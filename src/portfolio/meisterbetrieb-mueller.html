@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meisterbetrieb Müller - Qualität seit 1990</title>
+    <meta name="description" content="Ihr zuverlässiger Partner für Handwerk und Bau. Schnell, kompetent und fair.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js für Interaktivität (Mobile Menu) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Konfiguration der Farben (Hier kannst du das Design für Kunden anpassen) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a',   // Dunkelblau (Seriös)
+                        accent: '#ea580c',    // Orange (Handwerk/Aktion)
+                        light: '#f8fafc',     // Hintergrund Hell
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-slate-800 bg-light antialiased">
+
+    <!-- NAVIGATION -->
+    <nav class="bg-white shadow-md fixed w-full z-50" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <!-- Logo Bereich -->
+                <div class="flex items-center">
+                    <a href="#" class="flex-shrink-0 flex items-center gap-2">
+                        <i class="fa-solid fa-hammer text-accent text-2xl"></i>
+                        <span class="font-bold text-xl tracking-tight text-primary">Meister<span class="text-accent">Müller</span></span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#leistungen" class="text-gray-600 hover:text-accent transition font-medium">Leistungen</a>
+                    <a href="#uber-uns" class="text-gray-600 hover:text-accent transition font-medium">Über Uns</a>
+                    <a href="#projekte" class="text-gray-600 hover:text-accent transition font-medium">Referenzen</a>
+                    <a href="#kontakt" class="bg-accent hover:bg-orange-700 text-white px-5 py-2.5 rounded-lg font-bold transition shadow-lg shadow-orange-500/30">
+                        Angebot anfragen
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button @click="open = !open" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
+                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#leistungen" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Leistungen</a>
+                <a href="#uber-uns" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Über Uns</a>
+                <a href="#projekte" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Referenzen</a>
+                <a href="#kontakt" @click="open = false" class="block px-3 py-2 text-base font-bold text-accent hover:bg-gray-50 rounded-md">Jetzt anfragen</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-primary overflow-hidden">
+        <!-- Hintergrundbild mit Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" alt="Baustelle Hintergrund" class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary to-transparent opacity-90"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:w-2/3">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 text-accent border border-accent/30 text-sm font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                    Jetzt Termine für 2026 sichern
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">
+                    Wir bauen Ihre Vision.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-orange-300">Zuverlässig & Präzise.</span>
+                </h1>
+                <p class="text-lg text-slate-300 mb-8 max-w-2xl">
+                    Ihr Meisterbetrieb für Renovierung, Sanierung und Neubau in der Region.
+                    Über 30 Jahre Erfahrung und hunderte zufriedene Kunden.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#kontakt" class="inline-flex justify-center items-center bg-accent hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-lg shadow-orange-500/30">
+                        Kostenloses Angebot
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="tel:0123456789" class="inline-flex justify-center items-center bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 px-8 py-4 rounded-lg font-bold text-lg transition">
+                        <i class="fa-solid fa-phone mr-2"></i>
+                        0123 / 45 67 89
+                    </a>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-12 flex flex-wrap items-center gap-6 text-slate-400 text-sm font-medium">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-accent"></i> Meisterbetrieb
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-accent"></i> Festpreisgarantie
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-accent"></i> TÜV Zertifiziert
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEISTUNGEN (GRID) -->
+    <section id="leistungen" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-accent font-bold uppercase tracking-wide text-sm mb-2">Unsere Expertise</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-primary">Alles aus einer Hand</h3>
+                <div class="w-20 h-1 bg-accent mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-trowel-bricks text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Sanierung & Umbau</h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        Komplettsanierung von Altbauten, Badezimmern und Wohnräumen. Wir koordinieren alle Gewerke für Sie.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-paint-roller text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Malerarbeiten</h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        Innen- und Außenanstriche, Fassadengestaltung und moderne Spachteltechniken für exklusive Optik.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
+                        <i class="fa-solid fa-wrench text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Trockenbau</h4>
+                    <p class="text-slate-600 leading-relaxed">
+                        Wände einziehen, Decken abhängen oder Dachgeschossausbau. Schnell, sauber und schallgedämmt.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÜBER UNS (SPLIT SCREEN) -->
+    <section id="uber-uns" class="py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:flex items-center gap-16">
+                <div class="lg:w-1/2 mb-10 lg:mb-0 relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 rounded-full blur-2xl"></div>
+                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+                    <img src="https://images.unsplash.com/photo-1581578731117-104a8861d204?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Unser Team bei der Arbeit" class="relative rounded-2xl shadow-2xl z-10">
+
+                    <!-- Stats Card Floating -->
+                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 border-l-4 border-accent hidden md:block">
+                        <p class="text-3xl font-bold text-primary">30+</p>
+                        <p class="text-sm text-slate-500 font-medium">Jahre Erfahrung</p>
+                    </div>
+                </div>
+
+                <div class="lg:w-1/2">
+                    <h2 class="text-accent font-bold uppercase tracking-wide text-sm mb-2">Warum wir?</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold text-primary mb-6">Handwerk ist Vertrauenssache.</h3>
+                    <p class="text-slate-600 mb-6 leading-relaxed">
+                        Als familiengeführtes Unternehmen legen wir größten Wert auf Pünktlichkeit, Sauberkeit und transparente Preise. Bei uns gibt es keine versteckten Kosten.
+                    </p>
+                    <p class="text-slate-600 mb-8 leading-relaxed">
+                        Wir verwenden ausschließlich hochwertige Materialien namhafter Hersteller, damit Sie lange Freude an Ihrem Ergebnis haben.
+                    </p>
+
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-slate-700">Kostenlose Erstbesichtigung vor Ort</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-slate-700">Festpreisangebot innerhalb von 24h</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-slate-700">Saubere Baustelle nach Abschluss</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION / KONTAKT -->
+    <section id="kontakt" class="py-20 bg-primary text-white relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-white/5 skew-x-12 transform translate-x-20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:flex gap-16">
+                <div class="lg:w-1/2 mb-12 lg:mb-0">
+                    <h2 class="text-accent font-bold uppercase tracking-wide text-sm mb-2">Kontakt</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold mb-6">Starten Sie Ihr Projekt heute.</h3>
+                    <p class="text-slate-300 mb-8 text-lg">
+                        Füllen Sie das Formular aus oder rufen Sie uns direkt an. Wir melden uns umgehend bei Ihnen.
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-sm">Telefon</p>
+                                <p class="font-bold text-lg">0123 / 45 67 89</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-sm">E-Mail</p>
+                                <p class="font-bold text-lg">info@meister-mueller.de</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-sm">Standort</p>
+                                <p class="font-bold text-lg">Musterstraße 12, 12345 Musterstadt</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kontaktformular -->
+                <div class="lg:w-1/2">
+                    <form class="bg-white p-8 rounded-2xl shadow-2xl text-slate-800">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-bold mb-2 text-slate-700">Name</label>
+                                <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Max Mustermann">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2 text-slate-700">Telefon</label>
+                                <input type="tel" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Für Rückruf">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2 text-slate-700">E-Mail</label>
+                            <input type="email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="max@beispiel.de">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-bold mb-2 text-slate-700">Nachricht / Projekt</label>
+                            <textarea rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Worum geht es bei Ihrem Projekt?"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-accent hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition transform hover:-translate-y-1 shadow-lg shadow-orange-500/30">
+                            Kostenlos anfragen
+                        </button>
+                        <p class="text-xs text-slate-400 mt-4 text-center">Ihre Daten sind bei uns sicher und werden nicht weitergegeben.</p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-hammer text-accent text-xl"></i>
+                        <span class="font-bold text-lg text-white">Meister<span class="text-accent">Müller</span></span>
+                    </div>
+                    <p class="text-sm leading-relaxed">
+                        Qualität, die bleibt. Ihr Partner für Bauprojekte in der Region seit über 30 Jahren.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Leistungen</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-accent transition">Sanierung</a></li>
+                        <li><a href="#" class="hover:text-accent transition">Trockenbau</a></li>
+                        <li><a href="#" class="hover:text-accent transition">Malerarbeiten</a></li>
+                        <li><a href="#" class="hover:text-accent transition">Bodenverlegung</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Rechtliches</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-accent transition">Impressum</a></li>
+                        <li><a href="#" class="hover:text-accent transition">Datenschutz</a></li>
+                        <li><a href="#" class="hover:text-accent transition">AGB</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Folgen Sie uns</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p>&copy; 2026 Meisterbetrieb Müller. Alle Rechte vorbehalten.</p>
+                <p class="mt-2 md:mt-0">Webdesign von <a href="/" class="text-accent hover:text-orange-400 transition">Karriaro Webdesign</a></p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

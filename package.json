@@ -1,0 +1,24 @@
+{
+  "name": "karriaro-webdesign",
+  "version": "1.0.0",
+  "description": "Karriaro Webdesign - Handcodierte Webseiten für Unternehmen",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --watch",
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --minify && npm run copy",
+    "copy": "cp -r src/*.html dist/ && cp -r assets dist/",
+    "preview": "npx serve dist",
+    "clean": "rm -rf dist && mkdir -p dist"
+  },
+  "keywords": [
+    "webdesign",
+    "tailwindcss",
+    "landing-page"
+  ],
+  "author": "Karriaro Webdesign",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "serve": "^14.2.0"
+  }
+}
