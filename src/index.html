@@ -129,7 +129,7 @@
         }
     </style>
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+<body class="antialiased overflow-x-hidden selection:bg-primary selection:text-white" x-data="{ cookieConsent: localStorage.getItem('cookieConsent') }">
 
     <!-- NAVIGATION -->
     <nav class="fixed w-full z-50 glass-nav transition-all duration-300" x-data="{ open: false }">
@@ -622,22 +622,20 @@
         </div>
     </section>
 
-    <!-- COOKIE CONSENT BANNER (DSGVO) -->
-    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-[#151516] border-t border-white/10 shadow-2xl transform translate-y-full transition-transform duration-500" x-data="{ show: false }" x-init="
-        if (!localStorage.getItem('cookieConsent')) {
-            setTimeout(() => { $el.classList.remove('translate-y-full'); show = true; }, 1000);
-        }
-    " x-show="show">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex-1 text-center md:text-left">
-                <p class="text-sm text-gray-300">
-                    <i class="fa-solid fa-cookie-bite text-primary mr-2"></i>
-                    Diese Website verwendet nur technisch notwendige Cookies und keine Tracking-Tools.
-                    <a href="/datenschutz.html" class="text-primary hover:underline ml-1">Mehr erfahren</a>
-                </p>
+    <!-- COOKIE CONSENT BANNER (DSGVO Friendly) -->
+    <div x-show="!cookieConsent"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-full"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         class="fixed bottom-0 left-0 w-full z-50 p-4">
+        <div class="max-w-4xl mx-auto bg-[#151516]/90 backdrop-blur-md border border-white/10 p-4 md:p-6 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-sm text-gray-300">
+                <span class="font-bold text-white block mb-1">Privatsphäre zuerst.</span>
+                Wir nutzen keine Tracking-Cookies. Diese Seite ist handcodiert, um Ihre Daten zu schützen. Lediglich für die Funktionalität notwendige Daten werden lokal gespeichert.
             </div>
-            <div class="flex gap-3">
-                <button @click="localStorage.setItem('cookieConsent', 'accepted'); $el.closest('#cookie-banner').classList.add('translate-y-full'); show = false" class="px-6 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition">
+            <div class="flex gap-3 shrink-0">
+                <a href="/datenschutz.html" class="px-4 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-white transition border border-white/10">Details</a>
+                <button @click="localStorage.setItem('cookieConsent', 'true'); cookieConsent = 'true'" class="px-6 py-2 rounded-lg bg-primary hover:bg-blue-600 text-white text-xs font-bold transition shadow-glow">
                     Verstanden
                 </button>
             </div>
@@ -689,17 +687,18 @@
             // ===========================================
             const codeLines = [
                 { text: '<span class="text-purple-400">const</span> ihrProjekt = <span class="text-yellow-300">new</span> <span class="text-blue-400">KarriaroWebStrategy</span>({', delay: 0 },
-                { text: '    <span class="text-muted">// Was Sie bekommen:</span>', delay: 50 },
-                { text: '    <span class="text-green-400">speed</span>: <span class="text-orange-400">\'Maximum (0.4s)\'</span>,', delay: 50 },
-                { text: '    <span class="text-green-400">google_rank</span>: <span class="text-orange-400">\'Top Tier\'</span>,', delay: 50 },
-                { text: '    <span class="text-green-400">monthly_cost</span>: <span class="text-blue-400">0</span>,', delay: 50 },
+                { text: '    <span class="text-muted">// Ihre Vorteile:</span>', delay: 50 },
+                { text: '    <span class="text-green-400">sichtbarkeit</span>: <span class="text-orange-400">\'Seite 1 bei Google\'</span>,', delay: 50 },
+                { text: '    <span class="text-green-400">ladezeit</span>: <span class="text-orange-400">\'Sofort (0.4s)\'</span>,', delay: 50 },
+                { text: '    <span class="text-green-400">monatliche_kosten</span>: <span class="text-blue-400">0</span>,', delay: 50 },
                 { text: '', delay: 30 },
                 { text: '    <span class="text-muted">// Was wir eliminieren:</span>', delay: 50 },
-                { text: '    <span class="text-red-400">headaches</span>: <span class="text-blue-400">false</span>,', delay: 50 },
-                { text: '    <span class="text-red-400">waiting_time</span>: <span class="text-blue-400">false</span>', delay: 50 },
+                { text: '    <span class="text-red-400">kopfschmerzen</span>: <span class="text-blue-400">false</span>,', delay: 50 },
+                { text: '    <span class="text-red-400">wartezeit</span>: <span class="text-blue-400">false</span>', delay: 50 },
                 { text: '});', delay: 50 },
                 { text: '', delay: 30 },
-                { text: '<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">launch</span>();', delay: 100 }
+                { text: '<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">starten</span>();', delay: 100 },
+                { text: '<span class="text-gray-500">// 🚀 Online in 48 Stunden.</span>', delay: 100 }
             ];
 
             const codeContent = document.getElementById('code-content');
