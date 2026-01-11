@@ -9,8 +9,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 
-    <!-- Tailwind CSS (Das Design-Framework) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS (kompiliert für schnelles Laden) -->
+    <link rel="stylesheet" href="/style.css">
 
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.3/dist/cdn.min.js"></script>
@@ -19,130 +19,6 @@
     <!-- Font Awesome (Für die Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- System Font Stack (DSGVO-konform - keine externen Requests) -->
-
-    <!-- Design Konfiguration (Farben & Animationen) -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        bg: '#000000',
-                        surface: '#151516',
-                        surfaceHighlight: '#2c2c2e',
-                        primary: '#0071e3', // Apple Blue
-                        text: '#f5f5f7',
-                        muted: '#a1a1a6' // Aufgehellt von #86868b für besseren Kontrast
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'glow': '0 0 25px rgba(0, 113, 227, 0.4)',
-                        'card': '0 10px 30px -10px rgba(0,0,0,0.5)',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 1s ease-out forwards',
-                        'slide-up': 'slideUp 0.8s ease-out forwards',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'cursor': 'cursor .75s step-end infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(40px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        cursor: {
-                            '0%, 100%': { opacity: '1' },
-                            '50%': { opacity: '0' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Globale Styles für Apple-Look */
-        body {
-            background-color: #000000;
-            color: #f5f5f7;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .glass-nav {
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .text-gradient-blue {
-            background: linear-gradient(135deg, #2997ff 0%, #9dcbfb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .apple-card {
-            background-color: #151516;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
-        }
-
-        .apple-card:hover {
-            transform: scale(1.01);
-            border-color: rgba(255,255,255,0.15);
-            box-shadow: 0 0 30px rgba(0, 113, 227, 0.15);
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Floating Animation */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .floating-element {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        /* Staggered reveal delays */
-        .stagger-1 { transition-delay: 0ms !important; }
-        .stagger-2 { transition-delay: 100ms !important; }
-        .stagger-3 { transition-delay: 200ms !important; }
-        .stagger-4 { transition-delay: 300ms !important; }
-        .stagger-5 { transition-delay: 400ms !important; }
-
-        /* Code Editor Specifics */
-        .code-glass {
-            background: rgba(21, 21, 22, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .line-numbers {
-            user-select: none;
-            text-align: right;
-            color: rgba(255, 255, 255, 0.2);
-            padding-right: 1.5rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-        }
-    </style>
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-primary selection:text-white" x-data="{ cookieConsent: localStorage.getItem('cookieConsent') }">
 
