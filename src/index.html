@@ -101,6 +101,33 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Staggered reveal delays */
+        .stagger-1 { transition-delay: 0ms !important; }
+        .stagger-2 { transition-delay: 100ms !important; }
+        .stagger-3 { transition-delay: 200ms !important; }
+        .stagger-4 { transition-delay: 300ms !important; }
+        .stagger-5 { transition-delay: 400ms !important; }
+
+        /* Cursor blink */
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        #cursor {
+            animation: blink 1s infinite;
+        }
     </style>
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-primary selection:text-white">
@@ -178,15 +205,15 @@
             <div class="reveal border-y border-white/5 py-8 mb-24 bg-white/[0.02]" style="transition-delay: 250ms">
                 <p class="text-xs text-muted uppercase tracking-widest mb-6">Technologie-Standard</p>
                 <div class="flex flex-wrap justify-center gap-12 text-2xl text-gray-400 opacity-50">
-                    <i class="fa-brands fa-google hover:text-white hover:opacity-100 transition duration-500" title="Google Optimized"></i>
-                    <i class="fa-brands fa-aws hover:text-white hover:opacity-100 transition duration-500" title="High Performance Cloud"></i>
-                    <i class="fa-brands fa-apple hover:text-white hover:opacity-100 transition duration-500" title="iOS Optimized"></i>
-                    <i class="fa-brands fa-js hover:text-white hover:opacity-100 transition duration-500" title="Modern JavaScript"></i>
+                    <i class="fa-brands fa-google hover:text-white hover:opacity-100 transition duration-500 floating-element" style="animation-delay: 0s" title="Google Optimized"></i>
+                    <i class="fa-brands fa-aws hover:text-white hover:opacity-100 transition duration-500 floating-element" style="animation-delay: 0.5s" title="High Performance Cloud"></i>
+                    <i class="fa-brands fa-apple hover:text-white hover:opacity-100 transition duration-500 floating-element" style="animation-delay: 1s" title="iOS Optimized"></i>
+                    <i class="fa-brands fa-js hover:text-white hover:opacity-100 transition duration-500 floating-element" style="animation-delay: 1.5s" title="Modern JavaScript"></i>
                 </div>
             </div>
 
-            <!-- Code Editor Visual -->
-            <div class="reveal relative max-w-3xl mx-auto" style="transition-delay: 300ms">
+            <!-- Code Editor Visual with Typing Animation -->
+            <div class="reveal relative max-w-3xl mx-auto" style="transition-delay: 300ms" id="code-editor">
                 <div class="bg-[#151516] rounded-2xl border border-white/10 shadow-2xl overflow-hidden text-left">
                     <div class="h-10 bg-[#1e1e1f] border-b border-white/5 flex items-center px-4 gap-2">
                         <div class="flex gap-2">
@@ -196,22 +223,12 @@
                         </div>
                         <div class="ml-4 text-xs text-muted font-mono opacity-50">success_protocol.js</div>
                     </div>
-                    <div class="p-6 md:p-8 overflow-x-auto">
-                        <pre class="font-mono text-sm md:text-base text-gray-300 leading-relaxed"><span class="text-purple-400">const</span> ihrProjekt = <span class="text-yellow-300">new</span> <span class="text-blue-400">KarriaroWebStrategy</span>({
-    <span class="text-muted">// Was Sie bekommen:</span>
-    <span class="text-green-400">speed</span>: <span class="text-orange-400">'Maximum (0.4s)'</span>,
-    <span class="text-green-400">google_rank</span>: <span class="text-orange-400">'Top Tier'</span>,
-    <span class="text-green-400">monthly_cost</span>: <span class="text-blue-400">0</span>,
-
-    <span class="text-muted">// Was wir eliminieren:</span>
-    <span class="text-red-400">headaches</span>: <span class="text-blue-400">false</span>,
-    <span class="text-red-400">waiting_time</span>: <span class="text-blue-400">false</span>
-});
-
-<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">launch</span>();</pre>
+                    <div class="p-6 md:p-8 overflow-x-auto min-h-[280px]">
+                        <pre id="code-content" class="font-mono text-sm md:text-base text-gray-300 leading-relaxed"></pre>
+                        <span id="cursor" class="inline-block w-2 h-5 bg-primary animate-pulse ml-1 align-middle"></span>
                     </div>
-                    <!-- Ergebnis-Anzeige -->
-                    <div class="border-t border-white/5 px-6 md:px-8 py-4 bg-[#0d0d0e] flex items-center justify-between">
+                    <!-- Ergebnis-Anzeige (initially hidden) -->
+                    <div id="code-result" class="border-t border-white/5 px-6 md:px-8 py-4 bg-[#0d0d0e] flex items-center justify-between opacity-0 transition-opacity duration-500">
                         <div class="flex items-center gap-3">
                             <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
                             <span class="font-mono text-sm text-green-400">Kompilierung erfolgreich</span>
@@ -222,7 +239,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="absolute -inset-10 bg-primary/20 blur-[100px] -z-10 opacity-20 pointer-events-none"></div>
+                <div class="absolute -inset-10 bg-primary/20 blur-[100px] -z-10 opacity-20 pointer-events-none floating-element"></div>
             </div>
         </div>
     </section>
@@ -267,7 +284,7 @@
                                 <span class="text-4xl font-bold text-green-400">100<span class="text-lg text-gray-500">/100</span></span>
                             </div>
                             <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                                <div class="h-full bg-green-500 w-full shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                                <div id="pagespeed-bar" class="h-full bg-green-500 w-0 shadow-[0_0_10px_rgba(34,197,94,0.5)] transition-all duration-1000 ease-out"></div>
                             </div>
                             <div class="mt-8 pt-8 border-t border-white/5 grid grid-cols-2 gap-4">
                                 <div>
@@ -358,7 +375,7 @@
             <h2 class="reveal text-3xl font-bold mb-12 text-center">Stimmen unserer Kunden</h2>
             <div class="grid md:grid-cols-3 gap-6">
                 <!-- Testimonial 1 -->
-                <div class="reveal apple-card p-8 hover:bg-[#1c1c1e] transition-colors">
+                <div class="reveal stagger-1 apple-card p-8 hover:bg-[#1c1c1e] transition-colors">
                     <div class="flex gap-1 text-yellow-500 text-xs mb-4">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
@@ -375,7 +392,7 @@
                 </div>
 
                 <!-- Testimonial 2 -->
-                <div class="reveal apple-card p-8 hover:bg-[#1c1c1e] transition-colors" style="transition-delay: 100ms">
+                <div class="reveal stagger-2 apple-card p-8 hover:bg-[#1c1c1e] transition-colors">
                     <div class="flex gap-1 text-yellow-500 text-xs mb-4">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
@@ -392,7 +409,7 @@
                 </div>
 
                 <!-- Testimonial 3 -->
-                <div class="reveal apple-card p-8 hover:bg-[#1c1c1e] transition-colors" style="transition-delay: 200ms">
+                <div class="reveal stagger-3 apple-card p-8 hover:bg-[#1c1c1e] transition-colors">
                     <div class="flex gap-1 text-yellow-500 text-xs mb-4">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                     </div>
@@ -437,15 +454,15 @@
                     </p>
                     <div class="flex gap-8 pt-4">
                         <div>
-                            <div class="text-3xl font-bold text-white">50+</div>
+                            <div class="text-3xl font-bold text-white"><span class="counter" data-target="50">0</span>+</div>
                             <div class="text-sm text-muted">Projekte</div>
                         </div>
                         <div>
-                            <div class="text-3xl font-bold text-white">100%</div>
+                            <div class="text-3xl font-bold text-white"><span class="counter" data-target="100">0</span>%</div>
                             <div class="text-sm text-muted">Zufriedenheit</div>
                         </div>
                         <div>
-                            <div class="text-3xl font-bold text-white">0</div>
+                            <div class="text-3xl font-bold text-white"><span class="counter" data-target="0">0</span></div>
                             <div class="text-sm text-muted">Monatliche Kosten</div>
                         </div>
                     </div>
@@ -622,9 +639,12 @@
         </div>
     </footer>
 
-    <!-- SCROLL REVEAL SCRIPT -->
+    <!-- SCROLL REVEAL & ANIMATIONS SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ===========================================
+            // 1. SCROLL REVEAL
+            // ===========================================
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
@@ -641,6 +661,178 @@
 
             const revealElements = document.querySelectorAll('.reveal');
             revealElements.forEach(el => observer.observe(el));
+
+            // ===========================================
+            // 2. CODE TYPING ANIMATION
+            // ===========================================
+            const codeLines = [
+                { text: '<span class="text-purple-400">const</span> ihrProjekt = <span class="text-yellow-300">new</span> <span class="text-blue-400">KarriaroWebStrategy</span>({', delay: 0 },
+                { text: '    <span class="text-muted">// Was Sie bekommen:</span>', delay: 50 },
+                { text: '    <span class="text-green-400">speed</span>: <span class="text-orange-400">\'Maximum (0.4s)\'</span>,', delay: 50 },
+                { text: '    <span class="text-green-400">google_rank</span>: <span class="text-orange-400">\'Top Tier\'</span>,', delay: 50 },
+                { text: '    <span class="text-green-400">monthly_cost</span>: <span class="text-blue-400">0</span>,', delay: 50 },
+                { text: '', delay: 30 },
+                { text: '    <span class="text-muted">// Was wir eliminieren:</span>', delay: 50 },
+                { text: '    <span class="text-red-400">headaches</span>: <span class="text-blue-400">false</span>,', delay: 50 },
+                { text: '    <span class="text-red-400">waiting_time</span>: <span class="text-blue-400">false</span>', delay: 50 },
+                { text: '});', delay: 50 },
+                { text: '', delay: 30 },
+                { text: '<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">launch</span>();', delay: 100 }
+            ];
+
+            const codeContent = document.getElementById('code-content');
+            const cursor = document.getElementById('cursor');
+            const codeResult = document.getElementById('code-result');
+            let codeTypingStarted = false;
+
+            function typeCode() {
+                if (codeTypingStarted) return;
+                codeTypingStarted = true;
+
+                let lineIndex = 0;
+                let charIndex = 0;
+                let currentLine = '';
+
+                function typeNextChar() {
+                    if (lineIndex >= codeLines.length) {
+                        // Typing complete - show result
+                        cursor.style.display = 'none';
+                        setTimeout(() => {
+                            codeResult.style.opacity = '1';
+                        }, 300);
+                        return;
+                    }
+
+                    const line = codeLines[lineIndex];
+                    const plainText = line.text.replace(/<[^>]*>/g, '');
+
+                    if (charIndex < plainText.length) {
+                        // Still typing current line
+                        charIndex++;
+                        // Show the full HTML up to current char position
+                        let visibleChars = 0;
+                        let htmlIndex = 0;
+                        let inTag = false;
+                        let result = '';
+
+                        for (let i = 0; i < line.text.length && visibleChars < charIndex; i++) {
+                            if (line.text[i] === '<') inTag = true;
+                            if (!inTag) visibleChars++;
+                            result += line.text[i];
+                            if (line.text[i] === '>') inTag = false;
+                        }
+                        // Complete any open tags
+                        if (result.includes('<span') && !result.includes('</span>')) {
+                            result += '</span>';
+                        }
+
+                        currentLine = result;
+                        updateCodeDisplay();
+                        setTimeout(typeNextChar, 20 + Math.random() * 30);
+                    } else {
+                        // Line complete, move to next
+                        lineIndex++;
+                        charIndex = 0;
+                        currentLine = line.text;
+                        updateCodeDisplay();
+                        setTimeout(typeNextChar, line.delay);
+                    }
+                }
+
+                function updateCodeDisplay() {
+                    let fullCode = '';
+                    for (let i = 0; i < lineIndex; i++) {
+                        fullCode += codeLines[i].text + '\n';
+                    }
+                    fullCode += currentLine;
+                    codeContent.innerHTML = fullCode;
+                }
+
+                typeNextChar();
+            }
+
+            // Start typing when code editor is in view
+            const codeEditor = document.getElementById('code-editor');
+            const codeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(typeCode, 500);
+                        codeObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            if (codeEditor) codeObserver.observe(codeEditor);
+
+            // ===========================================
+            // 3. COUNTER ANIMATION
+            // ===========================================
+            const counters = document.querySelectorAll('.counter');
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = parseInt(counter.dataset.target);
+                        const duration = 2000;
+                        const startTime = performance.now();
+
+                        function updateCounter(currentTime) {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            // Easing function for smooth animation
+                            const easeOut = 1 - Math.pow(1 - progress, 3);
+                            const current = Math.round(easeOut * target);
+                            counter.textContent = current;
+
+                            if (progress < 1) {
+                                requestAnimationFrame(updateCounter);
+                            }
+                        }
+
+                        requestAnimationFrame(updateCounter);
+                        counterObserver.unobserve(counter);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => counterObserver.observe(counter));
+
+            // ===========================================
+            // 4. PAGESPEED BAR ANIMATION
+            // ===========================================
+            const pagespeedBar = document.getElementById('pagespeed-bar');
+            const pagespeedObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            pagespeedBar.style.width = '100%';
+                        }, 300);
+                        pagespeedObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            if (pagespeedBar) pagespeedObserver.observe(pagespeedBar);
+
+            // ===========================================
+            // 5. PARALLAX ON SCROLL (subtle)
+            // ===========================================
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const scrolled = window.pageYOffset;
+                        const floatingElements = document.querySelectorAll('.floating-element');
+                        floatingElements.forEach((el, index) => {
+                            const speed = 0.02 + (index * 0.01);
+                            const yPos = -(scrolled * speed);
+                            el.style.transform = `translateY(${yPos}px)`;
+                        });
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
         });
     </script>
 </body>
