@@ -16,8 +16,7 @@
     <!-- Font Awesome (Für die Icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts: Inter Tight (Schriftart) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- System Font Stack (DSGVO-konform - keine externen Requests) -->
 
     <!-- Design Konfiguration (Farben & Animationen) -->
     <script>
@@ -33,7 +32,7 @@
                         muted: '#a1a1a6' // Aufgehellt von #86868b für besseren Kontrast
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
                     },
                     boxShadow: {
                         'glow': '0 0 25px rgba(0, 113, 227, 0.4)',
@@ -623,6 +622,28 @@
         </div>
     </section>
 
+    <!-- COOKIE CONSENT BANNER (DSGVO) -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-50 p-4 bg-[#151516] border-t border-white/10 shadow-2xl transform translate-y-full transition-transform duration-500" x-data="{ show: false }" x-init="
+        if (!localStorage.getItem('cookieConsent')) {
+            setTimeout(() => { $el.classList.remove('translate-y-full'); show = true; }, 1000);
+        }
+    " x-show="show">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex-1 text-center md:text-left">
+                <p class="text-sm text-gray-300">
+                    <i class="fa-solid fa-cookie-bite text-primary mr-2"></i>
+                    Diese Website verwendet nur technisch notwendige Cookies und keine Tracking-Tools.
+                    <a href="/datenschutz.html" class="text-primary hover:underline ml-1">Mehr erfahren</a>
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <button @click="localStorage.setItem('cookieConsent', 'accepted'); $el.closest('#cookie-banner').classList.add('translate-y-full'); show = false" class="px-6 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-semibold rounded-lg transition">
+                    Verstanden
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="py-12 border-t border-white/5 bg-black">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -635,6 +656,7 @@
             <div class="flex gap-6 text-xs text-gray-500">
                 <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
                 <a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a>
+                <a href="/agb.html" class="hover:text-white transition">AGB</a>
             </div>
         </div>
     </footer>
