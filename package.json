@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --watch",
     "build": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --minify && npm run copy",
-    "copy": "cp -r src/*.html dist/ && cp -r assets dist/",
+    "copy": "cp -r src/*.html dist/ && cp -r src/portfolio dist/ && cp -r assets dist/ 2>/dev/null || true",
     "preview": "npx serve dist",
     "clean": "rm -rf dist && mkdir -p dist"
   },
