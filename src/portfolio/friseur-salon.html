@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Salon Name] | Ihr Friseur & Beauty Experte in [Stadt]</title>
+    <meta name="description" content="Exklusives Haarstyling, Coloration und Wellness. Entspannen Sie in unserem modernen Salon. Jetzt Termin vereinbaren.">
+
+    <!-- Fonts: Cinzel (Luxus Serif) & Lato (Clean Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1c1917',   // Stone 900 (Text Dunkel)
+                        accent: '#bfa094',    // Muted Rose/Beige (Elegant)
+                        bg: '#fafaf9',        // Stone 50 (Hintergrund warmes Weiß)
+                        soft: '#e7e5e4',      // Stone 200 (Elemente)
+                    },
+                    fontFamily: {
+                        sans: ['Lato', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-primary bg-bg antialiased selection:bg-accent selection:text-white">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 bg-bg/80 backdrop-blur-md border-b border-stone-200 transition-all duration-300" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex flex-col items-center group">
+                    <span class="font-serif text-2xl tracking-widest group-hover:text-accent transition">[SALON]</span>
+                    <span class="text-[10px] uppercase tracking-[0.3em] text-stone-500">Hair & Beauty</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-12">
+                    <a href="#philosophie" class="text-xs uppercase tracking-widest hover:text-accent transition">Philosophie</a>
+                    <a href="#leistungen" class="text-xs uppercase tracking-widest hover:text-accent transition">Leistungen</a>
+                    <a href="#galerie" class="text-xs uppercase tracking-widest hover:text-accent transition">Galerie</a>
+                    <a href="#preise" class="text-xs uppercase tracking-widest hover:text-accent transition">Preise</a>
+                    <a href="#termin" class="px-6 py-2 bg-primary text-white hover:bg-accent transition text-xs uppercase tracking-widest">
+                        Termin buchen
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button @click="open = !open" class="md:hidden text-primary p-2 focus:outline-none">
+                    <i class="fa-solid fa-bars-staggered text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div x-show="open" class="md:hidden bg-bg border-t border-stone-100 absolute w-full h-screen">
+            <div class="flex flex-col p-8 space-y-6 text-center text-xl font-serif">
+                <a href="#philosophie" @click="open = false" class="hover:text-accent">Philosophie</a>
+                <a href="#leistungen" @click="open = false" class="hover:text-accent">Leistungen</a>
+                <a href="#galerie" @click="open = false" class="hover:text-accent">Galerie</a>
+                <a href="#preise" @click="open = false" class="hover:text-accent">Preise</a>
+                <a href="#termin" @click="open = false" class="mt-8 px-8 py-4 bg-primary text-white">Termin buchen</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative h-[90vh] overflow-hidden">
+        <!-- Split Layout: Bild Rechts, Text Links -->
+        <div class="absolute inset-0 z-0 flex">
+            <div class="w-full lg:w-1/2 bg-bg hidden lg:block"></div>
+            <div class="w-full lg:w-1/2 relative">
+                <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1920&auto=format&fit=crop" alt="Haarstyling Model" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/20 lg:bg-transparent"></div>
+            </div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+            <div class="lg:w-1/2 pr-0 lg:pr-20 pt-20">
+                <span class="text-accent uppercase tracking-[0.3em] text-xs font-bold mb-6 block">Est. 2018 in [Stadt]</span>
+                <h1 class="font-serif text-5xl md:text-7xl leading-tight mb-8 text-primary mix-blend-multiply lg:mix-blend-normal">
+                    Schönheit <br>ist <span class="italic text-accent">Charakter.</span>
+                </h1>
+                <p class="text-lg text-stone-600 mb-12 font-light leading-relaxed max-w-md bg-bg/80 lg:bg-transparent p-4 lg:p-0 backdrop-blur-sm lg:backdrop-blur-none rounded-lg">
+                    Entdecken Sie Ihren individuellen Look. Wir verbinden handwerkliche Perfektion mit hochwertigen Pflegeprodukten für Ihr Wohlbefinden.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#termin" class="px-8 py-4 bg-primary text-white text-xs uppercase tracking-widest hover:bg-accent transition shadow-lg shadow-stone-300">
+                        Termin vereinbaren
+                    </a>
+                    <a href="#leistungen" class="px-8 py-4 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-white transition flex items-center gap-2 bg-white/80 backdrop-blur-sm lg:bg-transparent">
+                        <i class="fa-solid fa-play text-[8px]"></i> Unser Angebot
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHILOSOPHIE / ABOUT -->
+    <section id="philosophie" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="order-2 md:order-1 relative">
+                    <div class="absolute -top-4 -left-4 w-2/3 h-2/3 border border-accent z-0"></div>
+                    <img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=800&auto=format&fit=crop" alt="Salon Interior" class="relative z-10 w-full shadow-xl">
+                    <div class="absolute -bottom-6 -right-6 bg-bg p-6 shadow-lg z-20 max-w-xs hidden md:block">
+                        <p class="font-serif text-xl italic text-primary">"Wir nehmen uns Zeit für Sie. Das ist der wahre Luxus."</p>
+                        <p class="text-xs uppercase tracking-widest text-accent mt-2">- [Inhaber Name]</p>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <span class="text-accent uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Über Uns</span>
+                    <h2 class="font-serif text-4xl mb-6">Mehr als nur ein Haarschnitt.</h2>
+                    <p class="text-stone-600 font-light leading-relaxed mb-6">
+                        In unserem Salon im Herzen von [Stadt] schaffen wir eine Oase der Ruhe. Wir arbeiten ausschließlich mit nachhaltigen Produkten von [Marke] und legen größten Wert auf eine typgerechte Beratung.
+                    </p>
+                    <ul class="space-y-4 font-light text-stone-700">
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-leaf"></i></span>
+                            100% Vegane Produkte
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-certificate"></i></span>
+                            Meisterbetrieb
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-clock"></i></span>
+                            Late-Night Termine
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEISTUNGEN -->
+    <section id="leistungen" class="py-24 bg-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl mb-4">Unser Service</h2>
+                <div class="w-12 h-0.5 bg-accent mx-auto"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100">
+                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
+                        <i class="fa-solid fa-scissors text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-4">Cut & Style</h3>
+                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
+                        Präzise Haarschnitte, die zu Ihrer Gesichtsform und Ihrem Lebensstil passen. Inklusive Kopfmassage.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 45€</span>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100 transform md:-translate-y-4">
+                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
+                        <i class="fa-solid fa-wand-magic-sparkles text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-4">Coloration</h3>
+                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
+                        Balayage, Babylights oder Glossing. Wir finden den perfekten Farbton für Ihren Teint.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 85€</span>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100">
+                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
+                        <i class="fa-solid fa-spa text-2xl text-primary group-hover:text-white transition"></i>
+                    </div>
+                    <h3 class="font-serif text-xl mb-4">Care & Repair</h3>
+                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
+                        Intensive Pflegekuren für strapaziertes Haar. Olaplex-Behandlungen für maximalen Aufbau.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 30€</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIE (Instagram Style) -->
+    <section id="galerie" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <h2 class="font-serif text-3xl">Looks & Inspiration</h2>
+                <a href="#" class="text-xs uppercase tracking-widest hover:text-accent transition"><i class="fa-brands fa-instagram mr-2"></i>Folgen Sie uns</a>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="aspect-square overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 1">
+                </div>
+                <div class="aspect-square overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 2">
+                </div>
+                <div class="aspect-square overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 3">
+                </div>
+                <div class="aspect-square overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 4">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PREISE -->
+    <section id="preise" class="py-24 bg-bg">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-4xl mb-4">Preisliste</h2>
+                <p class="text-stone-500 font-light">Transparent und fair.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Item -->
+                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
+                    <div>
+                        <h4 class="font-serif text-lg">Damen Haarschnitt</h4>
+                        <span class="text-xs text-stone-500 uppercase tracking-wide">Waschen, Schneiden, Föhnen</span>
+                    </div>
+                    <span class="font-bold">ab 55 €</span>
+                </div>
+                <!-- Item -->
+                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
+                    <div>
+                        <h4 class="font-serif text-lg">Herren Haarschnitt</h4>
+                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Kopfmassage</span>
+                    </div>
+                    <span class="font-bold">ab 35 €</span>
+                </div>
+                <!-- Item -->
+                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
+                    <div>
+                        <h4 class="font-serif text-lg">Balayage Komplett</h4>
+                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Glossing & Pflege</span>
+                    </div>
+                    <span class="font-bold">ab 140 €</span>
+                </div>
+                <!-- Item -->
+                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
+                    <div>
+                        <h4 class="font-serif text-lg">Brautstyling</h4>
+                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Probetermin</span>
+                    </div>
+                    <span class="font-bold">ab 250 €</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TERMIN / KONTAKT -->
+    <section id="termin" class="py-24 bg-primary text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <img src="https://images.unsplash.com/photo-1596178065573-54369ec39d6d?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale" alt="Background">
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
+            <h2 class="font-serif text-4xl md:text-5xl mb-8">Bereit für eine Veränderung?</h2>
+            <p class="text-stone-300 mb-10 font-light max-w-lg mx-auto">
+                Buchen Sie Ihren Termin ganz einfach online oder rufen Sie uns an. Wir freuen uns auf Sie.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                <a href="#" class="px-10 py-5 bg-accent hover:bg-white hover:text-primary transition text-sm font-bold uppercase tracking-widest">
+                    Online Buchen
+                </a>
+                <a href="tel:0123456789" class="px-10 py-5 border border-white hover:bg-white hover:text-primary transition text-sm font-bold uppercase tracking-widest">
+                    0123 / 45 67 89
+                </a>
+            </div>
+
+            <div class="mt-16 grid md:grid-cols-3 gap-8 text-sm font-light text-stone-300">
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Adresse</h4>
+                    <p>Salon Straße 12</p>
+                    <p>12345 Stadt</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Öffnungszeiten</h4>
+                    <p>Mo: Geschlossen</p>
+                    <p>Di - Fr: 09:00 - 19:00</p>
+                    <p>Sa: 09:00 - 16:00</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Parken</h4>
+                    <p>Kundenparkplätze</p>
+                    <p>im Hof verfügbar</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-bg py-8 border-t border-stone-200 text-center text-xs text-stone-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-4">&copy; 2026 [Salon Name]. All rights reserved.</p>
+            <div class="space-x-4">
+                <a href="#" class="hover:text-primary transition">Impressum</a>
+                <a href="#" class="hover:text-primary transition">Datenschutz</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
