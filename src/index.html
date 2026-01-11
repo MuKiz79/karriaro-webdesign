@@ -621,7 +621,8 @@
     <!-- FAQ SECTION -->
     <section id="faq" class="py-40">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="reveal text-3xl font-bold mb-12 text-center">Häufige Fragen</h2>
+            <h2 class="reveal text-3xl font-bold mb-4 text-center">Häufige Fragen</h2>
+            <p class="reveal text-muted text-center mb-12">Alles, was Sie vor dem Start wissen müssen.</p>
 
             <div class="space-y-4" x-data="{ selected: null }">
                 <!-- FAQ 1 -->
@@ -631,29 +632,51 @@
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 0}"></i>
                     </button>
                     <div x-show="selected === 0" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        Ja, zu 100%. Im Gegensatz zu Baukästen wie Wix oder Jimdo mieten Sie die Seite nicht. Nach der einmaligen Zahlung erhalten Sie alle Rechte und den Quellcode.
+                        Ja, zu 100%. Im Gegensatz zu Baukästen wie Wix oder Jimdo mieten Sie die Seite nicht. Nach der einmaligen Zahlung erhalten Sie alle Rechte und den kompletten Quellcode. Sie sind an uns nicht gebunden.
                     </div>
                 </div>
 
                 <!-- FAQ 2 -->
                 <div class="reveal apple-card overflow-hidden">
                     <button @click="selected !== 1 ? selected = 1 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
-                        <span class="font-medium text-white">Kann ich Texte später selbst ändern?</span>
+                        <span class="font-medium text-white">Werde ich bei Google besser gefunden?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 1}"></i>
                     </button>
                     <div x-show="selected === 1" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        Für kleine Änderungen bieten wir unser günstiges Wartungspaket an – schreiben Sie uns einfach eine Nachricht, wir erledigen das. Alternativ zeigen wir Ihnen gerne, wie Sie einfache Texte im Code selbst anpassen können.
+                        Absolut. Google liebt schnelle Seiten. Da unsere handcodierten Seiten extrem schnell laden (oft unter 0,5 Sekunden) und technisch sauber strukturiert sind, haben Sie einen massiven Vorteil gegenüber der langsamen Konkurrenz mit Standard-Baukästen.
                     </div>
                 </div>
 
                 <!-- FAQ 3 -->
                 <div class="reveal apple-card overflow-hidden">
                     <button @click="selected !== 2 ? selected = 2 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
-                        <span class="font-medium text-white">Wie lange dauert die Erstellung?</span>
+                        <span class="font-medium text-white">Muss ich Texte & Bilder selbst liefern?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 2}"></i>
                     </button>
                     <div x-show="selected === 2" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        Da wir mit optimierten Code-Templates arbeiten, ist Ihre Seite oft schon innerhalb von 48 bis 72 Stunden nach Erhalt aller Inhalte (Texte/Bilder) online.
+                        Nicht zwingend. Wir unterstützen Sie gerne mit professionellen Struktur-Vorlagen. Wenn Sie keine eigenen Bilder haben, nutzen wir hochwertige Lizenzbilder. Für Texte können wir auf Wunsch (gegen kleinen Aufpreis) professionelle Entwürfe erstellen.
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="reveal apple-card overflow-hidden">
+                    <button @click="selected !== 3 ? selected = 3 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="font-medium text-white">Warum nutzen Sie kein WordPress?</span>
+                        <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 3}"></i>
+                    </button>
+                    <div x-show="selected === 3" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
+                        WordPress ist toll für Blogs, aber für Firmenwebseiten oft unnötig komplex, langsam und ein Sicherheitsrisiko (Hacker). Unsere "statische" Technologie eliminiert diese Risiken komplett: Keine Updates, keine Hacker, keine Ladezeiten.
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div class="reveal apple-card overflow-hidden">
+                    <button @click="selected !== 4 ? selected = 4 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="font-medium text-white">Kann ich später Dinge ändern?</span>
+                        <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 4}"></i>
+                    </button>
+                    <div x-show="selected === 4" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
+                        Für kleine Änderungen (z.B. neue Telefonnummer) bieten wir unser günstiges Wartungspaket an – eine E-Mail genügt, wir erledigen das sofort. Das spart Ihnen Zeit und Nerven, sich in komplizierte Systeme einzuarbeiten.
                     </div>
                 </div>
             </div>
