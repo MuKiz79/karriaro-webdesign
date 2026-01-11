@@ -314,8 +314,8 @@
                                     <span>Ladezeit</span>
                                     <span class="text-red-400">~3.5s (Langsam)</span>
                                 </div>
-                                <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                                    <div class="h-full bg-red-500/50 w-[30%]"></div>
+                                <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden relative">
+                                    <div id="slow-speed-bar" class="absolute inset-0 bg-red-500/50 w-0 transition-all duration-1000 ease-out"></div>
                                 </div>
                             </div>
 
@@ -964,21 +964,27 @@
             counters.forEach(counter => counterObserver.observe(counter));
 
             // ===========================================
-            // 4. PAGESPEED BAR ANIMATION
+            // 4. PAGESPEED BAR ANIMATION (Both bars)
             // ===========================================
+            const slowSpeedBar = document.getElementById('slow-speed-bar');
             const pagespeedBar = document.getElementById('pagespeed-bar');
-            const pagespeedObserver = new IntersectionObserver((entries) => {
+
+            const speedBarsObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
+                        // Animate both bars simultaneously
                         setTimeout(() => {
-                            pagespeedBar.style.width = '100%';
+                            if (slowSpeedBar) slowSpeedBar.style.width = '30%';
+                            if (pagespeedBar) pagespeedBar.style.width = '100%';
                         }, 300);
-                        pagespeedObserver.unobserve(entry.target);
+                        speedBarsObserver.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.5 });
+            }, { threshold: 0.3 });
 
-            if (pagespeedBar) pagespeedObserver.observe(pagespeedBar);
+            // Observe the problem section to trigger both animations
+            const problemSection = document.getElementById('problem');
+            if (problemSection) speedBarsObserver.observe(problemSection);
 
             // ===========================================
             // 5. PARALLAX ON SCROLL (subtle)
