@@ -399,68 +399,109 @@
         </div>
     </section>
 
-    <!-- PORTFOLIO SECTION -->
-    <section id="work" class="py-32 bg-black border-t border-white/5">
+    <!-- PORTFOLIO SECTION (REDESIGNED - IMMERSIVE) -->
+    <section id="work" class="py-32 bg-black border-t border-white/5 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-20">
-                <h2 class="reveal text-4xl font-bold mb-6">Ausgewählte Projekte</h2>
-                <p class="reveal text-lg text-muted max-w-2xl mx-auto">
-                    Qualität, die man sehen kann. Jedes Projekt ist ein Unikat.
-                </p>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-6">
+                <div class="reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-4">Ausgewählte Arbeiten</h2>
+                    <p class="text-lg text-muted max-w-xl">
+                        Wir bauen keine Webseiten von der Stange. <br>Jedes Projekt ist ein maßgeschneidertes Werkzeug für mehr Umsatz.
+                    </p>
+                </div>
+                <div class="reveal">
+                    <a href="#kontakt" class="inline-flex items-center gap-2 text-white border-b border-white/20 pb-1 hover:border-white transition group">
+                        Alle Projekte ansehen
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition text-xs"></i>
+                    </a>
+                </div>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- Project 1 -->
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal apple-card group overflow-hidden cursor-pointer block">
-                    <div class="h-64 bg-[#1c1c1e] relative overflow-hidden">
-                        <!-- Live Website Preview via iframe -->
-                        <div class="absolute inset-0 overflow-hidden">
-                            <iframe
-                                src="/portfolio/meisterbetrieb-mueller.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                title="Meisterbetrieb Müller Website Vorschau"
-                                loading="lazy"
-                            ></iframe>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#151516] via-transparent to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-bold text-white border border-white/10">
-                            HANDWERK
+
+                <!-- Project 1 (Immersive Card) -->
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal group relative h-[500px] rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
+                    <!-- Background Image / Gradient Placeholder -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 transform group-hover:scale-105 transition duration-700 ease-out">
+                        <!-- Abstract Shapes simulating a UI -->
+                        <div class="absolute top-1/4 left-1/4 w-full h-full bg-blue-500/20 rounded-full blur-[100px]"></div>
+                        <div class="absolute bottom-0 right-0 w-2/3 h-2/3 bg-primary/10 rounded-full blur-[80px]"></div>
+
+                        <!-- Mockup Visual (Icon) -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                            <i class="fa-solid fa-hammer text-9xl text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"></i>
                         </div>
                     </div>
-                    <div class="p-8">
-                        <h3 class="text-xl font-bold text-white mb-2">Meisterbetrieb Müller</h3>
-                        <p class="text-muted text-sm mb-4">
-                            Kompletter Relaunch für einen lokalen Handwerksbetrieb. Fokus auf schnelle Ladezeiten und Lead-Generierung.
+
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90"></div>
+
+                    <!-- Top Badge -->
+                    <div class="absolute top-6 right-6">
+                        <span class="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold text-white uppercase tracking-wider">
+                            Handwerk
+                        </span>
+                    </div>
+
+                    <!-- Content (Bottom) -->
+                    <div class="absolute bottom-0 left-0 w-full p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition duration-500">
+                        <div class="mb-4 opacity-0 group-hover:opacity-100 transition duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                            <span class="text-green-400 text-xs font-bold uppercase tracking-widest mb-2 block"><i class="fa-solid fa-circle text-[8px] mr-2"></i>Live & Online</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-3">Meisterbetrieb Müller</h3>
+                        <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
+                            Von 0 auf Seite 1 in 3 Wochen. Ein kompletter Relaunch mit Fokus auf lokale SEO und schnelle Lead-Generierung per WhatsApp-Button.
                         </p>
-                        <span class="text-primary text-sm font-medium group-hover:text-white transition">Case Study ansehen <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        <div class="flex items-center gap-4 text-sm font-bold text-white group-hover:text-primary transition">
+                            <span>Case Study lesen</span>
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition">
+                                <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition duration-300"></i>
+                            </div>
+                        </div>
                     </div>
                 </a>
 
-                <!-- Project 2 -->
-                <a href="/portfolio/praxis-weber.html" class="reveal apple-card group overflow-hidden cursor-pointer block" style="transition-delay: 100ms">
-                    <div class="h-64 bg-[#1c1c1e] relative overflow-hidden">
-                        <!-- Live Website Preview via iframe -->
-                        <div class="absolute inset-0 overflow-hidden">
-                            <iframe
-                                src="/portfolio/praxis-weber.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                title="Praxis Dr. Weber Website Vorschau"
-                                loading="lazy"
-                            ></iframe>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#151516] via-transparent to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-bold text-white border border-white/10">
-                            MEDIZIN
+                <!-- Project 2 (Immersive Card) -->
+                <a href="/portfolio/praxis-weber.html" class="reveal group relative h-[500px] rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block" style="transition-delay: 100ms">
+                    <!-- Background Image / Gradient Placeholder -->
+                    <div class="absolute inset-0 bg-gradient-to-bl from-emerald-900 to-slate-900 transform group-hover:scale-105 transition duration-700 ease-out">
+                        <!-- Abstract Shapes -->
+                        <div class="absolute top-0 right-0 w-full h-full bg-emerald-500/10 rounded-full blur-[100px]"></div>
+
+                        <!-- Mockup Visual -->
+                        <div class="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-100 group-hover:scale-110 transition duration-500">
+                            <i class="fa-solid fa-tooth text-9xl text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"></i>
                         </div>
                     </div>
-                    <div class="p-8">
-                        <h3 class="text-xl font-bold text-white mb-2">Praxis Dr. Weber</h3>
-                        <p class="text-muted text-sm mb-4">
-                            Seriöses, vertrauensbildendes Design für eine Arztpraxis. Integrierte Terminbuchung und Team-Vorstellung.
+
+                    <!-- Overlay Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90"></div>
+
+                    <!-- Top Badge -->
+                    <div class="absolute top-6 right-6">
+                        <span class="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold text-white uppercase tracking-wider">
+                            Medizin
+                        </span>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="absolute bottom-0 left-0 w-full p-8 md:p-10 transform translate-y-4 group-hover:translate-y-0 transition duration-500">
+                        <div class="mb-4 opacity-0 group-hover:opacity-100 transition duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                            <span class="text-green-400 text-xs font-bold uppercase tracking-widest mb-2 block"><i class="fa-solid fa-circle text-[8px] mr-2"></i>Conversion +40%</span>
+                        </div>
+                        <h3 class="text-3xl font-bold text-white mb-3">Praxis Dr. Weber</h3>
+                        <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
+                            Vertrauen auf den ersten Blick. Ein sauberes, medizinisches Design mit integrierter Doctolib-Schnittstelle und Team-Vorstellung.
                         </p>
-                        <span class="text-primary text-sm font-medium group-hover:text-white transition">Case Study ansehen <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                        <div class="flex items-center gap-4 text-sm font-bold text-white group-hover:text-emerald-400 transition">
+                            <span>Case Study lesen</span>
+                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition">
+                                <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition duration-300"></i>
+                            </div>
+                        </div>
                     </div>
                 </a>
+
             </div>
         </div>
     </section>
