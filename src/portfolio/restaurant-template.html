@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Restaurant Name] | Genuss in [Stadt]</title>
+    <meta name="description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre. Beste Zutaten, handgemacht. Jetzt Tisch reservieren.">
+
+    <!-- Fonts: Elegant Serif für Headlines, Clean Sans für Text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#1a1a1a',      // Fast Schwarz (Elegant background)
+                        gold: '#d4af37',      // Gold (Akzente)
+                        cream: '#f9f9f7',     // Papier-Weiß (Text Hintergrund)
+                        muted: '#a3a3a3',     // Grau für Nebentext
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(26,26,26,0.3), rgba(26,26,26,1)), url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1920&auto=format&fit=crop')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .text-gold-gradient {
+            background: linear-gradient(to right, #d4af37, #f3e5ab, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-dark text-cream font-sans antialiased">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 bg-dark/90 backdrop-blur-md border-b border-white/5 transition-all duration-300" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="font-serif text-3xl font-bold tracking-wider text-white">
+                    [RESTAURANT]
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#menu" class="text-sm uppercase tracking-widest hover:text-gold transition">Speisekarte</a>
+                    <a href="#ambiente" class="text-sm uppercase tracking-widest hover:text-gold transition">Ambiente</a>
+                    <a href="#events" class="text-sm uppercase tracking-widest hover:text-gold transition">Events</a>
+                    <a href="#reservierung" class="px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition uppercase tracking-widest text-xs font-bold">
+                        Tisch reservieren
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button @click="open = !open" class="md:hidden text-gold p-2">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div x-show="open" class="md:hidden bg-dark border-t border-white/10 absolute w-full">
+            <div class="flex flex-col p-4 space-y-4 text-center">
+                <a href="#menu" class="text-lg font-serif hover:text-gold">Speisekarte</a>
+                <a href="#reservierung" class="text-lg font-serif hover:text-gold">Reservieren</a>
+                <a href="#kontakt" class="text-lg font-serif hover:text-gold">Kontakt</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative h-screen bg-hero-pattern bg-cover bg-center bg-fixed flex items-center justify-center text-center px-4">
+        <div class="relative z-10 max-w-3xl">
+            <span class="block text-gold uppercase tracking-[0.3em] text-sm mb-4 animate-fade-in-up">Willkommen im</span>
+            <h1 class="font-serif text-6xl md:text-8xl mb-6 text-white leading-tight">
+                Geschmack <br><span class="italic text-gold">erleben.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 mb-10 font-light max-w-xl mx-auto">
+                Moderne Küche trifft auf Tradition. Frische Zutaten, mit Leidenschaft zubereitet im Herzen von [Stadt].
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#reservierung" class="px-8 py-4 bg-gold text-dark font-bold uppercase tracking-widest hover:bg-white transition">
+                    Tisch Buchen
+                </a>
+                <a href="#menu" class="px-8 py-4 border border-white/30 text-white font-bold uppercase tracking-widest hover:bg-white/10 transition backdrop-blur-sm">
+                    Zur Karte
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/50">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- INTRO / ÜBER UNS -->
+    <section id="ambiente" class="py-24 bg-dark relative overflow-hidden">
+        <!-- Deco Element -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="absolute -top-4 -left-4 w-full h-full border border-gold/30 z-0"></div>
+                <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1000&auto=format&fit=crop" alt="Innenraum Restaurant" class="relative z-10 grayscale hover:grayscale-0 transition duration-1000 w-full object-cover h-[500px]">
+            </div>
+            <div>
+                <h2 class="font-serif text-4xl md:text-5xl mb-6 text-white">Ein Ort für <br><span class="text-gold italic">besondere Momente.</span></h2>
+                <div class="w-20 h-1 bg-gold mb-8"></div>
+                <p class="text-gray-400 leading-relaxed mb-6 font-light">
+                    Bei uns geht es nicht nur ums Essen, sondern um das Erlebnis. Wir glauben an Slow Food, lokale Lieferanten und eine Atmosphäre, in der die Zeit stillsteht.
+                </p>
+                <p class="text-gray-400 leading-relaxed mb-8 font-light">
+                    Unser Chefkoch [Name] kreiert saisonale Menüs, die klassische Rezepte neu interpretieren. Dazu servieren wir ausgewählte Weine aus den besten Regionen.
+                </p>
+
+                <div class="flex gap-8 text-gold font-serif text-xl">
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-bold">100%</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-500 font-sans">Frisch</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-bold">250+</span>
+                        <span class="text-xs uppercase tracking-widest text-gray-500 font-sans">Weine</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SPEISEKARTE (HTML Text, KEIN PDF!) -->
+    <section id="menu" class="py-24 bg-[#111111]">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-gold uppercase tracking-[0.2em] text-xs">Kulinarik</span>
+                <h2 class="font-serif text-4xl md:text-5xl mt-2 text-white">Unsere Auswahl</h2>
+                <p class="text-gray-500 mt-4 text-sm italic">Saisonal & Regional</p>
+            </div>
+
+            <!-- Menu Tabs (Optional, hier simpel als Liste) -->
+            <div class="space-y-16">
+
+                <!-- Vorspeisen -->
+                <div>
+                    <h3 class="font-serif text-2xl text-gold border-b border-white/10 pb-4 mb-8 text-center">Vorspeisen</h3>
+                    <div class="grid gap-8">
+                        <!-- Item 1 -->
+                        <div class="flex justify-between items-baseline group">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Rinder-Carpaccio</h4>
+                                    <span class="text-gold font-serif text-lg">16€</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-light mt-1">Hauchdünnes Rinderfilet, Rucola, Parmesan, Trüffelöl</p>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex justify-between items-baseline group">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Burrata & Tomate</h4>
+                                    <span class="text-gold font-serif text-lg">14€</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-light mt-1">Cremiger Burrata, bunte Tomaten, Basilikum-Pesto</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hauptgerichte -->
+                <div>
+                    <h3 class="font-serif text-2xl text-gold border-b border-white/10 pb-4 mb-8 text-center">Hauptgerichte</h3>
+                    <div class="grid gap-8">
+                        <!-- Item 1 -->
+                        <div class="flex justify-between items-baseline group">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Wiener Schnitzel</h4>
+                                    <span class="text-gold font-serif text-lg">24€</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-light mt-1">Original vom Kalb, Preiselbeeren, lauwarmer Kartoffelsalat</p>
+                            </div>
+                        </div>
+                        <!-- Item 2 -->
+                        <div class="flex justify-between items-baseline group">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Tagliatelle Tartufo</h4>
+                                    <span class="text-gold font-serif text-lg">22€</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-light mt-1">Frische Pasta, schwarzer Trüffel, Butter-Salbei-Sud</p>
+                            </div>
+                        </div>
+                        <!-- Item 3 -->
+                        <div class="flex justify-between items-baseline group">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-baseline">
+                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Zanderfilet</h4>
+                                    <span class="text-gold font-serif text-lg">26€</span>
+                                </div>
+                                <p class="text-sm text-gray-500 font-light mt-1">Auf der Haut gebraten, Risotto, geschmortes Gemüse</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-12">
+                <a href="#" class="text-sm text-gray-400 hover:text-white underline decoration-gold underline-offset-4">Komplette Karte als PDF (Download)</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALLERIE GRID -->
+    <section class="py-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=800&auto=format&fit=crop" class="w-full h-64 object-cover hover:opacity-80 transition" alt="Essen 1">
+            <img src="https://images.unsplash.com/photo-1514326640560-7d063ef2aed5?q=80&w=800&auto=format&fit=crop" class="w-full h-64 object-cover hover:opacity-80 transition" alt="Essen 2">
+            <img src="https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=800&auto=format&fit=crop" class="w-full h-64 object-cover hover:opacity-80 transition" alt="Essen 3">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop" class="w-full h-64 object-cover hover:opacity-80 transition" alt="Essen 4">
+        </div>
+    </section>
+
+    <!-- RESERVIERUNG & KONTAKT -->
+    <section id="reservierung" class="py-24 bg-dark relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-[#1a1a1a] border border-white/10 p-8 md:p-16 text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-hero-pattern opacity-10"></div>
+
+                <div class="relative z-10">
+                    <h2 class="font-serif text-4xl mb-4 text-white">Reservierung</h2>
+                    <p class="text-gray-400 mb-10 max-w-lg mx-auto">
+                        Sichern Sie sich Ihren Platz. Für Gruppen ab 8 Personen bitten wir um telefonische Reservierung.
+                    </p>
+
+                    <form class="max-w-2xl mx-auto space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="Name" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
+                            <input type="tel" placeholder="Telefon" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <input type="date" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
+                            <input type="time" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
+                            <select class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
+                                <option class="text-dark">2 Personen</option>
+                                <option class="text-dark">3 Personen</option>
+                                <option class="text-dark">4 Personen</option>
+                                <option class="text-dark">5+ Personen</option>
+                            </select>
+                        </div>
+                        <button class="w-full bg-gold hover:bg-white text-dark font-bold uppercase tracking-widest py-4 transition duration-300 mt-6">
+                            Jetzt Reservieren
+                        </button>
+                    </form>
+
+                    <div class="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-center gap-12 text-sm text-gray-400">
+                        <div>
+                            <h4 class="text-gold uppercase tracking-widest mb-2 font-bold">Öffnungszeiten</h4>
+                            <p>Mo - Do: 17:00 - 23:00</p>
+                            <p>Fr - Sa: 17:00 - 01:00</p>
+                            <p>So: 12:00 - 22:00</p>
+                        </div>
+                        <div>
+                            <h4 class="text-gold uppercase tracking-widest mb-2 font-bold">Kontakt</h4>
+                            <p>[Straße Hausnummer]</p>
+                            <p>[PLZ Stadt]</p>
+                            <p class="mt-2"><a href="tel:0123456789" class="hover:text-white">0123 / 45 67 89</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-8 border-t border-white/5 text-center text-xs text-gray-600">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-4">&copy; 2026 [Restaurant Name]. Alle Rechte vorbehalten.</p>
+            <div class="space-x-4">
+                <a href="#" class="hover:text-white transition">Impressum</a>
+                <a href="#" class="hover:text-white transition">Datenschutz</a>
+                <a href="#" class="hover:text-white transition">Allergene</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
