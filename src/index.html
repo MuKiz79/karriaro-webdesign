@@ -439,13 +439,12 @@
                         <!-- Abstract Shapes -->
                         <div class="absolute top-0 right-0 w-full h-full bg-amber-500/10 rounded-full blur-[100px]"></div>
 
-                        <!-- Live Website Preview via iframe -->
+                        <!-- Live Website Preview via iframe (lazy loaded) -->
                         <div class="absolute inset-0 overflow-hidden">
                             <iframe
-                                src="/portfolio/restaurant-template.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+                                data-src="/portfolio/restaurant-template.html"
+                                class="lazy-iframe w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                                 title="Restaurant Website Vorschau"
-                                loading="lazy"
                             ></iframe>
                         </div>
                     </div>
@@ -485,13 +484,12 @@
                         <!-- Abstract Shapes -->
                         <div class="absolute top-0 right-0 w-full h-full bg-rose-500/10 rounded-full blur-[100px]"></div>
 
-                        <!-- Live Website Preview via iframe -->
+                        <!-- Live Website Preview via iframe (lazy loaded) -->
                         <div class="absolute inset-0 overflow-hidden">
                             <iframe
-                                src="/portfolio/friseur-salon.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+                                data-src="/portfolio/friseur-salon.html"
+                                class="lazy-iframe w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                                 title="Friseur Salon Website Vorschau"
-                                loading="lazy"
                             ></iframe>
                         </div>
                     </div>
@@ -531,13 +529,12 @@
                         <!-- Abstract Shapes -->
                         <div class="absolute top-0 right-0 w-full h-full bg-blue-500/10 rounded-full blur-[100px]"></div>
 
-                        <!-- Live Website Preview via iframe -->
+                        <!-- Live Website Preview via iframe (lazy loaded) -->
                         <div class="absolute inset-0 overflow-hidden">
                             <iframe
-                                src="/portfolio/meisterbetrieb-mueller.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+                                data-src="/portfolio/meisterbetrieb-mueller.html"
+                                class="lazy-iframe w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                                 title="Meisterbetrieb Müller Website Vorschau"
-                                loading="lazy"
                             ></iframe>
                         </div>
                     </div>
@@ -577,13 +574,12 @@
                         <!-- Abstract Shapes -->
                         <div class="absolute top-0 right-0 w-full h-full bg-emerald-500/10 rounded-full blur-[100px]"></div>
 
-                        <!-- Live Website Preview via iframe -->
+                        <!-- Live Website Preview via iframe (lazy loaded) -->
                         <div class="absolute inset-0 overflow-hidden">
                             <iframe
-                                src="/portfolio/praxis-weber.html"
-                                class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
+                                data-src="/portfolio/praxis-weber.html"
+                                class="lazy-iframe w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity duration-500"
                                 title="Praxis Dr. Weber Website Vorschau"
-                                loading="lazy"
                             ></iframe>
                         </div>
                     </div>
@@ -643,10 +639,9 @@
                             <div class="absolute inset-0 bg-gradient-to-bl from-red-950 to-slate-950">
                                 <div class="absolute inset-0 overflow-hidden">
                                     <iframe
-                                        src="/portfolio/dachdecker-meisterbetrieb.html"
-                                        class="w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity duration-500"
+                                        data-src="/portfolio/dachdecker-meisterbetrieb.html"
+                                        class="lazy-iframe w-[200%] h-[200%] origin-top-left scale-50 pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity duration-500"
                                         title="Dachdecker Website Vorschau"
-                                        loading="lazy"
                                     ></iframe>
                                 </div>
                             </div>
@@ -1181,7 +1176,26 @@
             if (problemSection) speedBarsObserver.observe(problemSection);
 
             // ===========================================
-            // 5. PARALLAX ON SCROLL (subtle)
+            // 5. LAZY LOAD IFRAMES (Portfolio Previews)
+            // ===========================================
+            const lazyIframes = document.querySelectorAll('.lazy-iframe');
+            const iframeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const iframe = entry.target;
+                        const src = iframe.dataset.src;
+                        if (src && !iframe.src) {
+                            iframe.src = src;
+                        }
+                        iframeObserver.unobserve(iframe);
+                    }
+                });
+            }, { rootMargin: '200px', threshold: 0 });
+
+            lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
+
+            // ===========================================
+            // 6. PARALLAX ON SCROLL (subtle)
             // ===========================================
             let ticking = false;
             window.addEventListener('scroll', () => {
