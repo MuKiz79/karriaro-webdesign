@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGB | Karriaro Webdesign</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Design Konfiguration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#000000',
+                        surface: '#151516',
+                        surfaceHighlight: '#2c2c2e',
+                        primary: '#0071e3',
+                        text: '#f5f5f7',
+                        muted: '#a1a1a6'
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #f5f5f7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .legal-card {
+            background-color: #151516;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="/" class="text-xl font-semibold tracking-tight text-white hover:opacity-80 transition flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    Karriaro
+                </a>
+                <a href="/" class="text-sm text-muted hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Zurück zur Startseite</span>
+                    <span class="sm:hidden">Zurück</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="pt-32 pb-16 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-white/10 text-sm text-muted mb-6">
+                    <i class="fa-solid fa-file-contract text-primary"></i>
+                    Vertragsbedingungen
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Allgemeine Geschäftsbedingungen</h1>
+                <p class="text-muted text-lg">Karriaro Webdesign</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <main class="pb-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- § 1 Geltungsbereich -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §1
+                    </div>
+                    Geltungsbereich
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen <strong class="text-white">Karriaro Webdesign</strong> (nachfolgend „Anbieter") und dem Kunden über die Erstellung, Gestaltung und Pflege von Webseiten sowie damit verbundene Dienstleistungen.</p>
+                    <p>Abweichende Bedingungen des Kunden werden nicht anerkannt, es sei denn, der Anbieter stimmt ihrer Geltung ausdrücklich schriftlich zu.</p>
+                </div>
+            </div>
+
+            <!-- § 2 Vertragsschluss -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §2
+                    </div>
+                    Vertragsschluss
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Die Darstellung der Dienstleistungen auf der Website stellt kein rechtlich bindendes Angebot, sondern eine Aufforderung zur Abgabe eines Angebots dar.</p>
+                    <p>Der Vertrag kommt zustande durch:</p>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>Abschluss einer Online-Bestellung mit Bezahlung über unseren Zahlungsdienstleister</li>
+                        <li>Schriftliche Auftragsbestätigung durch den Anbieter nach einer Anfrage</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- § 3 Leistungsumfang -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §3
+                    </div>
+                    Leistungsumfang
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Der Umfang der Leistungen ergibt sich aus der jeweiligen Leistungsbeschreibung (Paket „Visitenkarte" oder „Business") sowie individuellen Vereinbarungen.</p>
+                    <p>Die Leistungen umfassen je nach gebuchtem Paket:</p>
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div class="p-4 rounded-xl bg-white/5">
+                            <h3 class="text-white font-medium mb-2">Visitenkarte (790€)</h3>
+                            <ul class="text-sm space-y-1">
+                                <li>• One-Page Design</li>
+                                <li>• Mobile Optimierung</li>
+                                <li>• Impressum & Datenschutz</li>
+                            </ul>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5">
+                            <h3 class="text-white font-medium mb-2">Business (1.490€)</h3>
+                            <ul class="text-sm space-y-1">
+                                <li>• Bis zu 5 Unterseiten</li>
+                                <li>• High-Speed Performance</li>
+                                <li>• SEO-Fundament</li>
+                                <li>• Kontaktformulare</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="mt-4">Der Kunde erhält nach Fertigstellung den vollständigen Quellcode und alle Nutzungsrechte an der erstellten Webseite.</p>
+                </div>
+            </div>
+
+            <!-- § 4 Mitwirkungspflichten -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §4
+                    </div>
+                    Mitwirkungspflichten des Kunden
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Der Kunde stellt dem Anbieter alle für die Erstellung der Webseite erforderlichen Inhalte (Texte, Bilder, Logos) rechtzeitig zur Verfügung.</p>
+                    <p>Der Kunde ist für die Richtigkeit und Rechtmäßigkeit der bereitgestellten Inhalte verantwortlich und stellt den Anbieter von Ansprüchen Dritter frei.</p>
+                    <p>Verzögerungen durch nicht rechtzeitige Zulieferung von Inhalten gehen nicht zu Lasten des Anbieters.</p>
+                </div>
+            </div>
+
+            <!-- § 5 Preise und Zahlung -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §5
+                    </div>
+                    Preise und Zahlung
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Alle Preise verstehen sich in Euro inklusive der gesetzlichen Mehrwertsteuer.</p>
+                    <p>Die Zahlung erfolgt bei Bestellung über unseren Zahlungsdienstleister <strong class="text-white">Stripe</strong>. Akzeptierte Zahlungsmethoden sind Kreditkarte und weitere von Stripe angebotene Methoden.</p>
+                    <p>Bei individuellen Projekten kann eine Anzahlung von 50% bei Auftragserteilung vereinbart werden. Der Restbetrag ist nach Fertigstellung und vor Übergabe fällig.</p>
+                </div>
+            </div>
+
+            <!-- § 6 Wartung & Hosting -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §6
+                    </div>
+                    Wartung & Hosting
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Das optionale Wartungs- und Hostingpaket (49€/Monat) umfasst:</p>
+                    <ul class="list-disc list-inside space-y-2 ml-4">
+                        <li>Hosting der Webseite</li>
+                        <li>Monatliche Backups</li>
+                        <li>Kleinere inhaltliche Änderungen</li>
+                        <li>Technische Überwachung</li>
+                    </ul>
+                    <p>Das Wartungspaket hat eine Mindestlaufzeit von 3 Monaten und verlängert sich automatisch um jeweils einen Monat, wenn es nicht mit einer Frist von 14 Tagen zum Monatsende gekündigt wird.</p>
+                </div>
+            </div>
+
+            <!-- § 7 Lieferung -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §7
+                    </div>
+                    Lieferung und Fertigstellung
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Die Fertigstellung erfolgt in der Regel innerhalb von 5-10 Werktagen nach Erhalt aller erforderlichen Inhalte und Zahlungseingang.</p>
+                    <p>Der Kunde hat nach Fertigstellung 7 Tage Zeit, die Webseite zu prüfen und Änderungswünsche mitzuteilen. Im Preis sind bis zu 2 Korrekturschleifen enthalten.</p>
+                </div>
+            </div>
+
+            <!-- § 8 Nutzungsrechte -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §8
+                    </div>
+                    Nutzungsrechte
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Nach vollständiger Bezahlung erhält der Kunde das ausschließliche, zeitlich und räumlich unbeschränkte Nutzungsrecht an der erstellten Webseite.</p>
+                    <p>Der Quellcode wird dem Kunden vollständig übergeben. Der Kunde kann die Webseite frei nutzen, verändern und bei jedem Hosting-Anbieter seiner Wahl betreiben.</p>
+                    <div class="p-4 rounded-xl bg-primary/10 border border-primary/20">
+                        <p class="text-white text-sm"><i class="fa-solid fa-circle-check text-primary mr-2"></i>Die Webseite gehört Ihnen zu 100% – keine Miete, keine Abhängigkeit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- § 9 Widerrufsrecht -->
+            <div class="legal-card p-8 md:p-10 mb-6 border-primary/30">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §9
+                    </div>
+                    Widerrufsrecht für Verbraucher
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p><strong class="text-white">Widerrufsbelehrung:</strong></p>
+                    <p>Sie haben das Recht, binnen 14 Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.</p>
+                    <p>Die Widerrufsfrist beträgt 14 Tage ab dem Tag des Vertragsabschlusses.</p>
+                    <p>Um Ihr Widerrufsrecht auszuüben, müssen Sie uns mittels einer eindeutigen Erklärung (z.B. E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.</p>
+                    <p>Zur Wahrung der Widerrufsfrist reicht es aus, dass Sie die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist absenden.</p>
+                    <p><strong class="text-white">Folgen des Widerrufs:</strong></p>
+                    <p>Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen 14 Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf bei uns eingegangen ist.</p>
+                    <div class="p-4 rounded-xl bg-yellow-500/10 border border-yellow-500/20 mt-4">
+                        <p class="text-yellow-200 text-sm"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i><strong>Hinweis:</strong> Das Widerrufsrecht erlischt vorzeitig, wenn wir mit der Ausführung der Dienstleistung mit Ihrer ausdrücklichen Zustimmung vor Ablauf der Widerrufsfrist begonnen haben und Sie Ihre Kenntnis davon bestätigt haben, dass Sie Ihr Widerrufsrecht bei vollständiger Vertragserfüllung verlieren.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- § 10 Haftung -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §10
+                    </div>
+                    Haftung
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Der Anbieter haftet unbeschränkt für Vorsatz und grobe Fahrlässigkeit sowie bei Verletzung von Leben, Körper und Gesundheit.</p>
+                    <p>Bei leichter Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten, begrenzt auf den vertragstypischen, vorhersehbaren Schaden.</p>
+                    <p>Die Haftung für mittelbare Schäden und entgangenen Gewinn ist ausgeschlossen, soweit gesetzlich zulässig.</p>
+                </div>
+            </div>
+
+            <!-- § 11 Schlussbestimmungen -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        §11
+                    </div>
+                    Schlussbestimmungen
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</p>
+                    <p>Sollten einzelne Bestimmungen dieser AGB unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.</p>
+                    <p>Bei Verbrauchern gilt diese Rechtswahl nur insoweit, als nicht der gewährte Schutz durch zwingende Bestimmungen des Rechts des Staates, in dem der Verbraucher seinen gewöhnlichen Aufenthalt hat, entzogen wird.</p>
+                </div>
+            </div>
+
+            <!-- Stand -->
+            <div class="text-center text-muted text-sm mt-12">
+                <p>Stand: Januar 2026</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    <span class="font-semibold text-white">Karriaro</span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-6 text-sm text-muted">
+                    <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
+                    <a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a>
+                    <a href="/agb.html" class="text-white">AGB</a>
+                </nav>
+                <p class="text-muted text-sm">© 2026 Karriaro Webdesign</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

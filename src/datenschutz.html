@@ -1,39 +1,53 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datenschutzerklärung | Karriaro Webdesign</title>
     <meta name="robots" content="noindex, nofollow">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
-
-    <!-- Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- CSS -->
-    <link href="/dist/style.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+    <!-- Design Konfiguration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#000000',
+                        surface: '#151516',
+                        surfaceHighlight: '#2c2c2e',
+                        primary: '#0071e3',
+                        text: '#f5f5f7',
+                        muted: '#a1a1a6'
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     <style>
         body {
             background-color: #000000;
             color: #f5f5f7;
-            font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
         .glass-nav {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .legal-card {
+            background-color: #151516;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
         }
     </style>
 </head>
@@ -44,344 +58,245 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="/" class="text-xl font-semibold tracking-tight text-white hover:opacity-80 transition flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
                     Karriaro
                 </a>
-                <a href="/" class="text-sm text-gray-400 hover:text-white transition">
-                    <i class="fa-solid fa-arrow-left mr-2"></i>Zurück zur Startseite
+                <a href="/" class="text-sm text-muted hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Zurück zur Startseite</span>
+                    <span class="sm:hidden">Zurück</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- CONTENT -->
-    <main class="pt-32 pb-20">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl font-bold mb-8">Datenschutzerklärung</h1>
-
-            <div class="prose prose-invert prose-gray max-w-none space-y-8 text-gray-300 text-sm leading-relaxed">
-
-                <section>
-                    <h2 class="text-xl font-semibold text-white mb-4">1. Datenschutz auf einen Blick</h2>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Allgemeine Hinweise</h3>
-                    <p>
-                        Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten
-                        passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie
-                        persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen
-                        Sie unserer unter diesem Text aufgeführten Datenschutzerklärung.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Datenerfassung auf dieser Website</h3>
-                    <p><strong class="text-white">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
-                    <p>
-                        Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten
-                        können Sie dem Abschnitt „Hinweis zur Verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.
-                    </p>
-
-                    <p class="mt-4"><strong class="text-white">Wie erfassen wir Ihre Daten?</strong></p>
-                    <p>
-                        Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z. B. um
-                        Daten handeln, die Sie in ein Kontaktformular eingeben.
-                    </p>
-                    <p>
-                        Andere Daten werden automatisch oder nach Ihrer Einwilligung beim Besuch der Website durch unsere IT-
-                        Systeme erfasst. Das sind vor allem technische Daten (z. B. Internetbrowser, Betriebssystem oder Uhrzeit
-                        des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie diese Website betreten.
-                    </p>
-
-                    <p class="mt-4"><strong class="text-white">Wofür nutzen wir Ihre Daten?</strong></p>
-                    <p>
-                        Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere
-                        Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.
-                    </p>
-
-                    <p class="mt-4"><strong class="text-white">Welche Rechte haben Sie bezüglich Ihrer Daten?</strong></p>
-                    <p>
-                        Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer
-                        gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder
-                        Löschung dieser Daten zu verlangen. Wenn Sie eine Einwilligung zur Datenverarbeitung erteilt haben,
-                        können Sie diese Einwilligung jederzeit für die Zukunft widerrufen. Außerdem haben Sie das Recht, unter
-                        bestimmten Umständen die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.
-                        Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.
-                    </p>
-                    <p>
-                        Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit an uns wenden.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-semibold text-white mb-4">2. Hosting</h2>
-                    <p>
-                        Wir hosten die Inhalte unserer Website bei folgendem Anbieter:
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Externes Hosting</h3>
-                    <p>
-                        Diese Website wird extern gehostet. Die personenbezogenen Daten, die auf dieser Website erfasst werden,
-                        werden auf den Servern des Hosters / der Hoster gespeichert. Hierbei kann es sich v. a. um IP-Adressen,
-                        Kontaktanfragen, Meta- und Kommunikationsdaten, Vertragsdaten, Kontaktdaten, Namen, Websitezugriffe
-                        und sonstige Daten, die über eine Website generiert werden, handeln.
-                    </p>
-                    <p>
-                        Das externe Hosting erfolgt zum Zwecke der Vertragserfüllung gegenüber unseren potenziellen und
-                        bestehenden Kunden (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen und effizienten
-                        Bereitstellung unseres Online-Angebots durch einen professionellen Anbieter (Art. 6 Abs. 1 lit. f DSGVO).
-                    </p>
-                    <p>
-                        <!-- BITTE ANPASSEN -->
-                        Unser(e) Hoster wird bzw. werden Ihre Daten nur insoweit verarbeiten, wie dies zur Erfüllung seiner
-                        Leistungspflichten erforderlich ist und unsere Weisungen in Bezug auf diese Daten befolgen.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-semibold text-white mb-4">3. Allgemeine Hinweise und Pflichtinformationen</h2>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Datenschutz</h3>
-                    <p>
-                        Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre
-                        personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie
-                        dieser Datenschutzerklärung.
-                    </p>
-                    <p>
-                        Wenn Sie diese Website benutzen, werden verschiedene personenbezogene Daten erhoben.
-                        Personenbezogene Daten sind Daten, mit denen Sie persönlich identifiziert werden können. Die vorliegende
-                        Datenschutzerklärung erläutert, welche Daten wir erheben und wofür wir sie nutzen. Sie erläutert auch, wie
-                        und zu welchem Zweck das geschieht.
-                    </p>
-                    <p>
-                        Wir weisen darauf hin, dass die Datenübertragung im Internet (z. B. bei der Kommunikation per E-Mail)
-                        Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht
-                        möglich.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Hinweis zur verantwortlichen Stelle</h3>
-                    <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
-                    <p>
-                        <!-- BITTE ANPASSEN -->
-                        Karriaro Webdesign<br>
-                        Max Mustermann<br>
-                        Musterstraße 123<br>
-                        70173 Stuttgart<br><br>
-                        Telefon: +49 (0) 711 123456<br>
-                        E-Mail: kontakt@karriaro.web
-                    </p>
-                    <p>
-                        Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder gemeinsam mit anderen über
-                        die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z. B. Namen, E-Mail-Adressen o. Ä.)
-                        entscheidet.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Speicherdauer</h3>
-                    <p>
-                        Soweit innerhalb dieser Datenschutzerklärung keine speziellere Speicherdauer genannt wurde, verbleiben
-                        Ihre personenbezogenen Daten bei uns, bis der Zweck für die Datenverarbeitung entfällt. Wenn Sie ein
-                        berechtigtes Löschersuchen geltend machen oder eine Einwilligung zur Datenverarbeitung widerrufen,
-                        werden Ihre Daten gelöscht, sofern wir keine anderen rechtlich zulässigen Gründe für die Speicherung Ihrer
-                        personenbezogenen Daten haben (z. B. steuer- oder handelsrechtliche Aufbewahrungsfristen); im
-                        letztgenannten Fall erfolgt die Löschung nach Fortfall dieser Gründe.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
-                    <p>
-                        Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine
-                        bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten
-                        Datenverarbeitung bleibt vom Widerruf unberührt.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Widerspruchsrecht gegen die Datenerhebung in besonderen Fällen sowie gegen Direktwerbung (Art. 21 DSGVO)</h3>
-                    <p>
-                        WENN DIE DATENVERARBEITUNG AUF GRUNDLAGE VON ART. 6 ABS. 1 LIT. E ODER F DSGVO
-                        ERFOLGT, HABEN SIE JEDERZEIT DAS RECHT, AUS GRÜNDEN, DIE SICH AUS IHRER BESONDEREN
-                        SITUATION ERGEBEN, GEGEN DIE VERARBEITUNG IHRER PERSONENBEZOGENEN DATEN
-                        WIDERSPRUCH EINZULEGEN; DIES GILT AUCH FÜR EIN AUF DIESE BESTIMMUNGEN GESTÜTZTES
-                        PROFILING. DIE JEWEILIGE RECHTSGRUNDLAGE, AUF DENEN EINE VERARBEITUNG BERUHT,
-                        ENTNEHMEN SIE DIESER DATENSCHUTZERKLÄRUNG. WENN SIE WIDERSPRUCH EINLEGEN,
-                        WERDEN WIR IHRE BETROFFENEN PERSONENBEZOGENEN DATEN NICHT MEHR VERARBEITEN, ES
-                        SEI DENN, WIR KÖNNEN ZWINGENDE SCHUTZWÜRDIGE GRÜNDE FÜR DIE VERARBEITUNG
-                        NACHWEISEN, DIE IHRE INTERESSEN, RECHTE UND FREIHEITEN ÜBERWIEGEN ODER DIE
-                        VERARBEITUNG DIENT DER GELTENDMACHUNG, AUSÜBUNG ODER VERTEIDIGUNG VON
-                        RECHTSANSPRÜCHEN (WIDERSPRUCH NACH ART. 21 ABS. 1 DSGVO).
-                    </p>
-                    <p>
-                        WERDEN IHRE PERSONENBEZOGENEN DATEN VERARBEITET, UM DIREKTWERBUNG ZU BETREIBEN,
-                        SO HABEN SIE DAS RECHT, JEDERZEIT WIDERSPRUCH GEGEN DIE VERARBEITUNG SIE
-                        BETREFFENDER PERSONENBEZOGENER DATEN ZUM ZWECKE DERARTIGER WERBUNG
-                        EINZULEGEN; DIES GILT AUCH FÜR DAS PROFILING, SOWEIT ES MIT SOLCHER DIREKTWERBUNG IN
-                        VERBINDUNG STEHT. WENN SIE WIDERSPRECHEN, WERDEN IHRE PERSONENBEZOGENEN DATEN
-                        ANSCHLIESSEND NICHT MEHR ZUM ZWECKE DER DIREKTWERBUNG VERWENDET (WIDERSPRUCH
-                        NACH ART. 21 ABS. 2 DSGVO).
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Beschwerderecht bei der zuständigen Aufsichtsbehörde</h3>
-                    <p>
-                        Im Falle von Verstößen gegen die DSGVO steht den Betroffenen ein Beschwerderecht bei einer
-                        Aufsichtsbehörde, insbesondere in dem Mitgliedstaat ihres gewöhnlichen Aufenthalts, ihres Arbeitsplatzes
-                        oder des Orts des mutmaßlichen Verstoßes zu. Das Beschwerderecht besteht unbeschadet anderweitiger
-                        verwaltungsrechtlicher oder gerichtlicher Rechtsbehelfe.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Recht auf Datenübertragbarkeit</h3>
-                    <p>
-                        Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags
-                        automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen, maschinenlesbaren Format
-                        aushändigen zu lassen. Sofern Sie die direkte Übertragung der Daten an einen anderen Verantwortlichen
-                        verlangen, erfolgt dies nur, soweit es technisch machbar ist.
-
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Auskunft, Berichtigung und Löschung</h3>
-                    <p>
-                        Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche
-                        Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den
-                        Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung oder Löschung dieser Daten. Hierzu sowie
-                        zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit an uns wenden.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Recht auf Einschränkung der Verarbeitung</h3>
-                    <p>
-                        Sie haben das Recht, die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.
-                        Hierzu können Sie sich jederzeit an uns wenden. Das Recht auf Einschränkung der Verarbeitung besteht in
-                        folgenden Fällen:
-                    </p>
-                    <ul class="list-disc list-inside space-y-2 ml-4">
-                        <li>Wenn Sie die Richtigkeit Ihrer bei uns gespeicherten personenbezogenen Daten bestreiten, benötigen wir
-                            in der Regel Zeit, um dies zu überprüfen. Für die Dauer der Prüfung haben Sie das Recht, die
-                            Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</li>
-                        <li>Wenn die Verarbeitung Ihrer personenbezogenen Daten unrechtmäßig geschah/geschieht, können Sie
-                            statt der Löschung die Einschränkung der Datenverarbeitung verlangen.</li>
-                        <li>Wenn wir Ihre personenbezogenen Daten nicht mehr benötigen, Sie sie jedoch zur Ausübung,
-                            Verteidigung oder Geltendmachung von Rechtsansprüchen benötigen, haben Sie das Recht, statt der
-                            Löschung die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten zu verlangen.</li>
-                        <li>Wenn Sie einen Widerspruch nach Art. 21 Abs. 1 DSGVO eingelegt haben, muss eine Abwägung zwischen
-                            Ihren und unseren Interessen vorgenommen werden. Solange noch nicht feststeht, wessen Interessen
-                            überwiegen, haben Sie das Recht, die Einschränkung der Verarbeitung Ihrer personenbezogenen Daten
-                            zu verlangen.</li>
-                    </ul>
-                    <p>
-                        Wenn Sie die Verarbeitung Ihrer personenbezogenen Daten eingeschränkt haben, dürfen diese Daten - von
-                        ihrer Speicherung abgesehen - nur mit Ihrer Einwilligung oder zur Geltendmachung, Ausübung oder
-                        Verteidigung von Rechtsansprüchen oder zum Schutz der Rechte einer anderen natürlichen oder
-                        juristischen Person oder aus Gründen eines wichtigen öffentlichen Interesses der Europäischen Union oder
-                        eines Mitgliedstaats verarbeitet werden.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">SSL- bzw. TLS-Verschlüsselung</h3>
-                    <p>
-                        Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum
-                        Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-
-                        Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von
-                        „http://" auf „https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.
-                    </p>
-                    <p>
-                        Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht
-                        von Dritten mitgelesen werden.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-semibold text-white mb-4">4. Datenerfassung auf dieser Website</h2>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Kontaktformular</h3>
-                    <p>
-                        Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem
-                        Anfrageformular inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage
-                        und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre
-                        Einwilligung weiter.
-                    </p>
-                    <p>
-                        Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit
-                        der Erfüllung eines Vertrags zusammenhängt oder zur Durchführung vorvertraglicher Maßnahmen
-                        erforderlich ist. In allen übrigen Fällen beruht die Verarbeitung auf unserem berechtigten Interesse an der
-                        effektiven Bearbeitung der an uns gerichteten Anfragen (Art. 6 Abs. 1 lit. f DSGVO) oder auf Ihrer
-                        Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sofern diese abgefragt wurde; die Einwilligung ist jederzeit
-                        widerrufbar.
-                    </p>
-                    <p>
-                        Die von Ihnen im Kontaktformular eingegebenen Daten verbleiben bei uns, bis Sie uns zur Löschung
-                        auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt
-                        (z. B. nach abgeschlossener Bearbeitung Ihrer Anfrage). Zwingende gesetzliche Bestimmungen -
-                        insbesondere Aufbewahrungsfristen - bleiben unberührt.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Anfrage per E-Mail, Telefon oder Telefax</h3>
-                    <p>
-                        Wenn Sie uns per E-Mail, Telefon oder Telefax kontaktieren, wird Ihre Anfrage inklusive aller daraus
-                        hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke der Bearbeitung Ihres Anliegens
-                        bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.
-                    </p>
-                    <p>
-                        Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit
-                        der Erfüllung eines Vertrags zusammenhängt oder zur Durchführung vorvertraglicher Maßnahmen
-                        erforderlich ist. In allen übrigen Fällen beruht die Verarbeitung auf unserem berechtigten Interesse an der
-                        effektiven Bearbeitung der an uns gerichteten Anfragen (Art. 6 Abs. 1 lit. f DSGVO) oder auf Ihrer
-                        Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sofern diese abgefragt wurde; die Einwilligung ist jederzeit
-                        widerrufbar.
-                    </p>
-                    <p>
-                        Die von Ihnen an uns per Kontaktanfragen übersandten Daten verbleiben bei uns, bis Sie uns zur Löschung
-                        auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt
-                        (z. B. nach abgeschlossener Bearbeitung Ihres Anliegens). Zwingende gesetzliche Bestimmungen -
-                        insbesondere gesetzliche Aufbewahrungsfristen - bleiben unberührt.
-                    </p>
-                </section>
-
-                <section>
-                    <h2 class="text-xl font-semibold text-white mb-4">5. Plugins und Tools</h2>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Google Fonts (lokales Hosting)</h3>
-                    <p>
-                        Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten so genannte Google Fonts, die von Google
-                        bereitgestellt werden. Die Google Fonts sind lokal installiert. Eine Verbindung zu Servern von Google findet
-                        dabei nicht statt.
-                    </p>
-                    <p>
-                        Weitere Informationen zu Google Fonts finden Sie unter
-                        <a href="https://developers.google.com/fonts/faq" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
-                            https://developers.google.com/fonts/faq
-                        </a>
-                        und in der Datenschutzerklärung von Google:
-                        <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
-                            https://policies.google.com/privacy?hl=de
-                        </a>.
-                    </p>
-
-                    <h3 class="text-lg font-medium text-white mt-6 mb-3">Font Awesome (lokales Hosting)</h3>
-                    <p>
-                        Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten und Symbolen Font Awesome. Anbieter ist
-                        die Fonticons, Inc., 6 Porter Road Apartment 3R, Cambridge, Massachusetts, USA.
-                    </p>
-                    <p>
-                        Die Font Awesome Icons werden lokal gehostet. Eine Verbindung zu Servern von Fonticons, Inc. findet nicht
-                        statt.
-                    </p>
-                    <p>
-                        Weitere Informationen zu Font Awesome finden Sie in der Datenschutzerklärung für Font Awesome unter:
-                        <a href="https://fontawesome.com/privacy" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300">
-                            https://fontawesome.com/privacy
-                        </a>.
-                    </p>
-                </section>
-
-                <section class="border-t border-white/10 pt-8">
-                    <p class="text-gray-500 text-xs">
-                        Stand: Januar 2026
-                    </p>
-                </section>
-
+    <!-- HERO -->
+    <section class="pt-32 pb-16 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-white/10 text-sm text-muted mb-6">
+                    <i class="fa-solid fa-shield-halved text-primary"></i>
+                    Datenschutz
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Datenschutzerklärung</h1>
+                <p class="text-muted text-lg">Ihre Daten sind bei uns sicher</p>
             </div>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <main class="pb-24">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Quick Overview -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                    </div>
+                    Datenschutz auf einen Blick
+                </h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="p-4 rounded-xl bg-white/5">
+                        <h3 class="text-white font-medium mb-2">Wer ist verantwortlich?</h3>
+                        <p class="text-muted text-sm">Die Datenverarbeitung erfolgt durch den Websitebetreiber. Kontaktdaten finden Sie im Impressum.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5">
+                        <h3 class="text-white font-medium mb-2">Wie erfassen wir Daten?</h3>
+                        <p class="text-muted text-sm">Durch Ihre Angaben (z.B. Kontaktformular) und automatisch beim Besuch der Website.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5">
+                        <h3 class="text-white font-medium mb-2">Wofür nutzen wir Daten?</h3>
+                        <p class="text-muted text-sm">Zur fehlerfreien Bereitstellung der Website und zur Bearbeitung Ihrer Anfragen.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white/5">
+                        <h3 class="text-white font-medium mb-2">Ihre Rechte</h3>
+                        <p class="text-muted text-sm">Auskunft, Berichtigung, Löschung, Einschränkung und Datenübertragbarkeit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verantwortliche Stelle -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-user-shield text-primary"></i>
+                    </div>
+                    Verantwortliche Stelle
+                </h2>
+                <div class="text-muted">
+                    <p class="mb-4">Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
+                    <div class="p-4 rounded-xl bg-white/5 inline-block">
+                        <p class="text-white font-medium">Karriaro Webdesign</p>
+                        <p>Max Mustermann</p>
+                        <p>Musterstraße 123</p>
+                        <p>70173 Stuttgart</p>
+                        <p class="mt-2">
+                            <a href="tel:+49711123456" class="text-primary hover:underline">+49 (0) 711 123456</a><br>
+                            <a href="mailto:kontakt@karriaro-webdesign.de" class="text-primary hover:underline">kontakt@karriaro-webdesign.de</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hosting -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-server text-primary"></i>
+                    </div>
+                    Hosting
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Diese Website wird bei <strong class="text-white">GitHub Pages</strong> (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet.</p>
+                    <p>Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters gespeichert. Hierbei kann es sich v.a. um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Websitezugriffe und sonstige Daten handeln.</p>
+                    <p>Das externe Hosting erfolgt zum Zwecke der Vertragserfüllung gegenüber unseren potenziellen und bestehenden Kunden (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen und effizienten Bereitstellung unseres Online-Angebots (Art. 6 Abs. 1 lit. f DSGVO).</p>
+                </div>
+            </div>
+
+            <!-- Ihre Rechte -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-scale-balanced text-primary"></i>
+                    </div>
+                    Ihre Rechte
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-eye text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-medium mb-1">Auskunftsrecht</h3>
+                            <p class="text-muted text-sm">Sie haben das Recht, jederzeit unentgeltlich Auskunft über Ihre gespeicherten Daten zu erhalten.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-pen text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-medium mb-1">Berichtigung</h3>
+                            <p class="text-muted text-sm">Sie können die Berichtigung unrichtiger Daten verlangen.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-trash text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-medium mb-1">Löschung</h3>
+                            <p class="text-muted text-sm">Sie haben das Recht auf Löschung Ihrer Daten, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-ban text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-medium mb-1">Widerruf</h3>
+                            <p class="text-muted text-sm">Eine erteilte Einwilligung können Sie jederzeit für die Zukunft widerrufen.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
+                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-gavel text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-white font-medium mb-1">Beschwerderecht</h3>
+                            <p class="text-muted text-sm">Sie haben das Recht, sich bei einer Aufsichtsbehörde zu beschweren.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SSL -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-lock text-primary"></i>
+                    </div>
+                    SSL-Verschlüsselung
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Diese Seite nutzt aus Sicherheitsgründen eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol.</p>
+                    <p>Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.</p>
+                </div>
+            </div>
+
+            <!-- Kontaktformular -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-envelope text-primary"></i>
+                    </div>
+                    Kontaktformular
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben inklusive der Kontaktdaten zwecks Bearbeitung der Anfrage bei uns gespeichert.</p>
+                    <p>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) oder Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der effektiven Bearbeitung von Anfragen).</p>
+                    <p>Die Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern oder der Zweck für die Speicherung entfällt. Gesetzliche Aufbewahrungsfristen bleiben unberührt.</p>
+                    <div class="p-4 rounded-xl bg-primary/10 border border-primary/20">
+                        <p class="text-white text-sm"><i class="fa-solid fa-circle-info text-primary mr-2"></i>Wir nutzen <strong>Formspree</strong> zur Verarbeitung von Kontaktanfragen. Ihre Daten werden dabei an Formspree (USA) übermittelt.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zahlungsabwicklung -->
+            <div class="legal-card p-8 md:p-10 mb-6">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-credit-card text-primary"></i>
+                    </div>
+                    Zahlungsabwicklung
+                </h2>
+                <div class="text-muted text-sm leading-relaxed space-y-4">
+                    <p>Für die Zahlungsabwicklung nutzen wir <strong class="text-white">Stripe</strong> (Stripe, Inc., 510 Townsend Street, San Francisco, CA 94103, USA).</p>
+                    <p>Bei einer Bestellung werden Ihre Zahlungsdaten (z.B. Kreditkartennummer, Rechnungsadresse) direkt an Stripe übermittelt. Wir selbst speichern keine vollständigen Zahlungsdaten.</p>
+                    <p>Die Datenverarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).</p>
+                    <p>Weitere Informationen finden Sie in der <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener" class="text-primary hover:underline">Datenschutzerklärung von Stripe</a>.</p>
+                </div>
+            </div>
+
+            <!-- Widerspruch Werbung -->
+            <div class="legal-card p-8 md:p-10 mb-6 border-primary/30">
+                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <i class="fa-solid fa-hand text-primary"></i>
+                    </div>
+                    Widerspruch gegen Werbe-Mails
+                </h2>
+                <div class="text-muted text-sm leading-relaxed">
+                    <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.</p>
+                </div>
+            </div>
+
+            <!-- Stand -->
+            <div class="text-center text-muted text-sm mt-12">
+                <p>Stand: Januar 2026</p>
+            </div>
+
         </div>
     </main>
 
     <!-- FOOTER -->
-    <footer class="py-8 border-t border-white/5 bg-black">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-gray-500 text-xs">© 2026 Karriaro Webdesign. Stuttgart, DE.</p>
-            <nav class="flex justify-center gap-6 text-xs text-gray-500 mt-4">
-                <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
-                <a href="/datenschutz.html" class="text-white">Datenschutz</a>
-            </nav>
+    <footer class="py-12 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    <span class="font-semibold text-white">Karriaro</span>
+                </div>
+                <nav class="flex flex-wrap justify-center gap-6 text-sm text-muted">
+                    <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
+                    <a href="/datenschutz.html" class="text-white">Datenschutz</a>
+                    <a href="/agb.html" class="hover:text-white transition">AGB</a>
+                </nav>
+                <p class="text-muted text-sm">© 2026 Karriaro Webdesign</p>
+            </div>
         </div>
     </footer>
 
