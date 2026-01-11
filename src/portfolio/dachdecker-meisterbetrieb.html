@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Firmenname] | Ihr Meisterbetrieb für Dach & Wand</title>
+    <meta name="description" content="Seit über 30 Jahren Ihr Experte für Bedachungen, Sanierung und Flaschnerei in [Region]. Schnell, kompetent und zuverlässig.">
+
+    <!-- Fonts: Robuste, handwerkliche Schriftart -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e293b',   // Schiefer-Grau
+                        accent: '#dc2626',    // Ziegel-Rot
+                        secondary: '#f1f5f9', // Helles Grau
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Archivo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-slate-800 bg-white antialiased">
+
+    <!-- TOP BAR (Notfall Kontakt) -->
+    <div class="bg-accent text-white py-2 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm font-bold">
+            <div class="flex items-center gap-2 mb-2 md:mb-0">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Sturmschaden? Wir sind erreichbar!</span>
+            </div>
+            <a href="tel:0123456789" class="flex items-center gap-2 hover:text-slate-200 transition">
+                <i class="fa-solid fa-phone"></i>
+                Notdienst: 0123 / 45 67 89
+            </a>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center gap-3 group">
+                        <div class="w-12 h-12 bg-primary text-white flex items-center justify-center rounded-lg shadow-lg group-hover:bg-accent transition duration-300">
+                            <i class="fa-solid fa-house-chimney text-2xl"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-display font-bold text-2xl text-primary tracking-tight leading-none">[FIRMA]</span>
+                            <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Meisterbetrieb</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#leistungen" class="font-bold text-slate-600 hover:text-accent transition">Leistungen</a>
+                    <a href="#referenzen" class="font-bold text-slate-600 hover:text-accent transition">Projekte</a>
+                    <a href="#uber-uns" class="font-bold text-slate-600 hover:text-accent transition">Über Uns</a>
+                    <a href="#kontakt" class="bg-primary hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold transition shadow-lg transform hover:-translate-y-0.5">
+                        Angebot anfordern
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button @click="open = !open" class="text-slate-600 hover:text-accent p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="open" class="md:hidden bg-white border-t p-4 space-y-2 shadow-xl">
+            <a href="#leistungen" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Leistungen</a>
+            <a href="#referenzen" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Projekte</a>
+            <a href="#uber-uns" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Über Uns</a>
+            <a href="#kontakt" class="block px-4 py-3 rounded-lg bg-accent text-white font-bold text-center mt-4">Jetzt anfragen</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-20 pb-32 md:pt-32 md:pb-48 bg-primary overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1632759972826-67056bbd8d9e?q=80&w=1920&auto=format&fit=crop" alt="Dachdecker bei der Arbeit" class="w-full h-full object-cover opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-3/5">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-red-200 text-sm font-bold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+                    Meisterbetrieb seit 1995
+                </div>
+                <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
+                    Wir machen Ihr Dach <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">wetterfest & sicher.</span>
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 max-w-xl leading-relaxed">
+                    Ob Steildach, Flachdach oder energetische Sanierung – [Firmenname] ist Ihr zuverlässiger Partner in [Stadt] und Umgebung. Qualität, die Generationen hält.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#kontakt" class="inline-flex justify-center items-center bg-accent hover:bg-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+                        Kostenlose Beratung
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#referenzen" class="inline-flex justify-center items-center bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-lg font-bold text-lg transition backdrop-blur-sm">
+                        Unsere Projekte
+                    </a>
+                </div>
+
+                <!-- Trust Badges -->
+                <div class="mt-12 flex gap-8 border-t border-white/10 pt-8">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-award text-3xl text-accent"></i>
+                        <div>
+                            <div class="font-bold text-white">Meister</div>
+                            <div class="text-xs text-slate-400">Zertifizierter Betrieb</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-brands fa-google text-3xl text-accent"></i>
+                        <div>
+                            <div class="font-bold text-white">4.9 Sterne</div>
+                            <div class="text-xs text-slate-400">Kundenzufriedenheit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Contact Card -->
+            <div class="hidden md:block md:w-2/5 relative">
+                <div class="absolute -inset-4 bg-accent/20 rounded-2xl blur-xl"></div>
+                <div class="bg-white p-8 rounded-2xl shadow-2xl relative transform rotate-2 hover:rotate-0 transition duration-500">
+                    <h3 class="text-xl font-bold text-primary mb-2">Schnell-Kontakt</h3>
+                    <p class="text-slate-500 mb-6 text-sm">Hinterlassen Sie uns Ihre Nummer, wir rufen binnen 60 Min zurück.</p>
+                    <form class="space-y-4">
+                        <input type="text" placeholder="Ihr Name" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-accent">
+                        <input type="tel" placeholder="Telefonnummer" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-accent">
+                        <button class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition">Rückruf anfordern</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="leistungen" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-accent font-bold uppercase tracking-widest text-sm mb-2">Unsere Expertise</h2>
+                <h3 class="font-display text-4xl font-bold text-primary">Alles rund ums Dach</h3>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Steildach & Ziegel</h4>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Neueindeckung oder Reparatur. Wir arbeiten mit hochwertigen Tonziegeln und Betondachsteinen für Langlebigkeit.
+                    </p>
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Sturmschaden-Reparatur</li>
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dachfenster-Einbau</li>
+                    </ul>
+                </div>
+
+                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Flachdach-Abdichtung</h4>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Spezialisten für Bitumen- und Folienabdichtung. Ideal für Garagen, Gewerbehallen und moderne Wohnbauten.
+                    </p>
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dichtigkeitsprüfung</li>
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Gründach-Vorbereitung</li>
+                    </ul>
+                </div>
+
+                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
+                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
+                        <i class="fa-solid fa-sheet-plastic"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-primary mb-3">Flaschnerei & Blech</h4>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        Maßgefertigte Kaminverkleidungen, Dachrinnen und Gaubenverkleidungen aus Kupfer, Zink oder Alu.
+                    </p>
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dachrinnen-Reinigung</li>
+                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Kaminhauben</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: GALLERY / REFERENZEN SECTION -->
+    <section id="referenzen" class="py-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                <div>
+                    <h2 class="text-accent font-bold uppercase tracking-widest text-sm mb-2">Aus der Praxis</h2>
+                    <h3 class="font-display text-4xl font-bold text-primary">Unsere aktuellen Projekte</h3>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-4 py-2 bg-primary text-white rounded-full text-sm font-bold shadow-md cursor-default">Alle</span>
+                    <span class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-100 transition cursor-pointer">Steildach</span>
+                    <span class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-100 transition cursor-pointer hidden sm:inline-block">Sanierung</span>
+                </div>
+            </div>
+
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Project 1: Villa / Steildach (NEU) -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop" alt="Sanierung Villa" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">[Stadtteil]</span>
+                        <h4 class="text-white text-xl font-bold mb-1">Villa Dachsanierung</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Komplette Neueindeckung mit Biberschwanz-Ziegeln.</p>
+                    </div>
+                </div>
+
+                <!-- Project 2: Flachdach Modern (NEU) -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <img src="https://images.unsplash.com/photo-1520699697819-577813647460?q=80&w=800&auto=format&fit=crop" alt="Flachdach Gewerbe" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">[Stadtteil]</span>
+                        <h4 class="text-white text-xl font-bold mb-1">Flachdach Abdichtung</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Bitumen-Schweißbahn mit 20 Jahren Garantie.</p>
+                    </div>
+                </div>
+
+                <!-- Project 3: Neubau / Ziegel Nahaufnahme (NEU) -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <img src="https://images.unsplash.com/photo-1599619351208-3e6c839d6828?q=80&w=800&auto=format&fit=crop" alt="Neubau Eindeckung" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">[Stadtteil]</span>
+                        <h4 class="text-white text-xl font-bold mb-1">Neubau Eindeckung</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Moderne Flachziegel in Anthrazit.</p>
+                    </div>
+                </div>
+
+                <!-- Project 4: Dachstuhl Holz (NEU) -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <img src="https://images.unsplash.com/photo-1533758488827-16215319c3c5?q=80&w=800&auto=format&fit=crop" alt="Dachstuhl Arbeiten" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">[Stadtteil]</span>
+                        <h4 class="text-white text-xl font-bold mb-1">Dachstuhl Reparatur</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Austausch morscher Balken und Neu-Dämmung.</p>
+                    </div>
+                </div>
+
+                <!-- Project 5: Solar -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop" alt="Solaranlage" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
+                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">[Stadtteil]</span>
+                        <h4 class="text-white text-xl font-bold mb-1">Solar-Vorbereitung</h4>
+                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Integration von PV-Anlagen in die Dachhaut.</p>
+                    </div>
+                </div>
+
+                <!-- Project 6: Call to Action -->
+                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
+                    <div class="absolute inset-0 bg-primary flex flex-col items-center justify-center p-8 text-center group-hover:bg-slate-800 transition duration-300">
+                        <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-camera text-2xl text-white"></i>
+                        </div>
+                        <h4 class="text-white text-xl font-bold mb-2">Mehr sehen?</h4>
+                        <p class="text-slate-400 text-sm mb-6">Wir haben über 500 Dächer in der Region realisiert. Fragen Sie nach Referenzen in Ihrer Nähe.</p>
+                        <a href="#kontakt" class="px-6 py-2 bg-accent text-white rounded-lg font-bold text-sm hover:bg-red-700 transition">Kontakt aufnehmen</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION STRIP -->
+    <section class="bg-primary py-16 border-y-4 border-accent">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+            <div>
+                <h2 class="text-3xl font-display font-bold text-white mb-2">Dach undicht? Warten Sie nicht.</h2>
+                <p class="text-slate-400">Wir sind schnell vor Ort in [Region] und Umgebung. Keine versteckten Anfahrtskosten.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="tel:0123456789" class="bg-white text-primary px-8 py-4 rounded-lg font-bold hover:bg-slate-200 transition flex items-center gap-3">
+                    <i class="fa-solid fa-phone"></i> 0123 / 45 67 89
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">[Firmenname]</h4>
+                    <p class="text-sm leading-relaxed">
+                        Ihr Meisterbetrieb in [Stadt]. <br>
+                        Qualität, Tradition und modernste Technik.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Kontakt</h4>
+                    <p class="text-sm">Musterstraße 1<br>12345 Musterstadt</p>
+                    <p class="text-sm mt-2">Tel: 0123 / 45 67 89<br>Mail: info@muster-dach.de</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Rechtliches</h4>
+                    <ul class="text-sm space-y-2">
+                        <li><a href="#" class="hover:text-white">Impressum</a></li>
+                        <li><a href="#" class="hover:text-white">Datenschutz</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-800 pt-8 text-xs text-center">
+                &copy; 2026 [Firmenname]. Alle Rechte vorbehalten. Design by Karriaro.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
