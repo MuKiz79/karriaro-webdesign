@@ -57,9 +57,19 @@
     <nav class="fixed w-full z-50 glass-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <a href="/" class="text-xl font-semibold tracking-tight text-white hover:opacity-80 transition flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-primary"></div>
-                    Karriaro
+                <a href="/" class="text-xl font-bold tracking-tight flex items-center gap-2 group">
+                    <svg class="w-6 h-6" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Rotierende Halbkreise -->
+                        <g class="origin-center animate-[spin_8s_linear_infinite]">
+                            <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        </g>
+                        <!-- Statischer Pfeil -->
+                        <path d="M25 42 L25 10" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M16 20 L25 8 L34 20" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <line x1="12" y1="25" x2="38" y2="25" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.4"/>
+                    </svg>
+                    Karriaro<span class="text-muted font-normal"> Webdesign</span>
                 </a>
                 <a href="/" class="text-sm text-muted hover:text-white transition flex items-center gap-2">
                     <i class="fa-solid fa-arrow-left"></i>
