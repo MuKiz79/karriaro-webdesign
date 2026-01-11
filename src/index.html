@@ -30,7 +30,7 @@
                         surfaceHighlight: '#2c2c2e',
                         primary: '#0071e3', // Apple Blue
                         text: '#f5f5f7',
-                        muted: '#86868b'
+                        muted: '#a1a1a6' // Aufgehellt von #86868b für besseren Kontrast
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -89,6 +89,7 @@
         .apple-card:hover {
             transform: scale(1.01);
             border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 0 30px rgba(0, 113, 227, 0.15);
         }
 
         .reveal {
@@ -176,7 +177,7 @@
             <!-- TRUST BAR -->
             <div class="reveal border-y border-white/5 py-8 mb-24 bg-white/[0.02]" style="transition-delay: 250ms">
                 <p class="text-xs text-muted uppercase tracking-widest mb-6">Technologie-Standard</p>
-                <div class="flex flex-wrap justify-center gap-12 text-2xl text-gray-600 opacity-60 grayscale">
+                <div class="flex flex-wrap justify-center gap-12 text-2xl text-gray-400 opacity-50">
                     <i class="fa-brands fa-google hover:text-white hover:opacity-100 transition duration-500" title="Google Optimized"></i>
                     <i class="fa-brands fa-aws hover:text-white hover:opacity-100 transition duration-500" title="High Performance Cloud"></i>
                     <i class="fa-brands fa-apple hover:text-white hover:opacity-100 transition duration-500" title="iOS Optimized"></i>
@@ -207,8 +208,18 @@
     <span class="text-red-400">waiting_time</span>: <span class="text-blue-400">false</span>
 });
 
-<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">launch</span>();
-<span class="text-gray-500">// Online in 48 Stunden.</span></pre>
+<span class="text-purple-400">await</span> ihrProjekt.<span class="text-blue-400">launch</span>();</pre>
+                    </div>
+                    <!-- Ergebnis-Anzeige -->
+                    <div class="border-t border-white/5 px-6 md:px-8 py-4 bg-[#0d0d0e] flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="font-mono text-sm text-green-400">Kompilierung erfolgreich</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-xs font-mono text-gray-500">
+                            <span><i class="fa-solid fa-bolt text-yellow-500 mr-1"></i> 0.4s Ladezeit</span>
+                            <span><i class="fa-solid fa-chart-line text-green-500 mr-1"></i> 100/100 Score</span>
+                        </div>
                     </div>
                 </div>
                 <div class="absolute -inset-10 bg-primary/20 blur-[100px] -z-10 opacity-20 pointer-events-none"></div>
@@ -228,21 +239,21 @@
 
                     <div class="space-y-6">
                         <div class="flex gap-4 items-start">
-                            <div class="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center text-red-500 mt-1 shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 mt-1 shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.3)]">
                                 <i class="fa-solid fa-xmark"></i>
                             </div>
                             <div>
                                 <h4 class="text-white font-bold">Standard Baukasten</h4>
-                                <p class="text-sm text-muted mt-1">Überladener Code, monatliche Abos, langsam.</p>
+                                <p class="text-base text-gray-400 mt-1">Überladener Code, monatliche Abos, langsam.</p>
                             </div>
                         </div>
                         <div class="flex gap-4 items-start">
-                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mt-1 shrink-0">
+                            <div class="w-8 h-8 rounded-full bg-primary/30 flex items-center justify-center text-primary mt-1 shrink-0 shadow-[0_0_15px_rgba(0,113,227,0.4)]">
                                 <i class="fa-solid fa-check"></i>
                             </div>
                             <div>
                                 <h4 class="text-white font-bold">Karriaro Webdesign</h4>
-                                <p class="text-sm text-muted mt-1">Handcodiert, statisch sicher, einmalige Zahlung.</p>
+                                <p class="text-base text-gray-400 mt-1">Handcodiert, statisch sicher, einmalige Zahlung.</p>
                             </div>
                         </div>
                     </div>
@@ -342,7 +353,7 @@
     </section>
 
     <!-- TESTIMONIALS -->
-    <section id="results" class="py-32 bg-[#050507]">
+    <section id="results" class="py-40 bg-[#050507]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="reveal text-3xl font-bold mb-12 text-center">Stimmen unserer Kunden</h2>
             <div class="grid md:grid-cols-3 gap-6">
@@ -401,19 +412,50 @@
     </section>
 
     <!-- ABOUT / PERSONALITY -->
-    <section class="py-24 border-y border-white/5 bg-white/[0.02]">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="reveal text-2xl font-bold mb-4">Wer ist Karriaro Webdesign?</h2>
-            <p class="reveal text-muted text-lg leading-relaxed">
-                Wir sind keine anonyme Großagentur. Wir sind Ihr persönlicher Tech-Partner.
-                Gegründet mit der Mission, den digitalen Standard für lokale Unternehmen massiv anzuheben.
-                Wir glauben an sauberen Code, ehrliche Kommunikation und Ergebnisse, die für sich sprechen.
-            </p>
+    <section class="py-32 border-y border-white/5 bg-white/[0.02]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Bild links -->
+                <div class="reveal relative">
+                    <div class="aspect-square rounded-2xl overflow-hidden bg-[#151516] border border-white/10">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Karriaro Webdesign Gründer" class="w-full h-full object-cover opacity-90">
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold shadow-glow">
+                        <i class="fa-solid fa-code mr-2"></i>Handcoded since 2020
+                    </div>
+                </div>
+
+                <!-- Text rechts -->
+                <div class="reveal">
+                    <span class="text-primary text-sm font-semibold uppercase tracking-widest mb-4 block">Über uns</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Wer ist Karriaro Webdesign?</h2>
+                    <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                        Wir sind keine anonyme Großagentur. Wir sind Ihr persönlicher Tech-Partner.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Gegründet mit der Mission, den digitalen Standard für lokale Unternehmen massiv anzuheben. Wir glauben an sauberen Code, ehrliche Kommunikation und Ergebnisse, die für sich sprechen.
+                    </p>
+                    <div class="flex gap-8 pt-4">
+                        <div>
+                            <div class="text-3xl font-bold text-white">50+</div>
+                            <div class="text-sm text-muted">Projekte</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-white">100%</div>
+                            <div class="text-sm text-muted">Zufriedenheit</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold text-white">0</div>
+                            <div class="text-sm text-muted">Monatliche Kosten</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- FAQ SECTION -->
-    <section id="faq" class="py-32">
+    <section id="faq" class="py-40">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="reveal text-3xl font-bold mb-12 text-center">Häufige Fragen</h2>
 
@@ -464,7 +506,8 @@
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Haupt-Pakete -->
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
                 <!-- Paket 1 -->
                 <div class="reveal apple-card p-8 flex flex-col hover:border-white/20">
                     <h3 class="text-lg font-semibold mb-2 text-white">Visitenkarte</h3>
@@ -480,7 +523,7 @@
                 </div>
 
                 <!-- Paket 2 -->
-                <div class="reveal apple-card p-8 flex flex-col border-primary/50 bg-[#111112] relative scale-105 shadow-2xl z-10">
+                <div class="reveal apple-card p-8 flex flex-col border-primary/50 bg-[#111112] relative shadow-2xl">
                     <div class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-widest">
                         Empfohlen
                     </div>
@@ -491,24 +534,35 @@
                     <ul class="space-y-4 text-sm text-white mb-8 flex-1">
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> <strong>Bis zu 5 Unterseiten</strong></li>
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> High-Speed (100/100)</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Google Maps & SEO Basic</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Google Maps & SEO-Fundament</li>
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Kontaktformulare</li>
                     </ul>
                     <a href="#kontakt" class="w-full py-3 rounded-xl bg-primary hover:bg-blue-600 text-white text-center text-sm font-bold transition shadow-glow">Jetzt starten</a>
                 </div>
+            </div>
 
-                <!-- Paket 3 -->
-                <div class="reveal apple-card p-8 flex flex-col hover:border-white/20">
-                    <h3 class="text-lg font-semibold mb-2 text-white">Wartung</h3>
-                    <p class="text-muted text-sm mb-6">Sorgenfrei-Garantie.</p>
-                    <div class="text-3xl font-bold text-white mb-8">49€ <span class="text-sm font-normal text-muted">/ monatlich</span></div>
-
-                    <ul class="space-y-4 text-sm text-gray-400 mb-8 flex-1">
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Hosting inklusive</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Monatliche Backups</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Änderungen inklusive</li>
-                    </ul>
-                    <a href="#kontakt" class="w-full py-3 rounded-xl bg-[#2c2c2e] text-white text-center text-sm font-medium hover:bg-[#3a3a3c] transition">Dazu buchen</a>
+            <!-- Wartungspaket separat -->
+            <div class="reveal max-w-4xl mx-auto">
+                <div class="apple-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-[#151516] to-[#1a1a1c] border-dashed border-white/10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                            <i class="fa-solid fa-shield-halved text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-white">Wartung & Hosting</h3>
+                            <p class="text-muted text-sm">Optional zu jedem Paket dazu buchbar</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <ul class="hidden md:flex gap-6 text-sm text-gray-400">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Hosting inklusive</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Monatliche Backups</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Änderungen inklusive</li>
+                        </ul>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white">49€<span class="text-sm font-normal text-muted">/Monat</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -525,24 +579,28 @@
                     Kostenlose Erstanalyse Ihrer aktuellen Situation.
                 </p>
 
-                <form class="relative z-10 space-y-4 text-left">
+                <form class="relative z-10 space-y-5 text-left">
                     <div>
-                        <input type="text" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-500" placeholder="Ihr Name">
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihr Name</label>
+                        <input type="text" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Max Mustermann">
                     </div>
                     <div>
-                        <input type="text" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-500" placeholder="Webseite (falls vorhanden)">
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Webseite <span class="text-gray-600 normal-case">(falls vorhanden)</span></label>
+                        <input type="text" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="www.ihre-seite.de">
                     </div>
                     <div>
-                        <input type="email" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-500" placeholder="E-Mail Adresse">
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">E-Mail Adresse</label>
+                        <input type="email" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="max@beispiel.de">
                     </div>
                     <div>
-                        <textarea rows="4" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-500" placeholder="Nachricht..."></textarea>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihre Nachricht</label>
+                        <textarea rows="4" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Beschreiben Sie kurz Ihr Projekt..."></textarea>
                     </div>
 
                     <button class="w-full py-4 rounded-lg bg-primary hover:bg-blue-600 text-white font-semibold text-sm transition duration-300 shadow-glow mt-2">
-                        Analyse anfordern
+                        Jetzt unverbindlich anfragen
                     </button>
-                    <p class="text-xs text-center text-gray-600 mt-4">Antwort innerhalb von 24h.</p>
+                    <p class="text-xs text-center text-gray-500 mt-4">Antwort innerhalb von 24h. 100% kostenlos.</p>
                 </form>
             </div>
         </div>
