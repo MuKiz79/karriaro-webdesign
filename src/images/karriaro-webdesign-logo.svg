@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 50">
+  <!-- KARRIARO Text -->
+  <text x="110" y="24"
+        font-family="'Cinzel', 'Times New Roman', Georgia, serif"
+        font-size="20"
+        font-weight="400"
+        letter-spacing="4"
+        fill="#C6A87C"
+        text-anchor="middle">
+    KARRIARO
+  </text>
+
+  <!-- Goldener Strich -->
+  <line x1="30" y1="32" x2="190" y2="32" stroke="#C6A87C" stroke-width="0.8"/>
+
+  <!-- Webdesign Subline -->
+  <text x="110" y="45"
+        font-family="'Lato', 'Helvetica Neue', Arial, sans-serif"
+        font-size="10"
+        font-weight="300"
+        letter-spacing="3"
+        fill="#C6A87C"
+        text-anchor="middle"
+        opacity="0.85">
+    WEBDESIGN
+  </text>
+</svg>
