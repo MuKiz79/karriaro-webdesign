@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Karriaro PWA Icons Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            padding: 40px;
+            margin: 0;
+        }
+        h1 { color: #C9B99A; text-align: center; }
+        .instructions {
+            background: rgba(201,185,154,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .instructions ol {
+            text-align: left;
+            display: inline-block;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .icon-box {
+            background: #0A0E1A;
+            border: 1px solid rgba(201,185,154,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .icon-box canvas {
+            border-radius: 20%;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .icon-box .size {
+            color: #C9B99A;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .icon-box button {
+            background: #C9B99A;
+            color: #0A0E1A;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .icon-box button:hover {
+            background: white;
+        }
+        #downloadAll {
+            display: block;
+            margin: 30px auto;
+            background: #C9B99A;
+            color: #0A0E1A;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        #downloadAll:hover {
+            background: white;
+        }
+        .done {
+            color: #10B981;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Karriaro PWA Icons Generator</h1>
+
+    <div class="instructions">
+        <p><strong>So generierst du die Icons:</strong></p>
+        <ol>
+            <li>Klicke auf "Alle Icons herunterladen"</li>
+            <li>Die PNG-Dateien werden in deinen Downloads-Ordner gespeichert</li>
+            <li>Verschiebe sie in den <code>/icons/</code> Ordner</li>
+            <li>Deploy neu mit <code>bash build.sh && firebase deploy --only hosting</code></li>
+        </ol>
+    </div>
+
+    <button id="downloadAll">Alle Icons herunterladen</button>
+
+    <div class="done" id="done">✅ Alle Icons wurden heruntergeladen!</div>
+
+    <div class="grid" id="grid"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+
+        function drawIcon(ctx, size) {
+            const scale = size / 50;
+            const bgRadius = size * 0.18;
+
+            // Background
+            ctx.fillStyle = '#0A0E1A';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, bgRadius);
+            ctx.fill();
+
+            // Center and scale
+            ctx.save();
+            ctx.translate(size / 2, size / 2);
+            ctx.scale(scale, scale);
+            ctx.translate(-25, -25);
+
+            // Left arc
+            ctx.strokeStyle = '#C9B99A';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(25, 25, 21, Math.PI, Math.PI * 1.5);
+            ctx.stroke();
+
+            // Right arc
+            ctx.beginPath();
+            ctx.arc(25, 25, 21, 0, Math.PI * 0.5);
+            ctx.stroke();
+
+            // Arrow shaft
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(25, 42);
+            ctx.lineTo(25, 10);
+            ctx.stroke();
+
+            // Arrow head
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(16, 20);
+            ctx.lineTo(25, 8);
+            ctx.lineTo(34, 20);
+            ctx.stroke();
+
+            // Horizon line
+            ctx.lineWidth = 1.5;
+            ctx.globalAlpha = 0.4;
+            ctx.beginPath();
+            ctx.moveTo(12, 25);
+            ctx.lineTo(38, 25);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // Create canvases
+        const grid = document.getElementById('grid');
+        const canvases = {};
+
+        sizes.forEach(size => {
+            const box = document.createElement('div');
+            box.className = 'icon-box';
+
+            const sizeLabel = document.createElement('div');
+            sizeLabel.className = 'size';
+            sizeLabel.textContent = `${size}x${size}`;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.style.width = Math.min(size, 128) + 'px';
+            canvas.style.height = Math.min(size, 128) + 'px';
+
+            const ctx = canvas.getContext('2d');
+            drawIcon(ctx, size);
+            canvases[size] = canvas;
+
+            const btn = document.createElement('button');
+            btn.textContent = 'Download';
+            btn.onclick = () => downloadCanvas(canvas, size);
+
+            box.appendChild(sizeLabel);
+            box.appendChild(canvas);
+            box.appendChild(btn);
+            grid.appendChild(box);
+        });
+
+        function downloadCanvas(canvas, size) {
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        document.getElementById('downloadAll').onclick = async () => {
+            for (const size of sizes) {
+                downloadCanvas(canvases[size], size);
+                await new Promise(r => setTimeout(r, 300)); // Kleine Pause zwischen Downloads
+            }
+            document.getElementById('done').style.display = 'block';
+        };
+    </script>
+</body>
+</html>

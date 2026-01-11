@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hintergrund mit abgerundeten Ecken -->
+  <rect width="512" height="512" rx="80" fill="#0a0a0f"/>
+
+  <!-- Linker Halbbogen (oben) -->
+  <path d="M100 256 A156 156 0 0 1 256 100" stroke="#3b82f6" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+  <!-- Rechter Halbbogen (unten) -->
+  <path d="M412 256 A156 156 0 0 1 256 412" stroke="#3b82f6" stroke-width="20" fill="none" stroke-linecap="round"/>
+
+  <!-- Vertikaler Pfeil -->
+  <path d="M256 380 L256 150" stroke="#3b82f6" stroke-width="24" stroke-linecap="round"/>
+
+  <!-- Pfeilspitze -->
+  <path d="M180 220 L256 130 L332 220" stroke="#3b82f6" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Horizont-Linie -->
+  <line x1="150" y1="256" x2="362" y2="256" stroke="#3b82f6" stroke-width="12" stroke-opacity="0.4" stroke-linecap="round"/>
+</svg>
