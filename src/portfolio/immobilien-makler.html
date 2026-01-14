@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Makler Name] | Exklusive Immobilien in [Region]</title>
+    <meta name="description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien. Diskret, kompetent und persönlich. Jetzt kostenlose Wertermittlung starten.">
+
+    <!-- Fonts: Playfair Display (Premium Serif) & Manrope (Modern Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a',   // Slate 900 (Deep Navy)
+                        accent: '#c2410c',    // Burnt Orange / Copper (Premium Akzent)
+                        light: '#f8fafc',     // Slate 50
+                        surface: '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-slate-600 bg-light antialiased">
+
+    <!-- TOP BAR -->
+    <div class="bg-primary text-slate-300 py-2 px-4 text-xs font-medium tracking-wide hidden md:block border-b border-white/5">
+        <div class="max-w-7xl mx-auto flex justify-between">
+            <div class="flex gap-6">
+                <span><i class="fa-solid fa-location-dot text-accent mr-2"></i>Marktplatz 1, [Stadt]</span>
+                <span><i class="fa-solid fa-envelope text-accent mr-2"></i>immobilien@[firma].de</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="hover:text-white transition">Kaufen</a>
+                <a href="#" class="hover:text-white transition">Verkaufen</a>
+                <a href="#" class="hover:text-white transition">Mieten</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-100" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 items-center">
+                <!-- Logo -->
+                <a href="#" class="flex flex-col group">
+                    <span class="font-serif text-2xl font-bold text-primary tracking-tight group-hover:text-accent transition duration-300">[MAKLER NAME]</span>
+                    <span class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-bold">Immobilien</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-10">
+                    <a href="#angebote" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Immobilien</a>
+                    <a href="#service" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Verkauf</a>
+                    <a href="#uber-uns" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Über Uns</a>
+                    <a href="#bewertung" class="bg-primary hover:bg-accent text-white px-6 py-3 text-sm font-bold uppercase tracking-widest transition duration-300 shadow-lg">
+                        Wertermittlung
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button @click="open = !open" class="text-primary hover:text-accent p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="open" class="md:hidden bg-white border-t p-6 space-y-4 shadow-xl absolute w-full">
+            <a href="#angebote" class="block font-bold text-slate-800 text-lg">Immobilien</a>
+            <a href="#service" class="block font-bold text-slate-800 text-lg">Verkauf</a>
+            <a href="#bewertung" class="block bg-accent text-white px-4 py-3 text-center font-bold uppercase tracking-widest mt-4">Kostenlose Bewertung</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative h-[80vh] min-h-[600px] flex items-center">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1920&auto=format&fit=crop" alt="Luxus Villa Interior" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="max-w-2xl">
+                <span class="inline-block py-1 px-3 border border-white/30 rounded-full text-white/80 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
+                    Seit 25 Jahren in [Region]
+                </span>
+                <h1 class="font-serif text-5xl md:text-7xl font-bold text-white leading-tight mb-8">
+                    Wir finden den <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-200 to-accent">perfekten Käufer.</span>
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 leading-relaxed max-w-lg">
+                    Immobilienverkauf ist Vertrauenssache. Wir bewerten, präsentieren und vermitteln Ihre Immobilie zum Bestpreis. Diskret und professionell.
+                </p>
+
+                <!-- Quick Search Box -->
+                <div class="bg-white p-2 rounded-lg shadow-2xl flex flex-col md:flex-row gap-2 max-w-xl">
+                    <select class="p-3 bg-slate-50 rounded-md text-sm font-bold text-slate-600 focus:outline-none w-full md:w-auto">
+                        <option>Kaufen</option>
+                        <option>Mieten</option>
+                    </select>
+                    <select class="p-3 bg-slate-50 rounded-md text-sm font-bold text-slate-600 focus:outline-none w-full">
+                        <option>Alle Immobilientypen</option>
+                        <option>Haus</option>
+                        <option>Wohnung</option>
+                        <option>Grundstück</option>
+                    </select>
+                    <button class="bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-md font-bold transition w-full md:w-auto">
+                        Suchen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEAD MAGNET: WERTERMITTLUNG -->
+    <section id="bewertung" class="relative -mt-20 z-20 px-4">
+        <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row">
+            <div class="p-10 md:w-1/2 flex flex-col justify-center">
+                <span class="text-accent font-bold uppercase tracking-widest text-xs mb-2">Kostenlose Analyse</span>
+                <h2 class="font-serif text-3xl font-bold text-primary mb-4">Was ist Ihre Immobilie wert?</h2>
+                <p class="text-slate-500 mb-8 leading-relaxed">
+                    Der Immobilienmarkt in [Stadt] ändert sich ständig. Nutzen Sie unsere Marktkenntnis für eine realistische Einschätzung – unverbindlich und kostenfrei.
+                </p>
+                <div class="flex gap-4">
+                    <input type="text" placeholder="Ihre Adresse / PLZ" class="flex-1 bg-slate-50 border border-slate-200 px-4 py-3 rounded-lg focus:outline-none focus:border-accent transition">
+                    <button class="bg-primary hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold transition">
+                        Starten
+                    </button>
+                </div>
+            </div>
+            <div class="bg-primary md:w-1/2 relative min-h-[300px]">
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=800&auto=format&fit=crop" alt="Makler Gespräch" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay">
+                <div class="absolute inset-0 flex items-center justify-center p-10">
+                    <div class="text-center">
+                        <div class="text-4xl font-serif font-bold text-white mb-2">450+</div>
+                        <div class="text-white/70 text-sm uppercase tracking-widest font-bold">Erfolgreiche Verkäufe</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IMMOBILIEN ANGEBOTE -->
+    <section id="angebote" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="font-serif text-4xl text-primary font-bold mb-4">Aktuelle Angebote</h2>
+                    <p class="text-slate-500 max-w-xl">Entdecken Sie ausgewählte Objekte in Bestlagen.</p>
+                </div>
+                <a href="#" class="hidden md:flex items-center gap-2 text-accent font-bold hover:text-primary transition group">
+                    Alle Immobilien <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition"></i>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Property Card 1 -->
+                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
+                    <div class="relative h-64 overflow-hidden">
+                        <span class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded z-10">NEU</span>
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop" alt="Haus 1" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white font-bold text-xl">890.000 €</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Moderne Stadtvilla</h3>
+                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> [Stadtteil], Premium Lage</p>
+                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
+                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 180 m²</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 5 Zi.</span>
+                            <span><i class="fa-solid fa-bath mr-1"></i> 2 Bad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Card 2 -->
+                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop" alt="Haus 2" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white font-bold text-xl">450.000 €</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Eigentumswohnung mit Blick</h3>
+                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> [Stadtteil], Zentrum</p>
+                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
+                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 95 m²</span>
+                            <span><i class="fa-solid fa-bed mr-1"></i> 3 Zi.</span>
+                            <span><i class="fa-solid fa-layer-group mr-1"></i> 2. OG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Card 3 -->
+                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
+                    <div class="relative h-64 overflow-hidden">
+                        <span class="absolute top-4 left-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded z-10">RESERVIERT</span>
+                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800&auto=format&fit=crop" alt="Haus 3" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 grayscale">
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
+                            <span class="text-white font-bold text-xl">1.250.000 €</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Architektenhaus</h3>
+                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> [Vorort], Ruhige Lage</p>
+                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
+                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 220 m²</span>
+                            <span><i class="fa-solid fa-tree mr-1"></i> 800 m² Grd.</span>
+                            <span><i class="fa-solid fa-car mr-1"></i> Garage</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center md:hidden">
+                <a href="#" class="inline-block border border-primary text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition">Alle Angebote</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICE / USP -->
+    <section id="service" class="py-24 bg-primary text-white relative overflow-hidden">
+        <!-- Pattern Overlay -->
+        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#c2410c 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-accent font-bold uppercase tracking-widest text-xs">Unser Versprechen</span>
+                <h2 class="font-serif text-4xl md:text-5xl mt-2 mb-6">Warum [Makler Name]?</h2>
+                <div class="w-20 h-1 bg-accent mx-auto"></div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-12 text-center">
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="font-serif text-xl font-bold mb-4">Marktkenntnis</h3>
+                    <p class="text-slate-400 leading-relaxed">Wir kennen den lokalen Markt in [Stadt] seit über 20 Jahren und ermitteln den realistischen Bestpreis für Ihre Immobilie.</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+                    <h3 class="font-serif text-xl font-bold mb-4">Premium Exposé</h3>
+                    <p class="text-slate-400 leading-relaxed">Professionelle Fotografie, 360°-Rundgänge und Drohnenaufnahmen rücken Ihr Objekt ins perfekte Licht.</p>
+                </div>
+                <div class="p-6">
+                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <h3 class="font-serif text-xl font-bold mb-4">Rundum-Sorglos</h3>
+                    <p class="text-slate-400 leading-relaxed">Vom ersten Gespräch über Besichtigungen bis zum Notartermin. Wir übernehmen die komplette Abwicklung.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="py-24 bg-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <i class="fa-solid fa-quote-left text-4xl text-accent/20 mb-6"></i>
+                <h3 class="font-serif text-2xl md:text-3xl font-bold text-primary mb-8 leading-snug">
+                    "Herr [Name] hat unser Elternhaus innerhalb von 4 Wochen zu unserem Wunschpreis verkauft. Die Abwicklung war absolut professionell und stressfrei."
+                </h3>
+                <div class="flex flex-col items-center">
+                    <div class="flex text-accent text-sm mb-2">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="font-bold text-primary">Familie Schneider</span>
+                    <span class="text-slate-500 text-sm">Verkauf Einfamilienhaus in [Stadtteil]</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <a href="#" class="font-serif text-2xl font-bold text-primary mb-4 block">[MAKLER NAME]</a>
+                    <p class="text-slate-500 leading-relaxed max-w-sm">
+                        Ihr Partner für exklusive Immobilien. Wir verbinden Menschen mit Räumen, in denen sie glücklich werden.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-4 uppercase text-sm tracking-widest">Kontakt</h4>
+                    <ul class="space-y-2 text-slate-500">
+                        <li>Marktplatz 1</li>
+                        <li>12345 [Stadt]</li>
+                        <li class="pt-2"><a href="tel:0123456789" class="hover:text-accent">0123 / 45 67 89</a></li>
+                        <li><a href="mailto:info@makler.de" class="hover:text-accent">info@makler.de</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-primary mb-4 uppercase text-sm tracking-widest">Rechtliches</h4>
+                    <ul class="space-y-2 text-slate-500">
+                        <li><a href="#" class="hover:text-primary">Impressum</a></li>
+                        <li><a href="#" class="hover:text-primary">Datenschutz</a></li>
+                        <li><a href="#" class="hover:text-primary">AGB</a></li>
+                        <li><a href="#" class="hover:text-primary">Widerrufsbelehrung</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400">
+                <p>&copy; 2026 [Makler Name]. Alle Rechte vorbehalten.</p>
+                <p>Designed by Karriaro.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
