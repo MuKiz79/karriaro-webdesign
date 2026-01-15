@@ -699,7 +699,7 @@
                 <!-- FAQ 1 -->
                 <div class="reveal apple-card overflow-hidden">
                     <button @click="selected !== 0 ? selected = 0 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
-                        <span class="font-medium text-white">Gehört die Webseite wirklich mir?</span>
+                        <span class="font-medium text-white">Gehört die Website wirklich mir?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 0}"></i>
                     </button>
                     <div x-show="selected === 0" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
@@ -736,7 +736,7 @@
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 3}"></i>
                     </button>
                     <div x-show="selected === 3" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        WordPress ist toll für Blogs, aber für Firmenwebseiten oft unnötig komplex, langsam und ein Sicherheitsrisiko (Hacker). Unsere "statische" Technologie eliminiert diese Risiken komplett: Keine Updates, keine Hacker, keine Ladezeiten.
+                        WordPress kann gehackt werden, ist oft langsam und braucht ständige Updates. Wir bauen Ferraris, keine Busse. Unsere statische Technologie ist unhackbar, lädt blitzschnell und benötigt null Wartung. Schnelligkeit = besseres Google-Ranking = mehr Kunden.
                     </div>
                 </div>
 
@@ -747,7 +747,18 @@
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 4}"></i>
                     </button>
                     <div x-show="selected === 4" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        Für kleine Änderungen (z.B. neue Telefonnummer) bieten wir unser günstiges Wartungspaket an – eine E-Mail genügt, wir erledigen das sofort. Das spart Ihnen Zeit und Nerven, sich in komplizierte Systeme einzuarbeiten.
+                        Selbstverständlich. Kleine Änderungen (Telefonnummer, Öffnungszeiten, neue Bilder) erledigen wir oft noch am selben Tag – eine kurze E-Mail genügt. Im ersten Jahr sind kleine Anpassungen inklusive. Danach bieten wir ein günstiges Wartungspaket an.
+                    </div>
+                </div>
+
+                <!-- FAQ 6 -->
+                <div class="reveal apple-card overflow-hidden">
+                    <button @click="selected !== 5 ? selected = 5 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="font-medium text-white">Wie schnell kann ich starten?</span>
+                        <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 5}"></i>
+                    </button>
+                    <div x-show="selected === 5" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
+                        Sofort. Nach einem kurzen Erstgespräch (15 Min.) sehen Sie bereits innerhalb von 48 Stunden den ersten Entwurf Ihrer Website. Bezahlung: 50% zum Start, 50% erst bei Ihrer Zufriedenheit.
                     </div>
                 </div>
             </div>
