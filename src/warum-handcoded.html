@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warum Handcoded? | Karriaro Webdesign</title>
+    <meta name="description" content="Erfahren Sie, warum handcodierte Websites schneller laden, besser ranken und langfristig günstiger sind als WordPress & Baukästen.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/style.css">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.3/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-primary selection:text-white">
+
+    <!-- NAVIGATION -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="/" class="text-xl font-bold tracking-tight flex items-center gap-2 group">
+                    <svg class="w-6 h-6" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="origin-center animate-[spin_8s_linear_infinite]">
+                            <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        </g>
+                        <path d="M25 42 L25 10" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M16 20 L25 8 L34 20" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <line x1="12" y1="25" x2="38" y2="25" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.4"/>
+                    </svg>
+                    Karriaro<span class="text-muted font-normal"> Webdesign</span>
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/#problem" class="text-sm font-medium text-white">Warum Handcoded</a>
+                    <a href="/#work" class="text-sm font-medium text-gray-300 hover:text-white transition">Portfolio</a>
+                    <a href="/#preise" class="text-sm font-medium text-gray-300 hover:text-white transition">Preise</a>
+                    <a href="/#faq" class="text-sm font-medium text-gray-300 hover:text-white transition">FAQ</a>
+                    <a href="/#kontakt" class="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition">
+                        Projekt starten
+                    </a>
+                </div>
+
+                <button @click="open = !open" class="md:hidden text-white p-2">
+                    <i class="fa-solid fa-bars text-lg" x-show="!open"></i>
+                    <i class="fa-solid fa-times text-lg" x-show="open" x-cloak></i>
+                </button>
+            </div>
+        </div>
+
+        <div x-show="open" x-collapse class="md:hidden bg-[#151516] border-t border-white/10 absolute w-full shadow-2xl">
+            <div class="px-6 py-8 space-y-4">
+                <a href="/#problem" @click="open = false" class="block text-lg font-medium text-white">Warum Handcoded</a>
+                <a href="/#work" @click="open = false" class="block text-lg font-medium text-gray-300 hover:text-white">Portfolio</a>
+                <a href="/#preise" @click="open = false" class="block text-lg font-medium text-gray-300 hover:text-white">Preise</a>
+                <a href="/#faq" @click="open = false" class="block text-lg font-medium text-gray-300 hover:text-white">FAQ</a>
+                <a href="/#kontakt" @click="open = false" class="block w-full text-center py-3 bg-white text-black rounded-xl font-bold mt-6">Jetzt anfragen</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+        <!-- Background -->
+        <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent"></div>
+        <div class="absolute top-20 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[150px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <a href="/" class="reveal inline-flex items-center gap-2 text-sm text-muted hover:text-white transition mb-8">
+                <i class="fa-solid fa-arrow-left"></i> Zurück zur Startseite
+            </a>
+
+            <h1 class="reveal text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 leading-[1.1]">
+                Warum <span class="text-gradient-blue">Handcoded</span>?
+            </h1>
+
+            <p class="reveal text-xl text-gray-400 max-w-3xl mx-auto mb-12 leading-relaxed">
+                Der Unterschied zwischen einer Website, die Kunden kostet und einer, die Kunden bringt.
+            </p>
+        </div>
+    </section>
+
+    <!-- DAS PROBLEM -->
+    <section class="py-24 bg-[#050507] relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-red-500/5 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="reveal text-red-400 text-sm font-bold uppercase tracking-widest mb-4 block">Das Problem</span>
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-6">90% aller Websites sind zu langsam.</h2>
+                <p class="reveal text-xl text-muted max-w-2xl mx-auto">
+                    Und langsam bedeutet: verlorene Kunden, schlechtere Google-Rankings und bares Geld, das Sie verschenken.
+                </p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="reveal apple-card p-8 text-center border-red-500/20">
+                    <div class="text-5xl font-bold text-red-400 mb-4">53%</div>
+                    <p class="text-gray-400">der Besucher verlassen eine Seite, die länger als <strong class="text-white">3 Sekunden</strong> lädt.</p>
+                    <p class="text-xs text-muted mt-4">Quelle: Google</p>
+                </div>
+                <div class="reveal apple-card p-8 text-center border-red-500/20">
+                    <div class="text-5xl font-bold text-red-400 mb-4">-7%</div>
+                    <p class="text-gray-400">Conversion Rate pro Sekunde zusätzlicher Ladezeit.</p>
+                    <p class="text-xs text-muted mt-4">Quelle: Akamai</p>
+                </div>
+                <div class="reveal apple-card p-8 text-center border-red-500/20">
+                    <div class="text-5xl font-bold text-red-400 mb-4">0</div>
+                    <p class="text-gray-400">Chancen bei Google auf Seite 1 mit einer langsamen Website.</p>
+                    <p class="text-xs text-muted mt-4">Core Web Vitals sind Ranking-Faktor</p>
+                </div>
+            </div>
+
+            <!-- Visual: Slow Website -->
+            <div class="reveal apple-card p-8 md:p-12 border-red-500/20 max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-plug text-red-400"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">WordPress & Baukästen</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            Typische WordPress-Seiten laden Dutzende Plugins, riesige Theme-Dateien und externe Scripts. Das Ergebnis: 3-6 Sekunden Ladezeit und frustrierte Besucher.
+                        </p>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <i class="fa-solid fa-times text-red-400"></i> 20+ Plugins für Basis-Funktionen
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <i class="fa-solid fa-times text-red-400"></i> Datenbank-Abfragen bei jedem Seitenaufruf
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <i class="fa-solid fa-times text-red-400"></i> Ungenutzter CSS/JS Code (Bloat)
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-400">
+                                <i class="fa-solid fa-times text-red-400"></i> Ständige Sicherheits-Updates nötig
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex-1 w-full">
+                        <!-- Fake PageSpeed Score -->
+                        <div class="bg-[#0a0a0b] rounded-xl p-6 border border-red-500/20">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-muted">PageSpeed Score</span>
+                                <span class="text-xs text-red-400 font-mono">Langsam</span>
+                            </div>
+                            <div class="flex items-center justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="64" cy="64" r="56" fill="none" stroke="#1a1a1c" stroke-width="8"/>
+                                        <circle cx="64" cy="64" r="56" fill="none" stroke="#ef4444" stroke-width="8" stroke-dasharray="352" stroke-dashoffset="211" stroke-linecap="round"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-4xl font-bold text-red-400">38</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-muted">First Contentful Paint</span>
+                                    <span class="text-red-400">3.2s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted">Largest Contentful Paint</span>
+                                    <span class="text-red-400">5.8s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted">Total Blocking Time</span>
+                                    <span class="text-red-400">890ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIE LÖSUNG -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <span class="reveal text-primary text-sm font-bold uppercase tracking-widest mb-4 block">Die Lösung</span>
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-6">Handcode. Keine Kompromisse.</h2>
+                <p class="reveal text-xl text-muted max-w-2xl mx-auto">
+                    Jede Zeile Code wird von Hand geschrieben. Kein Ballast. Nur das, was Ihre Website wirklich braucht.
+                </p>
+            </div>
+
+            <!-- Visual: Fast Website -->
+            <div class="reveal apple-card p-8 md:p-12 border-primary/30 max-w-4xl mx-auto mb-16 bg-gradient-to-br from-primary/5 to-transparent">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1 order-2 md:order-1 w-full">
+                        <!-- Fake PageSpeed Score -->
+                        <div class="bg-[#0a0a0b] rounded-xl p-6 border border-primary/30">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-sm text-muted">PageSpeed Score</span>
+                                <span class="text-xs text-green-400 font-mono">Perfekt</span>
+                            </div>
+                            <div class="flex items-center justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <svg class="w-full h-full transform -rotate-90">
+                                        <circle cx="64" cy="64" r="56" fill="none" stroke="#1a1a1c" stroke-width="8"/>
+                                        <circle cx="64" cy="64" r="56" fill="none" stroke="url(#gradient)" stroke-width="8" stroke-dasharray="352" stroke-dashoffset="0" stroke-linecap="round"/>
+                                        <defs>
+                                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="#0071e3"/>
+                                                <stop offset="100%" stop-color="#22c55e"/>
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-4xl font-bold text-green-400">100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-muted">First Contentful Paint</span>
+                                    <span class="text-green-400">0.3s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted">Largest Contentful Paint</span>
+                                    <span class="text-green-400">0.4s</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-muted">Total Blocking Time</span>
+                                    <span class="text-green-400">0ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 order-1 md:order-2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center shadow-glow">
+                                <i class="fa-solid fa-code text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Karriaro Handcode</h3>
+                        </div>
+                        <p class="text-gray-400 mb-6">
+                            Statische HTML/CSS/JS Dateien, die direkt vom Server ausgeliefert werden. Keine Datenbank, keine Plugins, keine Angriffsfläche.
+                        </p>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-center gap-3 text-white">
+                                <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-check text-green-400 text-xs"></i></div>
+                                Nur der Code, den Sie wirklich brauchen
+                            </li>
+                            <li class="flex items-center gap-3 text-white">
+                                <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-check text-green-400 text-xs"></i></div>
+                                Statische Dateien = maximale Geschwindigkeit
+                            </li>
+                            <li class="flex items-center gap-3 text-white">
+                                <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-check text-green-400 text-xs"></i></div>
+                                Keine Datenbank = unhackbar
+                            </li>
+                            <li class="flex items-center gap-3 text-white">
+                                <div class="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center"><i class="fa-solid fa-check text-green-400 text-xs"></i></div>
+                                Null Wartung erforderlich
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="reveal apple-card p-6 text-center hover:border-primary/30 transition">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-2xl mb-4">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Blitzschnell</h3>
+                    <p class="text-sm text-muted">Ladezeiten unter 0.5 Sekunden. Ihre Besucher warten nie.</p>
+                </div>
+                <div class="reveal apple-card p-6 text-center hover:border-primary/30 transition">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-2xl mb-4">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Unhackbar</h3>
+                    <p class="text-sm text-muted">Keine Datenbank, keine Plugins, keine Angriffsfläche.</p>
+                </div>
+                <div class="reveal apple-card p-6 text-center hover:border-primary/30 transition">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-2xl mb-4">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">SEO-Optimiert</h3>
+                    <p class="text-sm text-muted">Google liebt schnelle Seiten. Sie ranken höher.</p>
+                </div>
+                <div class="reveal apple-card p-6 text-center hover:border-primary/30 transition">
+                    <div class="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-2xl mb-4">
+                        <i class="fa-solid fa-piggy-bank"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Keine Abo-Kosten</h3>
+                    <p class="text-sm text-muted">Einmal bezahlen, für immer nutzen. Sie sind Eigentümer.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DIREKTER VERGLEICH -->
+    <section class="py-24 bg-[#050507]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-6">Der direkte Vergleich</h2>
+                <p class="reveal text-xl text-muted max-w-2xl mx-auto">
+                    Sehen Sie selbst, was Sie mit Handcode gewinnen.
+                </p>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="reveal overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-white/10">
+                            <th class="py-4 px-6 text-muted font-medium text-sm">Kriterium</th>
+                            <th class="py-4 px-6 text-center">
+                                <div class="inline-flex items-center gap-2 text-red-400">
+                                    <i class="fa-brands fa-wordpress"></i> WordPress
+                                </div>
+                            </th>
+                            <th class="py-4 px-6 text-center">
+                                <div class="inline-flex items-center gap-2 text-orange-400">
+                                    <i class="fa-solid fa-cubes"></i> Wix/Jimdo
+                                </div>
+                            </th>
+                            <th class="py-4 px-6 text-center bg-primary/10 rounded-t-xl">
+                                <div class="inline-flex items-center gap-2 text-primary font-bold">
+                                    <i class="fa-solid fa-code"></i> Karriaro
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Ladezeit</td>
+                            <td class="py-4 px-6 text-center text-red-400">3-6 Sekunden</td>
+                            <td class="py-4 px-6 text-center text-orange-400">2-4 Sekunden</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5 font-bold">0.3-0.5 Sek.</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Google PageSpeed</td>
+                            <td class="py-4 px-6 text-center text-red-400">30-60</td>
+                            <td class="py-4 px-6 text-center text-orange-400">40-70</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5 font-bold">95-100</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Sicherheit</td>
+                            <td class="py-4 px-6 text-center text-red-400">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Hackbar
+                            </td>
+                            <td class="py-4 px-6 text-center text-orange-400">
+                                <i class="fa-solid fa-minus"></i> Mittel
+                            </td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5">
+                                <i class="fa-solid fa-shield-halved"></i> Unhackbar
+                            </td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Monatliche Kosten</td>
+                            <td class="py-4 px-6 text-center text-red-400">20-100€</td>
+                            <td class="py-4 px-6 text-center text-orange-400">15-40€</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5 font-bold">0€*</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Wartung nötig</td>
+                            <td class="py-4 px-6 text-center text-red-400">Ständig</td>
+                            <td class="py-4 px-6 text-center text-orange-400">Gelegentlich</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5">Keine</td>
+                        </tr>
+                        <tr class="border-b border-white/5">
+                            <td class="py-4 px-6 text-white font-medium">Code-Eigentum</td>
+                            <td class="py-4 px-6 text-center text-muted">Ja, aber komplex</td>
+                            <td class="py-4 px-6 text-center text-red-400">Nein (Miete)</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5 font-bold">100% Ihres</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-6 text-white font-medium">SEO-Potenzial</td>
+                            <td class="py-4 px-6 text-center text-orange-400">Mittel</td>
+                            <td class="py-4 px-6 text-center text-red-400">Begrenzt</td>
+                            <td class="py-4 px-6 text-center text-green-400 bg-primary/5 rounded-b-xl font-bold">Maximum</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-muted text-center mt-4">* Optional: 49€/Monat für Hosting & Wartungspaket</p>
+        </div>
+    </section>
+
+    <!-- TECHNOLOGIE -->
+    <section class="py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-6">Moderne Technologie</h2>
+                <p class="reveal text-xl text-muted max-w-2xl mx-auto">
+                    Wir nutzen die gleichen Technologien wie Apple, Stripe und andere Tech-Giganten.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="reveal apple-card p-8">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400 text-2xl mb-6">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">HTML5 & CSS3</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Semantischer, barrierefreier Code, der von Suchmaschinen geliebt wird. Keine unnötigen Frameworks, nur sauberes Markup.
+                    </p>
+                </div>
+                <div class="reveal apple-card p-8">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 text-2xl mb-6">
+                        <i class="fa-brands fa-css3-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Tailwind CSS</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Das Utility-first Framework, das auch von Shopify und Netflix genutzt wird. Minimaler CSS-Output, maximale Flexibilität.
+                    </p>
+                </div>
+                <div class="reveal apple-card p-8">
+                    <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-400 text-2xl mb-6">
+                        <i class="fa-brands fa-js"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3">Vanilla JavaScript</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Kein jQuery, kein React-Overhead. Nur minimaler, hochperformanter JavaScript-Code für Interaktionen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CDN Info -->
+            <div class="reveal mt-12 apple-card p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 border-primary/20">
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold text-white mb-4">Globales CDN-Hosting</h3>
+                    <p class="text-gray-400 mb-6">
+                        Ihre Website wird über ein Content Delivery Network mit Servern weltweit ausgeliefert. Egal wo Ihre Besucher sind, die Ladezeit bleibt unter einer halben Sekunde.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center gap-2 text-sm text-muted">
+                            <i class="fa-solid fa-globe text-primary"></i> 300+ Edge-Standorte
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-muted">
+                            <i class="fa-solid fa-lock text-primary"></i> SSL inklusive
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-muted">
+                            <i class="fa-solid fa-shield text-primary"></i> DDoS-Schutz
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1 flex justify-center">
+                    <div class="relative w-48 h-48">
+                        <!-- Globe Animation -->
+                        <div class="absolute inset-0 rounded-full border-2 border-primary/20 animate-pulse"></div>
+                        <div class="absolute inset-4 rounded-full border border-primary/30"></div>
+                        <div class="absolute inset-8 rounded-full border border-primary/40"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa-solid fa-earth-europe text-6xl text-primary/50"></i>
+                        </div>
+                        <!-- Dots -->
+                        <div class="absolute top-4 left-1/2 w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                        <div class="absolute bottom-8 right-4 w-2 h-2 bg-green-400 rounded-full animate-ping" style="animation-delay: 0.5s"></div>
+                        <div class="absolute top-1/3 left-4 w-2 h-2 bg-green-400 rounded-full animate-ping" style="animation-delay: 1s"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI SECTION -->
+    <section class="py-24 bg-[#050507]">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="reveal text-3xl md:text-5xl font-bold mb-6">Was bedeutet das für Sie?</h2>
+                <p class="reveal text-xl text-muted max-w-2xl mx-auto">
+                    Eine schnelle Website ist kein Luxus, sondern eine Investition mit messbarer Rendite.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- ROI Card 1 -->
+                <div class="reveal apple-card p-8 border-green-500/20">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+                            <i class="fa-solid fa-arrow-trend-up text-green-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Mehr Conversions</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Jede Sekunde schnellere Ladezeit bedeutet 7% mehr Conversions. Bei 1.000 Besuchern pro Monat und einem Kundenwert von 500€ sind das:
+                    </p>
+                    <div class="bg-[#0a0a0b] rounded-xl p-6 border border-green-500/20">
+                        <div class="text-4xl font-bold text-green-400 mb-2">+10.500€</div>
+                        <p class="text-sm text-muted">zusätzlicher Umsatz pro Jahr (konservativ geschätzt)</p>
+                    </div>
+                </div>
+
+                <!-- ROI Card 2 -->
+                <div class="reveal apple-card p-8 border-primary/20">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <i class="fa-solid fa-magnifying-glass-chart text-primary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Bessere Rankings</h3>
+                    </div>
+                    <p class="text-gray-400 mb-6">
+                        Google bevorzugt schnelle Websites seit 2021 offiziell. Eine Top-Position bei lokalen Suchanfragen kann bedeuten:
+                    </p>
+                    <div class="bg-[#0a0a0b] rounded-xl p-6 border border-primary/20">
+                        <div class="text-4xl font-bold text-primary mb-2">+200%</div>
+                        <p class="text-sm text-muted">mehr organische Besucher (statt teurer Google Ads)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Comparison -->
+            <div class="reveal mt-12 apple-card p-8 md:p-12">
+                <h3 class="text-2xl font-bold text-white mb-8 text-center">Kostenvergleich über 3 Jahre</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center mb-4">
+                            <i class="fa-brands fa-wordpress text-red-400 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">WordPress Agentur</h4>
+                        <div class="text-3xl font-bold text-red-400 mb-2">~5.400€</div>
+                        <p class="text-xs text-muted">
+                            1.500€ Erstellung + 100€/Monat Wartung + Hosting
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-orange-500/10 flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-cubes text-orange-400 text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">Wix/Jimdo Pro</h4>
+                        <div class="text-3xl font-bold text-orange-400 mb-2">~1.800€</div>
+                        <p class="text-xs text-muted">
+                            50€/Monat x 36 Monate (Design selbst gemacht)
+                        </p>
+                    </div>
+                    <div class="text-center border-2 border-primary/30 rounded-2xl p-6 -m-2 bg-primary/5">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-primary flex items-center justify-center mb-4 shadow-glow">
+                            <i class="fa-solid fa-code text-white text-2xl"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">Karriaro Handcode</h4>
+                        <div class="text-3xl font-bold text-green-400 mb-2">1.490€</div>
+                        <p class="text-xs text-muted">
+                            Einmalig. Keine weiteren Pflichtkosten.*
+                        </p>
+                    </div>
+                </div>
+                <p class="text-xs text-center text-muted mt-8">* Optionales Wartungspaket: 49€/Monat. Selbst damit nur 3.254€ über 3 Jahre.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="py-32 relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px]"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="reveal">
+                <span class="inline-block px-4 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+                    Bereit für den Unterschied?
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                    Lassen Sie Ihre Konkurrenz<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">im Ladebalken hängen.</span>
+                </h2>
+                <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+                    In 15 Minuten zeigen wir Ihnen, wie schnell Ihre neue Website sein könnte. Kostenlos und unverbindlich.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/#kontakt" class="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary hover:bg-blue-600 text-white font-bold rounded-xl transition shadow-glow">
+                        Kostenlose Analyse starten
+                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                    </a>
+                    <a href="/#work" class="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl border border-white/10 transition">
+                        <i class="fa-solid fa-eye"></i>
+                        Beispiele ansehen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <a href="/" class="text-base font-bold tracking-tight text-white mb-1 block">
+                    Karriaro<span class="text-muted font-normal"> Webdesign</span>
+                </a>
+                <p class="text-muted text-xs">© 2026 Karriaro Webdesign. Stuttgart, DE.</p>
+            </div>
+            <div class="flex gap-6 text-xs text-gray-500">
+                <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
+                <a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a>
+                <a href="/agb.html" class="hover:text-white transition">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCROLL REVEAL SCRIPT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
