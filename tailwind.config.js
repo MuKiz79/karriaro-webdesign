@@ -4,6 +4,19 @@ module.exports = {
     "./src/**/*.{html,js}",
     "./dist/**/*.html"
   ],
+  safelist: [
+    // Portfolio card hover colors
+    'group-hover:text-orange-400',
+    'group-hover:bg-orange-600',
+    'group-hover:text-emerald-400',
+    'group-hover:bg-emerald-600',
+    'group-hover:text-blue-400',
+    'group-hover:bg-blue-600',
+    'group-hover:text-amber-400',
+    'group-hover:bg-amber-600',
+    'group-hover:text-rose-400',
+    'group-hover:text-red-400',
+  ],
   theme: {
     extend: {
       colors: {
