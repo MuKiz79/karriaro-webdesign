@@ -268,7 +268,7 @@
                                 <div class="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-xs shrink-0"><i class="fa-solid fa-check"></i></div>
                                 <div>
                                     <h4 class="text-white font-medium text-sm">Maximale Sicherheit (Statisch)</h4>
-                                    <p class="text-gray-400 text-xs mt-1 leading-relaxed">Ohne Datenbank gibt es keine Angriffsfläche. Maximale Sicherheit garantiert.</p>
+                                    <p class="text-gray-400 text-xs mt-1 leading-relaxed">Ohne Datenbank minimieren wir die Angriffsfläche auf nahezu null.</p>
                                 </div>
                             </div>
                         </div>
@@ -325,7 +325,7 @@
                     </div>
 
                     <!-- Overlay Gradient - Stark unten, leicht oben -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 opacity-80 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-70 transition duration-500"></div>
 
                     <!-- Top Badge -->
                     <div class="absolute top-6 right-6">
@@ -370,7 +370,7 @@
                     </div>
 
                     <!-- Overlay Gradient - Stark unten, leicht oben -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 opacity-80 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-70 transition duration-500"></div>
 
                     <!-- Top Badge -->
                     <div class="absolute top-6 right-6">
@@ -386,7 +386,7 @@
                         </div>
                         <h3 class="text-3xl font-bold text-white mb-3">Praxis Dr. Weber</h3>
                         <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
-                            Vertrauenerweckende Zahnarzt-Webseite. Online-Terminbuchung, Leistungsübersicht und patientenfreundliches Design.
+                            Vertrauenerweckende Zahnarzt-Website. Online-Terminbuchung, Leistungsübersicht und patientenfreundliches Design.
                         </p>
                         <div class="flex items-center gap-4 text-sm font-bold text-white group-hover:text-emerald-400 transition">
                             <span>Case Study lesen</span>
@@ -415,7 +415,7 @@
                     </div>
 
                     <!-- Overlay Gradient - Stark unten, leicht oben -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 opacity-80 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-70 transition duration-500"></div>
 
                     <!-- Top Badge -->
                     <div class="absolute top-6 right-6">
@@ -431,7 +431,7 @@
                         </div>
                         <h3 class="text-3xl font-bold text-white mb-3">Meisterbetrieb Müller</h3>
                         <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-6 max-w-md">
-                            Professionelle Handwerker-Webseite. Klare Leistungsübersicht, Projektgalerie und direkter Kontakt für lokale Kundschaft.
+                            Professionelle Handwerker-Website. Klare Leistungsübersicht, Projektgalerie und direkter Kontakt für lokale Kundschaft.
                         </p>
                         <div class="flex items-center gap-4 text-sm font-bold text-white group-hover:text-blue-400 transition">
                             <span>Case Study lesen</span>
@@ -460,7 +460,7 @@
                     </div>
 
                     <!-- Overlay Gradient - Stark unten, leicht oben -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10 opacity-80 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-70 transition duration-500"></div>
 
                     <!-- Top Badge -->
                     <div class="absolute top-6 right-6">
@@ -736,7 +736,7 @@
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 3}"></i>
                     </button>
                     <div x-show="selected === 3" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        WordPress kann gehackt werden, ist oft langsam und braucht ständige Updates. Wir bauen Ferraris, keine Busse. Unsere statische Technologie ist unhackbar, lädt blitzschnell und benötigt null Wartung. Schnelligkeit = besseres Google-Ranking = mehr Kunden.
+                        WordPress kann gehackt werden, ist oft langsam und braucht ständige Updates. Wir bauen Ferraris, keine Busse. Unsere statische Technologie minimiert die Angriffsfläche auf nahezu null, lädt blitzschnell und benötigt keine Wartung. Schnelligkeit = besseres Google-Ranking = mehr Kunden.
                     </div>
                 </div>
 
@@ -759,6 +759,17 @@
                     </button>
                     <div x-show="selected === 5" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
                         Sofort. Nach einem kurzen Erstgespräch (15 Min.) sehen Sie bereits innerhalb von 48 Stunden den ersten Entwurf Ihrer Website. Bezahlung: 50% zum Start, 50% erst bei Ihrer Zufriedenheit.
+                    </div>
+                </div>
+
+                <!-- FAQ 7 -->
+                <div class="reveal apple-card overflow-hidden">
+                    <button @click="selected !== 6 ? selected = 6 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                        <span class="font-medium text-white">Ist die Website DSGVO-konform?</span>
+                        <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 6}"></i>
+                    </button>
+                    <div x-show="selected === 6" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
+                        Ja, zu 100%. Im Gegensatz zu vielen Baukästen laden wir keine externen Schriften von US-Servern (Google Fonts Problem). Alle Ressourcen werden lokal gehostet. Sie sind vor Abmahnungen geschützt und Ihre Besucher-Daten bleiben in Europa.
                     </div>
                 </div>
             </div>
@@ -826,7 +837,7 @@
                         <ul class="flex flex-col md:flex-row gap-2 md:gap-6 text-sm text-gray-400">
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Hosting inklusive</li>
                             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Monatliche Backups</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Kleine Änderungen (1h/Monat)</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> Text- & Bildtausch (bis 30 Min/Monat)</li>
                         </ul>
                         <div class="text-left md:text-right md:ml-auto">
                             <div class="text-2xl font-bold text-white">49€<span class="text-sm font-normal text-muted">/Monat</span></div>
@@ -854,7 +865,7 @@
                         <input type="text" name="name" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Max Mustermann">
                     </div>
                     <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Webseite <span class="text-gray-600 normal-case">(falls vorhanden)</span></label>
+                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Website <span class="text-gray-600 normal-case">(falls vorhanden)</span></label>
                         <input type="text" name="website" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="www.ihre-seite.de">
                     </div>
                     <div>
@@ -877,12 +888,16 @@
                         <textarea name="message" rows="3" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Weitere Details zu Ihrem Projekt..."></textarea>
                     </div>
 
+                    <div class="flex items-start gap-3">
+                        <input type="checkbox" id="privacy" name="privacy" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary focus:ring-offset-0">
+                        <label for="privacy" class="text-xs text-gray-400 leading-relaxed">
+                            Ich stimme der Verarbeitung meiner Daten gemäß der <a href="/datenschutz.html" class="underline hover:text-white transition">Datenschutzerklärung</a> zu. *
+                        </label>
+                    </div>
+
                     <button type="submit" class="w-full py-4 rounded-lg bg-primary hover:bg-blue-600 text-white font-semibold text-sm transition duration-300 shadow-glow mt-2">
                         Kostenlose Analyse anfordern
                     </button>
-                    <p class="text-xs text-center text-gray-500 mt-4">
-                        Mit dem Absenden akzeptieren Sie unsere <a href="/datenschutz.html" class="underline hover:text-white transition">Datenschutzbestimmungen</a>.
-                    </p>
                 </form>
             </div>
         </div>
