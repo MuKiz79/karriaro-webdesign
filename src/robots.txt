@@ -1,11 +1,11 @@
 # Karriaro Webdesign - robots.txt
-# https://karriaro.de
+# https://karriaro-webdesign.de
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://karriaro.de/sitemap.xml
+Sitemap: https://karriaro-webdesign.de/sitemap.xml
 
 # Crawl-delay for polite crawling (optional)
 Crawl-delay: 1
