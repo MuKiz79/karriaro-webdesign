@@ -553,8 +553,10 @@
                                 </div>
                             </div>
 
-                            <!-- Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                            <!-- Overlay Gradient - Oben transparent, unten dunkel für Textlesbarkeit -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 via-40% to-transparent group-hover:via-black/50 transition duration-500"></div>
+                            <!-- Blur overlay for text area -->
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 backdrop-blur-[2px]" style="-webkit-backdrop-filter: blur(2px); mask-image: linear-gradient(to top, black 60%, transparent);"></div>
 
                             <!-- Badge -->
                             <div class="absolute top-4 right-4">
@@ -564,7 +566,7 @@
                             </div>
 
                             <!-- Content -->
-                            <div class="absolute bottom-0 left-0 w-full p-6">
+                            <div class="absolute bottom-0 left-0 w-full p-6 portfolio-text">
                                 <h3 class="text-xl font-bold text-white mb-2">Hair & Beauty Salon</h3>
                                 <p class="text-gray-400 text-sm mb-4">Online-Terminbuchung, Preisliste & Instagram-Galerie</p>
                                 <div class="flex items-center gap-2 text-xs font-medium text-white group-hover:text-rose-400 transition">
@@ -587,8 +589,10 @@
                                 </div>
                             </div>
 
-                            <!-- Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent"></div>
+                            <!-- Overlay Gradient - Oben transparent, unten dunkel für Textlesbarkeit -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 via-40% to-transparent group-hover:via-black/50 transition duration-500"></div>
+                            <!-- Blur overlay for text area -->
+                            <div class="absolute inset-x-0 bottom-0 h-1/2 backdrop-blur-[2px]" style="-webkit-backdrop-filter: blur(2px); mask-image: linear-gradient(to top, black 60%, transparent);"></div>
 
                             <!-- Badge -->
                             <div class="absolute top-4 right-4">
@@ -598,7 +602,7 @@
                             </div>
 
                             <!-- Content -->
-                            <div class="absolute bottom-0 left-0 w-full p-6">
+                            <div class="absolute bottom-0 left-0 w-full p-6 portfolio-text">
                                 <h3 class="text-xl font-bold text-white mb-2">Dachdecker Meisterbetrieb</h3>
                                 <p class="text-gray-400 text-sm mb-4">Notfall-Hotline, Schnellkontakt & Projektgalerie</p>
                                 <div class="flex items-center gap-2 text-xs font-medium text-white group-hover:text-red-400 transition">
