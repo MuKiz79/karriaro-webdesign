@@ -43,50 +43,6 @@
 
     <!-- Premium Animations -->
     <style>
-        /* Hero Text Reveal Animation */
-        .hero-line-1, .hero-line-2 {
-            display: block;
-            overflow: visible;
-        }
-        .hero-word {
-            display: inline-block;
-            opacity: 0;
-            filter: blur(8px);
-            transform: translateY(15px);
-            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        /* First line - slower timing */
-        .hero-line-1 .hero-word:nth-child(1) { animation-delay: 0.2s; }
-        .hero-line-1 .hero-word:nth-child(2) { animation-delay: 0.5s; }
-        /* Second line - starts after first line finishes */
-        .hero-line-2 .hero-word:nth-child(1) {
-            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards, shimmer 3s ease-in-out 2s infinite;
-        }
-        .hero-line-2 .hero-word:nth-child(2) {
-            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards, shimmer 3s ease-in-out 2.3s infinite;
-        }
-
-        @keyframes heroReveal {
-            to {
-                opacity: 1;
-                filter: blur(0);
-                transform: translateY(0);
-            }
-        }
-
-        /* Shimmer effect for gradient text */
-        .hero-line-2 .hero-word {
-            background: linear-gradient(90deg, #2997ff, #9dcbfb, #2997ff, #9dcbfb, #2997ff);
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
         /* 3D Tilt Card Effect */
         .tilt-card {
             transform-style: preserve-3d;
@@ -279,16 +235,9 @@
                 Neue Kapazitäten für Q1/2026
             </div>
 
-            <h1 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.05]">
-                <span class="hero-line-1">
-                    <span class="hero-word">Websites,</span>
-                    <span class="hero-word">die</span>
-                </span>
-                <br>
-                <span class="hero-line-2">
-                    <span class="hero-word">Umsatz</span>
-                    <span class="hero-word">generieren.</span>
-                </span>
+            <h1 class="reveal text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.05]">
+                Websites, die <br>
+                <span class="text-gradient-blue">Umsatz generieren.</span>
             </h1>
 
             <p class="reveal text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-8 md:mb-12 font-medium leading-relaxed" style="transition-delay: 100ms">
