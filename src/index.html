@@ -41,6 +41,65 @@
     <!-- Tailwind CSS (kompiliert für schnelles Laden) -->
     <link rel="stylesheet" href="/style.css">
 
+    <!-- Premium Animations -->
+    <style>
+        /* Hero Text Reveal Animation */
+        .hero-word {
+            display: inline-block;
+            opacity: 0;
+            filter: blur(10px);
+            transform: translateY(20px);
+            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .hero-word:nth-child(1) { animation-delay: 0.1s; }
+        .hero-word:nth-child(2) { animation-delay: 0.2s; }
+        .hero-text-reveal:nth-child(3) .hero-word:nth-child(1) { animation-delay: 0.35s; }
+        .hero-text-reveal:nth-child(3) .hero-word:nth-child(2) { animation-delay: 0.5s; }
+
+        @keyframes heroReveal {
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        /* Shimmer effect for gradient text */
+        .shimmer {
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* 3D Tilt Card Effect */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+        .tilt-card .tilt-inner {
+            transform: translateZ(30px);
+            transition: transform 0.3s ease-out;
+        }
+        .tilt-card:hover .tilt-inner {
+            transform: translateZ(50px);
+        }
+        .tilt-card .tilt-shine {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            border-radius: inherit;
+        }
+        .tilt-card:hover .tilt-shine {
+            opacity: 1;
+        }
+    </style>
+
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.3/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
@@ -213,9 +272,16 @@
                 Neue Kapazitäten für Q1/2026
             </div>
 
-            <h1 class="reveal text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.05]">
-                Websites, die <br>
-                <span class="text-gradient-blue">Umsatz generieren.</span>
+            <h1 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.05]">
+                <span class="hero-text-reveal">
+                    <span class="hero-word">Websites,</span>
+                    <span class="hero-word">die</span>
+                </span>
+                <br>
+                <span class="hero-text-reveal">
+                    <span class="hero-word text-gradient-blue shimmer">Umsatz</span>
+                    <span class="hero-word text-gradient-blue shimmer">generieren.</span>
+                </span>
             </h1>
 
             <p class="reveal text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mb-8 md:mb-12 font-medium leading-relaxed" style="transition-delay: 100ms">
@@ -477,7 +543,8 @@
             <div class="grid md:grid-cols-2 gap-8">
 
                 <!-- Project 1 (Immersive Card) - Immobilienmakler -->
-                <a href="/portfolio/immobilien-makler.html" class="reveal stagger-1 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
+                <a href="/portfolio/immobilien-makler.html" class="reveal stagger-1 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
+                    <div class="tilt-shine"></div>
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-orange-950 to-slate-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -524,7 +591,8 @@
                 </a>
 
                 <!-- Project 2 (Immersive Card) - Praxis Weber -->
-                <a href="/portfolio/praxis-weber.html" class="reveal stagger-2 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
+                <a href="/portfolio/praxis-weber.html" class="reveal stagger-2 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
+                    <div class="tilt-shine"></div>
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-emerald-950 to-teal-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -571,7 +639,8 @@
                 </a>
 
                 <!-- Project 3 (Immersive Card) - Meisterbetrieb Müller -->
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal stagger-3 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal stagger-3 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
+                    <div class="tilt-shine"></div>
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-blue-950 to-slate-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -618,7 +687,8 @@
                 </a>
 
                 <!-- Project 4 (Immersive Card) - Restaurant -->
-                <a href="/portfolio/restaurant-template.html" class="reveal stagger-4 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
+                <a href="/portfolio/restaurant-template.html" class="reveal stagger-4 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
+                    <div class="tilt-shine"></div>
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-amber-950 to-stone-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -1400,6 +1470,40 @@
                     });
                     ticking = true;
                 }
+            });
+
+            // ===========================================
+            // 7. 3D TILT EFFECT FOR PORTFOLIO CARDS
+            // ===========================================
+            const tiltCards = document.querySelectorAll('.tilt-card');
+
+            tiltCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+
+                    const rotateX = (y - centerY) / 20;
+                    const rotateY = (centerX - x) / 20;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+
+                    // Update shine position
+                    const shine = card.querySelector('.tilt-shine');
+                    if (shine) {
+                        const percentX = (x / rect.width) * 100;
+                        const percentY = (y / rect.height) * 100;
+                        shine.style.setProperty('--mouse-x', `${percentX}%`);
+                        shine.style.setProperty('--mouse-y', `${percentY}%`);
+                    }
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                });
             });
         });
     </script>
