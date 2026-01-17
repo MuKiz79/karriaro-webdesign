@@ -51,10 +51,12 @@
             transform: translateY(20px);
             animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .hero-word:nth-child(1) { animation-delay: 0.1s; }
-        .hero-word:nth-child(2) { animation-delay: 0.2s; }
-        .hero-text-reveal:nth-child(3) .hero-word:nth-child(1) { animation-delay: 0.35s; }
-        .hero-text-reveal:nth-child(3) .hero-word:nth-child(2) { animation-delay: 0.5s; }
+        /* First line */
+        .hero-line-1 .hero-word:nth-child(1) { animation-delay: 0.1s; }
+        .hero-line-1 .hero-word:nth-child(2) { animation-delay: 0.25s; }
+        /* Second line */
+        .hero-line-2 .hero-word:nth-child(1) { animation-delay: 0.45s; }
+        .hero-line-2 .hero-word:nth-child(2) { animation-delay: 0.65s; }
 
         @keyframes heroReveal {
             to {
@@ -66,7 +68,11 @@
 
         /* Shimmer effect for gradient text */
         .shimmer {
+            background: linear-gradient(135deg, #2997ff 0%, #9dcbfb 25%, #2997ff 50%, #9dcbfb 75%, #2997ff 100%);
             background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             animation: shimmer 3s ease-in-out infinite;
         }
         @keyframes shimmer {
@@ -77,19 +83,13 @@
         /* 3D Tilt Card Effect */
         .tilt-card {
             transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-        .tilt-card .tilt-inner {
-            transform: translateZ(30px);
             transition: transform 0.3s ease-out;
-        }
-        .tilt-card:hover .tilt-inner {
-            transform: translateZ(50px);
         }
         .tilt-card .tilt-shine {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15) 0%, transparent 50%);
+            z-index: 50;
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.2) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
@@ -273,14 +273,14 @@
             </div>
 
             <h1 class="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 md:mb-8 leading-[1.05]">
-                <span class="hero-text-reveal">
+                <span class="hero-line-1">
                     <span class="hero-word">Websites,</span>
                     <span class="hero-word">die</span>
                 </span>
                 <br>
-                <span class="hero-text-reveal">
-                    <span class="hero-word text-gradient-blue shimmer">Umsatz</span>
-                    <span class="hero-word text-gradient-blue shimmer">generieren.</span>
+                <span class="hero-line-2">
+                    <span class="hero-word shimmer">Umsatz</span>
+                    <span class="hero-word shimmer">generieren.</span>
                 </span>
             </h1>
 
