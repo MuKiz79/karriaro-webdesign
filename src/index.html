@@ -41,31 +41,6 @@
     <!-- Tailwind CSS (kompiliert für schnelles Laden) -->
     <link rel="stylesheet" href="/style.css">
 
-    <!-- Premium Animations -->
-    <style>
-        /* 3D Tilt Card Effect */
-        .tilt-wrapper {
-            perspective: 1000px;
-        }
-        .tilt-card {
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-        .tilt-card .tilt-shine {
-            position: absolute;
-            inset: 0;
-            z-index: 50;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1) 0%, transparent 50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            border-radius: inherit;
-        }
-        .tilt-card:hover .tilt-shine {
-            opacity: 1;
-        }
-    </style>
-
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.3/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
@@ -499,11 +474,10 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8 tilt-wrapper">
+            <div class="grid md:grid-cols-2 gap-8">
 
                 <!-- Project 1 (Immersive Card) - Immobilienmakler -->
-                <a href="/portfolio/immobilien-makler.html" class="reveal stagger-1 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
-                    <div class="tilt-shine"></div>
+                <a href="/portfolio/immobilien-makler.html" class="reveal stagger-1 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-orange-950 to-slate-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -550,8 +524,7 @@
                 </a>
 
                 <!-- Project 2 (Immersive Card) - Praxis Weber -->
-                <a href="/portfolio/praxis-weber.html" class="reveal stagger-2 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
-                    <div class="tilt-shine"></div>
+                <a href="/portfolio/praxis-weber.html" class="reveal stagger-2 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-emerald-950 to-teal-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -598,8 +571,7 @@
                 </a>
 
                 <!-- Project 3 (Immersive Card) - Meisterbetrieb Müller -->
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal stagger-3 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
-                    <div class="tilt-shine"></div>
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="reveal stagger-3 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-blue-950 to-slate-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -646,8 +618,7 @@
                 </a>
 
                 <!-- Project 4 (Immersive Card) - Restaurant -->
-                <a href="/portfolio/restaurant-template.html" class="reveal stagger-4 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
-                    <div class="tilt-shine"></div>
+                <a href="/portfolio/restaurant-template.html" class="reveal stagger-4 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block">
                     <!-- Background with Live Website Preview -->
                     <div class="absolute inset-0 bg-gradient-to-bl from-amber-950 to-stone-950 transform group-hover:scale-105 transition duration-700 ease-out">
                         <!-- Abstract Shapes -->
@@ -1431,30 +1402,6 @@
                 }
             });
 
-            // ===========================================
-            // 7. 3D TILT EFFECT FOR PORTFOLIO CARDS
-            // ===========================================
-            document.querySelectorAll('.tilt-card').forEach(card => {
-                const maxRotation = 5; // Max degrees of rotation
-
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = (e.clientX - rect.left) / rect.width - 0.5;
-                    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-                    card.style.transform = `rotateY(${x * maxRotation}deg) rotateX(${-y * maxRotation}deg)`;
-
-                    const shine = card.querySelector('.tilt-shine');
-                    if (shine) {
-                        shine.style.setProperty('--mouse-x', `${(x + 0.5) * 100}%`);
-                        shine.style.setProperty('--mouse-y', `${(y + 0.5) * 100}%`);
-                    }
-                });
-
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'rotateY(0) rotateX(0)';
-                });
-            });
         });
     </script>
 
