@@ -41,6 +41,27 @@
     <!-- Tailwind CSS (kompiliert für schnelles Laden) -->
     <link rel="stylesheet" href="/style.css">
 
+    <!-- Logo Animation -->
+    <style>
+        .logo-spin {
+            animation: spin 8s linear infinite;
+        }
+        .group:hover .logo-spin {
+            animation: spin 0.5s linear infinite;
+        }
+        .logo-icon {
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .group:hover .logo-icon {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6));
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.13.3/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
@@ -155,9 +176,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <a href="#" class="text-xl font-bold tracking-tight flex items-center gap-2 group">
-                    <svg class="w-6 h-6" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-6 h-6 logo-icon" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Rotierende Halbkreise -->
-                        <g class="origin-center animate-[spin_8s_linear_infinite]">
+                        <g class="logo-spin origin-center">
                             <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                             <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                         </g>
