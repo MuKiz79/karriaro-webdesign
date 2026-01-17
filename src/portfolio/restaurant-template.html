@@ -16,11 +16,13 @@
     <meta property="og:title" content="Goldener Hirsch | Genuss in München">
     <meta property="og:description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre. Beste Zutaten, handgemacht.">
     <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Goldener Hirsch | Genuss in München">
     <meta name="twitter:description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Schema.org Restaurant -->
     <script type="application/ld+json">
@@ -40,10 +42,7 @@
     }
     </script>
 
-    <!-- Fonts: Elegant Serif für Headlines, Clean Sans für Text -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -65,8 +64,8 @@
                         muted: '#a3a3a3',     // Grau für Nebentext
                     },
                     fontFamily: {
-                        sans: ['Montserrat', 'sans-serif'],
-                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
                     },
                     backgroundImage: {
                         'hero-pattern': "linear-gradient(to bottom, rgba(26,26,26,0.3), rgba(26,26,26,1)), url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=1920&auto=format&fit=crop')",
@@ -105,8 +104,9 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button @click="open = !open" class="md:hidden text-gold p-2">
-                    <i class="fa-solid fa-bars text-xl"></i>
+                <button @click="open = !open" class="md:hidden text-gold p-2" aria-label="Menü öffnen" :aria-expanded="open.toString()">
+                    <i class="fa-solid fa-bars text-xl" x-show="!open"></i>
+                    <i class="fa-solid fa-xmark text-xl" x-show="open" x-cloak></i>
                 </button>
             </div>
         </div>

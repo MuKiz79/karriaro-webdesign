@@ -16,11 +16,13 @@
     <meta property="og:title" content="Salon Elegance | Ihr Friseur & Beauty Experte in Düsseldorf">
     <meta property="og:description" content="Exklusives Haarstyling, Coloration und Wellness. Entspannen Sie in unserem modernen Salon.">
     <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Salon Elegance | Ihr Friseur & Beauty Experte in Düsseldorf">
     <meta name="twitter:description" content="Exklusives Haarstyling, Coloration und Wellness in Düsseldorf.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Schema.org HairSalon -->
     <script type="application/ld+json">
@@ -39,10 +41,7 @@
     }
     </script>
 
-    <!-- Fonts: Cinzel (Luxus Serif) & Lato (Clean Sans) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -64,8 +63,8 @@
                         soft: '#e7e5e4',      // Stone 200 (Elemente)
                     },
                     fontFamily: {
-                        sans: ['Lato', 'sans-serif'],
-                        serif: ['Cinzel', 'serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
                     }
                 }
             }
@@ -96,8 +95,9 @@
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <button @click="open = !open" class="md:hidden text-primary p-2 focus:outline-none">
-                    <i class="fa-solid fa-bars-staggered text-xl"></i>
+                <button @click="open = !open" class="md:hidden text-primary p-2 focus:outline-none" aria-label="Menü öffnen" :aria-expanded="open.toString()">
+                    <i class="fa-solid fa-bars-staggered text-xl" x-show="!open"></i>
+                    <i class="fa-solid fa-xmark text-xl" x-show="open" x-cloak></i>
                 </button>
             </div>
         </div>
@@ -346,7 +346,7 @@
     <!-- FOOTER -->
     <footer class="bg-bg py-8 border-t border-stone-200 text-center text-xs text-stone-500">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="mb-4">&copy; 2026 Salon Elegance. All rights reserved.</p>
+            <p class="mb-4">&copy; 2026 Salon Elegance. Alle Rechte vorbehalten.</p>
             <div class="space-x-4">
                 <a href="#" class="hover:text-primary transition">Impressum</a>
                 <a href="#" class="hover:text-primary transition">Datenschutz</a>

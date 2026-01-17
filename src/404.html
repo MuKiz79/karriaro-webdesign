@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seite nicht gefunden | Karriaro Webdesign</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Design Konfiguration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: '#000000',
+                        surface: '#151516',
+                        primary: '#0071e3',
+                        text: '#f5f5f7',
+                        muted: '#a1a1a6'
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #f5f5f7;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex items-center justify-center">
+
+    <div class="text-center px-4">
+        <!-- 404 Icon -->
+        <div class="mb-8">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 border border-primary/20">
+                <i class="fa-solid fa-compass text-4xl text-primary"></i>
+            </div>
+        </div>
+
+        <!-- Error Code -->
+        <h1 class="text-8xl font-bold text-white mb-4">404</h1>
+
+        <!-- Message -->
+        <h2 class="text-2xl font-semibold text-white mb-4">Seite nicht gefunden</h2>
+        <p class="text-muted text-lg mb-8 max-w-md mx-auto">
+            Die gesuchte Seite existiert nicht oder wurde verschoben.
+            Kein Problem, wir bringen Sie zurück auf Kurs.
+        </p>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-full font-semibold transition">
+                <i class="fa-solid fa-house"></i>
+                Zur Startseite
+            </a>
+            <a href="/#kontakt" class="inline-flex items-center justify-center gap-2 bg-surface hover:bg-white/10 text-white border border-white/10 px-8 py-4 rounded-full font-semibold transition">
+                <i class="fa-solid fa-envelope"></i>
+                Kontakt aufnehmen
+            </a>
+        </div>
+
+        <!-- Branding -->
+        <div class="mt-16 text-muted text-sm">
+            <a href="/" class="inline-flex items-center gap-2 hover:text-white transition">
+                <svg class="w-5 h-5" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g class="origin-center animate-[spin_8s_linear_infinite]">
+                        <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    </g>
+                    <path d="M25 42 L25 10" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M16 20 L25 8 L34 20" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                </svg>
+                Karriaro Webdesign
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

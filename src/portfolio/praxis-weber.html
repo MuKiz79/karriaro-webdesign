@@ -16,11 +16,13 @@
     <meta property="og:title" content="Praxis Dr. Med. Weber - Ihr Spezialist für Gesundheit">
     <meta property="og:description" content="Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.">
     <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Praxis Dr. Med. Weber - Ihr Spezialist für Gesundheit">
     <meta name="twitter:description" content="Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Schema.org MedicalBusiness -->
     <script type="application/ld+json">
@@ -41,10 +43,7 @@
     }
     </script>
 
-    <!-- Google Fonts: Playfair Display (Serif für Titel) & Lato (Sans für Text) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,8 +66,8 @@
                         light: '#ffffff',
                     },
                     fontFamily: {
-                        sans: ['Lato', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'], // Für Überschriften
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
                     }
                 }
             }
@@ -114,9 +113,9 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="flex items-center md:hidden">
-                    <button @click="open = !open" class="text-gray-500 hover:text-primary focus:outline-none p-2">
+                    <button @click="open = !open" class="text-gray-500 hover:text-primary focus:outline-none p-2" aria-label="Menü öffnen" :aria-expanded="open.toString()">
                         <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
-                        <i class="fa-solid fa-xmark text-2xl" x-show="open" style="display: none;"></i>
+                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
                     </button>
                 </div>
             </div>
@@ -352,7 +351,7 @@
                 </div>
             </div>
             <div class="text-center text-xs text-gray-600 mt-16 pt-8 border-t border-gray-800">
-                &copy; 2024 Praxis Dr. Weber. Alle Rechte vorbehalten. Design by Karriaro.
+                &copy; 2026 Praxis Dr. Weber. Alle Rechte vorbehalten. Design by Karriaro.
             </div>
         </div>
     </footer>

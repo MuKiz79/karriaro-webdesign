@@ -16,11 +16,13 @@
     <meta property="og:title" content="Immobilien Hanseat | Exklusive Immobilien in Hamburg">
     <meta property="og:description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien. Diskret, kompetent und persönlich.">
     <meta property="og:locale" content="de_DE">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Immobilien Hanseat | Exklusive Immobilien in Hamburg">
     <meta name="twitter:description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien in Hamburg.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1200&auto=format&fit=crop">
 
     <!-- Schema.org LocalBusiness -->
     <script type="application/ld+json">
@@ -43,10 +45,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 
-    <!-- Fonts: Playfair Display (Premium Serif) & Manrope (Modern Sans) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -68,8 +67,8 @@
                         surface: '#ffffff',
                     },
                     fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
                     }
                 }
             }
@@ -115,8 +114,9 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="flex items-center md:hidden">
-                    <button @click="open = !open" class="text-primary hover:text-accent p-2">
-                        <i class="fa-solid fa-bars text-2xl"></i>
+                    <button @click="open = !open" class="text-primary hover:text-accent p-2" aria-label="Menü öffnen" :aria-expanded="open.toString()">
+                        <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
+                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
                     </button>
                 </div>
             </div>
