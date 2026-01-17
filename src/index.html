@@ -44,19 +44,18 @@
     <!-- Premium Animations -->
     <style>
         /* 3D Tilt Card Effect */
+        .tilt-wrapper {
+            perspective: 1000px;
+        }
         .tilt-card {
             transform-style: preserve-3d;
-            will-change: transform;
-        }
-        .tilt-card.active {
-            /* Override reveal animation transform when tilt is active */
-            transition: none !important;
+            transition: transform 0.1s ease-out;
         }
         .tilt-card .tilt-shine {
             position: absolute;
             inset: 0;
             z-index: 50;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15) 0%, transparent 50%);
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.1) 0%, transparent 50%);
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
@@ -500,7 +499,7 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="grid md:grid-cols-2 gap-8 tilt-wrapper">
 
                 <!-- Project 1 (Immersive Card) - Immobilienmakler -->
                 <a href="/portfolio/immobilien-makler.html" class="reveal stagger-1 group relative h-[350px] md:h-[500px] rounded-2xl md:rounded-3xl overflow-hidden cursor-pointer border border-white/10 shadow-2xl block tilt-card">
@@ -1435,48 +1434,25 @@
             // ===========================================
             // 7. 3D TILT EFFECT FOR PORTFOLIO CARDS
             // ===========================================
-            const tiltCards = document.querySelectorAll('.tilt-card');
-
-            tiltCards.forEach(card => {
-                let rafId = null;
-
-                card.addEventListener('mouseenter', () => {
-                    card.classList.add('active');
-                });
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                const maxRotation = 5; // Max degrees of rotation
 
                 card.addEventListener('mousemove', (e) => {
-                    if (rafId) cancelAnimationFrame(rafId);
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-                    rafId = requestAnimationFrame(() => {
-                        const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
+                    card.style.transform = `rotateY(${x * maxRotation}deg) rotateX(${-y * maxRotation}deg)`;
 
-                        const centerX = rect.width / 2;
-                        const centerY = rect.height / 2;
-
-                        const rotateX = (y - centerY) / 15;
-                        const rotateY = (centerX - x) / 15;
-
-                        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-                        // Update shine position
-                        const shine = card.querySelector('.tilt-shine');
-                        if (shine) {
-                            shine.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
-                            shine.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
-                        }
-                    });
+                    const shine = card.querySelector('.tilt-shine');
+                    if (shine) {
+                        shine.style.setProperty('--mouse-x', `${(x + 0.5) * 100}%`);
+                        shine.style.setProperty('--mouse-y', `${(y + 0.5) * 100}%`);
+                    }
                 });
 
                 card.addEventListener('mouseleave', () => {
-                    if (rafId) cancelAnimationFrame(rafId);
-                    card.classList.remove('active');
-                    card.style.transition = 'transform 0.5s ease-out';
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                    setTimeout(() => {
-                        card.style.transition = '';
-                    }, 500);
+                    card.style.transform = 'rotateY(0) rotateX(0)';
                 });
             });
         });
