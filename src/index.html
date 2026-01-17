@@ -44,22 +44,26 @@
     <!-- Premium Animations -->
     <style>
         /* Hero Text Reveal Animation */
+        .hero-line-1, .hero-line-2 {
+            display: block;
+            overflow: visible;
+        }
         .hero-word {
             display: inline-block;
             opacity: 0;
-            filter: blur(10px);
-            transform: translateY(20px);
-            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            filter: blur(8px);
+            transform: translateY(15px);
+            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        /* First line */
-        .hero-line-1 .hero-word:nth-child(1) { animation-delay: 0.1s; }
-        .hero-line-1 .hero-word:nth-child(2) { animation-delay: 0.25s; }
-        /* Second line - use animation shorthand with both animations */
+        /* First line - slower timing */
+        .hero-line-1 .hero-word:nth-child(1) { animation-delay: 0.2s; }
+        .hero-line-1 .hero-word:nth-child(2) { animation-delay: 0.5s; }
+        /* Second line - starts after first line finishes */
         .hero-line-2 .hero-word:nth-child(1) {
-            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards, shimmer 3s ease-in-out 1.25s infinite;
+            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards, shimmer 3s ease-in-out 2s infinite;
         }
         .hero-line-2 .hero-word:nth-child(2) {
-            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards, shimmer 3s ease-in-out 1.45s infinite;
+            animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards, shimmer 3s ease-in-out 2.3s infinite;
         }
 
         @keyframes heroReveal {
