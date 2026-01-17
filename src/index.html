@@ -54,9 +54,13 @@
         /* First line */
         .hero-line-1 .hero-word:nth-child(1) { animation-delay: 0.1s; }
         .hero-line-1 .hero-word:nth-child(2) { animation-delay: 0.25s; }
-        /* Second line */
-        .hero-line-2 .hero-word:nth-child(1) { animation-delay: 0.45s; }
-        .hero-line-2 .hero-word:nth-child(2) { animation-delay: 0.65s; }
+        /* Second line - use animation shorthand with both animations */
+        .hero-line-2 .hero-word:nth-child(1) {
+            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards, shimmer 3s ease-in-out 1.25s infinite;
+        }
+        .hero-line-2 .hero-word:nth-child(2) {
+            animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s forwards, shimmer 3s ease-in-out 1.45s infinite;
+        }
 
         @keyframes heroReveal {
             to {
@@ -67,13 +71,12 @@
         }
 
         /* Shimmer effect for gradient text */
-        .shimmer {
-            background: linear-gradient(135deg, #2997ff 0%, #9dcbfb 25%, #2997ff 50%, #9dcbfb 75%, #2997ff 100%);
+        .hero-line-2 .hero-word {
+            background: linear-gradient(90deg, #2997ff, #9dcbfb, #2997ff, #9dcbfb, #2997ff);
             background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 3s ease-in-out infinite;
         }
         @keyframes shimmer {
             0%, 100% { background-position: 0% 50%; }
@@ -279,8 +282,8 @@
                 </span>
                 <br>
                 <span class="hero-line-2">
-                    <span class="hero-word shimmer">Umsatz</span>
-                    <span class="hero-word shimmer">generieren.</span>
+                    <span class="hero-word">Umsatz</span>
+                    <span class="hero-word">generieren.</span>
                 </span>
             </h1>
 
