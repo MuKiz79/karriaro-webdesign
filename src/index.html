@@ -74,21 +74,49 @@
             0%, 100% { transform: translateY(0) rotateY(-10deg) rotateX(4deg); }
             50% { transform: translateY(-10px) rotateY(-10deg) rotateX(4deg); }
         }
-        .website-preview {
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
+
+        /* 3D Flip Container */
+        .flip-container {
+            perspective: 2000px;
+            transform-style: preserve-3d;
         }
-        .website-preview.active {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-            pointer-events: auto;
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .flip-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flip-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Code Glow Effect */
+        @keyframes codeGlow {
+            0% { text-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.5); opacity: 1; }
+            100% { text-shadow: none; opacity: 1; }
+        }
+        .code-line-glow {
+            animation: codeGlow 0.5s ease-out forwards;
+        }
+
+        /* Progress bar glow */
         .progress-bar {
             width: 0%;
             transition: width 0.1s linear;
+            box-shadow: 0 0 10px #3b82f6, 0 0 20px rgba(59, 130, 246, 0.5);
         }
+
         .animate-float-card {
             animation: float 6s ease-in-out infinite;
         }
@@ -332,27 +360,30 @@
                         <div class="w-14"></div>
                     </div>
 
-                    <!-- CONTAINER: CODE & PREVIEW -->
-                    <div class="relative flex-1 bg-[#0d0d0f] overflow-hidden">
+                    <!-- CONTAINER: CODE & PREVIEW with 3D Flip -->
+                    <div class="relative flex-1 overflow-hidden flip-container">
+                        <div id="flip-inner" class="flip-inner">
 
-                        <!-- LAYER 1: CODE EDITOR -->
-                        <div class="absolute inset-0 p-6 md:p-10 overflow-x-auto">
-                            <div class="flex h-full">
-                                <!-- Line Numbers -->
-                                <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block text-gray-700 pr-6 border-r border-gray-800 select-none text-right w-14"></div>
-                                <!-- Code Content -->
-                                <pre id="code-content" class="font-mono text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
-                                <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
+                            <!-- FRONT: CODE EDITOR -->
+                            <div class="flip-front bg-[#0d0d0f]">
+                                <div class="absolute inset-0 p-6 md:p-10 overflow-x-auto">
+                                    <div class="flex h-full">
+                                        <!-- Line Numbers -->
+                                        <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block text-gray-700 pr-6 border-r border-gray-800 select-none text-right w-14"></div>
+                                        <!-- Code Content -->
+                                        <pre id="code-content" class="font-mono text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
+                                        <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
+                                    </div>
+                                </div>
+
+                                <!-- LOADING BAR -->
+                                <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
+                                    <div id="progress-bar" class="h-full bg-blue-500 progress-bar"></div>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- LOADING BAR -->
-                        <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
-                            <div id="progress-bar" class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] progress-bar"></div>
-                        </div>
-
-                        <!-- LAYER 2: FINISHED WEBSITE PREVIEW -->
-                        <div id="website-preview" class="absolute inset-0 bg-white z-30 website-preview origin-center flex flex-col overflow-hidden shadow-2xl">
+                            <!-- BACK: FINISHED WEBSITE PREVIEW -->
+                            <div id="website-preview" class="flip-back bg-white flex flex-col overflow-hidden shadow-2xl">
                             <!-- Preview Header -->
                             <div class="h-16 md:h-20 bg-white/90 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-40">
                                 <div class="flex items-center gap-3">
@@ -405,7 +436,7 @@
                                                 <div class="w-10 md:w-12 h-10 md:h-12 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20"></div>
                                             </div>
                                             <div class="flex gap-3 md:gap-4 items-end">
-                                                <div class="text-white text-3xl md:text-4xl font-bold">€124k</div>
+                                                <div id="revenue-counter" class="text-white text-3xl md:text-4xl font-bold">€0</div>
                                                 <div class="text-white/80 text-xs md:text-sm mb-1">+24% diesen Monat</div>
                                             </div>
                                         </div>
@@ -419,7 +450,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </div> <!-- /flip-inner -->
+                    </div> <!-- /flip-container -->
                 </div>
 
                 <!-- Improved Background Glow -->
@@ -1337,8 +1369,29 @@
             const lineNumbers = document.getElementById('line-numbers');
             const cursor = document.getElementById('cursor');
             const progressBar = document.getElementById('progress-bar');
-            const websitePreview = document.getElementById('website-preview');
+            const flipInner = document.getElementById('flip-inner');
+            const revenueCounter = document.getElementById('revenue-counter');
             let codeTypingStarted = false;
+
+            // Counter animation function
+            function animateCounter(element, target, duration) {
+                const start = 0;
+                const startTime = performance.now();
+
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Easing function for smooth deceleration
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.floor(start + (target - start) * easeOut);
+                    element.textContent = '€' + current.toLocaleString('de-DE') + 'k';
+
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                requestAnimationFrame(update);
+            }
 
             function typeCode() {
                 if (codeTypingStarted) return;
@@ -1350,6 +1403,7 @@
                 let completedLines = [];
                 let totalChars = codeLines.reduce((sum, line) => sum + line.text.replace(/<[^>]*>/g, '').length, 0);
                 let typedChars = 0;
+                let lastCompletedLine = -1;
 
                 function updateLineNumbers() {
                     let nums = '';
@@ -1366,17 +1420,24 @@
 
                 function typeNextChar() {
                     if (lineIndex >= codeLines.length) {
-                        // Typing complete - show website preview
+                        // Typing complete - 3D flip to website preview
                         cursor.style.display = 'none';
                         progressBar.style.width = '100%';
 
                         setTimeout(() => {
-                            websitePreview.classList.add('active');
+                            // 3D Flip animation
+                            flipInner.classList.add('flipped');
+
+                            // Start counter animation after flip
+                            setTimeout(() => {
+                                animateCounter(revenueCounter, 124, 2000);
+                            }, 400);
                         }, 500);
 
-                        // After 5 seconds, hide preview and restart
+                        // After 5 seconds, flip back and restart
                         setTimeout(() => {
-                            websitePreview.classList.remove('active');
+                            flipInner.classList.remove('flipped');
+                            revenueCounter.textContent = '€0';
 
                             setTimeout(() => {
                                 // Reset everything
@@ -1385,6 +1446,7 @@
                                 currentLine = '';
                                 completedLines = [];
                                 typedChars = 0;
+                                lastCompletedLine = -1;
                                 codeContent.innerHTML = '';
                                 progressBar.style.width = '0%';
                                 cursor.style.display = 'inline-block';
@@ -1393,7 +1455,7 @@
                                 // Restart typing
                                 setTimeout(typeNextChar, 500);
                             }, 600);
-                        }, 5000);
+                        }, 5500);
 
                         return;
                     }
@@ -1423,20 +1485,30 @@
                         updateProgress();
                         setTimeout(typeNextChar, 20 + Math.random() * 30);
                     } else {
+                        // Line completed - add glow effect
                         completedLines.push(line.text);
+                        lastCompletedLine = completedLines.length - 1;
                         lineIndex++;
                         charIndex = 0;
                         currentLine = '';
                         updateLineNumbers();
-                        updateCodeDisplay();
+                        updateCodeDisplay(true); // Pass flag to add glow
                         setTimeout(typeNextChar, line.delay);
                     }
                 }
 
-                function updateCodeDisplay() {
-                    let fullCode = completedLines.join('\n');
+                function updateCodeDisplay(addGlow = false) {
+                    let lines = completedLines.map((line, index) => {
+                        // Add glow class to the last completed line
+                        if (addGlow && index === lastCompletedLine) {
+                            return '<div class="code-line-glow">' + line + '</div>';
+                        }
+                        return '<div>' + line + '</div>';
+                    });
+
+                    let fullCode = lines.join('');
                     if (currentLine) {
-                        fullCode += (completedLines.length > 0 ? '\n' : '') + currentLine;
+                        fullCode += '<div>' + currentLine + '</div>';
                     }
                     codeContent.innerHTML = fullCode;
                 }
