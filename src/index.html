@@ -199,22 +199,24 @@
             right: 0;
             bottom: 0;
             overflow: hidden;
-            opacity: 0.15;
+            opacity: 0.6;
         }
         .matrix-column {
             position: absolute;
             top: -100%;
             font-family: monospace;
-            font-size: 12px;
+            font-size: 16px;
             color: #3b82f6;
             writing-mode: vertical-rl;
             text-orientation: upright;
             animation: matrixFall linear infinite;
-            text-shadow: 0 0 8px #3b82f6;
+            text-shadow: 0 0 10px #3b82f6, 0 0 20px rgba(59, 130, 246, 0.6);
         }
         @keyframes matrixFall {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(200%); }
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(200%); opacity: 0; }
         }
 
         /* Preview Staggered Fade-In */
@@ -238,29 +240,21 @@
             transform: scaleY(1);
         }
 
-        /* Counter Animation Effects - White/Gold glow + Scale pulse */
+        /* Counter Animation Effects */
         @keyframes counterPulse {
-            0%, 100% {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.6), 0 0 50px rgba(250, 204, 21, 0.4);
-                transform: scale(1);
-            }
-            50% {
-                text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(255, 255, 255, 0.8), 0 0 60px rgba(250, 204, 21, 0.6);
-                transform: scale(1.08);
-            }
+            0%, 100% { text-shadow: 0 0 0 transparent; }
+            50% { text-shadow: 0 0 20px rgba(52, 211, 153, 0.8), 0 0 40px rgba(52, 211, 153, 0.4); }
         }
         @keyframes counterBounce {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
         .counter-animating {
-            animation: counterPulse 0.4s ease-in-out infinite;
-            display: inline-block;
+            animation: counterPulse 0.5s ease-in-out infinite;
         }
         .counter-done {
-            animation: counterBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(250, 204, 21, 0.5);
+            animation: counterBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         /* CTA Button Shimmer */
@@ -1670,21 +1664,21 @@
                 chartBars.forEach(bar => bar.classList.remove('grow'));
             }
 
-            // Create Matrix rain effect
+            // Create Matrix rain effect - Enhanced visibility
             function createMatrixRain() {
                 matrixRain.innerHTML = '';
-                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-                const columns = 20;
+                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン<>{}[]=/';
+                const columns = 30;
 
                 for (let i = 0; i < columns; i++) {
                     const column = document.createElement('div');
                     column.className = 'matrix-column';
-                    column.style.left = (i * 5) + '%';
-                    column.style.animationDuration = (1 + Math.random() * 2) + 's';
-                    column.style.animationDelay = (Math.random() * 2) + 's';
+                    column.style.left = (i * 3.33) + '%';
+                    column.style.animationDuration = (0.8 + Math.random() * 1.2) + 's';
+                    column.style.animationDelay = (Math.random() * 0.5) + 's';
 
                     let text = '';
-                    for (let j = 0; j < 20; j++) {
+                    for (let j = 0; j < 25; j++) {
                         text += chars[Math.floor(Math.random() * chars.length)] + ' ';
                     }
                     column.textContent = text;
