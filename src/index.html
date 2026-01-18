@@ -199,24 +199,22 @@
             right: 0;
             bottom: 0;
             overflow: hidden;
-            opacity: 0.6;
+            opacity: 0.35;
         }
         .matrix-column {
             position: absolute;
             top: -100%;
             font-family: monospace;
-            font-size: 16px;
+            font-size: 12px;
             color: #3b82f6;
             writing-mode: vertical-rl;
             text-orientation: upright;
             animation: matrixFall linear infinite;
-            text-shadow: 0 0 10px #3b82f6, 0 0 20px rgba(59, 130, 246, 0.6);
+            text-shadow: 0 0 8px #3b82f6;
         }
         @keyframes matrixFall {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(200%); opacity: 0; }
+            0% { transform: translateY(0); }
+            100% { transform: translateY(200%); }
         }
 
         /* Preview Staggered Fade-In */
@@ -1664,21 +1662,21 @@
                 chartBars.forEach(bar => bar.classList.remove('grow'));
             }
 
-            // Create Matrix rain effect - Enhanced visibility
+            // Create Matrix rain effect
             function createMatrixRain() {
                 matrixRain.innerHTML = '';
-                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン<>{}[]=/';
-                const columns = 30;
+                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+                const columns = 20;
 
                 for (let i = 0; i < columns; i++) {
                     const column = document.createElement('div');
                     column.className = 'matrix-column';
-                    column.style.left = (i * 3.33) + '%';
-                    column.style.animationDuration = (0.8 + Math.random() * 1.2) + 's';
-                    column.style.animationDelay = (Math.random() * 0.5) + 's';
+                    column.style.left = (i * 5) + '%';
+                    column.style.animationDuration = (1 + Math.random() * 2) + 's';
+                    column.style.animationDelay = (Math.random() * 2) + 's';
 
                     let text = '';
-                    for (let j = 0; j < 25; j++) {
+                    for (let j = 0; j < 20; j++) {
                         text += chars[Math.floor(Math.random() * chars.length)] + ' ';
                     }
                     column.textContent = text;
