@@ -74,6 +74,15 @@
             width: 100%;
         }
 
+        /* Scroll Indicator Bounce */
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
         /* Website Preview Animation */
         @keyframes float {
             0%, 100% { transform: translateY(0) rotateY(-10deg) rotateX(4deg); }
@@ -662,6 +671,14 @@
 
                 <!-- Improved Background Glow -->
                 <div class="absolute -inset-1 top-8 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 blur-3xl -z-10 opacity-60 animate-pulse"></div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="hidden md:flex flex-col items-center mt-12 md:mt-16 animate-bounce-slow">
+                <span class="text-gray-500 text-xs uppercase tracking-widest mb-2">Mehr entdecken</span>
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
             </div>
         </div>
     </section>
