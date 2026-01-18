@@ -1746,11 +1746,12 @@
                         } else {
                             clearInterval(msgInterval);
                             setTimeout(() => {
-                                createParticles(30);
+                                createParticles(120);
+                                // Longer delay to enjoy the firework effect
                                 setTimeout(() => {
                                     compileOverlay.classList.remove('active');
                                     resolve();
-                                }, 400);
+                                }, 1200);
                             }, 300);
                         }
                     }, 350);
