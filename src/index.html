@@ -238,6 +238,23 @@
             transform: scaleY(1);
         }
 
+        /* Counter Animation Effects */
+        @keyframes counterPulse {
+            0%, 100% { text-shadow: 0 0 0 transparent; }
+            50% { text-shadow: 0 0 20px rgba(52, 211, 153, 0.8), 0 0 40px rgba(52, 211, 153, 0.4); }
+        }
+        @keyframes counterBounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .counter-animating {
+            animation: counterPulse 0.5s ease-in-out infinite;
+        }
+        .counter-done {
+            animation: counterBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
         /* CTA Button Shimmer */
         @keyframes shimmer {
             0% { background-position: -200% center; }
@@ -1551,10 +1568,13 @@
             const particleContainer = document.getElementById('particle-container');
             let codeTypingStarted = false;
 
-            // Counter animation function
+            // Counter animation function - Enhanced with glow and bounce
             function animateCounter(element, target, duration) {
                 const start = 0;
                 const startTime = performance.now();
+
+                // Add pulsing glow during animation
+                element.classList.add('counter-animating');
 
                 function update(currentTime) {
                     const elapsed = currentTime - startTime;
@@ -1565,17 +1585,27 @@
 
                     if (progress < 1) {
                         requestAnimationFrame(update);
+                    } else {
+                        // Animation complete - remove pulse, add bounce
+                        element.classList.remove('counter-animating');
+                        element.classList.add('counter-done');
+                        setTimeout(() => {
+                            element.classList.remove('counter-done');
+                        }, 400);
                     }
                 }
                 requestAnimationFrame(update);
             }
 
-            // Percent counter animation
+            // Percent counter animation - Enhanced with glow and bounce
             const percentCounter = document.getElementById('percent-counter');
             function animatePercent() {
                 const target = 24;
-                const duration = 1500;
+                const duration = 3000; // Slower: 3 seconds
                 const startTime = performance.now();
+
+                // Add pulsing glow during animation
+                percentCounter.classList.add('counter-animating');
 
                 function update(currentTime) {
                     const elapsed = currentTime - startTime;
@@ -1586,6 +1616,13 @@
 
                     if (progress < 1) {
                         requestAnimationFrame(update);
+                    } else {
+                        // Animation complete - remove pulse, add bounce
+                        percentCounter.classList.remove('counter-animating');
+                        percentCounter.classList.add('counter-done');
+                        setTimeout(() => {
+                            percentCounter.classList.remove('counter-done');
+                        }, 400);
                     }
                 }
                 requestAnimationFrame(update);
@@ -1812,7 +1849,7 @@
 
                         // Start counter animation after flip
                         setTimeout(() => {
-                            animateCounter(revenueCounter, 124, 2000);
+                            animateCounter(revenueCounter, 124, 3000); // 3 seconds for better visibility
                             animatePercent();
                         }, 600);
 
