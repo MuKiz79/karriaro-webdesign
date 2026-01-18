@@ -68,6 +68,32 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+
+        /* Website Preview Animation */
+        @keyframes revealPreview {
+            0%, 45% { opacity: 0; transform: scale(0.95) translateY(20px); pointer-events: none; }
+            50% { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+            90% { opacity: 1; transform: scale(1) translateY(0); }
+            95%, 100% { opacity: 0; transform: scale(1.02); pointer-events: none; }
+        }
+        @keyframes progress {
+            0%, 40% { width: 0%; }
+            45% { width: 100%; }
+            46%, 100% { width: 100%; }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateY(-8deg) rotateX(4deg); }
+            50% { transform: translateY(-10px) rotateY(-8deg) rotateX(4deg); }
+        }
+        .animate-reveal-preview {
+            animation: revealPreview 14s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .animate-progress {
+            animation: progress 14s infinite linear;
+        }
+        .animate-float-card {
+            animation: float 6s ease-in-out infinite;
+        }
     </style>
 
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
@@ -291,51 +317,109 @@
                 </div>
             </div>
 
-            <!-- ENHANCED Code Editor Visual with Typing Animation -->
-            <div class="reveal relative max-w-3xl mx-auto" style="transition-delay: 300ms" id="code-editor">
-                <div class="code-glass rounded-2xl overflow-hidden text-left relative z-10">
+            <!-- ANIMATED CODE TO WEBSITE TRANSFORMATION -->
+            <div class="reveal relative max-w-4xl mx-auto h-[500px] md:h-[580px]" style="transition-delay: 300ms" id="code-editor">
+                <div class="code-glass rounded-2xl overflow-hidden text-left relative z-10 w-full h-full flex flex-col border border-white/10 shadow-2xl">
+
                     <!-- Mac Window Header -->
-                    <div class="h-12 border-b border-white/5 flex items-center px-4 justify-between bg-white/[0.02]">
+                    <div class="h-12 border-b border-white/5 flex items-center px-5 justify-between bg-[#0a0a0c] z-30">
                         <div class="flex gap-2">
                             <div class="w-3 h-3 rounded-full bg-[#ff5f57] border border-[#e0443e]"></div>
                             <div class="w-3 h-3 rounded-full bg-[#febc2e] border border-[#d89e24]"></div>
                             <div class="w-3 h-3 rounded-full bg-[#28c840] border border-[#1aab29]"></div>
                         </div>
-                        <div class="text-xs text-muted font-mono opacity-70 flex items-center gap-2">
-                            <i class="fa-solid fa-lock text-[10px]"></i>
-                            erfolgs_strategie.js
+                        <div class="text-xs text-gray-500 font-mono flex items-center gap-2 opacity-60 bg-black/40 px-4 py-1.5 rounded-md border border-white/5">
+                            <i class="fa-solid fa-lock text-[10px] text-green-500"></i> karriaro_engine.js
                         </div>
-                        <div class="w-14"></div> <!-- Spacer for centering -->
+                        <div class="w-14"></div>
                     </div>
 
-                    <!-- Editor Body -->
-                    <div class="flex p-6 md:p-8 overflow-x-auto relative">
-                        <!-- Line Numbers -->
-                        <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block"></div>
+                    <!-- CONTAINER: CODE & PREVIEW -->
+                    <div class="relative flex-1 bg-[#0d0d0f] overflow-hidden">
 
-                        <!-- Code Content with Typing Animation -->
-                        <pre id="code-content" class="font-mono text-sm md:text-base text-gray-300 leading-relaxed pl-0 md:pl-6 w-full min-h-[280px]"></pre>
-                        <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
-
-                        <!-- Subtle Highlight Overlay -->
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-                    </div>
-
-                    <!-- Ergebnis-Anzeige (initially hidden) -->
-                    <div id="code-result" class="border-t border-white/5 px-6 md:px-8 py-4 bg-[#0d0d0e] flex items-center justify-between opacity-0 transition-opacity duration-500">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                            <span class="font-mono text-sm text-green-400">Kompilierung erfolgreich</span>
+                        <!-- LAYER 1: CODE EDITOR -->
+                        <div class="absolute inset-0 p-6 md:p-10 overflow-x-auto">
+                            <div class="flex h-full">
+                                <!-- Line Numbers -->
+                                <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block text-gray-700 pr-6 border-r border-gray-800 select-none text-right w-14"></div>
+                                <!-- Code Content -->
+                                <pre id="code-content" class="font-mono text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
+                                <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
+                            </div>
                         </div>
-                        <div class="flex items-center gap-4 text-xs font-mono text-gray-500">
-                            <span><i class="fa-solid fa-bolt text-yellow-500 mr-1"></i> 0.4s Ladezeit</span>
-                            <span><i class="fa-solid fa-chart-line text-green-500 mr-1"></i> 100/100 Score</span>
+
+                        <!-- LOADING BAR -->
+                        <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
+                            <div class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] animate-progress"></div>
+                        </div>
+
+                        <!-- LAYER 2: FINISHED WEBSITE PREVIEW -->
+                        <div class="absolute inset-0 bg-white z-30 animate-reveal-preview origin-center flex flex-col overflow-hidden shadow-2xl">
+                            <!-- Preview Header -->
+                            <div class="h-16 md:h-20 bg-white/90 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-40">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 shadow-lg shadow-blue-200 flex items-center justify-center text-white font-bold text-sm md:text-lg">K</div>
+                                    <div class="w-20 md:w-24 h-3 md:h-4 bg-slate-900 rounded-full"></div>
+                                </div>
+                                <div class="hidden md:flex gap-8">
+                                    <div class="w-16 md:w-20 h-2.5 bg-slate-200 rounded-full"></div>
+                                    <div class="w-16 md:w-20 h-2.5 bg-slate-200 rounded-full"></div>
+                                </div>
+                                <div class="w-24 md:w-32 h-8 md:h-10 bg-black rounded-lg shadow-xl"></div>
+                            </div>
+
+                            <!-- Preview Body -->
+                            <div class="flex-1 bg-slate-50 relative flex items-center px-6 md:px-12 gap-8 md:gap-16 overflow-hidden">
+                                <div class="absolute top-[-20%] right-[-10%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-100 rounded-full blur-[100px] opacity-60"></div>
+
+                                <!-- Left Content -->
+                                <div class="w-full md:w-5/12 space-y-6 md:space-y-8 z-10 py-8">
+                                    <div class="w-fit px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white border border-blue-100 flex items-center gap-2 md:gap-3 shadow-sm">
+                                        <div class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></div>
+                                        <div class="w-16 md:w-24 h-2 bg-slate-300 rounded-full"></div>
+                                    </div>
+                                    <div class="space-y-3 md:space-y-4">
+                                        <div class="w-full h-10 md:h-14 bg-slate-900 rounded-xl shadow-md"></div>
+                                        <div class="w-3/4 h-10 md:h-14 bg-slate-900 rounded-xl shadow-md"></div>
+                                    </div>
+                                    <div class="space-y-2 md:space-y-3 pt-2">
+                                        <div class="w-full h-2 md:h-3 bg-slate-400 rounded"></div>
+                                        <div class="w-5/6 h-2 md:h-3 bg-slate-400 rounded"></div>
+                                    </div>
+                                    <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
+                                        <div class="w-32 md:w-40 h-10 md:h-14 bg-blue-600 rounded-xl shadow-xl shadow-blue-200"></div>
+                                        <div class="w-10 md:w-14 h-10 md:h-14 bg-white border border-slate-200 rounded-xl shadow-sm"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Dashboard Card -->
+                                <div class="hidden md:block w-7/12 h-[80%] relative">
+                                    <div class="absolute right-[-5%] top-8 w-[110%] h-full bg-white rounded-l-3xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden animate-float-card z-10">
+                                        <div class="h-40 md:h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-6 md:p-8 relative overflow-hidden">
+                                            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                                            <div class="flex justify-between items-start relative z-10 mb-6 md:mb-8">
+                                                <div class="w-10 md:w-12 h-10 md:h-12 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20"></div>
+                                            </div>
+                                            <div class="flex gap-3 md:gap-4 items-end">
+                                                <div class="text-white text-3xl md:text-4xl font-bold">€124k</div>
+                                                <div class="text-white/80 text-xs md:text-sm mb-1">+24% diesen Monat</div>
+                                            </div>
+                                        </div>
+                                        <div class="p-6 md:p-8 flex gap-3 md:gap-4 h-40 md:h-48 items-end">
+                                            <div class="w-full bg-blue-50 rounded-t-lg h-[40%]"></div>
+                                            <div class="w-full bg-blue-100 rounded-t-lg h-[60%]"></div>
+                                            <div class="w-full bg-blue-600 rounded-t-lg h-[85%] shadow-lg shadow-blue-200"></div>
+                                            <div class="w-full bg-blue-100 rounded-t-lg h-[50%]"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Improved Background Glow -->
-                <div class="absolute -inset-1 top-4 bg-gradient-to-r from-primary/30 via-blue-600/30 to-purple-600/30 blur-2xl -z-10 opacity-60 animate-pulse-slow"></div>
+                <div class="absolute -inset-1 top-8 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 blur-3xl -z-10 opacity-60 animate-pulse"></div>
             </div>
         </div>
     </section>
