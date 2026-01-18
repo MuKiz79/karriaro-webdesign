@@ -120,6 +120,84 @@
         .animate-float-card {
             animation: float 6s ease-in-out infinite;
         }
+
+        /* Ghost Cursor Effect */
+        .ghost-cursor {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: rgba(59, 130, 246, 0.3);
+            filter: blur(1px);
+            pointer-events: none;
+            animation: ghostPulse 0.75s step-end infinite;
+        }
+        @keyframes ghostPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.2; }
+        }
+
+        /* Particle Effect */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 6px #3b82f6, 0 0 12px rgba(59, 130, 246, 0.5);
+        }
+        @keyframes particleFly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+        }
+
+        /* Compilation Effect */
+        .compile-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(13, 13, 15, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 25;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .compile-overlay.active {
+            opacity: 1;
+        }
+        .compile-text {
+            font-family: monospace;
+            font-size: 14px;
+            color: #3b82f6;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+        }
+        .matrix-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+        .matrix-column {
+            position: absolute;
+            top: -100%;
+            font-family: monospace;
+            font-size: 12px;
+            color: #3b82f6;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            animation: matrixFall linear infinite;
+            text-shadow: 0 0 8px #3b82f6;
+        }
+        @keyframes matrixFall {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(200%); }
+        }
     </style>
 
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
@@ -367,14 +445,27 @@
                             <!-- FRONT: CODE EDITOR -->
                             <div class="flip-front bg-[#0d0d0f]">
                                 <div class="absolute inset-0 p-6 md:p-10 overflow-x-auto">
-                                    <div class="flex h-full">
+                                    <div class="flex h-full relative">
                                         <!-- Line Numbers -->
                                         <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block text-gray-700 pr-6 border-r border-gray-800 select-none text-right w-14"></div>
                                         <!-- Code Content -->
                                         <pre id="code-content" class="font-mono text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
                                         <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
+                                        <span id="ghost-cursor" class="ghost-cursor hidden"></span>
                                     </div>
                                 </div>
+
+                                <!-- COMPILATION OVERLAY -->
+                                <div id="compile-overlay" class="compile-overlay">
+                                    <div class="matrix-rain" id="matrix-rain"></div>
+                                    <div class="relative z-10 text-center">
+                                        <div class="compile-text text-lg mb-2" id="compile-status">Kompiliere...</div>
+                                        <div class="compile-text text-xs opacity-60" id="compile-detail">Optimiere für maximale Performance</div>
+                                    </div>
+                                </div>
+
+                                <!-- PARTICLE CONTAINER -->
+                                <div id="particle-container" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
 
                                 <!-- LOADING BAR -->
                                 <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
@@ -1368,9 +1459,15 @@
             const codeContent = document.getElementById('code-content');
             const lineNumbers = document.getElementById('line-numbers');
             const cursor = document.getElementById('cursor');
+            const ghostCursor = document.getElementById('ghost-cursor');
             const progressBar = document.getElementById('progress-bar');
             const flipInner = document.getElementById('flip-inner');
             const revenueCounter = document.getElementById('revenue-counter');
+            const compileOverlay = document.getElementById('compile-overlay');
+            const compileStatus = document.getElementById('compile-status');
+            const compileDetail = document.getElementById('compile-detail');
+            const matrixRain = document.getElementById('matrix-rain');
+            const particleContainer = document.getElementById('particle-container');
             let codeTypingStarted = false;
 
             // Counter animation function
@@ -1381,7 +1478,6 @@
                 function update(currentTime) {
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
-                    // Easing function for smooth deceleration
                     const easeOut = 1 - Math.pow(1 - progress, 3);
                     const current = Math.floor(start + (target - start) * easeOut);
                     element.textContent = '€' + current.toLocaleString('de-DE') + 'k';
@@ -1391,6 +1487,103 @@
                     }
                 }
                 requestAnimationFrame(update);
+            }
+
+            // Create Matrix rain effect
+            function createMatrixRain() {
+                matrixRain.innerHTML = '';
+                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+                const columns = 20;
+
+                for (let i = 0; i < columns; i++) {
+                    const column = document.createElement('div');
+                    column.className = 'matrix-column';
+                    column.style.left = (i * 5) + '%';
+                    column.style.animationDuration = (1 + Math.random() * 2) + 's';
+                    column.style.animationDelay = (Math.random() * 2) + 's';
+
+                    let text = '';
+                    for (let j = 0; j < 20; j++) {
+                        text += chars[Math.floor(Math.random() * chars.length)] + ' ';
+                    }
+                    column.textContent = text;
+                    matrixRain.appendChild(column);
+                }
+            }
+
+            // Create particle explosion
+            function createParticles(count) {
+                particleContainer.innerHTML = '';
+                const centerX = particleContainer.offsetWidth / 2;
+                const centerY = particleContainer.offsetHeight / 2;
+
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = centerX + 'px';
+                    particle.style.top = centerY + 'px';
+
+                    // Random direction
+                    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5);
+                    const distance = 100 + Math.random() * 200;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance;
+
+                    particle.style.setProperty('--tx', tx + 'px');
+                    particle.style.setProperty('--ty', ty + 'px');
+                    particle.style.animation = `particleFly ${0.6 + Math.random() * 0.4}s ease-out forwards`;
+                    particle.style.animationDelay = (Math.random() * 0.2) + 's';
+
+                    particleContainer.appendChild(particle);
+                }
+
+                // Clean up particles after animation
+                setTimeout(() => {
+                    particleContainer.innerHTML = '';
+                }, 1500);
+            }
+
+            // Show compilation effect
+            function showCompilationEffect() {
+                return new Promise((resolve) => {
+                    createMatrixRain();
+                    compileOverlay.classList.add('active');
+
+                    const messages = [
+                        { status: 'Kompiliere...', detail: 'Optimiere für maximale Performance' },
+                        { status: 'Bündle Assets...', detail: 'Minimiere CSS & JavaScript' },
+                        { status: 'Optimiere Bilder...', detail: 'WebP Konvertierung läuft' },
+                        { status: 'Finalisiere...', detail: 'Prüfe PageSpeed Score' },
+                        { status: '✓ Build erfolgreich!', detail: 'PageSpeed: 100/100' }
+                    ];
+
+                    let msgIndex = 0;
+                    const msgInterval = setInterval(() => {
+                        if (msgIndex < messages.length) {
+                            compileStatus.textContent = messages[msgIndex].status;
+                            compileDetail.textContent = messages[msgIndex].detail;
+                            msgIndex++;
+                        } else {
+                            clearInterval(msgInterval);
+                            setTimeout(() => {
+                                createParticles(30);
+                                setTimeout(() => {
+                                    compileOverlay.classList.remove('active');
+                                    resolve();
+                                }, 400);
+                            }, 300);
+                        }
+                    }, 350);
+                });
+            }
+
+            // Update ghost cursor position
+            function updateGhostCursor() {
+                if (cursor.offsetParent) {
+                    ghostCursor.classList.remove('hidden');
+                    ghostCursor.style.left = (cursor.offsetLeft - 8) + 'px';
+                    ghostCursor.style.top = cursor.offsetTop + 'px';
+                }
             }
 
             function typeCode() {
@@ -1418,21 +1611,23 @@
                     progressBar.style.width = percent + '%';
                 }
 
-                function typeNextChar() {
+                async function typeNextChar() {
                     if (lineIndex >= codeLines.length) {
-                        // Typing complete - 3D flip to website preview
+                        // Typing complete - show compilation effect then flip
                         cursor.style.display = 'none';
+                        ghostCursor.classList.add('hidden');
                         progressBar.style.width = '100%';
 
-                        setTimeout(() => {
-                            // 3D Flip animation
-                            flipInner.classList.add('flipped');
+                        // Show compilation effect
+                        await showCompilationEffect();
 
-                            // Start counter animation after flip
-                            setTimeout(() => {
-                                animateCounter(revenueCounter, 124, 2000);
-                            }, 400);
-                        }, 500);
+                        // 3D Flip animation
+                        flipInner.classList.add('flipped');
+
+                        // Start counter animation after flip
+                        setTimeout(() => {
+                            animateCounter(revenueCounter, 124, 2000);
+                        }, 400);
 
                         // After 5 seconds, flip back and restart
                         setTimeout(() => {
@@ -1481,6 +1676,7 @@
                         }
 
                         currentLine = result;
+                        updateGhostCursor();
                         updateCodeDisplay();
                         updateProgress();
                         setTimeout(typeNextChar, 20 + Math.random() * 30);
