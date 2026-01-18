@@ -70,26 +70,24 @@
         }
 
         /* Website Preview Animation */
-        @keyframes revealPreview {
-            0%, 45% { opacity: 0; transform: scale(0.95) translateY(20px); pointer-events: none; }
-            50% { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
-            90% { opacity: 1; transform: scale(1) translateY(0); }
-            95%, 100% { opacity: 0; transform: scale(1.02); pointer-events: none; }
-        }
-        @keyframes progress {
-            0%, 40% { width: 0%; }
-            45% { width: 100%; }
-            46%, 100% { width: 100%; }
-        }
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotateY(-8deg) rotateX(4deg); }
-            50% { transform: translateY(-10px) rotateY(-8deg) rotateX(4deg); }
+            0%, 100% { transform: translateY(0) rotateY(-10deg) rotateX(4deg); }
+            50% { transform: translateY(-10px) rotateY(-10deg) rotateX(4deg); }
         }
-        .animate-reveal-preview {
-            animation: revealPreview 14s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        .website-preview {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
-        .animate-progress {
-            animation: progress 14s infinite linear;
+        .website-preview.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+        }
+        .progress-bar {
+            width: 0%;
+            transition: width 0.1s linear;
         }
         .animate-float-card {
             animation: float 6s ease-in-out infinite;
@@ -350,11 +348,11 @@
 
                         <!-- LOADING BAR -->
                         <div class="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
-                            <div class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] animate-progress"></div>
+                            <div id="progress-bar" class="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6] progress-bar"></div>
                         </div>
 
                         <!-- LAYER 2: FINISHED WEBSITE PREVIEW -->
-                        <div class="absolute inset-0 bg-white z-30 animate-reveal-preview origin-center flex flex-col overflow-hidden shadow-2xl">
+                        <div id="website-preview" class="absolute inset-0 bg-white z-30 website-preview origin-center flex flex-col overflow-hidden shadow-2xl">
                             <!-- Preview Header -->
                             <div class="h-16 md:h-20 bg-white/90 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-40">
                                 <div class="flex items-center gap-3">
@@ -1332,7 +1330,8 @@
             const codeContent = document.getElementById('code-content');
             const lineNumbers = document.getElementById('line-numbers');
             const cursor = document.getElementById('cursor');
-            const codeResult = document.getElementById('code-result');
+            const progressBar = document.getElementById('progress-bar');
+            const websitePreview = document.getElementById('website-preview');
             let codeTypingStarted = false;
 
             function typeCode() {
@@ -1343,6 +1342,8 @@
                 let charIndex = 0;
                 let currentLine = '';
                 let completedLines = [];
+                let totalChars = codeLines.reduce((sum, line) => sum + line.text.replace(/<[^>]*>/g, '').length, 0);
+                let typedChars = 0;
 
                 function updateLineNumbers() {
                     let nums = '';
@@ -1352,13 +1353,42 @@
                     lineNumbers.innerHTML = nums;
                 }
 
+                function updateProgress() {
+                    const percent = Math.min((typedChars / totalChars) * 100, 100);
+                    progressBar.style.width = percent + '%';
+                }
+
                 function typeNextChar() {
                     if (lineIndex >= codeLines.length) {
-                        // Typing complete - show result
+                        // Typing complete - show website preview
                         cursor.style.display = 'none';
+                        progressBar.style.width = '100%';
+
                         setTimeout(() => {
-                            codeResult.style.opacity = '1';
-                        }, 300);
+                            websitePreview.classList.add('active');
+                        }, 500);
+
+                        // After 5 seconds, hide preview and restart
+                        setTimeout(() => {
+                            websitePreview.classList.remove('active');
+
+                            setTimeout(() => {
+                                // Reset everything
+                                lineIndex = 0;
+                                charIndex = 0;
+                                currentLine = '';
+                                completedLines = [];
+                                typedChars = 0;
+                                codeContent.innerHTML = '';
+                                progressBar.style.width = '0%';
+                                cursor.style.display = 'inline-block';
+                                updateLineNumbers();
+
+                                // Restart typing
+                                setTimeout(typeNextChar, 500);
+                            }, 600);
+                        }, 5000);
+
                         return;
                     }
 
@@ -1367,6 +1397,7 @@
 
                     if (charIndex < plainText.length) {
                         charIndex++;
+                        typedChars++;
                         let visibleChars = 0;
                         let inTag = false;
                         let result = '';
@@ -1383,6 +1414,7 @@
 
                         currentLine = result;
                         updateCodeDisplay();
+                        updateProgress();
                         setTimeout(typeNextChar, 20 + Math.random() * 30);
                     } else {
                         completedLines.push(line.text);
