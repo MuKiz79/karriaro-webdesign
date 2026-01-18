@@ -198,6 +198,54 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(200%); }
         }
+
+        /* Preview Staggered Fade-In */
+        .preview-fade-in {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .preview-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Chart Bar Growth Animation */
+        .chart-bar {
+            transform-origin: bottom;
+            transform: scaleY(0);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chart-bar.grow {
+            transform: scaleY(1);
+        }
+
+        /* CTA Button Shimmer */
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .cta-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.4) 50%,
+                transparent 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+            pointer-events: none;
+        }
     </style>
 
     <!-- Alpine.js (Für Interaktionen wie das Mobile Menü) -->
@@ -476,66 +524,81 @@
                             <!-- BACK: FINISHED WEBSITE PREVIEW -->
                             <div id="website-preview" class="flip-back bg-white flex flex-col overflow-hidden shadow-2xl">
                             <!-- Preview Header -->
-                            <div class="h-16 md:h-20 bg-white/90 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-40">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-8 h-8 md:w-10 md:h-10" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <div class="h-14 md:h-16 bg-white/95 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-4 md:px-8 z-40">
+                                <div class="flex items-center gap-2 preview-fade-in" data-delay="0">
+                                    <svg class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                                         <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                                         <path d="M25 42 L25 10" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
                                         <path d="M16 20 L25 8 L34 20" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
                                         <line x1="6" y1="28" x2="44" y2="28" stroke="#3b82f6" stroke-width="2" stroke-opacity="0.7"/>
                                     </svg>
-                                    <div class="w-20 md:w-24 h-3 md:h-4 bg-slate-900 rounded-full"></div>
+                                    <span class="text-slate-900 font-semibold text-xs md:text-sm">Karriaro</span>
+                                    <span class="text-slate-400 font-normal text-xs md:text-sm hidden sm:inline">Webdesign</span>
                                 </div>
-                                <div class="hidden md:flex gap-8">
-                                    <div class="w-16 md:w-20 h-2.5 bg-slate-200 rounded-full"></div>
-                                    <div class="w-16 md:w-20 h-2.5 bg-slate-200 rounded-full"></div>
+                                <div class="hidden md:flex gap-6 preview-fade-in" data-delay="100">
+                                    <span class="text-slate-400 text-xs">Portfolio</span>
+                                    <span class="text-slate-400 text-xs">Preise</span>
+                                    <span class="text-slate-400 text-xs">Kontakt</span>
                                 </div>
-                                <div class="w-24 md:w-32 h-8 md:h-10 bg-black rounded-lg shadow-xl"></div>
+                                <div class="preview-fade-in" data-delay="200">
+                                    <div class="px-3 md:px-4 py-1.5 md:py-2 bg-slate-900 text-white text-xs rounded-lg shadow-lg">Projekt starten</div>
+                                </div>
                             </div>
 
                             <!-- Preview Body -->
-                            <div class="flex-1 bg-slate-50 relative flex items-center px-6 md:px-12 gap-8 md:gap-16 overflow-hidden">
-                                <div class="absolute top-[-20%] right-[-10%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-100 rounded-full blur-[100px] opacity-60"></div>
+                            <div class="flex-1 bg-gradient-to-br from-slate-50 to-blue-50/30 relative flex items-center px-4 md:px-10 gap-6 md:gap-12 overflow-hidden">
+                                <div class="absolute top-[-20%] right-[-10%] w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-100 rounded-full blur-[100px] opacity-50"></div>
+                                <div class="absolute bottom-[-20%] left-[-10%] w-[300px] h-[300px] bg-purple-100 rounded-full blur-[80px] opacity-40"></div>
 
                                 <!-- Left Content -->
-                                <div class="w-full md:w-5/12 space-y-6 md:space-y-8 z-10 py-8">
-                                    <div class="w-fit px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white border border-blue-100 flex items-center gap-2 md:gap-3 shadow-sm">
-                                        <div class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></div>
-                                        <div class="w-16 md:w-24 h-2 bg-slate-300 rounded-full"></div>
+                                <div class="w-full md:w-5/12 space-y-4 md:space-y-6 z-10 py-6">
+                                    <div class="preview-fade-in" data-delay="300">
+                                        <div class="w-fit px-3 py-1.5 rounded-full bg-white border border-blue-100 flex items-center gap-2 shadow-sm">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></div>
+                                            <span class="text-slate-500 text-[10px] md:text-xs">Neue Kapazitäten</span>
+                                        </div>
                                     </div>
-                                    <div class="space-y-3 md:space-y-4">
-                                        <div class="w-full h-10 md:h-14 bg-slate-900 rounded-xl shadow-md"></div>
-                                        <div class="w-3/4 h-10 md:h-14 bg-slate-900 rounded-xl shadow-md"></div>
+                                    <div class="space-y-2 md:space-y-3 preview-fade-in" data-delay="400">
+                                        <div class="text-slate-900 text-lg md:text-2xl font-bold leading-tight">Websites, die</div>
+                                        <div class="text-blue-600 text-lg md:text-2xl font-bold leading-tight">Umsatz generieren.</div>
                                     </div>
-                                    <div class="space-y-2 md:space-y-3 pt-2">
-                                        <div class="w-full h-2 md:h-3 bg-slate-400 rounded"></div>
-                                        <div class="w-5/6 h-2 md:h-3 bg-slate-400 rounded"></div>
+                                    <div class="space-y-1.5 preview-fade-in" data-delay="500">
+                                        <div class="w-full h-2 bg-slate-200 rounded"></div>
+                                        <div class="w-4/5 h-2 bg-slate-200 rounded"></div>
                                     </div>
-                                    <div class="flex gap-3 md:gap-4 pt-4 md:pt-6">
-                                        <div class="w-32 md:w-40 h-10 md:h-14 bg-blue-600 rounded-xl shadow-xl shadow-blue-200"></div>
-                                        <div class="w-10 md:w-14 h-10 md:h-14 bg-white border border-slate-200 rounded-xl shadow-sm"></div>
+                                    <div class="flex gap-3 pt-2 md:pt-4 preview-fade-in" data-delay="600">
+                                        <div class="cta-shimmer px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white text-xs md:text-sm font-medium rounded-xl shadow-xl shadow-blue-200/50">
+                                            Kostenlose Analyse
+                                        </div>
+                                        <div class="w-9 md:w-11 h-9 md:h-11 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-center">
+                                            <svg class="w-3 h-3 md:w-4 md:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Right Dashboard Card -->
-                                <div class="hidden md:block w-7/12 h-[80%] relative">
-                                    <div class="absolute right-[-5%] top-8 w-[110%] h-full bg-white rounded-l-3xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden animate-float-card z-10">
-                                        <div class="h-40 md:h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-6 md:p-8 relative overflow-hidden">
-                                            <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-                                            <div class="flex justify-between items-start relative z-10 mb-6 md:mb-8">
-                                                <div class="w-10 md:w-12 h-10 md:h-12 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20"></div>
+                                <div class="hidden md:block w-7/12 h-[85%] relative preview-fade-in" data-delay="500">
+                                    <div class="absolute right-[-5%] top-4 w-[110%] h-full bg-white rounded-l-3xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.12)] border border-slate-100 overflow-hidden animate-float-card z-10">
+                                        <div class="h-36 md:h-44 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-5 md:p-6 relative overflow-hidden">
+                                            <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+                                            <div class="flex justify-between items-start relative z-10 mb-4 md:mb-6">
+                                                <div class="w-8 md:w-10 h-8 md:h-10 bg-white/20 backdrop-blur-md rounded-xl border border-white/20 flex items-center justify-center">
+                                                    <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                                </div>
+                                                <span class="text-white/60 text-[10px] bg-white/10 px-2 py-1 rounded-full">Live</span>
                                             </div>
-                                            <div class="flex gap-3 md:gap-4 items-end">
-                                                <div id="revenue-counter" class="text-white text-3xl md:text-4xl font-bold">€0</div>
-                                                <div class="text-white/80 text-xs md:text-sm mb-1">+24% diesen Monat</div>
+                                            <div class="flex gap-2 md:gap-3 items-end">
+                                                <div id="revenue-counter" class="text-white text-2xl md:text-3xl font-bold">€0</div>
+                                                <div id="percent-counter" class="text-emerald-300 text-xs mb-0.5">+0%</div>
                                             </div>
+                                            <div class="text-white/60 text-[10px] mt-1">Monatlicher Umsatz</div>
                                         </div>
-                                        <div class="p-6 md:p-8 flex gap-3 md:gap-4 h-40 md:h-48 items-end">
-                                            <div class="w-full bg-blue-50 rounded-t-lg h-[40%]"></div>
-                                            <div class="w-full bg-blue-100 rounded-t-lg h-[60%]"></div>
-                                            <div class="w-full bg-blue-600 rounded-t-lg h-[85%] shadow-lg shadow-blue-200"></div>
-                                            <div class="w-full bg-blue-100 rounded-t-lg h-[50%]"></div>
+                                        <div class="p-4 md:p-6 flex gap-2 md:gap-3 h-32 md:h-40 items-end">
+                                            <div class="chart-bar w-full bg-blue-100 rounded-t-lg h-[40%]" data-delay="700"></div>
+                                            <div class="chart-bar w-full bg-blue-200 rounded-t-lg h-[55%]" data-delay="800"></div>
+                                            <div class="chart-bar w-full bg-blue-400 rounded-t-lg h-[70%]" data-delay="900"></div>
+                                            <div class="chart-bar w-full bg-blue-600 rounded-t-lg h-[85%] shadow-lg shadow-blue-200" data-delay="1000"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1489,6 +1552,61 @@
                 requestAnimationFrame(update);
             }
 
+            // Percent counter animation
+            const percentCounter = document.getElementById('percent-counter');
+            function animatePercent() {
+                const target = 24;
+                const duration = 1500;
+                const startTime = performance.now();
+
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.floor(target * easeOut);
+                    percentCounter.textContent = '+' + current + '%';
+
+                    if (progress < 1) {
+                        requestAnimationFrame(update);
+                    }
+                }
+                requestAnimationFrame(update);
+            }
+
+            // Trigger staggered fade-in animations
+            function triggerPreviewAnimations() {
+                const elements = document.querySelectorAll('.preview-fade-in');
+                elements.forEach(el => {
+                    const delay = parseInt(el.dataset.delay) || 0;
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, delay);
+                });
+            }
+
+            // Trigger chart bar growth animations
+            function triggerChartBars() {
+                const bars = document.querySelectorAll('.chart-bar');
+                bars.forEach(bar => {
+                    const delay = parseInt(bar.dataset.delay) || 0;
+                    setTimeout(() => {
+                        bar.classList.add('grow');
+                    }, delay - 700); // Offset from base delay
+                });
+            }
+
+            // Reset preview animations for next loop
+            function resetPreviewAnimations() {
+                revenueCounter.textContent = '€0';
+                percentCounter.textContent = '+0%';
+
+                const fadeElements = document.querySelectorAll('.preview-fade-in');
+                fadeElements.forEach(el => el.classList.remove('visible'));
+
+                const chartBars = document.querySelectorAll('.chart-bar');
+                chartBars.forEach(bar => bar.classList.remove('grow'));
+            }
+
             // Create Matrix rain effect
             function createMatrixRain() {
                 matrixRain.innerHTML = '';
@@ -1624,15 +1742,26 @@
                         // 3D Flip animation
                         flipInner.classList.add('flipped');
 
+                        // Trigger staggered fade-in animations
+                        setTimeout(() => {
+                            triggerPreviewAnimations();
+                        }, 300);
+
                         // Start counter animation after flip
                         setTimeout(() => {
                             animateCounter(revenueCounter, 124, 2000);
-                        }, 400);
+                            animatePercent();
+                        }, 600);
 
-                        // After 5 seconds, flip back and restart
+                        // Trigger chart bar animations
+                        setTimeout(() => {
+                            triggerChartBars();
+                        }, 800);
+
+                        // After 5.5 seconds, flip back and restart
                         setTimeout(() => {
                             flipInner.classList.remove('flipped');
-                            revenueCounter.textContent = '€0';
+                            resetPreviewAnimations();
 
                             setTimeout(() => {
                                 // Reset everything
