@@ -69,6 +69,11 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Nav Link Underline Animation */
+        .nav-link:hover span {
+            width: 100%;
+        }
+
         /* Website Preview Animation */
         @keyframes float {
             0%, 100% { transform: translateY(0) rotateY(-10deg) rotateX(4deg); }
@@ -412,10 +417,22 @@
                 </a>
 
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="/warum-handcoded.html" class="text-sm font-medium text-gray-300 hover:text-white transition">Warum Handcoded</a>
-                    <a href="#work" class="text-sm font-medium text-gray-300 hover:text-white transition">Portfolio</a>
-                    <a href="#preise" class="text-sm font-medium text-gray-300 hover:text-white transition">Preise</a>
-                    <a href="#faq" class="text-sm font-medium text-gray-300 hover:text-white transition">FAQ</a>
+                    <a href="/warum-handcoded.html" class="nav-link relative text-sm font-medium text-gray-300 hover:text-white transition">
+                        Warum Handcoded
+                        <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#work" class="nav-link relative text-sm font-medium text-gray-300 hover:text-white transition">
+                        Portfolio
+                        <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-300"></span>
+                    </a>
+                    <a href="#preise" class="nav-link relative text-sm font-medium text-gray-300 hover:text-white transition">
+                        Preise
+                        <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-300"></span>
+                    </a>
+                    <a href="#faq" class="nav-link relative text-sm font-medium text-gray-300 hover:text-white transition">
+                        FAQ
+                        <span class="absolute left-0 -bottom-1 w-0 h-0.5 bg-primary transition-all duration-300"></span>
+                    </a>
                     <a href="#kontakt" class="bg-white text-black px-5 py-2 rounded-full text-sm font-semibold hover:bg-gray-200 transition">
                         Projekt starten
                     </a>
@@ -465,10 +482,10 @@
             </p>
 
             <div class="reveal flex flex-col sm:flex-row justify-center gap-4 items-center mb-6" style="transition-delay: 200ms">
-                <a href="#kontakt" class="bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition duration-300 shadow-glow w-full sm:w-auto">
+                <a href="#kontakt" class="bg-primary hover:bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition duration-300 shadow-glow w-full sm:w-auto">
                     Kostenlose Analyse
                 </a>
-                <a href="#work" class="text-gray-300 hover:text-white font-medium text-lg transition flex items-center gap-2 px-8 py-4 w-full sm:w-auto justify-center">
+                <a href="#work" class="text-gray-300 hover:text-white font-medium text-base sm:text-lg transition flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto justify-center">
                     Arbeiten ansehen <i class="fa-solid fa-arrow-right text-sm ml-1"></i>
                 </a>
             </div>
@@ -505,7 +522,7 @@
             </div>
 
             <!-- ANIMATED CODE TO WEBSITE TRANSFORMATION -->
-            <div class="reveal relative max-w-4xl mx-auto h-[500px] md:h-[580px]" style="transition-delay: 300ms" id="code-editor">
+            <div class="reveal relative max-w-4xl mx-auto h-[320px] sm:h-[400px] md:h-[580px]" style="transition-delay: 300ms" id="code-editor">
                 <div class="code-glass rounded-2xl overflow-hidden text-left relative z-10 w-full h-full flex flex-col border border-white/10 shadow-2xl">
 
                     <!-- Mac Window Header -->
@@ -527,12 +544,12 @@
 
                             <!-- FRONT: CODE EDITOR -->
                             <div class="flip-front bg-[#0d0d0f]">
-                                <div class="absolute inset-0 p-6 md:p-10 overflow-x-auto">
+                                <div class="absolute inset-0 p-3 sm:p-6 md:p-10 overflow-x-auto">
                                     <div class="flex h-full relative">
                                         <!-- Line Numbers -->
                                         <div id="line-numbers" class="line-numbers font-mono text-sm leading-relaxed hidden md:block text-gray-700 pr-6 border-r border-gray-800 select-none text-right w-14"></div>
                                         <!-- Code Content -->
-                                        <pre id="code-content" class="font-mono text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
+                                        <pre id="code-content" class="font-mono text-xs sm:text-sm md:text-[15px] text-gray-300 leading-relaxed pl-0 md:pl-8 w-full"></pre>
                                         <span id="cursor" class="animate-cursor inline-block w-2 h-5 bg-primary align-middle ml-1"></span>
                                         <span id="ghost-cursor" class="ghost-cursor hidden"></span>
                                     </div>
@@ -587,33 +604,33 @@
                                 <div class="absolute bottom-[-20%] left-[-10%] w-[300px] h-[300px] bg-purple-100 rounded-full blur-[80px] opacity-40"></div>
 
                                 <!-- Left Content -->
-                                <div class="w-full md:w-5/12 space-y-4 md:space-y-6 z-10 py-6">
+                                <div class="w-full sm:w-7/12 md:w-5/12 space-y-2 sm:space-y-4 md:space-y-6 z-10 py-3 sm:py-6">
                                     <div class="preview-fade-in" data-delay="300">
                                         <div class="w-fit px-3 py-1.5 rounded-full bg-white border border-blue-100 flex items-center gap-2 shadow-sm">
                                             <div class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></div>
                                             <span class="text-slate-500 text-[10px] md:text-xs">Neue Kapazitäten</span>
                                         </div>
                                     </div>
-                                    <div class="space-y-2 md:space-y-3 preview-fade-in" data-delay="400">
-                                        <div class="text-slate-900 text-lg md:text-2xl font-bold leading-tight">Websites, die</div>
-                                        <div class="text-blue-600 text-lg md:text-2xl font-bold leading-tight">Umsatz generieren.</div>
+                                    <div class="space-y-1 sm:space-y-2 md:space-y-3 preview-fade-in" data-delay="400">
+                                        <div class="text-slate-900 text-base sm:text-lg md:text-2xl font-bold leading-tight">Websites, die</div>
+                                        <div class="text-blue-600 text-base sm:text-lg md:text-2xl font-bold leading-tight">Umsatz generieren.</div>
                                     </div>
                                     <div class="space-y-1.5 preview-fade-in" data-delay="500">
                                         <div class="w-full h-2 bg-slate-200 rounded"></div>
                                         <div class="w-4/5 h-2 bg-slate-200 rounded"></div>
                                     </div>
-                                    <div class="flex gap-3 pt-2 md:pt-4 preview-fade-in" data-delay="600">
-                                        <div class="cta-shimmer px-4 md:px-6 py-2 md:py-3 bg-blue-600 text-white text-xs md:text-sm font-medium rounded-xl shadow-xl shadow-blue-200/50">
+                                    <div class="flex gap-2 sm:gap-3 pt-1 sm:pt-2 md:pt-4 preview-fade-in" data-delay="600">
+                                        <div class="cta-shimmer px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 bg-blue-600 text-white text-[10px] sm:text-xs md:text-sm font-medium rounded-lg sm:rounded-xl shadow-xl shadow-blue-200/50">
                                             Kostenlose Analyse
                                         </div>
-                                        <div class="w-9 md:w-11 h-9 md:h-11 bg-white border border-slate-200 rounded-xl shadow-sm flex items-center justify-center">
-                                            <svg class="w-3 h-3 md:w-4 md:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                        <div class="w-7 sm:w-9 md:w-11 h-7 sm:h-9 md:h-11 bg-white border border-slate-200 rounded-lg sm:rounded-xl shadow-sm flex items-center justify-center">
+                                            <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Right Dashboard Card -->
-                                <div class="hidden md:block w-7/12 h-[85%] relative preview-fade-in" data-delay="500">
+                                <div class="hidden sm:block sm:w-5/12 md:w-7/12 h-[70%] sm:h-[80%] md:h-[85%] relative preview-fade-in" data-delay="500">
                                     <div class="absolute right-[-5%] top-4 w-[110%] h-full bg-white rounded-l-3xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.12)] border border-slate-100 overflow-hidden animate-float-card z-10">
                                         <div class="h-36 md:h-44 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-5 md:p-6 relative overflow-hidden">
                                             <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
