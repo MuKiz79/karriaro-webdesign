@@ -82,7 +82,7 @@
                 } else {
                     // Exponential friction decay (realistic momentum)
                     if (speed > normalSpeed) {
-                        speed *= 0.96;
+                        speed *= 0.992; // Less friction = longer spin-down
                         if (speed < normalSpeed) speed = normalSpeed;
                     }
                 }
