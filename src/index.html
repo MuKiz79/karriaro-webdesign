@@ -69,18 +69,22 @@
             if (!logoLink || !logoSpin) return;
 
             let rotation = 0;
-            let speed = 0.8; // Normal slow speed (degrees per frame)
+            let speed = 0.8;
             const normalSpeed = 0.8;
-            const hoverSpeed = 12; // Fast speed on hover
+            const hoverSpeed = 14;
             let isHovering = false;
             let animationId;
 
             function animate() {
-                // Gradually adjust speed
                 if (isHovering) {
-                    speed = Math.min(speed + 1.5, hoverSpeed); // Speed up fast
+                    // Ease-out acceleration (fast start, slows as it approaches max)
+                    speed += (hoverSpeed - speed) * 0.12;
                 } else {
-                    speed = Math.max(speed - 0.15, normalSpeed); // Slow down gradually
+                    // Exponential friction decay (realistic momentum)
+                    if (speed > normalSpeed) {
+                        speed *= 0.96;
+                        if (speed < normalSpeed) speed = normalSpeed;
+                    }
                 }
 
                 rotation += speed;
