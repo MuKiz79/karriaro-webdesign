@@ -69,18 +69,18 @@
             if (!logoLink || !logoSpin) return;
 
             let rotation = 0;
-            let speed = 0.5; // Normal slow speed (degrees per frame)
-            const normalSpeed = 0.5;
-            const hoverSpeed = 4; // Fast speed on hover
+            let speed = 0.8; // Normal slow speed (degrees per frame)
+            const normalSpeed = 0.8;
+            const hoverSpeed = 12; // Fast speed on hover
             let isHovering = false;
             let animationId;
 
             function animate() {
                 // Gradually adjust speed
                 if (isHovering) {
-                    speed = Math.min(speed + 0.3, hoverSpeed); // Speed up
+                    speed = Math.min(speed + 1.5, hoverSpeed); // Speed up fast
                 } else {
-                    speed = Math.max(speed - 0.05, normalSpeed); // Slow down gradually
+                    speed = Math.max(speed - 0.15, normalSpeed); // Slow down gradually
                 }
 
                 rotation += speed;
