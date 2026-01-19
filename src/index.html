@@ -2030,15 +2030,31 @@
             let speedBarsInterval = null;
 
             function animateSpeedBars() {
-                // Reset bars
-                if (slowSpeedBar) slowSpeedBar.style.width = '0%';
-                if (pagespeedBar) pagespeedBar.style.width = '0%';
+                // Disable transition for instant reset
+                if (slowSpeedBar) {
+                    slowSpeedBar.style.transition = 'none';
+                    slowSpeedBar.style.width = '0%';
+                }
+                if (pagespeedBar) {
+                    pagespeedBar.style.transition = 'none';
+                    pagespeedBar.style.width = '0%';
+                }
 
-                // Animate after short delay
+                // Force reflow to apply reset immediately
+                if (slowSpeedBar) slowSpeedBar.offsetHeight;
+                if (pagespeedBar) pagespeedBar.offsetHeight;
+
+                // Re-enable transition and animate
                 setTimeout(() => {
-                    if (slowSpeedBar) slowSpeedBar.style.width = '30%';
-                    if (pagespeedBar) pagespeedBar.style.width = '100%';
-                }, 300);
+                    if (slowSpeedBar) {
+                        slowSpeedBar.style.transition = 'all 1000ms ease-out';
+                        slowSpeedBar.style.width = '30%';
+                    }
+                    if (pagespeedBar) {
+                        pagespeedBar.style.transition = 'all 1000ms ease-out';
+                        pagespeedBar.style.width = '100%';
+                    }
+                }, 50);
             }
 
             const speedBarsObserver = new IntersectionObserver((entries) => {
@@ -2046,7 +2062,7 @@
                     if (entry.isIntersecting) {
                         // Start animation loop
                         animateSpeedBars();
-                        speedBarsInterval = setInterval(animateSpeedBars, 3500);
+                        speedBarsInterval = setInterval(animateSpeedBars, 3000);
                     } else {
                         // Stop animation when out of view
                         if (speedBarsInterval) {
