@@ -2023,20 +2023,36 @@
             counters.forEach(counter => counterObserver.observe(counter));
 
             // ===========================================
-            // 4. PAGESPEED BAR ANIMATION (Both bars)
+            // 4. PAGESPEED BAR ANIMATION (Endless Loop)
             // ===========================================
             const slowSpeedBar = document.getElementById('slow-speed-bar');
             const pagespeedBar = document.getElementById('pagespeed-bar');
+            let speedBarsInterval = null;
+
+            function animateSpeedBars() {
+                // Reset bars
+                if (slowSpeedBar) slowSpeedBar.style.width = '0%';
+                if (pagespeedBar) pagespeedBar.style.width = '0%';
+
+                // Animate after short delay
+                setTimeout(() => {
+                    if (slowSpeedBar) slowSpeedBar.style.width = '30%';
+                    if (pagespeedBar) pagespeedBar.style.width = '100%';
+                }, 300);
+            }
 
             const speedBarsObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Animate both bars simultaneously
-                        setTimeout(() => {
-                            if (slowSpeedBar) slowSpeedBar.style.width = '30%';
-                            if (pagespeedBar) pagespeedBar.style.width = '100%';
-                        }, 300);
-                        speedBarsObserver.unobserve(entry.target);
+                        // Start animation loop
+                        animateSpeedBars();
+                        speedBarsInterval = setInterval(animateSpeedBars, 3500);
+                    } else {
+                        // Stop animation when out of view
+                        if (speedBarsInterval) {
+                            clearInterval(speedBarsInterval);
+                            speedBarsInterval = null;
+                        }
                     }
                 });
             }, { threshold: 0.3 });
