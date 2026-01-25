@@ -1388,7 +1388,7 @@
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Mobile Optimiert</li>
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> DSGVO-Schutz (Lokale Daten)</li>
                     </ul>
-                    <a href="https://buy.stripe.com/test_28EbJ34Ej3aA0aDaJM4ko00" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-[#2c2c2e] text-white text-center text-sm font-medium hover:bg-[#3a3a3c] transition">Wählen</a>
+                    <button @click="openCheckout('starter')" class="w-full py-3 rounded-xl bg-[#2c2c2e] text-white text-center text-sm font-medium hover:bg-[#3a3a3c] transition">Wählen</button>
                 </div>
 
                 <!-- Paket 2 -->
@@ -1407,7 +1407,7 @@
                         <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Kontaktformulare</li>
                         <li class="flex items-center gap-3"><i class="fa-solid fa-shield-halved text-primary"></i> DSGVO & BFSG-ready</li>
                     </ul>
-                    <a href="https://buy.stripe.com/test_6oUeVf5In7qQaPh3hk4ko01" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-primary hover:bg-blue-600 text-white text-center text-sm font-bold transition shadow-glow">Jetzt starten</a>
+                    <button @click="openCheckout('business')" class="w-full py-3 rounded-xl bg-primary hover:bg-blue-600 text-white text-center text-sm font-bold transition shadow-glow">Jetzt starten</button>
                 </div>
             </div>
 
@@ -2149,7 +2149,231 @@
             });
 
         });
+
+        // ========== CHECKOUT SYSTEM ==========
+        const WEBDESIGN_PACKAGES = {
+            starter: {
+                id: 'webdesign-starter',
+                name: 'Starter Paket',
+                description: 'One-Page Design, Mobile Optimiert, DSGVO-Schutz',
+                price: 790
+            },
+            business: {
+                id: 'webdesign-business',
+                name: 'Business Paket',
+                description: 'Bis zu 5 Unterseiten, High-Speed, SEO-Fundament, DSGVO & BFSG',
+                price: 1490
+            }
+        };
+
+        const HOSTING_PACKAGE = {
+            id: 'webdesign-hosting',
+            name: 'Wartung & Hosting',
+            description: 'Monatliches Hosting, Backups, kleine Änderungen',
+            price: 49,
+            isSubscription: true
+        };
+
+        // Global checkout state
+        window.checkoutState = {
+            selectedPackage: null,
+            includeHosting: false
+        };
+
+        // Alpine.js component for checkout modal
+        function checkoutModal() {
+            return {
+                open: false,
+                selectedPackage: null,
+                includeHosting: false,
+                acceptedTerms: false,
+                acceptedWithdrawal: false,
+                loading: false,
+                error: null,
+
+                get totalPrice() {
+                    if (!this.selectedPackage) return 0;
+                    return this.selectedPackage.price + (this.includeHosting ? HOSTING_PACKAGE.price : 0);
+                },
+
+                openModal(packageKey) {
+                    this.selectedPackage = WEBDESIGN_PACKAGES[packageKey];
+                    this.includeHosting = false;
+                    this.acceptedTerms = false;
+                    this.acceptedWithdrawal = false;
+                    this.error = null;
+                    this.open = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeModal() {
+                    this.open = false;
+                    document.body.style.overflow = '';
+                },
+
+                async proceedToPayment() {
+                    if (!this.acceptedTerms || !this.acceptedWithdrawal) {
+                        this.error = 'Bitte akzeptieren Sie die AGB und die Widerrufsbelehrung.';
+                        return;
+                    }
+
+                    this.loading = true;
+                    this.error = null;
+
+                    try {
+                        // Build cart items
+                        const items = [{
+                            id: this.selectedPackage.id,
+                            title: this.selectedPackage.name,
+                            price: this.selectedPackage.price,
+                            quantity: 1
+                        }];
+
+                        if (this.includeHosting) {
+                            items.push({
+                                id: HOSTING_PACKAGE.id,
+                                title: HOSTING_PACKAGE.name + ' (1. Monat)',
+                                price: HOSTING_PACKAGE.price,
+                                quantity: 1
+                            });
+                        }
+
+                        // Call Stripe checkout
+                        const response = await fetch('https://createcheckoutsession-plyofowo4a-uc.a.run.app', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                items: items,
+                                mode: 'payment',
+                                service: 'webdesign',
+                                successUrl: window.location.origin + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+                                cancelUrl: window.location.origin + '/#preise',
+                                consents: {
+                                    withdrawalWaiver: true,
+                                    withdrawalWaiverText: 'Ich verlange ausdrücklich, dass Sie vor Ende der Widerrufsfrist mit der Ausführung der Dienstleistung beginnen. Mir ist bekannt, dass ich bei vollständiger Vertragserfüllung mein Widerrufsrecht verliere.',
+                                    termsAccepted: true,
+                                    consentTimestamp: new Date().toISOString()
+                                }
+                            })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error('Checkout konnte nicht gestartet werden');
+                        }
+
+                        const { url } = await response.json();
+                        window.location.href = url;
+
+                    } catch (e) {
+                        console.error('Checkout error:', e);
+                        this.error = 'Zahlung konnte nicht gestartet werden. Bitte versuchen Sie es später erneut.';
+                        this.loading = false;
+                    }
+                }
+            };
+        }
+
+        // Global function to open checkout
+        window.openCheckout = function(packageKey) {
+            const modal = document.getElementById('checkout-modal');
+            if (modal && modal.__x) {
+                modal.__x.$data.openModal(packageKey);
+            }
+        };
     </script>
+
+    <!-- ========== CHECKOUT MODAL ========== -->
+    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden" x-data="checkoutModal()" x-show="open" x-cloak>
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="closeModal()"></div>
+
+        <!-- Modal Content -->
+        <div class="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-lg bg-[#0d0d0f] rounded-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                <h3 class="text-xl font-bold text-white">Bestellung abschließen</h3>
+                <button @click="closeModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1">
+                <!-- Selected Package -->
+                <div class="bg-white/5 rounded-xl p-4 mb-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-semibold text-white" x-text="selectedPackage?.name"></h4>
+                            <p class="text-sm text-gray-400" x-text="selectedPackage?.description"></p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-white" x-text="selectedPackage?.price + '€'"></div>
+                            <div class="text-xs text-gray-500">einmalig</div>
+                        </div>
+                    </div>
+
+                    <!-- Wartungspaket Option -->
+                    <div class="mt-4 pt-4 border-t border-white/10">
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <input type="checkbox" x-model="includeHosting" class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary">
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-white group-hover:text-primary transition">+ Wartung & Hosting</span>
+                                    <span class="text-sm text-white font-semibold">49€/Monat</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Hosting, Backups, kleine Änderungen inkl.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="flex justify-between items-center mb-6 py-3 border-y border-white/10">
+                    <span class="text-gray-400">Gesamtbetrag</span>
+                    <div class="text-right">
+                        <div class="text-2xl font-bold text-white" x-text="totalPrice + '€'"></div>
+                        <div class="text-xs text-gray-500" x-show="includeHosting">+ 49€/Monat ab dem 2. Monat</div>
+                    </div>
+                </div>
+
+                <!-- Legal Checkboxes -->
+                <div class="space-y-4 mb-6">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" x-model="acceptedTerms" class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary">
+                        <span class="text-xs text-gray-400 leading-relaxed">
+                            Ich akzeptiere die <a href="/agb.html" target="_blank" class="underline hover:text-white">AGB</a> und habe die <a href="/datenschutz.html" target="_blank" class="underline hover:text-white">Datenschutzerklärung</a> zur Kenntnis genommen. *
+                        </span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" x-model="acceptedWithdrawal" class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary">
+                        <span class="text-xs text-gray-400 leading-relaxed">
+                            Ich verlange ausdrücklich, dass vor Ende der Widerrufsfrist mit der Ausführung begonnen wird. Mir ist bekannt, dass ich bei vollständiger Vertragserfüllung mein Widerrufsrecht verliere. *
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Error Message -->
+                <div x-show="error" x-text="error" class="text-red-400 text-sm mb-4 p-3 bg-red-500/10 rounded-lg"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="p-6 border-t border-white/10 bg-[#0a0a0c]">
+                <button
+                    @click="proceedToPayment()"
+                    :disabled="loading || !acceptedTerms || !acceptedWithdrawal"
+                    :class="{'opacity-50 cursor-not-allowed': !acceptedTerms || !acceptedWithdrawal}"
+                    class="w-full py-4 rounded-xl bg-primary hover:bg-blue-600 text-white font-bold transition flex items-center justify-center gap-2">
+                    <span x-show="!loading">Jetzt kostenpflichtig bestellen</span>
+                    <span x-show="loading" class="flex items-center gap-2">
+                        <i class="fa-solid fa-spinner animate-spin"></i> Weiterleitung zu Stripe...
+                    </span>
+                </button>
+                <p class="text-center text-xs text-gray-500 mt-3">
+                    <i class="fa-solid fa-lock mr-1"></i> Sichere Zahlung über Stripe
+                </p>
+            </div>
+        </div>
+    </div>
 
     </main>
 
