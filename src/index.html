@@ -2275,15 +2275,13 @@
 
         // Global function to open checkout
         window.openCheckout = function(packageKey) {
-            const modal = document.getElementById('checkout-modal');
-            if (modal && modal.__x) {
-                modal.__x.$data.openModal(packageKey);
-            }
+            window.dispatchEvent(new CustomEvent('open-checkout', { detail: { packageKey } }));
         };
     </script>
 
     <!-- ========== CHECKOUT MODAL ========== -->
-    <div id="checkout-modal" class="fixed inset-0 z-[100] hidden" x-data="checkoutModal()" x-show="open" x-cloak>
+    <div id="checkout-modal" class="fixed inset-0 z-[100]" x-data="checkoutModal()" x-show="open" x-cloak
+         @open-checkout.window="openModal($event.detail.packageKey)">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="closeModal()"></div>
 
