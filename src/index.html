@@ -442,7 +442,7 @@
     <nav class="fixed w-full z-50 glass-nav transition-all duration-300" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <a href="#" class="text-xl font-bold tracking-tight flex items-center gap-2 group">
+                <a href="/" class="text-xl font-bold tracking-tight flex items-center gap-2 group" aria-label="Karriaro Webdesign – Startseite">
                     <svg class="w-6 h-6 logo-icon" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Rotierende Halbkreise -->
                         <g class="logo-spin origin-center">
@@ -479,7 +479,7 @@
                     </a>
                 </div>
 
-                <button @click="open = !open" class="md:hidden text-white p-2">
+                <button @click="open = !open" class="md:hidden text-white p-2" :aria-expanded="open" aria-label="Menü öffnen">
                     <i class="fa-solid fa-bars text-lg" x-show="!open"></i>
                     <i class="fa-solid fa-times text-lg" x-show="open" x-cloak></i>
                 </button>
@@ -1284,7 +1284,7 @@
             <div class="space-y-4" x-data="{ selected: null }">
                 <!-- FAQ 1 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 0 ? selected = 0 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 0 ? selected = 0 : selected = null" :aria-expanded="selected === 0" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Gehört die Website wirklich mir?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 0}"></i>
                     </button>
@@ -1295,7 +1295,7 @@
 
                 <!-- FAQ 2 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 1 ? selected = 1 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 1 ? selected = 1 : selected = null" :aria-expanded="selected === 1" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Werde ich bei Google besser gefunden?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 1}"></i>
                     </button>
@@ -1306,7 +1306,7 @@
 
                 <!-- FAQ 3 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 2 ? selected = 2 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 2 ? selected = 2 : selected = null" :aria-expanded="selected === 2" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Muss ich Texte & Bilder selbst liefern?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 2}"></i>
                     </button>
@@ -1317,7 +1317,7 @@
 
                 <!-- FAQ 4 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 3 ? selected = 3 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 3 ? selected = 3 : selected = null" :aria-expanded="selected === 3" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Warum nutzen Sie kein WordPress?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 3}"></i>
                     </button>
@@ -1328,7 +1328,7 @@
 
                 <!-- FAQ 5 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 4 ? selected = 4 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 4 ? selected = 4 : selected = null" :aria-expanded="selected === 4" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Kann ich später Dinge ändern?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 4}"></i>
                     </button>
@@ -1339,7 +1339,7 @@
 
                 <!-- FAQ 6 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 5 ? selected = 5 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 5 ? selected = 5 : selected = null" :aria-expanded="selected === 5" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Wie schnell kann ich starten?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 5}"></i>
                     </button>
@@ -1350,12 +1350,12 @@
 
                 <!-- FAQ 7 -->
                 <div class="reveal apple-card overflow-hidden">
-                    <button @click="selected !== 6 ? selected = 6 : selected = null" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
+                    <button @click="selected !== 6 ? selected = 6 : selected = null" :aria-expanded="selected === 6" class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-white/5 transition">
                         <span class="font-medium text-white">Ist die Website rechtssicher (DSGVO & Barrierefreiheit)?</span>
                         <i class="fa-solid fa-chevron-down text-muted transition-transform duration-300" :class="{'rotate-180': selected === 6}"></i>
                     </button>
                     <div x-show="selected === 6" x-collapse class="px-6 pb-6 text-muted text-sm leading-relaxed">
-                        Absolut. Anders als viele Baukästen laden wir Schriften und Karten lokal – das kappt die illegale Datenleitung in die USA (Google Fonts Problematik). Zudem ist unser sauberer, semantischer Code perfekt für Screenreader lesbar, sodass Sie bestens auf das <strong class="text-white">BFSG 2025</strong> (Barrierefreiheitsstärkungsgesetz) vorbereitet sind. Sie sind vor Abmahnungen geschützt.
+                        Absolut. Anders als viele Baukästen laden wir Schriften und Karten lokal – das kappt die illegale Datenleitung in die USA (Google Fonts Problematik). Zudem ist unser sauberer, semantischer Code perfekt für Screenreader lesbar, sodass Sie bestens auf das <strong class="text-white">BFSG</strong> (Barrierefreiheitsstärkungsgesetz, seit Juni 2025 in Kraft) vorbereitet sind. Sie sind vor Abmahnungen geschützt.
                     </div>
                 </div>
             </div>
@@ -1599,6 +1599,7 @@
                 <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
                 <a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a>
                 <a href="/agb.html" class="hover:text-white transition">AGB</a>
+                <a href="/barrierefreiheit.html" class="hover:text-white transition">Barrierefreiheit</a>
             </div>
         </div>
     </footer>
@@ -2315,8 +2316,8 @@
             <!-- Header -->
             <div class="p-6 border-b border-white/10 flex items-center justify-between">
                 <h3 class="text-xl font-bold text-white">Bestellung abschließen</h3>
-                <button @click="closeModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition">
-                    <i class="fa-solid fa-times"></i>
+                <button @click="closeModal()" aria-label="Dialog schließen" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition">
+                    <i class="fa-solid fa-times" aria-hidden="true"></i>
                 </button>
             </div>
 
