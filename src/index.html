@@ -1449,46 +1449,71 @@
                     Kostenlose Erstanalyse Ihrer aktuellen Situation.
                 </p>
 
-                <form action="https://formspree.io/f/mjggbdre" method="POST" class="relative z-10 space-y-5 text-left">
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihr Name</label>
-                        <input type="text" name="name" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Max Mustermann">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Website <span class="text-gray-600 normal-case">(falls vorhanden)</span></label>
-                        <input type="text" name="website" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="www.ihre-seite.de">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">E-Mail Adresse</label>
-                        <input type="email" name="email" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="max@beispiel.de">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Interesse an</label>
-                        <select name="interest" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition">
-                            <option value="" disabled selected>Bitte wählen...</option>
-                            <option value="neue-website">Komplett neue Website</option>
-                            <option value="redesign">Redesign / Relaunch</option>
-                            <option value="performance">Performance Optimierung</option>
-                            <option value="sonstiges">Sonstiges</option>
-                        </select>
-                    </div>
+                <div x-data="{ submitted: false, error: false, loading: false }" class="relative z-10">
+                    <form x-show="!submitted" x-ref="contactForm" @submit.prevent="
+                        loading = true;
+                        error = false;
+                        fetch('https://formspree.io/f/mjggbdre', {
+                            method: 'POST',
+                            body: new FormData($refs.contactForm),
+                            headers: { 'Accept': 'application/json' }
+                        }).then(r => {
+                            loading = false;
+                            if (r.ok) { submitted = true; } else { error = true; }
+                        }).catch(() => { loading = false; error = true; })
+                    " class="space-y-5 text-left">
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihr Name</label>
+                            <input type="text" name="name" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Max Mustermann">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Website <span class="text-gray-600 normal-case">(falls vorhanden)</span></label>
+                            <input type="text" name="website" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="www.ihre-seite.de">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">E-Mail Adresse</label>
+                            <input type="email" name="email" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="max@beispiel.de">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Interesse an</label>
+                            <select name="interest" required class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition">
+                                <option value="" disabled selected>Bitte wählen...</option>
+                                <option value="neue-website">Komplett neue Website</option>
+                                <option value="redesign">Redesign / Relaunch</option>
+                                <option value="performance">Performance Optimierung</option>
+                                <option value="sonstiges">Sonstiges</option>
+                            </select>
+                        </div>
 
-                    <div>
-                        <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihre Nachricht <span class="text-gray-600">(optional)</span></label>
-                        <textarea name="message" rows="3" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Weitere Details zu Ihrem Projekt..."></textarea>
-                    </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 uppercase tracking-wider mb-2 font-medium">Ihre Nachricht <span class="text-gray-600">(optional)</span></label>
+                            <textarea name="message" rows="3" class="w-full bg-[#2c2c2e] border-0 rounded-lg px-4 py-3 text-white text-sm focus:ring-1 focus:ring-primary transition placeholder-gray-600" placeholder="Weitere Details zu Ihrem Projekt..."></textarea>
+                        </div>
 
-                    <div class="flex items-start gap-3">
-                        <input type="checkbox" id="privacy" name="privacy" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary focus:ring-offset-0">
-                        <label for="privacy" class="text-xs text-gray-400 leading-relaxed">
-                            Ich stimme der Verarbeitung meiner Daten gemäß der <a href="/datenschutz.html" class="underline hover:text-white transition">Datenschutzerklärung</a> zu. *
-                        </label>
-                    </div>
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="privacy" name="privacy" required class="mt-1 w-4 h-4 rounded border-gray-600 bg-[#2c2c2e] text-primary focus:ring-primary focus:ring-offset-0">
+                            <label for="privacy" class="text-xs text-gray-400 leading-relaxed">
+                                Ich stimme der Verarbeitung meiner Daten gemäß der <a href="/datenschutz.html" class="underline hover:text-white transition">Datenschutzerklärung</a> zu. *
+                            </label>
+                        </div>
 
-                    <button type="submit" class="w-full py-4 rounded-lg bg-primary hover:bg-blue-600 text-white font-semibold text-sm transition duration-300 shadow-glow mt-2">
-                        Kostenlose Analyse anfordern
-                    </button>
-                </form>
+                        <p x-show="error" class="text-red-400 text-sm">Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.</p>
+
+                        <button type="submit" :disabled="loading" class="w-full py-4 rounded-lg bg-primary hover:bg-blue-600 text-white font-semibold text-sm transition duration-300 shadow-glow mt-2 disabled:opacity-50">
+                            <span x-show="!loading">Kostenlose Analyse anfordern</span>
+                            <span x-show="loading"><i class="fa-solid fa-spinner animate-spin mr-2"></i>Wird gesendet...</span>
+                        </button>
+                    </form>
+
+                    <!-- Erfolgs-Nachricht -->
+                    <div x-show="submitted" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" class="text-center py-12">
+                        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                            <i class="fa-solid fa-check text-green-500 text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Anfrage erfolgreich gesendet!</h3>
+                        <p class="text-gray-400 text-sm">Vielen Dank für Ihr Interesse. Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
