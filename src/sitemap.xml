@@ -100,6 +100,32 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Blog -->
+  <url>
+    <loc>https://karriaro-webdesign.de/blog.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/blog/wordpress-vs-handcode.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/blog/core-web-vitals-erklaert.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/blog/dsgvo-website-checkliste.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Portfolio -->
   <url>
     <loc>https://karriaro-webdesign.de/portfolio/immobilien-makler.html</loc>

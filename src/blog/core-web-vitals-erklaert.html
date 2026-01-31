@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Web Vitals erklärt: LCP, FID, CLS verstehen & optimieren | Karriaro</title>
+    <meta name="description" content="Core Web Vitals einfach erklärt: Was LCP, FID und CLS bedeuten, wie du sie misst und verbesserst. Mit praktischer Checkliste für bessere Google Rankings.">
+    <meta name="keywords" content="Core Web Vitals, LCP, FID, CLS, Website Performance, Google Ranking, Page Speed">
+    <meta name="author" content="Karriaro Webdesign">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/blog/core-web-vitals-erklaert.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://karriaro-webdesign.de/blog/core-web-vitals-erklaert.html">
+    <meta property="og:title" content="Core Web Vitals erklärt: LCP, FID, CLS verstehen & optimieren">
+    <meta property="og:description" content="Core Web Vitals einfach erklärt: Was LCP, FID und CLS bedeuten, wie du sie misst und verbesserst.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:locale" content="de_DE">
+    <meta property="article:published_time" content="2026-01-31">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Core Web Vitals erklärt: LCP, FID, CLS verstehen & optimieren",
+        "description": "Core Web Vitals einfach erklärt: Was LCP, FID und CLS bedeuten, wie du sie misst und verbesserst.",
+        "author": {"@type": "Organization", "name": "Karriaro Webdesign"},
+        "publisher": {"@type": "Organization", "name": "Karriaro Webdesign", "logo": {"@type": "ImageObject", "url": "https://karriaro-webdesign.de/images/logo.svg"}},
+        "datePublished": "2026-01-31",
+        "dateModified": "2026-01-31"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://karriaro-webdesign.de/"},
+            {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://karriaro-webdesign.de/blog.html"},
+            {"@type": "ListItem", "position": 3, "name": "Core Web Vitals", "item": "https://karriaro-webdesign.de/blog/core-web-vitals-erklaert.html"}
+        ]
+    }
+    </script>
+    <style>body{background:#050507}.hero-gradient{background:radial-gradient(ellipse at top,rgba(59,130,246,.15) 0%,transparent 50%)}.text-gradient{background:linear-gradient(135deg,#3b82f6 0%,#60a5fa 50%,#93c5fd 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.prose{color:#a1a1a6}.prose h2{color:#fff;font-size:1.5rem;font-weight:700;margin-top:2.5rem;margin-bottom:1rem}.prose h3{color:#fff;font-size:1.25rem;font-weight:600;margin-top:2rem;margin-bottom:0.75rem}.prose p{margin-bottom:1.25rem;line-height:1.75}.prose ul,.prose ol{margin-bottom:1.25rem;padding-left:1.5rem}.prose li{margin-bottom:0.5rem}.prose strong{color:#fff}.prose a{color:#3b82f6;text-decoration:underline}.prose a:hover{color:#60a5fa}</style>
+</head>
+<body class="text-white antialiased">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center h-16"><a href="/" class="text-lg font-bold tracking-tight">Karriaro<span class="text-gray-500 font-normal"> Webdesign</span></a><div class="flex items-center gap-6"><a href="/blog.html" class="text-sm text-gray-400 hover:text-white transition hidden sm:block">Blog</a><a href="/#kontakt" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition">Kontakt</a></div></div></div></nav>
+
+    <article class="pt-24 pb-16">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="mb-8 text-sm text-gray-500"><a href="/" class="hover:text-white transition">Home</a><span class="mx-2">/</span><a href="/blog.html" class="hover:text-white transition">Blog</a><span class="mx-2">/</span><span class="text-white">Core Web Vitals</span></nav>
+
+            <header class="mb-12">
+                <div class="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                    <span><i class="fa-solid fa-calendar mr-1"></i>31. Januar 2026</span>
+                    <span><i class="fa-solid fa-clock mr-1"></i>6 Min. Lesezeit</span>
+                </div>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mb-6">Core Web Vitals: <span class="text-gradient">Was Google wirklich von deiner Website will</span></h1>
+                <p class="text-xl text-gray-400">LCP, FID, CLS – drei Abkürzungen, die über dein Google-Ranking entscheiden. Hier erfährst du, was sie bedeuten und wie du sie optimierst.</p>
+            </header>
+
+            <div class="prose max-w-none">
+                <p>Seit 2021 sind die Core Web Vitals ein offizieller Google-Ranking-Faktor. Das bedeutet: Wenn deine Website langsam ist oder springende Inhalte hat, kann das dein Ranking negativ beeinflussen – selbst wenn dein Content erstklassig ist.</p>
+
+                <p>In diesem Artikel erkläre ich dir die drei Core Web Vitals so, dass du sie wirklich verstehst. Ohne Marketing-Buzzwords, ohne unnötige Komplexität.</p>
+
+                <h2><i class="fa-solid fa-image text-blue-400 mr-2"></i>LCP – Largest Contentful Paint</h2>
+
+                <p><strong>Was es misst:</strong> Wie lange dauert es, bis der größte sichtbare Inhalt (meist ein Bild oder eine Überschrift) geladen ist?</p>
+
+                <div class="bg-white/5 rounded-xl p-6 my-6 border border-white/10">
+                    <h4 class="text-white font-semibold mb-3">LCP Bewertung:</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-green-500"></span><strong class="text-green-400">Gut:</strong> unter 2,5 Sekunden</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-yellow-500"></span><strong class="text-yellow-400">Verbesserungswürdig:</strong> 2,5 - 4 Sekunden</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-red-500"></span><strong class="text-red-400">Schlecht:</strong> über 4 Sekunden</div>
+                    </div>
+                </div>
+
+                <p><strong>Typische Probleme:</strong></p>
+                <ul>
+                    <li>Große, unkomprimierte Bilder</li>
+                    <li>Langsamer Server (billiges Hosting)</li>
+                    <li>Blockierendes JavaScript und CSS</li>
+                    <li>Lazy Loading für Above-the-Fold Content</li>
+                </ul>
+
+                <p><strong>So verbesserst du LCP:</strong></p>
+                <ul>
+                    <li>Bilder in WebP-Format konvertieren und komprimieren</li>
+                    <li>Hero-Bild mit <code>preload</code> vorladen</li>
+                    <li>Schnelles Hosting wählen (nicht den billigsten Anbieter)</li>
+                    <li>Kritisches CSS inline einbinden</li>
+                </ul>
+
+                <h2><i class="fa-solid fa-hand-pointer text-green-400 mr-2"></i>FID – First Input Delay (jetzt INP)</h2>
+
+                <p><strong>Was es misst:</strong> Wie lange dauert es, bis die Website auf deine erste Interaktion (Klick, Tippen) reagiert?</p>
+
+                <p><em>Hinweis: Google hat FID im März 2024 durch INP (Interaction to Next Paint) ersetzt. INP misst alle Interaktionen, nicht nur die erste.</em></p>
+
+                <div class="bg-white/5 rounded-xl p-6 my-6 border border-white/10">
+                    <h4 class="text-white font-semibold mb-3">INP Bewertung:</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-green-500"></span><strong class="text-green-400">Gut:</strong> unter 200 Millisekunden</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-yellow-500"></span><strong class="text-yellow-400">Verbesserungswürdig:</strong> 200 - 500 ms</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-red-500"></span><strong class="text-red-400">Schlecht:</strong> über 500 ms</div>
+                    </div>
+                </div>
+
+                <p><strong>Typische Probleme:</strong></p>
+                <ul>
+                    <li>Zu viel JavaScript, das den Browser blockiert</li>
+                    <li>Third-Party Scripts (Analytics, Chat-Widgets, Social Media)</li>
+                    <li>Große JavaScript-Bundles</li>
+                </ul>
+
+                <p><strong>So verbesserst du INP:</strong></p>
+                <ul>
+                    <li>JavaScript minimieren und aufteilen</li>
+                    <li>Third-Party Scripts asynchron laden oder entfernen</li>
+                    <li>Lange JavaScript-Tasks aufbrechen</li>
+                    <li>Web Workers für schwere Berechnungen nutzen</li>
+                </ul>
+
+                <h2><i class="fa-solid fa-arrows-up-down text-orange-400 mr-2"></i>CLS – Cumulative Layout Shift</h2>
+
+                <p><strong>Was es misst:</strong> Wie stark verschieben sich Elemente auf der Seite während des Ladens?</p>
+
+                <p>Du kennst das: Du willst auf einen Button klicken, aber plötzlich lädt ein Bild und alles springt nach unten. Das ist CLS – und es nervt Nutzer massiv.</p>
+
+                <div class="bg-white/5 rounded-xl p-6 my-6 border border-white/10">
+                    <h4 class="text-white font-semibold mb-3">CLS Bewertung:</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-green-500"></span><strong class="text-green-400">Gut:</strong> unter 0,1</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-yellow-500"></span><strong class="text-yellow-400">Verbesserungswürdig:</strong> 0,1 - 0,25</div>
+                        <div class="flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-red-500"></span><strong class="text-red-400">Schlecht:</strong> über 0,25</div>
+                    </div>
+                </div>
+
+                <p><strong>Typische Probleme:</strong></p>
+                <ul>
+                    <li>Bilder ohne definierte Größe (width/height)</li>
+                    <li>Werbung und Embeds ohne reservierten Platz</li>
+                    <li>Web Fonts, die zu Flash of Unstyled Text (FOUT) führen</li>
+                    <li>Dynamisch eingefügte Inhalte (Cookie-Banner, Newsletter-Popups)</li>
+                </ul>
+
+                <p><strong>So verbesserst du CLS:</strong></p>
+                <ul>
+                    <li>Immer width und height für Bilder angeben</li>
+                    <li>Platzhalter für Ads und Embeds reservieren</li>
+                    <li><code>font-display: swap</code> für Web Fonts</li>
+                    <li>Animationen mit <code>transform</code> statt Position/Größe</li>
+                </ul>
+
+                <h2><i class="fa-solid fa-wrench text-purple-400 mr-2"></i>So misst du deine Core Web Vitals</h2>
+
+                <p>Es gibt mehrere kostenlose Tools, um deine Werte zu prüfen:</p>
+
+                <ol>
+                    <li><strong>PageSpeed Insights</strong> (pagespeed.web.dev) – Das offizielle Google-Tool</li>
+                    <li><strong>Google Search Console</strong> – Zeigt echte Nutzerdaten</li>
+                    <li><strong>Lighthouse</strong> – In Chrome DevTools integriert</li>
+                    <li><strong>WebPageTest</strong> – Für detaillierte Analysen</li>
+                </ol>
+
+                <p><strong>Wichtig:</strong> Teste immer auf Mobile! Die meisten deiner Besucher kommen wahrscheinlich vom Smartphone, und dort sind die Werte oft schlechter.</p>
+
+                <h2><i class="fa-solid fa-clipboard-check text-blue-400 mr-2"></i>Schnelle Checkliste</h2>
+
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6 my-6">
+                    <h4 class="text-white font-semibold mb-4">Core Web Vitals Checkliste:</h4>
+                    <ul class="space-y-2 text-sm mb-0">
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Bilder komprimiert und in WebP</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Alle Bilder haben width/height</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Hero-Bild wird vorgeladen</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>JavaScript ist minimiert</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Third-Party Scripts sind asynchron</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Fonts nutzen font-display: swap</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Hosting ist schnell genug</li>
+                        <li><i class="fa-regular fa-square text-gray-500 mr-2"></i>Mobile Performance getestet</li>
+                    </ul>
+                </div>
+
+                <h2><i class="fa-solid fa-scale-balanced text-gray-400 mr-2"></i>Fazit</h2>
+
+                <p>Core Web Vitals sind kein Hexenwerk. Die meisten Probleme lassen sich mit ein paar grundlegenden Optimierungen lösen. Das Wichtigste:</p>
+
+                <ul>
+                    <li><strong>Bilder optimieren</strong> (löst meist LCP und CLS)</li>
+                    <li><strong>Weniger JavaScript</strong> (löst INP)</li>
+                    <li><strong>Gutes Hosting</strong> (hilft bei allem)</li>
+                </ul>
+
+                <p>Oder du lässt dir eine <a href="/#kontakt">handcodierte Website erstellen</a>, die von Anfang an auf Performance optimiert ist. Unsere Websites erreichen standardmäßig 95+ Punkte bei PageSpeed Insights.</p>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-white/10">
+                <a href="/blog.html" class="inline-flex items-center gap-2 text-gray-400 hover:text-white transition"><i class="fa-solid fa-arrow-left"></i>Zurück zum Blog</a>
+            </div>
+        </div>
+    </article>
+
+    <section class="py-20 bg-gradient-to-t from-blue-500/10 to-transparent">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-6">Website zu langsam?</h2>
+            <p class="text-gray-400 mb-8">Ich analysiere deine Core Web Vitals kostenlos und zeige dir, was du verbessern kannst.</p>
+            <a href="/#kontakt" class="inline-flex items-center gap-3 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition shadow-lg shadow-blue-500/25">Kostenlose Analyse<i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <footer class="py-12 border-t border-white/5 bg-black"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6"><div class="text-center md:text-left"><a href="/" class="text-base font-bold tracking-tight text-white mb-1 block">Karriaro<span class="text-gray-500 font-normal"> Webdesign</span></a><p class="text-gray-500 text-xs">© 2026 Karriaro Webdesign. Stuttgart, DE.</p></div><div class="flex gap-6 text-xs text-gray-500"><a href="/impressum.html" class="hover:text-white transition">Impressum</a><a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a><a href="/agb.html" class="hover:text-white transition">AGB</a></div></div></footer>
+</body>
+</html>
