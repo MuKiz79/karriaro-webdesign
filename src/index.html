@@ -349,7 +349,21 @@
         "priceRange": "€€",
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Spitalstr. 7",
+            "addressLocality": "Schiltach",
+            "postalCode": "77761",
+            "addressRegion": "Baden-Württemberg",
             "addressCountry": "DE"
+        },
+        "telephone": "+49 711 123456",
+        "email": "kontakt@karriaro-webdesign.de",
+        "founder": {
+            "@type": "Person",
+            "name": "Muammer Kizilaslan"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "Deutschland"
         },
         "sameAs": [],
         "hasOfferCatalog": {
@@ -384,6 +398,56 @@
             "reviewCount": "50",
             "bestRating": "5",
             "worstRating": "1"
+        }
+    }
+    </script>
+
+    <!-- LocalBusiness Schema für lokale Suche -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Karriaro Webdesign",
+        "image": "https://karriaro-webdesign.de/images/og-image.jpg",
+        "url": "https://karriaro-webdesign.de",
+        "telephone": "+49 711 123456",
+        "email": "kontakt@karriaro-webdesign.de",
+        "priceRange": "€€",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Spitalstr. 7",
+            "addressLocality": "Schiltach",
+            "postalCode": "77761",
+            "addressRegion": "Baden-Württemberg",
+            "addressCountry": "DE"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 48.2897,
+            "longitude": 8.3414
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "09:00",
+                "closes": "18:00"
+            }
+        ],
+        "areaServed": [
+            {"@type": "City", "name": "Stuttgart"},
+            {"@type": "City", "name": "Berlin"},
+            {"@type": "City", "name": "München"},
+            {"@type": "City", "name": "Hamburg"},
+            {"@type": "City", "name": "Köln"},
+            {"@type": "City", "name": "Frankfurt"},
+            {"@type": "State", "name": "Baden-Württemberg"},
+            {"@type": "Country", "name": "Deutschland"}
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "reviewCount": "50"
         }
     }
     </script>
