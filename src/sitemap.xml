@@ -14,6 +14,38 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Lokale Landing Pages -->
+  <url>
+    <loc>https://karriaro-webdesign.de/webdesign-berlin.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/webdesign-muenchen.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/webdesign-hamburg.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/webdesign-frankfurt.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://karriaro-webdesign.de/webdesign-koeln.html</loc>
+    <lastmod>2026-01-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- Portfolio -->
   <url>
     <loc>https://karriaro-webdesign.de/portfolio/immobilien-makler.html</loc>
