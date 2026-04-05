@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,463 +38,175 @@
     </script>
     <link rel="stylesheet" href="/style.css">
     <style>
-        :root {
-            --color-primary: #0f172a;
-            --color-accent: #ea580c;
-            --color-accent-hover: #c2410c;
-            --color-light: #f8fafc;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-
-        /* Custom utility classes */
-        .bg-primary { background-color: var(--color-primary); }
-        .text-primary { color: var(--color-primary); }
-        .bg-accent { background-color: var(--color-accent); }
-        .text-accent { color: var(--color-accent); }
-        .bg-light { background-color: var(--color-light); }
-        .border-accent { border-color: var(--color-accent); }
-        .hover\:bg-accent-hover:hover { background-color: var(--color-accent-hover); }
-        .hover\:text-accent:hover { color: var(--color-accent); }
-        .focus\:ring-accent:focus { --tw-ring-color: var(--color-accent); }
-        .focus\:border-accent:focus { border-color: var(--color-accent); }
-
-        /* Skip-to-content */
-        .skip-link {
-            position: absolute; left: -9999px; top: 0; z-index: 999;
-            padding: 0.75rem 1.5rem; background: var(--color-accent);
-            color: #fff; font-weight: 700; text-decoration: none;
-            border-radius: 0 0 0.5rem 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --orange: #ea580c; --dark: #1d1d1f; --off: #fafafa; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--dark); background: var(--off); -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        .skip-link { position: absolute; left: -9999px; top: 0; z-index: 999; padding: 0.75rem 1.5rem; background: var(--orange); color: #fff; font-weight: 700; border-radius: 0 0 8px 0; }
         .skip-link:focus { left: 0; }
 
-        /* Section spacing */
-        .section-pad { padding-top: 7rem; padding-bottom: 7rem; }
+        /* Hero */
+        .hero { position: relative; height: 100vh; min-height: 600px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
+        .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.15) 100%); }
+        .hero-top { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 28px 40px; z-index: 2; }
+        .hero-logo { color: #fff; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; }
+        .hero-phone { color: var(--orange); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 0 24px; }
+        .hero h1 { color: #fff; font-size: clamp(48px, 8vw, 80px); font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 20px; }
+        .hero p { color: rgba(255,255,255,0.8); font-size: 18px; font-weight: 400; margin-bottom: 40px; }
+        .btn-primary { display: inline-block; background: #fff; color: var(--dark); font-size: 16px; font-weight: 700; padding: 16px 36px; border-radius: 9999px; transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); z-index: 2; width: 20px; height: 32px; border: 2px solid rgba(255,255,255,0.5); border-radius: 10px; }
+        .scroll-hint::after { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 4px; height: 8px; background: rgba(255,255,255,0.7); border-radius: 2px; animation: scrollDown 1.8s ease-in-out infinite; }
+        @keyframes scrollDown { 0%, 100% { opacity: 1; transform: translateX(-50%) translateY(0); } 50% { opacity: 0.3; transform: translateX(-50%) translateY(10px); } }
 
-        /* Hero overlay */
-        .hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(160deg, rgba(15,23,42,0.92) 40%, rgba(15,23,42,0.7) 100%);
-        }
+        /* Sections */
+        section { padding: 100px 24px; }
+        .wrap { max-width: 1080px; margin: 0 auto; }
+        h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 56px; color: var(--dark); }
 
-        /* Icon wrapper */
-        .icon-wrap {
-            width: 3.5rem; height: 3.5rem; border-radius: 0.75rem;
-            display: flex; align-items: center; justify-content: center;
-            transition: background-color 0.3s, color 0.3s;
-        }
+        /* Leistungen */
+        .services { background: #fff; }
+        .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-bottom: 48px; }
+        .services-grid h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+        .services-grid p { font-size: 15px; line-height: 1.6; color: #6b6b6b; }
+        .link-orange { color: var(--orange); font-size: 16px; font-weight: 600; transition: opacity 0.2s; }
+        .link-orange:hover { opacity: 0.7; }
 
-        /* Service card */
-        .service-card {
-            padding: 2.5rem; border-radius: 1rem;
-            border: 1px solid #e2e8f0; background: #fff;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.1);
-        }
-        .service-card:hover .icon-wrap {
-            background-color: var(--color-accent); color: #fff;
-        }
+        /* Projekte */
+        .projekte { background: var(--off); }
+        .projekte img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 32px; }
+        .projekte .stat { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .projekte .note { font-size: 14px; color: #999; }
 
-        /* CTA button */
-        .btn-accent {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: var(--color-accent); color: #fff;
-            padding: 1rem 2rem; border-radius: 0.5rem;
-            font-weight: 700; font-size: 1.125rem;
-            transition: background-color 0.25s, transform 0.25s;
-            text-decoration: none;
-        }
-        .btn-accent:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
+        /* Kontakt */
+        .kontakt { background: #fff; }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+        .kontakt-info .phone { font-size: 28px; font-weight: 800; color: var(--orange); display: block; margin-bottom: 24px; }
+        .kontakt-info p { font-size: 15px; color: #6b6b6b; line-height: 1.8; }
+        .kontakt-form input, .kontakt-form textarea { width: 100%; padding: 14px 18px; font-size: 15px; font-family: inherit; border: 1px solid #e0e0e0; border-radius: 12px; background: var(--off); margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
+        .kontakt-form input:focus, .kontakt-form textarea:focus { border-color: var(--orange); }
+        .kontakt-form textarea { resize: vertical; min-height: 120px; }
+        .btn-submit { display: inline-block; background: var(--orange); color: #fff; font-size: 16px; font-weight: 700; padding: 16px 36px; border-radius: 12px; border: none; cursor: pointer; font-family: inherit; transition: transform 0.2s, opacity 0.2s; }
+        .btn-submit:hover { transform: translateY(-1px); opacity: 0.9; }
+        .form-note { font-size: 13px; color: #999; margin-top: 12px; }
 
-        .btn-ghost {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.08); color: #fff;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 1rem 2rem; border-radius: 0.5rem;
-            font-weight: 700; font-size: 1.125rem;
-            transition: background-color 0.25s; text-decoration: none;
-        }
-        .btn-ghost:hover { background: rgba(255,255,255,0.16); }
+        /* Footer */
+        footer { background: var(--dark); color: rgba(255,255,255,0.5); text-align: center; padding: 40px 24px; font-size: 14px; }
+        footer a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+        footer a:hover { color: #fff; }
 
-        /* Mobile menu */
-        #mobile-menu {
-            max-height: 0; overflow: hidden; opacity: 0;
-            transition: max-height 0.3s ease, opacity 0.25s ease;
+        /* Mobile nav */
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; z-index: 10; padding: 8px; }
+        .nav-toggle span { display: block; width: 22px; height: 2px; background: #fff; margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
+        .mobile-menu { display: none; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section { padding: 72px 20px; }
+            .services-grid { grid-template-columns: 1fr; gap: 36px; }
+            .kontakt-grid { grid-template-columns: 1fr; gap: 40px; }
+            .hero-top { padding: 20px 20px; }
+            .nav-toggle { display: block; }
+            .hero-phone.desktop { display: none; }
+            .mobile-menu.open { display: flex; flex-direction: column; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 50; justify-content: center; align-items: center; gap: 24px; }
+            .mobile-menu a { color: #fff; font-size: 20px; font-weight: 600; }
         }
-        #mobile-menu.open { max-height: 320px; opacity: 1; }
-        /* Contact info icon circle */
-        .contact-icon {
-            width: 3rem; height: 3rem; border-radius: 9999px;
-            background: rgba(255,255,255,0.08);
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; color: var(--color-accent);
-        }
-        /* Form input */
-        .form-input {
-            width: 100%; padding: 0.875rem 1rem;
-            background: var(--color-light); border: 1px solid #e2e8f0;
-            border-radius: 0.5rem; font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-        }
-        .form-input:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(234,88,12,0.15);
-        }
-        /* Divider line */
-        .accent-line { width: 3rem; height: 3px; background: var(--color-accent); border-radius: 2px; }
     </style>
 </head>
-<body class="font-sans text-slate-800 antialiased" style="background:var(--color-light)">
-    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
-    <!-- TOP BAR -->
-    <div class="bg-primary text-white text-sm hidden md:block">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center h-10">
-            <div class="flex items-center gap-6">
-                <span class="flex items-center gap-2 text-slate-300">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    Mo - Fr: 7:00 - 18:00
-                </span>
-                <span class="flex items-center gap-2 text-slate-300">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    Musterstadt &amp; Umgebung
-                </span>
-            </div>
-            <a href="tel:0123456789" class="flex items-center gap-2 font-semibold text-accent hover:text-orange-400 transition" aria-label="Notfallnummer anrufen: 0123 456 789">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                Notdienst: 0123 / 45 67 89
-            </a>
+<body>
+    <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+
+    <!-- 1. Hero -->
+    <section class="hero" aria-label="Willkommen">
+        <img src="/images/Bauarbeiter_Hero.jpg" alt="Meisterbetrieb Müller - Handwerker bei der Arbeit" width="1920" height="1080">
+        <div class="hero-overlay"></div>
+        <div class="hero-top">
+            <span class="hero-logo">Meisterbetrieb Müller</span>
+            <a href="tel:0800123456" class="hero-phone desktop" aria-label="Notfall-Telefonnummer anrufen">Notfall? 0800 123 456</a>
+            <button class="nav-toggle" aria-label="Menü öffnen" onclick="document.querySelector('.mobile-menu').classList.toggle('open')">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-    </div>
-
-    <!-- NAVIGATION -->
-    <nav class="bg-white/95 backdrop-blur-sm shadow-sm fixed w-full z-50 top-0 md:top-10" role="navigation" aria-label="Hauptnavigation">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <a href="#" class="flex items-center gap-2.5" aria-label="Meisterbetrieb Müller Startseite">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25V6.5a.5.5 0 0 0-.5-.5H16.7a3.18 3.18 0 0 1-2.24-.93l-1.27-1.27a1 1 0 0 0-1.41 0L9.02 6.56a1 1 0 0 0 0 1.4l5.02 5.02a1 1 0 0 0 1.41 0l2.77-2.77"/></svg>
-                    <span class="font-bold text-xl tracking-tight" style="color:var(--color-primary)">Meister<span class="text-accent">Müller</span></span>
-                </a>
-
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#leistungen" class="text-slate-600 hover:text-accent transition font-medium">Leistungen</a>
-                    <a href="#uber-uns" class="text-slate-600 hover:text-accent transition font-medium">Über uns</a>
-                    <a href="#kontakt" class="text-slate-600 hover:text-accent transition font-medium">Kontakt</a>
-                    <a href="#kontakt" class="btn-accent" style="padding:0.625rem 1.5rem;font-size:0.9375rem">Angebot anfragen</a>
-                </div>
-
-                <button id="mobile-menu-btn" class="md:hidden p-2 text-slate-600 hover:text-primary" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
-                    <svg id="menu-icon-open" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                    <svg id="menu-icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                </button>
-            </div>
+        <div class="mobile-menu" role="navigation" aria-label="Mobile Navigation">
+            <a href="tel:0800123456">Notfall? 0800 123 456</a>
+            <a href="#leistungen">Leistungen</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
-
-        <div id="mobile-menu" class="md:hidden bg-white border-t border-slate-100">
-            <div class="px-6 py-4 space-y-1">
-                <a href="#leistungen" class="mobile-link block py-3 font-medium text-slate-700 hover:text-accent transition">Leistungen</a>
-                <a href="#uber-uns" class="mobile-link block py-3 font-medium text-slate-700 hover:text-accent transition">Über uns</a>
-                <a href="#kontakt" class="mobile-link block py-3 font-medium text-slate-700 hover:text-accent transition">Kontakt</a>
-                <a href="#kontakt" class="mobile-link block py-3 font-bold text-accent">Angebot anfragen</a>
-            </div>
+        <div class="hero-content">
+            <h1>Qualität, die bleibt.</h1>
+            <p>Dach, Fassade &amp; Innenausbau seit 1990</p>
+            <a href="#kontakt" class="btn-primary" aria-label="Kostenlose Beratung anfragen">Kostenlos beraten lassen</a>
         </div>
-    </nav>
+        <div class="scroll-hint" aria-hidden="true"></div>
+    </section>
 
-    <!-- MAIN CONTENT -->
     <main id="main-content">
 
-    <!-- HERO -->
-    <section class="relative overflow-hidden" style="padding-top:10rem;padding-bottom:7rem;min-height:90vh;display:flex;align-items:center">
-        <img src="/images/Bauarbeiter_Hero.jpg" alt="Handwerker auf einer modernen Baustelle mit professionellem Werkzeug" class="absolute inset-0 w-full h-full object-cover">
-        <div class="hero-overlay"></div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 w-full">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold mb-8" style="background:rgba(234,88,12,0.15);color:var(--color-accent);border:1px solid rgba(234,88,12,0.25)">
-                    <span class="w-2 h-2 rounded-full bg-accent" style="animation:pulse 2s infinite"></span>
-                    Jetzt Termine für 2026 sichern
+        <!-- 2. Leistungen -->
+        <section class="services" id="leistungen" aria-label="Unsere Leistungen">
+            <div class="wrap">
+                <h2>Was wir für Sie tun.</h2>
+                <div class="services-grid">
+                    <div>
+                        <h3>Dachsanierung</h3>
+                        <p>Komplette Neueindeckung, Dämmung und Reparatur. Wir bringen Ihr Dach auf den neuesten Stand der Technik.</p>
+                    </div>
+                    <div>
+                        <h3>Fassadenarbeiten</h3>
+                        <p>Von Wärmedämmung bis Putzarbeiten. Ihre Fassade wird nicht nur schöner, sondern auch energieeffizienter.</p>
+                    </div>
+                    <div>
+                        <h3>Innenausbau</h3>
+                        <p>Trockenbau, Bodenbeläge und Malerarbeiten. Wir verwandeln Räume in Ihr neues Zuhause.</p>
+                    </div>
                 </div>
-
-                <h1 class="text-white leading-tight mb-6" style="font-size:clamp(2.5rem,5vw,4rem);font-weight:800;letter-spacing:-0.025em">
-                    Wir bauen Ihre Vision.<br>
-                    <span class="text-accent">Zuverlässig &amp; Präzise.</span>
-                </h1>
-
-                <p class="text-slate-300 mb-10 max-w-2xl" style="font-size:1.25rem;line-height:1.75">
-                    Ihr Meisterbetrieb für Renovierung, Sanierung und Neubau in der Region. Über 30 Jahre Erfahrung und hunderte zufriedene Kunden.
-                </p>
-
-                <div class="flex flex-col sm:flex-row gap-4 mb-14">
-                    <a href="#kontakt" class="btn-accent" style="padding:1.125rem 2.25rem" aria-label="Kostenloses Angebot anfragen">
-                        Kostenloses Angebot
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </a>
-                    <a href="tel:0123456789" class="btn-ghost" aria-label="Jetzt anrufen: 0123 456 789">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        0123 / 45 67 89
-                    </a>
-                </div>
-
-                <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm font-medium text-slate-400">
-                    <span class="flex items-center gap-2">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        Meisterbetrieb
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        Festpreisgarantie
-                    </span>
-                    <span class="flex items-center gap-2">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        TÜV Zertifiziert
-                    </span>
-                </div>
+                <a href="#kontakt" class="link-orange">Alle Leistungen besprechen &rarr;</a>
             </div>
-        </div>
+        </section>
 
-        <style>@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}</style>
-    </section>
-
-    <!-- LEISTUNGEN -->
-    <section id="leistungen" class="section-pad bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <p class="text-accent font-bold uppercase tracking-widest text-sm mb-3">Unsere Expertise</p>
-                <h2 class="text-primary mb-4" style="font-size:clamp(1.875rem,3vw,2.5rem);font-weight:800;letter-spacing:-0.02em">Alles aus einer Hand</h2>
-                <div class="accent-line mx-auto"></div>
+        <!-- 3. Projekte -->
+        <section class="projekte" id="projekte" aria-label="Unsere Projekte">
+            <div class="wrap">
+                <h2>Aktuelle Projekte.</h2>
+                <img src="/images/portfolio/handwerk-team.jpg" alt="Das Team von Meisterbetrieb Müller auf der Baustelle" loading="lazy" width="1080" height="608">
+                <p class="stat">30+ Jahre Erfahrung. Über 500 Projekte abgeschlossen.</p>
+                <p class="note">Referenzen auf Anfrage.</p>
             </div>
+        </section>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Sanierung -->
-                <div class="service-card">
-                    <div class="icon-wrap mb-6" style="background:#eff6ff;color:var(--color-primary)">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25V6.5a.5.5 0 0 0-.5-.5H16.7a3.18 3.18 0 0 1-2.24-.93l-1.27-1.27a1 1 0 0 0-1.41 0L9.02 6.56a1 1 0 0 0 0 1.4l5.02 5.02a1 1 0 0 0 1.41 0l2.77-2.77"/></svg>
+        <!-- 4. Kontakt -->
+        <section class="kontakt" id="kontakt" aria-label="Kontaktformular">
+            <div class="wrap">
+                <h2>Sprechen Sie uns an.</h2>
+                <div class="kontakt-grid">
+                    <div class="kontakt-info">
+                        <a href="tel:0800123456" class="phone" aria-label="Anrufen">0800 123 456</a>
+                        <p>
+                            Musterstraße 12<br>
+                            12345 Musterstadt<br><br>
+                            Mo – Fr: 07:00 – 18:00 Uhr<br>
+                            Sa: 08:00 – 13:00 Uhr
+                        </p>
                     </div>
-                    <h3 class="text-lg font-bold text-primary mb-2">Sanierung &amp; Umbau</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Komplettsanierung von Altbauten, Badezimmern und Wohnräumen. Alle Gewerke aus einer Hand.</p>
-                </div>
-
-                <!-- Malerarbeiten -->
-                <div class="service-card">
-                    <div class="icon-wrap mb-6" style="background:#eff6ff;color:var(--color-primary)">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 22 1-1h3l9-9"/><path d="M13 6l-2.4-2.1a2.12 2.12 0 0 0-3 3L10 9"/><path d="m13 6 6-6 3 3-6 6"/><path d="M10 9l3 3"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-primary mb-2">Malerarbeiten</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Innen- und Außenanstriche, Fassadengestaltung und moderne Spachteltechniken für exklusive Optik.</p>
-                </div>
-
-                <!-- Trockenbau -->
-                <div class="service-card">
-                    <div class="icon-wrap mb-6" style="background:#eff6ff;color:var(--color-primary)">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-primary mb-2">Trockenbau</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Wände einziehen, Decken abhängen oder Dachgeschossausbau. Schnell, sauber und schallgedämmt.</p>
-                </div>
-
-                <!-- Bodenverlegung -->
-                <div class="service-card">
-                    <div class="icon-wrap mb-6" style="background:#eff6ff;color:var(--color-primary)">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-primary mb-2">Bodenverlegung</h3>
-                    <p class="text-slate-500 leading-relaxed text-sm">Parkett, Fliesen, Vinyl und Naturstein. Professionelle Verlegung mit perfektem Finish.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ÜBER UNS -->
-    <section id="uber-uns" class="section-pad" style="background:var(--color-light)">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="lg:flex items-center gap-20">
-                <div class="lg:w-1/2 mb-12 lg:mb-0 relative">
-                    <img src="/images/portfolio/handwerk-team.jpg" alt="Das Team von Meisterbetrieb Müller bei einer gemeinsamen Projektbesprechung auf der Baustelle" class="relative rounded-2xl shadow-2xl w-full object-cover z-10" style="aspect-ratio:4/3" loading="lazy">
-                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 hidden md:block" style="border-left:4px solid var(--color-accent)">
-                        <p class="text-primary" style="font-size:2rem;font-weight:800">30+</p>
-                        <p class="text-slate-500 text-sm font-medium">Jahre Erfahrung</p>
-                    </div>
-                </div>
-
-                <div class="lg:w-1/2">
-                    <p class="text-accent font-bold uppercase tracking-widest text-sm mb-3">Warum wir?</p>
-                    <h2 class="text-primary mb-6" style="font-size:clamp(1.875rem,3vw,2.5rem);font-weight:800;letter-spacing:-0.02em">Handwerk ist Vertrauenssache.</h2>
-                    <p class="text-slate-600 mb-6" style="line-height:1.8;font-size:1.0625rem">
-                        Als familiengeführtes Unternehmen legen wir größten Wert auf Pünktlichkeit, Sauberkeit und transparente Preise. Bei uns gibt es keine versteckten Kosten.
-                    </p>
-                    <p class="text-slate-600 mb-8" style="line-height:1.8;font-size:1.0625rem">
-                        Wir verwenden ausschließlich hochwertige Materialien namhafter Hersteller, damit Sie lange Freude an Ihrem Ergebnis haben.
-                    </p>
-
-                    <ul class="space-y-4">
-                        <li class="flex items-center gap-3">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            <span class="text-slate-700 font-medium">Kostenlose Erstbesichtigung vor Ort</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            <span class="text-slate-700 font-medium">Festpreisangebot innerhalb von 24h</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            <span class="text-slate-700 font-medium">Saubere Baustelle nach Abschluss</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- KONTAKT -->
-    <section id="kontakt" class="section-pad bg-primary text-white relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/3 h-full" style="background:rgba(255,255,255,0.03);transform:skewX(-12deg) translateX(5rem)"></div>
-
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-            <div class="lg:flex gap-20">
-                <div class="lg:w-1/2 mb-14 lg:mb-0">
-                    <p class="text-accent font-bold uppercase tracking-widest text-sm mb-3">Kontakt</p>
-                    <h2 class="mb-6" style="font-size:clamp(1.875rem,3vw,2.5rem);font-weight:800;letter-spacing:-0.02em">Starten Sie Ihr Projekt heute.</h2>
-                    <p class="text-slate-300 mb-10" style="font-size:1.125rem;line-height:1.75">
-                        Füllen Sie das Formular aus oder rufen Sie uns direkt an. Wir melden uns umgehend bei Ihnen.
-                    </p>
-
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-4">
-                            <div class="contact-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                            </div>
-                            <div>
-                                <p class="text-slate-400 text-sm">Telefon</p>
-                                <p class="font-bold text-lg">0123 / 45 67 89</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="contact-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                            </div>
-                            <div>
-                                <p class="text-slate-400 text-sm">E-Mail</p>
-                                <p class="font-bold text-lg">info@meister-mueller.de</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="contact-icon">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            </div>
-                            <div>
-                                <p class="text-slate-400 text-sm">Standort</p>
-                                <p class="font-bold text-lg">Musterstraße 12, 12345 Musterstadt</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:w-1/2">
-                    <form class="bg-white p-8 rounded-2xl shadow-2xl text-slate-800" style="lg:p-10">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                            <div>
-                                <label for="contact-name" class="block text-sm font-bold mb-2 text-slate-700">Name</label>
-                                <input id="contact-name" type="text" class="form-input" placeholder="Max Mustermann" required>
-                            </div>
-                            <div>
-                                <label for="contact-phone" class="block text-sm font-bold mb-2 text-slate-700">Telefon</label>
-                                <input id="contact-phone" type="tel" class="form-input" placeholder="Für Rückruf">
-                            </div>
-                        </div>
-                        <div class="mb-5">
-                            <label for="contact-email" class="block text-sm font-bold mb-2 text-slate-700">E-Mail</label>
-                            <input id="contact-email" type="email" class="form-input" placeholder="max@beispiel.de" required>
-                        </div>
-                        <div class="mb-6">
-                            <label for="contact-message" class="block text-sm font-bold mb-2 text-slate-700">Nachricht / Projekt</label>
-                            <textarea id="contact-message" rows="4" class="form-input" style="resize:vertical" placeholder="Worum geht es bei Ihrem Projekt?"></textarea>
-                        </div>
-                        <button type="submit" class="btn-accent w-full" aria-label="Kostenloses Angebot absenden">
-                            Kostenlos anfragen
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="ml-2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                        </button>
-                        <p class="text-xs text-slate-400 mt-4 text-center">Ihre Daten sind bei uns sicher und werden nicht weitergegeben.</p>
+                    <form class="kontakt-form" aria-label="Kontaktanfrage senden">
+                        <input type="text" name="name" placeholder="Name" required aria-label="Ihr Name">
+                        <input type="tel" name="telefon" placeholder="Telefon" aria-label="Ihre Telefonnummer">
+                        <input type="email" name="email" placeholder="E-Mail" required aria-label="Ihre E-Mail-Adresse">
+                        <textarea name="nachricht" placeholder="Nachricht" aria-label="Ihre Nachricht"></textarea>
+                        <button type="submit" class="btn-submit" aria-label="Nachricht absenden">Nachricht senden</button>
+                        <p class="form-note">Wir melden uns innerhalb von 24 Stunden.</p>
                     </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="py-16 border-t" style="background:#0c1220;border-color:#1e293b;color:#94a3b8">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-10 mb-12">
-                <div>
-                    <div class="flex items-center gap-2.5 mb-4">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 12l-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15L22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25V6.5a.5.5 0 0 0-.5-.5H16.7a3.18 3.18 0 0 1-2.24-.93l-1.27-1.27a1 1 0 0 0-1.41 0L9.02 6.56a1 1 0 0 0 0 1.4l5.02 5.02a1 1 0 0 0 1.41 0l2.77-2.77"/></svg>
-                        <span class="font-bold text-lg text-white">Meister<span class="text-accent">Müller</span></span>
-                    </div>
-                    <p class="text-sm leading-relaxed">Qualität, die bleibt. Ihr Partner für Bauprojekte in der Region seit über 30 Jahren.</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4">Leistungen</h4>
-                    <ul class="space-y-2.5 text-sm">
-                        <li><a href="#leistungen" class="hover:text-accent transition">Sanierung</a></li>
-                        <li><a href="#leistungen" class="hover:text-accent transition">Trockenbau</a></li>
-                        <li><a href="#leistungen" class="hover:text-accent transition">Malerarbeiten</a></li>
-                        <li><a href="#leistungen" class="hover:text-accent transition">Bodenverlegung</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4">Rechtliches</h4>
-                    <ul class="space-y-2.5 text-sm">
-                        <li><a href="#" class="hover:text-accent transition">Impressum</a></li>
-                        <li><a href="#" class="hover:text-accent transition">Datenschutz</a></li>
-                        <li><a href="#" class="hover:text-accent transition">AGB</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold mb-4">Kontakt</h4>
-                    <ul class="space-y-2.5 text-sm">
-                        <li>0123 / 45 67 89</li>
-                        <li>info@meister-mueller.de</li>
-                        <li>Musterstraße 12, 12345 Musterstadt</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="pt-8 flex flex-col md:flex-row justify-between items-center text-sm" style="border-top:1px solid #1e293b">
-                <p>&copy; 2026 Meisterbetrieb Müller. Alle Rechte vorbehalten.</p>
-                <p class="mt-2 md:mt-0">Webdesign von <a href="/" class="text-accent hover:text-orange-400 transition">Karriaro Webdesign</a></p>
-            </div>
-        </div>
+    <!-- 5. Footer -->
+    <footer>
+        <p>&copy; 2026 Meisterbetrieb Müller &middot; <a href="/impressum">Impressum</a> &middot; <a href="/datenschutz">Datenschutz</a></p>
     </footer>
-
-    <script>
-    (function() {
-        var btn = document.getElementById('mobile-menu-btn');
-        var menu = document.getElementById('mobile-menu');
-        var iconOpen = document.getElementById('menu-icon-open');
-        var iconClose = document.getElementById('menu-icon-close');
-
-        btn.addEventListener('click', function() {
-            var isOpen = menu.classList.toggle('open');
-            btn.setAttribute('aria-expanded', isOpen);
-            btn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
-            iconOpen.style.display = isOpen ? 'none' : '';
-            iconClose.style.display = isOpen ? '' : 'none';
-        });
-
-        var links = menu.querySelectorAll('.mobile-link');
-        for (var i = 0; i < links.length; i++) {
-            links[i].addEventListener('click', function() {
-                menu.classList.remove('open');
-                btn.setAttribute('aria-expanded', 'false');
-                btn.setAttribute('aria-label', 'Menü öffnen');
-                iconOpen.style.display = '';
-                iconClose.style.display = 'none';
-            });
-        }
-    })();
-    </script>
-
 </body>
 </html>
