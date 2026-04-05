@@ -41,8 +41,11 @@
             --green: #0f5132;
             --green-hover: #0a3b24;
             --gold: #c5a059;
+            --gold-hover: #b08c42;
+            --bg-alt: #f8faf9;
             --text: #1a1a1a;
             --muted: #6b7280;
+            --border: #e8ebe9;
             --serif: Georgia, 'Times New Roman', serif;
             --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
@@ -54,11 +57,15 @@
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--green); color: #fff; padding: 8px 16px; border-radius: 0 0 8px 8px; z-index: 100; font-size: 14px; }
         .skip-link:focus { top: 0; }
 
+        /* Top Bar */
+        .top-bar { background: var(--bg-alt); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); padding: 8px 32px; text-align: center; }
+
         /* Nav */
-        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+        .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.04); }
         .nav-inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; justify-content: space-between; }
-        .nav-brand { font-weight: 700; font-size: 16px; letter-spacing: -0.01em; }
+        .nav-brand { font-family: var(--serif); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--green); }
         .nav-links { display: flex; gap: 32px; font-size: 15px; color: var(--muted); }
+        .nav-links a { transition: color 0.2s; }
         .nav-links a:hover { color: var(--text); }
         .nav-cta { background: var(--green); color: #fff; padding: 10px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; transition: background 0.2s; }
         .nav-cta:hover { background: var(--green-hover); }
@@ -66,194 +73,331 @@
         .nav-mobile-menu { display: none; }
 
         /* Sections */
-        section { padding: 120px 32px; }
+        section { padding: 96px 32px; }
+        .section-alt { background: var(--bg-alt); }
         .container { max-width: 1120px; margin: 0 auto; }
+        .section-head { text-align: center; margin-bottom: 56px; }
+        .section-head h2 { font-family: var(--serif); font-size: 36px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 12px; }
+        .section-head p { font-size: 17px; color: var(--muted); max-width: 540px; margin: 0 auto; }
 
         /* Hero */
-        .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 72px; }
+        .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 0; background: #fff; }
         .hero-text { max-width: 680px; }
-        .hero h1 { font-family: var(--serif); font-size: clamp(40px, 5.5vw, 68px); line-height: 1.08; letter-spacing: -0.025em; color: var(--text); margin-bottom: 20px; font-weight: 400; }
-        .hero p { font-size: 18px; color: var(--muted); margin-bottom: 40px; line-height: 1.6; }
+        .hero h1 { font-family: var(--serif); font-size: clamp(40px, 5.5vw, 64px); line-height: 1.1; letter-spacing: -0.025em; color: var(--text); margin-bottom: 20px; font-weight: 400; }
+        .hero p { font-size: 19px; color: var(--muted); margin-bottom: 40px; line-height: 1.7; }
+        .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
         .btn-primary { display: inline-block; background: var(--green); color: #fff; padding: 16px 40px; border-radius: 12px; font-size: 16px; font-weight: 600; transition: background 0.2s; }
         .btn-primary:hover { background: var(--green-hover); }
-        .hero-phone { display: block; margin-top: 20px; font-size: 15px; color: var(--green); font-weight: 500; }
-        .hero-phone:hover { text-decoration: underline; }
+        .btn-ghost { display: inline-block; border: 1.5px solid var(--green); color: var(--green); padding: 15px 36px; border-radius: 12px; font-size: 16px; font-weight: 600; transition: all 0.2s; }
+        .btn-ghost:hover { background: var(--green); color: #fff; }
+        .hero-note { display: block; margin-top: 24px; font-size: 14px; color: var(--muted); }
 
         /* About */
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
-        .about-img { border-radius: 20px; aspect-ratio: 3/4; object-fit: cover; width: 100%; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-        .about-content h2 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-        .about-content .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 24px; }
-        .about-content .bio { font-size: 16px; color: #374151; line-height: 1.75; margin-bottom: 28px; }
-        .about-content blockquote { font-family: var(--serif); font-size: 20px; color: var(--green); font-style: italic; padding-left: 20px; border-left: 2px solid var(--green); line-height: 1.5; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
+        .about-img { border-radius: 20px; aspect-ratio: 3/4; object-fit: cover; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        .about-content h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin-bottom: 4px; }
+        .about-content .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+        .about-content .bio { font-size: 16px; color: #374151; line-height: 1.8; margin-bottom: 24px; }
+        .about-content blockquote { font-family: var(--serif); font-size: 20px; color: var(--green); font-style: italic; padding-left: 20px; border-left: 2.5px solid var(--green); line-height: 1.5; margin-bottom: 28px; }
+        .about-quals { font-size: 14px; color: var(--muted); letter-spacing: 0.02em; }
 
         /* Leistungen */
-        .leistungen h2 { font-size: 32px; font-weight: 700; margin-bottom: 56px; letter-spacing: -0.02em; }
-        .leistungen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 80px; }
-        .leistung-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
-        .leistung-desc { font-size: 15px; color: var(--muted); line-height: 1.6; }
+        .leistungen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .leistung-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; transition: box-shadow 0.3s; }
+        .leistung-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .leistung-icon { width: 44px; height: 44px; margin-bottom: 20px; color: var(--green); }
+        .leistung-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+        .leistung-card p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+
+        /* Praxis */
+        .praxis-img { width: 100%; border-radius: 16px; aspect-ratio: 16/9; object-fit: cover; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+        .praxis-note { text-align: center; margin-top: 24px; font-size: 16px; color: var(--muted); }
+
+        /* Sprechzeiten */
+        .zeiten-wrapper { max-width: 560px; margin: 0 auto; }
+        .zeiten-row { display: flex; justify-content: space-between; font-size: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .zeiten-row:last-child { border-bottom: none; }
+        .zeiten-row .day { font-weight: 600; }
+        .zeiten-row .closed { color: var(--muted); }
+        .zeiten-note { text-align: center; margin-top: 32px; font-size: 15px; color: var(--muted); }
+        .zeiten-cta { display: block; text-align: center; margin-top: 16px; font-size: 16px; color: var(--green); font-weight: 600; }
+        .zeiten-cta:hover { text-decoration: underline; }
+
+        /* Testimonials */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+        .testimonial-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; }
+        .testimonial-stars { color: var(--gold); font-size: 18px; margin-bottom: 16px; letter-spacing: 2px; }
+        .testimonial-card blockquote { font-size: 15px; line-height: 1.75; color: #374151; margin-bottom: 20px; font-style: italic; }
+        .testimonial-author { font-size: 14px; font-weight: 700; }
+        .testimonial-since { font-size: 13px; color: var(--muted); }
 
         /* Kontakt */
-        .kontakt h2 { font-size: 32px; font-weight: 700; margin-bottom: 56px; letter-spacing: -0.02em; }
-        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 64px; }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 48px; align-items: start; }
         .kontakt-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 16px; }
+        .kontakt-phone { font-size: 22px; font-weight: 700; color: var(--green); display: block; margin-bottom: 12px; }
+        .kontakt-phone:hover { text-decoration: underline; }
         .kontakt-info { font-size: 15px; line-height: 2; }
         .kontakt-info a { color: var(--green); font-weight: 500; }
         .kontakt-info a:hover { text-decoration: underline; }
-        .zeiten-row { display: flex; justify-content: space-between; font-size: 15px; padding: 6px 0; border-bottom: 1px solid #f3f4f6; }
-        .zeiten-row:last-child { border-bottom: none; }
-        .form-container { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .kontakt-badge { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--green); background: rgba(15,81,50,0.06); padding: 4px 12px; border-radius: 20px; }
+        .form-container { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
         .form-container label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
-        .form-container input, .form-container textarea { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 15px; font-family: var(--sans); margin-bottom: 20px; transition: border-color 0.2s; outline: none; }
+        .form-container input, .form-container textarea { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 15px; font-family: var(--sans); margin-bottom: 20px; transition: border-color 0.2s; outline: none; background: #fff; }
         .form-container input:focus, .form-container textarea:focus { border-color: var(--green); }
         .form-container textarea { resize: vertical; min-height: 100px; }
-        .btn-gold { display: inline-block; width: 100%; background: var(--gold); color: #fff; padding: 14px 32px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: opacity 0.2s; }
-        .btn-gold:hover { opacity: 0.88; }
+        .btn-gold { display: inline-block; width: 100%; background: var(--gold); color: #fff; padding: 14px 32px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: background 0.2s; }
+        .btn-gold:hover { background: var(--gold-hover); }
+        .kontakt-response { text-align: center; margin-top: 32px; font-size: 14px; color: var(--muted); }
 
         /* Footer */
-        footer { background: #f9fafb; padding: 40px 32px; text-align: center; font-size: 14px; color: var(--muted); }
+        footer { background: var(--bg-alt); padding: 48px 32px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--border); }
+        .footer-brand { font-family: var(--serif); font-size: 18px; color: var(--green); font-weight: 700; margin-bottom: 4px; }
+        .footer-tagline { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
         footer a { color: var(--muted); }
         footer a:hover { color: var(--text); }
+        .footer-legal { margin-top: 16px; font-size: 13px; }
 
         /* Mobile */
         @media (max-width: 768px) {
-            section { padding: 80px 24px; }
+            .top-bar { font-size: 12px; padding: 6px 16px; }
+            section { padding: 72px 24px; }
+            .nav-inner { padding: 0 24px; }
             .nav-links { display: none; }
             .nav-cta { display: none; }
             .nav-mobile-toggle { display: block; }
             .nav-mobile-menu.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: #fff; padding: 24px 32px; gap: 16px; border-bottom: 1px solid #f0f0f0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
             .nav-mobile-menu.open a { font-size: 16px; color: var(--text); }
             .hero h1 { font-size: 36px; }
+            .hero-ctas { flex-direction: column; align-items: flex-start; }
             .about-grid { grid-template-columns: 1fr; gap: 40px; }
-            .leistungen-grid { grid-template-columns: 1fr; gap: 32px; }
+            .leistungen-grid { grid-template-columns: 1fr; gap: 24px; }
+            .testimonials-grid { grid-template-columns: 1fr; gap: 24px; }
             .kontakt-grid { grid-template-columns: 1fr; gap: 40px; }
+            .section-head h2 { font-size: 28px; }
         }
     </style>
 </head>
 <body>
     <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
 
+    <!-- Top Bar -->
+    <div class="top-bar" aria-hidden="true">Mo – Fr 8:00 – 18:00 &nbsp;&middot;&nbsp; 030 / 123 456 78</div>
+
+    <!-- Navigation -->
     <nav class="nav" aria-label="Hauptnavigation">
         <div class="nav-inner">
             <span class="nav-brand">Praxis Dr. Weber</span>
             <div class="nav-links">
-                <a href="#about">Ihre Arztin</a>
+                <a href="#about">Ihre Ärztin</a>
                 <a href="#leistungen">Leistungen</a>
+                <a href="#praxis">Praxis</a>
+                <a href="#sprechzeiten">Sprechzeiten</a>
                 <a href="#kontakt">Kontakt</a>
             </div>
             <a href="#kontakt" class="nav-cta" aria-label="Termin vereinbaren">Termin vereinbaren</a>
-            <button class="nav-mobile-toggle" aria-label="Menu offnen" aria-expanded="false" onclick="toggleMenu()">Menu</button>
+            <button class="nav-mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
         </div>
         <div class="nav-mobile-menu" id="mobileMenu">
-            <a href="#about" onclick="closeMenu()">Ihre Arztin</a>
+            <a href="#about" onclick="closeMenu()">Ihre Ärztin</a>
             <a href="#leistungen" onclick="closeMenu()">Leistungen</a>
+            <a href="#praxis" onclick="closeMenu()">Praxis</a>
+            <a href="#sprechzeiten" onclick="closeMenu()">Sprechzeiten</a>
             <a href="#kontakt" onclick="closeMenu()">Kontakt</a>
             <a href="#kontakt" onclick="closeMenu()">Termin vereinbaren</a>
         </div>
     </nav>
 
     <main id="main-content">
+
+        <!-- 1. Hero -->
         <section class="hero">
             <div class="container">
                 <div class="hero-text">
-                    <h1>Ihre Gesundheit in besten Händen.</h1>
-                    <p>Hausarztpraxis in Berlin-Mitte. Termine nach Vereinbarung.</p>
-                    <a href="#kontakt" class="btn-primary" aria-label="Jetzt Termin vereinbaren">Termin vereinbaren</a>
-                    <a href="tel:+493012345678" class="hero-phone">Oder anrufen: 030 / 123 456 78 &rarr;</a>
+                    <h1>Ihre Gesundheit.<br>In besten Händen.</h1>
+                    <p>Hausarztpraxis in Berlin-Mitte. Moderne Medizin mit persönlicher Betreuung.</p>
+                    <div class="hero-ctas">
+                        <a href="#kontakt" class="btn-primary" aria-label="Jetzt Termin vereinbaren">Termin vereinbaren</a>
+                        <a href="#leistungen" class="btn-ghost">Unsere Leistungen</a>
+                    </div>
+                    <span class="hero-note">Auch online Termine möglich.</span>
                 </div>
             </div>
         </section>
 
-        <section id="about">
+        <!-- 2. Über Dr. Weber -->
+        <section id="about" class="section-alt">
             <div class="container">
                 <div class="about-grid">
-                    <img src="/images/portfolio/arzt-portrait.jpg" alt="Dr. med. Sarah Weber, Facharztin für Allgemeinmedizin" class="about-img" loading="lazy" width="560" height="747">
+                    <img src="/images/portfolio/arzt-portrait.jpg" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" class="about-img" loading="lazy" width="560" height="747">
                     <div class="about-content">
                         <h2>Dr. med. Sarah Weber</h2>
                         <p class="subtitle">Fachärztin für Allgemeinmedizin</p>
-                        <p class="bio">Seit über 15 Jahren begleite ich meine Patientinnen und Patienten durch alle Lebensphasen. Mir ist wichtig, dass Sie sich bei uns gut aufgehoben fühlen — nicht nur medizinisch, sondern auch menschlich. Ich nehme mir die Zeit, die Sie brauchen, und erkläre verständlich, was ich empfehle und warum.</p>
-                        <blockquote>Medizin beginnt mit Zuhören.</blockquote>
+                        <p class="bio">Seit über 15 Jahren begleite ich meine Patientinnen und Patienten durch alle Lebensphasen -- von der Vorsorge bis zur Behandlung chronischer Erkrankungen. Nach meinem Studium an der Charité Berlin und mehrjähriger Klinikarbeit habe ich mich bewusst für die Hausarztmedizin entschieden.</p>
+                        <p class="bio">Ich glaube daran, dass gute Medizin Zeit braucht. Deshalb nehme ich mir bei jedem Termin die Ruhe, Ihnen zuzuhören, Ihre Fragen zu beantworten und gemeinsam den besten Weg für Ihre Gesundheit zu finden. Meine Patientinnen und Patienten sind keine Nummern -- sie sind Menschen, die mir vertrauen.</p>
+                        <blockquote>Gute Medizin beginnt mit Zuhören.</blockquote>
+                        <p class="about-quals">Facharzt Allgemeinmedizin &middot; Notfallmedizin &middot; Reisemedizin</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="leistungen" class="leistungen">
+        <!-- 3. Leistungen -->
+        <section id="leistungen">
             <div class="container">
-                <h2>Unsere Leistungen.</h2>
+                <div class="section-head">
+                    <h2>Unsere Leistungen.</h2>
+                    <p>Ganzheitliche Versorgung für die ganze Familie.</p>
+                </div>
                 <div class="leistungen-grid">
-                    <div>
-                        <p class="leistung-title">Allgemeinmedizin</p>
-                        <p class="leistung-desc">Umfassende hausärztliche Versorgung für die ganze Familie, von der Diagnostik bis zur Therapie.</p>
+                    <div class="leistung-card">
+                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="16" r="8"/><path d="M22 8v16M18 16h8"/><path d="M10 36c0-6.627 5.373-12 12-12s12 5.373 12 12"/></svg>
+                        <h3>Allgemeinmedizin</h3>
+                        <p>Umfassende hausärztliche Versorgung für akute und chronische Erkrankungen. Von der Erstdiagnose über die Therapie bis zur langfristigen Begleitung -- wir sind Ihre erste Anlaufstelle für alle gesundheitlichen Fragen.</p>
                     </div>
-                    <div>
-                        <p class="leistung-title">Vorsorgeuntersuchungen</p>
-                        <p class="leistung-desc">Regelmäßige Check-ups und Gesundheitsvorsorge, damit Erkrankungen frühzeitig erkannt werden.</p>
+                    <div class="leistung-card">
+                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 38s-14-8.4-14-18.2C8 12.6 12.5 8 18 8c3 0 4 2.5 4 2.5S23 8 26 8c5.5 0 10 4.6 10 11.8C36 29.6 22 38 22 38z"/><path d="M16 20l4 4 8-8"/></svg>
+                        <h3>Vorsorge &amp; Check-ups</h3>
+                        <p>Regelmäßige Gesundheitsuntersuchungen helfen, Erkrankungen frühzeitig zu erkennen. Wir bieten Herz-Kreislauf-Checks, Krebsvorsorge, Hautscreening und individuelle Vorsorgeprogramme -- abgestimmt auf Ihr Alter und Ihre Bedürfnisse.</p>
                     </div>
-                    <div>
-                        <p class="leistung-title">Impfberatung</p>
-                        <p class="leistung-desc">Individuelle Beratung zu Standardimpfungen, Reiseimpfungen und Auffrischungen nach STIKO-Empfehlung.</p>
+                    <div class="leistung-card">
+                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6v20"/><path d="M18 6h8"/><circle cx="22" cy="32" r="6"/><path d="M22 26v6"/></svg>
+                        <h3>Impfberatung</h3>
+                        <p>Individuelle Beratung zu allen Standard-, Auffrischungs- und Reiseimpfungen nach aktueller STIKO-Empfehlung. Wir prüfen Ihren Impfstatus, erstellen einen persönlichen Impfplan und führen alle Impfungen direkt in der Praxis durch.</p>
                     </div>
-                    <div>
-                        <p class="leistung-title">Labordiagnostik</p>
-                        <p class="leistung-desc">Blutuntersuchungen und Laboranalysen direkt in der Praxis für schnelle, zuverlässige Ergebnisse.</p>
+                    <div class="leistung-card">
+                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="18" r="4"/><path d="M22 22v10"/><path d="M14 10h16v24H14z"/><path d="M18 38h8"/><path d="M22 34h0"/></svg>
+                        <h3>Labor &amp; Diagnostik</h3>
+                        <p>Blutuntersuchungen, Urinanalysen und weitere Labordiagnostik direkt in unserer Praxis. Durch unsere modernen Geräte erhalten Sie schnelle, zuverlässige Ergebnisse -- oft noch am selben Tag. EKG und Lungenfunktion ergänzen unser Angebot.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="kontakt" class="kontakt">
+        <!-- 4. Praxis-Impressionen -->
+        <section id="praxis" class="section-alt">
             <div class="container">
-                <h2>Besuchen Sie uns.</h2>
+                <div class="section-head">
+                    <h2>Unsere Praxis.</h2>
+                </div>
+                <img src="/images/portfolio/praxis-interior.jpg" alt="Helle, moderne Praxisräume der Praxis Dr. Weber in Berlin-Mitte" class="praxis-img" loading="lazy" width="1120" height="630">
+                <p class="praxis-note">Moderne Ausstattung in hellen, freundlichen Räumen. Barrierefreier Zugang.</p>
+            </div>
+        </section>
+
+        <!-- 5. Sprechzeiten -->
+        <section id="sprechzeiten">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Sprechzeiten.</h2>
+                </div>
+                <div class="zeiten-wrapper">
+                    <div class="zeiten-row"><span class="day">Montag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
+                    <div class="zeiten-row"><span class="day">Dienstag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
+                    <div class="zeiten-row"><span class="day">Mittwoch</span><span>8:00 – 13:00</span></div>
+                    <div class="zeiten-row"><span class="day">Donnerstag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
+                    <div class="zeiten-row"><span class="day">Freitag</span><span>8:00 – 13:00</span></div>
+                    <div class="zeiten-row"><span class="day">Samstag</span><span class="closed">Geschlossen</span></div>
+                    <div class="zeiten-row"><span class="day">Sonntag</span><span class="closed">Geschlossen</span></div>
+                    <p class="zeiten-note">Termine nach Vereinbarung auch außerhalb der Sprechzeiten möglich.</p>
+                    <a href="#kontakt" class="zeiten-cta">Jetzt Termin vereinbaren &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Patientenstimmen -->
+        <section id="stimmen" class="section-alt">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Das sagen unsere Patienten.</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <blockquote>Frau Dr. Weber nimmt sich wirklich Zeit. Ich habe mich zum ersten Mal bei einem Arzt richtig verstanden gefühlt. Die Praxis ist modern, das Team freundlich -- ich komme seit Jahren gerne hierher.</blockquote>
+                        <p class="testimonial-author">Markus</p>
+                        <p class="testimonial-since">Patient seit 2019</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <blockquote>Meine ganze Familie geht zu Dr. Weber. Die Kinder fühlen sich wohl, die Wartezeiten sind kurz, und man bekommt immer alles verständlich erklärt. Eine Hausärztin, wie man sie sich wünscht.</blockquote>
+                        <p class="testimonial-author">Sabine</p>
+                        <p class="testimonial-since">Patientin seit 2020</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        <blockquote>Nach einem Umzug nach Berlin habe ich lange nach einem guten Hausarzt gesucht. Bei Dr. Weber bin ich geblieben. Gründlich, ehrlich, menschlich. Die Praxis ist genau so, wie Medizin sein sollte.</blockquote>
+                        <p class="testimonial-author">Thomas</p>
+                        <p class="testimonial-since">Patient seit 2021</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Kontakt -->
+        <section id="kontakt">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Besuchen Sie uns.</h2>
+                </div>
                 <div class="kontakt-grid">
                     <div>
                         <p class="kontakt-label">Kontakt</p>
+                        <a href="tel:+493012345678" class="kontakt-phone">030 / 123 456 78</a>
                         <div class="kontakt-info">
-                            <p>Hauptstraße 10<br>10115 Berlin-Mitte</p>
-                            <p><a href="tel:+493012345678">030 / 123 456 78</a></p>
                             <p><a href="mailto:info@praxis-weber.de">info@praxis-weber.de</a></p>
+                            <p><span class="kontakt-badge">Termine auch online</span></p>
                         </div>
                     </div>
                     <div>
-                        <p class="kontakt-label">Sprechzeiten</p>
-                        <div class="zeiten-row"><span>Montag</span><span>08:00 – 12:00, 14:00 – 18:00</span></div>
-                        <div class="zeiten-row"><span>Dienstag</span><span>08:00 – 12:00, 14:00 – 18:00</span></div>
-                        <div class="zeiten-row"><span>Mittwoch</span><span>08:00 – 12:00</span></div>
-                        <div class="zeiten-row"><span>Donnerstag</span><span>08:00 – 12:00, 14:00 – 18:00</span></div>
-                        <div class="zeiten-row"><span>Freitag</span><span>08:00 – 12:00</span></div>
+                        <p class="kontakt-label">Adresse</p>
+                        <div class="kontakt-info">
+                            <p>Hauptstraße 10<br>10115 Berlin-Mitte</p>
+                            <p><span class="kontakt-badge">Barrierefreier Zugang</span></p>
+                        </div>
                     </div>
                     <div>
                         <div class="form-container">
                             <form aria-label="Kontaktformular">
                                 <label for="name">Name</label>
-                                <input type="text" id="name" name="name" required autocomplete="name">
+                                <input type="text" id="name" name="name" required autocomplete="name" placeholder="Ihr vollständiger Name">
                                 <label for="email">E-Mail</label>
-                                <input type="email" id="email" name="email" required autocomplete="email">
+                                <input type="email" id="email" name="email" required autocomplete="email" placeholder="ihre@email.de">
                                 <label for="message">Anliegen</label>
-                                <textarea id="message" name="message" rows="4" required></textarea>
+                                <textarea id="message" name="message" rows="4" required placeholder="Wie können wir Ihnen helfen?"></textarea>
                                 <button type="submit" class="btn-gold" aria-label="Nachricht absenden">Nachricht senden</button>
                             </form>
                         </div>
                     </div>
                 </div>
+                <p class="kontakt-response">Wir antworten innerhalb eines Werktages.</p>
             </div>
         </section>
+
     </main>
 
+    <!-- 8. Footer -->
     <footer>
-        <p>&copy; 2026 Praxis Dr. med. Weber &middot; Berlin-Mitte &middot; <a href="/impressum">Impressum</a> &middot; <a href="/datenschutz">Datenschutz</a></p>
+        <p class="footer-brand">Praxis Dr. Weber</p>
+        <p class="footer-tagline">Hausarztpraxis in Berlin-Mitte</p>
+        <p><a href="/impressum">Impressum</a> &nbsp;&middot;&nbsp; <a href="/datenschutz">Datenschutz</a></p>
+        <p class="footer-legal">&copy; 2026 Praxis Dr. med. Weber. Alle Rechte vorbehalten.</p>
     </footer>
 
     <script>
         function toggleMenu() {
-            const menu = document.getElementById('mobileMenu');
-            const btn = document.querySelector('.nav-mobile-toggle');
-            const isOpen = menu.classList.toggle('open');
+            var menu = document.getElementById('mobileMenu');
+            var btn = document.querySelector('.nav-mobile-toggle');
+            var isOpen = menu.classList.toggle('open');
             btn.setAttribute('aria-expanded', isOpen);
+            btn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
         }
         function closeMenu() {
             document.getElementById('mobileMenu').classList.remove('open');
-            document.querySelector('.nav-mobile-toggle').setAttribute('aria-expanded', 'false');
+            var btn = document.querySelector('.nav-mobile-toggle');
+            btn.setAttribute('aria-expanded', 'false');
+            btn.setAttribute('aria-label', 'Menü öffnen');
         }
     </script>
 </body>
