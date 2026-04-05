@@ -40,7 +40,7 @@
     </script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root { --accent: #2563eb; --dark: #1d1d1f; --off: #fafafa; --muted: #6b6b6b; }
+        :root { --accent: #0e7490; --accent-light: #ecfeff; --dark: #1d1d1f; --off: #f8fafb; --muted: #5f6b7a; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--dark); background: #fff; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
         img { display: block; max-width: 100%; }
@@ -49,7 +49,7 @@
 
         /* Top bar */
         .top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; background: rgba(0,0,0,0.4); padding: 10px 40px; display: flex; justify-content: flex-end; align-items: center; gap: 24px; font-size: 13px; color: rgba(255,255,255,0.8); }
-        .top-bar .emergency { color: #ef4444; font-weight: 700; }
+        .top-bar .emergency { color: #f97316; font-weight: 700; }
 
         /* Nav */
         .nav { position: absolute; top: 42px; left: 0; right: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; }
@@ -68,8 +68,8 @@
         .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.2) 100%); }
         .hero-content { position: relative; z-index: 2; max-width: 820px; padding: 0 24px; }
-        .hero h1 { color: #fff; font-size: clamp(40px, 7vw, 72px); font-weight: 800; line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 20px; }
-        .hero-sub { color: rgba(255,255,255,0.75); font-size: 19px; font-weight: 400; margin-bottom: 40px; line-height: 1.5; }
+        .hero h1 { color: #fff; font-size: clamp(40px, 7vw, 72px); font-weight: 700; line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 20px; font-family: Georgia, 'Times New Roman', serif; }
+        .hero-sub { color: rgba(255,255,255,0.8); font-size: 20px; font-weight: 400; margin-bottom: 40px; line-height: 1.5; letter-spacing: 0.01em; }
         .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
         .btn-primary { display: inline-block; background: var(--accent); color: #fff; font-size: 16px; font-weight: 700; padding: 16px 36px; border-radius: 12px; border: none; cursor: pointer; transition: opacity 0.2s; }
         .btn-primary:hover { opacity: 0.85; }
@@ -84,14 +84,14 @@
         .wrap { max-width: 1080px; margin: 0 auto; }
         .bg-white { background: #fff; }
         .bg-off { background: var(--off); }
-        h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 56px; color: var(--dark); }
+        h2 { font-size: clamp(32px, 5vw, 48px); font-weight: 700; font-family: Georgia, 'Times New Roman', serif; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 56px; color: var(--dark); }
         .section-sub { font-size: 17px; color: var(--muted); line-height: 1.7; max-width: 640px; margin-bottom: 48px; }
 
         /* Leistungen */
         .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 40px; }
         .service-card { background: #fff; border: 1px solid #f0f0f0; border-radius: 16px; padding: 36px 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); transition: box-shadow 0.3s; }
         .service-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
-        .service-icon { width: 48px; height: 48px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--accent); }
+        .service-icon { width: 48px; height: 48px; background: var(--accent-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; color: var(--accent); }
         .service-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
         .service-card p { font-size: 15px; line-height: 1.7; color: var(--muted); margin-bottom: 16px; }
         .link-arrow { color: var(--accent); font-size: 15px; font-weight: 600; transition: opacity 0.2s; }
@@ -107,10 +107,9 @@
         /* Projekte */
         .project-hero-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin-bottom: 40px; }
         .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
-        .project-card { position: relative; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; display: flex; align-items: flex-end; padding: 24px; }
-        .project-card-1 { background: linear-gradient(135deg, #1e3a5f, #0f1d30); }
-        .project-card-2 { background: linear-gradient(135deg, #1e40af, #1e3a8a); }
-        .project-card-3 { background: linear-gradient(135deg, #0369a1, #075985); }
+        .project-card { position: relative; aspect-ratio: 4/3; border-radius: 16px; overflow: hidden; display: flex; align-items: flex-end; padding: 24px; background: var(--dark); }
+        .project-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .project-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%); }
         .project-card-text { position: relative; z-index: 1; }
         .project-card-text .type { color: #fff; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
         .project-card-text .location { color: rgba(255,255,255,0.6); font-size: 14px; }
@@ -175,6 +174,32 @@
             .hero h1 { font-size: clamp(32px, 8vw, 56px); }
             .trust-line { gap: 16px; }
         }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nav scroll */
+        .nav.scrolled {
+            position: fixed;
+            top: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 40px;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
+        .nav.scrolled .nav-logo { color: var(--dark); }
+        .nav.scrolled .nav-links a { color: var(--muted); }
+        .nav.scrolled .nav-links a:hover { color: var(--dark); }
+        .nav.scrolled .nav-toggle span { background: var(--dark); }
     </style>
 </head>
 <body>
@@ -239,7 +264,7 @@
     <main id="main-content">
 
         <!-- 2. Leistungen -->
-        <section class="bg-white" id="leistungen" aria-label="Unsere Leistungen">
+        <section class="bg-white fade-in" id="leistungen" aria-label="Unsere Leistungen">
             <div class="wrap">
                 <h2>Unsere Leistungen.</h2>
                 <div class="services-grid">
@@ -273,7 +298,7 @@
         </section>
 
         <!-- 3. Warum wir -->
-        <section class="bg-off" id="warum" aria-label="Warum Sanitär Hartmann">
+        <section class="bg-off fade-in" id="warum" aria-label="Warum Sanitär Hartmann">
             <div class="wrap">
                 <h2>Warum Sanitär Hartmann.</h2>
                 <div class="stats-grid">
@@ -299,24 +324,30 @@
         </section>
 
         <!-- 4. Projekte -->
-        <section class="bg-white" id="projekte" aria-label="Aktuelle Projekte">
+        <section class="bg-white fade-in" id="projekte" aria-label="Aktuelle Projekte">
             <div class="wrap">
                 <h2>Aktuelle Projekte.</h2>
                 <img class="project-hero-img" src="/images/portfolio/installateur-arbeit.jpg" alt="Sanitär Hartmann bei einer Badsanierung" loading="lazy" width="1080" height="608">
                 <div class="projects-grid">
-                    <div class="project-card project-card-1">
+                    <div class="project-card">
+                        <img src="/images/portfolio/installateur-hero.jpg" alt="Badsanierung Stuttgart-Süd" loading="lazy">
+                        <div class="project-card-overlay"></div>
                         <div class="project-card-text">
                             <div class="type">Komplette Badsanierung</div>
                             <div class="location">Stuttgart-Süd</div>
                         </div>
                     </div>
-                    <div class="project-card project-card-2">
+                    <div class="project-card">
+                        <img src="/images/portfolio/handwerk-team.jpg" alt="Heizungsmodernisierung Esslingen" loading="lazy">
+                        <div class="project-card-overlay"></div>
                         <div class="project-card-text">
                             <div class="type">Heizungsmodernisierung</div>
                             <div class="location">Esslingen</div>
                         </div>
                     </div>
-                    <div class="project-card project-card-3">
+                    <div class="project-card">
+                        <img src="/images/portfolio/praxis-interior.jpg" alt="Wärmepumpe Neubau Ludwigsburg" loading="lazy">
+                        <div class="project-card-overlay"></div>
                         <div class="project-card-text">
                             <div class="type">Wärmepumpe Neubau</div>
                             <div class="location">Ludwigsburg</div>
@@ -328,7 +359,7 @@
         </section>
 
         <!-- 5. Kundenstimmen -->
-        <section class="bg-off" id="kundenstimmen" aria-label="Kundenstimmen">
+        <section class="bg-off fade-in" id="kundenstimmen" aria-label="Kundenstimmen">
             <div class="wrap">
                 <h2>Das sagen unsere Kunden.</h2>
                 <div class="testimonials-grid">
@@ -355,7 +386,7 @@
         </section>
 
         <!-- 6. Über uns -->
-        <section class="bg-white" id="ueber-uns" aria-label="Über uns">
+        <section class="bg-white fade-in" id="ueber-uns" aria-label="Über uns">
             <div class="wrap">
                 <h2>Seit 1995. Aus Stuttgart. Für Stuttgart.</h2>
                 <div class="about-grid">
@@ -372,7 +403,7 @@
         </section>
 
         <!-- 7. Kontakt -->
-        <section class="bg-off" id="kontakt" aria-label="Kontakt">
+        <section class="bg-off fade-in" id="kontakt" aria-label="Kontakt">
             <div class="wrap">
                 <h2>Sprechen Sie mit uns.</h2>
                 <div class="kontakt-grid">
@@ -443,6 +474,25 @@
             <p>&copy; 2026 Sanitär Hartmann. Alle Rechte vorbehalten.</p>
         </div>
     </footer>
+
+    <script>
+    // Scroll-aware nav
+    var nav = document.querySelector('.nav');
+    window.addEventListener('scroll', function() {
+        nav.classList.toggle('scrolled', window.scrollY > 80);
+    }, { passive: true });
+
+    // Fade-in on scroll
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+    </script>
 
 </body>
 </html>
