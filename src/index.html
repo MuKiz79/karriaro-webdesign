@@ -220,6 +220,8 @@
 
         .preview-card { display: block; border-radius: 16px; overflow: hidden; aspect-ratio: 3/2; position: relative; transition: all 0.5s; }
         .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+        .preview-card img { width: 100%; height: 100%; object-fit: cover; }
+        .preview-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 60%); }
         .preview-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; color: #fff; }
         .preview-card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; margin-bottom: 4px; }
         .preview-card-title { font-size: 19px; font-weight: 600; }
@@ -307,19 +309,25 @@
             <p class="subhead" style="margin-bottom: 60px;">Echte Projekte. Echte Ergebnisse.</p>
 
             <div class="grid-3">
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card" style="background: linear-gradient(135deg, #1e3a5f, #0f1d30);">
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
+                    <img src="/images/portfolio/installateur-arbeit.jpg" alt="Website für Sanitär Hartmann — Gas, Wasser, Heizung in Stuttgart" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
                     <div class="preview-card-content">
                         <div class="preview-card-label">Installateur</div>
                         <div class="preview-card-title">Sanitär Hartmann</div>
                     </div>
                 </a>
-                <a href="/portfolio/praxis-weber.html" class="preview-card" style="background: linear-gradient(135deg, #0f5132, #064e3b);">
+                <a href="/portfolio/praxis-weber.html" class="preview-card">
+                    <img src="/images/portfolio/praxis-interior.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis in Berlin" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
                     <div class="preview-card-content">
                         <div class="preview-card-label">Arztpraxis</div>
                         <div class="preview-card-title">Praxis Dr. Weber</div>
                     </div>
                 </a>
-                <a href="/portfolio/restaurant-template.html" class="preview-card" style="background: linear-gradient(135deg, #78350f, #451a03);">
+                <a href="/portfolio/restaurant-template.html" class="preview-card">
+                    <img src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Feines Restaurant in München" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
                     <div class="preview-card-content">
                         <div class="preview-card-label">Gastronomie</div>
                         <div class="preview-card-title">Goldener Hirsch</div>
