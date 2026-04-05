@@ -76,13 +76,13 @@
             display: flex; align-items: center; justify-content: space-between;
             height: 48px;
         }
-        nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.2s; }
+        nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.3s var(--mk); }
         nav a:hover { opacity: 1; }
         nav .links { display: flex; gap: 28px; }
         nav .cta {
             background: #0071e3; color: #fff; padding: 6px 16px;
             border-radius: 20px; font-size: 12px; font-weight: 500;
-            opacity: 1; transition: background 0.2s;
+            opacity: 1; transition: background 0.35s var(--mk);
         }
         nav .cta:hover { background: #0077ED; }
         @media (max-width: 640px) { nav .links { display: none; } }
@@ -115,7 +115,7 @@
             background: #0071e3; color: #fff;
             padding: 14px 32px; border-radius: 28px;
             font-size: 17px; font-weight: 400;
-            transition: background 0.2s;
+            transition: background 0.35s var(--mk);
         }
         .btn:hover { background: #0077ED; }
         .link-arrow { color: #0071e3; font-size: 17px; }
@@ -126,7 +126,7 @@
             border: 1px solid #d2d2d7; border-radius: 12px;
             padding: 16px 20px; font-size: 17px;
             font-family: inherit; color: #1d1d1f;
-            outline: none; transition: border-color 0.2s;
+            outline: none; transition: border-color 0.3s var(--mk);
         }
         input:focus, textarea:focus { border-color: #0071e3; }
         textarea { resize: none; }
@@ -136,7 +136,7 @@
             width: 100%; background: #0071e3; color: #fff;
             border: none; border-radius: 12px; padding: 16px;
             font-size: 17px; font-family: inherit; font-weight: 500;
-            cursor: pointer; transition: background 0.2s;
+            cursor: pointer; transition: background 0.35s var(--mk);
         }
         .submit-btn:hover { background: #0077ED; }
 
@@ -144,7 +144,7 @@
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         @media (max-width: 640px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; } }
 
-        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: box-shadow 0.3s; }
+        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: box-shadow 0.35s var(--mk); }
         .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
         .preview-bar { height: 28px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; padding: 0 12px; gap: 5px; }
         .preview-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
@@ -155,10 +155,9 @@
         footer a { color: #424245; }
         footer a:hover { color: #1d1d1f; }
 
-        /* MK Signature */
-        :root { --mk-ease: cubic-bezier(0.77, 0, 0.18, 1); }
+        /* MK */
+        :root { --mk: cubic-bezier(0.77, 0, 0.18, 1); }
         ::selection { background: #4D4B2A; color: #fff; }
-        .btn, .cta, .link-arrow, .submit-btn, a { transition-timing-function: var(--mk-ease); }
     </style>
 </head>
 <body>
