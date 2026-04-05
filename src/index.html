@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <!-- ✦ Handcrafted by Karriaro Webdesign · karriaro-webdesign.de -->
+    <!-- MK · Karriaro Webdesign · karriaro-webdesign.de -->
     <meta name="generator" content="Karriaro Webdesign">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karriaro Webdesign | Moderne Websites ab 990 € — 30 % mehr Anfragen</title>
@@ -155,7 +155,10 @@
         footer a { color: #424245; }
         footer a:hover { color: #1d1d1f; }
 
-        @keyframes karriaro-draw { from { stroke-dashoffset: 300; } to { stroke-dashoffset: 0; } }
+        /* MK Signature */
+        :root { --mk-ease: cubic-bezier(0.77, 0, 0.18, 1); }
+        ::selection { background: #4D4B2A; color: #fff; }
+        .btn, .cta, .link-arrow, .submit-btn, a { transition-timing-function: var(--mk-ease); }
     </style>
 </head>
 <body>
@@ -188,12 +191,6 @@
             </p>
         </div>
     </section>
-
-    <div style="padding: 60px 0; text-align: center;">
-        <svg viewBox="0 0 240 24" style="width: 100%; max-width: 400px; height: auto; display: inline-block;" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M0 18 C20 18, 25 6, 48 6 S76 18, 96 12 C108 8, 112 4, 128 4 S148 12, 160 12 C172 12, 176 8, 192 8 S216 14, 240 6" style="fill: none; stroke: rgba(0,0,0,0.3); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 300; stroke-dashoffset: 0; animation: karriaro-draw 2.5s cubic-bezier(0.65,0,0.35,1) 0.3s backwards;" />
-        </svg>
-    </div>
 
     <!-- 2 · Die neue Suche -->
     <section style="background: #f5f5f7;">
