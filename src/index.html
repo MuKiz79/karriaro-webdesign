@@ -82,9 +82,9 @@
         nav .cta {
             background: #0071e3; color: #fff; padding: 6px 16px;
             border-radius: 20px; font-size: 12px; font-weight: 500;
-            opacity: 1; transition: background 0.35s var(--mk);
+            opacity: 1; transition: all 0.35s var(--mk);
         }
-        nav .cta:hover { background: #0077ED; }
+        nav .cta:hover { background: #0077ED; transform: scale(1.05); }
         @media (max-width: 640px) { nav .links { display: none; } }
 
         section { padding: 120px 0; }
@@ -115,9 +115,9 @@
             background: #0071e3; color: #fff;
             padding: 14px 32px; border-radius: 28px;
             font-size: 17px; font-weight: 400;
-            transition: background 0.35s var(--mk);
+            transition: all 0.4s var(--mk);
         }
-        .btn:hover { background: #0077ED; }
+        .btn:hover { background: #0077ED; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,113,227,0.3); }
         .link-arrow { color: #0071e3; font-size: 17px; }
         .link-arrow:hover { text-decoration: underline; }
 
@@ -136,16 +136,16 @@
             width: 100%; background: #0071e3; color: #fff;
             border: none; border-radius: 12px; padding: 16px;
             font-size: 17px; font-family: inherit; font-weight: 500;
-            cursor: pointer; transition: background 0.35s var(--mk);
+            cursor: pointer; transition: all 0.4s var(--mk);
         }
-        .submit-btn:hover { background: #0077ED; }
+        .submit-btn:hover { background: #0077ED; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,113,227,0.3); }
 
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         @media (max-width: 640px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; } }
 
-        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: box-shadow 0.35s var(--mk); }
-        .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: all 0.5s var(--mk); }
+        .preview-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.1); transform: translateY(-4px); }
         .preview-bar { height: 28px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; padding: 0 12px; gap: 5px; }
         .preview-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
         .preview-frame { aspect-ratio: 3/2; overflow: hidden; }
