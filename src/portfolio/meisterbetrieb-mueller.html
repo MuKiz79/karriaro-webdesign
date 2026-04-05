@@ -42,43 +42,100 @@
 
     <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Compiled Tailwind CSS (DSGVO-konform, lokal gehostet) -->
+    <link rel="stylesheet" href="/style.css">
 
-    <!-- Alpine.js für Interaktivität (Mobile Menu) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-
-    <!-- Font Awesome für Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Konfiguration der Farben (Hier kannst du das Design für Kunden anpassen) -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0f172a',   // Dunkelblau (Seriös)
-                        accent: '#ea580c',    // Orange (Handwerk/Aktion)
-                        light: '#f8fafc',     // Hintergrund Hell
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                    }
-                }
-            }
+    <!-- Custom Styles (Gradients, Animations, Custom Colors) -->
+    <style>
+        :root {
+            --color-primary: #0f172a;
+            --color-accent: #ea580c;
+            --color-light: #f8fafc;
         }
-    </script>
+        .bg-primary { background-color: var(--color-primary); }
+        .text-primary { color: var(--color-primary); }
+        .bg-accent { background-color: var(--color-accent); }
+        .text-accent { color: var(--color-accent); }
+        .bg-light { background-color: var(--color-light); }
+        .border-accent { border-color: var(--color-accent); }
+        .shadow-orange-500\/30 { --tw-shadow-color: rgb(249 115 22 / 0.3); }
+        .ring-accent { --tw-ring-color: var(--color-accent); }
+        .focus\:border-accent:focus { border-color: var(--color-accent); }
+        .focus\:ring-accent:focus { --tw-ring-color: var(--color-accent); }
+        .hover\:text-accent:hover { color: var(--color-accent); }
+        .hover\:bg-accent:hover { background-color: var(--color-accent); }
+        .hover\:bg-orange-700:hover { background-color: #c2410c; }
+        .hover\:text-orange-400:hover { color: #fb923c; }
+        .bg-accent\/20 { background-color: rgb(234 88 12 / 0.2); }
+        .border-accent\/30 { border-color: rgb(234 88 12 / 0.3); }
+        .group:hover .group-hover\:bg-accent { background-color: var(--color-accent); }
+        .group:hover .group-hover\:text-white { color: #fff; }
+
+        /* Skip-to-content link */
+        .skip-link {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            z-index: 999;
+            padding: 0.75rem 1.5rem;
+            background: var(--color-accent);
+            color: #fff;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 0 0 0.5rem 0;
+        }
+        .skip-link:focus {
+            left: 0;
+        }
+
+        /* Mobile menu transitions */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out, opacity 0.2s ease-out;
+            opacity: 0;
+        }
+        #mobile-menu.open {
+            max-height: 400px;
+            opacity: 1;
+        }
+
+        /* Inline SVG icon sizing */
+        .icon-inline {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em;
+            fill: currentColor;
+        }
+        .icon-sm {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .icon-md {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        .icon-lg {
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
 </head>
 <body class="font-sans text-slate-800 bg-light antialiased">
 
+    <!-- Skip to content (BFSG/Accessibility) -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
     <!-- NAVIGATION -->
-    <nav class="bg-white shadow-md fixed w-full z-50" x-data="{ open: false }">
+    <nav class="bg-white shadow-md fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <!-- Logo Bereich -->
                 <div class="flex items-center">
                     <a href="#" class="flex-shrink-0 flex items-center gap-2">
-                        <i class="fa-solid fa-hammer text-accent text-2xl"></i>
+                        <!-- Hammer icon (inline SVG) -->
+                        <svg class="icon-inline icon-md text-accent" viewBox="0 0 512 512" aria-hidden="true"><path d="M399.8 37.1C390.3 45.1 381.8 54.3 374.6 64.6c-21.4 30.5-33.6 67.4-33.6 107.4c0 10.3 .8 20.3 2.4 30.1L128 416l-16 16 32 32 16-16L374.4 232.8c9.8 1.6 19.8 2.4 30.1 2.4c40 0 76.9-12.2 107.4-33.6c10.3-7.2 19.5-15.7 27.5-25.2L480 128 384 32 399.8 37.1zM80 432L16 496l64-16L80 432z"/></svg>
                         <span class="font-bold text-xl tracking-tight text-primary">Meister<span class="text-accent">Müller</span></span>
                     </a>
                 </div>
@@ -95,28 +152,29 @@
 
                 <!-- Mobile Menu Button -->
                 <div class="flex items-center md:hidden">
-                    <button @click="open = !open" class="text-gray-600 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
-                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
+                    <button id="mobile-menu-btn" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <!-- Hamburger icon -->
+                        <svg id="menu-icon-open" class="icon-inline icon-lg" viewBox="0 0 448 512" aria-hidden="true"><path d="M0 96C0 78.3 14.3 64 32 64h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zm0 160c0-17.7 14.3-32 32-32h384c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zm448 160c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32h384c17.7 0 32 14.3 32 32z"/></svg>
+                        <!-- Close icon (hidden by default) -->
+                        <svg id="menu-icon-close" class="icon-inline icon-lg" style="display:none;" viewBox="0 0 384 512" aria-hidden="true"><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3l105.4 105.3c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256l105.3-105.4z"/></svg>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div x-show="open"
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0 -translate-y-2"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             class="md:hidden bg-white border-t">
+        <div id="mobile-menu" class="md:hidden bg-white border-t">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#leistungen" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Leistungen</a>
-                <a href="#uber-uns" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Über Uns</a>
-                <a href="#projekte" @click="open = false" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Referenzen</a>
-                <a href="#kontakt" @click="open = false" class="block px-3 py-2 text-base font-bold text-accent hover:bg-gray-50 rounded-md">Jetzt anfragen</a>
+                <a href="#leistungen" class="mobile-menu-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Leistungen</a>
+                <a href="#uber-uns" class="mobile-menu-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Über Uns</a>
+                <a href="#projekte" class="mobile-menu-link block px-3 py-2 text-base font-medium text-gray-700 hover:text-accent hover:bg-gray-50 rounded-md">Referenzen</a>
+                <a href="#kontakt" class="mobile-menu-link block px-3 py-2 text-base font-bold text-accent hover:bg-gray-50 rounded-md">Jetzt anfragen</a>
             </div>
         </div>
     </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="main-content">
 
     <!-- HERO SECTION -->
     <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-primary overflow-hidden">
@@ -143,10 +201,10 @@
                 <div class="flex flex-col sm:flex-row gap-4">
                     <a href="#kontakt" class="inline-flex justify-center items-center bg-accent hover:bg-orange-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-lg shadow-orange-500/30">
                         Kostenloses Angebot
-                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                        <span class="ml-2" aria-hidden="true">&rarr;</span>
                     </a>
                     <a href="tel:0123456789" class="inline-flex justify-center items-center bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/20 px-8 py-4 rounded-lg font-bold text-lg transition">
-                        <i class="fa-solid fa-phone mr-2"></i>
+                        <span class="mr-2" aria-hidden="true">&#9742;</span>
                         0123 / 45 67 89
                     </a>
                 </div>
@@ -154,13 +212,13 @@
                 <!-- Trust Badges -->
                 <div class="mt-12 flex flex-wrap items-center gap-6 text-slate-400 text-sm font-medium">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check-circle text-accent"></i> Meisterbetrieb
+                        <span class="text-accent" aria-hidden="true">&#10003;</span> Meisterbetrieb
                     </div>
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check-circle text-accent"></i> Festpreisgarantie
+                        <span class="text-accent" aria-hidden="true">&#10003;</span> Festpreisgarantie
                     </div>
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-check-circle text-accent"></i> TÜV Zertifiziert
+                        <span class="text-accent" aria-hidden="true">&#10003;</span> TÜV Zertifiziert
                     </div>
                 </div>
             </div>
@@ -180,7 +238,8 @@
                 <!-- Card 1 -->
                 <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-trowel-bricks text-2xl text-primary group-hover:text-white transition"></i>
+                        <!-- Bricks/Trowel icon -->
+                        <svg class="icon-inline icon-lg text-primary group-hover:text-white transition" viewBox="0 0 512 512" aria-hidden="true"><path d="M240 0c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V16c0-8.8-7.2-16-16-16H240zm-80 128H16c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h144c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zm192 0H208c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h144c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zm144 0H368c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16V144c0-8.8-7.2-16-16-16zM96 256H16c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16H96c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16zm160 0H128c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16zm240 0H368c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16h128c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16z"/></svg>
                     </div>
                     <h4 class="text-xl font-bold text-primary mb-3">Sanierung & Umbau</h4>
                     <p class="text-slate-600 leading-relaxed">
@@ -191,7 +250,8 @@
                 <!-- Card 2 -->
                 <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-paint-roller text-2xl text-primary group-hover:text-white transition"></i>
+                        <!-- Paint roller icon -->
+                        <svg class="icon-inline icon-lg text-primary group-hover:text-white transition" viewBox="0 0 512 512" aria-hidden="true"><path d="M0 64C0 28.7 28.7 0 64 0h384c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm64 96h384c17.7 0 32 14.3 32 32v16c0 17.7-14.3 32-32 32H288v48h16c8.8 0 16 7.2 16 16v192c0 8.8-7.2 16-16 16h-96c-8.8 0-16-7.2-16-16V304c0-8.8 7.2-16 16-16h16V240H64c-17.7 0-32-14.3-32-32V192c0-17.7 14.3-32 32-32z"/></svg>
                     </div>
                     <h4 class="text-xl font-bold text-primary mb-3">Malerarbeiten</h4>
                     <p class="text-slate-600 leading-relaxed">
@@ -202,7 +262,8 @@
                 <!-- Card 3 -->
                 <div class="group p-8 bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-accent group-hover:text-white transition-colors duration-300">
-                        <i class="fa-solid fa-wrench text-2xl text-primary group-hover:text-white transition"></i>
+                        <!-- Wrench icon -->
+                        <svg class="icon-inline icon-lg text-primary group-hover:text-white transition" viewBox="0 0 512 512" aria-hidden="true"><path d="M352 320c88.4 0 160-71.6 160-160c0-15.3-2.2-30.1-6.2-44.2c-3.1-10.8-16.4-13.2-24.3-5.3l-76.8 76.8c-3 3-7.1 4.7-11.3 4.7H336c-8.8 0-16-7.2-16-16V117.6c0-4.2 1.7-8.3 4.7-11.3l76.8-76.8c7.9-7.9 5.4-21.2-5.3-24.3C382.1 2.2 367.3 0 352 0C263.6 0 192 71.6 192 160c0 19.1 3.4 37.5 9.5 54.5L19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L297.5 310.5c17 6.2 35.4 9.5 54.5 9.5z"/></svg>
                     </div>
                     <h4 class="text-xl font-bold text-primary mb-3">Trockenbau</h4>
                     <p class="text-slate-600 leading-relaxed">
@@ -220,7 +281,7 @@
                 <div class="lg:w-1/2 mb-10 lg:mb-0 relative">
                     <div class="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 rounded-full blur-2xl"></div>
                     <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
-                    <img src="/images/Bauarbeiter_Hero.jpg" alt="Unser Team bei der Arbeit" class="relative rounded-2xl shadow-2xl z-10">
+                    <img src="/images/Bauarbeiter_Hero.jpg" alt="Unser Team bei der Arbeit" class="relative rounded-2xl shadow-2xl z-10" loading="lazy">
 
                     <!-- Stats Card Floating -->
                     <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl shadow-xl z-20 border-l-4 border-accent hidden md:block">
@@ -241,15 +302,15 @@
 
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-start">
-                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-accent mt-1 mr-3" aria-hidden="true">&#10003;</span>
                             <span class="text-slate-700">Kostenlose Erstbesichtigung vor Ort</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-accent mt-1 mr-3" aria-hidden="true">&#10003;</span>
                             <span class="text-slate-700">Festpreisangebot innerhalb von 24h</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fa-solid fa-check text-accent mt-1 mr-3"></i>
+                            <span class="text-accent mt-1 mr-3" aria-hidden="true">&#10003;</span>
                             <span class="text-slate-700">Saubere Baustelle nach Abschluss</span>
                         </li>
                     </ul>
@@ -275,7 +336,7 @@
                     <div class="space-y-6">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
-                                <i class="fa-solid fa-phone"></i>
+                                <span aria-hidden="true">&#9742;</span>
                             </div>
                             <div>
                                 <p class="text-slate-400 text-sm">Telefon</p>
@@ -285,7 +346,7 @@
 
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
-                                <i class="fa-solid fa-envelope"></i>
+                                <span aria-hidden="true">&#9993;</span>
                             </div>
                             <div>
                                 <p class="text-slate-400 text-sm">E-Mail</p>
@@ -295,7 +356,8 @@
 
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-accent text-xl">
-                                <i class="fa-solid fa-location-dot"></i>
+                                <!-- Location pin SVG -->
+                                <svg class="icon-inline icon-sm" viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                             </div>
                             <div>
                                 <p class="text-slate-400 text-sm">Standort</p>
@@ -310,23 +372,23 @@
                     <form class="bg-white p-8 rounded-2xl shadow-2xl text-slate-800">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label class="block text-sm font-bold mb-2 text-slate-700">Name</label>
-                                <input type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Max Mustermann">
+                                <label for="contact-name" class="block text-sm font-bold mb-2 text-slate-700">Name</label>
+                                <input id="contact-name" type="text" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Max Mustermann">
                             </div>
                             <div>
-                                <label class="block text-sm font-bold mb-2 text-slate-700">Telefon</label>
-                                <input type="tel" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Für Rückruf">
+                                <label for="contact-phone" class="block text-sm font-bold mb-2 text-slate-700">Telefon</label>
+                                <input id="contact-phone" type="tel" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Für Rückruf">
                             </div>
                         </div>
                         <div class="mb-6">
-                            <label class="block text-sm font-bold mb-2 text-slate-700">E-Mail</label>
-                            <input type="email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="max@beispiel.de">
+                            <label for="contact-email" class="block text-sm font-bold mb-2 text-slate-700">E-Mail</label>
+                            <input id="contact-email" type="email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="max@beispiel.de">
                         </div>
                         <div class="mb-6">
-                            <label class="block text-sm font-bold mb-2 text-slate-700">Nachricht / Projekt</label>
-                            <textarea rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Worum geht es bei Ihrem Projekt?"></textarea>
+                            <label for="contact-message" class="block text-sm font-bold mb-2 text-slate-700">Nachricht / Projekt</label>
+                            <textarea id="contact-message" rows="4" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition" placeholder="Worum geht es bei Ihrem Projekt?"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-accent hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition transform hover:-translate-y-1 shadow-lg shadow-orange-500/30">
+                        <button type="submit" aria-label="Kostenloses Angebot anfragen" class="w-full bg-accent hover:bg-orange-700 text-white font-bold py-4 rounded-lg transition transform hover:-translate-y-1 shadow-lg shadow-orange-500/30">
                             Kostenlos anfragen
                         </button>
                         <p class="text-xs text-slate-400 mt-4 text-center">Ihre Daten sind bei uns sicher und werden nicht weitergegeben.</p>
@@ -336,13 +398,16 @@
         </div>
     </section>
 
+    </main>
+
     <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <div class="flex items-center gap-2 mb-4">
-                        <i class="fa-solid fa-hammer text-accent text-xl"></i>
+                        <!-- Hammer icon -->
+                        <svg class="icon-inline icon-sm text-accent" viewBox="0 0 512 512" aria-hidden="true"><path d="M399.8 37.1C390.3 45.1 381.8 54.3 374.6 64.6c-21.4 30.5-33.6 67.4-33.6 107.4c0 10.3 .8 20.3 2.4 30.1L128 416l-16 16 32 32 16-16L374.4 232.8c9.8 1.6 19.8 2.4 30.1 2.4c40 0 76.9-12.2 107.4-33.6c10.3-7.2 19.5-15.7 27.5-25.2L480 128 384 32 399.8 37.1zM80 432L16 496l64-16L80 432z"/></svg>
                         <span class="font-bold text-lg text-white">Meister<span class="text-accent">Müller</span></span>
                     </div>
                     <p class="text-sm leading-relaxed">
@@ -369,11 +434,13 @@
                 <div>
                     <h4 class="text-white font-bold mb-4">Folgen Sie uns</h4>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
-                            <i class="fa-brands fa-facebook-f"></i>
+                        <a href="#" aria-label="Facebook" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
+                            <!-- Facebook icon -->
+                            <svg class="icon-inline icon-sm" viewBox="0 0 320 512" fill="currentColor" aria-hidden="true"><path d="M80 299.3V512h116V299.3h86.5l18-97.8H196V142.5c0-27.1 7.5-45.5 46.3-45.5H302V6.7C295.3 5.8 265.2 3 230.2 3 157.3 3 108 47.2 108 134.1v67.4H20v97.8h88z"/></svg>
                         </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
-                            <i class="fa-brands fa-instagram"></i>
+                        <a href="#" aria-label="Instagram" class="w-10 h-10 rounded-full bg-white/5 hover:bg-accent flex items-center justify-center text-white transition">
+                            <!-- Instagram icon -->
+                            <svg class="icon-inline icon-sm" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -384,6 +451,36 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Menu Toggle (Vanilla JS, no external dependencies) -->
+    <script>
+    (function() {
+        var btn = document.getElementById('mobile-menu-btn');
+        var menu = document.getElementById('mobile-menu');
+        var iconOpen = document.getElementById('menu-icon-open');
+        var iconClose = document.getElementById('menu-icon-close');
+
+        btn.addEventListener('click', function() {
+            var isOpen = menu.classList.toggle('open');
+            btn.setAttribute('aria-expanded', isOpen);
+            btn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+            iconOpen.style.display = isOpen ? 'none' : '';
+            iconClose.style.display = isOpen ? '' : 'none';
+        });
+
+        // Close menu when a link is clicked
+        var links = menu.querySelectorAll('.mobile-menu-link');
+        for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener('click', function() {
+                menu.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-label', 'Menü öffnen');
+                iconOpen.style.display = '';
+                iconClose.style.display = 'none';
+            });
+        }
+    })();
+    </script>
 
 </body>
 </html>
