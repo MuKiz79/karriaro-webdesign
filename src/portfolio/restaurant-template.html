@@ -6,25 +6,17 @@
     <title>Goldener Hirsch | Genuss in München</title>
     <meta name="description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre. Beste Zutaten, handgemacht. Jetzt Tisch reservieren.">
     <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/restaurant-template.html">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="restaurant">
     <meta property="og:url" content="https://karriaro-webdesign.de/portfolio/restaurant-template.html">
     <meta property="og:title" content="Goldener Hirsch | Genuss in München">
     <meta property="og:description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre. Beste Zutaten, handgemacht.">
     <meta property="og:locale" content="de_DE">
     <meta property="og:image" content="https://karriaro-webdesign.de/portfolio/og-restaurant.jpg">
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Goldener Hirsch | Genuss in München">
     <meta name="twitter:description" content="Erleben Sie authentische Küche in gemütlicher Atmosphäre.">
     <meta name="twitter:image" content="https://karriaro-webdesign.de/portfolio/og-restaurant.jpg">
-
-    <!-- Schema.org Restaurant -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -35,365 +27,356 @@
         "servesCuisine": "Deutsche Küche",
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Maximilianstraße 12",
             "addressLocality": "München",
+            "postalCode": "80539",
             "addressCountry": "DE"
         },
-        "priceRange": "€€"
+        "telephone": "+49 89 123 456 78",
+        "priceRange": "€€€",
+        "openingHoursSpecification": [
+            { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday"], "opens": "17:00", "closes": "23:00" },
+            { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday"], "opens": "17:00", "closes": "01:00" },
+            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "12:00", "closes": "22:00" }
+        ]
     }
     </script>
-
-    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
-
-    <!-- Compiled Tailwind CSS (lokal, DSGVO-konform) -->
     <link rel="stylesheet" href="/style.css">
-
     <style>
+        :root { --gold: #d4af37; --dark: #1a1a1a; --cream: #f9f9f7; --dark-alt: #111111; }
         .text-gold-gradient {
-            background: linear-gradient(to right, #d4af37, #f3e5ab, #d4af37);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            background: linear-gradient(135deg, #d4af37 0%, #f3e5ab 40%, #d4af37 70%, #c9a227 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        /* Custom color utilities (previously in tailwind.config) */
-        .bg-dark { background-color: #1a1a1a; }
-        .text-gold { color: #d4af37; }
-        .bg-gold { background-color: #d4af37; }
-        .border-gold { border-color: #d4af37; }
-        .decoration-gold { text-decoration-color: #d4af37; }
-        .hover\:text-gold:hover { color: #d4af37; }
-        .hover\:bg-gold:hover { background-color: #d4af37; }
-        .focus\:border-gold:focus { border-color: #d4af37; }
-        .text-cream { color: #f9f9f7; }
-        .bg-cream { background-color: #f9f9f7; }
-        .bg-gold\/5 { background-color: rgba(212, 175, 55, 0.05); }
-        .border-gold\/30 { border-color: rgba(212, 175, 55, 0.3); }
-        /* Hero background as CSS gradient (no external image) */
-        .hero-bg {
-            background: linear-gradient(to bottom, rgba(26,26,26,0.3), rgba(26,26,26,1)),
-                        linear-gradient(135deg, #2a1f0e 0%, #1a1a1a 40%, #2a1f0e 100%);
+        .bg-dark { background-color: var(--dark); }
+        .bg-dark-alt { background-color: var(--dark-alt); }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        .border-gold { border-color: var(--gold); }
+        .text-cream { color: var(--cream); }
+        .bg-cream { background-color: var(--cream); }
+        .hover\:text-gold:hover { color: var(--gold); }
+        .hover\:bg-gold:hover { background-color: var(--gold); }
+        .focus\:border-gold:focus { border-color: var(--gold); }
+        .font-heading { font-family: Georgia, 'Times New Roman', serif; }
+        .hero-overlay {
+            background: linear-gradient(to bottom, rgba(26,26,26,0.4) 0%, rgba(26,26,26,0.6) 50%, rgba(26,26,26,0.95) 100%);
         }
-        /* Gallery placeholders */
-        .gallery-placeholder-1 { background: linear-gradient(135deg, #3b2f1a, #1a1a1a); }
-        .gallery-placeholder-2 { background: linear-gradient(135deg, #1a2a1a, #1a1a1a); }
-        .gallery-placeholder-3 { background: linear-gradient(135deg, #2a1a1a, #1a1a1a); }
-        .gallery-placeholder-4 { background: linear-gradient(135deg, #1a1a2a, #1a1a1a); }
-        /* Image placeholder */
-        .img-placeholder {
-            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-        }
-        /* Skip to content (sr-only style) */
         .skip-link {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0,0,0,0);
-            white-space: nowrap;
-            border: 0;
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+            overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
         }
         .skip-link:focus {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: auto;
-            height: auto;
-            padding: 1rem 1.5rem;
-            margin: 0;
-            overflow: visible;
-            clip: auto;
-            white-space: normal;
-            z-index: 9999;
-            background: #d4af37;
-            color: #1a1a1a;
-            font-weight: bold;
-            text-decoration: none;
+            position: fixed; top: 0; left: 0; width: auto; height: auto;
+            padding: 1rem 1.5rem; margin: 0; overflow: visible; clip: auto;
+            white-space: normal; z-index: 9999; background: var(--gold);
+            color: var(--dark); font-weight: bold; text-decoration: none;
         }
-        /* Mobile menu hidden by default */
         .mobile-menu { display: none; }
         .mobile-menu.is-open { display: block; }
+        .gallery-item { overflow: hidden; }
+        .gallery-item img { transition: transform 0.6s ease, filter 0.6s ease; }
+        .gallery-item:hover img { transform: scale(1.05); filter: brightness(1.1); }
+        .menu-item { transition: background-color 0.3s ease; }
+        .menu-item:hover { background-color: rgba(212,175,55,0.05); }
+        .divider-dots::after {
+            content: ''; display: block; flex: 1; border-bottom: 1px dotted rgba(255,255,255,0.15);
+            margin: 0 1rem; position: relative; top: -0.3em;
+        }
+        input, select { transition: border-color 0.3s ease; }
+        a, button { transition: all 0.3s ease; }
     </style>
 </head>
-<body class="bg-dark text-cream font-sans antialiased">
+<body class="bg-dark text-cream antialiased" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
 
-    <!-- Skip to content (BFSG/Accessibility) -->
     <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 bg-dark/90 backdrop-blur-md border-b border-white/5 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- NAV -->
+    <nav class="fixed w-full z-50 bg-dark/95 backdrop-blur-md border-b border-white/5" aria-label="Hauptnavigation">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <a href="#" class="font-serif text-3xl font-bold tracking-wider text-white">
+                <a href="#" class="font-heading text-2xl tracking-widest text-white" aria-label="Goldener Hirsch Startseite">
                     Goldener Hirsch
                 </a>
-
-                <!-- Desktop Menu -->
-                <ul class="hidden md:flex items-center space-x-8 list-none m-0 p-0">
-                    <li><a href="#menu" class="text-sm uppercase tracking-widest hover:text-gold transition">Speisekarte</a></li>
-                    <li><a href="#ambiente" class="text-sm uppercase tracking-widest hover:text-gold transition">Ambiente</a></li>
-                    <li><a href="#events" class="text-sm uppercase tracking-widest hover:text-gold transition">Events</a></li>
+                <ul class="hidden md:flex items-center gap-10 list-none m-0 p-0">
+                    <li><a href="#philosophie" class="text-xs uppercase tracking-[0.2em] text-gray-300 hover:text-gold">Philosophie</a></li>
+                    <li><a href="#menu" class="text-xs uppercase tracking-[0.2em] text-gray-300 hover:text-gold">Karte</a></li>
+                    <li><a href="#galerie" class="text-xs uppercase tracking-[0.2em] text-gray-300 hover:text-gold">Galerie</a></li>
                     <li>
-                        <a href="#reservierung" class="px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition uppercase tracking-widest text-xs font-bold">
-                            Tisch reservieren
+                        <a href="#reservierung" class="px-6 py-2.5 border border-gold text-gold hover:bg-gold hover:text-dark text-xs uppercase tracking-[0.2em] font-bold" aria-label="Tisch reservieren">
+                            Reservieren
                         </a>
                     </li>
                 </ul>
-
-                <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" class="md:hidden text-gold p-2" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu">
-                    <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                    <svg id="menu-icon-close" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                    <svg id="menu-icon-open" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    <svg id="menu-icon-close" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="display:none;" aria-hidden="true"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
         </div>
-
-        <!-- Mobile Dropdown -->
         <div id="mobile-menu" class="mobile-menu md:hidden bg-dark border-t border-white/10 absolute w-full">
-            <ul class="flex flex-col p-4 space-y-4 text-center list-none m-0">
-                <li><a href="#menu" class="text-lg font-serif hover:text-gold">Speisekarte</a></li>
-                <li><a href="#reservierung" class="text-lg font-serif hover:text-gold">Reservieren</a></li>
-                <li><a href="#kontakt" class="text-lg font-serif hover:text-gold">Kontakt</a></li>
+            <ul class="flex flex-col p-6 gap-5 text-center list-none m-0">
+                <li><a href="#philosophie" class="text-lg font-heading text-gray-300 hover:text-gold">Philosophie</a></li>
+                <li><a href="#menu" class="text-lg font-heading text-gray-300 hover:text-gold">Karte</a></li>
+                <li><a href="#galerie" class="text-lg font-heading text-gray-300 hover:text-gold">Galerie</a></li>
+                <li><a href="#reservierung" class="text-lg font-heading text-gold">Reservieren</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
+    <!-- MAIN -->
     <main id="main-content">
 
-    <!-- HERO SECTION -->
-    <section class="relative h-screen hero-bg bg-cover bg-center bg-fixed flex items-center justify-center text-center px-4">
+    <!-- HERO -->
+    <section class="relative h-screen flex items-center justify-center text-center px-6">
+        <img src="/images/portfolio/restaurant-interior.jpg" alt="Elegantes Interieur des Goldener Hirsch Restaurants mit warmem Licht und gedeckten Tischen" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 hero-overlay"></div>
         <div class="relative z-10 max-w-3xl">
-            <span class="block text-gold uppercase tracking-[0.3em] text-sm mb-4 animate-fade-in-up">Willkommen im</span>
-            <h1 class="font-serif text-6xl md:text-8xl mb-6 text-white leading-tight">
-                Geschmack <br><span class="italic text-gold">erleben.</span>
+            <p class="text-gold uppercase tracking-[0.4em] text-xs mb-6 font-bold">Seit 1987 in München</p>
+            <h1 class="font-heading text-5xl sm:text-6xl md:text-8xl mb-8 leading-[1.1]">
+                <span class="text-gold-gradient">Kulinarische</span><br>
+                <span class="text-white font-normal italic">Exzellenz.</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-300 mb-10 font-light max-w-xl mx-auto">
-                Moderne Küche trifft auf Tradition. Frische Zutaten, mit Leidenschaft zubereitet im Herzen von München.
+            <p class="text-lg text-gray-300 mb-12 font-light max-w-lg mx-auto leading-relaxed">
+                Moderne deutsche Küche, saisonal inspiriert, mit Leidenschaft zubereitet im Herzen Münchens.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#reservierung" class="px-8 py-4 bg-gold text-dark font-bold uppercase tracking-widest hover:bg-white transition">
-                    Tisch Buchen
+                <a href="#reservierung" class="px-10 py-4 bg-gold text-dark font-bold uppercase tracking-[0.2em] text-xs hover:bg-white" aria-label="Jetzt Tisch reservieren">
+                    Tisch reservieren
                 </a>
-                <a href="#menu" class="px-8 py-4 border border-white/30 text-white font-bold uppercase tracking-widest hover:bg-white/10 transition backdrop-blur-sm">
-                    Zur Karte
+                <a href="#menu" class="px-10 py-4 border border-white/20 text-white uppercase tracking-[0.2em] text-xs font-bold hover:border-gold hover:text-gold">
+                    Unsere Karte
+                    <svg class="inline-block ml-2 -mt-0.5" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
                 </a>
             </div>
         </div>
-
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/50">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-white/30">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
         </div>
     </section>
 
-    <!-- INTRO / ÜBER UNS -->
-    <section id="ambiente" class="py-24 bg-dark relative overflow-hidden">
-        <!-- Deco Element -->
-        <div class="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-[100px]"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-2 gap-16 items-center">
-            <div class="relative">
-                <div class="absolute -top-4 -left-4 w-full h-full border border-gold/30 z-0"></div>
-                <div class="relative z-10 img-placeholder w-full h-[500px] flex items-center justify-center text-gray-600 text-sm">
-                    <span class="sr-only">Innenraum Restaurant</span>
-                </div>
-            </div>
+    <!-- PHILOSOPHIE -->
+    <section id="philosophie" class="bg-dark" style="padding: 120px 0;">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-20 items-center">
             <div>
-                <h2 class="font-serif text-4xl md:text-5xl mb-6 text-white">Ein Ort für <br><span class="text-gold italic">besondere Momente.</span></h2>
-                <div class="w-20 h-1 bg-gold mb-8"></div>
-                <p class="text-gray-400 leading-relaxed mb-6 font-light">
-                    Bei uns geht es nicht nur ums Essen, sondern um das Erlebnis. Wir glauben an Slow Food, lokale Lieferanten und eine Atmosphäre, in der die Zeit stillsteht.
+                <p class="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-4">Unsere Philosophie</p>
+                <h2 class="font-heading text-4xl md:text-5xl text-white mb-8 leading-tight">
+                    Wo Tradition auf<br><span class="text-gold italic">Handwerk</span> trifft.
+                </h2>
+                <div class="w-16 h-px bg-gold mb-8"></div>
+                <p class="text-gray-400 leading-relaxed mb-6">
+                    Im Goldener Hirsch glauben wir an die Kraft erstklassiger Zutaten. Unser Küchenchef Maximilian Berger arbeitet ausschließlich mit regionalen Erzeugern zusammen, die seine Philosophie teilen: Respekt vor dem Produkt, Geduld in der Zubereitung, Perfektion auf dem Teller.
                 </p>
-                <p class="text-gray-400 leading-relaxed mb-8 font-light">
-                    Unser Chefkoch Maximilian Berger kreiert saisonale Menüs, die klassische Rezepte neu interpretieren. Dazu servieren wir ausgewählte Weine aus den besten Regionen.
+                <p class="text-gray-400 leading-relaxed mb-10">
+                    Jedes Gericht erzählt eine Geschichte -- von den Feldern Oberbayerns über unsere offene Küche bis auf Ihren Tisch. Begleitet von handverlesenen Weinen aus den besten Lagen Europas.
                 </p>
-
-                <div class="flex gap-8 text-gold font-serif text-xl">
-                    <div class="flex flex-col">
-                        <span class="text-3xl font-bold">100%</span>
-                        <span class="text-xs uppercase tracking-widest text-gray-500 font-sans">Frisch</span>
+                <div class="flex gap-12">
+                    <div class="flex items-start gap-3">
+                        <svg class="text-gold flex-shrink-0 mt-1" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674h4.914c.969 0 1.371 1.24.588 1.81l-3.976 2.888 1.518 4.674c.3.922-.755 1.688-1.539 1.118L12 15.203l-3.974 2.888c-.784.57-1.838-.196-1.539-1.118l1.518-4.674-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.914l1.518-4.674z"/></svg>
+                        <div>
+                            <span class="font-heading text-2xl text-white">1 Stern</span><br>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">Michelin</span>
+                        </div>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-3xl font-bold">250+</span>
-                        <span class="text-xs uppercase tracking-widest text-gray-500 font-sans">Weine</span>
+                    <div class="flex items-start gap-3">
+                        <svg class="text-gold flex-shrink-0 mt-1" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        <div>
+                            <span class="font-heading text-2xl text-white">250+</span><br>
+                            <span class="text-xs text-gray-500 uppercase tracking-widest">Weine</span>
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div class="relative">
+                <div class="absolute -top-4 -left-4 w-full h-full border border-gold/20"></div>
+                <img src="/images/portfolio/restaurant-interior.jpg" alt="Goldenes Ambiente und warme Beleuchtung im Restaurant Goldener Hirsch" class="relative z-10 w-full h-[520px] object-cover">
             </div>
         </div>
     </section>
 
-    <!-- SPEISEKARTE (HTML Text, KEIN PDF!) -->
-    <section id="menu" class="py-24 bg-[#111111]">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- MENU HIGHLIGHTS -->
+    <section id="menu" class="bg-dark-alt" style="padding: 120px 0;">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16">
-                <span class="text-gold uppercase tracking-[0.2em] text-xs">Kulinarik</span>
-                <h2 class="font-serif text-4xl md:text-5xl mt-2 text-white">Unsere Auswahl</h2>
-                <p class="text-gray-500 mt-4 text-sm italic">Saisonal & Regional</p>
+                <p class="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-3">Kulinarik</p>
+                <h2 class="font-heading text-4xl md:text-5xl text-white">Ausgewählte Gerichte</h2>
+                <p class="text-gray-500 mt-4 text-sm italic">Saisonal wechselnde Empfehlungen unseres Küchenchefs</p>
             </div>
 
-            <!-- Menu Tabs (Optional, hier simpel als Liste) -->
-            <div class="space-y-16">
-
-                <!-- Vorspeisen -->
-                <div>
-                    <h3 class="font-serif text-2xl text-gold border-b border-white/10 pb-4 mb-8 text-center">Vorspeisen</h3>
-                    <div class="grid gap-8">
-                        <!-- Item 1 -->
-                        <div class="flex justify-between items-baseline group">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-baseline">
-                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Rinder-Carpaccio</h4>
-                                    <span class="text-gold font-serif text-lg">16€</span>
-                                </div>
-                                <p class="text-sm text-gray-500 font-light mt-1">Hauchdünnes Rinderfilet, Rucola, Parmesan, Trüffelöl</p>
-                            </div>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="flex justify-between items-baseline group">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-baseline">
-                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Burrata & Tomate</h4>
-                                    <span class="text-gold font-serif text-lg">14€</span>
-                                </div>
-                                <p class="text-sm text-gray-500 font-light mt-1">Cremiger Burrata, bunte Tomaten, Basilikum-Pesto</p>
-                            </div>
-                        </div>
+            <ul class="list-none m-0 p-0 space-y-2">
+                <li class="menu-item px-6 py-5 rounded">
+                    <div class="flex items-baseline">
+                        <h3 class="font-heading text-lg text-white flex-shrink-0">Rinder-Carpaccio</h3>
+                        <span class="divider-dots flex-1"></span>
+                        <span class="text-gold font-heading text-lg flex-shrink-0">16 &euro;</span>
                     </div>
-                </div>
-
-                <!-- Hauptgerichte -->
-                <div>
-                    <h3 class="font-serif text-2xl text-gold border-b border-white/10 pb-4 mb-8 text-center">Hauptgerichte</h3>
-                    <div class="grid gap-8">
-                        <!-- Item 1 -->
-                        <div class="flex justify-between items-baseline group">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-baseline">
-                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Wiener Schnitzel</h4>
-                                    <span class="text-gold font-serif text-lg">24€</span>
-                                </div>
-                                <p class="text-sm text-gray-500 font-light mt-1">Original vom Kalb, Preiselbeeren, lauwarmer Kartoffelsalat</p>
-                            </div>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="flex justify-between items-baseline group">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-baseline">
-                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Tagliatelle Tartufo</h4>
-                                    <span class="text-gold font-serif text-lg">22€</span>
-                                </div>
-                                <p class="text-sm text-gray-500 font-light mt-1">Frische Pasta, schwarzer Trüffel, Butter-Salbei-Sud</p>
-                            </div>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="flex justify-between items-baseline group">
-                            <div class="flex-1">
-                                <div class="flex justify-between items-baseline">
-                                    <h4 class="text-lg font-serif font-bold text-white group-hover:text-gold transition">Zanderfilet</h4>
-                                    <span class="text-gold font-serif text-lg">26€</span>
-                                </div>
-                                <p class="text-sm text-gray-500 font-light mt-1">Auf der Haut gebraten, Risotto, geschmortes Gemüse</p>
-                            </div>
-                        </div>
+                    <p class="text-sm text-gray-500 mt-1">Hauchdünnes Rinderfilet, Rucola, gereifter Parmesan, weißes Trüffelöl</p>
+                </li>
+                <li class="menu-item px-6 py-5 rounded">
+                    <div class="flex items-baseline">
+                        <h3 class="font-heading text-lg text-white flex-shrink-0">Wiener Schnitzel vom Kalb</h3>
+                        <span class="divider-dots flex-1"></span>
+                        <span class="text-gold font-heading text-lg flex-shrink-0">34 &euro;</span>
                     </div>
-                </div>
+                    <p class="text-sm text-gray-500 mt-1">Goldbraun gebacken, Preiselbeeren, lauwarmer Kartoffel-Feldsalat</p>
+                </li>
+                <li class="menu-item px-6 py-5 rounded">
+                    <div class="flex items-baseline">
+                        <h3 class="font-heading text-lg text-white flex-shrink-0">Zanderfilet auf Risotto</h3>
+                        <span class="divider-dots flex-1"></span>
+                        <span class="text-gold font-heading text-lg flex-shrink-0">32 &euro;</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Auf der Haut gebraten, Safran-Risotto, glasiertes Wurzelgemüse</p>
+                </li>
+                <li class="menu-item px-6 py-5 rounded">
+                    <div class="flex items-baseline">
+                        <h3 class="font-heading text-lg text-white flex-shrink-0">Crème Brûlée Tonkabohne</h3>
+                        <span class="divider-dots flex-1"></span>
+                        <span class="text-gold font-heading text-lg flex-shrink-0">14 &euro;</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Vanille aus Madagaskar, Tonkabohne, karamellisierte Oberfläche</p>
+                </li>
+            </ul>
 
-            </div>
-
-            <div class="text-center mt-12">
-                <a href="#" class="text-sm text-gray-400 hover:text-white underline decoration-gold underline-offset-4">Komplette Karte als PDF (Download)</a>
+            <div class="text-center mt-14">
+                <a href="#" class="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-gold border-b border-gold/30 pb-1">
+                    Komplette Karte ansehen
+                    <svg class="inline-block ml-1 -mt-0.5" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5-5 5M6 12h12"/></svg>
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- GALLERIE GRID -->
-    <section class="py-4">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-2">
-            <div class="gallery-placeholder-1 w-full h-64 hover:opacity-80 transition" role="img" aria-label="Gericht 1"></div>
-            <div class="gallery-placeholder-2 w-full h-64 hover:opacity-80 transition" role="img" aria-label="Gericht 2"></div>
-            <div class="gallery-placeholder-3 w-full h-64 hover:opacity-80 transition" role="img" aria-label="Gericht 3"></div>
-            <div class="gallery-placeholder-4 w-full h-64 hover:opacity-80 transition" role="img" aria-label="Gericht 4"></div>
+    <!-- GALERIE -->
+    <section id="galerie" style="padding: 100px 0;" class="bg-dark">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-14">
+                <p class="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-3">Impressionen</p>
+                <h2 class="font-heading text-4xl md:text-5xl text-white">Aus unserer Küche</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="gallery-item rounded overflow-hidden">
+                    <img src="/images/portfolio/food-1.jpg" loading="lazy" alt="Kunstvoll angerichtetes Rinder-Carpaccio mit Trüffel und Rucola" class="w-full h-64 md:h-72 object-cover">
+                </div>
+                <div class="gallery-item rounded overflow-hidden">
+                    <img src="/images/portfolio/food-2.jpg" loading="lazy" alt="Goldbraunes Wiener Schnitzel mit frischem Salat auf weißem Porzellan" class="w-full h-64 md:h-72 object-cover">
+                </div>
+                <div class="gallery-item rounded overflow-hidden">
+                    <img src="/images/portfolio/food-3.jpg" loading="lazy" alt="Gebratenes Zanderfilet auf Safran-Risotto mit glasiertem Gemüse" class="w-full h-64 md:h-72 object-cover">
+                </div>
+                <div class="gallery-item rounded overflow-hidden">
+                    <img src="/images/portfolio/food-4.jpg" loading="lazy" alt="Crème Brûlée mit karamellisierter Oberfläche und frischen Beeren" class="w-full h-64 md:h-72 object-cover">
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- RESERVIERUNG & KONTAKT -->
-    <section id="reservierung" class="py-24 bg-dark relative">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-[#1a1a1a] border border-white/10 p-8 md:p-16 text-center relative overflow-hidden">
-                <div class="absolute inset-0 hero-bg opacity-10"></div>
+    <!-- RESERVIERUNG -->
+    <section id="reservierung" class="bg-dark-alt" style="padding: 120px 0;">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-14">
+                <p class="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-3">Reservierung</p>
+                <h2 class="font-heading text-4xl md:text-5xl text-white mb-4">Ihr Tisch wartet.</h2>
+                <p class="text-gray-400 max-w-md mx-auto">Für Gruppen ab 8 Personen bitten wir um telefonische Reservierung.</p>
+            </div>
 
-                <div class="relative z-10">
-                    <h2 class="font-serif text-4xl mb-4 text-white">Reservierung</h2>
-                    <p class="text-gray-400 mb-10 max-w-lg mx-auto">
-                        Sichern Sie sich Ihren Platz. Für Gruppen ab 8 Personen bitten wir um telefonische Reservierung.
-                    </p>
-
-                    <form class="max-w-2xl mx-auto space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Name" aria-label="Name" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                            <input type="email" placeholder="E-Mail" aria-label="E-Mail-Adresse" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="tel" placeholder="Telefon" aria-label="Telefonnummer" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                            <select aria-label="Anzahl Personen" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                                <option class="text-dark">2 Personen</option>
-                                <option class="text-dark">3 Personen</option>
-                                <option class="text-dark">4 Personen</option>
-                                <option class="text-dark">5+ Personen</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="date" aria-label="Datum" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                            <input type="time" aria-label="Uhrzeit" class="bg-white/5 border border-white/10 text-white px-4 py-3 focus:outline-none focus:border-gold transition">
-                        </div>
-                        <button type="submit" aria-label="Reservierung absenden" class="w-full bg-gold hover:bg-white text-dark font-bold uppercase tracking-widest py-4 transition duration-300 mt-6">
-                            Jetzt Reservieren
-                        </button>
-                    </form>
-
-                    <div class="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-center gap-12 text-sm text-gray-400">
-                        <div>
-                            <h4 class="text-gold uppercase tracking-widest mb-2 font-bold">Öffnungszeiten</h4>
-                            <p>Mo - Do: 17:00 - 23:00</p>
-                            <p>Fr - Sa: 17:00 - 01:00</p>
-                            <p>So: 12:00 - 22:00</p>
-                        </div>
-                        <div>
-                            <h4 class="text-gold uppercase tracking-widest mb-2 font-bold">Kontakt</h4>
-                            <p>Maximilianstraße 12</p>
-                            <p>80539 München</p>
-                            <p class="mt-2">&#9742; <a href="tel:0123456789" class="hover:text-white">0123 / 45 67 89</a></p>
-                        </div>
+            <form class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="res-name" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Name</label>
+                        <input id="res-name" type="text" placeholder="Ihr vollständiger Name" aria-label="Name" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold placeholder-gray-600">
+                    </div>
+                    <div>
+                        <label for="res-email" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">E-Mail</label>
+                        <input id="res-email" type="email" placeholder="ihre@email.de" aria-label="E-Mail-Adresse" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold placeholder-gray-600">
                     </div>
                 </div>
-            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="res-phone" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Telefon</label>
+                        <input id="res-phone" type="tel" placeholder="+49 89 ..." aria-label="Telefonnummer" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold placeholder-gray-600">
+                    </div>
+                    <div>
+                        <label for="res-guests" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Personen</label>
+                        <select id="res-guests" aria-label="Anzahl Personen" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold">
+                            <option value="2" class="text-dark">2 Personen</option>
+                            <option value="3" class="text-dark">3 Personen</option>
+                            <option value="4" class="text-dark">4 Personen</option>
+                            <option value="5" class="text-dark">5 Personen</option>
+                            <option value="6" class="text-dark">6 Personen</option>
+                            <option value="7" class="text-dark">7 Personen</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="res-date" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Datum</label>
+                        <input id="res-date" type="date" aria-label="Datum" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label for="res-time" class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Uhrzeit</label>
+                        <input id="res-time" type="time" aria-label="Uhrzeit" class="w-full bg-white/5 border border-white/10 text-white px-5 py-3.5 focus:outline-none focus:border-gold">
+                    </div>
+                </div>
+                <button type="submit" aria-label="Reservierung absenden" class="w-full bg-gold hover:bg-white text-dark font-bold uppercase tracking-[0.2em] text-xs py-4.5 mt-4">
+                    Jetzt reservieren
+                </button>
+            </form>
         </div>
     </section>
 
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-black py-8 border-t border-white/5 text-center text-xs text-gray-600">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="mb-4">&copy; 2026 Goldener Hirsch. Alle Rechte vorbehalten.</p>
-            <nav aria-label="Footer-Navigation">
-                <ul class="flex justify-center space-x-4 list-none m-0 p-0">
-                    <li><a href="#" class="hover:text-white transition">Impressum</a></li>
-                    <li><a href="#" class="hover:text-white transition">Datenschutz</a></li>
-                    <li><a href="#" class="hover:text-white transition">Allergene</a></li>
+    <footer class="bg-dark border-t border-white/5" style="padding: 80px 0 40px;">
+        <div class="max-w-6xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+                <div>
+                    <h3 class="font-heading text-xl text-white mb-5">Goldener Hirsch</h3>
+                    <div class="flex items-start gap-3 mb-3 text-gray-400 text-sm">
+                        <svg class="text-gold flex-shrink-0 mt-0.5" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <span>Maximilianstraße 12<br>80539 München</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-3 text-gray-400 text-sm">
+                        <svg class="text-gold flex-shrink-0" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        <a href="tel:+498912345678" class="hover:text-gold">+49 89 123 456 78</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-heading text-xl text-white mb-5">Öffnungszeiten</h3>
+                    <div class="flex items-start gap-3 text-gray-400 text-sm">
+                        <svg class="text-gold flex-shrink-0 mt-0.5" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
+                        <div>
+                            <p class="mb-1">Mo -- Do: 17:00 -- 23:00</p>
+                            <p class="mb-1">Fr -- Sa: 17:00 -- 01:00</p>
+                            <p>So: 12:00 -- 22:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-heading text-xl text-white mb-5">Navigation</h3>
+                    <nav aria-label="Footer-Navigation">
+                        <ul class="list-none m-0 p-0 space-y-2 text-sm text-gray-400">
+                            <li><a href="#philosophie" class="hover:text-gold">Philosophie</a></li>
+                            <li><a href="#menu" class="hover:text-gold">Speisekarte</a></li>
+                            <li><a href="#galerie" class="hover:text-gold">Galerie</a></li>
+                            <li><a href="#reservierung" class="hover:text-gold">Reservierung</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600">
+                <p>&copy; 2026 Goldener Hirsch. Alle Rechte vorbehalten.</p>
+                <ul class="flex gap-6 list-none m-0 p-0">
+                    <li><a href="#" class="hover:text-white">Impressum</a></li>
+                    <li><a href="#" class="hover:text-white">Datenschutz</a></li>
+                    <li><a href="#" class="hover:text-white">Allergene</a></li>
                 </ul>
-            </nav>
+            </div>
         </div>
     </footer>
 
-    <!-- Mobile menu toggle (vanilla JS, no external dependencies) -->
     <script>
     (function() {
         var btn = document.getElementById('mobile-menu-btn');
@@ -407,7 +390,6 @@
             iconOpen.style.display = isOpen ? 'none' : 'block';
             iconClose.style.display = isOpen ? 'block' : 'none';
         });
-        // Close menu when a link inside is clicked
         menu.querySelectorAll('a').forEach(function(link) {
             link.addEventListener('click', function() {
                 menu.classList.remove('is-open');
