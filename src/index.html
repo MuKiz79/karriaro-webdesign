@@ -58,7 +58,7 @@
         .wrap-xs { max-width: 500px; margin: 0 auto; padding: 0 24px; }
 
         .muted { color: #86868b; }
-        .light-bg { background: #f5f5f7; }
+        .blue { color: #0071e3; }
 
         /* Nav */
         nav {
@@ -77,15 +77,13 @@
         nav a:hover { opacity: 1; }
         nav .links { display: flex; gap: 28px; }
         nav .cta {
-            background: #1d1d1f; color: #fbfbfd; padding: 6px 16px;
+            background: #0071e3; color: #fff; padding: 6px 16px;
             border-radius: 20px; font-size: 12px; font-weight: 500;
             opacity: 1; transition: background 0.2s;
         }
-        nav .cta:hover { background: #424245; }
+        nav .cta:hover { background: #0077ED; }
 
-        @media (max-width: 640px) {
-            nav .links { display: none; }
-        }
+        @media (max-width: 640px) { nav .links { display: none; } }
 
         /* Sections */
         section { padding: 120px 0; }
@@ -97,93 +95,67 @@
             font-weight: 600;
             letter-spacing: -0.025em;
             line-height: 1.05;
-            color: #1d1d1f;
         }
         h2 {
             font-size: clamp(32px, 5vw, 56px);
             font-weight: 600;
             letter-spacing: -0.02em;
             line-height: 1.1;
-            color: #1d1d1f;
+        }
+        .subhead {
+            font-size: clamp(17px, 2vw, 21px);
+            color: #86868b;
+            line-height: 1.5;
+            max-width: 500px;
+            margin: 20px auto 0;
         }
 
-        /* CTA Button */
+        /* CTA */
         .btn {
             display: inline-block;
-            background: #0071e3;
-            color: #fff;
-            padding: 14px 32px;
-            border-radius: 28px;
-            font-size: 17px;
-            font-weight: 400;
+            background: #0071e3; color: #fff;
+            padding: 14px 32px; border-radius: 28px;
+            font-size: 17px; font-weight: 400;
             transition: background 0.2s;
         }
         .btn:hover { background: #0077ED; }
-
-        .btn-outline {
-            display: inline-block;
-            color: #0071e3;
-            font-size: 17px;
-            transition: opacity 0.2s;
-        }
-        .btn-outline:hover { opacity: 0.7; }
+        .link-arrow { color: #0071e3; font-size: 17px; }
+        .link-arrow:hover { text-decoration: underline; }
 
         /* Form */
         input[type="text"], input[type="email"], textarea {
-            width: 100%;
-            background: #fff;
-            border: 1px solid #d2d2d7;
-            border-radius: 12px;
-            padding: 16px 20px;
-            font-size: 17px;
-            font-family: inherit;
-            color: #1d1d1f;
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; background: #fff;
+            border: 1px solid #d2d2d7; border-radius: 12px;
+            padding: 16px 20px; font-size: 17px;
+            font-family: inherit; color: #1d1d1f;
+            outline: none; transition: border-color 0.2s;
         }
         input:focus, textarea:focus { border-color: #0071e3; }
         textarea { resize: none; }
         ::placeholder { color: #86868b; }
 
         .submit-btn {
-            width: 100%;
-            background: #0071e3;
-            color: #fff;
-            border: none;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 17px;
-            font-family: inherit;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
+            width: 100%; background: #0071e3; color: #fff;
+            border: none; border-radius: 12px; padding: 16px;
+            font-size: 17px; font-family: inherit; font-weight: 500;
+            cursor: pointer; transition: background 0.2s;
         }
         .submit-btn:hover { background: #0077ED; }
 
-        /* Stats */
-        .stat-number {
-            font-size: clamp(48px, 6vw, 72px);
-            font-weight: 600;
-            letter-spacing: -0.03em;
-            color: #1d1d1f;
+        /* Grids */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        @media (max-width: 640px) {
+            .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; }
         }
 
-        /* Feature list */
-        .feature-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            font-size: 15px;
-        }
-        .feature-row:last-child { border-bottom: none; }
-
-        /* Grid */
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
-        @media (max-width: 640px) { .grid-3 { grid-template-columns: 1fr; gap: 40px; } }
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 48px; }
-        @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; gap: 40px; } }
+        /* Portfolio card */
+        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: box-shadow 0.3s; }
+        .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        .preview-bar { height: 28px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; padding: 0 12px; gap: 5px; }
+        .preview-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
+        .preview-frame { aspect-ratio: 3/2; overflow: hidden; }
+        .preview-frame iframe { width: 200%; height: 200%; transform: scale(0.5); transform-origin: top left; pointer-events: none; border: 0; }
 
         /* Footer */
         footer { padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #86868b; }
@@ -193,7 +165,6 @@
 </head>
 <body>
 
-    <!-- Nav -->
     <nav>
         <div class="inner">
             <a href="/" style="font-weight:600; font-size:14px; opacity:1;">Karriaro</a>
@@ -207,283 +178,212 @@
     </nav>
 
 
-    <!-- 1. Hero -->
-    <section style="min-height:90vh; display:flex; align-items:center; padding-top:48px;">
-        <div class="wrap" style="text-align:center;">
-            <h1>
-                Eine Website,<br>die Kunden bringt.
-            </h1>
-            <p class="muted" style="font-size:21px; line-height:1.5; max-width:480px; margin:24px auto 40px;">
-                Professionell. Schnell. Ohne laufende Kosten.<br>
-                Ab 790 € einmalig.
+    <!-- 1 · Hero -->
+    <section style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px;">
+        <div class="wrap" style="text-align: center;">
+            <h1>Eine Website,<br>die Kunden bringt.</h1>
+            <p class="subhead">
+                Ihre Kunden googeln Sie. Wenn Ihre Website zu langsam lädt oder veraltet wirkt, landen die Anfragen bei der Konkurrenz.
             </p>
-            <a href="#kontakt" class="btn" style="margin-bottom:20px;">Kostenlos beraten lassen</a>
-            <br>
-            <a href="tel:+4977822091830" class="btn-outline" style="font-size:14px; margin-top:12px; display:inline-block;">
-                Oder anrufen: 07782 209 1830 &rarr;
-            </a>
-        </div>
-    </section>
-
-
-    <!-- 2. Warum jetzt -->
-    <section style="padding:80px 0; border-bottom:1px solid rgba(0,0,0,0.06);">
-        <div class="wrap-sm" style="text-align:center;">
-            <p style="font-size:19px; line-height:1.7; color:#1d1d1f;">
-                Jeden Tag suchen Kunden bei Google nach Ihrem Angebot. Wenn Ihre Website zu langsam lädt oder veraltet wirkt, landen diese Anfragen bei der Konkurrenz.
+            <div style="margin-top: 40px;">
+                <a href="#kontakt" class="btn">Kostenlos beraten lassen</a>
+            </div>
+            <p style="margin-top: 16px; font-size: 14px;">
+                <a href="tel:+4977822091830" class="link-arrow">Oder anrufen: 07782 209 1830 &rarr;</a>
             </p>
         </div>
     </section>
 
 
-    <!-- 3. Zahlen -->
-    <section class="light-bg">
-        <div class="wrap" style="text-align:center;">
-            <div class="grid-3">
+    <!-- 2 · Beweis -->
+    <section style="background: #f5f5f7;">
+        <div class="wrap" style="text-align: center;">
+            <div style="display: flex; justify-content: center; gap: clamp(40px, 8vw, 100px); flex-wrap: wrap;">
                 <div>
-                    <div class="stat-number">0,4s</div>
-                    <p class="muted" style="font-size:14px; margin-top:8px;">Ladezeit</p>
+                    <div style="font-size: clamp(48px, 7vw, 80px); font-weight: 600; letter-spacing: -0.03em;">0,4s</div>
+                    <p class="muted" style="font-size: 14px; margin-top: 4px;">Ladezeit</p>
                 </div>
                 <div>
-                    <div class="stat-number">100</div>
-                    <p class="muted" style="font-size:14px; margin-top:8px;">PageSpeed Score</p>
+                    <div style="font-size: clamp(48px, 7vw, 80px); font-weight: 600; letter-spacing: -0.03em;">100</div>
+                    <p class="muted" style="font-size: 14px; margin-top: 4px;">PageSpeed</p>
                 </div>
                 <div>
-                    <div class="stat-number">0 €</div>
-                    <p class="muted" style="font-size:14px; margin-top:8px;">Monatliche Kosten</p>
+                    <div style="font-size: clamp(48px, 7vw, 80px); font-weight: 600; letter-spacing: -0.03em;">0 €</div>
+                    <p class="muted" style="font-size: 14px; margin-top: 4px;">monatlich</p>
                 </div>
             </div>
+            <p class="muted" style="font-size: 15px; margin-top: 48px;">
+                Die durchschnittliche Website lädt in 3,5 Sekunden. Ihre neue in 0,4.
+            </p>
         </div>
     </section>
 
 
-    <!-- 4. Arbeiten -->
+    <!-- 3 · Arbeiten -->
     <section id="arbeiten">
-        <div class="wrap" style="text-align:center;">
+        <div class="wrap" style="text-align: center;">
             <h2>So sieht das aus.</h2>
-            <p class="muted" style="font-size:17px; margin-top:12px; margin-bottom:60px;">
-                Echte Designbeispiele. Klicken Sie rein.
-            </p>
+            <p class="subhead" style="margin-bottom: 60px;">Echte Designbeispiele. Klicken Sie rein.</p>
 
             <div class="grid-3">
-                <a href="/portfolio/meisterbetrieb-mueller.html" style="text-align:left; display:block;">
-                    <div style="border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,0.08); background:#fff; margin-bottom:16px;">
-                        <div style="height:28px; background:#f5f5f7; border-bottom:1px solid rgba(0,0,0,0.06); display:flex; align-items:center; padding:0 10px; gap:5px;">
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                        </div>
-                        <div style="aspect-ratio:4/3; overflow:hidden;">
-                            <iframe src="/portfolio/meisterbetrieb-mueller.html" style="width:200%; height:200%; transform:scale(0.5); transform-origin:top left; pointer-events:none;" title="Handwerksbetrieb" loading="lazy"></iframe>
-                        </div>
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
+                    <div class="preview-bar">
+                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
                     </div>
-                    <div style="font-size:15px; font-weight:600;">Handwerksbetrieb</div>
-                    <p class="muted" style="font-size:13px; margin-top:4px;">Leistungen, Galerie, Schnellkontakt</p>
+                    <div class="preview-frame">
+                        <iframe src="/portfolio/meisterbetrieb-mueller.html" title="Handwerk" loading="lazy"></iframe>
+                    </div>
                 </a>
 
-                <a href="/portfolio/praxis-weber.html" style="text-align:left; display:block;">
-                    <div style="border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,0.08); background:#fff; margin-bottom:16px;">
-                        <div style="height:28px; background:#f5f5f7; border-bottom:1px solid rgba(0,0,0,0.06); display:flex; align-items:center; padding:0 10px; gap:5px;">
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                        </div>
-                        <div style="aspect-ratio:4/3; overflow:hidden;">
-                            <iframe src="/portfolio/praxis-weber.html" style="width:200%; height:200%; transform:scale(0.5); transform-origin:top left; pointer-events:none;" title="Arztpraxis" loading="lazy"></iframe>
-                        </div>
+                <a href="/portfolio/praxis-weber.html" class="preview-card">
+                    <div class="preview-bar">
+                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
                     </div>
-                    <div style="font-size:15px; font-weight:600;">Arztpraxis</div>
-                    <p class="muted" style="font-size:13px; margin-top:4px;">Terminbuchung, Leistungen, Vertrauen</p>
+                    <div class="preview-frame">
+                        <iframe src="/portfolio/praxis-weber.html" title="Arztpraxis" loading="lazy"></iframe>
+                    </div>
                 </a>
 
-                <a href="/portfolio/restaurant-template.html" style="text-align:left; display:block;">
-                    <div style="border-radius:12px; overflow:hidden; border:1px solid rgba(0,0,0,0.08); background:#fff; margin-bottom:16px;">
-                        <div style="height:28px; background:#f5f5f7; border-bottom:1px solid rgba(0,0,0,0.06); display:flex; align-items:center; padding:0 10px; gap:5px;">
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                            <span style="width:8px; height:8px; border-radius:50%; background:#ccc; display:block;"></span>
-                        </div>
-                        <div style="aspect-ratio:4/3; overflow:hidden;">
-                            <iframe src="/portfolio/restaurant-template.html" style="width:200%; height:200%; transform:scale(0.5); transform-origin:top left; pointer-events:none;" title="Restaurant" loading="lazy"></iframe>
-                        </div>
+                <a href="/portfolio/restaurant-template.html" class="preview-card">
+                    <div class="preview-bar">
+                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
                     </div>
-                    <div style="font-size:15px; font-weight:600;">Restaurant</div>
-                    <p class="muted" style="font-size:13px; margin-top:4px;">Speisekarte, Reservierung, Atmosphäre</p>
+                    <div class="preview-frame">
+                        <iframe src="/portfolio/restaurant-template.html" title="Restaurant" loading="lazy"></iframe>
+                    </div>
                 </a>
             </div>
 
-            <p style="margin-top:40px;">
-                <a href="/portfolio/immobilien-makler.html" class="btn-outline" style="font-size:14px;">Alle Beispiele ansehen &rarr;</a>
-            </p>
-
-            <!-- Social Proof -->
-            <p class="muted" style="font-size:13px; margin-top:60px; padding-top:40px; border-top:1px solid rgba(0,0,0,0.06);">
-                Bereits Projekte für Handwerker, Ärzte, Restaurants, Makler und weitere Branchen umgesetzt.
+            <p style="margin-top: 48px;">
+                <a href="/portfolio/immobilien-makler.html" class="link-arrow" style="font-size: 14px;">Weitere Beispiele &rarr;</a>
             </p>
         </div>
     </section>
 
 
-    <!-- 4. Der Unterschied -->
-    <section class="light-bg">
-        <div class="wrap" style="text-align:center;">
-            <h2 style="margin-bottom:60px;">Der Unterschied.</h2>
-            <div class="grid-2">
+    <!-- 4 · Sicherheit -->
+    <section style="background: #f5f5f7;">
+        <div class="wrap" style="text-align: center;">
+            <h2>Rechtssicher.<br>Ab Tag eins.</h2>
+            <p class="subhead" style="max-width: 560px; margin-bottom: 60px;">
+                DSGVO und Barrierefreiheit (BFSG) sind seit 2025 Pflicht. Verstöße führen zu Abmahnungen. Unsere Websites sind von Anfang an geschützt.
+            </p>
+            <div class="grid-3" style="text-align: left; max-width: 780px; margin: 0 auto;">
                 <div>
-                    <div style="font-size:clamp(64px,10vw,96px); font-weight:600; letter-spacing:-0.03em; color:#d2d2d7; text-decoration:line-through; text-decoration-color:rgba(255,59,48,0.3);">3,5s</div>
-                    <p class="muted" style="font-size:15px; margin-top:12px; line-height:1.6;">
-                        Durchschnittliche Website.<br>
-                        WordPress. Baukasten. Plugins.<br>
-                        Monatliche Kosten.
-                    </p>
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Keine US-Server</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Schriften und Karten lokal gehostet. Keine Daten an Google.</p>
                 </div>
                 <div>
-                    <div style="font-size:clamp(64px,10vw,96px); font-weight:600; letter-spacing:-0.03em; color:#1d1d1f;">0,4s</div>
-                    <p class="muted" style="font-size:15px; margin-top:12px; line-height:1.6;">
-                        Ihre neue Website.<br>
-                        Handgeschrieben. Blitzschnell.<br>
-                        Einmal zahlen. Gehört Ihnen.
-                    </p>
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Keine Tracker</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Keine Cookies, kein Analytics. Kein Cookie-Banner nötig.</p>
+                </div>
+                <div>
+                    <div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Barrierefrei</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Semantischer Code. Screenreader-tauglich. BFSG-konform.</p>
                 </div>
             </div>
         </div>
     </section>
 
 
-    <!-- Rechtssicherheit -->
+    <!-- 5 · Prozess -->
     <section>
-        <div class="wrap-sm" style="text-align:center;">
-            <h2 style="margin-bottom:20px;">Rechtssicher.<br>Ab Tag eins.</h2>
-            <p class="muted" style="font-size:17px; line-height:1.6; margin-bottom:48px;">
-                Seit Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz (BFSG). Viele Websites verstoßen dagegen — und gegen die DSGVO. Beides kann zu Abmahnungen führen.
-            </p>
-            <div class="grid-2" style="text-align:left;">
+        <div class="wrap" style="text-align: center;">
+            <h2>So einfach geht's.</h2>
+            <p class="subhead" style="margin-bottom: 60px;">Vom Anruf zur fertigen Website in drei Schritten.</p>
+            <div class="grid-3" style="max-width: 780px; margin: 0 auto;">
                 <div>
-                    <div style="font-size:15px; font-weight:600; margin-bottom:8px;">DSGVO-konform</div>
-                    <p class="muted" style="font-size:14px; line-height:1.6;">
-                        Keine Google Fonts von US-Servern. Keine Cookies. Keine Tracker. Ihre Kundendaten bleiben in Deutschland.
-                    </p>
+                    <div style="font-size: 48px; font-weight: 600; color: #d2d2d7;">1</div>
+                    <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Anrufen</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">15 Minuten. Wir besprechen Ihre Wünsche. Kostenlos.</p>
                 </div>
                 <div>
-                    <div style="font-size:15px; font-weight:600; margin-bottom:8px;">BFSG-vorbereitet</div>
-                    <p class="muted" style="font-size:14px; line-height:1.6;">
-                        Semantischer Code, lesbar für Screenreader. Kontraststark und tastatursteuerbar. Schutz vor Abmahnungen.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Prozess -->
-    <section>
-        <div class="wrap" style="text-align:center;">
-            <h2 style="margin-bottom:60px;">So einfach geht's.</h2>
-            <div class="grid-3">
-                <div>
-                    <div style="font-size:56px; font-weight:600; color:#d2d2d7; margin-bottom:16px;">1</div>
-                    <div style="font-size:19px; font-weight:600; margin-bottom:8px;">Anrufen</div>
-                    <p class="muted" style="font-size:14px; line-height:1.6;">
-                        15 Minuten. Wir besprechen<br>Ihre Wünsche. Kostenlos.
-                    </p>
+                    <div style="font-size: 48px; font-weight: 600; color: #d2d2d7;">2</div>
+                    <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Entwurf in 48h</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Sie sehen Ihre Website, bevor Sie sich entscheiden.</p>
                 </div>
                 <div>
-                    <div style="font-size:56px; font-weight:600; color:#d2d2d7; margin-bottom:16px;">2</div>
-                    <div style="font-size:19px; font-weight:600; margin-bottom:8px;">Entwurf in 48h</div>
-                    <p class="muted" style="font-size:14px; line-height:1.6;">
-                        Sie sehen Ihre Website, bevor<br>Sie sich entscheiden.
-                    </p>
-                </div>
-                <div>
-                    <div style="font-size:56px; font-weight:600; color:#d2d2d7; margin-bottom:16px;">3</div>
-                    <div style="font-size:19px; font-weight:600; margin-bottom:8px;">Online</div>
-                    <p class="muted" style="font-size:14px; line-height:1.6;">
-                        Fertig in 1–2 Wochen.<br>Restbetrag erst bei Zufriedenheit.
-                    </p>
+                    <div style="font-size: 48px; font-weight: 600; color: #d2d2d7;">3</div>
+                    <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Online</div>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Fertig in 1–2 Wochen. Sie zahlen erst bei Zufriedenheit.</p>
                 </div>
             </div>
         </div>
     </section>
 
 
-    <!-- Preis -->
-    <section id="preis" class="light-bg">
-        <div class="wrap-sm" style="text-align:center;">
-            <h2 style="margin-bottom:16px;">Faire Festpreise.</h2>
-            <p class="muted" style="font-size:17px; margin-bottom:60px;">
-                Einmal zahlen. Keine Abo-Gebühren. Der Code gehört Ihnen.<br>
-                Eine Agentur verlangt 3.000–5.000 € für das Gleiche.
+    <!-- 6 · Preis -->
+    <section id="preis" style="background: #f5f5f7;">
+        <div class="wrap" style="text-align: center;">
+            <h2>Faire Festpreise.</h2>
+            <p class="subhead" style="margin-bottom: 60px;">
+                Einmal zahlen. Keine Abo-Gebühren. Eine Agentur verlangt 3.000–5.000 € für das Gleiche.
             </p>
 
-            <!-- Zwei Pakete -->
-            <div class="grid-2" style="text-align:left;">
+            <div class="grid-2" style="max-width: 700px; margin: 0 auto; text-align: left;">
                 <!-- Starter -->
-                <div style="background:#fff; border-radius:16px; padding:32px; border:1px solid rgba(0,0,0,0.06);">
-                    <div style="font-size:13px; color:#86868b; margin-bottom:8px;">Starter</div>
-                    <div style="font-size:40px; font-weight:600; letter-spacing:-0.02em; margin-bottom:4px;">790 €</div>
-                    <div class="muted" style="font-size:14px; margin-bottom:24px;">Ideal für Selbstständige</div>
-                    <div style="font-size:14px; line-height:2.2; color:#1d1d1f;">
+                <div>
+                    <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px;">Starter</p>
+                    <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em;">790 €</div>
+                    <p class="muted" style="font-size: 14px; margin: 8px 0 24px;">Ideal für Selbstständige</p>
+                    <div style="font-size: 14px; line-height: 2.2; color: #1d1d1f;">
                         One-Page Website<br>
                         Sieht auf jedem Gerät perfekt aus<br>
                         Anfragen landen in Ihrem Postfach<br>
-                        Geschützt vor Abmahnungen<br>
-                        Quellcode gehört Ihnen
+                        DSGVO- und BFSG-konform<br>
+                        Der Quellcode gehört Ihnen
                     </div>
-                    <a href="#kontakt" class="btn" style="display:block; text-align:center; margin-top:24px; font-size:15px; padding:12px;">Jetzt starten</a>
+                    <div style="margin-top: 24px;">
+                        <a href="#kontakt" class="link-arrow" style="font-size: 14px;">Starter wählen &rarr;</a>
+                    </div>
                 </div>
 
                 <!-- Business -->
-                <div style="background:#fff; border-radius:16px; padding:32px; border:2px solid #0071e3;">
-                    <div style="font-size:13px; color:#0071e3; font-weight:500; margin-bottom:8px;">Empfohlen</div>
-                    <div style="font-size:40px; font-weight:600; letter-spacing:-0.02em; margin-bottom:4px;">1.490 €</div>
-                    <div class="muted" style="font-size:14px; margin-bottom:24px;">Für wachsende Unternehmen</div>
-                    <div style="font-size:14px; line-height:2.2; color:#1d1d1f;">
+                <div>
+                    <p class="blue" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 12px; font-weight: 500;">Empfohlen</p>
+                    <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em;">1.490 €</div>
+                    <p class="muted" style="font-size: 14px; margin: 8px 0 24px;">Für wachsende Unternehmen</p>
+                    <div style="font-size: 14px; line-height: 2.2; color: #1d1d1f;">
                         Bis zu 5 Unterseiten<br>
                         Kunden finden Sie bei Google<br>
                         Google Maps Integration<br>
                         Alles aus Starter inklusive<br>
                         Erster Entwurf in 48 Stunden
                     </div>
-                    <a href="#kontakt" class="btn" style="display:block; text-align:center; margin-top:24px; font-size:15px; padding:12px;">Jetzt starten</a>
+                    <div style="margin-top: 24px;">
+                        <a href="#kontakt" class="btn" style="font-size: 14px; padding: 10px 24px;">Business wählen</a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Garantie -->
-            <div style="margin-top:40px; padding:24px; background:#fff; border-radius:12px; border:1px solid rgba(0,0,0,0.06);">
-                <p style="font-size:15px; color:#1d1d1f;">
-                    <strong>Kein Risiko:</strong> 50 % bei Auftragsstart, 50 % erst wenn Sie zufrieden sind.
-                    Nicht überzeugt? Sie zahlen nur den ersten Teil.
-                </p>
-            </div>
-
-            <!-- Wartung -->
-            <p class="muted" style="font-size:13px; margin-top:24px;">
-                Optional: Wartung & Hosting ab 49 €/Monat — Backups, Updates, kleine Änderungen inklusive.
+            <p style="margin-top: 60px; font-size: 15px; color: #1d1d1f; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                50 % bei Auftragsstart, 50 % erst bei Zufriedenheit.<br>
+                <span class="muted">Optional: Wartung ab 49 €/Monat.</span>
             </p>
         </div>
     </section>
 
 
-    <!-- 7. Kontakt -->
+    <!-- 7 · Kontakt -->
     <section id="kontakt">
-        <div class="wrap-xs" style="text-align:center;">
-            <h2>Lassen Sie<br>uns sprechen.</h2>
-            <p style="margin:16px 0 8px;">
-                <a href="tel:+4977822091830" style="color:#0071e3; font-size:17px;">07782 209 1830</a>
+        <div class="wrap-xs" style="text-align: center;">
+            <h2>Lassen Sie uns<br>sprechen.</h2>
+            <p style="margin-top: 16px;">
+                <a href="tel:+4977822091830" class="link-arrow">07782 209 1830</a>
+                <span class="muted" style="margin: 0 12px;">&middot;</span>
+                <a href="https://wa.me/4977822091830" target="_blank" rel="noopener" class="link-arrow" style="font-size: 14px;">WhatsApp</a>
+                <span class="muted" style="margin: 0 12px;">&middot;</span>
+                <a href="mailto:kontakt@karriaro-webdesign.de" class="link-arrow" style="font-size: 14px;">E-Mail</a>
             </p>
-            <p class="muted" style="font-size:14px; margin-bottom:8px;">
-                <a href="https://wa.me/4977822091830" target="_blank" rel="noopener" style="color:#86868b;">WhatsApp</a>
-                &nbsp;&middot;&nbsp;
-                <a href="mailto:kontakt@karriaro-webdesign.de" style="color:#86868b;">E-Mail</a>
-            </p>
-            <p class="muted" style="font-size:14px; margin-bottom:40px;">Oder schreiben Sie uns direkt:</p>
+            <p class="muted" style="font-size: 14px; margin: 8px 0 40px;">Oder schreiben Sie uns direkt:</p>
 
-            <form action="https://formspree.io/f/mjggbdre" method="POST" style="text-align:left; display:flex; flex-direction:column; gap:12px;">
+            <form action="https://formspree.io/f/mjggbdre" method="POST" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">
                 <textarea name="message" rows="3" placeholder="Erzählen Sie kurz von Ihrem Projekt"></textarea>
-                <label style="font-size:12px; color:#86868b; display:flex; gap:8px; align-items:flex-start; margin:4px 0;">
-                    <input type="checkbox" name="privacy" required style="margin-top:3px;">
-                    Ich stimme der <a href="/datenschutz.html" style="color:#424245; text-decoration:underline;">Datenschutzerklärung</a> zu.
+                <label style="font-size: 12px; color: #86868b; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0;">
+                    <input type="checkbox" name="privacy" required style="margin-top: 3px;">
+                    Ich stimme der <a href="/datenschutz.html" style="color: #424245; text-decoration: underline;">Datenschutzerklärung</a> zu.
                 </label>
                 <button type="submit" class="submit-btn">Nachricht senden</button>
             </form>
@@ -491,12 +391,11 @@
     </section>
 
 
-    <!-- Footer -->
     <footer>
         <div class="wrap">
-            <div style="margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(0,0,0,0.06);">
-                <p style="margin-bottom:12px; color:#86868b;">Webdesign in Ihrer Stadt</p>
-                <p style="line-height:2;">
+            <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.06);">
+                <p style="margin-bottom: 12px;">Webdesign in Ihrer Stadt</p>
+                <p style="line-height: 2;">
                     <a href="/webdesign-stuttgart.html">Stuttgart</a> &middot;
                     <a href="/webdesign-berlin.html">Berlin</a> &middot;
                     <a href="/webdesign-muenchen.html">München</a> &middot;
@@ -513,9 +412,9 @@
                     <a href="/webdesign-nuernberg.html">Nürnberg</a>
                 </p>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <span>&copy; 2026 Karriaro Webdesign</span>
-                <div style="display:flex; gap:20px;">
+                <div style="display: flex; gap: 20px;">
                     <a href="/impressum.html">Impressum</a>
                     <a href="/datenschutz.html">Datenschutz</a>
                     <a href="/agb.html">AGB</a>
