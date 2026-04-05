@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karriaro Webdesign | Moderne Websites ab 990 € — 30 % mehr Anfragen</title>
+    <title>Karriaro Webdesign | Jeden Tag verlieren Sie Kunden — weil Ihre Website von gestern ist</title>
     <meta name="description" content="Websites für lokale Unternehmen, die in Google, Sprachsuche und AI-Antworten gefunden werden. Ab 990 € einmalig. DSGVO-konform. Keine Abo-Gebühren.">
     <meta name="keywords" content="Webdesign, Website erstellen, lokale Unternehmen, Sprachsuche, DSGVO, BFSG, SEO, Webdesign Agentur">
     <meta name="robots" content="index, follow">
@@ -33,6 +33,10 @@
             "addressCountry": "DE"
         },
         "priceRange": "€€",
+        "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": ["h1", ".subhead", "h2"]
+        },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "itemListElement": [
@@ -40,6 +44,76 @@
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business" }, "price": "1990", "priceCurrency": "EUR" }
             ]
         }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Was kostet eine Website bei Karriaro?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Eine One-Page Website kostet einmalig 990 €. Eine Website mit bis zu 5 Unterseiten und lokaler SEO-Optimierung kostet 1.990 €. Optionales Hosting und Wartung gibt es für 49 €/Monat."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Wie lange dauert es, bis meine Website fertig ist?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sie erhalten einen Entwurf innerhalb von 48 Stunden. Die fertige Website ist in 1–2 Wochen online. Sie zahlen erst bei Zufriedenheit."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Warum handcodierte Websites statt WordPress?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren, der Quellcode gehört Ihnen."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Ist meine Website für Google und KI-Suche optimiert?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ja. Jede Website wird mit Schema.org-Strukturdaten, semantischem HTML und optimierter Ladezeit gebaut — so dass Google, ChatGPT und Sprachassistenten Ihre Inhalte bevorzugt anzeigen."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "Website erstellen lassen bei Karriaro",
+        "description": "Vom Anruf zur fertigen Website in drei Schritten.",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Anrufen",
+                "text": "15 Minuten. Wir besprechen Ihre Wünsche. Kostenlos."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Entwurf in 48h",
+                "text": "Sie sehen Ihre Website, bevor Sie sich entscheiden."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Online",
+                "text": "Fertig in 1–2 Wochen. Sie zahlen erst bei Zufriedenheit."
+            }
+        ]
     }
     </script>
 
@@ -144,12 +218,11 @@
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         @media (max-width: 640px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; } }
 
-        .preview-card { display: block; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); background: #fff; transition: all 0.5s; }
-        .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.14); }
-        .preview-bar { height: 28px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; align-items: center; padding: 0 12px; gap: 5px; }
-        .preview-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; }
-        .preview-frame { aspect-ratio: 3/2; overflow: hidden; }
-        .preview-frame iframe { width: 200%; height: 200%; transform: scale(0.5); transform-origin: top left; pointer-events: none; border: 0; }
+        .preview-card { display: block; border-radius: 16px; overflow: hidden; aspect-ratio: 3/2; position: relative; transition: all 0.5s; }
+        .preview-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+        .preview-card-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; color: #fff; }
+        .preview-card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; margin-bottom: 4px; }
+        .preview-card-title { font-size: 19px; font-weight: 600; }
 
         footer { padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #86868b; }
         footer a { color: #424245; }
@@ -183,8 +256,10 @@
     </nav>
 
 
+    <main>
+
     <!-- 1 · Hero -->
-    <section style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
+    <section aria-label="Einleitung" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
         <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
             <h1>Jeden Tag verlieren Sie Kunden,<br>ohne es zu merken.</h1>
             <p class="subhead">
@@ -198,7 +273,7 @@
     </section>
 
     <!-- 2 · Die neue Suche -->
-    <section class="fade-in" style="background: #f5f5f7;">
+    <section aria-label="Warum jetzt handeln" class="fade-in" style="background: #f5f5f7;">
         <div class="wrap" style="text-align: center;">
             <h2 style="font-size: clamp(36px, 6vw, 64px);">Google hat sich verändert.<br>Ihre Website nicht.</h2>
             <p class="subhead" style="max-width: 560px; margin-bottom: 60px;">
@@ -226,34 +301,28 @@
 
 
     <!-- 3 · Arbeiten -->
-    <section id="arbeiten" class="fade-in">
+    <section id="arbeiten" aria-label="Portfolio" class="fade-in">
         <div class="wrap" style="text-align: center;">
             <h2 style="font-size: clamp(28px, 4vw, 40px);">So sieht eine moderne<br>Website aus.</h2>
             <p class="subhead" style="margin-bottom: 60px;">Echte Projekte. Echte Ergebnisse.</p>
 
             <div class="grid-3">
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
-                    <div class="preview-bar">
-                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
-                    </div>
-                    <div class="preview-frame">
-                        <iframe src="/portfolio/meisterbetrieb-mueller.html" title="Handwerk" loading="lazy"></iframe>
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card" style="background: linear-gradient(135deg, #1e3a5f, #0f1d30);">
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Installateur</div>
+                        <div class="preview-card-title">Sanitär Hartmann</div>
                     </div>
                 </a>
-                <a href="/portfolio/praxis-weber.html" class="preview-card">
-                    <div class="preview-bar">
-                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
-                    </div>
-                    <div class="preview-frame">
-                        <iframe src="/portfolio/praxis-weber.html" title="Arztpraxis" loading="lazy"></iframe>
+                <a href="/portfolio/praxis-weber.html" class="preview-card" style="background: linear-gradient(135deg, #0f5132, #064e3b);">
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Arztpraxis</div>
+                        <div class="preview-card-title">Praxis Dr. Weber</div>
                     </div>
                 </a>
-                <a href="/portfolio/restaurant-template.html" class="preview-card">
-                    <div class="preview-bar">
-                        <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
-                    </div>
-                    <div class="preview-frame">
-                        <iframe src="/portfolio/restaurant-template.html" title="Restaurant" loading="lazy"></iframe>
+                <a href="/portfolio/restaurant-template.html" class="preview-card" style="background: linear-gradient(135deg, #78350f, #451a03);">
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Gastronomie</div>
+                        <div class="preview-card-title">Goldener Hirsch</div>
                     </div>
                 </a>
             </div>
@@ -269,7 +338,7 @@
 
 
     <!-- 5 · Prozess -->
-    <section class="fade-in" style="background: #f5f5f7;">
+    <section aria-label="So funktioniert es" class="fade-in" style="background: #f5f5f7;">
         <div class="wrap" style="text-align: center;">
             <h2 style="font-size: clamp(28px, 4vw, 40px);">So einfach geht's.</h2>
             <p class="subhead" style="margin-bottom: 60px;">Vom Anruf zur fertigen Website in drei Schritten.</p>
@@ -295,7 +364,7 @@
 
 
     <!-- 6 · Preis -->
-    <section id="preis" class="fade-in">
+    <section id="preis" aria-label="Preise" class="fade-in">
         <div class="wrap" style="text-align: center;">
             <h2 style="font-size: clamp(36px, 6vw, 64px);">Einmal zahlen. Fertig.</h2>
             <p class="subhead" style="margin-bottom: 60px;">
@@ -358,7 +427,7 @@
 
 
     <!-- 7 · Kontakt -->
-    <section id="kontakt" class="fade-in">
+    <section id="kontakt" aria-label="Kontakt" class="fade-in">
         <div class="wrap-xs" style="text-align: center;">
             <h2 style="font-size: clamp(32px, 5vw, 48px);">Lassen Sie uns<br>sprechen.</h2>
             <p class="subhead" style="max-width: 420px; margin-bottom: 16px;">
@@ -383,6 +452,8 @@
         </div>
     </section>
 
+
+    </main>
 
     <footer>
         <div class="wrap">
