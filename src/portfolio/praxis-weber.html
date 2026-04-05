@@ -176,7 +176,22 @@
             .section-head h2 { font-size: 28px; }
         }
 
-        
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Nav scroll */
+        .nav.scrolled {
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+        }
     </style>
 </head>
 <body>
@@ -230,7 +245,7 @@
 
 
         <!-- 2. Über Dr. Weber -->
-        <section id="about" class="section-alt">
+        <section id="about" class="section-alt fade-in">
             <div class="container">
                 <div class="about-grid">
                     <img src="/images/portfolio/stethoskop.jpg" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" class="about-img" loading="lazy" width="560" height="747">
@@ -247,7 +262,7 @@
         </section>
 
         <!-- 3. Leistungen -->
-        <section id="leistungen">
+        <section id="leistungen" class="fade-in">
             <div class="container">
                 <div class="section-head">
                     <h2>Unsere Leistungen.</h2>
@@ -279,7 +294,7 @@
         </section>
 
         <!-- 4. Praxis-Impressionen -->
-        <section id="praxis" class="section-alt">
+        <section id="praxis" class="section-alt fade-in">
             <div class="container">
                 <div class="section-head">
                     <h2>Unsere Praxis.</h2>
@@ -290,7 +305,7 @@
         </section>
 
         <!-- 5. Sprechzeiten -->
-        <section id="sprechzeiten">
+        <section id="sprechzeiten" class="fade-in">
             <div class="container">
                 <div class="section-head">
                     <h2>Sprechzeiten.</h2>
@@ -310,7 +325,7 @@
         </section>
 
         <!-- 6. Patientenstimmen -->
-        <section id="stimmen" class="section-alt">
+        <section id="stimmen" class="section-alt fade-in">
             <div class="container">
                 <div class="section-head">
                     <h2>Das sagen unsere Patienten.</h2>
@@ -339,7 +354,7 @@
         </section>
 
         <!-- 7. Kontakt -->
-        <section id="kontakt">
+        <section id="kontakt" class="fade-in">
             <div class="container">
                 <div class="section-head">
                     <h2>Besuchen Sie uns.</h2>
@@ -402,6 +417,23 @@
             btn.setAttribute('aria-expanded', 'false');
             btn.setAttribute('aria-label', 'Menü öffnen');
         }
+
+        // Nav scroll shadow
+        var nav = document.querySelector('.nav');
+        window.addEventListener('scroll', function() {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+
+        // Fade-in on scroll
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
 
     </script>
 </body>
