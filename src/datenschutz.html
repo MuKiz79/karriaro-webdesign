@@ -1,315 +1,119 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datenschutzerklärung | Karriaro Webdesign</title>
-    <meta name="description" content="Datenschutzerklärung von Karriaro Webdesign. Informationen zur Verarbeitung personenbezogener Daten.">
-    <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
+    <meta name="description" content="Datenschutzerklärung von Karriaro Webdesign.">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://karriaro-webdesign.de/datenschutz.html">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Design Konfiguration -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        bg: '#000000',
-                        surface: '#151516',
-                        surfaceHighlight: '#2c2c2e',
-                        primary: '#0071e3',
-                        text: '#f5f5f7',
-                        muted: '#a1a1a6'
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: #000000;
-            color: #f5f5f7;
+            font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #fbfbfd; color: #1d1d1f;
             -webkit-font-smoothing: antialiased;
         }
-        .glass-nav {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        a { color: inherit; text-decoration: none; }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(251,251,253,0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
         }
-        .legal-card {
-            background-color: #151516;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+        nav .inner {
+            max-width: 980px; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 48px;
         }
+        nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.3s; }
+        nav a:hover { opacity: 1; }
+        .wrap { max-width: 680px; margin: 0 auto; padding: 0 24px; }
+        .muted { color: #86868b; }
+        h1 {
+            font-size: clamp(32px, 5vw, 48px); font-weight: 600;
+            letter-spacing: -0.02em; line-height: 1.1;
+            margin-bottom: 48px; text-align: center;
+        }
+        h2 { font-size: 17px; font-weight: 600; margin: 48px 0 12px; }
+        h2:first-of-type { margin-top: 0; }
+        p { font-size: 15px; line-height: 1.7; color: #86868b; }
+        p + p { margin-top: 12px; }
+        .info { font-size: 15px; line-height: 1.8; color: #86868b; }
+        .info strong { color: #1d1d1f; font-weight: 600; }
+        section { padding: 120px 0 80px; }
+        footer {
+            padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06);
+            font-size: 12px; color: #86868b;
+        }
+        footer a { color: #424245; }
+        footer a:hover { color: #1d1d1f; }
+        .back { color: #0071e3; font-size: 14px; transition: color 0.3s; }
+        .back:hover { text-decoration: underline; }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 glass-nav">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="/" class="text-xl font-bold tracking-tight flex items-center gap-2 group">
-                    <svg class="w-6 h-6" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Rotierende Halbkreise -->
-                        <g class="origin-center animate-[spin_8s_linear_infinite]">
-                            <path d="M4 25 A21 21 0 0 1 25 4" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                            <path d="M46 25 A21 21 0 0 1 25 46" stroke="#3b82f6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                        </g>
-                        <!-- Statischer Pfeil -->
-                        <path d="M25 42 L25 10" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
-                        <path d="M16 20 L25 8 L34 20" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <line x1="12" y1="25" x2="38" y2="25" stroke="#3b82f6" stroke-width="1.5" stroke-opacity="0.4"/>
-                    </svg>
-                    Karriaro<span class="text-muted font-normal"> Webdesign</span>
-                </a>
-                <a href="/" class="text-sm text-muted hover:text-white transition flex items-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    <span class="hidden sm:inline">Zurück zur Startseite</span>
-                    <span class="sm:hidden">Zurück</span>
-                </a>
-            </div>
+    <nav>
+        <div class="inner">
+            <a href="/" style="font-weight: 600; font-size: 14px; opacity: 1;">Karriaro</a>
+            <a href="/" class="back">&larr; Zurück</a>
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="pt-32 pb-16 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent"></div>
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="text-center">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface border border-white/10 text-sm text-muted mb-6">
-                    <i class="fa-solid fa-shield-halved text-primary"></i>
-                    Datenschutz
-                </div>
-                <h1 class="text-4xl md:text-5xl font-bold mb-4">Datenschutzerklärung</h1>
-                <p class="text-muted text-lg">Ihre Daten sind bei uns sicher</p>
+    <section>
+        <div class="wrap">
+            <h1>Datenschutzerklärung</h1>
+
+            <h2>Verantwortliche Stelle</h2>
+            <div class="info">
+                <strong>Karriaro</strong><br>
+                Muammer Kizilaslan<br>
+                Am Sonnenhut 131<br>
+                51109 Köln<br><br>
+                E-Mail: <a href="mailto:kontakt@karriaro.de" style="color: #0071e3;">kontakt@karriaro.de</a><br>
+                Telefon: +49 174 2796784
             </div>
+
+            <h2>Datenschutz auf einen Blick</h2>
+            <p>Wenn Sie diese Website besuchen, werden automatisch technische Informationen erfasst (sog. Server-Logfiles). Wenn Sie uns über das Kontaktformular schreiben, speichern wir die von Ihnen angegebenen Daten zur Bearbeitung Ihrer Anfrage. Darüber hinaus erheben wir keine personenbezogenen Daten. Wir setzen keine Cookies, keine Tracking-Tools und keine Analyse-Dienste ein.</p>
+
+            <h2>Hosting</h2>
+            <p>Diese Website wird bei GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet. Beim Besuch der Website erfasst der Server automatisch Ihre IP-Adresse, den Zeitpunkt des Zugriffs und die aufgerufene Seite. Diese Daten werden zur Bereitstellung der Website benötigt und nach kurzer Zeit automatisch gelöscht.</p>
+            <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und effizienten Bereitstellung).</p>
+
+            <h2>Kontaktformular</h2>
+            <p>Wenn Sie uns über das Kontaktformular eine Nachricht senden, werden Ihre Angaben (Name, E-Mail, Website, Nachricht und ggf. gewähltes Paket) an Formspree (Formspree, Inc., USA) übermittelt und per E-Mail an uns weitergeleitet.</p>
+            <p>Wir speichern Ihre Daten zur Bearbeitung Ihrer Anfrage und löschen sie, wenn der Zweck entfällt und keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
+            <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) und Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung von Anfragen).</p>
+
+            <h2>Keine Cookies, kein Tracking</h2>
+            <p>Diese Website setzt keine Cookies. Wir verwenden keine Analyse-Tools wie Google Analytics, kein Facebook Pixel und keine sonstigen Tracking-Dienste. Ihr Besuch wird nirgendwo erfasst oder ausgewertet.</p>
+
+            <h2>SSL-Verschlüsselung</h2>
+            <p>Diese Seite nutzt eine SSL- bzw. TLS-Verschlüsselung. Sie erkennen dies am Schloss-Symbol in der Adresszeile Ihres Browsers. Damit sind Daten, die Sie an uns übermitteln, vor dem Zugriff Dritter geschützt.</p>
+
+            <h2>Ihre Rechte</h2>
+            <p>Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten Daten, deren Herkunft und Empfänger sowie den Zweck der Datenverarbeitung. Sie haben außerdem das Recht auf Berichtigung, Löschung oder Einschränkung der Verarbeitung Ihrer Daten.</p>
+            <p>Eine erteilte Einwilligung können Sie jederzeit für die Zukunft widerrufen.</p>
+            <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.</p>
+
+            <h2>Widerspruch gegen Werbe-Mails</h2>
+            <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung wird hiermit widersprochen. Wir behalten uns ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen vor.</p>
+
+            <p style="margin-top: 48px; font-size: 13px;">Stand: April 2026</p>
         </div>
     </section>
 
-    <!-- CONTENT -->
-    <main class="pb-24">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <!-- Quick Overview -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                    </div>
-                    Datenschutz auf einen Blick
-                </h2>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <h3 class="text-white font-medium mb-2">Wer ist verantwortlich?</h3>
-                        <p class="text-muted text-sm">Die Datenverarbeitung erfolgt durch den Websitebetreiber. Kontaktdaten finden Sie im Impressum.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <h3 class="text-white font-medium mb-2">Wie erfassen wir Daten?</h3>
-                        <p class="text-muted text-sm">Durch Ihre Angaben (z.B. Kontaktformular) und automatisch beim Besuch der Website.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <h3 class="text-white font-medium mb-2">Wofür nutzen wir Daten?</h3>
-                        <p class="text-muted text-sm">Zur fehlerfreien Bereitstellung der Website und zur Bearbeitung Ihrer Anfragen.</p>
-                    </div>
-                    <div class="p-4 rounded-xl bg-white/5">
-                        <h3 class="text-white font-medium mb-2">Ihre Rechte</h3>
-                        <p class="text-muted text-sm">Auskunft, Berichtigung, Löschung, Einschränkung und Datenübertragbarkeit.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Verantwortliche Stelle -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-user-shield text-primary"></i>
-                    </div>
-                    Verantwortliche Stelle
-                </h2>
-                <div class="text-muted">
-                    <p class="mb-4">Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
-                    <div class="p-4 rounded-xl bg-white/5 inline-block">
-                        <p class="text-white font-medium">Karriaro Webdesign</p>
-                        <p>Muammer Kizilaslan</p>
-                        <p>Spitalstr. 7</p>
-                        <p>77761 Schiltach</p>
-                        <p class="mt-2">
-                            <a href="mailto:kontakt@karriaro-webdesign.de" class="text-primary hover:underline">kontakt@karriaro-webdesign.de</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hosting -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-server text-primary"></i>
-                    </div>
-                    Hosting
-                </h2>
-                <div class="text-muted text-sm leading-relaxed space-y-4">
-                    <p>Diese Website wird bei <strong class="text-white">GitHub Pages</strong> (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet.</p>
-                    <p>Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den Servern des Hosters gespeichert. Hierbei kann es sich v.a. um IP-Adressen, Kontaktanfragen, Meta- und Kommunikationsdaten, Websitezugriffe und sonstige Daten handeln.</p>
-                    <p>Das externe Hosting erfolgt zum Zwecke der Vertragserfüllung gegenüber unseren potenziellen und bestehenden Kunden (Art. 6 Abs. 1 lit. b DSGVO) und im Interesse einer sicheren, schnellen und effizienten Bereitstellung unseres Online-Angebots (Art. 6 Abs. 1 lit. f DSGVO).</p>
-                </div>
-            </div>
-
-            <!-- Ihre Rechte -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-scale-balanced text-primary"></i>
-                    </div>
-                    Ihre Rechte
-                </h2>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-eye text-primary text-sm"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-medium mb-1">Auskunftsrecht</h3>
-                            <p class="text-muted text-sm">Sie haben das Recht, jederzeit unentgeltlich Auskunft über Ihre gespeicherten Daten zu erhalten.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-pen text-primary text-sm"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-medium mb-1">Berichtigung</h3>
-                            <p class="text-muted text-sm">Sie können die Berichtigung unrichtiger Daten verlangen.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-trash text-primary text-sm"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-medium mb-1">Löschung</h3>
-                            <p class="text-muted text-sm">Sie haben das Recht auf Löschung Ihrer Daten, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-ban text-primary text-sm"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-medium mb-1">Widerruf</h3>
-                            <p class="text-muted text-sm">Eine erteilte Einwilligung können Sie jederzeit für die Zukunft widerrufen.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4 p-4 rounded-xl bg-white/5">
-                        <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-gavel text-primary text-sm"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-white font-medium mb-1">Beschwerderecht</h3>
-                            <p class="text-muted text-sm">Sie haben das Recht, sich bei einer Aufsichtsbehörde zu beschweren.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SSL -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-lock text-primary"></i>
-                    </div>
-                    SSL-Verschlüsselung
-                </h2>
-                <div class="text-muted text-sm leading-relaxed space-y-4">
-                    <p>Diese Seite nutzt aus Sicherheitsgründen eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol.</p>
-                    <p>Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.</p>
-                </div>
-            </div>
-
-            <!-- Kontaktformular -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-envelope text-primary"></i>
-                    </div>
-                    Kontaktformular
-                </h2>
-                <div class="text-muted text-sm leading-relaxed space-y-4">
-                    <p>Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben inklusive der Kontaktdaten zwecks Bearbeitung der Anfrage bei uns gespeichert.</p>
-                    <p>Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) oder Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der effektiven Bearbeitung von Anfragen).</p>
-                    <p>Die Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern oder der Zweck für die Speicherung entfällt. Gesetzliche Aufbewahrungsfristen bleiben unberührt.</p>
-                    <div class="p-4 rounded-xl bg-primary/10 border border-primary/20">
-                        <p class="text-white text-sm"><i class="fa-solid fa-circle-info text-primary mr-2"></i>Wir nutzen <strong>Formspree</strong> zur Verarbeitung von Kontaktanfragen. Ihre Daten werden dabei an Formspree (USA) übermittelt.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Zahlungsabwicklung -->
-            <div class="legal-card p-8 md:p-10 mb-6">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-credit-card text-primary"></i>
-                    </div>
-                    Zahlungsabwicklung
-                </h2>
-                <div class="text-muted text-sm leading-relaxed space-y-4">
-                    <p>Für die Zahlungsabwicklung nutzen wir <strong class="text-white">Stripe</strong> (Stripe, Inc., 510 Townsend Street, San Francisco, CA 94103, USA).</p>
-                    <p>Bei einer Bestellung werden Ihre Zahlungsdaten (z.B. Kreditkartennummer, Rechnungsadresse) direkt an Stripe übermittelt. Wir selbst speichern keine vollständigen Zahlungsdaten.</p>
-                    <p>Die Datenverarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).</p>
-                    <p>Weitere Informationen finden Sie in der <a href="https://stripe.com/de/privacy" target="_blank" rel="noopener" class="text-primary hover:underline">Datenschutzerklärung von Stripe</a>.</p>
-                </div>
-            </div>
-
-            <!-- Widerspruch Werbung -->
-            <div class="legal-card p-8 md:p-10 mb-6 border-primary/30">
-                <h2 class="text-xl font-semibold text-white mb-6 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                        <i class="fa-solid fa-hand text-primary"></i>
-                    </div>
-                    Widerspruch gegen Werbe-Mails
-                </h2>
-                <div class="text-muted text-sm leading-relaxed">
-                    <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird hiermit widersprochen. Die Betreiber der Seiten behalten sich ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen, etwa durch Spam-E-Mails, vor.</p>
-                </div>
-            </div>
-
-            <!-- Stand -->
-            <div class="text-center text-muted text-sm mt-12">
-                <p>Stand: Januar 2026</p>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="py-12 border-t border-white/5 bg-black">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-primary"></div>
-                    <span class="font-semibold text-white">Karriaro</span>
-                </div>
-                <nav class="flex flex-wrap justify-center gap-6 text-sm text-muted">
-                    <a href="/impressum.html" class="hover:text-white transition">Impressum</a>
-                    <a href="/datenschutz.html" class="text-white">Datenschutz</a>
-                    <a href="/agb.html" class="hover:text-white transition">AGB</a>
-                    <a href="/barrierefreiheit.html" class="hover:text-white transition">Barrierefreiheit</a>
-                </nav>
-                <p class="text-muted text-sm">© 2026 Karriaro Webdesign</p>
+    <footer>
+        <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <span>&copy; 2026 Karriaro Webdesign</span>
+            <div style="display: flex; gap: 20px;">
+                <a href="/impressum.html">Impressum</a>
+                <a href="/datenschutz.html" style="color: #1d1d1f;">Datenschutz</a>
+                <a href="/agb.html">AGB</a>
             </div>
         </div>
     </footer>
