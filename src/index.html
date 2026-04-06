@@ -393,7 +393,7 @@
                         <li>Der Quellcode gehört Ihnen</li>
                     </ul>
                     <div style="margin-top: auto; padding-top: 32px;">
-                        <a href="#kontakt" class="link-arrow">Starter wählen &rarr;</a>
+                        <a href="#kontakt" class="link-arrow" data-paket="Starter (990 €)">Starter wählen &rarr;</a>
                     </div>
                 </div>
                 <div style="padding: 40px; border-radius: 20px; background: #f5f5f7; display: flex; flex-direction: column;">
@@ -407,7 +407,7 @@
                         <li>Alles aus Starter inklusive</li>
                     </ul>
                     <div style="margin-top: auto; padding-top: 32px;">
-                        <a href="#kontakt" class="btn" style="font-size: 14px; padding: 10px 24px;">Business wählen</a>
+                        <a href="#kontakt" class="btn" style="font-size: 14px; padding: 10px 24px;" data-paket="Business (1.990 €)">Business wählen</a>
                     </div>
                 </div>
                 <div style="padding: 40px; border-radius: 20px; display: flex; flex-direction: column;">
@@ -421,7 +421,7 @@
                         <li>Persönlicher Ansprechpartner</li>
                     </ul>
                     <div style="margin-top: auto; padding-top: 32px;">
-                        <a href="#kontakt" class="link-arrow">Wartung anfragen &rarr;</a>
+                        <a href="#kontakt" class="link-arrow" data-paket="Wartung & Hosting (99 €/Monat)">Wartung anfragen &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -453,6 +453,8 @@
                 <input type="hidden" name="_subject" value="Neue Anfrage über karriaro-webdesign.de">
                 <input type="hidden" name="_captcha" value="false">
                 <input type="text" name="_honey" style="display:none">
+                <input type="hidden" name="paket" id="paket-field" value="">
+                <div id="paket-badge" style="display: none; background: #f5f5f7; border-radius: 12px; padding: 12px 16px; font-size: 15px; font-weight: 500; color: #1d1d1f; text-align: center;"></div>
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
@@ -503,6 +505,17 @@
 
 
     <script>
+        // Paket selection from pricing CTAs
+        document.querySelectorAll('[data-paket]').forEach(function(link) {
+            link.addEventListener('click', function() {
+                var paket = this.getAttribute('data-paket');
+                document.getElementById('paket-field').value = paket;
+                var badge = document.getElementById('paket-badge');
+                badge.textContent = 'Gewähltes Paket: ' + paket;
+                badge.style.display = 'block';
+            });
+        });
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
