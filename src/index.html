@@ -456,6 +456,10 @@
             <form id="kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="paket" id="paket-field" value="">
                 <div id="paket-badge" style="display: none; background: #f5f5f7; border-radius: 12px; padding: 12px 16px; font-size: 15px; font-weight: 500; color: #1d1d1f; text-align: center;"></div>
+                <label id="wartung-checkbox" style="display: none; font-size: 15px; color: #1d1d1f; gap: 10px; align-items: center; background: #f5f5f7; border-radius: 12px; padding: 12px 16px; cursor: pointer;">
+                    <input type="checkbox" name="wartung" value="Wartung & Hosting (99 €/Monat)" style="width: 18px; height: 18px; accent-color: #0071e3;">
+                    Wartung & Hosting dazu — 99 €/Monat
+                </label>
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
@@ -538,6 +542,12 @@
                 var badge = document.getElementById('paket-badge');
                 badge.textContent = 'Gewähltes Paket: ' + paket;
                 badge.style.display = 'block';
+                var checkbox = document.getElementById('wartung-checkbox');
+                if (paket.indexOf('Wartung') === -1) {
+                    checkbox.style.display = 'flex';
+                } else {
+                    checkbox.style.display = 'none';
+                }
             });
         });
 
