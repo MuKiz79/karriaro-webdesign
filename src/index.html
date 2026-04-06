@@ -162,7 +162,12 @@
             opacity: 1; transition: all 0.35s;
         }
         nav .cta:hover { background: #005bb5; }
-        @media (max-width: 640px) { nav .links { display: none; } }
+        nav .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+        nav .menu-toggle span { display: block; width: 18px; height: 2px; background: #1d1d1f; margin: 4px 0; transition: all 0.3s; }
+        .mobile-menu { display: none; position: fixed; top: 48px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
+        .mobile-menu.open { display: flex; flex-direction: column; gap: 20px; }
+        .mobile-menu a { font-size: 17px; color: #1d1d1f; font-weight: 500; }
+        @media (max-width: 640px) { nav .links { display: none; } nav .menu-toggle { display: block; } }
 
         section { padding: 160px 0; }
         @media (max-width: 640px) { section { padding: 100px 0; } }
@@ -240,6 +245,31 @@
         footer a { color: #424245; }
         footer a:hover { color: #1d1d1f; }
 
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            nav .inner { padding: 0 16px; }
+            .wrap, .wrap-sm, .wrap-xs { padding: 0 20px; }
+            h1 { font-size: clamp(32px, 8vw, 44px); line-height: 1.1; }
+            .subhead { margin-top: 20px; }
+            .preview-card-content { padding: 16px; }
+            .preview-card-title { font-size: 17px; }
+            .price-card, .price-card-active { padding: 28px !important; border-radius: 16px !important; }
+            footer .wrap > div:first-child p { font-size: 11px; line-height: 1.8; }
+        }
+
+        @media (max-width: 480px) {
+            section { padding: 80px 0; }
+            h1 { font-size: 32px; }
+            h2 { font-size: 28px; }
+            .subhead { font-size: 17px; }
+            .btn { padding: 14px 24px; font-size: 16px; width: 100%; text-align: center; }
+            .submit-btn { font-size: 16px; }
+            input[type="text"], input[type="email"], textarea { font-size: 16px; padding: 14px 16px; }
+            .grid-3 { gap: 24px; }
+            .price-card, .price-card-active { padding: 24px !important; }
+            .preview-card { border-radius: 12px; }
+        }
+
         /* Scroll animations — Apple-style fade-up */
         .fade-in {
             opacity: 0;
@@ -265,8 +295,19 @@
                 <a href="/en/" style="font-weight: 500;">EN</a>
             </div>
             <a href="#kontakt" class="cta">Projekt starten</a>
+            <button class="menu-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
+
+    <div id="mobile-menu" class="mobile-menu">
+        <a href="#arbeiten" onclick="this.parentElement.classList.remove('open')">Arbeiten</a>
+        <a href="#preis" onclick="this.parentElement.classList.remove('open')">Preis</a>
+        <a href="/blog.html">Blog</a>
+        <a href="/en/">EN</a>
+        <a href="#kontakt" onclick="this.parentElement.classList.remove('open')" style="color: #0071e3; font-weight: 600;">Projekt starten</a>
+    </div>
 
 
     <main>
