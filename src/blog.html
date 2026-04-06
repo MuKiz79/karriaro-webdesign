@@ -1,26 +1,22 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Webdesign Tipps & Insights | Karriaro</title>
     <meta name="description" content="Webdesign Blog: Tipps zu Website-Performance, SEO, Core Web Vitals und mehr. Expertenwissen für Unternehmer, die ihre Online-Präsenz verbessern wollen.">
-    <meta name="keywords" content="Webdesign Blog, Website Tipps, SEO Ratgeber, Core Web Vitals, Website Performance">
-    <meta name="author" content="Karriaro Webdesign">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/blog.html">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://karriaro-webdesign.de/blog.html">
-    <meta property="og:title" content="Blog | Webdesign Tipps & Insights | Karriaro">
-    <meta property="og:description" content="Webdesign Blog: Tipps zu Website-Performance, SEO, Core Web Vitals und mehr.">
+    <meta property="og:title" content="Blog | Karriaro Webdesign">
+    <meta property="og:description" content="Expertenwissen zu Webdesign, SEO und Website-Performance.">
     <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
     <meta property="og:locale" content="de_DE">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Blog | Karriaro Webdesign">
     <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -30,94 +26,131 @@
         "url": "https://karriaro-webdesign.de/blog.html",
         "publisher": {
             "@type": "Organization",
-            "name": "Karriaro Webdesign",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://karriaro-webdesign.de/images/logo.svg"
-            }
+            "name": "Karriaro Webdesign"
         }
     }
     </script>
-    <style>body{background:#050507}.hero-gradient{background:radial-gradient(ellipse at top,rgba(59,130,246,.15) 0%,transparent 50%)}.text-gradient{background:linear-gradient(135deg,#3b82f6 0%,#60a5fa 50%,#93c5fd 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.card-hover{transition:all .3s ease}.card-hover:hover{transform:translateY(-4px);border-color:rgba(59,130,246,0.3)}</style>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #fbfbfd; color: #1d1d1f; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+        .muted { color: #86868b; }
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(251,251,253,0.92); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,0.04); }
+        nav .inner { max-width: 980px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 48px; }
+        nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.3s; }
+        nav a:hover { opacity: 1; }
+        nav .links { display: flex; gap: 28px; }
+        nav .cta { background: #0071e3; color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; opacity: 1; transition: all 0.35s; }
+        nav .cta:hover { background: #005bb5; }
+        @media (max-width: 640px) { nav .links { display: none; } }
+        h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+        @media (max-width: 640px) { .grid-3 { grid-template-columns: 1fr; } }
+        .card { border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); background: #fff; transition: all 0.4s; }
+        .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: scale(1.01); }
+        .card-img { aspect-ratio: 16/9; background: #f5f5f7; display: flex; align-items: center; justify-content: center; font-size: 40px; color: #86868b; }
+        .card-body { padding: 24px; }
+        .card-body h2 { font-size: 19px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+        .card-body p { font-size: 14px; color: #86868b; line-height: 1.6; margin-bottom: 16px; }
+        .card-meta { font-size: 12px; color: #aeaeb2; margin-bottom: 12px; }
+        .link-arrow { color: #0071e3; font-size: 14px; font-weight: 500; transition: color 0.3s; }
+        .link-arrow:hover { text-decoration: underline; }
+        footer { padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #86868b; }
+        footer a { color: #424245; }
+        footer a:hover { color: #1d1d1f; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
 </head>
-<body class="text-white antialiased">
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center h-16"><a href="/" class="text-lg font-bold tracking-tight">Karriaro<span class="text-gray-500 font-normal"> Webdesign</span></a><div class="flex items-center gap-6"><a href="/#portfolio" class="text-sm text-gray-400 hover:text-white transition hidden sm:block">Portfolio</a><a href="/#kontakt" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition">Kontakt</a></div></div></div></nav>
+<body>
 
-    <section class="relative min-h-[50vh] flex items-center pt-24 pb-16 hero-gradient">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <nav class="mb-8 text-sm text-gray-500"><a href="/" class="hover:text-white transition">Home</a><span class="mx-2">/</span><span class="text-white">Blog</span></nav>
-            <div class="max-w-4xl">
-                <span class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium mb-6"><i class="fa-solid fa-newspaper"></i>Wissen & Insights</span>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">Webdesign <span class="text-gradient">Blog</span></h1>
-                <p class="text-xl text-gray-400 max-w-2xl">Expertenwissen zu Website-Performance, SEO und digitalem Erfolg. Praktische Tipps für Unternehmer.</p>
+    <nav>
+        <div class="inner">
+            <a href="/" style="font-weight: 600; font-size: 14px; opacity: 1;">Karriaro</a>
+            <div class="links">
+                <a href="/#arbeiten">Arbeiten</a>
+                <a href="/#preis">Preis</a>
+                <a href="/blog.html" style="opacity: 1;">Blog</a>
             </div>
+            <a href="/#kontakt" class="cta">Projekt starten</a>
+        </div>
+    </nav>
+
+    <main>
+
+    <section style="padding: 140px 0 80px; text-align: center;">
+        <div class="wrap">
+            <h1>Blog</h1>
+            <p class="muted" style="font-size: clamp(17px, 2vw, 21px); margin-top: 16px; max-width: 480px; margin-left: auto; margin-right: auto;">Wissen zu Webdesign, SEO und digitaler Sichtbarkeit.</p>
         </div>
     </section>
 
-    <section class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <section class="fade-in" style="padding: 0 0 120px;">
+        <div class="wrap">
+            <div class="grid-3">
 
-                <!-- Artikel 1 -->
-                <article class="card-hover bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
-                    <div class="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
-                        <i class="fa-solid fa-code text-5xl text-blue-400"></i>
+                <a href="/blog/wordpress-vs-handcode.html" class="card">
+                    <div class="card-img">&lt;/&gt;</div>
+                    <div class="card-body">
+                        <div class="card-meta">31. Januar 2026 · 8 Min.</div>
+                        <h2>WordPress vs. Handcodierte Website</h2>
+                        <p>Warum 90 % aller WordPress-Seiten langsamer sind als nötig — und wann sich Handcode lohnt.</p>
+                        <span class="link-arrow">Weiterlesen &rarr;</span>
                     </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span><i class="fa-solid fa-calendar mr-1"></i>31. Januar 2026</span>
-                            <span><i class="fa-solid fa-clock mr-1"></i>8 Min. Lesezeit</span>
-                        </div>
-                        <h2 class="text-xl font-bold mb-3 hover:text-blue-400 transition"><a href="/blog/wordpress-vs-handcode.html">WordPress vs. Handcodierte Website: Der ehrliche Vergleich</a></h2>
-                        <p class="text-gray-400 text-sm mb-4">Warum 90% aller WordPress-Seiten langsamer sind als nötig – und wann sich Handcode wirklich lohnt.</p>
-                        <a href="/blog/wordpress-vs-handcode.html" class="inline-flex items-center gap-2 text-blue-400 text-sm font-medium hover:gap-3 transition-all">Weiterlesen <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
+                </a>
 
-                <!-- Artikel 2 -->
-                <article class="card-hover bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
-                    <div class="aspect-video bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
-                        <i class="fa-solid fa-gauge-high text-5xl text-green-400"></i>
+                <a href="/blog/core-web-vitals-erklaert.html" class="card">
+                    <div class="card-img">&#9889;</div>
+                    <div class="card-body">
+                        <div class="card-meta">31. Januar 2026 · 6 Min.</div>
+                        <h2>Core Web Vitals: Was Google wirklich will</h2>
+                        <p>LCP, FID, CLS — was diese Metriken bedeuten und wie Sie sie verbessern.</p>
+                        <span class="link-arrow">Weiterlesen &rarr;</span>
                     </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span><i class="fa-solid fa-calendar mr-1"></i>31. Januar 2026</span>
-                            <span><i class="fa-solid fa-clock mr-1"></i>6 Min. Lesezeit</span>
-                        </div>
-                        <h2 class="text-xl font-bold mb-3 hover:text-blue-400 transition"><a href="/blog/core-web-vitals-erklaert.html">Core Web Vitals: Was Google wirklich von deiner Website will</a></h2>
-                        <p class="text-gray-400 text-sm mb-4">LCP, FID, CLS – was diese Metriken bedeuten und wie du sie verbesserst. Mit praktischer Checkliste.</p>
-                        <a href="/blog/core-web-vitals-erklaert.html" class="inline-flex items-center gap-2 text-blue-400 text-sm font-medium hover:gap-3 transition-all">Weiterlesen <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
+                </a>
 
-                <!-- Artikel 3 -->
-                <article class="card-hover bg-white/5 rounded-2xl border border-white/10 overflow-hidden">
-                    <div class="aspect-video bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
-                        <i class="fa-solid fa-shield-halved text-5xl text-orange-400"></i>
+                <a href="/blog/dsgvo-website-checkliste.html" class="card">
+                    <div class="card-img">&#128274;</div>
+                    <div class="card-body">
+                        <div class="card-meta">31. Januar 2026 · 5 Min.</div>
+                        <h2>DSGVO-konforme Website: Die Checkliste 2026</h2>
+                        <p>Cookie-Banner, Datenschutzerklärung, Impressum — was Sie wirklich brauchen.</p>
+                        <span class="link-arrow">Weiterlesen &rarr;</span>
                     </div>
-                    <div class="p-6">
-                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
-                            <span><i class="fa-solid fa-calendar mr-1"></i>31. Januar 2026</span>
-                            <span><i class="fa-solid fa-clock mr-1"></i>5 Min. Lesezeit</span>
-                        </div>
-                        <h2 class="text-xl font-bold mb-3 hover:text-blue-400 transition"><a href="/blog/dsgvo-website-checkliste.html">DSGVO-konforme Website: Die komplette Checkliste 2026</a></h2>
-                        <p class="text-gray-400 text-sm mb-4">Cookie-Banner, Datenschutzerklärung, Impressum – was du wirklich brauchst und was überflüssig ist.</p>
-                        <a href="/blog/dsgvo-website-checkliste.html" class="inline-flex items-center gap-2 text-blue-400 text-sm font-medium hover:gap-3 transition-all">Weiterlesen <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
+                </a>
 
             </div>
         </div>
     </section>
 
-    <section class="py-20 bg-gradient-to-t from-blue-500/10 to-transparent">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-6">Keine Zeit zum Lesen?</h2>
-            <p class="text-gray-400 mb-8">Lass uns direkt über dein Projekt sprechen. Ich erkläre dir alles im kostenlosen Erstgespräch.</p>
-            <a href="/#kontakt" class="inline-flex items-center gap-3 px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition shadow-lg shadow-blue-500/25">Kostenloses Erstgespräch<i class="fa-solid fa-arrow-right"></i></a>
+    <section class="fade-in" style="background: #f5f5f7; padding: 80px 0; text-align: center;">
+        <div class="wrap">
+            <h2 style="font-size: clamp(24px, 4vw, 36px); font-weight: 600; margin-bottom: 16px;">Keine Zeit zum Lesen?</h2>
+            <p class="muted" style="font-size: 17px; margin-bottom: 32px;">Schicken Sie uns Ihre Website — wir sagen Ihnen ehrlich, was fehlt.</p>
+            <a href="/#kontakt" style="display: inline-block; background: #0071e3; color: #fff; padding: 12px 28px; border-radius: 28px; font-size: 17px; transition: all 0.4s;">Kostenlos beraten lassen</a>
         </div>
     </section>
 
-    <footer class="py-12 border-t border-white/5 bg-black"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6"><div class="text-center md:text-left"><a href="/" class="text-base font-bold tracking-tight text-white mb-1 block">Karriaro<span class="text-gray-500 font-normal"> Webdesign</span></a><p class="text-gray-500 text-xs">© 2026 Karriaro Webdesign. Stuttgart, DE.</p></div><div class="flex gap-6 text-xs text-gray-500"><a href="/impressum.html" class="hover:text-white transition">Impressum</a><a href="/datenschutz.html" class="hover:text-white transition">Datenschutz</a><a href="/agb.html" class="hover:text-white transition">AGB</a></div></div></footer>
+    </main>
+
+    <footer>
+        <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <span>&copy; 2026 Karriaro Webdesign</span>
+            <div style="display: flex; gap: 20px;">
+                <a href="/impressum.html">Impressum</a>
+                <a href="/datenschutz.html">Datenschutz</a>
+                <a href="/agb.html">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+    </script>
+
 </body>
 </html>
