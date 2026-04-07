@@ -158,6 +158,37 @@
         .lead-table .opp-pill.warm { background: rgba(255,159,10,0.1); color: var(--orange); }
         .lead-table .opp-pill.cold { background: rgba(48,209,88,0.1); color: var(--green); }
         .lead-table a { font-size: 12px; }
+
+        /* ── Probability Display ── */
+        .prob-hero { text-align: center; margin-bottom: 40px; }
+        .prob-pct { font-size: 4rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+        .prob-ci { font-size: 14px; color: var(--muted); margin-top: 4px; }
+        .prob-label { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 12px; }
+        .prob-bar-wrap { width: 100%; max-width: 320px; height: 8px; background: var(--border); border-radius: 4px; margin: 16px auto 0; overflow: hidden; position: relative; }
+        .prob-bar-fill { height: 100%; border-radius: 4px; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+        .prob-bar-ci { position: absolute; top: -2px; height: 12px; border-radius: 6px; opacity: 0.25; }
+
+        /* Driver Bars */
+        .drivers { margin-bottom: 12px; }
+        .driver-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .driver-row:last-child { border-bottom: none; }
+        .driver-name { font-size: 13px; color: var(--muted); width: 140px; flex-shrink: 0; }
+        .driver-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+        .driver-bar-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+        .driver-pct { font-size: 13px; font-weight: 700; width: 40px; text-align: right; }
+
+        /* Sensitivity */
+        .sensitivity-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .sensitivity-item:last-child { border-bottom: none; }
+        .sensitivity-delta { font-weight: 700; }
+        .sensitivity-delta.positive { color: var(--green); }
+        .sensitivity-delta.negative { color: var(--red); }
+
+        /* Methodology */
+        .method-toggle { font-size: 12px; color: var(--accent); cursor: pointer; background: none; border: none; font-family: var(--font); margin-top: 8px; }
+        .method-detail { display: none; margin-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+        .method-detail.active { display: block; }
+        .method-detail code { background: rgba(0,0,0,0.04); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
     </style>
 </head>
 <body>
@@ -413,31 +444,369 @@ App.score = {
 };
 
 // ══════════════════════════════════════
+// CONVERSION PROBABILITY ENGINE
+// Logistische Regression, Wilson-Score,
+// Konfidenzintervall, Sensitivity-Analyse
+// ══════════════════════════════════════
+App.probability = {
+
+    // ── Logistic Sigmoid ──
+    sigmoid(z) { return 1 / (1 + Math.exp(-z)); },
+
+    // ── Wilson-Score (untere Grenze, 95% Konfidenz) ──
+    // Statistisch korrekte Bewertung bei wenig Daten
+    wilsonScore(positive, total, z = 1.96) {
+        if (total === 0) return 0;
+        const p = positive / total;
+        const denom = 1 + (z * z) / total;
+        const center = p + (z * z) / (2 * total);
+        const spread = z * Math.sqrt((p * (1 - p) + (z * z) / (4 * total)) / total);
+        return Math.max(0, (center - spread) / denom);
+    },
+
+    // ── Branchengewichte: Wie stark haengt der Erfolg von der Website ab? ──
+    industryWebDependency: {
+        'restaurant': 0.85, 'cafe': 0.80, 'bar': 0.75,
+        'dentist': 0.90, 'doctor': 0.85, 'physiotherapist': 0.80,
+        'hair_salon': 0.80, 'beauty_salon': 0.82, 'spa': 0.85,
+        'real_estate_agency': 0.90, 'insurance_agency': 0.75,
+        'lawyer': 0.80, 'accounting': 0.70, 'tax_consultant': 0.70,
+        'auto_repair': 0.65, 'car_dealer': 0.80,
+        'plumber': 0.60, 'electrician': 0.60, 'painter': 0.55,
+        'locksmith': 0.55, 'roofing_contractor': 0.55,
+        'hotel': 0.92, 'lodging': 0.90, 'gym': 0.75,
+        'pet_store': 0.65, 'veterinary_care': 0.78,
+        'school': 0.50, 'church': 0.30,
+        'moving_company': 0.70, 'travel_agency': 0.85,
+        'florist': 0.70, 'bakery': 0.65, 'pharmacy': 0.55,
+        '_default': 0.65
+    },
+
+    // ══════════════════════════════════════
+    // DIE 5 SIGNAL-DIMENSIONEN
+    // Jede gibt einen Wert zwischen 0 und 1
+    // ══════════════════════════════════════
+
+    // D1: Website Pain Score — Wie sehr schadet die aktuelle Seite?
+    calcWebsitePain(ws, tech) {
+        // Gewichtete Invertierung der Scores
+        const perfPain = (100 - ws.perf) / 100;           // Performance am wichtigsten
+        const seoPain = (100 - ws.seo) / 100;
+        const a11yPain = (100 - ws.a11y) / 100;
+        const bpPain = (100 - ws.bp) / 100;
+
+        // Kritische Faktoren (binaer)
+        const noHttps = ws.isHttps ? 0 : 1;
+        const noViewport = ws.viewport ? 0 : 1;
+
+        // Technologie-Faktor
+        let techPain = 0;
+        if (tech.isBaukasten) techPain = 0.8;
+        else if (tech.version) {
+            const major = parseInt(tech.version);
+            if (major > 0 && major < 6) techPain = 0.7;  // Alte WordPress-Version
+            else if (major >= 6) techPain = 0.3;
+        }
+        else if (tech.cms.includes('WordPress')) techPain = 0.4;
+
+        // LCP als kontinuierlicher Faktor
+        const lcpSec = parseFloat(ws.lcp) || 3;
+        const lcpPain = Math.min(1, Math.max(0, (lcpSec - 1.5) / 6));  // 1.5s=0, 7.5s=1
+
+        // Gewichtete Summe
+        const raw = (
+            perfPain   * 0.25 +
+            seoPain    * 0.15 +
+            a11yPain   * 0.10 +
+            bpPain     * 0.05 +
+            noHttps    * 0.12 +
+            noViewport * 0.10 +
+            techPain   * 0.13 +
+            lcpPain    * 0.10
+        );
+
+        return { score: Math.min(1, raw), components: { perfPain, seoPain, a11yPain, noHttps, noViewport, techPain, lcpPain } };
+    },
+
+    // D2: Business Vitality Score — Lebt das Unternehmen?
+    calcBusinessVitality(place) {
+        if (!place) return { score: 0.5, confidence: 0.2 };  // Kein Daten = neutraler Prior
+
+        const rating = place.rating || 0;
+        const count = place.userRatingCount || 0;
+
+        // Wilson-Score: Statistisch korrektes Rating
+        // Konvertiere 1-5 Sterne zu positiv/negativ (>3.5 = positiv)
+        const positive = Math.round(count * Math.max(0, (rating - 1) / 4));
+        const wilson = this.wilsonScore(positive, count);
+
+        // Bewertungsvolumen (logarithmisch — 1000 ist nicht 10x besser als 100)
+        const volumeScore = count > 0 ? Math.min(1, Math.log10(count) / Math.log10(500)) : 0;
+
+        // Engagement-Signale
+        const hasPhotos = place.photos ? Math.min(1, place.photos.length / 10) : 0;
+        const hasHours = place.regularOpeningHours ? 1 : 0;
+        const isActive = place.businessStatus === 'OPERATIONAL' ? 1 : 0;
+
+        const score = (
+            wilson       * 0.35 +
+            volumeScore  * 0.30 +
+            hasPhotos    * 0.10 +
+            hasHours     * 0.10 +
+            isActive     * 0.15
+        );
+
+        // Konfidenz basierend auf Datenqualitaet
+        const confidence = Math.min(1, 0.3 + volumeScore * 0.5 + (hasPhotos > 0 ? 0.1 : 0) + (hasHours ? 0.1 : 0));
+
+        return { score: Math.min(1, score), confidence, wilson, volumeScore };
+    },
+
+    // D3: Market Pressure Index — Wie stark ist der Wettbewerbsdruck?
+    calcMarketPressure(ws, competitors, place) {
+        if (!competitors || competitors.length < 2) return { score: 0.5, percentile: 50 };
+
+        const validComps = competitors.filter(c => c.perf !== null);
+        if (validComps.length < 2) return { score: 0.5, percentile: 50 };
+
+        // Perzentil-Rang: Wie viele Konkurrenten haben eine bessere Website?
+        const betterCount = validComps.filter(c => c.perf > ws.perf).length;
+        const percentile = Math.round((betterCount / (validComps.length - 1)) * 100);
+
+        // Median der Konkurrenz
+        const compPerfs = validComps.map(c => c.perf).sort((a, b) => a - b);
+        const median = compPerfs[Math.floor(compPerfs.length / 2)];
+        const gap = Math.max(0, (median - ws.perf) / 100);  // Positiv = Ziel ist schlechter
+
+        // Branchenabhaengigkeit
+        const type = place?.primaryType || '_default';
+        const webDep = this.industryWebDependency[type] || this.industryWebDependency._default;
+
+        const score = (
+            (percentile / 100) * 0.40 +
+            gap                * 0.35 +
+            webDep             * 0.25
+        );
+
+        return { score: Math.min(1, score), percentile, median, gap, webDep };
+    },
+
+    // D4: Budget Probability — Kann sich der Kunde das leisten?
+    calcBudgetProbability(place, tech) {
+        if (!place) return { score: 0.5 };
+
+        const count = place.userRatingCount || 0;
+
+        // Unternehmensgrösse-Proxy (Bewertungsanzahl)
+        let sizeScore = 0;
+        if (count > 200) sizeScore = 0.9;
+        else if (count > 50) sizeScore = 0.75;
+        else if (count > 15) sizeScore = 0.55;
+        else if (count > 5) sizeScore = 0.35;
+        else sizeScore = 0.15;
+
+        // Branchen-Budget (manche Branchen geben mehr fuer Marketing aus)
+        const type = place.primaryType || '_default';
+        const highBudget = ['dentist', 'doctor', 'real_estate_agency', 'lawyer', 'hotel', 'car_dealer', 'beauty_salon', 'spa'];
+        const lowBudget = ['bakery', 'locksmith', 'painter', 'florist', 'church'];
+        let budgetFactor = 0.5;
+        if (highBudget.includes(type)) budgetFactor = 0.8;
+        else if (lowBudget.includes(type)) budgetFactor = 0.3;
+
+        // Baukasten = bereits Budget-bewusst, aber wechselbereit
+        const baukastenBonus = tech.isBaukasten ? 0.15 : 0;
+
+        const score = sizeScore * 0.45 + budgetFactor * 0.40 + baukastenBonus * 0.15;
+        return { score: Math.min(1, score + baukastenBonus), sizeScore, budgetFactor };
+    },
+
+    // D5: Timing Urgency — Ist jetzt der richtige Zeitpunkt?
+    calcTimingUrgency(ws, tech) {
+        let score = 0;
+
+        // Kein HTTPS = sofortige Browser-Warnung
+        if (!ws.isHttps) score += 0.30;
+
+        // Kein Viewport = Mobile komplett kaputt
+        if (!ws.viewport) score += 0.25;
+
+        // BFSG-Compliance (Barrierefreiheit ab 2025 Pflicht)
+        if (ws.a11y < 50) score += 0.20;
+        else if (ws.a11y < 70) score += 0.10;
+
+        // Baukasten = leichter Wechsel argumentierbar
+        if (tech.isBaukasten) score += 0.15;
+
+        // Extrem langsam = taeglicher Kundenverlust
+        if (ws.perf < 30) score += 0.10;
+
+        return { score: Math.min(1, score) };
+    },
+
+    // ══════════════════════════════════════
+    // HAUPTBERECHNUNG: Logistische Regression
+    // ══════════════════════════════════════
+    calculate(ws, tech, place, competitors) {
+        // Dimensionen berechnen
+        const d1 = this.calcWebsitePain(ws, tech);
+        const d2 = this.calcBusinessVitality(place);
+        const d3 = this.calcMarketPressure(ws, competitors, place);
+        const d4 = this.calcBudgetProbability(place, tech);
+        const d5 = this.calcTimingUrgency(ws, tech);
+
+        // ── Regressionskoeffizienten (Beta-Gewichte) ──
+        // Kalibriert auf typische Kaltakquise-Conversion-Raten (2-8%)
+        const B0 = -2.5;   // Intercept (Basis-Log-Odds)
+        const B1 = 3.2;    // Website-Schmerz
+        const B2 = 2.8;    // Business-Vitalitaet
+        const B3 = 1.5;    // Marktdruck
+        const B4 = 1.8;    // Budget
+        const B5 = 1.2;    // Timing
+
+        // Lineare Kombination
+        const z = B0 + B1*d1.score + B2*d2.score + B3*d3.score + B4*d4.score + B5*d5.score;
+
+        // Sigmoid -> Wahrscheinlichkeit
+        const probability = this.sigmoid(z);
+        const pct = Math.round(probability * 1000) / 10;  // Eine Dezimalstelle
+
+        // ── Konfidenzintervall ──
+        // Basierend auf Daten-Vollstaendigkeit und Stichprobengroesse
+        const dataCompleteness = [
+            1,                    // Website-Daten immer vorhanden
+            d2.confidence || 0.2, // Business-Daten
+            competitors && competitors.length > 2 ? 0.8 : 0.3,  // Konkurrenz
+            place ? 0.7 : 0.2,   // Budget-Daten
+            1                     // Timing immer berechenbar
+        ];
+        const avgCompleteness = dataCompleteness.reduce((a, b) => a + b, 0) / dataCompleteness.length;
+
+        // Standardfehler: Je weniger Daten, desto breiter
+        const se = (1 - avgCompleteness) * 0.20 + 0.03;  // 3-23% Standardfehler
+        const ciLow = Math.max(0, Math.round((probability - 1.96 * se) * 1000) / 10);
+        const ciHigh = Math.min(100, Math.round((probability + 1.96 * se) * 1000) / 10);
+        const ciMargin = Math.round(((ciHigh - ciLow) / 2) * 10) / 10;
+
+        // ── Treiber-Analyse: Anteil jeder Dimension am Ergebnis ──
+        const contributions = [
+            { name: 'Website-Schmerz', raw: B1 * d1.score, beta: B1, value: d1.score },
+            { name: 'Business-Staerke', raw: B2 * d2.score, beta: B2, value: d2.score },
+            { name: 'Wettbewerbsdruck', raw: B3 * d3.score, beta: B3, value: d3.score },
+            { name: 'Budget-Indikator', raw: B4 * d4.score, beta: B4, value: d4.score },
+            { name: 'Timing-Dringlichkeit', raw: B5 * d5.score, beta: B5, value: d5.score }
+        ];
+        const totalRaw = contributions.reduce((s, c) => s + Math.abs(c.raw), 0);
+        contributions.forEach(c => c.pct = totalRaw > 0 ? Math.round((Math.abs(c.raw) / totalRaw) * 100) : 20);
+        contributions.sort((a, b) => b.pct - a.pct);
+
+        // ── Sensitivity-Analyse: Was aendert die Wahrscheinlichkeit am meisten? ──
+        const sensitivity = [];
+
+        // Teste: Was waere wenn einzelne Faktoren sich aendern?
+        const scenarios = [
+            { label: 'SSL-Zertifikat wird hinzugefuegt', dim: 'd1', field: 'isHttps', val: true },
+            { label: 'Performance auf 80+ verbessert', dim: 'd1', field: 'perf', val: 80 },
+            { label: 'SEO auf 90+ optimiert', dim: 'd1', field: 'seo', val: 90 },
+            { label: 'Barrierefreiheit auf 80+ gebracht', dim: 'd1', field: 'a11y', val: 80 },
+        ];
+
+        // Sensitivity durch Perturbation: Jede Dimension um 0.2 erhoehen
+        const dims = [d1, d2, d3, d4, d5];
+        const dimNames = ['Website-Schmerz', 'Business-Staerke', 'Wettbewerbsdruck', 'Budget-Indikator', 'Timing'];
+        const betas = [B1, B2, B3, B4, B5];
+        const perturbation = 0.2;
+
+        for (let i = 0; i < dims.length; i++) {
+            const zPerturbed = z + betas[i] * perturbation;
+            const pPerturbed = this.sigmoid(zPerturbed);
+            const delta = Math.round((pPerturbed - probability) * 1000) / 10;
+            if (Math.abs(delta) > 0.5) {
+                sensitivity.push({
+                    factor: dimNames[i],
+                    delta,
+                    description: delta > 0
+                        ? `+${delta}% wenn ${dimNames[i]} um 20% steigt`
+                        : `${delta}% wenn ${dimNames[i]} um 20% sinkt`
+                });
+            }
+        }
+
+        // Spezifische Hebel
+        if (!ws.isHttps) {
+            const zFixed = B0 + B1*(d1.score - 0.12) + B2*d2.score + B3*d3.score + B4*d4.score + B5*(d5.score - 0.30);
+            const delta = Math.round((this.sigmoid(zFixed) - probability) * -1000) / 10;
+            sensitivity.push({ factor: 'SSL fehlt', delta, description: `SSL-Warnung im Browser ist allein ${delta}% der Konversions-Wahrscheinlichkeit` });
+        }
+        if (tech.isBaukasten) {
+            sensitivity.push({ factor: 'Baukasten-System', delta: 0, description: `${tech.cms} — einfacher Wechsel argumentierbar, keine Vendor-Lock-in-Angst` });
+        }
+
+        sensitivity.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+        return {
+            probability: pct,
+            ciLow, ciHigh, ciMargin,
+            completeness: Math.round(avgCompleteness * 100),
+            drivers: contributions,
+            sensitivity: sensitivity.slice(0, 5),
+            dimensions: { d1, d2, d3, d4, d5 },
+            z, // Raw log-odds fuer Debugging
+        };
+    }
+};
+
+// ══════════════════════════════════════
 // UI RENDERER
 // ══════════════════════════════════════
 App.ui = {
     sc: v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad',
-    oppColor: v => v >= 55 ? 'var(--red)' : v >= 30 ? 'var(--orange)' : 'var(--green)',
-    oppClass: v => v >= 55 ? 'hot' : v >= 30 ? 'warm' : 'cold',
-    oppLabel: v => v >= 55 ? 'Top-Opportunity' : v >= 30 ? 'Gute Opportunity' : 'Geringe Opportunity',
+    probColor: p => p >= 50 ? 'var(--green)' : p >= 25 ? 'var(--orange)' : 'var(--red)',
+    probClass: p => p >= 50 ? 'hot' : p >= 25 ? 'warm' : 'cold',
+    probLabel: p => p >= 50 ? 'Hohe Konversionswahrscheinlichkeit' : p >= 25 ? 'Moderate Chance' : 'Geringe Chance',
 
-    renderSingle(url, ws, tech, biz, opp, competitors) {
+    renderSingle(url, ws, tech, biz, prob, competitors) {
         const domain = new URL(url).hostname.replace('www.', '');
-        const circumference = 2 * Math.PI * 44;
-        const offset = circumference - (opp / 100) * circumference;
-        const oppC = this.oppColor(opp);
+        const pColor = this.probColor(prob.probability);
 
         let html = '';
 
-        // ── Opportunity Score Ring ──
-        html += `<div class="opp-badge">
-            <div class="opp-score-ring">
-                <svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fill" cx="50" cy="50" r="44" stroke="${oppC}" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"/></svg>
-                <div class="opp-score-num" style="color:${oppC}">${opp}</div>
+        // ── Konversionswahrscheinlichkeit ──
+        html += `<div class="prob-hero">
+            <div class="prob-pct" style="color:${pColor}">${prob.probability}%</div>
+            <div class="prob-ci">Konfidenzintervall: ${prob.ciLow}% — ${prob.ciHigh}% (±${prob.ciMargin}%)</div>
+            <div class="prob-label" style="color:${pColor}">${this.probLabel(prob.probability)}</div>
+            <div class="prob-bar-wrap">
+                <div class="prob-bar-ci" style="background:${pColor};left:${prob.ciLow}%;width:${prob.ciHigh - prob.ciLow}%"></div>
+                <div class="prob-bar-fill" style="background:${pColor};width:${prob.probability}%"></div>
             </div>
-            <h2>${this.oppLabel(opp)}</h2>
-            <p>${domain}</p>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">${domain} · Datenvollstaendigkeit: ${prob.completeness}%</div>
         </div>`;
+
+        // ── Treiber-Analyse ──
+        html += `<div class="section-title">Treiber-Analyse</div><div class="card drivers">`;
+        for (const d of prob.drivers) {
+            const barColor = d.pct > 25 ? 'var(--accent)' : 'var(--muted)';
+            html += `<div class="driver-row">
+                <span class="driver-name">${d.name}</span>
+                <div class="driver-bar-bg"><div class="driver-bar-fill" style="width:${d.pct}%;background:${barColor}"></div></div>
+                <span class="driver-pct">${d.pct}%</span>
+            </div>`;
+        }
+        html += '</div>';
+
+        // ── Sensitivity-Analyse ──
+        if (prob.sensitivity.length > 0) {
+            html += `<div class="section-title">Staerkste Hebel</div><div class="card">`;
+            for (const s of prob.sensitivity) {
+                const cls = s.delta > 0 ? 'positive' : s.delta < 0 ? 'negative' : '';
+                const prefix = s.delta > 0 ? '+' : '';
+                html += `<div class="sensitivity-item">
+                    <span>${s.description}</span>
+                    ${s.delta !== 0 ? `<span class="sensitivity-delta ${cls}">${prefix}${s.delta}%</span>` : ''}
+                </div>`;
+            }
+            html += '</div>';
+        }
 
         // ── Website Scores ──
         html += `<div class="section-title">Website-Analyse (Mobile)</div>
@@ -493,7 +862,20 @@ App.ui = {
         }
 
         // ── Pitch ──
-        html += this.generatePitch(domain, ws, tech, biz, competitors);
+        html += this.generatePitch(domain, ws, tech, biz, prob, competitors);
+
+        // ── Methodik ──
+        html += `<div class="card" style="margin-top:24px">
+            <button class="method-toggle" onclick="this.nextElementSibling.classList.toggle('active')">Methodik anzeigen</button>
+            <div class="method-detail">
+                <strong>Konversionswahrscheinlichkeit</strong> berechnet mit logistischer Regression (Sigmoid-Funktion):<br>
+                <code>P = 1 / (1 + e^-(β₀ + β₁·WPS + β₂·BVS + β₃·MPI + β₄·BP + β₅·TU))</code><br><br>
+                <strong>5 Dimensionen:</strong> Website-Schmerz (WPS), Business-Vitalitaet (BVS, via Wilson-Score), Marktdruck (MPI, Perzentil-Rang), Budget-Wahrscheinlichkeit (BP), Timing-Dringlichkeit (TU).<br><br>
+                <strong>Wilson-Score:</strong> Statistisch korrekte Bewertung — beruecksichtigt Stichprobengroesse. 4.8★ bei 200 Bewertungen > 5.0★ bei 3 Bewertungen.<br><br>
+                <strong>Konfidenzintervall:</strong> ±-Bereich basiert auf Datenvollstaendigkeit. Mehr Signale (Business-Daten, Konkurrenz) = schmaleres Intervall.<br><br>
+                <strong>Sensitivity:</strong> Zeigt, welcher Einzelfaktor die Wahrscheinlichkeit am staerksten veraendert (Perturbationsanalyse, Δ=0.2).
+            </div>
+        </div>`;
 
         // ── CTA ──
         html += `<div class="cta"><a href="https://karriaro-webdesign.de/#kontakt">Kostenlos beraten lassen</a><p>Unverbindlich. Antwort innerhalb von 24 Stunden.</p></div>`;
@@ -518,7 +900,7 @@ App.ui = {
         return issues;
     },
 
-    generatePitch(domain, ws, tech, biz, competitors) {
+    generatePitch(domain, ws, tech, biz, prob, competitors) {
         const lines = [];
         if (ws.perf < 50) lines.push(`Performance-Score von nur ${ws.perf}/100 auf Mobilgeraeten`);
         else if (ws.perf < 75) lines.push(`Performance bei ${ws.perf}/100`);
@@ -610,8 +992,8 @@ App.single = {
             } catch (e) { /* Places optional — weiter ohne */ }
         }
 
-        // Phase 4: Opportunity Score
-        const opp = App.score.opportunity(ws.avg, biz.health.score);
+        // Phase 4: Conversion Probability (statistische Engine)
+        let prob;
 
         // Phase 5: Competitors
         App.ui.showLoading('Konkurrenz wird analysiert...');
@@ -660,9 +1042,12 @@ App.single = {
             } catch (e) { /* Competitors optional */ }
         }
 
+        // Probability berechnen (nach Competitors, da Market Pressure diese braucht)
+        prob = App.probability.calculate(ws, tech, biz.place, competitors);
+
         App.ui.hideLoading();
         $('check-btn').disabled = false;
-        App.ui.renderSingle(url, ws, tech, biz, opp, competitors);
+        App.ui.renderSingle(url, ws, tech, biz, prob, competitors);
     }
 };
 
@@ -714,16 +1099,15 @@ App.batch = {
             const pct = Math.round(((i + 1) / places.length) * 100);
             App.ui.showProgress(pct, `${i + 1} von ${places.length}: ${p.displayName?.text || 'Wird analysiert'}...`);
 
-            let ws = null, tech = null, opp = 0;
+            let ws = null, tech = null, prob = null;
             try {
                 const psiData = await App.api.pagespeed(p.websiteUri);
                 ws = App.score.website(psiData);
                 tech = App.tech.detect(psiData);
-                const bh = App.score.businessHealth(p);
-                opp = App.score.opportunity(ws.avg, bh.score);
+                prob = App.probability.calculate(ws, tech, p, null);
             } catch (e) { /* skip failed */ }
 
-            if (ws) {
+            if (ws && prob) {
                 const domain = (() => { try { return new URL(p.websiteUri).hostname.replace('www.', ''); } catch { return p.websiteUri; } })();
                 results.push({
                     name: p.displayName?.text || domain,
@@ -738,7 +1122,8 @@ App.batch = {
                     avg: ws.avg,
                     cms: tech.cms,
                     isBaukasten: tech.isBaukasten,
-                    opp
+                    probability: prob.probability,
+                    ciMargin: prob.ciMargin
                 });
             }
 
@@ -748,8 +1133,8 @@ App.batch = {
         App.ui.hideProgress();
         $('batch-btn').disabled = false;
 
-        // Sort by opportunity
-        results.sort((a, b) => b.opp - a.opp);
+        // Sort by conversion probability
+        results.sort((a, b) => b.probability - a.probability);
         this.renderResults(query, results);
     },
 
@@ -760,11 +1145,11 @@ App.batch = {
         </div>`;
 
         html += `<table class="lead-table"><thead><tr>
-            <th>Unternehmen</th><th>Branche</th><th>Sterne</th><th>Bew.</th><th>Perf.</th><th>CMS</th><th>Opportunity</th>
+            <th>Unternehmen</th><th>Branche</th><th>Sterne</th><th>Bew.</th><th>Perf.</th><th>CMS</th><th>P(Konversion)</th>
         </tr></thead><tbody>`;
 
         for (const r of results) {
-            const oc = App.ui.oppClass(r.opp);
+            const pc = App.ui.probClass(r.probability);
             html += `<tr>
                 <td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank">${r.domain}</a></td>
                 <td>${r.type}</td>
@@ -772,7 +1157,7 @@ App.batch = {
                 <td>${r.reviews}</td>
                 <td class="${App.ui.sc(r.perf)}">${r.perf}</td>
                 <td>${r.isBaukasten ? '<span class="tech-badge template" style="font-size:10px">' + r.cms + '</span>' : '<span style="font-size:12px">' + r.cms + '</span>'}</td>
-                <td><span class="opp-pill ${oc}">${r.opp}</span></td>
+                <td><span class="opp-pill ${pc}">${r.probability}%</span><br><span style="font-size:10px;color:var(--muted)">±${r.ciMargin}%</span></td>
             </tr>`;
         }
         html += '</tbody></table>';
@@ -786,8 +1171,8 @@ App.batch = {
 
     exportCSV() {
         if (!this._lastResults) return;
-        const headers = ['Name', 'Domain', 'URL', 'Branche', 'Sterne', 'Bewertungen', 'Performance', 'SEO', 'A11y', 'CMS', 'Baukasten', 'Opportunity'];
-        const rows = this._lastResults.map(r => [r.name, r.domain, r.url, r.type, r.rating, r.reviews, r.perf, r.seo, r.a11y, r.cms, r.isBaukasten ? 'Ja' : 'Nein', r.opp]);
+        const headers = ['Name', 'Domain', 'URL', 'Branche', 'Sterne', 'Bewertungen', 'Performance', 'SEO', 'A11y', 'CMS', 'Baukasten', 'P(Konversion)', 'Konfidenz ±'];
+        const rows = this._lastResults.map(r => [r.name, r.domain, r.url, r.type, r.rating, r.reviews, r.perf, r.seo, r.a11y, r.cms, r.isBaukasten ? 'Ja' : 'Nein', r.probability, r.ciMargin]);
         const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const a = document.createElement('a');
