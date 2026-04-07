@@ -927,6 +927,371 @@ App.probability = {
 };
 
 // ══════════════════════════════════════
+// ══════════════════════════════════════
+// WISSENSCHAFTLICHE MODULE
+// 6 Modelle aus Physik, Chemie, Biologie,
+// Informationstheorie, Graphentheorie, Neurowissenschaft
+// ══════════════════════════════════════
+
+// ── MODUL W1: Thermodynamische Website-Entropie ──
+// Zweiter Hauptsatz: Ohne Energiezufuhr steigt die Unordnung
+App.entropy = {
+    calculate(psiData, tech) {
+        const lh = psiData?.lighthouseResult || {};
+        const audits = lh.audits || {};
+
+        // Signal 1: Technologie-Diversitaet (wie viele verschiedene Frameworks/Libraries?)
+        const netItems = audits['network-requests']?.details?.items || [];
+        const urls = netItems.map(i => i.url || '');
+        const techSignatures = new Set();
+        const patterns = [/jquery/i, /bootstrap/i, /divi/i, /elementor/i, /wp-content/i, /wix/i, /jimdo/i,
+            /fontawesome/i, /google.*font/i, /analytics/i, /gtag/i, /facebook/i, /hotjar/i,
+            /slick/i, /owl/i, /swiper/i, /lightbox/i, /fancybox/i, /revolution/i, /lodash/i, /moment/i];
+        for (const u of urls) { for (const p of patterns) { if (p.test(u)) techSignatures.add(p.source); } }
+        const techDiversity = techSignatures.size;
+
+        // Signal 2: Request-Chaos (Anzahl Requests als Unordnungs-Mass)
+        const totalRequests = netItems.length;
+        const requestEntropy = totalRequests > 0 ? Math.min(1, Math.log2(totalRequests) / Math.log2(200)) : 0;
+
+        // Signal 3: Dateigroessen-Verteilung (Shannon-aehnlich)
+        const sizes = netItems.map(i => i.transferSize || 0).filter(s => s > 0);
+        const totalSize = sizes.reduce((a, b) => a + b, 0);
+        let sizeEntropy = 0;
+        if (totalSize > 0 && sizes.length > 1) {
+            for (const s of sizes) {
+                const p = s / totalSize;
+                if (p > 0) sizeEntropy -= p * Math.log2(p);
+            }
+            sizeEntropy = Math.min(1, sizeEntropy / Math.log2(sizes.length));  // Normalisiert 0-1
+        }
+
+        // Signal 4: CMS-Alter (aeltere Systeme = mehr akkumulierte Entropie)
+        let ageFactor = 0;
+        if (tech.version) {
+            const v = parseInt(tech.version);
+            if (v > 0 && v < 5) ageFactor = 0.9;
+            else if (v < 6) ageFactor = 0.6;
+            else ageFactor = 0.3;
+        } else if (tech.isBaukasten) ageFactor = 0.5;
+
+        // Signal 5: Unused JavaScript / CSS (tote Code-Fragmente)
+        const unusedJs = (audits['unused-javascript']?.details?.items || []).length;
+        const unusedCss = (audits['unused-css-rules']?.details?.items || []).length;
+        const deadCodeFactor = Math.min(1, (unusedJs + unusedCss) / 15);
+
+        // Gesamt-Entropie (0-1, hoeher = mehr Unordnung = laenger nicht gepflegt)
+        const S = (
+            (techDiversity / 12) * 0.20 +   // Max 12 verschiedene Techs
+            requestEntropy       * 0.15 +
+            sizeEntropy          * 0.15 +
+            ageFactor            * 0.25 +
+            deadCodeFactor       * 0.25
+        );
+
+        // Geschaetztes Alter basierend auf Entropie
+        const estYearsSinceRedesign = S < 0.3 ? '< 1 Jahr' : S < 0.5 ? '1-2 Jahre' : S < 0.7 ? '2-4 Jahre' : '4+ Jahre';
+
+        return {
+            S: Math.round(Math.min(1, S) * 100) / 100,
+            techDiversity, totalRequests, sizeEntropy: Math.round(sizeEntropy * 100) / 100,
+            deadCodeFactor: Math.round(deadCodeFactor * 100) / 100,
+            ageFactor, estAge: estYearsSinceRedesign,
+            label: S >= 0.7 ? 'Kritisch — System im Verfall' : S >= 0.4 ? 'Erhoehte Unordnung' : 'Relativ gepflegt'
+        };
+    }
+};
+
+// ── MODUL W2: Aktivierungsenergie (Arrhenius-Gleichung) ──
+// k = A · e^(-Ea/RT) — Wie viel Energie braucht es den Lead zu aktivieren?
+App.activation = {
+    calculate(ws, tech, place, competitors, revenue) {
+        // Ea: Aktivierungsenergie (psychologische Huerden)
+        // Hoeher = schwerer zu ueberzeugen
+        let Ea = 50;  // Basis-Huerde
+
+        // Faktoren die Ea ERHOEHEN (Widerstand)
+        if (ws.perf >= 70) Ea += 15;       // "Website ist doch okay"
+        if (ws.isHttps && ws.viewport) Ea += 10; // Keine sichtbaren Probleme
+        if (!place) Ea += 20;               // Kann mich nicht kontaktieren
+        const count = place?.userRatingCount || 0;
+        if (count < 5) Ea += 10;            // Sehr kleines Unternehmen = Budgetangst
+
+        // Faktoren die Ea SENKEN (Dringlichkeit/Schmerz)
+        if (!ws.isHttps) Ea -= 25;          // Browser-Warnung = aktiver Schmerz
+        if (!ws.viewport) Ea -= 20;         // Mobile komplett kaputt
+        if (ws.perf < 30) Ea -= 15;         // Extrem langsam = spuerbar
+        if (tech.isBaukasten) Ea -= 10;     // Kennt eigene Limitierung
+        if (revenue && revenue.yearlyRevenueLoss > 10000) Ea -= 15;  // Grosse Euro-Zahl
+
+        // T: Temperatur (Markt-Druck, externe Faktoren)
+        let T = 300;  // Raumtemperatur = neutral
+        if (competitors && competitors.filter(c => c.perf > 60).length > 2) T += 50;  // Konkurrenz heizt ein
+        if (ws.a11y < 50) T += 30;  // BFSG-Deadline
+        const month = new Date().getMonth();
+        if ([2,3,4,8,9].includes(month)) T += 20;  // Fruehling/Herbst = Redesign-Saison
+
+        // Katalysatoren: Senken Ea ohne Temperatur zu erhoehen
+        const catalysts = [];
+        catalysts.push({ name: 'Kostenloser Entwurf', reduction: 15 });
+        if (competitors && competitors.length > 0) catalysts.push({ name: 'Konkurrenz-Vergleich zeigen', reduction: 10 });
+        if (revenue && revenue.yearlyRevenueLoss > 5000) catalysts.push({ name: `Umsatzverlust ${revenue.yearlyRevenueLoss.toLocaleString('de-DE')}€ nennen`, reduction: 12 });
+        if (!ws.isHttps) catalysts.push({ name: '"Nicht sicher"-Screenshot senden', reduction: 8 });
+
+        const bestCatalyst = catalysts.sort((a, b) => b.reduction - a.reduction)[0];
+        const EaWithCatalyst = Math.max(5, Ea - (bestCatalyst?.reduction || 0));
+
+        // Arrhenius: Reaktionsgeschwindigkeit
+        const R = 8.314;  // Universelle Gaskonstante
+        const A = 1000;   // Praeexponentieller Faktor
+        const k = A * Math.exp(-Ea / (R * T / 100));
+        const kCatalyzed = A * Math.exp(-EaWithCatalyst / (R * T / 100));
+
+        return {
+            Ea: Math.round(Math.max(5, Ea)),
+            EaWithCatalyst: Math.round(EaWithCatalyst),
+            T: Math.round(T),
+            k: Math.round(k * 100) / 100,
+            kCatalyzed: Math.round(kCatalyzed * 100) / 100,
+            speedup: kCatalyzed > 0 && k > 0 ? Math.round((kCatalyzed / k) * 10) / 10 : 1,
+            catalysts,
+            bestCatalyst,
+            label: Ea <= 25 ? 'Niedrig — braucht nur einen Anstoss' : Ea <= 45 ? 'Mittel — Katalysator empfohlen' : 'Hoch — schwer zu aktivieren'
+        };
+    }
+};
+
+// ── MODUL W3: Epidemiologischer R₀ ──
+// Wie viele Folge-Auftraege bringt ein Kunde?
+App.epidemic = {
+    calculate(place, competitors) {
+        if (!place || !competitors) return { R0: 1.0, label: 'Keine Cluster-Daten', clusterSize: 0 };
+
+        // Beta: Uebertragungswahrscheinlichkeit (wie sichtbar ist das Ergebnis?)
+        const beta = 0.15;  // 15% der Nachbarn bemerken eine neue Website
+
+        // c: Kontaktrate (wie viele aehnliche Geschaefte im Umkreis?)
+        const clusterSize = competitors.length;
+        const c = Math.min(10, clusterSize);
+
+        // d: Dauer der Sichtbarkeit (Monate in denen die neue Website auffaellt)
+        const d = 6;  // 6 Monate Auffaelligkeits-Fenster
+
+        // R₀ = beta × c × d / 12 (normalisiert auf Jahresbasis)
+        const R0 = beta * c * d / 12;
+
+        // Erwartete Folge-Auftraege in 12 Monaten
+        const expectedFollowUps = Math.round(R0 * 10) / 10;
+
+        // Cluster-Typ
+        const type = place.primaryType || '';
+        const clusterTypes = {
+            'restaurant': 'Gastromeile', 'cafe': 'Gastromeile', 'bar': 'Gastromeile',
+            'dentist': 'Aerztezentrum', 'doctor': 'Aerztezentrum', 'physiotherapist': 'Aerztezentrum',
+            'hair_salon': 'Einkaufsstrasse', 'beauty_salon': 'Einkaufsstrasse',
+            'lawyer': 'Kanzlei-Cluster', 'auto_repair': 'Gewerbegebiet'
+        };
+        const clusterType = clusterTypes[type] || 'Lokaler Markt';
+
+        return {
+            R0: Math.round(R0 * 100) / 100,
+            expectedFollowUps,
+            clusterSize, clusterType,
+            isEpidemic: R0 > 1,
+            label: R0 >= 2 ? `R₀=${R0.toFixed(1)} — Epidemisches Potenzial (${clusterType})` :
+                   R0 >= 1 ? `R₀=${R0.toFixed(1)} — Jeder Kunde bringt ~1 weiteren` :
+                   `R₀=${R0.toFixed(1)} — Wenig Cluster-Effekt`
+        };
+    }
+};
+
+// ── MODUL W4: Shannon-Entropie (Informationsgehalt) ──
+// Wie viel einzigartige Information hat die Website?
+App.shannon = {
+    calculate(psiData, tech) {
+        const lh = psiData?.lighthouseResult || {};
+        const audits = lh.audits || {};
+
+        // Signal 1: Resource-Diversitaet (viele gleiche Typen = Template)
+        const netItems = audits['network-requests']?.details?.items || [];
+        const mimeTypes = {};
+        for (const item of netItems) {
+            const mime = item.mimeType || 'unknown';
+            const category = mime.includes('image') ? 'image' :
+                           mime.includes('script') ? 'script' :
+                           mime.includes('css') ? 'css' :
+                           mime.includes('font') ? 'font' :
+                           mime.includes('html') ? 'html' : 'other';
+            mimeTypes[category] = (mimeTypes[category] || 0) + 1;
+        }
+        const total = netItems.length || 1;
+        let resourceEntropy = 0;
+        for (const count of Object.values(mimeTypes)) {
+            const p = count / total;
+            if (p > 0) resourceEntropy -= p * Math.log2(p);
+        }
+        // Normalisiere: Max Entropie bei 6 Kategorien = log2(6) = 2.58
+        const normalizedResourceEntropy = Math.min(1, resourceEntropy / 2.58);
+
+        // Signal 2: Third-Party vs First-Party Ratio
+        const finalUrl = lh.finalDisplayedUrl || '';
+        let domain = '';
+        try { domain = new URL(finalUrl).hostname; } catch(e) {}
+        const firstParty = netItems.filter(i => i.url && i.url.includes(domain)).length;
+        const thirdParty = netItems.length - firstParty;
+        const thirdPartyRatio = netItems.length > 0 ? thirdParty / netItems.length : 0;
+        // Hohe Third-Party-Ratio = Template/Baukasten (niedrige Eigenleistung)
+
+        // Signal 3: Baukasten-Indikator (Templates haben sehr niedrige Informations-Entropie)
+        const templatePenalty = tech.isBaukasten ? 0.7 : tech.cms.includes('WordPress') ? 0.3 : 0;
+
+        // Signal 4: Bild-Eigenleistung (eigene Bilder vs Stock)
+        // Approximation: Wenige grosse Bilder = eigene Fotos, viele kleine = Icons/Stock
+        const images = netItems.filter(i => (i.mimeType || '').includes('image'));
+        const avgImageSize = images.length > 0 ? images.reduce((s, i) => s + (i.transferSize || 0), 0) / images.length : 0;
+        const imageQuality = avgImageSize > 50000 ? 0.8 : avgImageSize > 15000 ? 0.5 : 0.2;  // Grosse Bilder = eher eigene
+
+        // Gesamt Shannon-Informationsgehalt (0-1, NIEDRIG = Template, HOCH = Custom)
+        const H = (
+            normalizedResourceEntropy * 0.20 +
+            (1 - thirdPartyRatio)     * 0.25 +   // Wenig Third-Party = mehr Eigenleistung
+            (1 - templatePenalty)      * 0.30 +   // Kein Template = mehr Information
+            imageQuality              * 0.25
+        );
+
+        // Invertiert fuer Lead-Score: NIEDRIGE Shannon-Entropie = GUTER Lead
+        // (Geschaeft ist besser als sein Online-Auftritt)
+        return {
+            H: Math.round(H * 100) / 100,
+            resourceEntropy: Math.round(normalizedResourceEntropy * 100) / 100,
+            thirdPartyRatio: Math.round(thirdPartyRatio * 100),
+            templatePenalty,
+            imageQuality: Math.round(imageQuality * 100) / 100,
+            label: H <= 0.3 ? 'Sehr niedrig — Template/Baukasten, Geschaeft verdient besseren Auftritt' :
+                   H <= 0.5 ? 'Niedrig — wenig einzigartiger Content' :
+                   H <= 0.7 ? 'Mittel — teilweise individualisiert' :
+                   'Hoch — bereits stark individualisierte Website'
+        };
+    }
+};
+
+// ── MODUL W5: Netzwerk-Graphentheorie (Betweenness Centrality) ──
+// Wie zentral liegt der Lead im lokalen Wettbewerbsnetz?
+App.graph = {
+    calculate(place, competitors) {
+        if (!place || !competitors || competitors.length < 2) {
+            return { centrality: 0.5, clusterCoeff: 0, label: 'Zu wenig Konkurrenz-Daten' };
+        }
+
+        // Vereinfachte Centrality: Basierend auf Anzahl Konkurrenten und
+        // wie stark sich ihre Performance-Scores aehneln (= gleicher Markt)
+        const perfs = competitors.filter(c => c.perf !== null).map(c => c.perf);
+        if (perfs.length < 2) return { centrality: 0.5, clusterCoeff: 0, label: 'Zu wenig Daten' };
+
+        // Varianz der Performance-Scores: Niedrige Varianz = enger Markt = hohe Centrality
+        const mean = perfs.reduce((a, b) => a + b, 0) / perfs.length;
+        const variance = perfs.reduce((s, p) => s + (p - mean) ** 2, 0) / perfs.length;
+        const sd = Math.sqrt(variance);
+        const cohesion = 1 - Math.min(1, sd / 40);  // SD < 40 = kohersenter Markt
+
+        // Cluster-Koeffizient: Wie viele Konkurrenten haben aehnliche Ratings?
+        const ratings = competitors.filter(c => c.rating).map(c => c.rating);
+        let similarPairs = 0, totalPairs = 0;
+        for (let i = 0; i < ratings.length; i++) {
+            for (let j = i + 1; j < ratings.length; j++) {
+                totalPairs++;
+                if (Math.abs(ratings[i] - ratings[j]) < 0.5) similarPairs++;
+            }
+        }
+        const clusterCoeff = totalPairs > 0 ? similarPairs / totalPairs : 0;
+
+        // Betweenness Centrality (vereinfacht):
+        // Zentraler = mehr Konkurrenten × engerer Markt × aehnliche Ratings
+        const centrality = (
+            Math.min(1, competitors.length / 8) * 0.40 +  // Mehr Nachbarn = zentraler
+            cohesion                             * 0.35 +  // Engerer Markt = sichtbarer
+            clusterCoeff                         * 0.25    // Aehnliche Ratings = direkter Vergleich
+        );
+
+        return {
+            centrality: Math.round(centrality * 100) / 100,
+            clusterCoeff: Math.round(clusterCoeff * 100) / 100,
+            cohesion: Math.round(cohesion * 100) / 100,
+            neighbors: competitors.length,
+            label: centrality >= 0.7 ? 'Hoch-zentral — jeder sieht den Vergleich' :
+                   centrality >= 0.4 ? 'Mittel — moderater Wettbewerbs-Druck' :
+                   'Peripher — wenig direkter Vergleich'
+        };
+    }
+};
+
+// ── MODUL W6: Kahneman Dual Process (System 1/2) ──
+// Welches Entscheidungssystem dominiert, und welcher Pitch passt?
+App.kahneman = {
+    calculate(ws, tech, place, revenue, activation) {
+        // System 1 Trigger (schnell, emotional, instinktiv)
+        let s1 = 0;
+        const s1Triggers = [];
+        if (!ws.isHttps) { s1 += 30; s1Triggers.push('"Nicht sicher" Warnung — loest Angst aus'); }
+        if (!ws.viewport) { s1 += 20; s1Triggers.push('Mobile kaputt — sofort sichtbar beim Testen'); }
+        if (revenue && revenue.yearlyRevenueLoss > 8000) { s1 += 25; s1Triggers.push(`${revenue.yearlyRevenueLoss.toLocaleString('de-DE')}€ Verlust/Jahr — Schmerz-Zahl`); }
+        if (ws.perf < 25) { s1 += 15; s1Triggers.push('Extrem langsam — jeder spuert das'); }
+        if (tech.isBaukasten) { s1 += 10; s1Triggers.push('Baukasten-Grenzen — kennt der Inhaber selbst'); }
+
+        // System 2 Trigger (langsam, rational, analytisch)
+        let s2 = 0;
+        const s2Triggers = [];
+        if (revenue && revenue.roi > 2) { s2 += 25; s2Triggers.push(`ROI ${revenue.roi}x — rationales Argument`); }
+        if (place?.userRatingCount > 50) { s2 += 15; s2Triggers.push('Etabliertes Unternehmen — entscheidet analytisch'); }
+        if (activation && activation.Ea > 40) { s2 += 20; s2Triggers.push('Hohe Aktivierungsenergie — braucht rationale Ueberzeugung'); }
+        const type = place?.primaryType || '';
+        if (['lawyer', 'real_estate_agency', 'doctor', 'hotel'].includes(type)) { s2 += 15; s2Triggers.push('Branche mit analytischen Entscheidern'); }
+        if (ws.perf >= 50 && ws.seo >= 50) { s2 += 10; s2Triggers.push('Website nicht katastrophal — kein emotionaler Schock moeglich'); }
+
+        const total = s1 + s2 || 1;
+        const s1Pct = Math.round((s1 / total) * 100);
+        const s2Pct = 100 - s1Pct;
+        const dominant = s1Pct >= 55 ? 'system1' : s2Pct >= 55 ? 'system2' : 'mixed';
+
+        // Pitch-Empfehlung
+        let pitchStrategy;
+        if (dominant === 'system1') {
+            pitchStrategy = {
+                approach: 'Emotional — Schmerz zuerst, Loesung danach',
+                opening: s1Triggers[0] || 'Visuelles Problem zeigen',
+                format: 'Screenshot + Euro-Zahl im Betreff, kurze E-Mail',
+                avoid: 'Keine langen ROI-Tabellen — der Lead entscheidet aus dem Bauch'
+            };
+        } else if (dominant === 'system2') {
+            pitchStrategy = {
+                approach: 'Rational — Daten, ROI, Vergleich',
+                opening: s2Triggers[0] || 'ROI-Berechnung',
+                format: 'Detaillierter Report mit Zahlen, Konkurrenz-Tabelle',
+                avoid: 'Keine emotionalen Tricks — dieser Lead will Fakten'
+            };
+        } else {
+            pitchStrategy = {
+                approach: 'Hybrid — emotionaler Hook, rationale Vertiefung',
+                opening: 'Screenshot als Aufhaenger, dann ROI-Argument',
+                format: 'Kurzer emotionaler Einstieg, dann Daten-Anhang',
+                avoid: 'Weder rein emotional noch rein rational'
+            };
+        }
+
+        return {
+            system1: s1Pct, system2: s2Pct,
+            dominant,
+            s1Triggers: s1Triggers.slice(0, 3),
+            s2Triggers: s2Triggers.slice(0, 3),
+            pitchStrategy,
+            label: dominant === 'system1' ? `System 1 dominant (${s1Pct}%) — emotionaler Pitch` :
+                   dominant === 'system2' ? `System 2 dominant (${s2Pct}%) — rationaler Pitch` :
+                   `Gemischt (${s1Pct}/${s2Pct}) — Hybrid-Pitch`
+        };
+    }
+};
+
+// ══════════════════════════════════════
 // MODUL 1: UMSATZVERLUST-RECHNER
 // Branchen-Conversion-Rates, Traffic-Proxy,
 // Bounce-Rate bei langsamer Seite
@@ -1470,6 +1835,86 @@ App.ui = {
             }
         }
 
+        // ── Wissenschaftliche Analyse ──
+        if (extra.thermoEntropy || extra.activationEnergy || extra.shannonEntropy || extra.kahnemanProfile) {
+            html += `<div class="section-title">Wissenschaftliche Analyse</div><div class="scores-grid">`;
+
+            // Thermodynamische Entropie
+            if (extra.thermoEntropy) {
+                const te = extra.thermoEntropy;
+                const teColor = te.S >= 0.7 ? 'bad' : te.S >= 0.4 ? 'ok' : 'good';
+                html += `<div class="score-card"><div class="label">Thermo-Entropie S</div><div class="value ${teColor}">${te.S}</div><div class="detail">${te.label}</div><div class="detail">Geschaetztes Alter: ${te.estAge} · ${te.techDiversity} Technologien · ${te.totalRequests} Requests</div></div>`;
+            }
+
+            // Aktivierungsenergie
+            if (extra.activationEnergy) {
+                const ae = extra.activationEnergy;
+                const aeColor = ae.Ea <= 25 ? 'good' : ae.Ea <= 45 ? 'ok' : 'bad';
+                html += `<div class="score-card"><div class="label">Aktivierungsenergie Ea</div><div class="value ${aeColor}">${ae.Ea} kJ</div><div class="detail">${ae.label}</div><div class="detail">T=${ae.T}K · Katalysator: ${ae.bestCatalyst?.name || '—'} (${ae.speedup}x schneller)</div></div>`;
+            }
+
+            // Shannon-Entropie
+            if (extra.shannonEntropy) {
+                const sh = extra.shannonEntropy;
+                const shColor = sh.H <= 0.3 ? 'good' : sh.H <= 0.5 ? 'ok' : 'bad';  // Niedrig = guter Lead
+                html += `<div class="score-card"><div class="label">Shannon-Entropie H</div><div class="value ${shColor}">${sh.H}</div><div class="detail">${sh.label}</div><div class="detail">${sh.thirdPartyRatio}% Third-Party · Bild-Qualitaet: ${sh.imageQuality}</div></div>`;
+            }
+
+            // R₀
+            if (extra.r0) {
+                const r = extra.r0;
+                const rColor = r.R0 >= 2 ? 'good' : r.R0 >= 1 ? 'ok' : 'bad';
+                html += `<div class="score-card"><div class="label">Epidemischer R₀</div><div class="value ${rColor}">${r.R0}</div><div class="detail">${r.label}</div><div class="detail">${r.clusterSize} Nachbarn · Typ: ${r.clusterType} · ~${r.expectedFollowUps} Folge-Auftraege</div></div>`;
+            }
+
+            html += `</div>`;  // End scores-grid
+
+            // Graphentheorie
+            if (extra.graphCentrality) {
+                const gc = extra.graphCentrality;
+                html += `<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center">
+                    <div><div class="label" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)">Netzwerk-Zentralitaet</div>
+                    <div style="font-size:1.2rem;font-weight:700">${gc.centrality} <span style="font-size:13px;font-weight:400;color:var(--muted)">/ 1.0</span></div></div>
+                    <div style="text-align:right;font-size:12px;color:var(--muted)">${gc.label}<br>${gc.neighbors} Konkurrenten · Kohaesion: ${gc.cohesion} · Cluster-Koeff: ${gc.clusterCoeff}</div>
+                </div></div>`;
+            }
+
+            // Kahneman
+            if (extra.kahnemanProfile) {
+                const kp = extra.kahnemanProfile;
+                const s1Color = kp.system1 > 55 ? 'var(--red)' : 'var(--muted)';
+                const s2Color = kp.system2 > 55 ? 'var(--accent)' : 'var(--muted)';
+                html += `<div class="card" style="margin-bottom:12px">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px">Kahneman-Entscheidungsprofil</div>
+                    <div style="display:flex;gap:24px;margin-bottom:12px">
+                        <div style="flex:1;text-align:center"><div style="font-size:2rem;font-weight:700;color:${s1Color}">${kp.system1}%</div><div style="font-size:11px;color:var(--muted)">System 1 (emotional)</div></div>
+                        <div style="flex:1;text-align:center"><div style="font-size:2rem;font-weight:700;color:${s2Color}">${kp.system2}%</div><div style="font-size:11px;color:var(--muted)">System 2 (rational)</div></div>
+                    </div>
+                    <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:16px"><div style="height:100%;width:${kp.system1}%;background:linear-gradient(90deg,${s1Color},${s2Color});border-radius:3px"></div></div>
+                    <div style="font-size:13px;font-weight:600;margin-bottom:4px">${kp.pitchStrategy.approach}</div>
+                    <div style="font-size:12px;color:var(--muted)">Eroeffnung: ${kp.pitchStrategy.opening}</div>
+                    <div style="font-size:12px;color:var(--muted)">Format: ${kp.pitchStrategy.format}</div>
+                    <div style="font-size:12px;color:var(--red);margin-top:4px">Vermeiden: ${kp.pitchStrategy.avoid}</div>
+                </div>`;
+
+                // System 1 & 2 Trigger listen
+                if (kp.s1Triggers.length > 0 || kp.s2Triggers.length > 0) {
+                    html += `<div class="card" style="margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap">`;
+                    if (kp.s1Triggers.length > 0) {
+                        html += `<div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px">SYSTEM 1 TRIGGER</div>`;
+                        for (const t of kp.s1Triggers) html += `<div style="font-size:12px;color:var(--muted);padding:3px 0">• ${t}</div>`;
+                        html += `</div>`;
+                    }
+                    if (kp.s2Triggers.length > 0) {
+                        html += `<div style="flex:1;min-width:200px"><div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px">SYSTEM 2 TRIGGER</div>`;
+                        for (const t of kp.s2Triggers) html += `<div style="font-size:12px;color:var(--muted);padding:3px 0">• ${t}</div>`;
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+                }
+            }
+        }
+
         // ── Umsatzverlust (Modul 1) ──
         if (extra.revenue && extra.revenue.yearlyRevenueLoss > 0) {
             const r = extra.revenue;
@@ -1754,11 +2199,20 @@ App.single = {
             ws, tech, biz.place, revenue, prob, strategy
         );
 
+        // Wissenschaftliche Module
+        const thermoEntropy = App.entropy.calculate(psiData, tech);
+        const activationEnergy = App.activation.calculate(ws, tech, biz.place, competitors, revenue);
+        const r0 = App.epidemic.calculate(biz.place, competitors);
+        const shannonEntropy = App.shannon.calculate(psiData, tech);
+        const graphCentrality = App.graph.calculate(biz.place, competitors);
+        const kahnemanProfile = App.kahneman.calculate(ws, tech, biz.place, revenue, activationEnergy);
+
         App.ui.hideLoading();
         $('check-btn').disabled = false;
         // Zwischenspeichern fuer CRM-Save-Button
         App._lastWs = ws; App._lastTech = tech; App._lastProb = prob;
-        App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence };
+        App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence,
+            thermoEntropy, activationEnergy, r0, shannonEntropy, graphCentrality, kahnemanProfile };
 
         App.ui.renderSingle(url, ws, tech, biz, prob, competitors, App._lastExtra);
     }
