@@ -756,6 +756,272 @@ App.probability = {
 };
 
 // ══════════════════════════════════════
+// MODUL 1: UMSATZVERLUST-RECHNER
+// Branchen-Conversion-Rates, Traffic-Proxy,
+// Bounce-Rate bei langsamer Seite
+// ══════════════════════════════════════
+App.revenue = {
+    // Branchen-Daten: monatl. Besucher pro Google-Bewertung, Conversion-Rate, durchschn. Kundenwert
+    industries: {
+        'restaurant':        { visitorsPerReview: 25, convRate: 0.12, avgValue: 35,   name: 'Restaurant' },
+        'cafe':              { visitorsPerReview: 20, convRate: 0.15, avgValue: 12,   name: 'Cafe' },
+        'dentist':           { visitorsPerReview: 8,  convRate: 0.08, avgValue: 280,  name: 'Zahnarzt' },
+        'doctor':            { visitorsPerReview: 8,  convRate: 0.06, avgValue: 150,  name: 'Arztpraxis' },
+        'physiotherapist':   { visitorsPerReview: 6,  convRate: 0.10, avgValue: 80,   name: 'Physiotherapie' },
+        'hair_salon':        { visitorsPerReview: 15, convRate: 0.14, avgValue: 55,   name: 'Friseur' },
+        'beauty_salon':      { visitorsPerReview: 12, convRate: 0.12, avgValue: 85,   name: 'Kosmetikstudio' },
+        'real_estate_agency':{ visitorsPerReview: 5,  convRate: 0.03, avgValue: 4500, name: 'Immobilienmakler' },
+        'lawyer':            { visitorsPerReview: 4,  convRate: 0.05, avgValue: 800,  name: 'Rechtsanwalt' },
+        'auto_repair':       { visitorsPerReview: 10, convRate: 0.08, avgValue: 350,  name: 'KFZ-Werkstatt' },
+        'plumber':           { visitorsPerReview: 8,  convRate: 0.12, avgValue: 280,  name: 'Sanitaerbetrieb' },
+        'electrician':       { visitorsPerReview: 7,  convRate: 0.10, avgValue: 250,  name: 'Elektrobetrieb' },
+        'hotel':             { visitorsPerReview: 30, convRate: 0.04, avgValue: 180,  name: 'Hotel' },
+        'gym':               { visitorsPerReview: 18, convRate: 0.06, avgValue: 40,   name: 'Fitnessstudio' },
+        'veterinary_care':   { visitorsPerReview: 8,  convRate: 0.10, avgValue: 120,  name: 'Tierarzt' },
+        'bakery':            { visitorsPerReview: 20, convRate: 0.18, avgValue: 8,    name: 'Baeckerei' },
+        'florist':           { visitorsPerReview: 10, convRate: 0.10, avgValue: 45,   name: 'Florist' },
+        'car_dealer':        { visitorsPerReview: 12, convRate: 0.02, avgValue: 25000,name: 'Autohaus' },
+        'moving_company':    { visitorsPerReview: 5,  convRate: 0.08, avgValue: 900,  name: 'Umzugsunternehmen' },
+        'travel_agency':     { visitorsPerReview: 6,  convRate: 0.05, avgValue: 1800, name: 'Reisebuero' },
+        '_default':          { visitorsPerReview: 10, convRate: 0.08, avgValue: 150,  name: 'Unternehmen' }
+    },
+
+    // Google-Studie: Bounce-Rate-Anstieg bei Ladezeit
+    // https://www.thinkwithgoogle.com/marketing-strategies/app-and-mobile/mobile-page-speed-new-industry-benchmarks/
+    bounceIncrease(loadTimeSec) {
+        if (loadTimeSec <= 1) return 0;
+        if (loadTimeSec <= 3) return 0.32;   // 32% mehr Bounces
+        if (loadTimeSec <= 5) return 0.90;   // 90% mehr Bounces
+        if (loadTimeSec <= 6) return 1.06;   // 106% mehr Bounces
+        if (loadTimeSec <= 10) return 1.23;  // 123% mehr Bounces
+        return 1.50;
+    },
+
+    calculate(ws, place) {
+        const type = place?.primaryType || '_default';
+        const ind = this.industries[type] || this.industries._default;
+        const reviews = place?.userRatingCount || 10;
+
+        // Geschaetzte monatliche Website-Besucher
+        const estMonthlyVisitors = reviews * ind.visitorsPerReview;
+
+        // Ladezeit-Impact
+        const lcpSec = parseFloat(ws.lcp) || 3;
+        const bounceRate = this.bounceIncrease(lcpSec);
+
+        // Baseline: gute Seite haette diese Conversions
+        const baselineConversions = estMonthlyVisitors * ind.convRate;
+
+        // Aktuelle Verluste durch langsame Seite
+        const lostVisitorPct = bounceRate * 0.4;  // 40% der Bounce-Erhoehung = verlorene Conversions
+        const lostConversions = baselineConversions * lostVisitorPct;
+
+        // Verluste durch fehlende Mobile-Optimierung
+        const mobilePenalty = ws.viewport ? 0 : 0.15;  // 15% aller Mobile-User verloren
+        const mobileLost = baselineConversions * 0.6 * mobilePenalty;  // 60% Traffic ist mobile
+
+        // Verluste durch fehlendes HTTPS
+        const sslPenalty = ws.isHttps ? 0 : 0.10;  // 10% verlassen bei "Nicht sicher"
+        const sslLost = baselineConversions * sslPenalty;
+
+        // SEO-Verluste (schlechteres Ranking = weniger Besucher)
+        const seoLostPct = ws.seo < 50 ? 0.30 : ws.seo < 75 ? 0.15 : 0.05;
+        const seoLost = baselineConversions * seoLostPct;
+
+        const totalLostMonthly = lostConversions + mobileLost + sslLost + seoLost;
+        const monthlyRevenueLoss = Math.round(totalLostMonthly * ind.avgValue);
+        const yearlyRevenueLoss = monthlyRevenueLoss * 12;
+
+        return {
+            industry: ind,
+            estMonthlyVisitors,
+            baselineConversions: Math.round(baselineConversions * 10) / 10,
+            lostConversions: { speed: lostConversions, mobile: mobileLost, ssl: sslLost, seo: seoLost },
+            totalLostMonthly: Math.round(totalLostMonthly * 10) / 10,
+            monthlyRevenueLoss,
+            yearlyRevenueLoss,
+            roi: yearlyRevenueLoss > 0 ? Math.round(yearlyRevenueLoss / 1990 * 100) / 100 : 0  // ROI vs. Business-Paket
+        };
+    }
+};
+
+// ══════════════════════════════════════
+// MODUL 2: SCREENSHOT-EXTRAKTION
+// Nutzt den Lighthouse-Screenshot aus PSI
+// ══════════════════════════════════════
+App.screenshot = {
+    extract(psiData) {
+        const screenshot = psiData.lighthouseResult?.audits?.['final-screenshot']?.details?.data
+            || psiData.lighthouseResult?.audits?.['screenshot-thumbnails']?.details?.items?.slice(-1)?.[0]?.data;
+        return screenshot || null;  // Base64 data-URI oder null
+    }
+};
+
+// ══════════════════════════════════════
+// MODUL 3: GOOGLE-PERSPEKTIVE-REPORT
+// Core Web Vitals in Googles Sprache
+// ══════════════════════════════════════
+App.googleReport = {
+    generate(ws, tech, competitors) {
+        const cwv = [];
+        const lcpSec = parseFloat(ws.lcp) || 0;
+        const clsVal = parseFloat(ws.cls) || 0;
+        const fcpSec = parseFloat(ws.fcp) || 0;
+
+        // Core Web Vitals Assessment
+        cwv.push({ name: 'Largest Contentful Paint (LCP)', value: ws.lcp, pass: lcpSec <= 2.5,
+            threshold: '≤ 2,5s', impact: 'Wie schnell der Hauptinhalt sichtbar wird' });
+        cwv.push({ name: 'Cumulative Layout Shift (CLS)', value: ws.cls, pass: clsVal <= 0.1,
+            threshold: '≤ 0,1', impact: 'Ob Elemente beim Laden springen' });
+        cwv.push({ name: 'First Contentful Paint (FCP)', value: ws.fcp, pass: fcpSec <= 1.8,
+            threshold: '≤ 1,8s', impact: 'Wie schnell ueberhaupt etwas erscheint' });
+        cwv.push({ name: 'HTTPS-Verschluesselung', value: ws.isHttps ? 'Aktiv' : 'Fehlt', pass: ws.isHttps,
+            threshold: 'Erforderlich', impact: 'Browser zeigen "Nicht sicher" Warnung' });
+        cwv.push({ name: 'Mobile Viewport', value: ws.viewport ? 'Konfiguriert' : 'Fehlt', pass: ws.viewport,
+            threshold: 'Erforderlich', impact: 'Seite wird auf Smartphones korrekt dargestellt' });
+        cwv.push({ name: 'Barrierefreiheit (BFSG)', value: ws.a11y + '/100', pass: ws.a11y >= 80,
+            threshold: '≥ 80', impact: 'Gesetzlich vorgeschrieben seit Juni 2025' });
+
+        const passed = cwv.filter(c => c.pass).length;
+        const failed = cwv.length - passed;
+
+        // Konkurrenz-Kontext
+        let compContext = '';
+        if (competitors && competitors.length > 1) {
+            const betterPerf = competitors.filter(c => c.perf !== null && c.perf > ws.perf).length;
+            if (betterPerf > 0) compContext = `${betterPerf} von ${competitors.length - 1} Wettbewerbern in Ihrer Umgebung haben eine schnellere Website.`;
+        }
+
+        return { cwv, passed, failed, total: cwv.length, compContext };
+    }
+};
+
+// ══════════════════════════════════════
+// MODUL 4: KONTAKT-STRATEGIE
+// Branchen-spezifische Empfehlung
+// ══════════════════════════════════════
+App.strategy = {
+    strategies: {
+        'restaurant':        { channel: 'Persoenlich vorbeigehen (Nebenzeit 14-16 Uhr)', opener: 'Umsatzverlust durch fehlende Online-Reservierungen', objection: '"Laeuft doch" → "Ihre Konkurrenz hat 3x mehr Google-Sichtbarkeit"', decisionMaker: 'Inhaber/Geschaeftsfuehrer direkt' },
+        'dentist':           { channel: 'E-Mail an Praxismanagement', opener: 'Patientenverlust durch langsame Website + fehlende Online-Terminbuchung', objection: '"Wir haben genug Patienten" → "Aber die richtigen? Privatpatienten suchen online"', decisionMaker: 'Praxismanager/in oder Inhaber/in' },
+        'doctor':            { channel: 'E-Mail an Praxismanagement', opener: 'BFSG-Compliance und Online-Terminbuchung', objection: '"Zu teuer" → "Weniger als eine Monatskarte fuer Doctolib"', decisionMaker: 'Praxismanager/in' },
+        'hair_salon':        { channel: 'Persoenlich vorbeigehen oder Instagram-DM', opener: 'Mobile Buchung — 70% der Kunden buchen vom Handy', objection: '"Instagram reicht" → "Google bringt Neukunden, Instagram haelt Bestandskunden"', decisionMaker: 'Saloninhaber/in direkt' },
+        'beauty_salon':      { channel: 'Instagram-DM oder persoenlich', opener: 'Premium-Positionierung — Ihre Preise verdienen eine Premium-Website', objection: '"Zu teuer" → "Ihre Website muss 2 Kunden bringen, dann hat sie sich bezahlt"', decisionMaker: 'Inhaber/in' },
+        'real_estate_agency': { channel: 'LinkedIn oder E-Mail', opener: 'Expose-Qualitaet online — Kaeufer erwarten Premium-Erlebnis', objection: '"Haben ImmoScout" → "Ihre Website ist Ihr Schaufenster, nicht ein Portal"', decisionMaker: 'Geschaeftsfuehrer/in oder Marketingleiter/in' },
+        'lawyer':            { channel: 'E-Mail (formell)', opener: 'Mandantenakquise — 72% suchen zuerst online nach Anwaelten', objection: '"Empfehlungen reichen" → "Auch Empfohlene googeln Sie danach"', decisionMaker: 'Kanzleiinhaber/in oder Managing Partner' },
+        'auto_repair':       { channel: 'Anruf oder persoenlich', opener: 'Fachkraeftemangel — moderne Website zieht auch Bewerber an', objection: '"Mundpropaganda reicht" → "Die naechste Generation sucht online"', decisionMaker: 'Werkstattmeister/Inhaber' },
+        'plumber':           { channel: 'Anruf (morgens 7-8 Uhr)', opener: 'Notfall-Kunden suchen "Sanitaer Notdienst [Stadt]" — sind Sie sichtbar?', objection: '"Keine Zeit fuer sowas" → "Dauert 0 Minuten — wir machen alles"', decisionMaker: 'Meister/Inhaber direkt' },
+        'electrician':       { channel: 'Anruf (morgens 7-8 Uhr)', opener: 'Neukunden + Azubi-Gewinnung durch modernen Auftritt', objection: '"Haben genug Auftraege" → "Aber finden Sie genug Azubis?"', decisionMaker: 'Meister/Inhaber' },
+        'hotel':             { channel: 'E-Mail an Direktion/Marketing', opener: 'Direktbuchungen statt Booking.com-Provision (15-25%)', objection: '"Booking bringt genug" → "Jede Direktbuchung spart 15-25% Provision"', decisionMaker: 'Hoteldirektor/in oder Revenue Manager' },
+        'moving_company':    { channel: 'E-Mail oder Anruf', opener: 'Angebotsanfragen — Kunden vergleichen 3-5 Umzugsfirmen online', objection: '"MyHammer reicht" → "Dort konkurrieren Sie nur ueber den Preis"', decisionMaker: 'Geschaeftsfuehrer/in' },
+        '_default':          { channel: 'E-Mail', opener: 'Neukunden-Gewinnung durch moderne Online-Praesenz', objection: '"Zu teuer" → "Rechnen Sie den Umsatzverlust dagegen"', decisionMaker: 'Geschaeftsfuehrer/in oder Inhaber/in' }
+    },
+
+    recommend(place, ws, prob) {
+        const type = place?.primaryType || '_default';
+        const s = this.strategies[type] || this.strategies._default;
+
+        // Dringlichkeit bestimmt Timing
+        let timing = 'Innerhalb der naechsten 2 Wochen';
+        if (!ws.isHttps) timing = 'Sofort — SSL-Warnung kostet taeglich Kunden';
+        else if (!ws.viewport) timing = 'Diese Woche — Mobile komplett unbrauchbar';
+        else if (ws.perf < 30) timing = 'Diese Woche — extrem langsam';
+
+        // Staerkstes Argument aus Probability-Engine
+        const topDriver = prob.drivers[0];
+
+        return { ...s, timing, topDriver: topDriver?.name || '', type };
+    }
+};
+
+// ══════════════════════════════════════
+// MODUL 5: FOLLOW-UP-SEQUENZ-GENERATOR
+// 5 personalisierte Nachrichten
+// ══════════════════════════════════════
+App.sequence = {
+    generate(domain, ws, tech, place, revenue, prob, strategy) {
+        const name = place?.displayName?.text || domain;
+        const rev = revenue.yearlyRevenueLoss;
+        const revStr = rev > 0 ? rev.toLocaleString('de-DE') : '—';
+
+        return [
+            {
+                day: 1, subject: `${name} — Ihre Website kostet Sie Kunden`,
+                body: `Guten Tag,\n\nich habe ${domain} auf Google getestet. Die Ergebnisse:\n\n- Performance: ${ws.perf}/100 (Mobile)\n- ${!ws.isHttps ? 'Kein SSL-Zertifikat — Browser zeigen "Nicht sicher"\n- ' : ''}SEO: ${ws.seo}/100\n- Geschaetzter Umsatzverlust: ~${revStr} Euro/Jahr\n\n${tech.isBaukasten ? `Ihre Seite laeuft auf ${tech.cms}. Das limitiert Design, Geschwindigkeit und SEO strukturell.` : ''}\n\nIch baue moderne Websites fuer Unternehmen wie Ihres — handcodiert, ab 990 Euro einmalig. Kein Abo.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nMuammer Kizilaslan\nkarriaro-webdesign.de`
+            },
+            {
+                day: 4, subject: `Vorher/Nachher — so sah Spedition Kolbe aus`,
+                body: `Guten Tag,\n\nich hatte Ihnen vor ein paar Tagen geschrieben. Hier ein konkretes Beispiel:\n\nSpedition Kolbe — vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt der Vertrauen schafft. Ergebnis: deutlich mehr Anfragen ueber die Website.\n\nFuer ${name} sehe ich aehnliches Potenzial.\n\nSchauen Sie sich das Ergebnis an: karriaro-webdesign.de\n\nBeste Gruesse\nMuammer Kizilaslan`
+            },
+            {
+                day: 8, subject: `${ws.a11y < 70 ? 'BFSG-Frist: Barrierefreiheit seit Juni 2025 Pflicht' : 'Google bevorzugt schnelle Websites — Ihre ist es nicht'}`,
+                body: ws.a11y < 70
+                    ? `Guten Tag,\n\nseit Juni 2025 gilt das Barrierefreiheitsstaerkungsgesetz (BFSG). Ihre Website erreicht ${ws.a11y}/100 im Barrierefreiheits-Test.\n\nDas ist nicht nur ein Ranking-Nachteil — es kann rechtliche Konsequenzen haben.\n\nEine neue Karriaro-Website ist von Anfang an BFSG- und DSGVO-konform.\n\nSoll ich Ihnen ein unverbindliches Angebot machen?\n\nViele Gruesse\nMuammer Kizilaslan`
+                    : `Guten Tag,\n\nGoogle hat bestaetigt: Websites die alle Core Web Vitals bestehen, erhalten bis zu 24% mehr organischen Traffic.\n\nIhre Website besteht ${prob.dimensions?.d1 ? Math.round((1 - prob.dimensions.d1.score) * 6) : '?'} von 6 Pruefungen.\n\nMit einer neuen Website von Karriaro bestehen Sie alle — garantiert.\n\nViele Gruesse\nMuammer Kizilaslan`
+            },
+            {
+                day: 12, subject: `Kostenloser Entwurf fuer ${name}`,
+                body: `Guten Tag,\n\nich habe mir die Freiheit genommen, einen groben Entwurf fuer ${domain} zu erstellen. Keine Verpflichtung — ich moechte Ihnen einfach zeigen, was moeglich ist.\n\nDarf ich Ihnen den Entwurf per E-Mail oder in einem kurzen 15-Minuten-Call zeigen?\n\nAntworten Sie einfach auf diese Mail oder buchen Sie direkt: karriaro-webdesign.de\n\nViele Gruesse\nMuammer Kizilaslan`
+            },
+            {
+                day: 18, subject: `Letzte Nachricht — Angebot fuer ${name}`,
+                body: `Guten Tag,\n\ndies ist meine letzte Nachricht. Ich moechte nicht aufdringlich sein.\n\nFalls Sie irgendwann ueber eine neue Website nachdenken: karriaro-webdesign.de — ab 990 Euro, fertig in 1-2 Wochen, komplett handcodiert.\n\n${rev > 1990 ? `Bei einem geschaetzten Umsatzverlust von ${revStr} Euro/Jahr amortisiert sich das in ${Math.ceil(1990 / (rev / 12))} Monaten.` : ''}\n\nIch wuensche Ihnen weiterhin viel Erfolg.\n\nViele Gruesse\nMuammer Kizilaslan\nKarriaro Webdesign`
+            }
+        ];
+    }
+};
+
+// ══════════════════════════════════════
+// MODUL 6: PREDICTIVE TIMING
+// Wann ist der beste Zeitpunkt?
+// ══════════════════════════════════════
+App.timing = {
+    analyze(ws, tech, place) {
+        const signals = [];
+        const now = new Date();
+        const month = now.getMonth();  // 0-11
+
+        // SSL fehlt = sofort
+        if (!ws.isHttps) signals.push({ urgency: 'critical', label: 'SSL fehlt', detail: 'Browser zeigen aktiv "Nicht sicher" — jeder Tag kostet Kunden', action: 'Sofort kontaktieren' });
+
+        // Mobile kaputt = sofort
+        if (!ws.viewport) signals.push({ urgency: 'critical', label: 'Nicht mobilfreundlich', detail: 'Google indexiert seit 2021 Mobile-First — Seite wird aktiv benachteiligt', action: 'Sofort kontaktieren' });
+
+        // BFSG (seit Juni 2025)
+        if (ws.a11y < 70) signals.push({ urgency: 'high', label: 'BFSG-Compliance', detail: `Barrierefreiheit ${ws.a11y}/100 — gesetzlich vorgeschrieben seit Juni 2025`, action: 'Diese Woche kontaktieren' });
+
+        // Extrem langsam
+        if (ws.perf < 25) signals.push({ urgency: 'high', label: 'Performance kritisch', detail: `Score ${ws.perf}/100 — Google stuft aktiv herab`, action: 'Diese Woche kontaktieren' });
+
+        // Baukasten = strukturelle Limitierung
+        if (tech.isBaukasten) signals.push({ urgency: 'medium', label: `${tech.cms} erreicht seine Grenzen`, detail: 'Baukasten-Systeme limitieren Performance, SEO und Design fundamental', action: 'Innerhalb von 2 Wochen' });
+
+        // Alte WordPress-Version
+        if (tech.version) {
+            const major = parseInt(tech.version);
+            if (major > 0 && major < 6) signals.push({ urgency: 'high', label: `WordPress ${tech.version} (veraltet)`, detail: 'Sicherheitsupdates laufen aus — Sicherheitsrisiko und Google-Nachteil', action: 'Diese Woche kontaktieren' });
+        }
+
+        // Saisonale Signale
+        const type = place?.primaryType || '';
+        if (['restaurant', 'hotel', 'cafe', 'lodging'].includes(type)) {
+            if (month >= 1 && month <= 3) signals.push({ urgency: 'medium', label: 'Vor der Sommersaison', detail: 'Jetzt neue Website launchen = rechtzeitig vor der Hauptsaison', action: 'Jetzt starten, fertig vor Mai' });
+            if (month >= 8 && month <= 9) signals.push({ urgency: 'medium', label: 'Vor der Weihnachtssaison', detail: 'Website-Relaunch vor dem Weihnachtsgeschaeft', action: 'Jetzt starten, fertig vor November' });
+        }
+        if (['hair_salon', 'beauty_salon'].includes(type) && month >= 9 && month <= 10) {
+            signals.push({ urgency: 'medium', label: 'Weihnachts-/Silvestergeschaeft', detail: 'Hochsaison steht bevor — Online-Buchung entscheidend', action: 'Jetzt starten' });
+        }
+
+        // Gesamtbewertung
+        const hasC = signals.some(s => s.urgency === 'critical');
+        const hasH = signals.some(s => s.urgency === 'high');
+        const overall = hasC ? 'Sofort kontaktieren' : hasH ? 'Diese Woche' : signals.length > 0 ? 'Innerhalb von 2 Wochen' : 'Kein dringender Zeitpunkt';
+
+        return { signals, overall };
+    }
+};
+
+// ══════════════════════════════════════
 // UI RENDERER
 // ══════════════════════════════════════
 App.ui = {
@@ -764,7 +1030,7 @@ App.ui = {
     probClass: p => p >= 50 ? 'hot' : p >= 25 ? 'warm' : 'cold',
     probLabel: p => p >= 50 ? 'Hohe Konversionswahrscheinlichkeit' : p >= 25 ? 'Moderate Chance' : 'Geringe Chance',
 
-    renderSingle(url, ws, tech, biz, prob, competitors) {
+    renderSingle(url, ws, tech, biz, prob, competitors, extra = {}) {
         const domain = new URL(url).hostname.replace('www.', '');
         const pColor = this.probColor(prob.probability);
 
@@ -853,6 +1119,45 @@ App.ui = {
             html += '</tbody></table></div>';
         }
 
+        // ── Umsatzverlust (Modul 1) ──
+        if (extra.revenue && extra.revenue.yearlyRevenueLoss > 0) {
+            const r = extra.revenue;
+            html += `<div class="section-title">Geschaetzter Umsatzverlust</div><div class="card">
+                <div style="font-size:2.5rem;font-weight:800;color:var(--red);letter-spacing:-0.03em">~${r.yearlyRevenueLoss.toLocaleString('de-DE')} €<span style="font-size:14px;font-weight:400;color:var(--muted)">/Jahr</span></div>
+                <div style="font-size:13px;color:var(--muted);margin:12px 0 16px">Basierend auf ~${r.estMonthlyVisitors} geschaetzten Besuchern/Monat (${r.industry.name})</div>
+                <div class="biz-stat"><span class="biz-label">Verlust durch Ladezeit</span><span class="biz-value">${Math.round(r.lostConversions.speed * r.industry.avgValue).toLocaleString('de-DE')} €/Mo</span></div>
+                <div class="biz-stat"><span class="biz-label">Verlust Mobile-Probleme</span><span class="biz-value">${Math.round(r.lostConversions.mobile * r.industry.avgValue).toLocaleString('de-DE')} €/Mo</span></div>
+                ${!ws.isHttps ? `<div class="biz-stat"><span class="biz-label">Verlust SSL-Warnung</span><span class="biz-value">${Math.round(r.lostConversions.ssl * r.industry.avgValue).toLocaleString('de-DE')} €/Mo</span></div>` : ''}
+                <div class="biz-stat"><span class="biz-label">Verlust SEO-Sichtbarkeit</span><span class="biz-value">${Math.round(r.lostConversions.seo * r.industry.avgValue).toLocaleString('de-DE')} €/Mo</span></div>
+                <div class="biz-stat" style="border-top:2px solid var(--border);margin-top:4px;padding-top:12px"><span class="biz-label"><strong>ROI einer neuen Website (vs. 1.990€)</strong></span><span class="biz-value" style="color:var(--green)">${r.roi}x im ersten Jahr</span></div>
+            </div>`;
+        }
+
+        // ── Screenshot (Modul 2) ──
+        if (extra.screenshot) {
+            html += `<div class="section-title">Mobile-Vorschau der aktuellen Website</div><div class="card" style="text-align:center;padding:32px">
+                <div style="display:inline-block;border:8px solid #1d1d1f;border-radius:24px;overflow:hidden;max-width:240px;box-shadow:0 20px 60px rgba(0,0,0,0.15)">
+                    <img src="${extra.screenshot}" alt="Screenshot" style="width:100%;display:block">
+                </div>
+                <div style="font-size:12px;color:var(--muted);margin-top:16px">So sieht Ihre Website auf einem Smartphone aus (Lighthouse-Screenshot)</div>
+            </div>`;
+        }
+
+        // ── Google-Report (Modul 3) ──
+        if (extra.googleReport) {
+            const gr = extra.googleReport;
+            html += `<div class="section-title">Google-Perspektive: Core Web Vitals</div><div class="card">
+                <div style="font-size:15px;font-weight:700;margin-bottom:16px">${gr.passed} von ${gr.total} Pruefungen bestanden</div>`;
+            for (const c of gr.cwv) {
+                html += `<div class="biz-stat">
+                    <span class="biz-label">${c.pass ? '✓' : '✗'} ${c.name}</span>
+                    <span class="biz-value" style="color:${c.pass ? 'var(--green)' : 'var(--red)'}">${c.value} <span style="font-size:11px;font-weight:400;color:var(--muted)">(Grenzwert: ${c.threshold})</span></span>
+                </div>`;
+            }
+            if (gr.compContext) html += `<div style="margin-top:12px;font-size:13px;color:var(--muted);padding:12px;background:var(--bg);border-radius:8px">${gr.compContext}</div>`;
+            html += '</div>';
+        }
+
         // ── Issues ──
         const issues = this.collectIssues(ws, tech);
         if (issues.length) {
@@ -861,7 +1166,43 @@ App.ui = {
             html += '</div>';
         }
 
-        // ── Pitch ──
+        // ── Predictive Timing (Modul 6) ──
+        if (extra.timing && extra.timing.signals.length > 0) {
+            html += `<div class="section-title">Optimales Timing</div><div class="card">
+                <div style="font-size:15px;font-weight:700;margin-bottom:12px;color:${extra.timing.signals[0]?.urgency === 'critical' ? 'var(--red)' : 'var(--orange)'}">${extra.timing.overall}</div>`;
+            for (const s of extra.timing.signals) {
+                const col = s.urgency === 'critical' ? 'var(--red)' : s.urgency === 'high' ? 'var(--orange)' : 'var(--muted)';
+                html += `<div class="issue-item"><div class="issue-dot" style="background:${col}"></div><span><strong>${s.label}</strong> — ${s.detail}</span></div>`;
+            }
+            html += '</div>';
+        }
+
+        // ── Kontakt-Strategie (Modul 4) ──
+        if (extra.strategy) {
+            const st = extra.strategy;
+            html += `<div class="section-title">Empfohlene Kontakt-Strategie</div><div class="card">
+                <div class="biz-stat"><span class="biz-label">Kanal</span><span class="biz-value">${st.channel}</span></div>
+                <div class="biz-stat"><span class="biz-label">Timing</span><span class="biz-value">${st.timing}</span></div>
+                <div class="biz-stat"><span class="biz-label">Entscheider</span><span class="biz-value">${st.decisionMaker}</span></div>
+                <div class="biz-stat"><span class="biz-label">Eroeffnung</span><span class="biz-value">${st.opener}</span></div>
+                <div class="biz-stat"><span class="biz-label">Einwand → Antwort</span><span class="biz-value" style="font-size:12px">${st.objection}</span></div>
+            </div>`;
+        }
+
+        // ── Follow-up-Sequenz (Modul 5) ──
+        if (extra.sequence) {
+            html += `<div class="section-title">5-Schritt Follow-up-Sequenz</div>`;
+            for (let i = 0; i < extra.sequence.length; i++) {
+                const s = extra.sequence[i];
+                html += `<div class="pitch-box" style="margin-bottom:8px">
+                    <h3>Tag ${s.day} — ${s.subject}</h3>
+                    <p>${s.body}</p>
+                    <button class="copy-btn" onclick="App.ui.copyPitch(this)">Kopieren</button>
+                </div>`;
+            }
+        }
+
+        // ── Einzel-Pitch (Legacy) ──
         html += this.generatePitch(domain, ws, tech, biz, prob, competitors);
 
         // ── Methodik ──
@@ -1042,12 +1383,21 @@ App.single = {
             } catch (e) { /* Competitors optional */ }
         }
 
-        // Probability berechnen (nach Competitors, da Market Pressure diese braucht)
+        // Alle Engines berechnen
         prob = App.probability.calculate(ws, tech, biz.place, competitors);
+        const revenue = App.revenue.calculate(ws, biz.place);
+        const screenshot = App.screenshot.extract(psiData);
+        const googleReport = App.googleReport.generate(ws, tech, competitors);
+        const strategy = App.strategy.recommend(biz.place, ws, prob);
+        const timing = App.timing.analyze(ws, tech, biz.place);
+        const sequence = App.sequence.generate(
+            new URL(url).hostname.replace('www.', ''),
+            ws, tech, biz.place, revenue, prob, strategy
+        );
 
         App.ui.hideLoading();
         $('check-btn').disabled = false;
-        App.ui.renderSingle(url, ws, tech, biz, prob, competitors);
+        App.ui.renderSingle(url, ws, tech, biz, prob, competitors, { revenue, screenshot, googleReport, strategy, timing, sequence });
     }
 };
 
