@@ -285,9 +285,10 @@
         <h1>Lead Intelligence</h1>
         <p>Website-Qualitaet, Technologie, Business-Gesundheit und Konkurrenz — in einem Check. Finde die Leads, die wirklich konvertieren.</p>
 
-        <div class="tabs">
+        <div class="tabs" style="max-width:480px">
             <button class="tab active" onclick="switchTab('single')">Einzel-Check</button>
             <button class="tab" onclick="switchTab('batch')">Batch-Suche</button>
+            <button class="tab" onclick="switchTab('scanner')">Branchen-Scanner</button>
         </div>
 
         <!-- Single Mode -->
@@ -312,6 +313,15 @@
                     </select>
                     <button class="btn-primary" id="batch-btn" onclick="App.batch.run()">Leads finden</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Scanner Mode -->
+        <div class="input-area hidden" id="input-scanner">
+            <p style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px">Welche Branche hat das groesste Potenzial? Das Tool testet automatisch alle Branchen in deiner Stadt und rankt sie nach Lead-Qualitaet.</p>
+            <div class="input-row">
+                <input type="text" id="scanner-city" placeholder="Stadt, z.B. Koeln" value="">
+                <button class="btn-primary" id="scanner-btn" onclick="App.scanner.run()">Branchen scannen</button>
             </div>
         </div>
     </section>
@@ -374,8 +384,10 @@ function switchTab(mode) {
     document.querySelector(`.tab[onclick*="${mode}"]`).classList.add('active');
     $('input-single').classList.toggle('hidden', mode !== 'single');
     $('input-batch').classList.toggle('hidden', mode !== 'batch');
+    $('input-scanner').classList.toggle('hidden', mode !== 'scanner');
     $('results').classList.remove('active');
     $('batch-results').classList.remove('active');
+    $('crm-view').classList.remove('active');
     $('error').classList.remove('active');
 }
 
@@ -1894,6 +1906,197 @@ App.batch = {
         a.href = URL.createObjectURL(blob);
         a.download = `karriaro-leads-${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
+    }
+};
+
+// ══════════════════════════════════════
+// ══════════════════════════════════════
+// BRANCHEN-SCANNER
+// Testet alle Branchen in einer Stadt,
+// rankt nach durchschnittlichem Lead-Score
+// ══════════════════════════════════════
+App.scanner = {
+    // Branchen mit deutschem Suchbegriff
+    branches: [
+        { key: 'dentist',           q: 'Zahnarzt',            name: 'Zahnaerzte' },
+        { key: 'hair_salon',        q: 'Friseur',             name: 'Friseure' },
+        { key: 'restaurant',        q: 'Restaurant',          name: 'Restaurants' },
+        { key: 'auto_repair',       q: 'KFZ Werkstatt',       name: 'KFZ-Werkstaetten' },
+        { key: 'beauty_salon',      q: 'Kosmetikstudio',      name: 'Kosmetikstudios' },
+        { key: 'physiotherapist',   q: 'Physiotherapie',      name: 'Physiotherapie' },
+        { key: 'lawyer',            q: 'Rechtsanwalt',        name: 'Rechtsanwaelte' },
+        { key: 'real_estate_agency', q: 'Immobilienmakler',   name: 'Immobilienmakler' },
+        { key: 'hotel',             q: 'Hotel',               name: 'Hotels' },
+        { key: 'plumber',           q: 'Sanitaer Heizung',    name: 'Sanitaerbetriebe' },
+        { key: 'electrician',       q: 'Elektriker',          name: 'Elektrobetriebe' },
+        { key: 'veterinary_care',   q: 'Tierarzt',            name: 'Tieraerzte' },
+        { key: 'gym',               q: 'Fitnessstudio',       name: 'Fitnessstudios' },
+        { key: 'moving_company',    q: 'Umzugsunternehmen',   name: 'Umzugsfirmen' },
+        { key: 'car_dealer',        q: 'Autohaus',            name: 'Autohaeuser' },
+        { key: 'bakery',            q: 'Baeckerei',           name: 'Baeckereien' },
+        { key: 'florist',           q: 'Blumenladen',         name: 'Floristen' },
+        { key: 'cafe',              q: 'Cafe',                name: 'Cafes' }
+    ],
+
+    async run() {
+        const city = $('scanner-city').value.trim();
+        if (!city) return;
+        if (!App.config.fnUrl) {
+            App.ui.showError('Branchen-Scanner benoetigt die Cloud Function URL. Bitte in Einstellungen konfigurieren.');
+            return;
+        }
+
+        $('results').classList.remove('active');
+        $('batch-results').classList.remove('active');
+        $('crm-view').classList.remove('active');
+        App.ui.hideError();
+        $('scanner-btn').disabled = true;
+
+        const results = [];
+        const total = this.branches.length;
+
+        App.ui.showProgress(0, `Scanne Branche 0 von ${total}...`);
+
+        for (let i = 0; i < total; i++) {
+            const branch = this.branches[i];
+            const pct = Math.round(((i + 1) / total) * 100);
+            App.ui.showProgress(pct, `${i + 1}/${total}: ${branch.name} in ${city}...`);
+
+            try {
+                // 3 Places pro Branche suchen
+                const data = await App.api.searchPlaces(`${branch.q} ${city}`, 3);
+                const places = (data?.places || []).filter(p => p.websiteUri && p.businessStatus !== 'CLOSED_PERMANENTLY');
+
+                if (places.length === 0) {
+                    results.push({ ...branch, city, avgScore: 0, count: 0, places: [], tested: 0, avgPerf: 0, baukastenPct: 0, reason: 'Keine Ergebnisse mit Website' });
+                    continue;
+                }
+
+                // PageSpeed fuer max 2 pro Branche (Speed vs. API Quota)
+                const tested = [];
+                for (let j = 0; j < Math.min(places.length, 2); j++) {
+                    try {
+                        const psiData = await App.api.pagespeed(places[j].websiteUri);
+                        const ws = App.score.website(psiData);
+                        const tech = App.tech.detect(psiData);
+                        const prob = App.probability.calculate(ws, tech, places[j], null);
+                        tested.push({ ws, tech, prob, place: places[j] });
+                        await App.api.delay(1500);
+                    } catch (e) { /* skip */ }
+                }
+
+                if (tested.length === 0) {
+                    results.push({ ...branch, city, avgScore: 0, count: places.length, places, tested: 0, avgPerf: 0, baukastenPct: 0, reason: 'PageSpeed fehlgeschlagen' });
+                    continue;
+                }
+
+                const avgScore = Math.round(tested.reduce((s, t) => s + t.prob.leadScore, 0) / tested.length);
+                const avgPerf = Math.round(tested.reduce((s, t) => s + t.ws.perf, 0) / tested.length);
+                const baukastenCount = tested.filter(t => t.tech.isBaukasten).length;
+                const avgEV = Math.round(tested.reduce((s, t) => s + (t.prob.kelly?.expectedValue || 0), 0) / tested.length);
+                const branchData = App.probability.hierarchy.get(branch.key);
+
+                results.push({
+                    ...branch, city,
+                    avgScore,
+                    avgPerf,
+                    avgEV,
+                    count: places.length,
+                    tested: tested.length,
+                    baukastenPct: Math.round((baukastenCount / tested.length) * 100),
+                    dealSize: branchData.ds,
+                    reason: null,
+                    details: tested
+                });
+
+            } catch (e) {
+                results.push({ ...branch, city, avgScore: 0, count: 0, tested: 0, avgPerf: 0, baukastenPct: 0, reason: 'API Fehler: ' + e.message });
+            }
+
+            await App.api.delay(1000);
+        }
+
+        App.ui.hideProgress();
+        $('scanner-btn').disabled = false;
+
+        // Sortiere nach avgScore absteigend
+        results.sort((a, b) => b.avgScore - a.avgScore);
+        this.renderResults(city, results);
+    },
+
+    renderResults(city, results) {
+        const valid = results.filter(r => r.avgScore > 0);
+        const best = valid[0];
+
+        let html = `<div class="batch-header">
+            <h2>Branchen-Ranking fuer ${city}</h2>
+        </div>`;
+
+        // Top-Empfehlung
+        if (best) {
+            html += `<div class="card" style="border-left:3px solid var(--green);margin-bottom:24px">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:8px">Groesstes Potenzial</div>
+                <div style="font-size:1.3rem;font-weight:700">${best.name}</div>
+                <div style="font-size:14px;color:var(--muted);margin-top:4px">
+                    Durchschnittlicher Lead Score: <strong>${best.avgScore}</strong> ·
+                    Ø Performance: <strong class="${App.ui.sc(best.avgPerf)}">${best.avgPerf}</strong> ·
+                    ${best.baukastenPct > 0 ? best.baukastenPct + '% auf Baukasten · ' : ''}
+                    Deal-Size: ${best.dealSize} € ·
+                    Ø EV: ${best.avgEV > 0 ? '+'+best.avgEV : best.avgEV} €
+                </div>
+                <div style="font-size:13px;margin-top:8px">→ Empfehlung: <strong>"${best.q} ${city}"</strong> in der Batch-Suche ausfuehren fuer detaillierte Lead-Liste</div>
+            </div>`;
+        }
+
+        // Ranking-Tabelle
+        html += `<table class="lead-table"><thead><tr>
+            <th>#</th><th>Branche</th><th>Ø Lead Score</th><th>Ø Performance</th><th>Baukasten</th><th>Deal-Size</th><th>Ø EV</th><th>Getestet</th>
+        </tr></thead><tbody>`;
+
+        results.forEach((r, i) => {
+            const sc = App.ui.probClass(r.avgScore);
+            const perfClass = App.ui.sc(r.avgPerf);
+            html += `<tr${i === 0 && r.avgScore > 0 ? ' style="background:rgba(48,209,88,0.04)"' : ''}>
+                <td style="font-weight:700;color:var(--muted)">${i + 1}</td>
+                <td><strong>${r.name}</strong>${r.reason ? `<br><span style="font-size:11px;color:var(--red)">${r.reason}</span>` : ''}</td>
+                <td><span class="opp-pill ${sc}">${r.avgScore || '—'}</span></td>
+                <td class="${perfClass}">${r.avgPerf || '—'}</td>
+                <td>${r.baukastenPct > 0 ? r.baukastenPct + '%' : '—'}</td>
+                <td>${r.dealSize || '—'} €</td>
+                <td style="font-weight:600">${r.avgEV > 0 ? '+'+r.avgEV+'€' : r.avgEV ? r.avgEV+'€' : '—'}</td>
+                <td style="color:var(--muted)">${r.tested}/${r.count}</td>
+            </tr>
+            <tr><td colspan="8" style="padding:4px 12px 12px;font-size:12px;line-height:1.5;color:var(--muted);border-bottom:2px solid var(--border)">${this.explainBranch(r)}</td></tr>`;
+        });
+        html += '</tbody></table>';
+
+        $('batch-results').innerHTML = html;
+        $('batch-results').classList.add('active');
+        $('batch-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    },
+
+    explainBranch(r) {
+        if (r.reason) return `Konnte nicht getestet werden: ${r.reason}`;
+        if (r.avgScore >= 55) {
+            let t = `<strong style="color:var(--green)">Starkes Potenzial.</strong> `;
+            if (r.avgPerf < 50) t += `Websites im Schnitt schlecht (${r.avgPerf}/100) — starke Argumente. `;
+            if (r.baukastenPct > 30) t += `${r.baukastenPct}% laufen auf Baukasten-Systemen — einfacher Wechsel-Pitch. `;
+            if (r.dealSize >= 1990) t += `Deal-Size ${r.dealSize}€ macht jeden Abschluss wertvoll. `;
+            t += `→ "${r.q} ${r.city}" als Batch-Suche empfohlen.`;
+            return t;
+        }
+        if (r.avgScore >= 35) {
+            let t = `<strong style="color:var(--orange)">Mittleres Potenzial.</strong> `;
+            if (r.avgPerf >= 65) t += `Websites schon passabel (Ø ${r.avgPerf}) — schwerer zu argumentieren. `;
+            else t += `Websites verbesserungswuerdig (Ø ${r.avgPerf}). `;
+            if (r.dealSize < 1500) t += `Kleinere Deals (${r.dealSize}€). `;
+            return t;
+        }
+        let t = `<strong style="color:var(--red)">Geringes Potenzial.</strong> `;
+        if (r.avgPerf >= 70) t += `Websites bereits gut (Ø ${r.avgPerf}). `;
+        if (r.avgScore === 0 && r.tested === 0) t += `Keine testbaren Websites gefunden. `;
+        else t += `Lead Scores zu niedrig fuer profitablen Zeitaufwand. `;
+        return t;
     }
 };
 
