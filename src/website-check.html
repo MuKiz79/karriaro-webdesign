@@ -2495,6 +2495,8 @@ App.scanner = {
 
         // Sortiere nach avgScore absteigend
         results.sort((a, b) => b.avgScore - a.avgScore);
+        this._lastCity = city;
+        this._lastResults = results;
         this.renderResults(city, results);
     },
 
@@ -2504,6 +2506,7 @@ App.scanner = {
 
         let html = `<div class="batch-header">
             <h2>Branchen-Ranking fuer ${city}</h2>
+            <button class="export-btn" onclick="App.scanner.saveToCRM()">Im CRM speichern</button>
         </div>`;
 
         // Top-Empfehlung
@@ -2571,6 +2574,39 @@ App.scanner = {
         if (r.avgScore === 0 && r.tested === 0) t += `Keine testbaren Websites gefunden. `;
         else t += `Lead Scores zu niedrig fuer profitablen Zeitaufwand. `;
         return t;
+    },
+
+    async saveToCRM() {
+        if (!this._lastResults) return;
+        const btn = document.querySelector('.batch-header .export-btn');
+        let saved = 0;
+        for (const r of this._lastResults) {
+            if (r.avgScore <= 0 || !r.details) continue;
+            // Speichere jeden getesteten Lead aus den Branchenergebnissen
+            for (const d of r.details) {
+                const place = d.place;
+                const domain = (() => { try { return new URL(place.websiteUri).hostname.replace('www.', ''); } catch { return ''; } })();
+                if (!domain) continue;
+                await App.crm.saveLead(domain, place.websiteUri, {
+                    name: place.displayName?.text || domain,
+                    type: r.name,
+                    rating: place.rating,
+                    reviews: place.userRatingCount || 0,
+                    perf: d.ws.perf, seo: d.ws.seo, a11y: d.ws.a11y,
+                    cms: d.tech.cms,
+                    isBaukasten: d.tech.isBaukasten,
+                    leadScore: d.prob.leadScore,
+                    conversionRate: d.prob.conversionRate || 0,
+                    expectedValue: d.prob.kelly?.expectedValue || 0,
+                    roiPerHour: d.prob.kelly?.roiPerHour || 0,
+                    yearlyRevenueLoss: 0,
+                    bottleneck: d.prob.bottleneck?.name || '',
+                    explanation: `Branche: ${r.name} in ${this._lastCity}. Ø Score: ${r.avgScore}, Ø Perf: ${r.avgPerf}`
+                });
+                saved++;
+            }
+        }
+        if (btn) { btn.textContent = `${saved} Leads gespeichert ✓`; btn.disabled = true; }
     }
 };
 
