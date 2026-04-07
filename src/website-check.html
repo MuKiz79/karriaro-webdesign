@@ -452,7 +452,8 @@ App.score = {
 //
 // Jede Stufe als Beta-Verteilung mit informativen Priors.
 // End-to-End Monte-Carlo-Simulation (N=2000).
-// Posterior-Update via Conversion-Tracking.
+// Markov Decision Process, Thompson Sampling,
+// EVOI, Kelly Criterion, Bayesian Hierarchical Model
 // ══════════════════════════════════════
 App.probability = {
 
@@ -460,289 +461,384 @@ App.probability = {
     randn() { const u1=Math.random(),u2=Math.random(); return Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2); },
     clamp(v, lo=0, hi=1) { return Math.max(lo, Math.min(hi, v)); },
     percentile(arr, p) { const s=[...arr].sort((a,b)=>a-b); return s[Math.floor(s.length*p/100)]; },
+    sampleBeta(a, b) { const m=a/(a+b), v=(a*b)/((a+b)**2*(a+b+1)); return this.clamp(m+this.randn()*Math.sqrt(v)); },
 
-    // Beta-Verteilung Sampling (Johnk's Algorithm, approximiert)
-    sampleBeta(alpha, beta) {
-        // Fuer alpha,beta > 1: Normalapproximation ist schnell und gut genug
-        const mean = alpha / (alpha + beta);
-        const v = (alpha * beta) / ((alpha+beta)**2 * (alpha+beta+1));
-        return this.clamp(mean + this.randn() * Math.sqrt(v));
-    },
+    // ══════════════════════════════════════
+    // BAYESIAN HIERARCHICAL MODEL (Methode 5)
+    // Branchen-Priors mit Partial Pooling
+    // Neue Leads werden zum Branchenmittel gezogen,
+    // mit mehr Daten entfernen sie sich davon
+    // ══════════════════════════════════════
+    hierarchy: {
+        // Hyper-Priors: Branchenmittelwerte (aus Sales-Research)
+        // α₀,β₀ fuer jede Funnel-Stufe, pro Branche
+        // Staerke τ steuert wie stark Pooling wirkt (hoeher = mehr Shrinkage)
+        branches: {
+            //                    reach     open      interest   convo     proposal  close      timePerLead  dealSize
+            'restaurant':       { r:[8,2],  o:[5,15], i:[3,6],  c:[3,5],  p:[5,3],  cl:[5,4],  tpl:2.0, ds:1500 },
+            'dentist':          { r:[8,2],  o:[6,14], i:[3,5],  c:[3,5],  p:[5,3],  cl:[6,3],  tpl:2.5, ds:1990 },
+            'doctor':           { r:[7,3],  o:[6,14], i:[2,6],  c:[2,5],  p:[5,3],  cl:[5,4],  tpl:2.5, ds:1990 },
+            'hair_salon':       { r:[7,3],  o:[4,16], i:[3,5],  c:[4,5],  p:[5,3],  cl:[4,4],  tpl:1.5, ds:990  },
+            'beauty_salon':     { r:[7,3],  o:[4,14], i:[3,5],  c:[3,5],  p:[5,3],  cl:[5,4],  tpl:2.0, ds:1490 },
+            'real_estate_agency':{ r:[8,2], o:[7,13], i:[2,7],  c:[2,6],  p:[5,3],  cl:[5,3],  tpl:3.0, ds:1990 },
+            'lawyer':           { r:[7,3],  o:[6,12], i:[2,7],  c:[2,6],  p:[5,3],  cl:[5,4],  tpl:3.0, ds:1990 },
+            'auto_repair':      { r:[7,3],  o:[4,18], i:[2,6],  c:[3,5],  p:[5,3],  cl:[4,5],  tpl:1.5, ds:990  },
+            'plumber':          { r:[6,4],  o:[3,17], i:[3,5],  c:[3,5],  p:[5,3],  cl:[4,5],  tpl:1.5, ds:990  },
+            'electrician':      { r:[6,4],  o:[3,17], i:[2,6],  c:[3,5],  p:[5,3],  cl:[4,5],  tpl:1.5, ds:990  },
+            'hotel':            { r:[8,2],  o:[6,14], i:[2,7],  c:[2,6],  p:[5,3],  cl:[5,3],  tpl:3.0, ds:1990 },
+            'car_dealer':       { r:[7,3],  o:[6,14], i:[2,8],  c:[2,6],  p:[5,3],  cl:[4,4],  tpl:3.0, ds:1990 },
+            'bakery':           { r:[7,3],  o:[4,18], i:[2,7],  c:[3,6],  p:[5,3],  cl:[3,5],  tpl:1.5, ds:990  },
+            'gym':              { r:[7,3],  o:[4,16], i:[3,5],  c:[3,5],  p:[5,3],  cl:[4,5],  tpl:2.0, ds:990  },
+            'veterinary_care':  { r:[7,3],  o:[5,15], i:[3,5],  c:[3,5],  p:[5,3],  cl:[4,4],  tpl:2.0, ds:990  },
+            'moving_company':   { r:[6,4],  o:[4,16], i:[3,5],  c:[3,5],  p:[5,3],  cl:[4,5],  tpl:2.0, ds:990  },
+            'florist':          { r:[7,3],  o:[4,16], i:[2,6],  c:[3,5],  p:[5,3],  cl:[3,5],  tpl:1.5, ds:990  },
+            'physiotherapist':  { r:[7,3],  o:[5,15], i:[3,5],  c:[3,5],  p:[5,3],  cl:[4,4],  tpl:2.0, ds:990  },
+            'cafe':             { r:[7,3],  o:[4,16], i:[2,6],  c:[3,6],  p:[5,3],  cl:[3,5],  tpl:1.5, ds:990  },
+            '_default':         { r:[7,3],  o:[4,16], i:[2,6],  c:[3,5],  p:[5,3],  cl:[4,4],  tpl:2.0, ds:990  }
+        },
 
-    // Beta-Posterior fuer Google-Bewertungen
-    betaPosterior(rating, count) {
-        if (count === 0) return { alpha: 2, beta: 2, mean: 0.5, variance: 0.05 };
-        const p = this.clamp((rating - 1) / 4);
-        // Informative Priors: Beta(3,1.5) — wir wissen dass aktive Unternehmen
-        // tendenziell gute Bewertungen haben (Survivor Bias in Google Maps)
-        const priorA = 3, priorB = 1.5;
-        const alpha = priorA + p * count;
-        const beta = priorB + (1 - p) * count;
-        const mean = alpha / (alpha + beta);
-        const variance = (alpha * beta) / ((alpha+beta)**2 * (alpha+beta+1));
-        return { alpha, beta, mean, variance };
-    },
+        // Partial Pooling: Kombiniere Branchen-Prior mit Lead-spezifischen Beobachtungen
+        // τ = Pooling-Staerke (2 = mittlerer Pooling, 10 = starker Pooling)
+        pool(branchPrior, observedAlphaShift, observedBetaShift, tau = 3) {
+            const [a0, b0] = branchPrior;
+            // Shrinkage: Gewichte Branchen-Prior mit τ, Beobachtung mit 1
+            const alpha = a0 + observedAlphaShift / (1 + tau / (a0 + b0));
+            const beta = b0 + observedBetaShift / (1 + tau / (a0 + b0));
+            return [Math.max(1, alpha), Math.max(1, beta)];
+        },
 
-    // ── Branchen-Datenbank ──
-    industryData: {
-        //                     webDep  emailOpen  coldReplyRate  avgDealSize  budgetClass
-        'restaurant':        { wd:.85, eo:.25,    cr:.06,        ds:1500,     bc:'mid' },
-        'cafe':              { wd:.80, eo:.22,    cr:.05,        ds:990,      bc:'low' },
-        'dentist':           { wd:.90, eo:.30,    cr:.08,        ds:1990,     bc:'high' },
-        'doctor':            { wd:.85, eo:.28,    cr:.06,        ds:1990,     bc:'high' },
-        'physiotherapist':   { wd:.80, eo:.26,    cr:.07,        ds:990,      bc:'mid' },
-        'hair_salon':        { wd:.80, eo:.20,    cr:.08,        ds:990,      bc:'mid' },
-        'beauty_salon':      { wd:.82, eo:.22,    cr:.07,        ds:1490,     bc:'mid' },
-        'real_estate_agency':{ wd:.90, eo:.35,    cr:.05,        ds:1990,     bc:'high' },
-        'lawyer':            { wd:.80, eo:.32,    cr:.04,        ds:1990,     bc:'high' },
-        'auto_repair':       { wd:.65, eo:.18,    cr:.06,        ds:990,      bc:'mid' },
-        'plumber':           { wd:.60, eo:.15,    cr:.07,        ds:990,      bc:'mid' },
-        'electrician':       { wd:.60, eo:.15,    cr:.06,        ds:990,      bc:'mid' },
-        'hotel':             { wd:.92, eo:.30,    cr:.04,        ds:1990,     bc:'high' },
-        'car_dealer':        { wd:.80, eo:.28,    cr:.03,        ds:1990,     bc:'high' },
-        'moving_company':    { wd:.70, eo:.20,    cr:.06,        ds:990,      bc:'mid' },
-        'bakery':            { wd:.65, eo:.18,    cr:.04,        ds:990,      bc:'low' },
-        'florist':           { wd:.70, eo:.20,    cr:.05,        ds:990,      bc:'low' },
-        'gym':               { wd:.75, eo:.22,    cr:.06,        ds:990,      bc:'mid' },
-        'veterinary_care':   { wd:.78, eo:.26,    cr:.06,        ds:990,      bc:'mid' },
-        '_default':          { wd:.65, eo:.22,    cr:.05,        ds:990,      bc:'mid' }
+        get(type) { return this.branches[type] || this.branches._default; }
     },
 
     // ══════════════════════════════════════
-    // DAS GENERATIVE MODELL: 6-STUFEN-FUNNEL
-    //
-    // Stufe 1: Erreichbarkeit — Kommt die Nachricht an?
-    // Stufe 2: Oeffnung — Wird sie gelesen?
-    // Stufe 3: Interesse — Erkennt der Lead sein Problem?
-    // Stufe 4: Gespraech — Nimmt er einen Termin an?
-    // Stufe 5: Angebot — Ueberzeugt der Entwurf?
-    // Stufe 6: Abschluss — Wird bezahlt?
-    //
-    // P(Conversion) = P₁ × P₂ × P₃ × P₄ × P₅ × P₆
-    // Jede Stufe ist Beta(α,β) mit informativen Priors
+    // MARKOV DECISION PROCESS (Methode 1)
+    // Zustandsuebergaenge mit Rueckfaellen
     // ══════════════════════════════════════
+    markov: {
+        // Zustaende: 0=Kalt, 1=Kontaktiert, 2=Interessiert, 3=Gespraech, 4=Angebot, 5=Kunde, 6=Verloren
+        stateNames: ['Kalt', 'Kontaktiert', 'Interessiert', 'Im Gespraech', 'Angebot', 'Kunde', 'Verloren'],
 
-    // Stufe 1: Erreichbarkeit
-    // Prior: Beta(7,3) — 70% Basis-Erreichbarkeit (E-Mail funktioniert meistens)
-    stageReach(place) {
-        let alpha = 7, beta = 3;
-        if (!place) { beta += 3; }  // Keine Kontaktdaten gefunden → unsicherer
-        else {
-            if (place.websiteUri) alpha += 2;        // Hat Website = E-Mail findbar
-            if (place.regularOpeningHours) alpha += 1; // Gepflegt = erreichbar
+        // Baue Uebergangsmatrix basierend auf Beta-Erwartungswerten der Stufen
+        buildTransitionMatrix(stageMeans) {
+            // stageMeans: [pReach, pOpen, pInterest, pConvo, pProposal, pClose]
+            const [p1,p2,p3,p4,p5,p6] = stageMeans.map(m => m / 100);
+            // T[i][j] = P(Uebergang von Zustand i nach Zustand j)
+            return [
+                // Von Kalt:           →Kontaktiert  →Verloren
+                [0,    p1,   0,    0,    0,    0,    1-p1],
+                // Von Kontaktiert:    →Interessiert  →Kalt(zurueck)  →Verloren
+                [0.10, 0,    p2,   0,    0,    0,    1-p2-0.10],
+                // Von Interessiert:   →Gespraech     →Kontaktiert(zurueck) →Verloren
+                [0,    0.08, 0,    p3,   0,    0,    1-p3-0.08],
+                // Von Gespraech:      →Angebot       →Interessiert(zurueck) →Verloren
+                [0,    0,    0.05, 0,    p4,   0,    1-p4-0.05],
+                // Von Angebot:        →Kunde         →Gespraech(zurueck)   →Verloren
+                [0,    0,    0,    0.08, 0,    p5*p6, 1-p5*p6-0.08],
+                // Kunde: Absorbing State
+                [0,    0,    0,    0,    0,    1,    0],
+                // Verloren: Absorbing State
+                [0,    0,    0,    0,    0,    0,    1]
+            ];
+        },
+
+        // Simuliere N Schritte durch die Markov-Kette
+        simulate(T, maxSteps = 20) {
+            let state = 0;  // Start: Kalt
+            const path = [state];
+            for (let step = 0; step < maxSteps; step++) {
+                const row = T[state];
+                const r = Math.random();
+                let cumul = 0;
+                for (let j = 0; j < row.length; j++) {
+                    cumul += Math.max(0, row[j]);
+                    if (r < cumul) { state = j; break; }
+                }
+                path.push(state);
+                if (state === 5 || state === 6) break;  // Absorbing
+            }
+            return { finalState: state, path, converted: state === 5 };
+        },
+
+        // Berechne erwartete Schritte bis Conversion oder Verlust
+        expectedSteps(T, N = 2000) {
+            const results = { converted: 0, lost: 0, paths: [], steps: [] };
+            for (let i = 0; i < N; i++) {
+                const sim = this.simulate(T);
+                if (sim.converted) results.converted++;
+                else results.lost++;
+                results.paths.push(sim.path);
+                results.steps.push(sim.path.length - 1);
+            }
+            results.conversionRate = results.converted / N;
+            results.avgSteps = results.steps.reduce((a,b) => a+b, 0) / N;
+            results.avgStepsToConversion = results.paths.filter(p => p[p.length-1]===5).map(p=>p.length-1);
+            results.medianStepsToConversion = results.avgStepsToConversion.length > 0
+                ? [...results.avgStepsToConversion].sort((a,b)=>a-b)[Math.floor(results.avgStepsToConversion.length/2)]
+                : null;
+            return results;
         }
-        return { alpha, beta, name: 'Erreichbarkeit' };
-    },
-
-    // Stufe 2: Oeffnung
-    // Prior: Beta(3,9) — ~25% Cold-E-Mail-Oeffnungsrate (Branchenstandard)
-    stageOpen(place, ws) {
-        const ind = this.industryData[place?.primaryType] || this.industryData._default;
-        // Branchen-spezifischer Prior
-        let alpha = ind.eo * 20, beta = (1 - ind.eo) * 20;  // z.B. 25% → Beta(5,15)
-        // Persoenlicher Betreff mit Firmennamen → +Oeffnung
-        if (place?.displayName) alpha += 2;
-        // Umsatzverlust im Betreff → Neugier
-        if (ws.perf < 50 || !ws.isHttps) alpha += 1;
-        return { alpha, beta, name: 'Oeffnung' };
-    },
-
-    // Stufe 3: Interesse
-    // Prior: Beta(2,6) — ~25% der Oeffner finden es relevant
-    stageInterest(ws, tech, place, revenue) {
-        let alpha = 2, beta = 6;
-        // Starke Problem-Signale erhoehen Interesse
-        if (!ws.isHttps) alpha += 3;          // "Nicht sicher" ist emotional
-        if (!ws.viewport) alpha += 2;          // Mobile kaputt = offensichtlich
-        if (ws.perf < 30) alpha += 2;          // Extrem langsam = spuerbar
-        if (tech.isBaukasten) alpha += 1;      // Erkennt eigene Limitierung
-        if (revenue && revenue.yearlyRevenueLoss > 5000) alpha += 2;  // Grosse Zahl
-        if (revenue && revenue.yearlyRevenueLoss > 15000) alpha += 1;
-        // Branche mit hoher Web-Abhaengigkeit → Problem ist relevanter
-        const ind = this.industryData[place?.primaryType] || this.industryData._default;
-        if (ind.wd > 0.8) alpha += 1;
-        return { alpha, beta, name: 'Interesse' };
-    },
-
-    // Stufe 4: Gespraech
-    // Prior: Beta(2,5) — ~28% der Interessierten nehmen Termin an
-    stageConversation(place, competitors) {
-        let alpha = 2, beta = 5;
-        // Social Proof: Portfolio + Konkurrenz-Argument
-        alpha += 1;  // Karriaro hat Portfolio (Kolbe etc.)
-        // Konkurrenz-Druck erhoet Gespraechsbereitschaft
-        if (competitors && competitors.length > 2) {
-            const betterCount = competitors.filter(c => c.perf > 50).length;
-            if (betterCount > 1) alpha += 2;  // "Ihre Konkurrenz ist schon besser"
-        }
-        // Kostenloses Angebot senkt Hemmschwelle
-        alpha += 1;  // "Darf ich Ihnen kostenlos einen Entwurf zeigen?"
-        return { alpha, beta, name: 'Gespraech' };
-    },
-
-    // Stufe 5: Angebot-Akzeptanz
-    // Prior: Beta(5,3) — ~62% nach Gespraech (Entwurf ist ueberzeugend, Karriaro-Qualitaet)
-    stageProposal() {
-        // Relativ konstant — haengt von Karriaro-Qualitaet ab, nicht vom Lead
-        return { alpha: 5, beta: 3, name: 'Angebot' };
-    },
-
-    // Stufe 6: Abschluss
-    // Prior: Beta(4,4) — ~50% nach Angebot (Preis vs. Budget)
-    stageClose(place, tech, revenue) {
-        let alpha = 4, beta = 4;
-        const ind = this.industryData[place?.primaryType] || this.industryData._default;
-
-        // Budget-Klasse
-        if (ind.bc === 'high') alpha += 2;
-        else if (ind.bc === 'low') beta += 2;
-
-        // ROI-Argument stark wenn Umsatzverlust >> Paketpreis
-        if (revenue && revenue.roi > 3) alpha += 2;
-        else if (revenue && revenue.roi > 1.5) alpha += 1;
-
-        // Baukasten → kein Lock-in, leichter Wechsel
-        if (tech.isBaukasten) alpha += 1;
-
-        // Unternehmensgroesse (Reviews als Proxy)
-        const count = place?.userRatingCount || 0;
-        if (count > 100) alpha += 1;  // Grosses Unternehmen = Budget vorhanden
-        else if (count < 5) beta += 1; // Sehr klein = Budget knapp
-
-        return { alpha, beta, name: 'Abschluss' };
     },
 
     // ══════════════════════════════════════
-    // END-TO-END MONTE-CARLO-SIMULATION
-    // Zieht N Samples durch den kompletten Funnel
+    // THOMPSON SAMPLING (Methode 2)
+    // Explore/Exploit fuer Lead-Ranking
+    // ══════════════════════════════════════
+    thompson: {
+        // Ziehe einen Sample aus der Posterior jedes Leads
+        // Der Lead mit dem hoechsten Sample wird als naechstes kontaktiert
+        sampleRank(leads) {
+            const parent = App.probability;
+            return leads.map((lead, idx) => {
+                // Sample aus jedem Funnel-Stufen-Produkt
+                let sample = 1;
+                for (const stage of lead._stages || []) {
+                    sample *= parent.sampleBeta(stage.alpha, stage.beta);
+                }
+                return { idx, sample, domain: lead.domain || idx };
+            }).sort((a, b) => b.sample - a.sample);
+        }
+    },
+
+    // ══════════════════════════════════════
+    // EXPECTED VALUE OF INFORMATION (Methode 3)
+    // Lohnt sich weitere Recherche?
+    // ══════════════════════════════════════
+    evoi: {
+        calculate(currentEV, completeness, timeToResearch = 0.5, hourlyValue = 60) {
+            // currentEV: Erwarteter Wert mit aktuellen Infos
+            // completeness: 0-1, wie vollstaendig sind die Daten?
+            // Kosten der Recherche in EUR
+            const researchCost = timeToResearch * hourlyValue;
+
+            // Erwartete Verbesserung der Entscheidung durch mehr Info
+            // Bei hoher Unsicherheit (niedrige Completeness) ist EVOI hoeher
+            const uncertainty = 1 - completeness;
+            // Max EVOI = currentEV * uncertainty * 0.3 (30% bessere Entscheidung moeglich)
+            const expectedImprovement = currentEV * uncertainty * 0.30;
+
+            const netEVOI = expectedImprovement - researchCost;
+            return {
+                evoi: Math.round(netEVOI * 100) / 100,
+                researchCost,
+                expectedImprovement: Math.round(expectedImprovement * 100) / 100,
+                recommendation: netEVOI > 0 ? 'Weitere Recherche lohnt sich' : 'Sofort kontaktieren oder ueberspringen',
+                worthIt: netEVOI > 0
+            };
+        }
+    },
+
+    // ══════════════════════════════════════
+    // KELLY CRITERION (Methode 4)
+    // Optimale Zeitallokation pro Lead
+    // ══════════════════════════════════════
+    kelly: {
+        calculate(conversionProb, dealSize, timeInvestmentHours, availableHoursPerWeek = 20) {
+            // Kelly: f* = (p*b - q) / b
+            // p = Gewinnwahrscheinlichkeit
+            // b = Gewinn/Verlust-Verhaeltnis (Auszahlung pro Zeiteinheit)
+            // q = 1-p
+            const p = conversionProb;
+            const q = 1 - p;
+            const hourlyRate = 60;  // Opportunitaetskosten EUR/h
+            const potentialGain = dealSize;
+            const potentialLoss = timeInvestmentHours * hourlyRate;
+            const b = potentialGain / potentialLoss;  // Odds
+
+            const kellyFraction = Math.max(0, (p * b - q) / b);
+            const optimalHours = kellyFraction * availableHoursPerWeek;
+
+            // Erwarteter Wert
+            const ev = p * dealSize - q * potentialLoss;
+            const roiPerHour = ev / Math.max(0.5, timeInvestmentHours);
+
+            return {
+                kellyFraction: Math.round(kellyFraction * 1000) / 10,  // % der Wochenzeit
+                optimalHours: Math.round(optimalHours * 10) / 10,
+                expectedValue: Math.round(ev * 100) / 100,
+                roiPerHour: Math.round(roiPerHour * 100) / 100,
+                potentialGain, potentialLoss,
+                recommendation: optimalHours < 0.5 ? 'Skip — nicht genug erwarteter Wert'
+                    : optimalHours < 2 ? 'Quick-Pitch — max 1-2h investieren'
+                    : 'Vollstaendig bearbeiten'
+            };
+        }
+    },
+
+    // ══════════════════════════════════════
+    // HAUPTBERECHNUNG: Alles zusammen
     // ══════════════════════════════════════
     calculate(ws, tech, place, competitors) {
         const revenue = App.revenue ? App.revenue.calculate(ws, place) : null;
+        const type = place?.primaryType || '_default';
+        const branch = this.hierarchy.get(type);
 
-        // Baue die 6 Funnel-Stufen
+        // ── Funnel-Stufen mit Hierarchical Pooling ──
+        // Lead-spezifische Shifts basierend auf Signalen
+        const shifts = this.calcShifts(ws, tech, place, competitors, revenue);
+
         const stages = [
-            this.stageReach(place),
-            this.stageOpen(place, ws),
-            this.stageInterest(ws, tech, place, revenue),
-            this.stageConversation(place, competitors),
-            this.stageProposal(),
-            this.stageClose(place, tech, revenue)
-        ];
+            { name:'Erreichbarkeit', ab: this.hierarchy.pool(branch.r, shifts.reach[0], shifts.reach[1]) },
+            { name:'Oeffnung',       ab: this.hierarchy.pool(branch.o, shifts.open[0], shifts.open[1]) },
+            { name:'Interesse',      ab: this.hierarchy.pool(branch.i, shifts.interest[0], shifts.interest[1]) },
+            { name:'Gespraech',      ab: this.hierarchy.pool(branch.c, shifts.convo[0], shifts.convo[1]) },
+            { name:'Angebot',        ab: this.hierarchy.pool(branch.p, 0, 0) },  // Konstant (Karriaro-Qualitaet)
+            { name:'Abschluss',      ab: this.hierarchy.pool(branch.cl, shifts.close[0], shifts.close[1]) }
+        ].map(s => ({ name: s.name, alpha: s.ab[0], beta: s.ab[1] }));
 
-        // Monte-Carlo: N=2000 Durchlaeufe durch den kompletten Funnel
+        // ── Monte-Carlo Funnel (N=2000) ──
         const N = 2000;
-        const conversions = [];
         const stagePassRates = stages.map(() => []);
-
-        for (let i = 0; i < N; i++) {
-            let converted = 1;
-            for (let s = 0; s < stages.length; s++) {
-                const p = this.sampleBeta(stages[s].alpha, stages[s].beta);
-                const pass = Math.random() < p ? 1 : 0;
-                stagePassRates[s].push(p);
-                converted *= pass;
-                if (!pass) break;  // Funnel-Abbruch
-            }
-            conversions.push(converted);
-        }
-
-        // Ergebnisse
-        const conversionRate = conversions.reduce((a,b) => a+b, 0) / N;
-        const pct = Math.round(conversionRate * 1000) / 10;
-
-        // Unsicherheitsband: Perzentile der Stufen-Produkte
         const funnelProducts = [];
+
         for (let i = 0; i < N; i++) {
             let prod = 1;
-            for (let s = 0; s < stages.length; s++) prod *= stagePassRates[s][i];
-            funnelProducts.push(prod * 100);
+            for (let s = 0; s < stages.length; s++) {
+                const p = this.sampleBeta(stages[s].alpha, stages[s].beta);
+                stagePassRates[s].push(p);
+                prod *= p;
+            }
+            funnelProducts.push(prod);
         }
-        const ci5 = Math.round(this.percentile(funnelProducts, 5) * 10) / 10;
-        const ci95 = Math.round(this.percentile(funnelProducts, 95) * 10) / 10;
+
+        const conversionRate = funnelProducts.reduce((a,b) => a+b, 0) / N;
+        const pct = Math.round(conversionRate * 1000) / 10;
+        const ci5 = Math.round(this.percentile(funnelProducts, 5) * 10000) / 100;
+        const ci95 = Math.round(this.percentile(funnelProducts, 95) * 10000) / 100;
         const ciMargin = Math.round((ci95 - ci5) / 2 * 10) / 10;
 
-        // Lead Score (0-100): Skaliert auf ~0-15% Conversion → 0-100 Score
-        const leadScore = Math.round(Math.min(100, conversionRate * 100 / 0.12 * 100) / 100 * 100);
+        // Lead Score 0-100 (12% = Score 100, linear)
+        const leadScore = Math.round(Math.min(100, (conversionRate / 0.12) * 100));
 
-        // Stufen-Analyse: Erwartungswerte und Engpaesse
+        // Stufen-Ergebnisse
         const stageResults = stages.map((s, i) => {
             const rates = stagePassRates[i];
             const mean = rates.reduce((a,b) => a+b, 0) / rates.length;
-            return {
-                name: s.name,
-                mean: Math.round(mean * 1000) / 10,
-                alpha: s.alpha, beta: s.beta,
-                ci5: Math.round(this.percentile(rates, 5) * 1000) / 10,
-                ci95: Math.round(this.percentile(rates, 95) * 1000) / 10
-            };
+            return { name:s.name, mean:Math.round(mean*1000)/10, alpha:s.alpha, beta:s.beta,
+                ci5: Math.round(this.percentile(rates,5)*1000)/10, ci95: Math.round(this.percentile(rates,95)*1000)/10 };
         });
 
-        // Engpass = Stufe mit niedrigstem Erwartungswert
         const bottleneck = [...stageResults].sort((a,b) => a.mean - b.mean)[0];
 
-        // Treiber-Analyse: Welche Stufe limitiert am meisten?
-        // Elastizitaet: Wie stark aendert sich P(Conversion) wenn Stufe X um 10% steigt?
+        // Elastizitaet
         const drivers = stageResults.map(s => {
-            const baseline = stageResults.reduce((prod, st) => prod * (st.mean/100), 1);
-            const boosted = stageResults.reduce((prod, st) => {
-                const rate = st.name === s.name ? Math.min(1, st.mean/100 * 1.10) : st.mean/100;
-                return prod * rate;
-            }, 1);
-            const elasticity = baseline > 0 ? (boosted - baseline) / baseline : 0;
-            return { name: s.name, pct: Math.round(elasticity * 100), value: s.mean };
+            const base = stageResults.reduce((p,st) => p*(st.mean/100), 1);
+            const boost = stageResults.reduce((p,st) => p*(st.name===s.name ? Math.min(1,st.mean/100*1.10) : st.mean/100), 1);
+            const el = base > 0 ? (boost-base)/base : 0;
+            return { name:s.name, pct:Math.round(el*100), value:s.mean };
         });
-        const totalElast = drivers.reduce((s,d) => s + Math.abs(d.pct), 0);
-        drivers.forEach(d => d.pct = totalElast > 0 ? Math.round((Math.abs(d.pct) / totalElast) * 100) : 17);
+        const totEl = drivers.reduce((s,d) => s+Math.abs(d.pct), 0);
+        drivers.forEach(d => d.pct = totEl > 0 ? Math.round(Math.abs(d.pct)/totEl*100) : 17);
         drivers.sort((a,b) => b.pct - a.pct);
 
-        // Sensitivity: Konkrete Hebel
+        // ── Markov: Zustandsuebergaenge simulieren ──
+        const T = this.markov.buildTransitionMatrix(stageResults.map(s => s.mean));
+        const markovResult = this.markov.expectedSteps(T, 2000);
+
+        // ── Kelly Criterion: Zeitallokation ──
+        const kellyResult = this.kelly.calculate(conversionRate, branch.ds, branch.tpl);
+
+        // ── EVOI: Lohnt sich mehr Recherche? ──
+        const completeness = this.clamp(([1, place?0.8:0.2, competitors&&competitors.length>2?0.8:0.3, place?0.7:0.2, 1].reduce((a,b)=>a+b,0)/5));
+        const evoiResult = this.evoi.calculate(kellyResult.expectedValue, completeness);
+
+        // ── Sensitivity ──
         const sensitivity = [];
-        if (!ws.isHttps) sensitivity.push({ factor: 'SSL fehlt', delta: Math.round(conversionRate * 0.3 * 1000)/10, description: 'SSL-Warnung macht "Interesse"-Stufe +30% staerker — groesster Einzel-Hebel' });
-        if (!ws.viewport) sensitivity.push({ factor: 'Nicht mobilfreundlich', delta: Math.round(conversionRate * 0.2 * 1000)/10, description: 'Viewport-Fix macht Problem sofort sichtbar fuer den Lead' });
-        if (tech.isBaukasten) sensitivity.push({ factor: `${tech.cms}`, delta: 0, description: 'Strukturelle Limitierung — Lead kennt die Grenzen selbst' });
-        if (bottleneck.mean < 30) sensitivity.push({ factor: `Engpass: ${bottleneck.name}`, delta: 0, description: `Nur ${bottleneck.mean}% Durchlassrate — hier verlierst du die meisten Leads` });
-        if (revenue && revenue.roi > 2) sensitivity.push({ factor: 'ROI-Argument', delta: 0, description: `${revenue.roi}x ROI im ersten Jahr — staerkstes Abschluss-Argument` });
+        if (!ws.isHttps) sensitivity.push({ factor:'SSL fehlt', delta:Math.round(conversionRate*0.3*1000)/10, description:'SSL-Warnung → Interesse-Stufe +30%' });
+        if (!ws.viewport) sensitivity.push({ factor:'Nicht mobilfreundlich', delta:Math.round(conversionRate*0.2*1000)/10, description:'Viewport-Fix → sichtbares Problem' });
+        if (tech.isBaukasten) sensitivity.push({ factor:tech.cms, delta:0, description:'Strukturelle Limitierung — Lead kennt die Grenzen' });
+        if (bottleneck.mean < 30) sensitivity.push({ factor:`Engpass: ${bottleneck.name}`, delta:0, description:`Nur ${bottleneck.mean}% — groesster Verlustpunkt` });
+        if (revenue && revenue.roi > 2) sensitivity.push({ factor:'ROI-Argument', delta:0, description:`${revenue.roi}x ROI — staerkstes Abschluss-Argument` });
 
-        // Daten-Vollstaendigkeit
-        const completeness = Math.round(([
-            1, place ? 0.8 : 0.2, competitors && competitors.length > 2 ? 0.8 : 0.3, place ? 0.7 : 0.2, 1
-        ].reduce((a,b) => a+b, 0) / 5) * 100);
+        // Naechste empfohlene Aktion (aus Markov)
+        const nextAction = this.recommendAction(stageResults, ws, tech, place);
 
         return {
-            leadScore,
-            probability: leadScore,
-            conversionRate: pct,
+            leadScore, probability: leadScore, conversionRate: pct,
             ci5, ci95, ciLow: ci5, ciHigh: ci95, ciMargin,
-            completeness,
-            stages: stageResults,
-            bottleneck,
-            drivers,
-            sensitivity,
-            dimensions: { d1: { score: stageResults[0]?.mean/100 || 0 }, d2: { score: stageResults[1]?.mean/100 || 0, posterior: this.betaPosterior(place?.rating||0, place?.userRatingCount||0) } },
-            isLearned: false,
-            N
+            completeness: Math.round(completeness * 100),
+            stages: stageResults, bottleneck, drivers, sensitivity,
+            // Neue Felder:
+            markov: markovResult,
+            kelly: kellyResult,
+            evoi: evoiResult,
+            nextAction,
+            dealSize: branch.ds,
+            expectedValue: kellyResult.expectedValue,
+            timePerLead: branch.tpl,
+            _stages: stages,  // Fuer Thompson Sampling
+            dimensions: { d1:{score:stageResults[0]?.mean/100||0}, d2:{score:stageResults[1]?.mean/100||0, posterior:this.betaPosterior(place?.rating||0, place?.userRatingCount||0)} },
+            isLearned: false, N
         };
     },
 
-    // Portfolio-Effekt (Batch)
-    portfolioProbability(leadScores, baseConversionRate = 0.05) {
-        const probs = leadScores.map(s => Math.min(0.20, baseConversionRate * (s / 50)));
-        const atLeastOne = 1 - probs.reduce((acc, p) => acc * (1 - p), 1);
-        const expectedConversions = probs.reduce((a, p) => a + p, 0);
+    // Signal-Shifts fuer Hierarchical Pooling
+    calcShifts(ws, tech, place, competitors, revenue) {
+        const s = { reach:[0,0], open:[0,0], interest:[0,0], convo:[0,0], close:[0,0] };
+
+        // Erreichbarkeit
+        if (place?.websiteUri) s.reach[0] += 2;
+        if (place?.regularOpeningHours) s.reach[0] += 1;
+        if (!place) s.reach[1] += 3;
+
+        // Oeffnung
+        if (place?.displayName) s.open[0] += 2;
+        if (ws.perf < 50 || !ws.isHttps) s.open[0] += 1;
+
+        // Interesse
+        if (!ws.isHttps) s.interest[0] += 3;
+        if (!ws.viewport) s.interest[0] += 2;
+        if (ws.perf < 30) s.interest[0] += 2;
+        if (tech.isBaukasten) s.interest[0] += 1;
+        if (revenue?.yearlyRevenueLoss > 5000) s.interest[0] += 2;
+        if (revenue?.yearlyRevenueLoss > 15000) s.interest[0] += 1;
+
+        // Gespraech
+        if (competitors && competitors.filter(c => c.perf > 50).length > 1) s.convo[0] += 2;
+        s.convo[0] += 1;  // Karriaro-Portfolio existiert
+
+        // Abschluss
+        if (revenue?.roi > 3) s.close[0] += 2;
+        else if (revenue?.roi > 1.5) s.close[0] += 1;
+        if (tech.isBaukasten) s.close[0] += 1;
+        const count = place?.userRatingCount || 0;
+        if (count > 100) s.close[0] += 1;
+        else if (count < 5) s.close[1] += 1;
+
+        return s;
+    },
+
+    recommendAction(stages, ws, tech, place) {
+        const bn = [...stages].sort((a,b) => a.mean - b.mean)[0];
+        if (bn.name === 'Oeffnung') return { action: 'Betreff optimieren — Firmennamen + Euro-Zahl', state: 'Kalt' };
+        if (bn.name === 'Interesse') {
+            if (!ws.isHttps) return { action: 'SSL-Warnung-Screenshot in die E-Mail', state: 'Kalt' };
+            if (!ws.viewport) return { action: 'Mobile-Screenshot zeigen', state: 'Kalt' };
+            return { action: 'Umsatzverlust-Zahl in den Betreff', state: 'Kalt' };
+        }
+        if (bn.name === 'Gespraech') return { action: 'Kostenlosen Entwurf anbieten — senkt Hemmschwelle', state: 'Interessiert' };
+        if (bn.name === 'Abschluss') return { action: 'ROI-Argument staerken: "Amortisiert sich in X Monaten"', state: 'Im Gespraech' };
+        return { action: 'E-Mail mit Problem-Report senden', state: 'Kalt' };
+    },
+
+    betaPosterior(rating, count) {
+        if (count === 0) return { alpha:2, beta:2, mean:0.5, variance:0.05 };
+        const p = this.clamp((rating-1)/4);
+        const a=3+p*count, b=1.5+(1-p)*count, m=a/(a+b), v=(a*b)/((a+b)**2*(a+b+1));
+        return { alpha:a, beta:b, mean:m, variance:v };
+    },
+
+    // Portfolio + Thompson fuer Batch
+    portfolioProbability(leadScores, baseRate = 0.05) {
+        const probs = leadScores.map(s => Math.min(0.20, baseRate*(s/50)));
         return {
-            atLeastOne: Math.round(atLeastOne * 1000) / 10,
-            expectedConversions: Math.round(expectedConversions * 100) / 100
+            atLeastOne: Math.round((1-probs.reduce((a,p)=>a*(1-p),1))*1000)/10,
+            expectedConversions: Math.round(probs.reduce((a,p)=>a+p,0)*100)/100
         };
     },
 
-    // Tracking / Lernschleife
     tracking: {
-        log(domain, leadScore, outcome) {
-            const h = JSON.parse(localStorage.getItem('karriaro_lead_history') || '[]');
-            h.push({ domain, leadScore, outcome, timestamp: Date.now() });
-            localStorage.setItem('karriaro_lead_history', JSON.stringify(h));
-        },
-        getHistory() { return JSON.parse(localStorage.getItem('karriaro_lead_history') || '[]'); }
+        log(d,s,o) { const h=JSON.parse(localStorage.getItem('karriaro_lead_history')||'[]'); h.push({domain:d,leadScore:s,outcome:o,timestamp:Date.now()}); localStorage.setItem('karriaro_lead_history',JSON.stringify(h)); },
+        getHistory() { return JSON.parse(localStorage.getItem('karriaro_lead_history')||'[]'); }
     }
 };
 
@@ -1144,6 +1240,43 @@ App.ui = {
                 html += `<tr class="${isSelf ? 'highlight' : ''}"><td>${c.name}${isSelf ? ' (Ziel)' : ''}</td><td>${c.rating || '—'}</td><td>${c.reviews || 0}</td><td class="${this.sc(c.perf)}">${c.perf !== null ? c.perf : '—'}</td></tr>`;
             }
             html += '</tbody></table></div>';
+        }
+
+        // ── Decision Dashboard (Stanford-Methoden) ──
+        if (prob.kelly || prob.evoi || prob.markov) {
+            html += `<div class="section-title">Entscheidungs-Dashboard</div><div class="scores-grid">`;
+
+            // Erwarteter Wert
+            if (prob.kelly) {
+                const evColor = prob.kelly.expectedValue > 50 ? 'good' : prob.kelly.expectedValue > 0 ? 'ok' : 'bad';
+                html += `<div class="score-card"><div class="label">Erwarteter Wert</div><div class="value ${evColor}">${prob.kelly.expectedValue > 0 ? '+' : ''}${prob.kelly.expectedValue} €</div><div class="detail">= ${prob.conversionRate}% × ${prob.dealSize} € - Zeitkosten</div></div>`;
+            }
+
+            // ROI pro Stunde
+            if (prob.kelly) {
+                const roiColor = prob.kelly.roiPerHour > 60 ? 'good' : prob.kelly.roiPerHour > 0 ? 'ok' : 'bad';
+                html += `<div class="score-card"><div class="label">ROI / Stunde</div><div class="value ${roiColor}">${prob.kelly.roiPerHour} €/h</div><div class="detail">Kelly: ${prob.kelly.kellyFraction}% deiner Wochenzeit</div></div>`;
+            }
+
+            // Markov: Erwartete Schritte
+            if (prob.markov) {
+                html += `<div class="score-card"><div class="label">Markov-Conversion</div><div class="value ${prob.markov.conversionRate > 0.05 ? 'good' : prob.markov.conversionRate > 0.02 ? 'ok' : 'bad'}">${Math.round(prob.markov.conversionRate * 1000)/10}%</div><div class="detail">${prob.markov.medianStepsToConversion ? 'Median '+prob.markov.medianStepsToConversion+' Schritte' : 'Inkl. Rueckfaelle'}</div></div>`;
+            }
+
+            // EVOI
+            if (prob.evoi) {
+                html += `<div class="score-card"><div class="label">Recherche-Wert (EVOI)</div><div class="value" style="font-size:1.5rem;color:${prob.evoi.worthIt ? 'var(--accent)' : 'var(--muted)'}">${prob.evoi.worthIt ? 'Ja, +'+prob.evoi.expectedImprovement+' €' : 'Nein'}</div><div class="detail">${prob.evoi.recommendation}</div></div>`;
+            }
+            html += `</div>`;
+
+            // Naechste Aktion
+            if (prob.nextAction) {
+                html += `<div class="card" style="border-left:3px solid var(--accent);margin-bottom:12px">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Empfohlene naechste Aktion</div>
+                    <div style="font-size:15px;font-weight:600">${prob.nextAction.action}</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">Aktueller Zustand: ${prob.nextAction.state} · Kelly: max ${prob.kelly?.optimalHours || '?'}h investieren · ${prob.kelly?.recommendation || ''}</div>
+                </div>`;
+            }
         }
 
         // ── Umsatzverlust (Modul 1) ──
