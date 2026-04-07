@@ -1135,6 +1135,71 @@ App.ui = {
     probClass: p => p >= 65 ? 'hot' : p >= 35 ? 'warm' : 'cold',
     probLabel: p => p >= 65 ? 'Sehr starker Lead' : p >= 35 ? 'Vielversprechender Lead' : 'Schwacher Lead',
 
+    // Klartext-Erklaerung unter dem Score
+    explainScore(prob, domain) {
+        const s = prob.leadScore;
+        const cr = prob.conversionRate;
+        const bn = prob.bottleneck;
+        const comp = prob.completeness;
+        const hasPlaces = prob.dimensions?.d2?.posterior?.alpha > 2.5;
+        const kelly = prob.kelly;
+
+        // ── Starker Lead (65-100) ──
+        if (s >= 65) {
+            let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong> `;
+            text += `Bei einer geschaetzten Conversion-Rate von ${cr}% und einem Auftragswert von ${prob.dealSize || 990} € `;
+            text += `liegt der erwartete Wert bei ${kelly?.expectedValue > 0 ? '+'+kelly.expectedValue : kelly?.expectedValue} €. `;
+            if (kelly?.roiPerHour > 60) text += `Mit ${kelly.roiPerHour} €/h ist das deutlich ueber deinen Opportunitaetskosten. `;
+            if (bn) text += `Achte auf die Stufe "${bn.name}" (${bn.mean}%) — das ist der Engpass. `;
+            text += `Kelly empfiehlt max. ${kelly?.optimalHours || '?'}h Zeitinvestment.`;
+            return text;
+        }
+
+        // ── Mittlerer Lead (35-64) ──
+        if (s >= 35) {
+            let text = `<strong style="color:var(--orange)">Potenzial vorhanden, aber nicht sicher.</strong> `;
+            text += `Die Conversion-Rate liegt bei ${cr}%. `;
+            if (!hasPlaces) text += `Es wurden keine Google-Business-Daten gefunden — das Modell arbeitet mit wenig Information (${comp}% Datenvollstaendigkeit). `;
+            if (bn && bn.mean < 30) text += `Der Engpass ist "${bn.name}" mit nur ${bn.mean}% Durchlassrate. `;
+            if (kelly?.expectedValue > 0) {
+                text += `Der erwartete Wert ist trotzdem positiv (+${kelly.expectedValue} €) — ein Quick-Pitch mit max. ${kelly?.optimalHours || 2}h lohnt sich.`;
+            } else {
+                text += `Der erwartete Wert ist knapp. Nur kontaktieren wenn du gerade wenig andere Leads hast.`;
+            }
+            return text;
+        }
+
+        // ── Schwacher Lead (0-34) ──
+        let text = `<strong style="color:var(--red)">Diesen Lead ueberspringen.</strong> `;
+
+        // Gruende sammeln
+        const reasons = [];
+        if (!hasPlaces) reasons.push('keine Google-Business-Daten gefunden (kein lokales Unternehmen oder kein Eintrag)');
+        if (comp < 50) reasons.push(`nur ${comp}% Datenvollstaendigkeit — zu wenig Signale fuer eine zuverlaessige Bewertung`);
+
+        // Website zu gut?
+        const perfStage = prob.stages?.find(st => st.name === 'Interesse');
+        if (perfStage && perfStage.mean < 25) reasons.push('die Website hat kaum sichtbare Probleme — der Lead wuerde sein Problem nicht erkennen');
+
+        // Zu gross/klein?
+        if (bn && bn.name === 'Abschluss' && bn.mean < 25) reasons.push('das Budget passt wahrscheinlich nicht zum Karriaro-Angebot');
+        if (bn && bn.name === 'Oeffnung' && bn.mean < 20) reasons.push('Cold-E-Mails werden in dieser Branche selten geoeffnet');
+
+        if (reasons.length > 0) {
+            text += `Gruende: ${reasons.join('; ')}. `;
+        }
+
+        text += `Bei ${cr}% Conversion-Rate muesste man ~${cr > 0 ? Math.round(100/parseFloat(cr)) : '∞'} solcher Leads kontaktieren fuer einen Abschluss. `;
+
+        if (kelly?.expectedValue !== undefined && kelly.expectedValue <= 0) {
+            text += `Der erwartete Wert ist ${kelly.expectedValue} € — du verlierst statistisch Geld (Zeitkosten > erwarteter Ertrag).`;
+        } else {
+            text += `Deine Zeit ist besser in Leads mit Score 50+ investiert.`;
+        }
+
+        return text;
+    },
+
     renderSingle(url, ws, tech, biz, prob, competitors, extra = {}) {
         const domain = new URL(url).hostname.replace('www.', '');
         const pColor = this.probColor(prob.probability);
@@ -1150,7 +1215,8 @@ App.ui = {
                 <div class="prob-bar-ci" style="background:${pColor};left:${prob.ci5}%;width:${prob.ci95 - prob.ci5}%"></div>
                 <div class="prob-bar-fill" style="background:${pColor};width:${prob.leadScore}%"></div>
             </div>
-            <div style="font-size:12px;color:var(--muted);margin-top:8px">${domain} · Datenvollstaendigkeit: ${prob.completeness}% · ${prob.isLearned ? 'Kalibrierte Gewichte' : 'Standard-Gewichte'}${prob.dimensions.d2.posterior ? ` · Rating-Posterior: Beta(${prob.dimensions.d2.posterior.alpha?.toFixed(1)}, ${prob.dimensions.d2.posterior.beta?.toFixed(1)})` : ''}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">${domain} · Datenvollstaendigkeit: ${prob.completeness}%${prob.dimensions.d2.posterior ? ` · Rating-Posterior: Beta(${prob.dimensions.d2.posterior.alpha?.toFixed(1)}, ${prob.dimensions.d2.posterior.beta?.toFixed(1)})` : ''}</div>
+            <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${this.explainScore(prob, domain)}</div>
         </div>`;
 
         // ── Funnel-Stufen (Gelman-Modell) ──
