@@ -1200,6 +1200,47 @@ App.ui = {
         return text;
     },
 
+    // Kurze Erklaerung fuer Batch-Tabelle (1-2 Saetze)
+    batchExplain(r) {
+        const s = r.probability;
+        const p = r.prob;
+        const bn = p?.bottleneck;
+        const kelly = p?.kelly;
+
+        if (s >= 65) {
+            let t = `<strong style="color:var(--green)">→ Kontaktieren.</strong> `;
+            if (kelly?.expectedValue > 0) t += `Erwarteter Wert: +${kelly.expectedValue} € (${kelly.roiPerHour} €/h). `;
+            if (r.perf < 50) t += `Performance nur ${r.perf}/100 — starkes Argument. `;
+            if (r.isBaukasten) t += `Laeuft auf ${r.cms} — einfacher Wechsel-Pitch. `;
+            if (bn && bn.mean < 35) t += `Engpass: ${bn.name} (${bn.mean}%). `;
+            if (r.reviews > 50) t += `${r.reviews} Bewertungen = aktives Unternehmen mit Budget.`;
+            return t;
+        }
+
+        if (s >= 35) {
+            let t = `<strong style="color:var(--orange)">→ Moeglich.</strong> `;
+            if (kelly?.expectedValue > 0) t += `EV: +${kelly.expectedValue} €, aber Kelly sagt max ${kelly.optimalHours}h. `;
+            else t += `Knapper erwarteter Wert. `;
+            if (r.perf >= 70) t += `Website ist schon okay (${r.perf}/100) — schweres Argument. `;
+            if (r.reviews < 10) t += `Wenig Bewertungen — kleines Unternehmen, unsicheres Budget. `;
+            if (bn) t += `Engpass: ${bn.name} (${bn.mean}%).`;
+            return t;
+        }
+
+        // Schwach
+        let t = `<strong style="color:var(--red)">→ Ueberspringen.</strong> `;
+        const reasons = [];
+        if (r.perf >= 75) reasons.push(`Website schon gut (${r.perf}/100)`);
+        if (r.reviews < 5) reasons.push('kaum Bewertungen — moeglicherweise inaktiv');
+        if (!r.ws?.isHttps === false && r.perf >= 60 && r.seo >= 60) reasons.push('keine sichtbaren Probleme');
+        if (kelly?.expectedValue <= 0) reasons.push(`negativer Erwartungswert (${kelly.expectedValue} €)`);
+        if (bn && bn.mean < 20) reasons.push(`Engpass "${bn.name}" bei nur ${bn.mean}%`);
+
+        if (reasons.length > 0) t += reasons.join('. ') + '.';
+        else t += `Conversion-Rate zu niedrig fuer den Zeitaufwand.`;
+        return t;
+    },
+
     renderSingle(url, ws, tech, biz, prob, competitors, extra = {}) {
         const domain = new URL(url).hostname.replace('www.', '');
         const pColor = this.probColor(prob.probability);
@@ -1703,7 +1744,8 @@ App.batch = {
                     cms: tech.cms,
                     isBaukasten: tech.isBaukasten,
                     probability: prob.probability,
-                    ciMargin: prob.ciMargin
+                    ciMargin: prob.ciMargin,
+                    prob, ws, tech
                 });
             }
 
@@ -1740,6 +1782,7 @@ App.batch = {
 
         for (const r of results) {
             const pc = App.ui.probClass(r.probability);
+            const explanation = r.prob ? App.ui.batchExplain(r) : '';
             html += `<tr>
                 <td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank">${r.domain}</a></td>
                 <td>${r.type}</td>
@@ -1748,7 +1791,8 @@ App.batch = {
                 <td class="${App.ui.sc(r.perf)}">${r.perf}</td>
                 <td>${r.isBaukasten ? '<span class="tech-badge template" style="font-size:10px">' + r.cms + '</span>' : '<span style="font-size:12px">' + r.cms + '</span>'}</td>
                 <td><span class="opp-pill ${pc}">${r.probability}</span><br><span style="font-size:10px;color:var(--muted)">±${r.ciMargin}</span></td>
-            </tr>`;
+            </tr>
+            <tr><td colspan="7" style="padding:4px 12px 16px;font-size:12px;line-height:1.6;color:var(--muted);border-bottom:2px solid var(--border)">${explanation}</td></tr>`;
         }
         html += '</tbody></table>';
 
