@@ -189,14 +189,83 @@
         .method-detail { display: none; margin-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
         .method-detail.active { display: block; }
         .method-detail code { background: rgba(0,0,0,0.04); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+
+        /* ── Auth ── */
+        .auth-btn { font-size: 13px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: var(--font); margin-left: 12px; }
+        .auth-btn:hover { color: var(--text); }
+        .auth-btn.logged-in { color: var(--green); }
+        .nav-right { display: flex; align-items: center; gap: 4px; }
+
+        /* ── CRM Tab ── */
+        .crm-view { display: none; max-width: 900px; margin: 0 auto; padding: 80px 24px 80px; }
+        .crm-view.active { display: block; }
+        .crm-view h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+        .crm-stats { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .crm-stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; min-width: 120px; }
+        .crm-stat .crm-stat-val { font-size: 1.5rem; font-weight: 700; }
+        .crm-stat .crm-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+        .crm-filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .crm-filter { padding: 6px 14px; font-size: 12px; font-weight: 600; font-family: var(--font); border: 1px solid var(--border); border-radius: 8px; background: var(--card); color: var(--muted); cursor: pointer; }
+        .crm-filter.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .status-select { padding: 4px 8px; font-size: 11px; font-family: var(--font); border: 1px solid var(--border); border-radius: 6px; background: var(--card); cursor: pointer; }
+        .status-neu { color: var(--muted); }
+        .status-kontaktiert { color: var(--orange); }
+        .status-interessiert { color: var(--accent); }
+        .status-angebot { color: #8b5cf6; }
+        .status-kunde { color: var(--green); font-weight: 700; }
+        .status-verloren { color: var(--red); }
+        .crm-note { width: 100%; padding: 6px 10px; font-size: 12px; font-family: var(--font); border: 1px solid var(--border); border-radius: 6px; margin-top: 4px; }
     </style>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVW65nxMRdszPNI0KLU0UGhE8YKwVms4o",
+            authDomain: "apex-executive.firebaseapp.com",
+            projectId: "apex-executive",
+            storageBucket: "apex-executive.appspot.com",
+            messagingSenderId: "525553082138",
+            appId: "1:525553082138:web:karriaro-lead-intelligence"
+        };
+
+        const fbApp = initializeApp(firebaseConfig);
+        const auth = getAuth(fbApp);
+        const db = getFirestore(fbApp);
+
+        // Expose to global scope for inline handlers
+        window.fbAuth = auth;
+        window.fbDb = db;
+        window.fbFns = { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged };
+
+        // Auth State
+        onAuthStateChanged(auth, (user) => {
+            window.currentUser = user;
+            const btn = document.getElementById('auth-btn');
+            if (user) {
+                btn.textContent = user.email.split('@')[0];
+                btn.classList.add('logged-in');
+                // Load settings from Firestore
+                App.crm.loadSettings();
+            } else {
+                btn.textContent = 'Anmelden';
+                btn.classList.remove('logged-in');
+            }
+        });
+    </script>
 </head>
 <body>
 
     <!-- ═══ NAV ═══ -->
     <nav>
         <a class="logo" href="/">Karriaro Webdesign</a>
-        <button class="settings-btn" onclick="toggleSettings()">Einstellungen</button>
+        <div class="nav-right">
+            <button class="settings-btn" onclick="toggleSettings()">Einstellungen</button>
+            <button class="settings-btn" onclick="App.crm.showView()">CRM</button>
+            <button class="auth-btn" id="auth-btn" onclick="App.crm.toggleAuth()">Anmelden</button>
+        </div>
     </nav>
 
     <!-- ═══ SETTINGS ═══ -->
@@ -264,6 +333,9 @@
 
     <!-- ═══ BATCH RESULTS ═══ -->
     <div class="batch-results" id="batch-results"></div>
+
+    <!-- ═══ CRM VIEW ═══ -->
+    <div class="crm-view" id="crm-view"></div>
 
 <script>
 /* ══════════════════════════════════════
@@ -1489,8 +1561,12 @@ App.ui = {
             </div>
         </div>`;
 
-        // ── CTA ──
-        html += `<div class="cta"><a href="https://karriaro-webdesign.de/#kontakt">Kostenlos beraten lassen</a><p>Unverbindlich. Antwort innerhalb von 24 Stunden.</p></div>`;
+        // ── Save + CTA ──
+        html += `<div class="cta">
+            <button class="btn-primary" id="save-single-btn" onclick="App.crm.saveFromSingle('${url}', App._lastWs, App._lastTech, App._lastProb, App._lastExtra).then(()=>{this.textContent='Gespeichert ✓';this.disabled=true})" style="margin-right:12px;background:var(--text)">Im CRM speichern</button>
+            <a href="https://karriaro-webdesign.de/#kontakt" style="display:inline-block;padding:14px 28px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;border-radius:12px">Kostenlos beraten lassen</a>
+            <p style="margin-top:8px;font-size:12px;color:var(--muted)">Unverbindlich. Antwort innerhalb von 24 Stunden.</p>
+        </div>`;
 
         $('results').innerHTML = html;
         $('results').classList.add('active');
@@ -1668,7 +1744,11 @@ App.single = {
 
         App.ui.hideLoading();
         $('check-btn').disabled = false;
-        App.ui.renderSingle(url, ws, tech, biz, prob, competitors, { revenue, screenshot, googleReport, strategy, timing, sequence });
+        // Zwischenspeichern fuer CRM-Save-Button
+        App._lastWs = ws; App._lastTech = tech; App._lastProb = prob;
+        App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence };
+
+        App.ui.renderSingle(url, ws, tech, biz, prob, competitors, App._lastExtra);
     }
 };
 
@@ -1767,6 +1847,7 @@ App.batch = {
         let html = `<div class="batch-header">
             <h2>${results.length} Leads fuer "${query}"</h2>
             <button class="export-btn" onclick="App.batch.exportCSV()">CSV Export</button>
+            <button class="export-btn" id="save-batch-btn" onclick="App.crm.saveFromBatch(App.batch._lastResults).then(n=>{this.textContent=n+' Leads gespeichert ✓';this.disabled=true})" style="margin-left:8px">Alle im CRM speichern</button>
         </div>`;
 
         // Portfolio-Zusammenfassung
@@ -1814,6 +1895,245 @@ App.batch = {
         a.download = `karriaro-leads-${new Date().toISOString().slice(0, 10)}.csv`;
         a.click();
     }
+};
+
+// ══════════════════════════════════════
+// CRM MODULE
+// Firebase Auth + Firestore Persistence
+// ══════════════════════════════════════
+App.crm = {
+    // ── Auth ──
+    async toggleAuth() {
+        if (window.currentUser) {
+            await window.fbFns.signOut(window.fbAuth);
+        } else {
+            try {
+                const provider = new window.fbFns.GoogleAuthProvider();
+                await window.fbFns.signInWithPopup(window.fbAuth, provider);
+            } catch (e) { console.error('Auth error:', e); }
+        }
+    },
+
+    // ── Settings aus Firestore laden ──
+    async loadSettings() {
+        if (!window.currentUser || !window.fbDb) return;
+        try {
+            const ref = window.fbFns.doc(window.fbDb, 'leadSettings', window.currentUser.uid);
+            const snap = await window.fbFns.getDoc(ref);
+            if (snap.exists()) {
+                const data = snap.data();
+                if (data.psiKey) { App.config.psiKey = data.psiKey; localStorage.setItem('karriaro_psi_key', data.psiKey); }
+                if (data.fnUrl) { App.config.fnUrl = data.fnUrl; localStorage.setItem('karriaro_fn_url', data.fnUrl); }
+            }
+        } catch (e) { console.error('Load settings:', e); }
+    },
+
+    // ── Settings in Firestore speichern ──
+    async saveSettings() {
+        if (!window.currentUser || !window.fbDb) return;
+        try {
+            const ref = window.fbFns.doc(window.fbDb, 'leadSettings', window.currentUser.uid);
+            await window.fbFns.setDoc(ref, {
+                psiKey: App.config.psiKey,
+                fnUrl: App.config.fnUrl,
+                updatedAt: window.fbFns.serverTimestamp()
+            }, { merge: true });
+        } catch (e) { console.error('Save settings:', e); }
+    },
+
+    // ── Lead speichern ──
+    async saveLead(domain, url, data) {
+        if (!window.currentUser || !window.fbDb) {
+            // Fallback: localStorage
+            const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+            leads.push({ domain, url, ...data, status: 'neu', notes: '', savedAt: Date.now() });
+            localStorage.setItem('karriaro_leads', JSON.stringify(leads));
+            return;
+        }
+        try {
+            const id = domain.replace(/[^a-zA-Z0-9]/g, '_');
+            const ref = window.fbFns.doc(window.fbDb, 'leads', `${window.currentUser.uid}_${id}`);
+            await window.fbFns.setDoc(ref, {
+                uid: window.currentUser.uid,
+                domain, url,
+                name: data.name || domain,
+                type: data.type || '',
+                rating: data.rating || null,
+                reviews: data.reviews || 0,
+                perf: data.perf || null,
+                seo: data.seo || null,
+                a11y: data.a11y || null,
+                cms: data.cms || '',
+                isBaukasten: data.isBaukasten || false,
+                leadScore: data.leadScore || data.probability || 0,
+                conversionRate: data.conversionRate || 0,
+                expectedValue: data.expectedValue || 0,
+                roiPerHour: data.roiPerHour || 0,
+                yearlyRevenueLoss: data.yearlyRevenueLoss || 0,
+                bottleneck: data.bottleneck || '',
+                explanation: data.explanation || '',
+                status: 'neu',
+                notes: '',
+                savedAt: window.fbFns.serverTimestamp(),
+                updatedAt: window.fbFns.serverTimestamp()
+            }, { merge: true });
+        } catch (e) { console.error('Save lead:', e); }
+    },
+
+    // ── Alle Leads laden ──
+    async loadLeads() {
+        if (!window.currentUser || !window.fbDb) {
+            return JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        }
+        try {
+            const q = window.fbFns.query(
+                window.fbFns.collection(window.fbDb, 'leads'),
+                window.fbFns.where('uid', '==', window.currentUser.uid),
+                window.fbFns.orderBy('savedAt', 'desc')
+            );
+            const snap = await window.fbFns.getDocs(q);
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) { console.error('Load leads:', e); return []; }
+    },
+
+    // ── Lead Status updaten ──
+    async updateLead(leadId, updates) {
+        if (!window.currentUser || !window.fbDb) return;
+        try {
+            const ref = window.fbFns.doc(window.fbDb, 'leads', leadId);
+            await window.fbFns.updateDoc(ref, { ...updates, updatedAt: window.fbFns.serverTimestamp() });
+        } catch (e) { console.error('Update lead:', e); }
+    },
+
+    // ── Lead loeschen ──
+    async deleteLead(leadId) {
+        if (!window.currentUser || !window.fbDb) return;
+        try {
+            await window.fbFns.deleteDoc(window.fbFns.doc(window.fbDb, 'leads', leadId));
+            this.showView();  // Refresh
+        } catch (e) { console.error('Delete lead:', e); }
+    },
+
+    // ── CRM View anzeigen ──
+    async showView(filter = 'alle') {
+        // Andere Views verstecken
+        $('results').classList.remove('active');
+        $('batch-results').classList.remove('active');
+        $('loading').classList.remove('active');
+
+        if (!window.currentUser) {
+            $('crm-view').innerHTML = `<div style="text-align:center;padding:40px"><p style="color:var(--muted);margin-bottom:16px">Bitte zuerst anmelden um das CRM zu nutzen.</p><button class="btn-primary" onclick="App.crm.toggleAuth()">Mit Google anmelden</button></div>`;
+            $('crm-view').classList.add('active');
+            return;
+        }
+
+        $('crm-view').innerHTML = `<div style="text-align:center;padding:40px"><div class="spinner"></div><p style="color:var(--muted)">Leads werden geladen...</p></div>`;
+        $('crm-view').classList.add('active');
+
+        const leads = await this.loadLeads();
+        const statuses = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
+        const filtered = filter === 'alle' ? leads : leads.filter(l => l.status === filter);
+
+        // Stats
+        const stats = {
+            total: leads.length,
+            neu: leads.filter(l => l.status === 'neu').length,
+            kontaktiert: leads.filter(l => l.status === 'kontaktiert').length,
+            kunde: leads.filter(l => l.status === 'kunde').length,
+            verloren: leads.filter(l => l.status === 'verloren').length,
+            pipeline: leads.filter(l => ['kontaktiert','interessiert','angebot'].includes(l.status)).reduce((s,l) => s + (l.expectedValue || 0), 0)
+        };
+
+        let html = `<h2>Lead-CRM</h2><p style="color:var(--muted);font-size:14px;margin-bottom:20px">${leads.length} Leads gespeichert</p>`;
+
+        // Stats Cards
+        html += `<div class="crm-stats">
+            <div class="crm-stat"><div class="crm-stat-val">${stats.total}</div><div class="crm-stat-label">Gesamt</div></div>
+            <div class="crm-stat"><div class="crm-stat-val" style="color:var(--orange)">${stats.kontaktiert}</div><div class="crm-stat-label">Kontaktiert</div></div>
+            <div class="crm-stat"><div class="crm-stat-val" style="color:var(--green)">${stats.kunde}</div><div class="crm-stat-label">Kunden</div></div>
+            <div class="crm-stat"><div class="crm-stat-val" style="color:var(--accent)">€${Math.round(stats.pipeline)}</div><div class="crm-stat-label">Pipeline EV</div></div>
+        </div>`;
+
+        // Filter
+        html += `<div class="crm-filters">`;
+        for (const s of statuses) {
+            const count = s === 'alle' ? leads.length : leads.filter(l => l.status === s).length;
+            html += `<button class="crm-filter ${s === filter ? 'active' : ''}" onclick="App.crm.showView('${s}')">${s.charAt(0).toUpperCase()+s.slice(1)} (${count})</button>`;
+        }
+        html += `</div>`;
+
+        // Table
+        if (filtered.length === 0) {
+            html += `<div style="text-align:center;padding:40px;color:var(--muted)">Keine Leads in "${filter}"</div>`;
+        } else {
+            html += `<table class="lead-table"><thead><tr><th>Lead</th><th>Score</th><th>EV</th><th>Status</th><th>Notizen</th><th></th></tr></thead><tbody>`;
+            for (const l of filtered) {
+                const pc = App.ui.probClass(l.leadScore);
+                const statusClass = 'status-' + (l.status || 'neu');
+                html += `<tr>
+                    <td><strong>${l.name || l.domain}</strong><br><a href="${l.url}" target="_blank" style="font-size:11px">${l.domain}</a><br><span style="font-size:11px;color:var(--muted)">${l.type || ''} · ${l.rating ? l.rating+'★' : ''} ${l.reviews ? '('+l.reviews+')' : ''}</span></td>
+                    <td><span class="opp-pill ${pc}">${l.leadScore}</span></td>
+                    <td style="font-size:13px;font-weight:600">${l.expectedValue > 0 ? '+'+Math.round(l.expectedValue)+'€' : '—'}</td>
+                    <td><select class="status-select ${statusClass}" onchange="App.crm.updateLead('${l.id}',{status:this.value});this.className='status-select status-'+this.value">
+                        ${['neu','kontaktiert','interessiert','angebot','kunde','verloren'].map(s => `<option value="${s}" ${l.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+                    </select></td>
+                    <td><input class="crm-note" value="${(l.notes||'').replace(/"/g,'&quot;')}" placeholder="Notiz..." onblur="App.crm.updateLead('${l.id}',{notes:this.value})"></td>
+                    <td><button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px" onclick="if(confirm('Lead loeschen?'))App.crm.deleteLead('${l.id}')">✕</button></td>
+                </tr>`;
+            }
+            html += '</tbody></table>';
+        }
+
+        $('crm-view').innerHTML = html;
+    },
+
+    // ── Save von Single-Check ──
+    async saveFromSingle(url, ws, tech, prob, extra) {
+        const domain = new URL(url).hostname.replace('www.', '');
+        await this.saveLead(domain, url, {
+            name: extra?.strategy?.type ? domain : domain,
+            type: extra?.strategy?.type || '',
+            rating: prob.dimensions?.d2?.posterior?.mean,
+            reviews: 0,
+            perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
+            cms: tech.cms,
+            isBaukasten: tech.isBaukasten,
+            leadScore: prob.leadScore,
+            conversionRate: prob.conversionRate,
+            expectedValue: prob.kelly?.expectedValue || 0,
+            roiPerHour: prob.kelly?.roiPerHour || 0,
+            yearlyRevenueLoss: extra?.revenue?.yearlyRevenueLoss || 0,
+            bottleneck: prob.bottleneck?.name || '',
+            explanation: App.ui.explainScore(prob, domain)
+        });
+    },
+
+    // ── Save von Batch ──
+    async saveFromBatch(results) {
+        let saved = 0;
+        for (const r of results) {
+            await this.saveLead(r.domain, r.url, {
+                name: r.name, type: r.type, rating: r.rating, reviews: r.reviews,
+                perf: r.perf, seo: r.seo, a11y: r.a11y,
+                cms: r.cms, isBaukasten: r.isBaukasten,
+                leadScore: r.probability, conversionRate: r.prob?.conversionRate || 0,
+                expectedValue: r.prob?.kelly?.expectedValue || 0,
+                roiPerHour: r.prob?.kelly?.roiPerHour || 0,
+                yearlyRevenueLoss: 0,
+                bottleneck: r.prob?.bottleneck?.name || '',
+                explanation: r.prob ? App.ui.batchExplain(r) : ''
+            });
+            saved++;
+        }
+        return saved;
+    }
+};
+
+// Override saveSettings to also save to Firestore
+const _origSaveSettings = saveSettings;
+saveSettings = function() {
+    _origSaveSettings();
+    App.crm.saveSettings();
 };
 </script>
 </body>
