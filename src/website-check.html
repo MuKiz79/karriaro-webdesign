@@ -327,12 +327,13 @@
     </section>
 
     <!-- ═══ LOADING ═══ -->
-    <div class="loading" id="loading"><div class="spinner"></div><p id="loading-text">Wird analysiert...</p></div>
+    <div class="loading" id="loading"><div class="spinner"></div><p id="loading-text">Wird analysiert...</p><button class="btn-primary" onclick="App.abort()" style="margin-top:12px;background:var(--red);font-size:13px;padding:10px 24px">Abbrechen</button></div>
 
     <!-- ═══ PROGRESS ═══ -->
     <div class="progress-wrap" id="progress">
         <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill"></div></div>
         <p class="progress-text" id="progress-text">Starte...</p>
+        <button class="btn-primary" onclick="App.abort()" style="margin-top:8px;background:var(--red);font-size:12px;padding:8px 20px;display:block;margin-left:auto;margin-right:auto">Abbrechen</button>
     </div>
 
     <!-- ═══ ERROR ═══ -->
@@ -360,7 +361,18 @@ const App = {
         psiKey: localStorage.getItem('karriaro_psi_key') || '',
         fnUrl: localStorage.getItem('karriaro_fn_url') || '',
     },
-    state: { mode: 'single' }
+    state: { mode: 'single', aborted: false },
+
+    // Globaler Abbruch
+    abort() {
+        this.state.aborted = true;
+        App.ui.hideLoading();
+        App.ui.hideProgress();
+        $('check-btn').disabled = false;
+        $('batch-btn').disabled = false;
+        $('scanner-btn').disabled = false;
+        App.ui.showError('Analyse abgebrochen.');
+    }
 };
 
 function toggleSettings() {
@@ -424,7 +436,8 @@ App.api = {
         if (!res.ok) throw new Error(`Nearby ${res.status}`);
         return res.json();
     },
-    delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+    delay(ms) { return new Promise((r, rej) => { const t = setTimeout(r, ms); if (App.state.aborted) { clearTimeout(t); rej('aborted'); } }); },
+    checkAbort() { if (App.state.aborted) throw new Error('aborted'); }
 };
 
 // ══════════════════════════════════════
@@ -2102,6 +2115,7 @@ App.single = {
         let url = $('url-input').value.trim();
         if (!url) return;
         if (!url.startsWith('http')) url = 'https://' + url;
+        App.state.aborted = false;
 
         $('results').classList.remove('active');
         $('batch-results').classList.remove('active');
@@ -2225,6 +2239,7 @@ App.batch = {
     async run() {
         const query = $('batch-query').value.trim();
         if (!query) return;
+        App.state.aborted = false;
         if (!App.config.fnUrl) {
             App.ui.showError('Batch-Modus benoetigt die Cloud Function URL. Bitte in Einstellungen konfigurieren.');
             return;
@@ -2295,11 +2310,13 @@ App.batch = {
                 });
             }
 
+            if (App.state.aborted) break;
             if (i < places.length - 1) await App.api.delay(2000);
         }
 
         App.ui.hideProgress();
         $('batch-btn').disabled = false;
+        if (App.state.aborted) return;
 
         // Sort by conversion probability
         results.sort((a, b) => b.probability - a.probability);
@@ -2395,6 +2412,7 @@ App.scanner = {
     async run() {
         const city = $('scanner-city').value.trim();
         if (!city) return;
+        App.state.aborted = false;
         if (!App.config.fnUrl) {
             App.ui.showError('Branchen-Scanner benoetigt die Cloud Function URL. Bitte in Einstellungen konfigurieren.');
             return;
@@ -2467,11 +2485,13 @@ App.scanner = {
                 results.push({ ...branch, city, avgScore: 0, count: 0, tested: 0, avgPerf: 0, baukastenPct: 0, reason: 'API Fehler: ' + e.message });
             }
 
+            if (App.state.aborted) break;
             await App.api.delay(1000);
         }
 
         App.ui.hideProgress();
         $('scanner-btn').disabled = false;
+        if (App.state.aborted) return;
 
         // Sortiere nach avgScore absteigend
         results.sort((a, b) => b.avgScore - a.avgScore);
