@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="de" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCHWABEN LOGISTIK | Ihr Speditionspartner seit 1959 – Transport & Lagerung</title>
+    <meta name="description" content="Schwaben Logistik GmbH – Spedition & Logistik seit 1959. Kühltransporte, Planentransporte, Lagerung. 45 LKW, 11.000 qm Lagerfläche. ISO 9001, IFS Logistics zertifiziert.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fff7ed', 100: '#ffedd5', 200: '#fed7aa', 300: '#fdba74',
+                            400: '#fb923c', 500: '#f97316', 600: '#ea580c', 700: '#c2410c',
+                            800: '#9a3412', 900: '#7c2d12', 950: '#431407',
+                        },
+                        navy: {
+                            50: '#f0f4f8', 100: '#d9e2ec', 200: '#bcccdc', 300: '#9fb3c8',
+                            400: '#829ab1', 500: '#627d98', 600: '#486581', 700: '#334e68',
+                            800: '#243b53', 900: '#102a43', 950: '#0a1929',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#fafbfc;color:#0f172a;overflow-x:hidden}
+        .font-serif{font-family:'Instrument Serif',serif}
+
+        /* Cursor */
+        .cursor-dot{width:8px;height:8px;background:#f97316;border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+        .cursor-ring{width:40px;height:40px;border:2px solid rgba(249,115,22,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transition:all 0.15s ease-out}
+        .cursor-ring.hover{transform:scale(1.8);border-color:rgba(249,115,22,0.8);background:rgba(249,115,22,0.05)}
+
+        ::-webkit-scrollbar{width:4px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:#f97316;border-radius:10px}
+
+        /* Loader */
+        .loader{position:fixed;inset:0;background:#0a1929;z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;transition:opacity 0.8s cubic-bezier(0.76,0,0.24,1),visibility 0.8s}
+        .loader.hidden{opacity:0;visibility:hidden}
+        .loader-text{font-family:'Instrument Serif',serif;font-size:clamp(2rem,5vw,4rem);color:white;opacity:0;animation:loaderFade 1.5s ease-out forwards}
+        .loader-sub{color:rgba(249,115,22,0.7);font-size:0.85rem;letter-spacing:0.4em;text-transform:uppercase;font-weight:600;opacity:0;animation:loaderFade 1.5s ease-out 0.3s forwards}
+        @keyframes loaderFade{0%{opacity:0;transform:translateY(20px)}50%{opacity:1}100%{opacity:1;transform:translateY(0)}}
+
+        /* Hero */
+        .hero-bg{background:url('https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;position:relative}
+        .hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,25,41,0.92) 0%,rgba(16,42,67,0.85) 40%,rgba(36,59,83,0.80) 70%,rgba(10,25,41,0.90) 100%);pointer-events:none}
+
+        .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.25;animation:orbFloat 20s ease-in-out infinite}
+        @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.05)}66%{transform:translate(-20px,20px) scale(0.95)}}
+
+        /* Reveals */
+        .reveal{opacity:0;transform:translateY(60px);transition:all 1s cubic-bezier(0.16,1,0.3,1)}
+        .reveal.active{opacity:1;transform:translateY(0)}
+        .reveal-left{opacity:0;transform:translateX(-80px);transition:all 1.2s cubic-bezier(0.16,1,0.3,1)}
+        .reveal-left.active{opacity:1;transform:translateX(0)}
+        .reveal-right{opacity:0;transform:translateX(80px);transition:all 1.2s cubic-bezier(0.16,1,0.3,1)}
+        .reveal-right.active{opacity:1;transform:translateX(0)}
+        .reveal-scale{opacity:0;transform:scale(0.92);transition:all 1s cubic-bezier(0.16,1,0.3,1)}
+        .reveal-scale.active{opacity:1;transform:scale(1)}
+        .delay-1{transition-delay:0.1s}.delay-2{transition-delay:0.2s}.delay-3{transition-delay:0.3s}.delay-4{transition-delay:0.4s}.delay-5{transition-delay:0.5s}
+
+        /* Buttons */
+        .magnetic-btn{position:relative;transition:transform 0.3s cubic-bezier(0.2,0,0,1)}
+        .magnetic-btn::after{content:'';position:absolute;inset:-2px;border-radius:inherit;background:linear-gradient(135deg,#f97316,#fdba74);z-index:-1;opacity:0;transition:opacity 0.3s,transform 0.3s;transform:scale(0.95);filter:blur(12px)}
+        .magnetic-btn:hover::after{opacity:0.6;transform:scale(1.05)}
+
+        /* Glass */
+        .glass-card{background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.8)}
+        .glass-dark{background:rgba(10,25,41,0.6);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08)}
+
+        /* Tilt */
+        .tilt-card{transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(0.2,0,0,1)}
+
+        /* Text gradient */
+        .text-gradient{background:linear-gradient(135deg,#f97316 0%,#fdba74 50%,#fed7aa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+        /* Marquee */
+        .marquee-track{display:flex;animation:marquee 35s linear infinite}
+        @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* Wave */
+        .section-wave{position:absolute;bottom:-1px;left:0;width:100%;overflow:hidden;line-height:0}
+        .section-wave svg{display:block;width:calc(100% + 2px);height:80px}
+
+        /* Notification */
+        .notif{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-150%);z-index:200;transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1)}
+        .notif.show{transform:translateX(-50%) translateY(0)}
+
+        /* Mobile Menu */
+        .mobile-overlay{position:fixed;inset:0;background:rgba(10,25,41,0.97);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;pointer-events:none;transition:opacity 0.5s cubic-bezier(0.76,0,0.24,1)}
+        .mobile-overlay.open{opacity:1;pointer-events:all}
+        .mobile-overlay a{font-family:'Instrument Serif',serif;font-size:2.2rem;color:white;opacity:0;transform:translateY(20px);transition:all 0.4s ease-out,color 0.2s}
+        .mobile-overlay.open a{opacity:1;transform:translateY(0)}
+        .mobile-overlay.open a:nth-child(1){transition-delay:0.1s}
+        .mobile-overlay.open a:nth-child(2){transition-delay:0.15s}
+        .mobile-overlay.open a:nth-child(3){transition-delay:0.2s}
+        .mobile-overlay.open a:nth-child(4){transition-delay:0.25s}
+        .mobile-overlay.open a:nth-child(5){transition-delay:0.3s}
+        .mobile-overlay.open a:nth-child(6){transition-delay:0.35s}
+
+        /* Modal */
+        .modal-backdrop{position:fixed;inset:0;background:rgba(10,25,41,0.8);backdrop-filter:blur(8px);z-index:150;display:none;align-items:center;justify-content:center;padding:1.5rem}
+        .modal-backdrop.open{display:flex}
+        .modal-box{background:white;border-radius:2.5rem;max-width:40rem;width:100%;box-shadow:0 40px 80px rgba(0,0,0,0.2);animation:modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        @keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+        /* Service card hover */
+        .service-card{transition:all 0.6s cubic-bezier(0.16,1,0.3,1)}
+        .service-card:hover{transform:translateY(-8px)}
+        .service-card:hover .service-icon{transform:scale(1.15) rotate(-5deg)}
+        .service-card:hover .service-arrow{transform:translateX(6px)}
+
+        /* Timeline */
+        .timeline-item{position:relative;padding-left:3rem}
+        .timeline-item::before{content:'';position:absolute;left:7px;top:0;bottom:-4rem;width:2px;background:linear-gradient(180deg,#f97316,#fdba74)}
+        .timeline-item:last-child::before{bottom:0;background:linear-gradient(180deg,#f97316,transparent)}
+        .timeline-item::after{content:'';position:absolute;left:0;top:6px;width:16px;height:16px;background:#f97316;border-radius:50%;border:4px solid #fafbfc;z-index:2;box-shadow:0 0 0 4px rgba(249,115,22,0.2)}
+
+        /* Counter */
+        .counter-value{font-variant-numeric:tabular-nums}
+
+        /* Cert badge */
+        .cert-badge{transition:all 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .cert-badge:hover{transform:translateY(-4px) scale(1.02)}
+
+        /* Testimonial */
+        .testimonial-card{transition:all 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .testimonial-card:hover{transform:translateY(-4px)}
+
+        /* Gallery image */
+        .gallery-img{position:relative;overflow:hidden;border-radius:2rem}
+        .gallery-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+        .gallery-img:hover img{transform:scale(1.08)}
+        .gallery-img .gallery-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(10,25,41,0.85) 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:2rem;opacity:0;transition:opacity 0.5s}
+        .gallery-img:hover .gallery-overlay{opacity:1}
+
+        @media(max-width:768px){.cursor-dot,.cursor-ring{display:none}}
+    </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+    <span class="loader-text">SCHWABEN LOGISTIK</span>
+    <span class="loader-sub">Zuverlässig seit 1959</span>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">
+    <div class="bg-navy-950 text-white px-8 py-4 rounded-full shadow-2xl flex items-center gap-3 border border-navy-800">
+        <i data-lucide="check-circle" class="text-brand-400 w-5 h-5"></i>
+        <span id="notif-text" class="font-semibold text-sm">Gesendet</span>
+    </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobile-menu">
+    <a href="#home" class="hover:text-brand-300">Home</a>
+    <a href="#leistungen" class="hover:text-brand-300">Leistungen</a>
+    <a href="#ueber-uns" class="hover:text-brand-300">Über uns</a>
+    <a href="#qualitaet" class="hover:text-brand-300">Qualität</a>
+    <a href="#galerie" class="hover:text-brand-300">Galerie</a>
+    <a href="#kontakt" class="hover:text-brand-300">Kontakt</a>
+</div>
+<button id="close-mobile" class="fixed top-8 right-8 z-[110] text-white opacity-0 pointer-events-none transition-all" aria-label="Menü schließen">
+    <i data-lucide="x" class="w-10 h-10"></i>
+</button>
+
+<!-- ANGEBOT MODAL -->
+<div class="modal-backdrop" id="modal-angebot">
+    <div class="modal-box p-10 md:p-14">
+        <div class="flex justify-between items-start mb-10">
+            <div>
+                <h3 class="text-3xl md:text-4xl font-serif mb-2">Angebot anfordern</h3>
+                <p class="text-slate-400">Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+            </div>
+            <button onclick="closeModal()" class="text-slate-300 hover:text-slate-900 transition-colors p-2">
+                <i data-lucide="x" class="w-7 h-7"></i>
+            </button>
+        </div>
+        <form class="space-y-5" onsubmit="event.preventDefault(); notify('Ihre Anfrage ist bei uns eingegangen!'); closeModal();">
+            <div class="grid md:grid-cols-2 gap-5">
+                <input type="text" placeholder="Firma / Name" class="w-full bg-orange-50 border-0 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 font-medium" required>
+                <input type="tel" placeholder="Telefonnummer" class="w-full bg-orange-50 border-0 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 font-medium" required>
+            </div>
+            <input type="email" placeholder="E-Mail-Adresse" class="w-full bg-orange-50 border-0 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 font-medium" required>
+            <select class="w-full bg-orange-50 border-0 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 font-medium" required>
+                <option value="">Ich benötige...</option>
+                <option>Kühltransport</option>
+                <option>Planentransport</option>
+                <option>Teil- oder Komplettladung</option>
+                <option>Volumentransport</option>
+                <option>Lagerfläche</option>
+                <option>Individuelle Lösung</option>
+            </select>
+            <textarea rows="3" placeholder="Weitere Details zu Ihrer Anfrage (optional)" class="w-full bg-orange-50 border-0 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 font-medium resize-none"></textarea>
+            <button type="submit" class="magnetic-btn w-full bg-navy-900 text-white font-bold py-5 rounded-2xl hover:bg-navy-800 transition-colors text-lg">
+                Unverbindlich anfragen
+            </button>
+            <p class="text-center text-slate-400 text-xs">Oder rufen Sie direkt an: <a href="tel:+498001234560" class="text-brand-600 font-semibold">0800 – 123 456</a></p>
+        </form>
+    </div>
+</div>
+
+<!-- ======================================= -->
+<!--              NAVIGATION                 -->
+<!-- ======================================= -->
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-700 py-6">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 flex justify-between items-center">
+        <a href="#home" class="flex items-center gap-3 group">
+            <div class="bg-brand-500 w-11 h-11 rounded-xl flex items-center justify-center group-hover:rounded-2xl transition-all duration-500 shadow-lg shadow-brand-500/30">
+                <i data-lucide="truck" class="text-white w-6 h-6"></i>
+            </div>
+            <div class="flex flex-col leading-tight">
+                <span id="nav-brand" class="text-xl font-black tracking-tight text-white transition-colors duration-500">SCHWABEN</span>
+                <span id="nav-sub" class="text-[9px] tracking-[0.35em] uppercase text-brand-300 font-bold transition-colors duration-500">Logistik GmbH</span>
+            </div>
+        </a>
+        <div class="hidden lg:flex items-center gap-10">
+            <div id="nav-links" class="flex gap-8 text-[13px] font-semibold tracking-wide text-white/80 transition-colors duration-500">
+                <a href="#leistungen" class="hover:text-brand-300 transition-colors">Leistungen</a>
+                <a href="#ueber-uns" class="hover:text-brand-300 transition-colors">Über uns</a>
+                <a href="#qualitaet" class="hover:text-brand-300 transition-colors">Qualität</a>
+                <a href="#galerie" class="hover:text-brand-300 transition-colors">Galerie</a>
+                <a href="#kontakt" class="hover:text-brand-300 transition-colors">Kontakt</a>
+            </div>
+            <button onclick="openModal()" class="magnetic-btn bg-brand-500 text-white px-8 py-3 rounded-full text-sm font-bold transition-all hover:bg-brand-400">
+                Kostenlos anfragen
+            </button>
+        </div>
+        <button id="menu-btn" class="lg:hidden text-white" aria-label="Menü">
+            <i data-lucide="menu" id="menu-icon" class="w-7 h-7 transition-colors duration-500"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- ======================================= -->
+<!--                 HERO                    -->
+<!-- ======================================= -->
+<section id="home" class="hero-bg min-h-screen flex items-center relative overflow-hidden">
+    <div class="orb" style="width:600px;height:600px;background:#f97316;top:-200px;right:-100px;animation-delay:0s"></div>
+    <div class="orb" style="width:400px;height:400px;background:#fdba74;bottom:-100px;left:-50px;animation-delay:-7s"></div>
+    <div class="orb" style="width:300px;height:300px;background:#fb923c;top:50%;right:20%;animation-delay:-14s"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 relative z-10 pt-32 pb-20 w-full">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="reveal inline-flex items-center gap-2 bg-white/8 backdrop-blur-sm px-5 py-2.5 rounded-full mb-10 border border-white/10">
+                    <span class="w-2 h-2 bg-brand-400 rounded-full animate-pulse"></span>
+                    <span class="text-brand-200 font-semibold text-sm">Spedition & Logistik seit 1959</span>
+                </div>
+
+                <h1 class="reveal delay-1 text-5xl md:text-7xl lg:text-[5.5rem] text-white leading-[1.05] mb-8 font-bold tracking-tight">
+                    Ihre Fracht in<br>
+                    <span class="font-serif italic font-normal text-gradient">besten Händen.</span>
+                </h1>
+
+                <p class="reveal delay-2 text-lg md:text-xl text-navy-300/70 font-light max-w-lg mb-12 leading-relaxed">
+                    Transport von Waren mit firmeneigenen LKW modernster Ausführung im nationalen und internationalen Güterverkehr. Zuverlässig, sicher und termingerecht.
+                </p>
+
+                <div class="reveal delay-3 flex flex-col sm:flex-row gap-4">
+                    <button onclick="openModal()" class="magnetic-btn bg-brand-500 text-white px-8 py-4 rounded-full font-bold text-base hover:bg-brand-400 transition-all flex items-center justify-center gap-2.5 shadow-2xl shadow-brand-500/20 whitespace-nowrap">
+                        <i data-lucide="package" class="w-5 h-5 shrink-0"></i>
+                        Jetzt Angebot anfordern
+                    </button>
+                    <a href="tel:+498001234560" class="group border-2 border-white/15 text-white px-8 py-4 rounded-full font-bold text-base hover:bg-white/5 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap">
+                        <i data-lucide="phone" class="w-5 h-5 shrink-0"></i>
+                        0800 – 123 456
+                    </a>
+                </div>
+            </div>
+
+            <!-- Hero Stats -->
+            <div class="hidden lg:flex flex-col gap-5 justify-center">
+                <div class="reveal delay-2 glass-dark p-6 rounded-2xl hover:scale-[1.02] transition-transform duration-500 cursor-default flex items-center gap-6">
+                    <div class="bg-brand-500/20 p-3.5 rounded-xl shrink-0"><i data-lucide="truck" class="text-brand-400 w-7 h-7"></i></div>
+                    <div>
+                        <span class="text-brand-300 font-semibold text-sm block mb-1">Fuhrpark</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-black text-white counter-value" data-target="45">0</span>
+                            <span class="text-brand-400 text-lg font-bold">LKW</span>
+                            <span class="text-navy-300/50 text-sm ml-1">Euro 6d</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal delay-3 glass-dark p-6 rounded-2xl hover:scale-[1.02] transition-transform duration-500 cursor-default flex items-center gap-6">
+                    <div class="bg-brand-500/20 p-3.5 rounded-xl shrink-0"><i data-lucide="warehouse" class="text-brand-400 w-7 h-7"></i></div>
+                    <div>
+                        <span class="text-brand-300 font-semibold text-sm block mb-1">Lagerfläche</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-black text-white counter-value" data-target="11000">0</span>
+                            <span class="text-brand-400 text-lg font-bold">qm</span>
+                        </div>
+                        <p class="text-navy-300/50 text-xs mt-1">inkl. 2.700 qm Kühllager</p>
+                    </div>
+                </div>
+
+                <div class="reveal delay-4 glass-dark p-6 rounded-2xl hover:scale-[1.02] transition-transform duration-500 cursor-default flex items-center gap-6">
+                    <div class="bg-brand-500/20 p-3.5 rounded-xl shrink-0"><i data-lucide="calendar" class="text-brand-400 w-7 h-7"></i></div>
+                    <div>
+                        <span class="text-brand-300 font-semibold text-sm block mb-1">Erfahrung</span>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-4xl font-black text-white">seit</span>
+                            <span class="text-brand-400 text-2xl font-bold">1959</span>
+                        </div>
+                        <p class="text-navy-300/50 text-xs mt-1">Über 65 Jahre Kompetenz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-wave">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 80L60 68C120 56 240 32 360 24C480 16 600 24 720 36C840 48 960 64 1080 64C1200 64 1320 48 1380 40L1440 32V80H0Z" fill="#fafbfc"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--           LEISTUNGEN – SERVICES         -->
+<!-- ======================================= -->
+<section id="leistungen" class="py-32 bg-[#fafbfc]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-20 reveal">
+            <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Unsere Leistungen</span>
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-tight mb-6">
+                Höchste Ansprüche erfordern<br>
+                <span class="font-serif italic font-normal text-brand-700">beste Lösungen.</span>
+            </h2>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto">Es ist unser oberstes Ziel, die Wünsche und Anforderungen unserer Kunden zur vollsten Zufriedenheit zu erfüllen.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Kühltransporte -->
+            <div class="service-card reveal delay-1 bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-100/50 cursor-pointer relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-sky-50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-sky-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-sky-500/20 transition-all duration-500">
+                        <i data-lucide="snowflake" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-sky-600 transition-colors">Kühltransporte</h3>
+                    <p class="text-slate-400 leading-relaxed mb-6 text-[15px]">Wir transportieren Ihr Kühlgut sicher und zuverlässig. Lückenlose Kühlkette, temperaturüberwacht und dokumentiert — von der Abholung bis zur Zustellung.</p>
+                    <span class="service-arrow inline-flex items-center gap-2 text-sky-600 font-semibold text-sm transition-all">
+                        Mehr erfahren <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Planentransporte -->
+            <div class="service-card reveal delay-2 bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-100/50 cursor-pointer relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-brand-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-500/20 transition-all duration-500">
+                        <i data-lucide="container" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-brand-700 transition-colors">Planentransporte</h3>
+                    <p class="text-slate-400 leading-relaxed mb-6 text-[15px]">Unsere Kunden schätzen bei allen Planentransporten unsere fachliche Beratung und Kompetenz. Flexibel be- und entladbar für verschiedenste Güter.</p>
+                    <span class="service-arrow inline-flex items-center gap-2 text-brand-600 font-semibold text-sm transition-all">
+                        Mehr erfahren <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Teil- & Komplettladung -->
+            <div class="service-card reveal delay-3 bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-100/50 cursor-pointer relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-brand-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-500/20 transition-all duration-500">
+                        <i data-lucide="boxes" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-brand-700 transition-colors">Teil- & Komplettladungen</h3>
+                    <p class="text-slate-400 leading-relaxed mb-6 text-[15px]">Ob Teilladung oder kompletter LKW — wir finden die wirtschaftlichste Lösung für Ihren Transportbedarf. National und international.</p>
+                    <span class="service-arrow inline-flex items-center gap-2 text-brand-600 font-semibold text-sm transition-all">
+                        Mehr erfahren <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Volumentransporte -->
+            <div class="service-card reveal delay-1 bg-white p-10 rounded-[2rem] border border-slate-100 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-100/50 cursor-pointer relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-brand-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-500/20 transition-all duration-500">
+                        <i data-lucide="maximize" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-brand-700 transition-colors">Volumentransporte</h3>
+                    <p class="text-slate-400 leading-relaxed mb-6 text-[15px]">Großvolumige Güter sind unsere Spezialität. Mit speziell ausgestatteten Fahrzeugen transportieren wir auch sperrige Waren zuverlässig.</p>
+                    <span class="service-arrow inline-flex items-center gap-2 text-brand-600 font-semibold text-sm transition-all">
+                        Mehr erfahren <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Lagerung -->
+            <div class="service-card reveal delay-2 bg-gradient-to-br from-navy-50/80 to-white p-10 rounded-[2rem] border border-navy-100/50 hover:border-navy-200 hover:shadow-2xl hover:shadow-navy-100/50 cursor-pointer relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-navy-50 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-navy-800 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-navy-800/20 transition-all duration-500">
+                        <i data-lucide="warehouse" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 group-hover:text-navy-700 transition-colors">Lagerung & Logistik</h3>
+                    <p class="text-slate-400 leading-relaxed mb-6 text-[15px]">11.000 qm Lagerfläche inklusive 2.700 qm Kühllager für optimale Lagerung Ihrer Waren. Kommissionierung und Distribution inklusive.</p>
+                    <span class="service-arrow inline-flex items-center gap-2 text-navy-600 font-semibold text-sm transition-all">
+                        Mehr erfahren <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Kontakt-CTA -->
+            <div class="service-card reveal delay-3 bg-navy-900 p-10 rounded-[2rem] cursor-pointer relative overflow-hidden group flex flex-col justify-between" onclick="openModal()">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-navy-800 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:scale-[2] transition-transform duration-700"></div>
+                <div class="relative">
+                    <div class="service-icon bg-brand-500 text-white w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-brand-500/30 transition-all duration-500">
+                        <i data-lucide="send" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-white">Individuelle Lösung gesucht?</h3>
+                    <p class="text-navy-300/60 leading-relaxed mb-6 text-[15px]">Sie haben besondere Anforderungen? Wir finden die passende Transport- und Logistiklösung für Sie. Sprechen Sie uns einfach an.</p>
+                </div>
+                <div class="relative flex items-center gap-3 bg-brand-500 text-white px-8 py-4 rounded-full font-bold hover:bg-brand-400 transition-all w-full justify-center">
+                    <i data-lucide="phone" class="w-5 h-5"></i>
+                    Jetzt anfragen
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--       KOMPETENZ-BAND – MARQUEE          -->
+<!-- ======================================= -->
+<section class="py-8 bg-white border-y border-slate-100 overflow-hidden">
+    <div class="marquee-track">
+        <div class="flex items-center gap-12 px-6 whitespace-nowrap">
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="snowflake" class="w-5 h-5 text-brand-400"></i>Kühltransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="container" class="w-5 h-5 text-brand-400"></i>Planentransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="boxes" class="w-5 h-5 text-brand-400"></i>Komplettladungen</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="maximize" class="w-5 h-5 text-brand-400"></i>Volumentransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="warehouse" class="w-5 h-5 text-brand-400"></i>Lagerung</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="shield-check" class="w-5 h-5 text-brand-400"></i>ISO 9001</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="leaf" class="w-5 h-5 text-brand-400"></i>Bio-zertifiziert</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="thermometer" class="w-5 h-5 text-brand-400"></i>Temperaturgeführt</span>
+        </div>
+        <div class="flex items-center gap-12 px-6 whitespace-nowrap" aria-hidden="true">
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="snowflake" class="w-5 h-5 text-brand-400"></i>Kühltransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="container" class="w-5 h-5 text-brand-400"></i>Planentransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="boxes" class="w-5 h-5 text-brand-400"></i>Komplettladungen</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="maximize" class="w-5 h-5 text-brand-400"></i>Volumentransporte</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="warehouse" class="w-5 h-5 text-brand-400"></i>Lagerung</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="shield-check" class="w-5 h-5 text-brand-400"></i>ISO 9001</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="leaf" class="w-5 h-5 text-brand-400"></i>Bio-zertifiziert</span>
+            <span class="flex items-center gap-3 text-slate-300 font-bold text-lg"><i data-lucide="thermometer" class="w-5 h-5 text-brand-400"></i>Temperaturgeführt</span>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--     ÜBER UNS – GESCHICHTE & TIMELINE    -->
+<!-- ======================================= -->
+<section id="ueber-uns" class="py-32 bg-[#fafbfc]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="grid lg:grid-cols-2 gap-20 items-start">
+            <!-- Text -->
+            <div>
+                <div class="reveal">
+                    <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Über uns</span>
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-tight mb-8">
+                        Langjährige Erfahrung.<br>
+                        <span class="font-serif italic font-normal text-brand-700">Motivierte Mitarbeiter.</span>
+                    </h2>
+                </div>
+                <p class="reveal delay-1 text-slate-500 text-lg leading-relaxed mb-8">
+                    Unser Speditionsunternehmen verfügt über einen Fuhrpark von derzeit 45 LKW (Euro 6d) und eine Lagerfläche von 11.000 qm, darunter ein Kühllager mit 2.700 qm für optimale Lagerung.
+                </p>
+                <p class="reveal delay-2 text-slate-500 text-lg leading-relaxed mb-12">
+                    Was uns auszeichnet? Wir fahren nicht nur — wir denken mit. Jeder Transport wird sorgfältig geplant, jede Lieferung termingerecht ausgeführt. Unser Team kennt sich aus und findet auch für komplexe Anforderungen die richtige Lösung.
+                </p>
+
+                <!-- Zahlen -->
+                <div class="reveal delay-3 grid grid-cols-2 gap-5">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:border-brand-200 transition-all group">
+                        <div class="bg-brand-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-500 transition-colors">
+                            <i data-lucide="truck" class="text-brand-600 w-6 h-6 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span class="text-5xl font-black text-navy-900 block leading-none">45</span>
+                        <p class="text-slate-400 text-sm mt-2 font-semibold">LKW (Euro 6d)</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:border-brand-200 transition-all group">
+                        <div class="bg-brand-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-brand-500 transition-colors">
+                            <i data-lucide="warehouse" class="text-brand-600 w-6 h-6 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-5xl font-black text-navy-900 leading-none">11.000</span>
+                            <span class="text-brand-500 text-lg font-bold">qm</span>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-2 font-semibold">Lagerfläche</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:border-brand-200 transition-all group">
+                        <div class="bg-sky-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-sky-500 transition-colors">
+                            <i data-lucide="snowflake" class="text-sky-600 w-6 h-6 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-5xl font-black text-navy-900 leading-none">2.700</span>
+                            <span class="text-brand-500 text-lg font-bold">qm</span>
+                        </div>
+                        <p class="text-slate-400 text-sm mt-2 font-semibold">Kühllager</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-xl hover:border-brand-200 transition-all group">
+                        <div class="bg-amber-100 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-500 transition-colors">
+                            <i data-lucide="calendar" class="text-amber-600 w-6 h-6 group-hover:text-white transition-colors"></i>
+                        </div>
+                        <span class="text-5xl font-black text-navy-900 block leading-none">65+</span>
+                        <p class="text-slate-400 text-sm mt-2 font-semibold">Jahre Erfahrung</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative mt-8">
+                <div class="reveal">
+                    <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-12">Firmenhistorie</span>
+                </div>
+
+                <div class="space-y-10">
+                    <div class="timeline-item reveal delay-1">
+                        <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-brand-200 transition-all">
+                            <span class="text-brand-500 font-black text-2xl">1959</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-1 mb-2">Gründung</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">Hans Müller gründet das Speditionsunternehmen in Augsburg und legt den Grundstein für über 65 Jahre Logistik-Kompetenz.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal delay-2">
+                        <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-brand-200 transition-all">
+                            <span class="text-brand-500 font-black text-2xl">1972</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-1 mb-2">Zweites Standbein</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">Werner Schmidt gründet ein eigenes Transportunternehmen und erweitert die Kapazitäten in der Region.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal delay-3">
+                        <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-brand-200 transition-all">
+                            <span class="text-brand-500 font-black text-2xl">1990</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-1 mb-2">Zusammenschluss</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">Die beiden Unternehmen vereinen ihre Stärken und bilden eine leistungsfähige Speditionseinheit.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal delay-4">
+                        <div class="bg-white p-7 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-brand-200 transition-all">
+                            <span class="text-brand-500 font-black text-2xl">2021</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-1 mb-2">Schwaben Logistik GmbH</h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">Umwandlung zur GmbH — ein neues Kapitel mit modernem Fuhrpark, Zertifizierungen und nachhaltigem Wachstum.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--       QUALITÄT & ZERTIFIZIERUNGEN       -->
+<!-- ======================================= -->
+<section id="qualitaet" class="py-32 bg-navy-900 relative overflow-hidden">
+    <div class="orb" style="width:500px;height:500px;background:#f97316;top:-200px;left:-100px;opacity:0.15;animation-delay:-5s"></div>
+    <div class="orb" style="width:350px;height:350px;background:#fdba74;bottom:-100px;right:-50px;opacity:0.1;animation-delay:-12s"></div>
+
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+        <div class="text-center mb-20 reveal">
+            <span class="text-brand-400 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Qualität & Standards</span>
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-white leading-tight mb-6">
+                Zertifiziert für<br>
+                <span class="font-serif italic font-normal text-gradient">höchste Ansprüche.</span>
+            </h2>
+            <p class="text-navy-300/60 text-lg max-w-2xl mx-auto">Unsere Zertifizierungen garantieren Ihnen geprüfte Qualität, Hygiene und Umweltstandards in jedem Bereich unserer Arbeit.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="cert-badge reveal delay-1 glass-dark p-10 rounded-[2rem] text-center cursor-default group">
+                <div class="bg-gradient-to-br from-brand-500/30 to-brand-500/10 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="shield-check" class="text-brand-400 w-12 h-12"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">DIN EN ISO 9001:2015</h3>
+                <p class="text-navy-300/60 text-sm leading-relaxed">Qualitätsmanagement nach internationalem Standard</p>
+                <div class="mt-4 inline-flex items-center gap-1 text-brand-400 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Aktiv zertifiziert
+                </div>
+            </div>
+
+            <div class="cert-badge reveal delay-2 glass-dark p-10 rounded-[2rem] text-center cursor-default group">
+                <div class="bg-gradient-to-br from-sky-500/30 to-sky-500/10 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="award" class="text-sky-400 w-12 h-12"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">IFS Logistics</h3>
+                <p class="text-navy-300/60 text-sm leading-relaxed">Zertifiziert für sichere Lebensmittel-Logistik</p>
+                <div class="mt-4 inline-flex items-center gap-1 text-sky-400 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Aktiv zertifiziert
+                </div>
+            </div>
+
+            <div class="cert-badge reveal delay-3 glass-dark p-10 rounded-[2rem] text-center cursor-default group">
+                <div class="bg-gradient-to-br from-emerald-500/30 to-emerald-500/10 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="leaf" class="text-emerald-400 w-12 h-12"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Bio-Bescheinigung</h3>
+                <p class="text-navy-300/60 text-sm leading-relaxed">Zertifizierter Transport von Bio-Produkten</p>
+                <div class="mt-4 inline-flex items-center gap-1 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Aktiv zertifiziert
+                </div>
+            </div>
+
+            <div class="cert-badge reveal delay-4 glass-dark p-10 rounded-[2rem] text-center cursor-default group">
+                <div class="bg-gradient-to-br from-amber-500/30 to-amber-500/10 w-24 h-24 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-500">
+                    <i data-lucide="gauge" class="text-amber-400 w-12 h-12"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">FUMO</h3>
+                <p class="text-navy-300/60 text-sm leading-relaxed">Fuhrparkmanagement für optimale Effizienz</p>
+                <div class="mt-4 inline-flex items-center gap-1 text-amber-400 text-xs font-bold uppercase tracking-wider">
+                    <i data-lucide="check-circle" class="w-3.5 h-3.5"></i> Aktiv zertifiziert
+                </div>
+            </div>
+        </div>
+
+        <!-- Kundenvorteile -->
+        <div class="mt-20 grid md:grid-cols-3 gap-8">
+            <div class="reveal delay-1 flex items-start gap-4">
+                <div class="bg-brand-500/20 p-3 rounded-xl shrink-0">
+                    <i data-lucide="truck" class="text-brand-400 w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-1">Moderner Fuhrpark</h4>
+                    <p class="text-navy-300/60 text-sm leading-relaxed">45 LKW mit Euro 6d-Motoren für umweltbewussten Transport</p>
+                </div>
+            </div>
+            <div class="reveal delay-2 flex items-start gap-4">
+                <div class="bg-brand-500/20 p-3 rounded-xl shrink-0">
+                    <i data-lucide="zap" class="text-brand-400 w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-1">Maximale Flexibilität</h4>
+                    <p class="text-navy-300/60 text-sm leading-relaxed">Schnelle Reaktionszeiten und individuelle Lösungen für Ihre Anforderungen</p>
+                </div>
+            </div>
+            <div class="reveal delay-3 flex items-start gap-4">
+                <div class="bg-brand-500/20 p-3 rounded-xl shrink-0">
+                    <i data-lucide="users" class="text-brand-400 w-6 h-6"></i>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-1">Motivierte Mitarbeiter</h4>
+                    <p class="text-navy-300/60 text-sm leading-relaxed">Erfahrene Profis, die Ihre Ware mit Sorgfalt behandeln</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--        KUNDENSTIMMEN / SOCIAL PROOF     -->
+<!-- ======================================= -->
+<section class="py-24 bg-white border-y border-slate-100">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-16 reveal">
+            <div>
+                <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Vertrauen</span>
+                <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-slate-900">
+                    Was unsere Kunden<br>
+                    <span class="font-serif italic font-normal text-brand-700">über uns sagen.</span>
+                </h2>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="flex">
+                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-5 h-5 text-amber-400 fill-amber-400"></i>
+                </div>
+                <span class="font-bold text-slate-900 text-lg">4,9</span>
+                <span class="text-slate-400 text-sm">auf Google</span>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="testimonial-card bg-slate-50 p-8 rounded-[2rem] border border-slate-100 reveal delay-1">
+                <div class="flex mb-3">
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">&bdquo;Seit Jahren unser fester Partner für Kühltransporte. <strong>Noch nie eine Lieferung verpasst</strong>, die Kommunikation ist erstklassig und das Team immer flexibel, auch bei kurzfristigen Anfragen.&ldquo;</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center">
+                        <span class="font-bold text-brand-700 text-sm">TM</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-sm text-slate-900 block">Thomas M.</span>
+                        <span class="text-slate-400 text-xs">Lebensmittelgroßhandel</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card bg-gradient-to-br from-brand-50/50 to-white p-8 rounded-[2rem] border border-brand-100/50 reveal delay-2">
+                <div class="flex mb-3">
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">&bdquo;Wir lagern seit 2019 bei Schwaben Logistik und sind rundum zufrieden. Das Kühllager ist top gepflegt, die <strong>IFS-Zertifizierung war für uns ausschlaggebend</strong>. Absolute Empfehlung!&ldquo;</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center">
+                        <span class="font-bold text-sky-700 text-sm">SW</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-sm text-slate-900 block">Sandra W.</span>
+                        <span class="text-slate-400 text-xs">Bio-Feinkost Hersteller</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card bg-slate-50 p-8 rounded-[2rem] border border-slate-100 reveal delay-3">
+                <div class="flex mb-3">
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                    <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">&bdquo;Ob Teilladung oder Komplettladung — <strong>Schwaben Logistik findet immer die wirtschaftlichste Lösung</strong>. Die Fahrer sind freundlich, pünktlich und professionell. So muss Spedition!&ldquo;</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                        <span class="font-bold text-emerald-700 text-sm">HK</span>
+                    </div>
+                    <div>
+                        <span class="font-bold text-sm text-slate-900 block">Hans K.</span>
+                        <span class="text-slate-400 text-xs">Maschinenbau GmbH</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--              GALERIE                    -->
+<!-- ======================================= -->
+<section id="galerie" class="py-32 bg-[#fafbfc]">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="text-center mb-20 reveal">
+            <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Einblicke</span>
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-tight mb-6">
+                Unser Unternehmen<br>
+                <span class="font-serif italic font-normal text-brand-700">in Bildern.</span>
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Bild 1: Weißer LKW auf Straße — klassisch, sofort erkennbar -->
+            <div class="reveal delay-1 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&w=800&q=80" alt="LKW Fuhrpark" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Moderner Fuhrpark</p>
+                    <p class="text-white/60 text-sm mt-1">45 LKW — Euro 6d</p>
+                </div>
+            </div>
+            <!-- Bild 2: Kühlcontainer/Kühlhaus — kühles Blau -->
+            <div class="reveal delay-2 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" alt="Kühltransport" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Kühltransporte</p>
+                    <p class="text-white/60 text-sm mt-1">Temperaturgeführt & sicher</p>
+                </div>
+            </div>
+            <!-- Bild 3: Lagerhalle innen — warmes Licht, Regale -->
+            <div class="reveal delay-3 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80" alt="Lagerhalle" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Lagerhallen</p>
+                    <p class="text-white/60 text-sm mt-1">11.000 qm Fläche</p>
+                </div>
+            </div>
+            <!-- Bild 4: Gabelstapler/Kommissionierung — Aktion -->
+            <div class="reveal delay-1 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80" alt="Fahrer" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Erfahrenes Team</p>
+                    <p class="text-white/60 text-sm mt-1">Profis mit Leidenschaft</p>
+                </div>
+            </div>
+            <!-- Bild 5: Pakete/Kartons — warm, nahbar -->
+            <div class="reveal delay-2 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80" alt="Kommissionierung" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Kommissionierung</p>
+                    <p class="text-white/60 text-sm mt-1">Effizient & präzise</p>
+                </div>
+            </div>
+            <!-- Bild 6: LKW bei Sonnenaufgang — emotional, Abschluss -->
+            <div class="reveal delay-3 gallery-img aspect-[4/3]">
+                <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80" alt="LKW Sonnenaufgang" loading="lazy">
+                <div class="gallery-overlay">
+                    <p class="text-white font-bold text-lg">Unterwegs für Sie</p>
+                    <p class="text-white/60 text-sm mt-1">Zuverlässig & termingerecht</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--              KONTAKT                    -->
+<!-- ======================================= -->
+<section id="kontakt" class="py-32 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="grid lg:grid-cols-2 gap-20">
+            <!-- Kontakt-Info -->
+            <div>
+                <div class="reveal">
+                    <span class="text-brand-600 font-bold text-sm tracking-[0.3em] uppercase block mb-4">Kontakt</span>
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-slate-900 leading-tight mb-8">
+                        Sprechen Sie<br>
+                        <span class="font-serif italic font-normal text-brand-700">mit uns.</span>
+                    </h2>
+                </div>
+                <p class="reveal delay-1 text-slate-400 text-lg leading-relaxed mb-12">
+                    Wir sind jederzeit für Sie da. Kontaktieren Sie uns per Telefon, E-Mail oder besuchen Sie uns vor Ort in Augsburg.
+                </p>
+
+                <div class="space-y-6">
+                    <a href="tel:+498001234560" class="reveal delay-1 flex items-center gap-5 bg-slate-50 p-5 rounded-2xl hover:bg-brand-50 transition-colors group">
+                        <div class="bg-brand-500 p-3 rounded-xl shrink-0">
+                            <i data-lucide="phone" class="text-white w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg text-slate-900 block mb-1">0800 – 123 456</span>
+                            <span class="text-slate-400 text-sm">Rufen Sie uns direkt an</span>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-6 h-6 text-brand-400 ml-auto group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </a>
+
+                    <a href="mailto:info@schwaben-logistik.de" class="reveal delay-2 flex items-center gap-5 bg-slate-50 p-5 rounded-2xl hover:bg-brand-50 transition-colors group">
+                        <div class="bg-navy-800 p-3 rounded-xl shrink-0">
+                            <i data-lucide="mail" class="text-white w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg text-slate-900 block mb-1">info@schwaben-logistik.de</span>
+                            <span class="text-slate-400 text-sm">Schreiben Sie uns eine E-Mail</span>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-6 h-6 text-brand-400 ml-auto group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </a>
+
+                    <div class="reveal delay-3 flex items-center gap-5 bg-slate-50 p-5 rounded-2xl">
+                        <div class="bg-brand-500 p-3 rounded-xl shrink-0">
+                            <i data-lucide="map-pin" class="text-white w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg text-slate-900 block mb-1">Industriestraße 12</span>
+                            <span class="text-slate-400 text-sm">86150 Augsburg</span>
+                        </div>
+                    </div>
+
+                    <div class="reveal delay-4 flex items-center gap-5 bg-slate-50 p-5 rounded-2xl">
+                        <div class="bg-navy-800 p-3 rounded-xl shrink-0">
+                            <i data-lucide="clock" class="text-white w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg text-slate-900 block mb-1">Öffnungszeiten</span>
+                            <span class="text-slate-400 text-sm">Mo – Fr: 7:00 – 18:00 Uhr &nbsp;|&nbsp; Sa: 7:00 – 11:00 Uhr</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Maps -->
+                <div class="reveal delay-5 mt-8 rounded-2xl overflow-hidden border border-slate-200 shadow-lg">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2654.5!2d10.4627!3d48.2847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x479e8f0a0a0a0a0a%3A0x0!2sIndustriestraße+12%2C+86150+Augsburg!5e0!3m2!1sde!2sde!4v1" width="100%" height="280" style="border:0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+
+            <!-- Kontaktformular -->
+            <div class="reveal delay-2">
+                <div class="bg-slate-50 p-10 md:p-14 rounded-[2rem] border border-slate-100">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Nachricht senden</h3>
+                    <p class="text-slate-400 text-sm mb-8">Wir antworten innerhalb von 24 Stunden.</p>
+                    <form class="space-y-5" onsubmit="event.preventDefault(); notify('Ihre Nachricht wurde erfolgreich gesendet!'); this.reset();">
+                        <div class="grid md:grid-cols-2 gap-5">
+                            <input type="text" placeholder="Firma / Name" class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-300 font-medium" required>
+                            <input type="tel" placeholder="Telefonnummer" class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-300 font-medium">
+                        </div>
+                        <input type="email" placeholder="E-Mail-Adresse" class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-300 font-medium" required>
+                        <select class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-300 font-medium">
+                            <option value="">Betreff wählen...</option>
+                            <option>Transportanfrage</option>
+                            <option>Lagerfläche</option>
+                            <option>Angebot</option>
+                            <option>Allgemeine Frage</option>
+                            <option>Sonstiges</option>
+                        </select>
+                        <textarea rows="4" placeholder="Ihre Nachricht" class="w-full bg-white border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-300 font-medium resize-none" required></textarea>
+                        <button type="submit" class="magnetic-btn w-full bg-brand-500 text-white font-bold py-5 rounded-2xl hover:bg-brand-600 transition-colors text-lg">
+                            Nachricht senden
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--           CTA BANNER                    -->
+<!-- ======================================= -->
+<section class="py-24 bg-navy-900 relative overflow-hidden">
+    <div class="orb" style="width:400px;height:400px;background:#f97316;top:-150px;right:-100px;opacity:0.15;animation-delay:-3s"></div>
+    <div class="max-w-4xl mx-auto px-6 lg:px-10 relative z-10 text-center">
+        <div class="reveal">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                Bereit für zuverlässige<br>
+                <span class="font-serif italic font-normal text-gradient">Logistik-Lösungen?</span>
+            </h2>
+            <p class="text-navy-300/60 text-lg mb-10 max-w-xl mx-auto">Fordern Sie jetzt Ihr unverbindliches Angebot an — wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="openModal()" class="magnetic-btn bg-brand-500 text-white px-12 py-5 rounded-full font-bold text-lg hover:bg-brand-400 transition-all shadow-2xl shadow-brand-500/20 flex items-center justify-center gap-3">
+                    <i data-lucide="send" class="w-5 h-5"></i>
+                    Kostenloses Angebot anfordern
+                </button>
+                <a href="tel:+498001234560" class="border-2 border-white/15 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/5 transition-all flex items-center justify-center gap-3">
+                    <i data-lucide="phone" class="w-5 h-5"></i>
+                    0800 – 123 456
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================= -->
+<!--               FOOTER                    -->
+<!-- ======================================= -->
+<footer class="bg-navy-950 text-navy-300 pt-24 pb-12">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="flex flex-col lg:flex-row justify-between items-start gap-16 pb-16 mb-12 border-b border-white/5">
+            <div class="max-w-sm">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="bg-brand-500 p-2.5 rounded-xl"><i data-lucide="truck" class="text-white w-6 h-6"></i></div>
+                    <div>
+                        <span class="text-2xl font-black text-white tracking-tight">SCHWABEN</span>
+                        <span class="block text-[9px] tracking-[0.35em] uppercase text-brand-400 font-bold">Logistik GmbH</span>
+                    </div>
+                </div>
+                <p class="text-navy-400/60 leading-relaxed text-sm">Ihre Fracht in besten Händen. Seit 1959 Ihr zuverlässiger Partner für Spedition und Logistik in Augsburg und weit darüber hinaus.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-sm">
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-[10px] mb-6">Leistungen</h4>
+                    <ul class="space-y-3 text-navy-400/70">
+                        <li><a href="#leistungen" class="hover:text-brand-300 transition-colors">Kühltransporte</a></li>
+                        <li><a href="#leistungen" class="hover:text-brand-300 transition-colors">Planentransporte</a></li>
+                        <li><a href="#leistungen" class="hover:text-brand-300 transition-colors">Komplettladungen</a></li>
+                        <li><a href="#leistungen" class="hover:text-brand-300 transition-colors">Lagerung</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-[10px] mb-6">Unternehmen</h4>
+                    <ul class="space-y-3 text-navy-400/70">
+                        <li><a href="#ueber-uns" class="hover:text-brand-300 transition-colors">Über uns</a></li>
+                        <li><a href="#qualitaet" class="hover:text-brand-300 transition-colors">Qualität</a></li>
+                        <li><a href="#galerie" class="hover:text-brand-300 transition-colors">Galerie</a></li>
+                        <li><a href="#kontakt" class="hover:text-brand-300 transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-[10px] mb-6">Kontakt</h4>
+                    <ul class="space-y-3 text-navy-400/70">
+                        <li>Industriestraße 12</li>
+                        <li>86150 Augsburg</li>
+                        <li><a href="tel:+498001234560" class="hover:text-brand-300 transition-colors">0800 – 123 456</a></li>
+                        <li><a href="mailto:info@schwaben-logistik.de" class="hover:text-brand-300 transition-colors">info@schwaben-logistik.de</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] uppercase font-bold tracking-[0.2em] text-navy-700">
+            <p>&copy; 2026 Schwaben Logistik GmbH Augsburg</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-brand-300 transition-colors">Impressum</a>
+                <a href="#" class="hover:text-brand-300 transition-colors">Datenschutz</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- ======================================= -->
+<!--            JAVASCRIPT                   -->
+<!-- ======================================= -->
+<script>
+    lucide.createIcons();
+
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => document.getElementById('loader').classList.add('hidden'), 2000);
+    });
+
+    // Custom Cursor
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left = mx - 4 + 'px'; dot.style.top = my - 4 + 'px';
+    });
+    (function animRing() {
+        rx += (mx - rx) * 0.15; ry += (my - ry) * 0.15;
+        ring.style.left = rx - 20 + 'px'; ring.style.top = ry - 20 + 'px';
+        requestAnimationFrame(animRing);
+    })();
+    document.querySelectorAll('a,button,.cursor-pointer,input,select,textarea').forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+    });
+
+    // Navbar
+    const navbar = document.getElementById('navbar');
+    const navBrand = document.getElementById('nav-brand');
+    const navSub = document.getElementById('nav-sub');
+    const navLinks = document.getElementById('nav-links');
+    const menuIcon = document.getElementById('menu-icon');
+    window.addEventListener('scroll', () => {
+        const s = window.scrollY > 80;
+        navbar.classList.toggle('bg-white/90', s); navbar.classList.toggle('backdrop-blur-xl', s);
+        navbar.classList.toggle('shadow-lg', s); navbar.classList.toggle('shadow-slate-900/5', s);
+        navbar.classList.toggle('py-4', s); navbar.classList.toggle('py-6', !s);
+        navBrand.style.color = s ? '#0a1929' : 'white';
+        navSub.style.color = s ? '#ea580c' : '#fdba74';
+        navLinks.style.color = s ? '#64748b' : 'rgba(255,255,255,0.8)';
+        menuIcon.style.color = s ? '#0a1929' : 'white';
+    });
+
+    // Mobile Menu
+    const mobMenu = document.getElementById('mobile-menu');
+    const closeMob = document.getElementById('close-mobile');
+    document.getElementById('menu-btn').onclick = () => {
+        mobMenu.classList.add('open');
+        closeMob.classList.remove('opacity-0', 'pointer-events-none');
+    };
+    function closeMobileMenu() {
+        mobMenu.classList.remove('open');
+        closeMob.classList.add('opacity-0', 'pointer-events-none');
+    }
+    closeMob.onclick = closeMobileMenu;
+    mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileMenu));
+
+    // Notification
+    function notify(text) {
+        const n = document.getElementById('notif');
+        document.getElementById('notif-text').innerText = text;
+        n.classList.add('show');
+        setTimeout(() => n.classList.remove('show'), 3500);
+    }
+
+    // Modal
+    const modal = document.getElementById('modal-angebot');
+    function openModal() { modal.classList.add('open'); }
+    function closeModal() { modal.classList.remove('open'); }
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+
+    // Scroll Reveals
+    const revObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); revObs.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => revObs.observe(el));
+
+    // Counters
+    const ctrObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const el = e.target, target = +el.dataset.target;
+                let cur = 0; const inc = target / 60;
+                const t = setInterval(() => {
+                    cur += inc;
+                    if (cur >= target) { el.textContent = target.toLocaleString('de-DE'); clearInterval(t); }
+                    else el.textContent = Math.floor(cur).toLocaleString('de-DE');
+                }, 25);
+                ctrObs.unobserve(el);
+            }
+        });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.counter-value').forEach(el => ctrObs.observe(el));
+
+    // Smooth Scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const t = document.querySelector(this.getAttribute('href'));
+            if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Tilt Cards
+    document.querySelectorAll('.tilt-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const x = e.clientX - r.left, y = e.clientY - r.top;
+            card.style.transform = `perspective(1000px) rotateX(${(y - r.height/2)/25}deg) rotateY(${(r.width/2 - x)/25}deg)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)'; });
+    });
+</script>
+</body>
+</html>
