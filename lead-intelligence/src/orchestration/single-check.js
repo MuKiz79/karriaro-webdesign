@@ -27,6 +27,7 @@ import { assessTechTrajectory } from '../analysis/tech-trajectory.js';
 import { assessLocalSEO } from '../analysis/local-seo.js';
 import { assessEmotionalReadiness } from '../analysis/emotional-readiness.js';
 import { calculateRevenueWeighted } from '../scoring/revenue-weighted.js';
+import { analyzeCompanyProfile } from '../analysis/company-profile.js';
 import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 
@@ -100,6 +101,9 @@ export async function runSingleCheck() {
         const abTest = selectVariant();
 
         // ── 10 innovative Analyse-Module (parallel wo möglich) ──
+        // ── Firmen-Profil (Branche, GF, Enterprise-Check) ──
+        const companyProfile = analyzeCompanyProfile(url, psiData, place, contentAnalysis);
+
         const wayback = await checkFreshness(url).catch(() => null);
         const surgeIntent = detectSurgeIntent(footprint, null, null, place);
         const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
@@ -116,7 +120,7 @@ export async function runSingleCheck() {
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
             abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
-            techTrajectory, localSEO, emotionalReady, revenueWeighted };
+            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
@@ -143,16 +147,38 @@ function renderResult(data) {
     // ── #12: Klartext-Erklärung generieren (inkl. fehlender Branchen-Features) ──
     const explanation = generateExplanation(r, ws, tech, data, uxForExplanation);
 
-    // ── Score + Erklärung ──
+    // ── Enterprise-Warnung + Firmen-Info + Score + Erklärung ──
     const scoreEl = document.getElementById('result-score');
-    scoreEl.innerHTML = `
-        <div style="text-align:center;margin-bottom:32px">
-            <div style="font-size:4rem;font-weight:800;color:${color};letter-spacing:-0.04em">${r.leadScore}</div>
-            <div style="font-size:14px;color:var(--muted)">Conversion-Rate: ${r.conversionRate}% · CI: ${r.ci.lower}% — ${r.ci.upper}% (N=${r.N})</div>
-            <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:${color};margin-top:8px">${label}</div>
-            <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${explanation}</div>
-        </div>
-    `;
+    const cp = data.companyProfile;
+    let scoreHtml = '';
+
+    // Enterprise-Warnung (Punkt 3)
+    if (cp?.isEnterprise) {
+        scoreHtml += `<div class="card" style="border-left:3px solid var(--red);margin-bottom:16px;text-align:left">
+            <div style="font-size:15px;font-weight:700;color:var(--red);margin-bottom:8px">⚠ Großunternehmen erkannt</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6">${cp.enterpriseWarning.message}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">Signale: ${cp.enterpriseWarning.signals.join(' · ')}</div>
+            <div style="font-size:13px;font-weight:600;color:var(--red);margin-top:8px">${cp.enterpriseWarning.recommendation}</div>
+        </div>`;
+    }
+
+    // Firmen-Info (Punkt 1)
+    scoreHtml += `<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:var(--muted)">
+        <span><strong>Branche:</strong> ${cp?.branche || '—'}</span>
+        ${cp?.owner?.name ? `<span><strong>Inhaber:</strong> ${cp.owner.name}${cp.owner.nationality ? ' ('+cp.owner.nationality+')' : ''}</span>` : ''}
+        ${data.stakeholder ? `<span><strong>Entscheider:</strong> ${data.stakeholder.decisionMaker.type}</span>` : ''}
+        ${data.stakeholder ? `<span><strong>Sales-Cycle:</strong> ${data.stakeholder.salesCycle}</span>` : ''}
+    </div>`;
+
+    // Score
+    scoreHtml += `<div style="text-align:center;margin-bottom:32px">
+        <div style="font-size:4rem;font-weight:800;color:${color};letter-spacing:-0.04em">${r.leadScore}</div>
+        <div style="font-size:14px;color:var(--muted)">Conversion-Rate: ${r.conversionRate}% · CI: ${r.ci.lower}% — ${r.ci.upper}% (N=${r.N})</div>
+        <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:${color};margin-top:8px">${label}</div>
+        <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${explanation}</div>
+    </div>`;
+
+    scoreEl.innerHTML = scoreHtml;
 
     // Funnel section
     const funnelEl = document.getElementById('result-funnel');

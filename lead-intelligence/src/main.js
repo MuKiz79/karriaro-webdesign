@@ -135,6 +135,7 @@ function toggleSettings() {
     const panel = document.getElementById('settings-panel');
     panel.classList.toggle('hidden');
     if (!panel.classList.contains('hidden')) {
+        const p = config.profile;
         panel.innerHTML = `
             <h3>API-Konfiguration</h3>
             <label>Google PageSpeed API Key</label>
@@ -142,12 +143,47 @@ function toggleSettings() {
             <div class="hint">Kostenlos unter console.cloud.google.com</div>
             <label>Cloud Function URL</label>
             <input type="text" id="cfg-fn-url" value="${config.fnUrl}" placeholder="https://us-central1-projekt.cloudfunctions.net">
-            <div class="hint">Firebase Cloud Function Basis-URL</div>
-            <button class="btn-primary" style="margin-top:16px" id="btn-save-settings">Speichern</button>
+
+            <h3 style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">Mein Profil (SuperPrompt)</h3>
+            <div class="hint" style="margin-bottom:12px">Diese Daten werden in Pitches und E-Mail-Vorlagen verwendet.</div>
+
+            <label>Mein Name</label>
+            <input type="text" id="cfg-name" value="${p.name}" placeholder="Muammer Kizilaslan">
+            <label>Mein Unternehmen</label>
+            <input type="text" id="cfg-company" value="${p.company}" placeholder="Karriaro Webdesign">
+            <label>Meine Rolle</label>
+            <input type="text" id="cfg-role" value="${p.role}" placeholder="Gründer & Webdesigner">
+            <label>Meine Leistungen</label>
+            <input type="text" id="cfg-services" value="${p.services}" placeholder="Handcodierte Websites, SEO, BFSG-Compliance">
+            <label>Preisbereich</label>
+            <input type="text" id="cfg-price" value="${p.priceRange}" placeholder="990-1.990€ einmalig, kein Abo">
+            <label>Meine Zielgruppe</label>
+            <input type="text" id="cfg-target" value="${p.targetGroup}" placeholder="Lokale Unternehmen (Handwerk, Gastronomie, Ärzte, Makler)">
+            <label>Mein USP (Was macht mich besonders?)</label>
+            <input type="text" id="cfg-usp" value="${p.usp}" placeholder="Kein Baukasten, kein Template. Handcodiert, in 2 Wochen fertig.">
+            <label>Mein Standort</label>
+            <input type="text" id="cfg-location" value="${p.location}" placeholder="Schwarzwald / Ortenau">
+            <label>Referenz-Projekte</label>
+            <input type="text" id="cfg-portfolio" value="${p.portfolio}" placeholder="karriaro-webdesign.de, Spedition Kolbe">
+            <label>Tonalität</label>
+            <select id="cfg-tone"><option value="professionell" ${p.tone==='professionell'?'selected':''}>Professionell</option><option value="freundlich" ${p.tone==='freundlich'?'selected':''}>Freundlich</option><option value="direkt" ${p.tone==='direkt'?'selected':''}>Direkt</option></select>
+
+            <button class="btn-primary" style="margin-top:16px;width:100%" id="btn-save-settings">Speichern</button>
         `;
         document.getElementById('btn-save-settings').addEventListener('click', () => {
             config.psiKey = document.getElementById('cfg-psi-key').value.trim();
             config.fnUrl = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
+            // Profil speichern
+            config.profile.name = document.getElementById('cfg-name').value.trim();
+            config.profile.company = document.getElementById('cfg-company').value.trim();
+            config.profile.role = document.getElementById('cfg-role').value.trim();
+            config.profile.services = document.getElementById('cfg-services').value.trim();
+            config.profile.priceRange = document.getElementById('cfg-price').value.trim();
+            config.profile.targetGroup = document.getElementById('cfg-target').value.trim();
+            config.profile.usp = document.getElementById('cfg-usp').value.trim();
+            config.profile.location = document.getElementById('cfg-location').value.trim();
+            config.profile.portfolio = document.getElementById('cfg-portfolio').value.trim();
+            config.profile.tone = document.getElementById('cfg-tone').value;
             saveConfig();
             saveCloudSettings();  // Fix 1: Auch in Firestore speichern
             panel.classList.add('hidden');
