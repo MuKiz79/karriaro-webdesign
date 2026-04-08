@@ -11,11 +11,25 @@ const MEDIAN_DAYS = {
     'bakery': 8, 'florist': 10, '_default': 16
 };
 
+/**
+ * Fix 8: Weibull statt Exponential
+ * S(t) = exp(-(t/λ)^k) mit k > 1 → fallende Hazard-Rate
+ * Realität: Wer nach 20 Tagen nicht geantwortet hat, antwortet wahrscheinlich nie.
+ * k = 1.5 (moderate fallende Rate), λ aus Median abgeleitet
+ */
 export function estimateSurvival(branchType, leadScore) {
     const baseMedian = MEDIAN_DAYS[branchType] || MEDIAN_DAYS._default;
-    const adjustedMedian = Math.round(baseMedian * (1.5 - leadScore / 100));
-    const lambda = Math.log(2) / adjustedMedian;
-    const survivalAt = (days) => Math.round(Math.exp(-lambda * days) * 100);
+    const adjustedMedian = Math.max(3, Math.round(baseMedian * (1.5 - leadScore / 100)));
+
+    // Weibull Parameter
+    const k = 1.5;  // Shape > 1 = Wahrscheinlichkeit sinkt mit der Zeit
+    // λ aus Median: S(median) = 0.5 → exp(-(median/λ)^k) = 0.5 → λ = median / (ln2)^(1/k)
+    const lambda = adjustedMedian / Math.pow(Math.log(2), 1 / k);
+
+    const survivalAt = (days) => Math.round(Math.exp(-Math.pow(days / lambda, k)) * 100);
+
+    // Hazard-Rate h(t) = (k/λ) * (t/λ)^(k-1) — steigt mit t wenn k > 1
+    const hazardAt = (days) => (k / lambda) * Math.pow(days / lambda, k - 1);
 
     return {
         medianDays: adjustedMedian,
@@ -23,6 +37,9 @@ export function estimateSurvival(branchType, leadScore) {
         survival14d: survivalAt(14),
         survival30d: survivalAt(30),
         giveUpAfter: Math.round(adjustedMedian * 2.5),
-        label: `Median: ${adjustedMedian} Tage · Aufgeben nach ${Math.round(adjustedMedian * 2.5)} Tagen`
+        weibullK: k,
+        weibullLambda: Math.round(lambda * 10) / 10,
+        hazard14d: Math.round(hazardAt(14) * 1000) / 1000,
+        label: `Median: ${adjustedMedian} Tage · Aufgeben nach ${Math.round(adjustedMedian * 2.5)} Tagen (Weibull k=${k})`
     };
 }

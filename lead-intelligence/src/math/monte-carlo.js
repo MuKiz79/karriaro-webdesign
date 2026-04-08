@@ -46,13 +46,12 @@ export function runSimulation(stages, activationEa = 40, seasonFactor = 1.0, N =
         // Baue Transition-Matrix mit gesampelten Raten
         const T = buildTransitionMatrix(rates, activationEa, seasonFactor);
 
-        // Simuliere durch Markov-Kette
-        const sim = monteCarloMarkov(T, 1);  // Eine Simulation pro Rate-Sample
+        // Fix 6+12: K=5 Markov-Simulationen pro Rate-Sample (reduziert MC-Varianz um √5)
+        const K = 5;
+        const sim = monteCarloMarkov(T, K);
 
-        if (sim.converted) {
-            totalConverted++;
-            convSteps.push(sim.medianSteps || 1);
-        }
+        totalConverted += sim.converted;
+        if (sim.converted > 0) convSteps.push(sim.medianSteps || 1);
         allSteps.push(sim.avgSteps);
 
         // I3 FIX: Tracke welche Stufen TATSÄCHLICH erreicht wurden
@@ -68,10 +67,12 @@ export function runSimulation(stages, activationEa = 40, seasonFactor = 1.0, N =
     }
 
     // I7 FIX: Eine einzige Conversion-Rate aus Markov
-    const conversionRate = totalConverted / N;
+    // Fix 12: totalConverted zählt über N*K Simulationen
+    const totalSimulations = N * 5;  // K=5
+    const conversionRate = totalConverted / totalSimulations;
 
     // I2 FIX: Wilson Score CI aus binären Ergebnissen
-    const ci = wilsonCI(totalConverted, N);
+    const ci = wilsonCI(totalConverted, totalSimulations);
 
     // Stufen-Ergebnisse (I3: conditional rates)
     const stageResults = stages.map((s, idx) => {

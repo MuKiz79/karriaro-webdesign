@@ -14,10 +14,12 @@ export function calculateEVOI(conversionRate, dealSize, completeness, timeToRese
     const researchCost = timeToResearch * hourlyRate;
     const uncertainty = 1 - completeness;
 
-    // P6 FIX: Stetige Gaussian-Funktion zentriert auf Entscheidungsschwellwert
-    // Maximaler Wert wenn CR nahe am Schwellwert (wo die Entscheidung kippen könnte)
-    const threshold = 0.025;
-    const sigma = 0.03;
+    // Fix 7: Threshold aus Break-Even ableiten statt hart-codieren
+    // Break-Even: P(conv) * dealSize = timeCost → P = timeCost / dealSize
+    const breakEvenCR = (timeToResearch * hourlyRate * 4) / dealSize;  // 4x Recherche-Kosten als Akquise-Kosten
+    const threshold = Math.max(0.005, Math.min(0.10, breakEvenCR));
+    // Sigma proportional zum Threshold (breitere Unsicherheit bei höherem Threshold)
+    const sigma = threshold * 0.8;
     const nearThreshold = Math.exp(-Math.pow(conversionRate - threshold, 2) / (2 * sigma * sigma));
 
     const pDecisionChange = nearThreshold * uncertainty;
