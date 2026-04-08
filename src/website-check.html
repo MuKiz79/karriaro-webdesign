@@ -2382,7 +2382,7 @@ App.ui = {
         return explanations[bn.name] || '';
     },
 
-    explainScore(prob, domain) {
+    explainScore(prob, domain, ws, tech) {
         const s = prob.leadScore;
         const cr = prob.conversionRate;
         const bn = prob.bottleneck;
@@ -2392,9 +2392,31 @@ App.ui = {
 
         // ── Starker Lead (55+) ──
         if (s >= 55) {
+            // Sammle die konkreten Gruende WARUM dieser Lead stark ist
+            const reasons = [];
+            if (ws) {
+                if (ws.perf < 40) reasons.push(`Die Website ist langsam (Performance ${ws.perf}/100) — das spuert jeder Besucher und ist ein starkes Verkaufsargument`);
+                else if (ws.perf < 65) reasons.push(`Die Website-Performance ist unterdurchschnittlich (${ws.perf}/100) — Besucher springen ab`);
+                if (!ws.isHttps) reasons.push(`Die Website hat kein SSL-Zertifikat — der Browser zeigt "Nicht sicher" an. Das schreckt Kunden sofort ab`);
+                if (ws.seo < 60) reasons.push(`Der SEO-Score ist niedrig (${ws.seo}/100) — die Website wird bei Google kaum gefunden`);
+                if (ws.a11y < 60) reasons.push(`Die Barrierefreiheit ist mangelhaft (${ws.a11y}/100) — seit Juni 2025 gesetzlich vorgeschrieben (BFSG)`);
+            }
+            if (tech) {
+                if (tech.isBaukasten) reasons.push(`Die Website laeuft auf ${tech.cms} — ein Baukasten-System das Design, Geschwindigkeit und SEO strukturell limitiert`);
+                else if (tech.version) { const v = parseInt(tech.version); if (v > 0 && v < 6) reasons.push(`Die Website laeuft auf einer veralteten WordPress-Version (${tech.version})`); }
+            }
+
             let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong> `;
+
+            // Zeige die konkreten Gruende
+            if (reasons.length > 0) {
+                text += `<br><br><strong>Warum dieser Lead vielversprechend ist:</strong><br>`;
+                text += reasons.map(r => `• ${r}`).join('<br>');
+                text += '<br><br>';
+            }
+
             text += `Unser Modell hat 2.000 Szenarien simuliert: In ${cr}% davon wird aus diesem Lead ein zahlender Kunde. `;
-            text += `Das klingt wenig, aber bei Kaltakquise ist 3-5% eine sehr gute Quote. `;
+            text += `Bei Kaltakquise ist 3-5% eine sehr gute Quote. `;
             text += `Bei einem Auftragswert von ${prob.dealSize || 990} € `;
             if (kelly?.expectedValue > 0) text += `verdienst du im Schnitt ${kelly.expectedValue} € pro Versuch. `;
             else text += `ist der reine Zeitaufwand von ~${prob.timePerLead || 2}h das Risiko wert. `;
@@ -2410,9 +2432,22 @@ App.ui = {
         // ── Mittlerer Lead (30-54) ──
         if (s >= 30) {
             let text = `<strong style="color:var(--orange)">Vielversprechend, aber mit Vorsicht.</strong> `;
-            text += `Die Erfolgschance liegt bei ${cr}%. Das bedeutet: Von 100 solcher Leads werden etwa ${Math.round(parseFloat(cr))} zu Kunden. `;
 
-            if (!hasPlaces) text += `Wir konnten keine Google-Bewertungen finden — deshalb fehlen uns wichtige Informationen ueber dieses Unternehmen (nur ${comp}% der Daten verfuegbar). Der Score koennte hoeher sein. `;
+            // Konkrete Gruende
+            const pros = [], cons = [];
+            if (ws) {
+                if (ws.perf < 50) pros.push(`Die Website ist langsam (${ws.perf}/100)`);
+                if (!ws.isHttps) pros.push('Kein SSL — Browser zeigt "Nicht sicher"');
+                if (ws.seo < 65) pros.push(`SEO ist schwach (${ws.seo}/100)`);
+                if (ws.perf >= 65) cons.push(`Die Website ist schon passabel (${ws.perf}/100) — schwerer zu argumentieren`);
+            }
+            if (tech?.isBaukasten) pros.push(`Laeuft auf ${tech.cms} (Baukasten)`);
+            if (!hasPlaces) cons.push(`Keine Google-Business-Daten gefunden (nur ${comp}% Datenvollstaendigkeit)`);
+
+            if (pros.length > 0) { text += `<br><br><strong>Was fuer diesen Lead spricht:</strong><br>${pros.map(r => '• '+r).join('<br>')}<br>`; }
+            if (cons.length > 0) { text += `<br><strong>Was dagegen spricht:</strong><br>${cons.map(r => '• '+r).join('<br>')}<br>`; }
+
+            text += `<br>Die Erfolgschance liegt bei ${cr}% (${Math.round(parseFloat(cr))} von 100 Leads werden Kunden). `;
 
             if (bn) {
                 text += `<br><br><strong>Die groesste Huerde:</strong> "${bn.name}" (${bn.mean}%). `;
@@ -2503,7 +2538,7 @@ App.ui = {
                 <div class="prob-bar-fill" style="background:${pColor};width:${prob.leadScore}%"></div>
             </div>
             <div style="font-size:12px;color:var(--muted);margin-top:8px">${domain} · Datenvollstaendigkeit: ${prob.completeness}%${prob.dimensions.d2.posterior ? ` · Rating-Posterior: Beta(${prob.dimensions.d2.posterior.alpha?.toFixed(1)}, ${prob.dimensions.d2.posterior.beta?.toFixed(1)})` : ''}</div>
-            <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${this.explainScore(prob, domain)}</div>
+            <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${this.explainScore(prob, domain, ws, tech)}</div>
         </div>`;
 
         // ── Funnel-Stufen (Gelman-Modell) ──
@@ -3854,7 +3889,7 @@ App.crm = {
             roiPerHour: prob.kelly?.roiPerHour || 0,
             yearlyRevenueLoss: extra?.revenue?.yearlyRevenueLoss || 0,
             bottleneck: prob.bottleneck?.name || '',
-            explanation: App.ui.explainScore(prob, domain)
+            explanation: App.ui.explainScore(prob, domain, null, null)
         });
     },
 
