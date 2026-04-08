@@ -2998,57 +2998,75 @@ App.crm = {
 
     // ── Lead speichern ──
     async saveLead(domain, url, data) {
-        if (!window.currentUser || !window.fbDb) {
-            // Fallback: localStorage
-            const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
-            leads.push({ domain, url, ...data, status: 'neu', notes: '', savedAt: Date.now() });
-            localStorage.setItem('karriaro_leads', JSON.stringify(leads));
-            return;
+        // Immer in localStorage als Backup
+        const localLeads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        const localEntry = { domain, url, ...data, status: 'neu', notes: '', savedAt: Date.now(), id: domain.replace(/[^a-zA-Z0-9]/g, '_') };
+        const existIdx = localLeads.findIndex(l => l.domain === domain);
+        if (existIdx >= 0) localLeads[existIdx] = { ...localLeads[existIdx], ...localEntry };
+        else localLeads.push(localEntry);
+        localStorage.setItem('karriaro_leads', JSON.stringify(localLeads));
+
+        // Firestore wenn eingeloggt
+        if (window.currentUser && window.fbDb) {
+            try {
+                const id = domain.replace(/[^a-zA-Z0-9]/g, '_');
+                const ref = window.fbFns.doc(window.fbDb, 'leads', `${window.currentUser.uid}_${id}`);
+                await window.fbFns.setDoc(ref, {
+                    uid: window.currentUser.uid,
+                    domain, url,
+                    name: data.name || domain,
+                    type: data.type || '',
+                    rating: data.rating || null,
+                    reviews: data.reviews || 0,
+                    perf: data.perf || null,
+                    seo: data.seo || null,
+                    a11y: data.a11y || null,
+                    cms: data.cms || '',
+                    isBaukasten: data.isBaukasten || false,
+                    leadScore: data.leadScore || data.probability || 0,
+                    conversionRate: data.conversionRate || 0,
+                    expectedValue: data.expectedValue || 0,
+                    roiPerHour: data.roiPerHour || 0,
+                    yearlyRevenueLoss: data.yearlyRevenueLoss || 0,
+                    bottleneck: data.bottleneck || '',
+                    explanation: data.explanation || '',
+                    status: 'neu',
+                    notes: '',
+                    savedAt: window.fbFns.serverTimestamp(),
+                    updatedAt: window.fbFns.serverTimestamp()
+                }, { merge: true });
+            } catch (e) {
+                console.error('Firestore save failed, localStorage OK:', e);
+            }
         }
-        try {
-            const id = domain.replace(/[^a-zA-Z0-9]/g, '_');
-            const ref = window.fbFns.doc(window.fbDb, 'leads', `${window.currentUser.uid}_${id}`);
-            await window.fbFns.setDoc(ref, {
-                uid: window.currentUser.uid,
-                domain, url,
-                name: data.name || domain,
-                type: data.type || '',
-                rating: data.rating || null,
-                reviews: data.reviews || 0,
-                perf: data.perf || null,
-                seo: data.seo || null,
-                a11y: data.a11y || null,
-                cms: data.cms || '',
-                isBaukasten: data.isBaukasten || false,
-                leadScore: data.leadScore || data.probability || 0,
-                conversionRate: data.conversionRate || 0,
-                expectedValue: data.expectedValue || 0,
-                roiPerHour: data.roiPerHour || 0,
-                yearlyRevenueLoss: data.yearlyRevenueLoss || 0,
-                bottleneck: data.bottleneck || '',
-                explanation: data.explanation || '',
-                status: 'neu',
-                notes: '',
-                savedAt: window.fbFns.serverTimestamp(),
-                updatedAt: window.fbFns.serverTimestamp()
-            }, { merge: true });
-        } catch (e) { console.error('Save lead:', e); }
     },
 
     // ── Alle Leads laden ──
     async loadLeads() {
-        if (!window.currentUser || !window.fbDb) {
-            return JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        // Versuche Firestore, Fallback auf localStorage
+        if (window.currentUser && window.fbDb) {
+            try {
+                const q = window.fbFns.query(
+                    window.fbFns.collection(window.fbDb, 'leads'),
+                    window.fbFns.where('uid', '==', window.currentUser.uid)
+                );
+                const snap = await window.fbFns.getDocs(q);
+                const leads = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                // Sortiere clientseitig (kein Index noetig)
+                leads.sort((a, b) => {
+                    const ta = a.savedAt?.toMillis?.() || a.savedAt || 0;
+                    const tb = b.savedAt?.toMillis?.() || b.savedAt || 0;
+                    return tb - ta;
+                });
+                return leads;
+            } catch (e) {
+                console.error('Firestore load failed, using localStorage:', e);
+            }
         }
-        try {
-            const q = window.fbFns.query(
-                window.fbFns.collection(window.fbDb, 'leads'),
-                window.fbFns.where('uid', '==', window.currentUser.uid),
-                window.fbFns.orderBy('savedAt', 'desc')
-            );
-            const snap = await window.fbFns.getDocs(q);
-            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch (e) { console.error('Load leads:', e); return []; }
+        // Fallback: localStorage
+        const local = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        local.sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+        return local;
     },
 
     // ── Lead Status updaten ──
