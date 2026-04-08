@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume } from '../api/cloud-functions.js';
+import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards } from '../api/cloud-functions.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { analyzeDigitalFootprint as analyzeFootprint } from '../signals/digital-footprint.js';
@@ -83,13 +83,18 @@ export async function runSingleCheck() {
         // Phase 5: KI-Analyse (parallel)
         showLoading('KI-Analyse...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
-        const [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume] = await Promise.all([
+        // KI-Branchenanalyse: Was ist Standard, was fehlt? (das stärkste Argument)
+        const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
+        const uxFound = auditUX(psiData, place)?.found?.map(f => f.name) || [];
+
+        const [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, branchStandards] = await Promise.all([
             analyzeContent(url),
             analyzeScreenshot(screenshot),
             analyzeReviews(domain),
             getDomainAge(domain),
             getDomainAuthority(domain),
-            getSearchVolume(`${place?.primaryTypeDisplayName?.text || ''} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain)
+            getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain),
+            analyzeBranchStandards(url, brancheForAI, uxFound)
         ]);
 
         // Render
@@ -120,7 +125,7 @@ export async function runSingleCheck() {
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
             abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
-            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile };
+            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile, branchStandards };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
@@ -204,7 +209,52 @@ function renderResult(data) {
         </div>
     `;
 
-    // ── Branchen-UX-Audit ──
+    // ── KI-Branchenanalyse (das stärkste Modul) ──
+    if (data.branchStandards && !data.branchStandards.error) {
+        const bs = data.branchStandards;
+        const modColor = (bs.modernityScore || 0) >= 7 ? 'var(--green)' : (bs.modernityScore || 0) >= 4 ? 'var(--orange)' : 'var(--red)';
+        const uxEl2 = document.getElementById('result-ux');
+        let bsHtml = `<div class="card" style="border-left:3px solid var(--accent);margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:8px">KI-Branchenanalyse: ${bs.branche || brancheForAI}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div><span style="font-size:11px;color:var(--muted)">Modernität: </span><span style="font-size:1.5rem;font-weight:700;color:${modColor}">${bs.modernityScore || '?'}/10</span> <span style="font-size:12px;color:var(--muted)">${bs.modernityLabel || ''}</span></div>
+                <div style="font-size:12px"><span style="color:var(--green);font-weight:700">${bs.found?.length || 0} vorhanden</span> · <span style="color:var(--red);font-weight:700">${bs.missing?.length || 0} fehlen</span></div>
+            </div>`;
+
+        // Fehlende Features
+        if (bs.missing?.length > 0) {
+            bsHtml += `<div style="font-size:13px;font-weight:700;margin-bottom:8px">Was dieser Website fehlt:</div>`;
+            for (const m of bs.missing) {
+                bsHtml += `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
+                    <div style="font-size:13px"><span style="color:var(--red);margin-right:6px">✗</span><strong>${m.name}</strong></div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:2px">${m.why}</div>
+                    ${m.impact ? `<div style="font-size:12px;color:var(--red);margin-top:2px">${m.impact}</div>` : ''}
+                </div>`;
+            }
+        }
+
+        // Vorhandene Features
+        if (bs.found?.length > 0) {
+            bsHtml += `<div style="font-size:12px;color:var(--green);margin-top:12px">Vorhanden: ${bs.found.join(', ')}</div>`;
+        }
+
+        bsHtml += `</div>`;
+
+        // Top Pitch-Argument
+        if (bs.topPitchArgument) {
+            bsHtml += `<div class="pitch-box" style="margin-bottom:12px"><h3>Stärkstes Argument (KI-generiert)</h3><p>${bs.topPitchArgument}</p></div>`;
+        }
+
+        // Summary
+        if (bs.summary) {
+            bsHtml += `<div style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:12px">"${bs.summary}"</div>`;
+        }
+
+        // Setze VOR das statische UX-Audit
+        uxEl.innerHTML = bsHtml + uxEl.innerHTML;
+    }
+
+    // ── Branchen-UX-Audit (statisch als Fallback) ──
     const uxResult = auditUX(data.psiData, data.place);
     const uxEl = document.getElementById('result-ux');
     if (uxResult && uxResult.results) {
@@ -469,9 +519,23 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
         const emailArgs = [];
 
         // ══════════════════════════════════════
-        // BRANCHEN-SPEZIFISCHE FEATURES ZUERST (das stärkste Argument!)
+        // KI-BRANCHENANALYSE ZUERST (wenn verfügbar — stärkstes Argument!)
         // ══════════════════════════════════════
-        if (uxAudit?.missingCritical?.length > 0) {
+        if (data.branchStandards?.missing?.length > 0) {
+            const bs = data.branchStandards;
+            let aiText = `<strong>Was dieser ${bs.branche || 'Branche'}-Website fehlt (KI-Analyse):</strong><br>`;
+            for (const m of bs.missing.slice(0, 5)) {
+                aiText += `<br>✗ <strong>${m.name}</strong> — ${m.why}`;
+                emailArgs.push(`${m.name} fehlt`);
+            }
+            if (bs.topPitchArgument) {
+                aiText += `<br><br><div style="background:rgba(0,113,227,0.05);padding:12px 16px;border-radius:8px;border-left:3px solid var(--accent)">${bs.topPitchArgument}</div>`;
+            }
+            problems.push(aiText);
+        }
+
+        // STATISCHES UX-AUDIT ALS FALLBACK (wenn KI nicht verfügbar)
+        else if (uxAudit?.missingCritical?.length > 0) {
             const missing = uxAudit.missingCritical;
             let uxText = `<strong>Wichtige Funktionen fehlen auf der Website:</strong><br>`;
             for (const m of missing) {

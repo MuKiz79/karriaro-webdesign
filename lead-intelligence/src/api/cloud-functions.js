@@ -32,3 +32,6 @@ export function getDomainAuthority(domain) { return call('domainAuthority', { do
 
 /** B6: Suchvolumen */
 export function getSearchVolume(query) { return call('searchVolume', { query }); }
+
+/** KI-Branchenanalyse: Was ist Standard, was fehlt? */
+export function analyzeBranchStandards(url, branche, features) { return call('analyzeBranchStandards', { url, branche, features }); }
