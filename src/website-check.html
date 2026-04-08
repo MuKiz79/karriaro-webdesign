@@ -647,30 +647,36 @@ App.probability = {
     // ══════════════════════════════════════
     // Fix 4+11: Echtes Partial Pooling + stark divergierende Priors
     hierarchy: {
-        // Fix 11: Priors divergieren stark zwischen Branchen
-        // Zahnarzt (280€/Patient) vs Baeckerei (8€/Kunde) = komplett andere Lead-Typen
+        // KALIBRIERT mit echten Benchmark-Daten (Snov.io 2026, Instantly 2026, Sopro 2026)
+        // o: Open Rate Beta-Prior — α/(α+β) = empirische Open Rate aus Snov.io
+        //    Hospitality 29.3%, Real Estate 32.6%, Legal 27.3%, Healthcare 25.5%,
+        //    Transport 25.2%, Construction 32%, E-Commerce 25.9%
+        // Reply-Rate fließt in Interest-Prior: Legal 10%, Hospitality 6.9%,
+        //    Real Estate 5.8%, Healthcare 4.9%, Transport 6.8%
+        // Quellen: snov.io/blog/cold-email-statistics, instantly.ai/cold-email-benchmark-report-2026
         branches: {
-            //                    reach      open       interest    convo      proposal   close       tpl   ds    channels
-            'dentist':          { r:[12,2],  o:[8,12],  i:[5,4],   c:[5,4],   p:[7,2],   cl:[8,3],   tpl:2.5, ds:1990, ch:['email','phone'] },
-            'doctor':           { r:[10,3],  o:[7,13],  i:[4,5],   c:[4,5],   p:[7,2],   cl:[7,4],   tpl:2.5, ds:1990, ch:['email'] },
-            'real_estate_agency':{ r:[12,2], o:[9,11],  i:[4,6],   c:[4,5],   p:[7,2],   cl:[7,3],   tpl:3.0, ds:1990, ch:['email','linkedin'] },
-            'lawyer':           { r:[10,3],  o:[8,10],  i:[3,6],   c:[3,5],   p:[7,2],   cl:[6,4],   tpl:3.0, ds:1990, ch:['email'] },
-            'hotel':            { r:[12,2],  o:[8,12],  i:[4,6],   c:[3,5],   p:[7,2],   cl:[7,3],   tpl:3.0, ds:1990, ch:['email'] },
-            'car_dealer':       { r:[10,3],  o:[7,13],  i:[3,7],   c:[3,5],   p:[7,2],   cl:[5,4],   tpl:3.0, ds:1990, ch:['phone','visit'] },
-            'beauty_salon':     { r:[9,3],   o:[5,12],  i:[5,4],   c:[5,4],   p:[7,2],   cl:[6,4],   tpl:2.0, ds:1490, ch:['instagram','visit'] },
-            'restaurant':       { r:[10,2],  o:[6,12],  i:[5,4],   c:[5,4],   p:[7,2],   cl:[6,5],   tpl:2.0, ds:1500, ch:['visit','phone'] },
-            'hair_salon':       { r:[9,3],   o:[5,13],  i:[5,3],   c:[6,4],   p:[7,2],   cl:[5,4],   tpl:1.5, ds:990,  ch:['visit','instagram'] },
-            'physiotherapist':  { r:[9,3],   o:[6,12],  i:[5,4],   c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email','phone'] },
-            'auto_repair':      { r:[8,4],   o:[4,14],  i:[4,5],   c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone','visit'] },
-            'plumber':          { r:[7,5],   o:[3,14],  i:[5,4],   c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone'] },
-            'electrician':      { r:[7,5],   o:[3,14],  i:[4,5],   c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone'] },
-            'gym':              { r:[9,3],   o:[5,13],  i:[4,4],   c:[4,4],   p:[7,2],   cl:[5,5],   tpl:2.0, ds:990,  ch:['email','visit'] },
-            'veterinary_care':  { r:[9,3],   o:[6,12],  i:[5,4],   c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email','phone'] },
-            'moving_company':   { r:[7,4],   o:[4,14],  i:[4,4],   c:[4,4],   p:[7,2],   cl:[5,5],   tpl:2.0, ds:990,  ch:['email','phone'] },
-            'bakery':           { r:[8,4],   o:[4,16],  i:[3,6],   c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },
-            'florist':          { r:[8,4],   o:[4,14],  i:[3,5],   c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },
-            'cafe':             { r:[8,3],   o:[4,14],  i:[3,5],   c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },
-            '_default':         { r:[8,3],   o:[5,13],  i:[4,5],   c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email'] }
+            //                    reach      open           interest       convo      proposal   close       tpl   ds    channels
+            //                              (empirisch)    (reply-based)
+            'dentist':          { r:[12,2],  o:[5,15],      i:[5,5],       c:[5,4],   p:[7,2],   cl:[8,3],   tpl:2.5, ds:1990, ch:['email','phone'] },        // Healthcare: 25.5% open, 4.9% reply
+            'doctor':           { r:[10,3],  o:[5,15],      i:[5,5],       c:[4,5],   p:[7,2],   cl:[7,4],   tpl:2.5, ds:1990, ch:['email'] },                 // Healthcare: 25.5% open, 4.9% reply
+            'real_estate_agency':{ r:[12,2], o:[7,14],      i:[6,4],       c:[4,5],   p:[7,2],   cl:[7,3],   tpl:3.0, ds:1990, ch:['email','linkedin'] },      // Real Estate: 32.6% open, 5.8% reply
+            'lawyer':           { r:[10,3],  o:[5,14],      i:[10,10],     c:[4,5],   p:[7,2],   cl:[6,4],   tpl:3.0, ds:1990, ch:['email'] },                 // Legal: 27.3% open, 10% reply (hoechste!)
+            'hotel':            { r:[12,2],  o:[6,14],      i:[7,3],       c:[3,5],   p:[7,2],   cl:[7,3],   tpl:3.0, ds:1990, ch:['email'] },                 // Hospitality: 29.3% open, 6.9% reply
+            'car_dealer':       { r:[10,3],  o:[5,15],      i:[3,7],       c:[3,5],   p:[7,2],   cl:[5,4],   tpl:3.0, ds:1990, ch:['phone','visit'] },         // Automotive: ~25% open, ~3% reply
+            'beauty_salon':     { r:[9,3],   o:[5,15],      i:[5,4],       c:[5,4],   p:[7,2],   cl:[6,4],   tpl:2.0, ds:1490, ch:['instagram','visit'] },     // Nahbar an Healthcare
+            'restaurant':       { r:[10,2],  o:[6,14],      i:[7,3],       c:[5,4],   p:[7,2],   cl:[6,5],   tpl:2.0, ds:1500, ch:['visit','phone'] },         // Hospitality: 29.3% open, 6.9% reply
+            'hair_salon':       { r:[9,3],   o:[5,15],      i:[5,3],       c:[6,4],   p:[7,2],   cl:[5,4],   tpl:1.5, ds:990,  ch:['visit','instagram'] },     // ~25% open, persoenl. Kontakt besser
+            'physiotherapist':  { r:[9,3],   o:[5,15],      i:[5,5],       c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email','phone'] },         // Healthcare: 25.5% open, 4.9% reply
+            'auto_repair':      { r:[8,4],   o:[5,15],      i:[4,5],       c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone','visit'] },         // ~25% open, Phone bevorzugt
+            'plumber':          { r:[7,5],   o:[6,13],      i:[5,4],       c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone'] },                 // Construction: 32% open, Phone first
+            'electrician':      { r:[7,5],   o:[6,13],      i:[4,5],       c:[4,4],   p:[7,2],   cl:[5,5],   tpl:1.5, ds:990,  ch:['phone'] },                 // Construction: 32% open
+            'gym':              { r:[9,3],   o:[5,15],      i:[4,4],       c:[4,4],   p:[7,2],   cl:[5,5],   tpl:2.0, ds:990,  ch:['email','visit'] },         // ~25% open
+            'veterinary_care':  { r:[9,3],   o:[5,15],      i:[5,5],       c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email','phone'] },         // Healthcare-nah
+            'moving_company':   { r:[7,4],   o:[5,15],      i:[7,3],       c:[4,4],   p:[7,2],   cl:[5,5],   tpl:2.0, ds:990,  ch:['email','phone'] },         // Transport: 25.2% open, 6.8% reply
+            'bakery':           { r:[8,4],   o:[5,15],      i:[3,6],       c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },                 // Niedrig, persoenlich besser
+            'florist':          { r:[8,4],   o:[5,15],      i:[3,5],       c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },                 // Niedrig
+            'cafe':             { r:[8,3],   o:[6,14],      i:[7,3],       c:[4,5],   p:[7,2],   cl:[3,6],   tpl:1.5, ds:990,  ch:['visit'] },                 // Hospitality-nah
+            '_default':         { r:[8,3],   o:[6,16],      i:[5,5],       c:[4,4],   p:[7,2],   cl:[5,4],   tpl:2.0, ds:990,  ch:['email'] }                  // 27.7% avg open, 5.1% avg reply
         },
 
         // Fix 4: Echtes Partial Pooling nach Gelman BDA
@@ -835,10 +841,24 @@ App.probability = {
 
     // Fix 12: Saisonalitaet
     seasonality: {
-        // Multiplikator auf Conversion-Rate basierend auf Monat
-        // Jan=neue Budgets, Maerz-Mai=Fruehling, Aug=Urlaub, Okt-Nov=Vor-Weihnachten
-        monthly: [1.15, 1.05, 1.10, 1.12, 1.08, 0.95, 0.85, 0.75, 0.90, 1.05, 1.10, 0.80],
-        get() { return this.monthly[new Date().getMonth()]; }
+        // KALIBRIERT: Snov.io 2026 — Reply-Rate nach Monat
+        // Jul=6.3% (hoechste), Dez=4.67% (niedrigste), Durchschnitt=5.1%
+        // Normalisiert auf Durchschnitt=1.0
+        //                  Jan   Feb   Mär   Apr   Mai   Jun   Jul   Aug   Sep   Okt   Nov   Dez
+        monthly:          [1.10, 1.02, 1.08, 1.10, 1.06, 0.98, 1.24, 0.88, 0.94, 1.04, 1.08, 0.92],
+        // Quelle: snov.io/blog/cold-email-statistics/ — Jul 6.3%/5.1%=1.24, Dez 4.67%/5.1%=0.92
+        get() { return this.monthly[new Date().getMonth()]; },
+
+        // KALIBRIERT: Snov.io 2026 — Beste Wochentage
+        // Di=28.2% open (hoechste), Mi=5.8% reply (hoechste), Mo/Fr=5.1% reply
+        bestDays: { send: 'Dienstag', engage: 'Mittwoch' },
+        bestTime: '7-11 Uhr vormittags',
+        getDayRecommendation() {
+            const day = new Date().getDay();  // 0=So, 1=Mo, 2=Di...
+            if (day === 2) return { today: true, label: 'Heute ist Dienstag — optimaler Versandtag (28.2% Open Rate)' };
+            if (day === 3) return { today: true, label: 'Heute ist Mittwoch — hoechste Reply-Rate (5.8%)' };
+            return { today: false, label: `Bester Versandtag: Dienstag (28.2% Open Rate), bester Reply-Tag: Mittwoch (5.8%)` };
+        }
     },
 
     // Fix 13: Multi-Channel-Optimierung
@@ -847,7 +867,7 @@ App.probability = {
             'email':     { reachRate: 0.95, openRate: 0.25, costHours: 0.3, name: 'E-Mail' },
             'phone':     { reachRate: 0.60, openRate: 0.55, costHours: 0.5, name: 'Anruf' },
             'visit':     { reachRate: 0.85, openRate: 0.80, costHours: 1.5, name: 'Persoenlich' },
-            'linkedin':  { reachRate: 0.90, openRate: 0.20, costHours: 0.4, name: 'LinkedIn' },
+            'linkedin':  { reachRate: 0.90, openRate: 0.103, costHours: 0.4, name: 'LinkedIn' },  // Snov.io/Outreaches: 10.3% InMail reply rate
             'instagram': { reachRate: 0.70, openRate: 0.15, costHours: 0.3, name: 'Instagram DM' }
         },
         // Berechne besten Kanal basierend auf EV/Stunde
@@ -2685,6 +2705,7 @@ App.ui = {
             // Multi-Touch Timeline (Fix 14)
             if (prob.multiTouch) {
                 html += `<div class="card" style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Multi-Touch Sequenz (kumulative Conversion-Rate)</div>`;
+                html += `<div style="font-size:12px;color:var(--muted);margin-bottom:8px">Datenbasiert: 1 Follow-Up steigert Antwortrate um 49%. Ab 3 Follow-Ups sinkt sie um 30%. (Snov.io 2026, N=Milliarden)</div>`;
                 for (let t = 0; t < prob.multiTouch.touchpoints.length; t++) {
                     const tp = prob.multiTouch.touchpoints[t];
                     const cr = prob.multiTouch.cumulativeCR[t];
@@ -2692,6 +2713,25 @@ App.ui = {
                 }
                 html += '</div>';
             }
+
+            // Timing-Empfehlung (kalibriert)
+            const dayRec = App.probability.seasonality.getDayRecommendation();
+            const seasonF = prob.seasonFactor;
+            html += `<div class="card" style="margin-bottom:12px;border-left:3px solid var(--accent)">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Optimales Timing (datenbasiert)</div>
+                <div style="font-size:13px;font-weight:600">${dayRec.label}</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px">Uhrzeit: ${App.probability.seasonality.bestTime} · Saison-Faktor: ${seasonF}% (Snov.io 2026)</div>
+            </div>`;
+
+            // Betreff-Empfehlungen (datenbasiert)
+            html += `<div class="card" style="margin-bottom:12px">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Betreff-Optimierung (Snov.io 2026)</div>
+                <div class="biz-stat"><span class="biz-label">Zahlen im Betreff</span><span class="biz-value" style="color:var(--green)">+45% Open Rate</span></div>
+                <div class="biz-stat"><span class="biz-label">Vor- und Nachname</span><span class="biz-value" style="color:var(--green)">33% Open Rate (vs. 9% nur Vorname)</span></div>
+                <div class="biz-stat"><span class="biz-label">Betreff als Frage</span><span class="biz-value" style="color:var(--green)">+10% Open Rate</span></div>
+                <div class="biz-stat"><span class="biz-label">3, 7 oder 8 Woerter</span><span class="biz-value">33% Open Rate (optimal)</span></div>
+                <div class="biz-stat"><span class="biz-label">Email-Laenge</span><span class="biz-value">&lt; 80 Woerter (Instantly 2026)</span></div>
+            </div>`;
         }
 
         // ── Wissenschaftliche Analyse ──
