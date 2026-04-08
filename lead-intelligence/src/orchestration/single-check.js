@@ -116,8 +116,11 @@ function renderResult(data) {
     const color = r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
     const label = r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead';
 
-    // ── #12: Klartext-Erklärung generieren ──
-    const explanation = generateExplanation(r, ws, tech, data);
+    // UX-Audit VOR Erklärung berechnen (branchenspezifische Features)
+    const uxForExplanation = auditUX(data.psiData, data.place);
+
+    // ── #12: Klartext-Erklärung generieren (inkl. fehlender Branchen-Features) ──
+    const explanation = generateExplanation(r, ws, tech, data, uxForExplanation);
 
     // ── Score + Erklärung ──
     const scoreEl = document.getElementById('result-score');
@@ -400,71 +403,95 @@ function renderResult(data) {
 }
 
 // ── #12: Klartext-Erklärung (verständlich für jeden, nutzbar als E-Mail) ──
-function generateExplanation(r, ws, tech, data) {
+function generateExplanation(r, ws, tech, data, uxAudit) {
     const s = r.leadScore;
     const domain = new URL(data.url).hostname.replace('www.', '');
     const name = data.place?.displayName?.text || domain;
     const rev = data.revenue;
     const footprint = data.footprint;
+    const branche = data.place?.primaryTypeDisplayName?.text || '';
 
     // ══════════════════════════════════════
     // STARKER LEAD (55+)
     // ══════════════════════════════════════
     if (s >= 55) {
         let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong><br><br>`;
-
-        // ── Was wir gefunden haben (für den User) ──
         text += `<strong>Was wir bei ${name} gefunden haben:</strong><br><br>`;
 
-        // Probleme sammeln — in Alltagssprache
         const problems = [];
-        const emailArgs = [];  // Für die Kontakt-E-Mail
+        const emailArgs = [];
 
+        // ══════════════════════════════════════
+        // BRANCHEN-SPEZIFISCHE FEATURES ZUERST (das stärkste Argument!)
+        // ══════════════════════════════════════
+        if (uxAudit?.missingCritical?.length > 0) {
+            const missing = uxAudit.missingCritical;
+            let uxText = `<strong>Wichtige Funktionen fehlen auf der Website:</strong><br>`;
+            for (const m of missing) {
+                uxText += `<br>✗ <strong>${m.name}</strong> — ${m.why}`;
+                emailArgs.push(`${m.name} fehlt auf Ihrer Website — ${m.why.split('—')[0].trim()}`);
+            }
+            // Auch nicht-kritische fehlende Features erwähnen
+            const missingOptional = uxAudit.missing?.filter(m => !m.critical) || [];
+            if (missingOptional.length > 0) {
+                uxText += `<br><br>Außerdem fehlen: ${missingOptional.map(m => m.name).join(', ')}.`;
+            }
+            problems.push(uxText);
+
+            // Branchen-spezifischer Pitch
+            if (uxAudit.persona?.missingPitch) {
+                problems.push(`<div style="background:rgba(0,113,227,0.05);padding:12px 16px;border-radius:8px;border-left:3px solid var(--accent);margin:4px 0"><strong>${uxAudit.persona.missingPitch}</strong></div>`);
+            }
+        } else if (uxAudit?.missing?.length > 0) {
+            problems.push(`Fehlende Features: ${uxAudit.missing.map(m => `<strong>${m.name}</strong>`).join(', ')}. Diese Funktionen erwarten Kunden in der ${branche}-Branche heute als Standard.`);
+        }
+
+        // ── Was eine moderne Website in dieser Branche braucht ──
+        if (uxAudit?.modernFeatures?.length > 0) {
+            problems.push(`<strong>Was eine moderne ${uxAudit.persona?.name || branche}-Website 2026 braucht:</strong> ${uxAudit.modernFeatures.join(', ')}. Davon hat ${name} ${uxAudit.found?.length || 0} von ${uxAudit.results?.length || 0} Basis-Features.`);
+        }
+
+        // ── Technische Probleme (sekundär) ──
         if (ws.perf < 40) {
-            problems.push(`Die Website lädt <strong>deutlich langsamer als die Konkurrenz</strong>. Google bestraft das mit schlechterem Ranking — potenzielle Kunden finden stattdessen die Wettbewerber.`);
-            emailArgs.push(`Ihre Website lädt langsamer als die Ihrer Konkurrenten — Google zeigt deshalb zuerst andere Ergebnisse`);
+            problems.push(`Die Website lädt <strong>deutlich langsamer als die Konkurrenz</strong>. Google bestraft das mit schlechterem Ranking.`);
+            emailArgs.push(`die Website lädt langsamer als die Ihrer Konkurrenten`);
         } else if (ws.perf < 65) {
-            problems.push(`Google bewertet die Ladegeschwindigkeit mit <strong>${ws.perf} von 100 Punkten</strong>. Zum Vergleich: Die besten Websites in der Branche erreichen 90+. Langsamere Seiten werden in den Suchergebnissen nach unten geschoben.`);
-            emailArgs.push(`Googles Geschwindigkeits-Bewertung liegt bei ${ws.perf}/100 — schnellere Konkurrenten werden bevorzugt angezeigt`);
+            problems.push(`Google bewertet die Ladegeschwindigkeit mit <strong>${ws.perf}/100</strong>. Die besten in der Branche erreichen 90+.`);
+            emailArgs.push(`Googles Geschwindigkeits-Bewertung liegt bei ${ws.perf}/100`);
         }
 
         if (!ws.isHttps) {
-            problems.push(`Die Website hat <strong>kein Sicherheitszertifikat (SSL)</strong>. Jeder Besucher sieht im Browser die Warnung "Nicht sicher". Studien zeigen: Jeder zweite Besucher verlässt die Seite sofort wenn er diese Warnung sieht.`);
-            emailArgs.push(`der Browser zeigt Ihren Besuchern "Nicht sicher" an — jeder zweite verlässt die Seite sofort`);
+            problems.push(`<strong>Kein Sicherheitszertifikat</strong> — Browser zeigt "Nicht sicher". Jeder zweite Besucher verlässt die Seite sofort.`);
+            emailArgs.push(`der Browser zeigt "Nicht sicher" an`);
         }
 
         if (tech.isBaukasten) {
-            problems.push(`Die Website läuft auf <strong>${tech.cms}</strong> — einem Baukasten-System. Das bedeutet: Design, Geschwindigkeit und Suchmaschinenoptimierung sind strukturell eingeschränkt. Egal wie viel man optimiert, der Baukasten setzt Grenzen die nicht überwunden werden können.`);
-            emailArgs.push(`die Seite läuft auf ${tech.cms} — ein Baukasten der Design und Geschwindigkeit begrenzt`);
-        }
-
-        if (ws.seo < 60) {
-            problems.push(`Der <strong>Suchmaschinen-Score liegt bei ${ws.seo}/100</strong>. Das bedeutet: Wenn potenzielle Kunden nach "${data.place?.primaryTypeDisplayName?.text || 'Ihrem Angebot'}" in der Nähe suchen, erscheint diese Website wahrscheinlich nicht auf der ersten Seite.`);
-            emailArgs.push(`bei einer Google-Suche nach "${data.place?.primaryTypeDisplayName?.text || 'Ihrem Angebot'}" erscheint die Website wahrscheinlich nicht auf Seite 1`);
+            problems.push(`Läuft auf <strong>${tech.cms}</strong> — ein Baukasten der Design, Geschwindigkeit und SEO strukturell begrenzt.`);
+            emailArgs.push(`die Seite läuft auf ${tech.cms}`);
         }
 
         if (ws.a11y < 60) {
-            problems.push(`Die <strong>Barrierefreiheit liegt bei ${ws.a11y}/100</strong>. Seit Juni 2025 ist das in Deutschland gesetzlich vorgeschrieben (BFSG). Die ersten Abmahnwellen laufen bereits — Bußgelder bis 100.000€ sind möglich.`);
-            emailArgs.push(`seit Juni 2025 ist Barrierefreiheit Pflicht — Ihre Seite erreicht nur ${ws.a11y}/100`);
+            problems.push(`<strong>Barrierefreiheit ${ws.a11y}/100</strong> — seit Juni 2025 gesetzlich vorgeschrieben (BFSG). Bußgelder bis 100.000€ möglich.`);
+            emailArgs.push(`Barrierefreiheit nur ${ws.a11y}/100 — seit 2025 Pflicht`);
         }
 
-        // Positives Signal: Aktives Business
+        // ── Business-Signale ──
         if (data.place?.userRatingCount > 30 && data.place?.rating >= 4.0) {
-            problems.push(`<strong>Das Geschäft selbst läuft offensichtlich gut</strong> — ${data.place.rating} Sterne bei ${data.place.userRatingCount} Google-Bewertungen. Die Kunden sind zufrieden. Aber die Website spiegelt diese Qualität nicht wider. Das ist eine verpasste Chance.`);
+            problems.push(`<strong>Das Geschäft läuft gut</strong> — ${data.place.rating} Sterne bei ${data.place.userRatingCount} Bewertungen. Die Kunden sind zufrieden. Die Website spiegelt diese Qualität nicht wider.`);
         }
 
-        // Digital Footprint
         if (footprint?.hasInstagram && ws.perf < 65) {
-            problems.push(`${name} ist <strong>auf Instagram aktiv</strong> — das zeigt Marketing-Bewusstsein. Aber die Website hält nicht mit. Instagram bringt Bestandskunden, aber Google bringt Neukunden. Ohne gute Website fehlt die Hälfte.`);
-        }
-        if (footprint?.hasFbPixel) {
-            problems.push(`${name} schaltet bereits <strong>Facebook-Werbung</strong> (wir haben den Facebook Pixel erkannt). Das bedeutet: Hier wird bereits Geld für Online-Marketing ausgegeben — aber die Website, auf der die Werbung landet, ist das schwächste Glied.`);
+            problems.push(`${name} ist <strong>auf Instagram aktiv</strong> — Marketing-Bewusstsein ist da. Aber Instagram bringt Bestandskunden, Google bringt Neukunden. Ohne gute Website fehlt die Hälfte.`);
         }
 
-        // Umsatzverlust
+        if (footprint?.hasFbPixel) {
+            problems.push(`Schaltet bereits <strong>Facebook-Werbung</strong> — gibt Geld für Marketing aus, aber die Website ist das schwächste Glied.`);
+        }
+
+        // ── Umsatzverlust ──
         if (rev?.yearlyLoss > 1000) {
-            problems.push(`<strong>Geschätzter Umsatzverlust: ~${rev.yearlyLoss.toLocaleString('de-DE')} € pro Jahr</strong> — durch verlorene Besucher die wegen Ladezeit, fehlender Mobiloptimierung oder schlechter Suchplatzierung nicht zu Kunden werden. Eine neue Website für 990-1.990 € hätte sich in ${rev.roi > 0 ? Math.ceil(1990 / (rev.yearlyLoss / 12)) + ' Monaten' : 'kurzer Zeit'} amortisiert.`);
-            emailArgs.push(`wir schätzen den jährlichen Verlust durch die aktuelle Website auf ~${rev.yearlyLoss.toLocaleString('de-DE')} €`);
+            problems.push(`<strong>Geschätzter Umsatzverlust: ~${rev.yearlyLoss.toLocaleString('de-DE')} €/Jahr</strong>. Eine neue Website für 990-1.990 € amortisiert sich in ${rev.roi > 0 ? Math.ceil(1990 / (rev.yearlyLoss / 12)) + ' Monaten' : 'kurzer Zeit'}.`);
+            emailArgs.push(`wir schätzen den jährlichen Verlust auf ~${rev.yearlyLoss.toLocaleString('de-DE')} €`);
         }
 
         if (problems.length > 0) {
