@@ -100,17 +100,24 @@ export async function runSingleCheck() {
 }
 
 function renderResult(data) {
-    // Score section
-    const scoreEl = document.getElementById('result-score');
     const r = data.result;
+    const ws = data.ws;
+    const tech = data.tech;
+    const domain = new URL(data.url).hostname.replace('www.', '');
     const color = r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
     const label = r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead';
 
+    // ── #12: Klartext-Erklärung generieren ──
+    const explanation = generateExplanation(r, ws, tech, data);
+
+    // ── Score + Erklärung ──
+    const scoreEl = document.getElementById('result-score');
     scoreEl.innerHTML = `
         <div style="text-align:center;margin-bottom:32px">
             <div style="font-size:4rem;font-weight:800;color:${color};letter-spacing:-0.04em">${r.leadScore}</div>
             <div style="font-size:14px;color:var(--muted)">Conversion-Rate: ${r.conversionRate}% · CI: ${r.ci.lower}% — ${r.ci.upper}% (N=${r.N})</div>
             <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:${color};margin-top:8px">${label}</div>
+            <div style="max-width:480px;margin:20px auto 0;padding:16px 20px;background:var(--bg);border-radius:12px;text-align:left;font-size:13px;line-height:1.65;color:var(--muted)">${explanation}</div>
         </div>
     `;
 
@@ -247,16 +254,154 @@ function renderResult(data) {
         </div>`;
     } else { revEl.innerHTML = ''; }
 
+    // ── #7: Kontakt-Strategie ──
+    const stratEl = document.getElementById('result-strategy');
+    let stratHtml = '';
+
+    // #9: Screenshot
+    if (data.screenshot) {
+        stratHtml += `<div class="card" style="text-align:center;padding:24px;margin-bottom:12px">
+            <div style="display:inline-block;border:6px solid #1d1d1f;border-radius:20px;overflow:hidden;max-width:200px;box-shadow:0 16px 48px rgba(0,0,0,0.12)">
+                <img src="${data.screenshot}" alt="Mobile Screenshot" style="width:100%;display:block">
+            </div>
+            <div style="font-size:11px;color:var(--muted);margin-top:12px">So sieht die Website auf dem Smartphone aus</div>
+        </div>`;
+    }
+
+    // #11: Digital Footprint
+    if (data.footprint?.platforms?.length > 0) {
+        stratHtml += `<div class="card" style="margin-bottom:12px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Digital Footprint — ${data.footprint.label} (${data.footprint.maturity})</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">${data.footprint.platforms.map(p => `<span class="badge badge-green">${p.name}</span>`).join('')}</div>
+            ${data.footprint.pixels?.length > 0 ? `<div style="font-size:11px;color:var(--muted)">Pixel: ${data.footprint.pixels.map(p => p.name).join(' · ')}</div>` : ''}
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">${data.footprint.insight}</div>
+        </div>`;
+    }
+
+    // #13: Konkurrenz-Vergleich
+    if (data.competitors?.length > 1) {
+        stratHtml += `<div class="card" style="margin-bottom:12px;padding:0;overflow:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead><tr><th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--border)">Konkurrent</th><th style="padding:10px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Sterne</th><th style="padding:10px 12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Bew.</th></tr></thead>
+                <tbody>${data.competitors.slice(0, 5).map(c => `<tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">${c.displayName?.text || '—'}</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">${c.rating || '—'}</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">${c.userRatingCount || 0}</td></tr>`).join('')}</tbody>
+            </table>
+        </div>`;
+    }
+
+    // #14+15: Multi-Touch + Kanal + Timing + Betreff
+    if (r.channelResult?.all?.length > 1) {
+        stratHtml += `<div class="card" style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Kanal-Optimierung</div>`;
+        for (const ch of r.channelResult.all) {
+            const best = ch.name === r.channelResult.best?.name;
+            stratHtml += `<div class="stat-row"><span class="stat-label">${best ? '★ ' : ''}${ch.name}</span><span class="stat-value" style="${best ? 'color:var(--green)' : ''}">${ch.ev}€ EV · ${ch.costHours}h</span></div>`;
+        }
+        stratHtml += '</div>';
+    }
+
+    // #16: Betreff-Tipps
+    stratHtml += `<div class="card" style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Betreff-Optimierung (Snov.io 2026)</div>
+        <div class="stat-row"><span class="stat-label">Zahlen im Betreff</span><span class="stat-value" style="color:var(--green)">+45% Open Rate</span></div>
+        <div class="stat-row"><span class="stat-label">Vor- und Nachname</span><span class="stat-value">33% Open Rate</span></div>
+        <div class="stat-row"><span class="stat-label">Betreff als Frage</span><span class="stat-value">+10% Open Rate</span></div>
+        <div class="stat-row"><span class="stat-label">Email-Länge</span><span class="stat-value">< 80 Wörter optimal</span></div>
+    </div>`;
+
+    // #17: Timing
+    stratHtml += `<div class="card" style="margin-bottom:12px;border-left:3px solid var(--accent)">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Optimales Timing</div>
+        <div style="font-size:13px;font-weight:600">Bester Versandtag: Dienstag (28.2% Open) · Bester Reply-Tag: Mittwoch (5.8%)</div>
+        <div style="font-size:12px;color:var(--muted)">Uhrzeit: 7-11 Uhr · Saison: ${r.seasonFactor}%</div>
+    </div>`;
+
+    // #10: Pitch-Box
+    const pitchLines = [];
+    if (ws.perf < 65) pitchLines.push(`Googles Performance-Score liegt bei ${ws.perf}/100`);
+    if (!ws.isHttps) pitchLines.push('kein SSL-Zertifikat');
+    if (ws.seo < 75) pitchLines.push(`SEO-Score bei ${ws.seo}/100`);
+    if (tech.isBaukasten) pitchLines.push(`läuft auf ${tech.cms}`);
+    if (pitchLines.length > 0) {
+        stratHtml += `<div class="pitch-box" style="margin-bottom:12px">
+            <h3>Pitch-Vorlage</h3>
+            <p>Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${pitchLines.join(', ')}.\n\nDas sind Punkte die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne Websites — handcodiert, ab 990 Euro.\n\nDarf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?\n\nViele Grüße\nMuammer Kizilaslan\nkarriaro-webdesign.de</p>
+            <button style="margin-top:12px;padding:8px 16px;font-size:12px;font-weight:600;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;cursor:pointer" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='Kopiert!'})">Kopieren</button>
+        </div>`;
+    }
+
+    // #6: 5-Schritt E-Mail-Sequenz
+    const seqMails = [
+        { day: 1, subject: `${domain} — Ihre Website kostet Sie Kunden`, body: `Performance ${ws.perf}/100, SEO ${ws.seo}/100.${rev?.yearlyLoss > 0 ? ' Geschätzter Verlust: ~'+rev.yearlyLoss.toLocaleString('de-DE')+'€/Jahr.' : ''} Darf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?` },
+        { day: 4, subject: 'Vorher/Nachher — so sah Spedition Kolbe aus', body: 'Konkretes Beispiel: Vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt. karriaro-webdesign.de' },
+        { day: 8, subject: ws.a11y < 70 ? 'BFSG: Barrierefreiheit seit 2025 Pflicht' : 'Google bevorzugt schnelle Websites', body: ws.a11y < 70 ? `Barrierefreiheit ${ws.a11y}/100. Gesetz seit Juni 2025. Erste Abmahnungen laufen.` : 'Websites die Core Web Vitals bestehen bekommen 24% mehr Traffic.' },
+        { day: 12, subject: `Kostenloser Entwurf für ${domain}`, body: 'Darf ich Ihnen den Entwurf in einem 15-Minuten-Call zeigen? Keine Verpflichtung.' },
+        { day: 18, subject: 'Letzte Nachricht', body: `Ab 990€, fertig in 1-2 Wochen.${rev?.roi > 1 ? ' Amortisiert sich in '+Math.ceil(1990/(rev.yearlyLoss/12))+' Monaten.' : ''}` }
+    ];
+    stratHtml += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin:16px 0 8px">5-Schritt Follow-up-Sequenz</div>`;
+    for (const m of seqMails) {
+        stratHtml += `<div class="pitch-box" style="margin-bottom:6px">
+            <h3>Tag ${m.day} — ${m.subject}</h3>
+            <p>${m.body}</p>
+            <button style="margin-top:8px;padding:6px 12px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:6px;cursor:pointer" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='✓'})">Kopieren</button>
+        </div>`;
+    }
+
+    stratEl.innerHTML = stratHtml;
+
     // ── Expert ──
     document.getElementById('result-expert').innerHTML = `<div class="card"><pre style="font-size:11px;overflow-x:auto;max-height:400px">${JSON.stringify(r, null, 2)}</pre></div>`;
 
-    // ── Actions ──
+    // ── #4: Actions (CRM Save) ──
     document.getElementById('result-actions').innerHTML = `
         <div style="text-align:center;padding:24px 0">
-            <button class="btn-primary" style="margin-right:12px;background:var(--text)" onclick="alert('CRM-Save wird in nächster Version aktiviert')">Im CRM speichern</button>
+            <button class="btn-primary" id="btn-save-crm" style="margin-right:12px;background:var(--text)">Im CRM speichern</button>
             <a href="https://karriaro-webdesign.de/#kontakt" class="btn-primary" style="display:inline-block;text-decoration:none">Kostenlos beraten lassen</a>
         </div>
     `;
+    document.getElementById('btn-save-crm')?.addEventListener('click', async function() {
+        const { saveLead } = await import('../crm/leads.js');
+        await saveLead(domain, data.url, {
+            name: data.place?.displayName?.text || domain,
+            type: data.place?.primaryTypeDisplayName?.text || '',
+            perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
+            cms: tech.cms, isBaukasten: tech.isBaukasten,
+            leadScore: r.leadScore, conversionRate: r.conversionRate,
+            expectedValue: r.expectedValue || 0
+        });
+        this.textContent = 'Gespeichert ✓';
+        this.disabled = true;
+    });
+}
+
+// ── #12: Klartext-Erklärung ──
+function generateExplanation(r, ws, tech, data) {
+    const s = r.leadScore;
+    const cr = r.conversionRate;
+    const bn = r.bottleneck;
+
+    if (s >= 55) {
+        const reasons = [];
+        if (ws.perf < 30) reasons.push(`Google bewertet die Geschwindigkeit mit nur ${ws.perf}/100`);
+        else if (ws.perf < 65) reasons.push(`Googles Performance-Score liegt bei ${ws.perf}/100 — Ranking-Nachteil`);
+        if (!ws.isHttps) reasons.push('Kein SSL — Browser zeigt "Nicht sicher"');
+        if (ws.seo < 60) reasons.push(`SEO-Score ${ws.seo}/100 — wird kaum gefunden`);
+        if (ws.a11y < 60) reasons.push(`Barrierefreiheit ${ws.a11y}/100 — BFSG seit 2025 Pflicht`);
+        if (tech.isBaukasten) reasons.push(`${tech.cms} — Baukasten limitiert alles`);
+
+        let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong>`;
+        if (reasons.length > 0) text += `<br><br><strong>Warum vielversprechend:</strong><br>${reasons.map(r => '• ' + r).join('<br>')}`;
+        text += `<br><br>${cr}% Conversion-Rate bei Kaltakquise ist gut. Zeitaufwand: max ${r.kelly?.optimalHours || '?'}h.`;
+        if (bn) text += `<br><br><strong>Aufpassen:</strong> Engpass "${bn.name}" (${bn.mean}%).`;
+        return text;
+    }
+
+    if (s >= 30) {
+        let text = `<strong style="color:var(--orange)">Vielversprechend, aber mit Vorsicht.</strong> ${cr}% Conversion-Rate.`;
+        if (bn) text += ` Engpass: "${bn.name}" (${bn.mean}%).`;
+        return text;
+    }
+
+    let text = `<strong style="color:var(--red)">Überspringen.</strong> Nur ${cr}% Conversion — du müsstest ~${cr > 0 ? Math.round(100/parseFloat(cr)) : '∞'} solcher Leads kontaktieren.`;
+    return text;
 }
 
 function showLoading(text) {
