@@ -234,7 +234,7 @@ function renderResult(data) {
         const modColor = (bs.modernityScore || 0) >= 7 ? 'var(--green)' : (bs.modernityScore || 0) >= 4 ? 'var(--orange)' : 'var(--red)';
         const uxEl2 = document.getElementById('result-ux');
         let bsHtml = `<div class="card" style="border-left:3px solid var(--accent);margin-bottom:12px">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:8px">KI-Branchenanalyse: ${bs.branche || brancheForAI}</div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:8px">KI-Branchenanalyse: ${bs.branche || data.companyProfile?.branche || ''}</div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
                 <div><span style="font-size:11px;color:var(--muted)">Modernität: </span><span style="font-size:1.5rem;font-weight:700;color:${modColor}">${bs.modernityScore || '?'}/10</span> <span style="font-size:12px;color:var(--muted)">${bs.modernityLabel || ''}</span></div>
                 <div style="font-size:12px"><span style="color:var(--green);font-weight:700">${bs.found?.length || 0} vorhanden</span> · <span style="color:var(--red);font-weight:700">${bs.missing?.length || 0} fehlen</span></div>
