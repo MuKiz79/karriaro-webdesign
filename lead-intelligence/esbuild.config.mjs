@@ -9,8 +9,8 @@ const jsConfig = {
     entryPoints: ['src/main.js'],
     bundle: true,
     outfile: 'dist/app.js',
-    format: 'esm',
-    target: 'es2022',
+    format: 'iife',       // IIFE statt ESM — vermeidet TDZ-Probleme bei zirkulären Lazy-Inits
+    target: 'es2020',
     minify: !isWatch,
     sourcemap: isWatch,
     external: [
