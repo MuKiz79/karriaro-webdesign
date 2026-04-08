@@ -2324,6 +2324,20 @@ App.ui = {
     probLabel: p => p >= 55 ? 'Starker Lead — kontaktieren' : p >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead',
 
     // Klartext-Erklaerung unter dem Score
+    // Engpass-Name in Klartext uebersetzen
+    bottleneckExplain(bn) {
+        if (!bn) return '';
+        const explanations = {
+            'Erreichbarkeit': 'Die Kontaktdaten sind schwer zu finden — es ist unklar ob eine E-Mail ankommt.',
+            'Oeffnung': 'E-Mails an diese Branche werden selten geoeffnet. Der Betreff muss besonders stark sein — am besten mit einer konkreten Zahl oder einem Problem das sofort ins Auge faellt.',
+            'Interesse': 'Der Inhaber wird die E-Mail wahrscheinlich lesen, aber sein Problem nicht sofort erkennen. Zeige einen konkreten Beweis: Screenshot der mobilen Website, Konkurrenz-Vergleich, oder die Euro-Zahl des Umsatzverlusts.',
+            'Gespraech': 'Interesse ist da, aber die Huerde zum Termin ist hoch. Biete etwas Kostenloses an: "Darf ich Ihnen einen Entwurf zeigen?" senkt die Hemmschwelle.',
+            'Angebot': 'Gespraeche kommen zustande, aber der Entwurf muss ueberzeugen. Zeige ein Vorher/Nachher-Beispiel (z.B. Spedition Kolbe).',
+            'Abschluss': 'Der Lead findet das Angebot gut, aber zoegert beim Bezahlen. Staerke das ROI-Argument: "Die Website amortisiert sich in X Monaten."'
+        };
+        return explanations[bn.name] || '';
+    },
+
     explainScore(prob, domain) {
         const s = prob.leadScore;
         const cr = prob.conversionRate;
@@ -2332,58 +2346,58 @@ App.ui = {
         const hasPlaces = prob.dimensions?.d2?.posterior?.alpha > 2.5;
         const kelly = prob.kelly;
 
-        // ── Starker Lead (65-100) ──
+        // ── Starker Lead (55+) ──
         if (s >= 55) {
             let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong> `;
-            text += `Bei einer geschaetzten Conversion-Rate von ${cr}% und einem Auftragswert von ${prob.dealSize || 990} € `;
-            text += `liegt der erwartete Wert bei ${kelly?.expectedValue > 0 ? '+'+kelly.expectedValue : kelly?.expectedValue} €. `;
-            if (kelly?.roiPerHour > 60) text += `Mit ${kelly.roiPerHour} €/h ist das deutlich ueber deinen Opportunitaetskosten. `;
-            if (bn) text += `Achte auf die Stufe "${bn.name}" (${bn.mean}%) — das ist der Engpass. `;
-            text += `Kelly empfiehlt max. ${kelly?.optimalHours || '?'}h Zeitinvestment.`;
-            return text;
-        }
+            text += `Unser Modell hat 2.000 Szenarien simuliert: In ${cr}% davon wird aus diesem Lead ein zahlender Kunde. `;
+            text += `Das klingt wenig, aber bei Kaltakquise ist 3-5% eine sehr gute Quote. `;
+            text += `Bei einem Auftragswert von ${prob.dealSize || 990} € `;
+            if (kelly?.expectedValue > 0) text += `verdienst du im Schnitt ${kelly.expectedValue} € pro Versuch. `;
+            else text += `ist der reine Zeitaufwand von ~${prob.timePerLead || 2}h das Risiko wert. `;
 
-        // ── Mittlerer Lead (35-64) ──
-        if (s >= 30) {
-            let text = `<strong style="color:var(--orange)">Potenzial vorhanden, aber nicht sicher.</strong> `;
-            text += `Die Conversion-Rate liegt bei ${cr}%. `;
-            if (!hasPlaces) text += `Es wurden keine Google-Business-Daten gefunden — das Modell arbeitet mit wenig Information (${comp}% Datenvollstaendigkeit). `;
-            if (bn && bn.mean < 30) text += `Der Engpass ist "${bn.name}" mit nur ${bn.mean}% Durchlassrate. `;
-            if (kelly?.expectedValue > 0) {
-                text += `Der erwartete Wert ist trotzdem positiv (+${kelly.expectedValue} €) — ein Quick-Pitch mit max. ${kelly?.optimalHours || 2}h lohnt sich.`;
-            } else {
-                text += `Der erwartete Wert ist knapp. Nur kontaktieren wenn du gerade wenig andere Leads hast.`;
+            if (bn) {
+                text += `<br><br><strong>Wo du aufpassen musst:</strong> Die groesste Huerde ist "${bn.name}" (${bn.mean}% Erfolgsrate). `;
+                text += this.bottleneckExplain(bn);
             }
+            if (kelly?.optimalHours) text += `<br><br>Investiere maximal ${kelly.optimalHours} Stunden in diesen Lead.`;
             return text;
         }
 
-        // ── Schwacher Lead (0-34) ──
+        // ── Mittlerer Lead (30-54) ──
+        if (s >= 30) {
+            let text = `<strong style="color:var(--orange)">Vielversprechend, aber mit Vorsicht.</strong> `;
+            text += `Die Erfolgschance liegt bei ${cr}%. Das bedeutet: Von 100 solcher Leads werden etwa ${Math.round(parseFloat(cr))} zu Kunden. `;
+
+            if (!hasPlaces) text += `Wir konnten keine Google-Bewertungen finden — deshalb fehlen uns wichtige Informationen ueber dieses Unternehmen (nur ${comp}% der Daten verfuegbar). Der Score koennte hoeher sein. `;
+
+            if (bn) {
+                text += `<br><br><strong>Die groesste Huerde:</strong> "${bn.name}" (${bn.mean}%). `;
+                text += this.bottleneckExplain(bn);
+            }
+
+            text += `<br><br><strong>Empfehlung:</strong> `;
+            if (kelly?.expectedValue > 0) text += `Ein kurzer Pitch (max. ${kelly?.optimalHours || 1}h) lohnt sich — der erwartete Gewinn ist +${kelly.expectedValue} €.`;
+            else text += `Nur kontaktieren wenn du gerade wenig staerkere Leads hast. Halte den Zeitaufwand unter 1 Stunde.`;
+            return text;
+        }
+
+        // ── Schwacher Lead (0-29) ──
         let text = `<strong style="color:var(--red)">Diesen Lead ueberspringen.</strong> `;
+        text += `Die Erfolgschance liegt bei nur ${cr}%. Das bedeutet: Du muessstest ${cr > 0 ? Math.round(100/parseFloat(cr)) : 'sehr viele'} solcher Leads kontaktieren um einen einzigen Kunden zu gewinnen. Das ist deine Zeit nicht wert. `;
 
-        // Gruende sammeln
+        // Gruende in Klartext
+        text += `<br><br><strong>Warum der Score so niedrig ist:</strong><br>`;
         const reasons = [];
-        if (!hasPlaces) reasons.push('keine Google-Business-Daten gefunden (kein lokales Unternehmen oder kein Eintrag)');
-        if (comp < 50) reasons.push(`nur ${comp}% Datenvollstaendigkeit — zu wenig Signale fuer eine zuverlaessige Bewertung`);
+        if (!hasPlaces) reasons.push('Wir haben keine Google-Bewertungen gefunden — entweder ist das Unternehmen nicht lokal, nicht aktiv, oder hat keinen Google-Eintrag.');
+        if (comp < 50) reasons.push(`Uns fehlen zu viele Daten (nur ${comp}% verfuegbar). Ohne Bewertungen, Branche und Konkurrenz-Daten ist eine zuverlaessige Einschaetzung nicht moeglich.`);
 
-        // Website zu gut?
         const perfStage = prob.stages?.find(st => st.name === 'Interesse');
-        if (perfStage && perfStage.mean < 25) reasons.push('die Website hat kaum sichtbare Probleme — der Lead wuerde sein Problem nicht erkennen');
+        if (perfStage && perfStage.mean < 25) reasons.push('Die Website ist bereits in einem akzeptablen Zustand — der Inhaber wuerde nicht verstehen warum er wechseln sollte.');
+        if (bn && bn.name === 'Abschluss' && bn.mean < 25) reasons.push('Selbst wenn Interesse besteht: Das Budget fuer eine neue Website passt wahrscheinlich nicht.');
+        if (bn && bn.name === 'Oeffnung' && bn.mean < 20) reasons.push('In dieser Branche werden Kaltakquise-E-Mails fast nie geoeffnet. Ein anderer Kanal (Anruf, persoenlicher Besuch) koennte besser funktionieren.');
 
-        // Zu gross/klein?
-        if (bn && bn.name === 'Abschluss' && bn.mean < 25) reasons.push('das Budget passt wahrscheinlich nicht zum Karriaro-Angebot');
-        if (bn && bn.name === 'Oeffnung' && bn.mean < 20) reasons.push('Cold-E-Mails werden in dieser Branche selten geoeffnet');
-
-        if (reasons.length > 0) {
-            text += `Gruende: ${reasons.join('; ')}. `;
-        }
-
-        text += `Bei ${cr}% Conversion-Rate muesste man ~${cr > 0 ? Math.round(100/parseFloat(cr)) : '∞'} solcher Leads kontaktieren fuer einen Abschluss. `;
-
-        if (kelly?.expectedValue !== undefined && kelly.expectedValue <= 0) {
-            text += `Der erwartete Wert ist ${kelly.expectedValue} € — du verlierst statistisch Geld (Zeitkosten > erwarteter Ertrag).`;
-        } else {
-            text += `Deine Zeit ist besser in Leads mit Score 50+ investiert.`;
-        }
+        if (reasons.length > 0) text += reasons.map(r => `• ${r}`).join('<br>');
+        else text += `• Die Kombination aus wenig Daten und moderater Website ergibt eine zu niedrige Erfolgswahrscheinlichkeit.`;
 
         return text;
     },
