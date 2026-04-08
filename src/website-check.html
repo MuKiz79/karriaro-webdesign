@@ -2395,8 +2395,8 @@ App.ui = {
             // Sammle die konkreten Gruende WARUM dieser Lead stark ist
             const reasons = [];
             if (ws) {
-                if (ws.perf < 40) reasons.push(`Die Website ist langsam (Performance ${ws.perf}/100) — das spuert jeder Besucher und ist ein starkes Verkaufsargument`);
-                else if (ws.perf < 65) reasons.push(`Die Website-Performance ist unterdurchschnittlich (${ws.perf}/100) — Besucher springen ab`);
+                if (ws.perf < 30) reasons.push(`Google bewertet die Website-Geschwindigkeit mit nur ${ws.perf}/100 — das fuehrt zu schlechterem Ranking in den Suchergebnissen`);
+                else if (ws.perf < 65) reasons.push(`Googles Performance-Score liegt bei ${ws.perf}/100 — die Seite funktioniert im Alltag, wird aber von Google im Ranking benachteiligt gegenueber schnelleren Konkurrenten`);
                 if (!ws.isHttps) reasons.push(`Die Website hat kein SSL-Zertifikat — der Browser zeigt "Nicht sicher" an. Das schreckt Kunden sofort ab`);
                 if (ws.seo < 60) reasons.push(`Der SEO-Score ist niedrig (${ws.seo}/100) — die Website wird bei Google kaum gefunden`);
                 if (ws.a11y < 60) reasons.push(`Die Barrierefreiheit ist mangelhaft (${ws.a11y}/100) — seit Juni 2025 gesetzlich vorgeschrieben (BFSG)`);
@@ -2436,10 +2436,10 @@ App.ui = {
             // Konkrete Gruende
             const pros = [], cons = [];
             if (ws) {
-                if (ws.perf < 50) pros.push(`Die Website ist langsam (${ws.perf}/100)`);
+                if (ws.perf < 50) pros.push(`Google bewertet die Geschwindigkeit mit nur ${ws.perf}/100 — Ranking-Nachteil`);
                 if (!ws.isHttps) pros.push('Kein SSL — Browser zeigt "Nicht sicher"');
                 if (ws.seo < 65) pros.push(`SEO ist schwach (${ws.seo}/100)`);
-                if (ws.perf >= 65) cons.push(`Die Website ist schon passabel (${ws.perf}/100) — schwerer zu argumentieren`);
+                if (ws.perf >= 65) cons.push(`Googles Performance-Score ist akzeptabel (${ws.perf}/100) — schwerer zu argumentieren`);
             }
             if (tech?.isBaukasten) pros.push(`Laeuft auf ${tech.cms} (Baukasten)`);
             if (!hasPlaces) cons.push(`Keine Google-Business-Daten gefunden (nur ${comp}% Datenvollstaendigkeit)`);
