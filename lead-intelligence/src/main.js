@@ -253,4 +253,4 @@ function showReminders() {
 }
 
 // Export for use in orchestration modules
-export { abort, selectVariant, checkDrift };
+export { abort };

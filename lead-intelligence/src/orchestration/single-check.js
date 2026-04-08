@@ -102,8 +102,9 @@ export async function runSingleCheck() {
         document.getElementById('btn-analyze').disabled = false;
 
         // Fix 4: A/B-Test Variante wählen
-        const { selectVariant, checkDrift } = await import('../main.js');
-        const abTest = selectVariant();
+        const { selectVariant: sv } = await import('../learning/ab-test.js');
+        const { checkDrift: cd } = await import('../learning/tracking.js');
+        const abTest = sv();
 
         // ── 10 innovative Analyse-Module (parallel wo möglich) ──
         // ── Firmen-Profil (Branche, GF, Enterprise-Check) ──
@@ -120,7 +121,7 @@ export async function runSingleCheck() {
         const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
 
         // Fix 5: Score-Drift prüfen
-        const drift = checkDrift(new URL(url).hostname.replace('www.', ''), result.leadScore);
+        const drift = cd(new URL(url).hostname.replace('www.', ''), result.leadScore);
 
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
