@@ -28,6 +28,9 @@ import { assessLocalSEO } from '../analysis/local-seo.js';
 import { assessEmotionalReadiness } from '../analysis/emotional-readiness.js';
 import { calculateRevenueWeighted } from '../scoring/revenue-weighted.js';
 import { analyzeCompanyProfile } from '../analysis/company-profile.js';
+import { selectVariant as sv } from '../learning/ab-test.js';
+import { checkDrift as cd } from '../learning/tracking.js';
+import { saveLead } from '../crm/leads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 
@@ -102,8 +105,6 @@ export async function runSingleCheck() {
         document.getElementById('btn-analyze').disabled = false;
 
         // Fix 4: A/B-Test Variante wählen
-        const { selectVariant: sv } = await import('../learning/ab-test.js');
-        const { checkDrift: cd } = await import('../learning/tracking.js');
         const abTest = sv();
 
         // ── 10 innovative Analyse-Module (parallel wo möglich) ──
@@ -486,7 +487,7 @@ function renderResult(data) {
         </div>
     `;
     document.getElementById('btn-save-crm')?.addEventListener('click', async function() {
-        const { saveLead } = await import('../crm/leads.js');
+        // saveLead importiert statisch oben
         await saveLead(domain, data.url, {
             name: data.place?.displayName?.text || domain,
             type: data.place?.primaryTypeDisplayName?.text || '',

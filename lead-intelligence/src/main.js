@@ -7,8 +7,10 @@ import { config, loadConfig, saveConfig } from './config.js';
 import { state } from './state.js';
 import { loadCloudSettings, saveCloudSettings } from './crm/settings.js';
 import { checkReminders } from './crm/reminders.js';
-import { selectVariant } from './learning/ab-test.js';
-import { checkDrift } from './learning/tracking.js';
+import { runSingleCheck } from './orchestration/single-check.js';
+import { runBatchSearch } from './orchestration/batch-search.js';
+import { runScanner } from './orchestration/scanner.js';
+import { renderCRM } from './ui/render-crm.js';
 
 // ── Config laden ──
 loadConfig();
@@ -55,19 +57,19 @@ function initTabs() {
 function initButtons() {
     // Analyze
     document.getElementById('btn-analyze')?.addEventListener('click', async () => {
-        const { runSingleCheck } = await import('./orchestration/single-check.js');
+        
         runSingleCheck();
     });
 
     // Batch
     document.getElementById('btn-batch')?.addEventListener('click', async () => {
-        const { runBatchSearch } = await import('./orchestration/batch-search.js');
+        
         runBatchSearch();
     });
 
     // Scanner
     document.getElementById('btn-scanner')?.addEventListener('click', async () => {
-        const { runScanner } = await import('./orchestration/scanner.js');
+        
         runScanner();
     });
 
@@ -78,13 +80,13 @@ function initButtons() {
     // Enter keys
     document.getElementById('url-input')?.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter') {
-            const { runSingleCheck } = await import('./orchestration/single-check.js');
+            
             runSingleCheck();
         }
     });
     document.getElementById('batch-query')?.addEventListener('keydown', async (e) => {
         if (e.key === 'Enter') {
-            const { runBatchSearch } = await import('./orchestration/batch-search.js');
+            
             runBatchSearch();
         }
     });
@@ -193,7 +195,7 @@ function toggleSettings() {
 
 // ── CRM ──
 async function showCRM() {
-    const { renderCRM } = await import('./ui/render-crm.js');
+    
     renderCRM();
 }
 
