@@ -96,6 +96,9 @@ export async function runSingleCheck() {
                 sensitivity: [], seasonFactor: 100, timePerLead: 2 };
         }
 
+        // Firmen-Profil ZUERST (wird in Phase 5 referenziert)
+        const companyProfile = analyzeCompanyProfile(url, psiData, place, null);
+
         // Phase 5: KI-Analyse (parallel, alle mit try/catch)
         showLoading('KI-Analyse...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
@@ -124,10 +127,7 @@ export async function runSingleCheck() {
         // Fix 4: A/B-Test Variante wählen
         const abTest = sv();
 
-        // ── 10 innovative Analyse-Module (parallel wo möglich) ──
-        // ── Firmen-Profil (Branche, GF, Enterprise-Check) ──
-        const companyProfile = analyzeCompanyProfile(url, psiData, place, contentAnalysis);
-
+        // ── 10 innovative Analyse-Module ──
         const wayback = await checkFreshness(url).catch(() => null);
         const surgeIntent = detectSurgeIntent(footprint, null, null, place);
         const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
