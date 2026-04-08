@@ -270,7 +270,7 @@ function renderResult(data) {
         }
 
         // Setze VOR das statische UX-Audit
-        uxEl.innerHTML = bsHtml + uxEl.innerHTML;
+        uxEl2.innerHTML = bsHtml + uxEl2.innerHTML;
     }
 
     // ── Branchen-UX-Audit (statisch als Fallback) ──
