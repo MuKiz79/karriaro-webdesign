@@ -437,7 +437,51 @@ App.api = {
         return res.json();
     },
     delay(ms) { return new Promise((r, rej) => { const t = setTimeout(r, ms); if (App.state.aborted) { clearTimeout(t); rej('aborted'); } }); },
-    checkAbort() { if (App.state.aborted) throw new Error('aborted'); }
+    checkAbort() { if (App.state.aborted) throw new Error('aborted'); },
+
+    // ── Cloud Function Aufrufe fuer A1, A2, A4, B6, D15, D16 ──
+    async analyzeContent(url) {
+        if (!App.config.fnUrl) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/analyzeContent`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ url }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    },
+    async analyzeScreenshot(base64) {
+        if (!App.config.fnUrl || !base64) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/analyzeScreenshot`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ screenshotBase64: base64 }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    },
+    async analyzeReviews(query) {
+        if (!App.config.fnUrl) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/analyzeReviews`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ placeQuery: query }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    },
+    async getDomainAge(domain) {
+        if (!App.config.fnUrl) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/domainAge`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ domain }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    },
+    async getDomainAuthority(domain) {
+        if (!App.config.fnUrl) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/domainAuthority`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ domain }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    },
+    async getSearchVolume(query) {
+        if (!App.config.fnUrl) return null;
+        try {
+            const r = await fetch(`${App.config.fnUrl}/searchVolume`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ query }) });
+            return r.ok ? await r.json() : null;
+        } catch(e) { return null; }
+    }
 };
 
 // ══════════════════════════════════════
@@ -2800,6 +2844,78 @@ App.ui = {
             }
         }
 
+        // ── KI-Analyse + Enrichment (Cloud Functions) ──
+        const hasCloud = extra.contentAnalysis || extra.screenshotAnalysis || extra.reviewSentiment || extra.domainAge || extra.domainAuthority || extra.searchVolume;
+        if (hasCloud) {
+            html += `<div class="section-title">KI-Analyse &amp; Enrichment</div>`;
+
+            // A1: LLM Content-Analyse
+            if (extra.contentAnalysis && !extra.contentAnalysis.error) {
+                const ca = extra.contentAnalysis;
+                const tonColor = ca.tonality === 'premium' ? 'var(--green)' : ca.tonality === 'discount' ? 'var(--red)' : 'var(--muted)';
+                const freshColor = ca.freshness === 'aktuell' ? 'var(--green)' : ca.freshness === 'veraltet' ? 'var(--red)' : 'var(--muted)';
+                html += `<div class="card" style="margin-bottom:12px">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">KI Content-Analyse (Claude)</div>
+                    <div class="biz-stat"><span class="biz-label">Tonalitaet</span><span class="biz-value" style="color:${tonColor}">${ca.tonality || '—'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Aktualitaet</span><span class="biz-value" style="color:${freshColor}">${ca.freshness || '—'}${ca.copyrightYear ? ' (©'+ca.copyrightYear+')' : ''}</span></div>
+                    <div class="biz-stat"><span class="biz-label">USP vorhanden</span><span class="biz-value">${ca.hasUSP ? 'Ja' + (ca.uspText ? ': '+ca.uspText : '') : 'Nein'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Call-to-Action</span><span class="biz-value">${ca.hasCTA ? 'Ja' : 'Fehlt'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Sprachqualitaet</span><span class="biz-value">${ca.languageQuality || '—'}</span></div>
+                    ${ca.summary ? `<div style="font-size:12px;color:var(--muted);margin-top:8px;font-style:italic">"${ca.summary}"</div>` : ''}
+                </div>`;
+            }
+
+            // A2: Screenshot-Analyse
+            if (extra.screenshotAnalysis && !extra.screenshotAnalysis.error) {
+                const sa = extra.screenshotAnalysis;
+                const dqColor = (sa.designQuality||0) >= 7 ? 'var(--green)' : (sa.designQuality||0) >= 4 ? 'var(--orange)' : 'var(--red)';
+                html += `<div class="card" style="margin-bottom:12px">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">KI Design-Bewertung (Claude Vision)</div>
+                    <div class="biz-stat"><span class="biz-label">Design-Qualitaet</span><span class="biz-value" style="color:${dqColor}">${sa.designQuality || '—'}/10</span></div>
+                    <div class="biz-stat"><span class="biz-label">Modernes Design</span><span class="biz-value">${sa.isModern ? 'Ja' : 'Nein'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Design-Aera</span><span class="biz-value">${sa.designEra || '—'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Stock-Fotos</span><span class="biz-value">${sa.hasStockPhotos ? 'Ja — unpersoenlich' : 'Nein — eigene Bilder'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Typografie</span><span class="biz-value">${sa.typography || '—'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Weissraum</span><span class="biz-value">${sa.whitespace || '—'}</span></div>
+                    ${sa.overallImpression ? `<div style="font-size:12px;color:var(--muted);margin-top:8px;font-style:italic">"${sa.overallImpression}"</div>` : ''}
+                </div>`;
+            }
+
+            // A4: Review-Sentiment
+            if (extra.reviewSentiment && !extra.reviewSentiment.error) {
+                const rs = extra.reviewSentiment;
+                const sentColor = rs.sentiment === 'positiv' ? 'var(--green)' : rs.sentiment === 'negativ' ? 'var(--red)' : 'var(--muted)';
+                html += `<div class="card" style="margin-bottom:12px">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Review-Sentiment (Claude)</div>
+                    <div class="biz-stat"><span class="biz-label">Stimmung</span><span class="biz-value" style="color:${sentColor}">${rs.sentiment || '—'}</span></div>
+                    <div class="biz-stat"><span class="biz-label">Zufriedenheit</span><span class="biz-value">${rs.overallSatisfaction || '—'}/10</span></div>
+                    <div class="biz-stat"><span class="biz-label">Website-Beschwerden</span><span class="biz-value" style="color:${(rs.websiteComplaints||0) > 0 ? 'var(--red)' : 'var(--green)'}">${rs.websiteComplaints || 0}</span></div>
+                    ${rs.websiteIssues?.length > 0 ? `<div style="font-size:12px;color:var(--red);margin-top:4px">Kunden beschweren sich ueber: ${rs.websiteIssues.join(', ')}</div>` : ''}
+                    ${rs.summary ? `<div style="font-size:12px;color:var(--muted);margin-top:8px;font-style:italic">"${rs.summary}"</div>` : ''}
+                </div>`;
+            }
+
+            // D15 + D16 + B6: Enrichment-Daten als Grid
+            const hasEnrichment = extra.domainAge || extra.domainAuthority || extra.searchVolume;
+            if (hasEnrichment) {
+                html += `<div class="scores-grid">`;
+                if (extra.domainAge && extra.domainAge.age) {
+                    const da = extra.domainAge;
+                    const ageColor = da.age > 10 ? 'var(--green)' : da.age > 3 ? 'var(--muted)' : 'var(--orange)';
+                    html += `<div class="score-card"><div class="label">Domain-Alter</div><div class="value" style="font-size:1.5rem;color:${ageColor}">${da.age} Jahre</div><div class="detail">Registriert: ${da.registrationDate || '—'}</div></div>`;
+                }
+                if (extra.domainAuthority && extra.domainAuthority.pageRank !== null) {
+                    const dau = extra.domainAuthority;
+                    html += `<div class="score-card"><div class="label">Domain Authority</div><div class="value" style="font-size:1.5rem">${dau.pageRank || '—'}</div><div class="detail">OpenPageRank · Globaler Rang: ${dau.rank ? '#'+dau.rank : '—'}</div></div>`;
+                }
+                if (extra.searchVolume && extra.searchVolume.suggestions > 0) {
+                    const sv = extra.searchVolume;
+                    html += `<div class="score-card"><div class="label">Suchvolumen</div><div class="value" style="font-size:1.5rem;color:${sv.hasVolume ? 'var(--green)' : 'var(--muted)'}">${sv.hasVolume ? 'Hoch' : 'Niedrig'}</div><div class="detail">${sv.suggestions} Google-Vorschlaege fuer "${sv.query || ''}"</div></div>`;
+                }
+                html += `</div>`;
+            }
+        }
+
         // ── Umsatzverlust (Modul 1) ──
         if (extra.revenue && extra.revenue.yearlyRevenueLoss > 0) {
             const r = extra.revenue;
@@ -3110,13 +3226,26 @@ App.single = {
         const reminders = App.reminders.check();
         const drift = App.drift.check(new URL(url).hostname.replace('www.', ''), prob.leadScore);
 
+        // Cloud Function Aufrufe (A1, A2, A4, B6, D15, D16) — parallel
+        App.ui.showLoading('KI-Analyse und Enrichment...');
+        const domain = new URL(url).hostname.replace('www.', '');
+        const [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume] = await Promise.all([
+            App.api.analyzeContent(url),
+            App.api.analyzeScreenshot(screenshot),
+            App.api.analyzeReviews(domain),
+            App.api.getDomainAge(domain),
+            App.api.getDomainAuthority(domain),
+            App.api.getSearchVolume(`${biz.place?.primaryTypeDisplayName?.text || ''} ${biz.place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain)
+        ]);
+
         App.ui.hideLoading();
         $('check-btn').disabled = false;
         // Zwischenspeichern fuer CRM-Save-Button
         App._lastWs = ws; App._lastTech = tech; App._lastProb = prob;
         App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence, digitalFootprint,
             thermoEntropy, activationEnergy, r0, shannonEntropy, graphCentrality, kahnemanProfile,
-            googleAds, pricePosition, marketSat, geoCluster, jobSignal, entities, survival, infoGain, abTest, reminders, drift };
+            googleAds, pricePosition, marketSat, geoCluster, jobSignal, entities, survival, infoGain, abTest, reminders, drift,
+            contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume };
 
         App.ui.renderSingle(url, ws, tech, biz, prob, competitors, App._lastExtra);
     }
