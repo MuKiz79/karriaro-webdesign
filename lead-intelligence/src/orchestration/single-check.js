@@ -18,6 +18,15 @@ import { calculateKahneman } from '../analysis/kahneman.js';
 import { auditUX } from '../analysis/ux-audit.js';
 import { analyzeFutureReadiness } from '../analysis/future-readiness.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
+import { checkFreshness } from '../analysis/wayback-freshness.js';
+import { detectSurgeIntent } from '../analysis/surge-intent.js';
+import { assessDigitalMaturity } from '../analysis/digital-maturity.js';
+import { assessConversationReadiness } from '../analysis/conversation-ready.js';
+import { detectStakeholder } from '../analysis/stakeholder.js';
+import { assessTechTrajectory } from '../analysis/tech-trajectory.js';
+import { assessLocalSEO } from '../analysis/local-seo.js';
+import { assessEmotionalReadiness } from '../analysis/emotional-readiness.js';
+import { calculateRevenueWeighted } from '../scoring/revenue-weighted.js';
 import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 
@@ -90,12 +99,24 @@ export async function runSingleCheck() {
         const { selectVariant, checkDrift } = await import('../main.js');
         const abTest = selectVariant();
 
+        // ── 10 innovative Analyse-Module (parallel wo möglich) ──
+        const wayback = await checkFreshness(url).catch(() => null);
+        const surgeIntent = detectSurgeIntent(footprint, null, null, place);
+        const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
+        const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
+        const stakeholder = detectStakeholder(psiData, place);
+        const techTrajectory = assessTechTrajectory(tech, wayback);
+        const localSEO = assessLocalSEO(ws, place, psiData);
+        const emotionalReady = assessEmotionalReadiness(reviewSentiment);
+        const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
+
         // Fix 5: Score-Drift prüfen
         const drift = checkDrift(new URL(url).hostname.replace('www.', ''), result.leadScore);
 
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
-            abTest, drift };
+            abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
+            techTrajectory, localSEO, emotionalReady, revenueWeighted };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
@@ -494,12 +515,40 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             emailArgs.push(`wir schätzen den jährlichen Verlust auf ~${rev.yearlyLoss.toLocaleString('de-DE')} €`);
         }
 
+        // ── Neue Module (1-10) als Argumente ──
+        if (data.wayback?.pitchArg) {
+            problems.push(data.wayback.pitchArg);
+            emailArgs.push(`die Website wurde seit ${data.wayback.yearsSince} Jahren nicht aktualisiert`);
+        }
+
+        if (data.emotionalReady?.paradox) {
+            problems.push(`<div style="background:rgba(255,69,58,0.05);padding:12px 16px;border-radius:8px;border-left:3px solid var(--red)"><strong>Kunden beschweren sich über die Website:</strong> ${data.emotionalReady.issues?.[0] ? '"' + data.emotionalReady.issues[0] + '"' : data.emotionalReady.complaints + ' Beschwerden in Google-Bewertungen'}. Gleichzeitig ist die Zufriedenheit bei ${data.emotionalReady.satisfaction}/10 — die Kunden lieben das Geschäft, aber nicht die Website.</div>`);
+            emailArgs.push('Ihre eigenen Kunden beschweren sich in den Bewertungen über die Website');
+        }
+
+        if (data.localSEO?.isParadoxLead) {
+            problems.push(data.localSEO.pitchArg);
+        }
+
+        if (data.surgeIntent?.hasSurge) {
+            problems.push(`<strong>Wachstumssignale erkannt:</strong> ${data.surgeIntent.signals.map(s => s.label).join(', ')}. ${data.surgeIntent.pitchArg}`);
+        }
+
+        if (data.techTrajectory?.urgency === 'critical') {
+            problems.push(data.techTrajectory.pitchArg);
+        }
+
         if (problems.length > 0) {
             text += problems.join('<br><br>');
         }
 
-        // ── Empfehlung ──
-        text += `<br><br><strong>Unsere Empfehlung:</strong> Investiere maximal ${r.kelly?.optimalHours || 2} Stunden in diesen Lead. `;
+        // ── Empfehlung (erweitert mit neuen Modulen) ──
+        text += `<br><br><strong>Unsere Empfehlung:</strong> `;
+        if (data.conversationReady?.isReady) {
+            text += `<strong style="color:var(--green)">${data.conversationReady.label}</strong> `;
+            if (data.conversationReady.topTrigger) text += `Grund: ${data.conversationReady.topTrigger.label}. `;
+        }
+        text += `Investiere maximal ${r.kelly?.optimalHours || 2} Stunden. `;
         if (r.channelResult?.best) {
             text += `Der beste Kontaktkanal ist <strong>${r.channelResult.best.name}</strong>. `;
         }
