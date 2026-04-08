@@ -825,12 +825,12 @@ App.probability = {
     // Fix 13: Multi-Channel
     // Fix 14: Multi-Touch
     // ══════════════════════════════════════
-    calculate(ws, tech, place, competitors) {
+    calculate(ws, tech, place, competitors, footprint) {
         const revenue = App.revenue ? App.revenue.calculate(ws, place) : null;
         const type = place?.primaryType || '_default';
         const branch = this.hierarchy.get(type);
 
-        const shifts = this.calcShifts(ws, tech, place, competitors, revenue);
+        const shifts = this.calcShifts(ws, tech, place, competitors, revenue, footprint);
 
         // Fix 6: Wissenschaftliche Module berechnen und in Shifts integrieren
         let sciBoost = 0;
@@ -996,7 +996,7 @@ App.probability = {
     },
 
     // Signal-Shifts fuer Hierarchical Pooling
-    calcShifts(ws, tech, place, competitors, revenue) {
+    calcShifts(ws, tech, place, competitors, revenue, footprint) {
         const s = { reach:[0,0], open:[0,0], interest:[0,0], convo:[0,0], close:[0,0] };
 
         // Erreichbarkeit
@@ -1038,6 +1038,21 @@ App.probability = {
         if (count > 100) s.close[0] += 2;  // Budget vorhanden
         else if (count > 30) s.close[0] += 1;
         else if (count < 5) s.close[1] += 1;
+
+        // Digital Footprint Shifts
+        if (footprint) {
+            // Instagram aktiv + schlechte Website = BESTER Lead (Marketing-bewusst aber Website schlecht)
+            if (footprint.hasInstagram && ws.perf < 60) s.interest[0] += 3;
+            // Facebook Pixel = hat Werbebudget
+            if (footprint.hasFbPixel) { s.close[0] += 2; s.interest[0] += 1; }
+            // Viele Plattformen = digital aktiv, versteht den Wert
+            if (footprint.platformCount >= 3) { s.interest[0] += 2; s.close[0] += 1; }
+            else if (footprint.platformCount >= 1) s.interest[0] += 1;
+            // Kein Social Media = weniger digital-affin, schwerer zu ueberzeugen
+            if (footprint.platformCount === 0) { s.open[1] += 1; s.interest[1] += 1; }
+            // Analytics aktiv = misst schon, versteht Daten
+            if (footprint.hasAnalytics) s.interest[0] += 1;
+        }
 
         return s;
     },
@@ -1348,6 +1363,108 @@ App.shannon = {
                    H <= 0.5 ? 'Niedrig — wenig einzigartiger Content' :
                    H <= 0.7 ? 'Mittel — teilweise individualisiert' :
                    'Hoch — bereits stark individualisierte Website'
+        };
+    }
+};
+
+// ── MODUL W7: Digital Footprint ──
+// Erkennt Social-Media-Praesenz aus PageSpeed Network Requests
+App.digitalFootprint = {
+    platforms: [
+        { key: 'facebook',  pattern: /facebook\.com\/(?!tr|sharer|dialog|plugins|flx)/i, name: 'Facebook',  icon: 'f', weight: 1.0 },
+        { key: 'instagram', pattern: /instagram\.com\/(?!embed|p\/)/i,                    name: 'Instagram', icon: 'i', weight: 1.5 },
+        { key: 'linkedin',  pattern: /linkedin\.com\/(?!sharing|cws)/i,                   name: 'LinkedIn',  icon: 'in', weight: 1.3 },
+        { key: 'tiktok',    pattern: /tiktok\.com\/@/i,                                   name: 'TikTok',    icon: 'tt', weight: 1.4 },
+        { key: 'youtube',   pattern: /youtube\.com\/(channel|c|@|user)/i,                 name: 'YouTube',   icon: 'yt', weight: 1.2 },
+        { key: 'pinterest', pattern: /pinterest\.(com|de)\/(?!pin\/create)/i,             name: 'Pinterest', icon: 'p', weight: 0.8 },
+        { key: 'xing',      pattern: /xing\.com\/(profile|companies)/i,                   name: 'XING',      icon: 'x', weight: 0.9 },
+        { key: 'twitter',   pattern: /twitter\.com\/(?!intent|share)|x\.com\/(?!intent)/i, name: 'X/Twitter', icon: 'x', weight: 0.7 },
+    ],
+
+    // Erkenne auch Social-Media Widgets/Pixel (zeigt aktive Nutzung, nicht nur Links)
+    pixels: [
+        { key: 'fb_pixel',     pattern: /connect\.facebook\.net|fbevents\.js|fbq\(/i,     name: 'Facebook Pixel', signal: 'Aktives Werbebudget auf Facebook' },
+        { key: 'ga',           pattern: /google-analytics\.com|gtag|googletagmanager/i,    name: 'Google Analytics', signal: 'Tracking aktiv — misst Website-Besucher' },
+        { key: 'hotjar',       pattern: /hotjar\.com|static\.hotjar/i,                     name: 'Hotjar',           signal: 'UX-Analyse aktiv — investiert in Optimierung' },
+        { key: 'mailchimp',    pattern: /mailchimp\.com|list-manage\.com|chimpstatic/i,    name: 'Mailchimp',        signal: 'E-Mail-Marketing aktiv' },
+        { key: 'hubspot',      pattern: /hubspot\.com|hs-scripts|hbspt/i,                 name: 'HubSpot',          signal: 'CRM/Marketing-Automation' },
+        { key: 'cookiebot',    pattern: /cookiebot\.com|consent\.cookiebot/i,              name: 'Cookiebot',        signal: 'DSGVO-bewusst' },
+    ],
+
+    analyze(psiData) {
+        const lh = psiData?.lighthouseResult || {};
+        const netItems = lh.audits?.['network-requests']?.details?.items || [];
+        const allUrls = netItems.map(i => i.url || '');
+
+        // Plattformen erkennen
+        const found = [];
+        const profileUrls = {};
+        for (const plat of this.platforms) {
+            for (const url of allUrls) {
+                if (plat.pattern.test(url)) {
+                    if (!found.find(f => f.key === plat.key)) {
+                        found.push(plat);
+                        // Versuche Profil-URL zu extrahieren
+                        const match = url.match(new RegExp(`(https?://(?:www\\.)?${plat.key === 'twitter' ? '(?:twitter|x)' : plat.name.toLowerCase()}\\.com/[^?"#\\s]+)`, 'i'));
+                        if (match) profileUrls[plat.key] = match[1];
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Pixel/Widgets erkennen
+        const activePixels = [];
+        const urlJoined = allUrls.join(' ');
+        for (const px of this.pixels) {
+            if (px.pattern.test(urlJoined)) activePixels.push(px);
+        }
+
+        // Scoring
+        const platformCount = found.length;
+        const totalWeight = found.reduce((s, p) => s + p.weight, 0);
+        const hasInstagram = found.some(f => f.key === 'instagram');
+        const hasLinkedIn = found.some(f => f.key === 'linkedin');
+        const hasFbPixel = activePixels.some(p => p.key === 'fb_pixel');
+        const hasAnalytics = activePixels.some(p => p.key === 'ga');
+
+        // Digital Maturity Score (0-1)
+        // Mehr Plattformen + aktive Pixel = hoeheres Marketing-Bewusstsein
+        const maturity = Math.min(1, (
+            Math.min(1, platformCount / 4) * 0.40 +         // Max 4 Plattformen = voll
+            (hasFbPixel ? 0.20 : 0) +                        // Facebook Pixel = Werbebudget
+            (hasAnalytics ? 0.10 : 0) +                       // Analytics = misst Traffic
+            (hasInstagram ? 0.15 : 0) +                       // Instagram = visuell bewusst
+            (activePixels.length > 2 ? 0.15 : activePixels.length > 0 ? 0.08 : 0)
+        ));
+
+        // Lead-Signal Interpretation
+        let insight, leadImpact;
+        if (maturity > 0.6) {
+            insight = 'Hohe digitale Reife — investiert bereits in Online-Marketing';
+            leadImpact = 'positiv';  // Versteht den Wert, hat Budget
+        } else if (maturity > 0.3) {
+            insight = 'Mittlere digitale Praesenz — nutzt Social Media, aber Website hinkt hinterher';
+            leadImpact = 'sehr_positiv';  // BESTER Lead: Marketing-Bewusstsein + schlechte Website
+        } else {
+            insight = 'Geringe digitale Praesenz — wenig Online-Marketing-Aktivitaet';
+            leadImpact = 'neutral';  // Schwerer zu ueberzeugen
+        }
+
+        // Kanal-Empfehlung basierend auf Social-Media-Praesenz
+        let recommendedChannel = 'email';
+        if (hasLinkedIn) recommendedChannel = 'linkedin';
+        else if (hasInstagram && !hasLinkedIn) recommendedChannel = 'instagram';
+
+        return {
+            platforms: found.map(f => ({ ...f, profileUrl: profileUrls[f.key] || null })),
+            pixels: activePixels,
+            platformCount,
+            maturity: Math.round(maturity * 100) / 100,
+            hasInstagram, hasLinkedIn, hasFbPixel, hasAnalytics,
+            insight, leadImpact,
+            recommendedChannel,
+            label: maturity > 0.6 ? 'Digital reif' : maturity > 0.3 ? 'Digital aktiv' : 'Digital minimal'
         };
     }
 };
@@ -2073,6 +2190,31 @@ App.ui = {
 
             html += `</div>`;  // End scores-grid
 
+            // Digital Footprint
+            if (extra.digitalFootprint) {
+                const df = extra.digitalFootprint;
+                const dfColor = df.leadImpact === 'sehr_positiv' ? 'var(--green)' : df.leadImpact === 'positiv' ? 'var(--accent)' : 'var(--muted)';
+                html += `<div class="card" style="margin-bottom:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                        <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted)">Digital Footprint</div>
+                        <div style="font-size:1.2rem;font-weight:700">${df.label} <span style="font-size:13px;font-weight:400;color:var(--muted)">(Maturity: ${df.maturity})</span></div></div>
+                        <div style="font-size:12px;color:${dfColor};text-align:right;font-weight:600">${df.insight}</div>
+                    </div>`;
+                if (df.platforms.length > 0) {
+                    html += `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">`;
+                    for (const p of df.platforms) {
+                        html += `<span class="tech-badge modern" style="font-size:11px">${p.name}</span>`;
+                    }
+                    html += `</div>`;
+                } else {
+                    html += `<div style="font-size:12px;color:var(--muted)">Keine Social-Media-Praesenz erkannt</div>`;
+                }
+                if (df.pixels.length > 0) {
+                    html += `<div style="margin-top:8px;font-size:12px;color:var(--muted)">Aktive Pixel: ${df.pixels.map(p => `<span title="${p.signal}">${p.name}</span>`).join(' · ')}</div>`;
+                }
+                html += `</div>`;
+            }
+
             // Graphentheorie
             if (extra.graphCentrality) {
                 const gc = extra.graphCentrality;
@@ -2392,8 +2534,11 @@ App.single = {
             } catch (e) { /* Competitors optional */ }
         }
 
+        // Digital Footprint VOR Probability (fuer Funnel-Shifts)
+        const digitalFootprint = App.digitalFootprint.analyze(psiData);
+
         // Alle Engines berechnen
-        prob = App.probability.calculate(ws, tech, biz.place, competitors);
+        prob = App.probability.calculate(ws, tech, biz.place, competitors, digitalFootprint);
         const revenue = App.revenue.calculate(ws, biz.place);
         const screenshot = App.screenshot.extract(psiData);
         const googleReport = App.googleReport.generate(ws, tech, competitors);
@@ -2409,6 +2554,7 @@ App.single = {
         const activationEnergy = App.activation.calculate(ws, tech, biz.place, competitors, revenue);
         const r0 = App.epidemic.calculate(biz.place, competitors);
         const shannonEntropy = App.shannon.calculate(psiData, tech);
+        // digitalFootprint bereits oben berechnet (vor prob)
         const graphCentrality = App.graph.calculate(biz.place, competitors);
         const kahnemanProfile = App.kahneman.calculate(ws, tech, biz.place, revenue, activationEnergy);
 
@@ -2416,7 +2562,7 @@ App.single = {
         $('check-btn').disabled = false;
         // Zwischenspeichern fuer CRM-Save-Button
         App._lastWs = ws; App._lastTech = tech; App._lastProb = prob;
-        App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence,
+        App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence, digitalFootprint,
             thermoEntropy, activationEnergy, r0, shannonEntropy, graphCentrality, kahnemanProfile };
 
         App.ui.renderSingle(url, ws, tech, biz, prob, competitors, App._lastExtra);
