@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Intelligence | Karriaro Webdesign</title>
+    <meta name="description" content="KI-gestützte Lead-Analyse: Bayesianischer Funnel, Monte-Carlo-Simulation, Branchen-UX-Audit. Finde die Leads die wirklich konvertieren.">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
+    <link rel="stylesheet" href="app.css">
+
+    <!-- Firebase SDK (extern, nicht gebundelt) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+
+        // Firebase Config
+        const fbApp = initializeApp({
+            apiKey: "AIzaSyBZ970mA7-2pJzhbxyFjjmzO97YKZhrSmU",
+            authDomain: "apex-executive.firebaseapp.com",
+            projectId: "apex-executive",
+            storageBucket: "apex-executive.appspot.com",
+            messagingSenderId: "525553082138",
+            appId: "1:525553082138:web:84d1437b2e150f5fb316a3"
+        });
+
+        // Expose to app.js
+        window.__firebase = {
+            auth: getAuth(fbApp),
+            db: getFirestore(fbApp),
+            fns: { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+        };
+    </script>
+</head>
+<body>
+
+    <!-- ═══ NAV ═══ -->
+    <nav id="nav">
+        <a class="nav-logo" href="/">Karriaro Webdesign</a>
+        <div class="nav-right">
+            <button class="nav-btn" data-action="settings">Einstellungen</button>
+            <button class="nav-btn" data-action="crm">CRM</button>
+            <button class="nav-btn nav-auth" id="auth-btn" data-action="auth">Anmelden</button>
+        </div>
+    </nav>
+
+    <!-- ═══ SETTINGS ═══ -->
+    <div id="settings-panel" class="panel hidden"></div>
+
+    <!-- ═══ HERO ═══ -->
+    <section id="hero" class="hero">
+        <h1>Lead Intelligence</h1>
+        <p class="hero-sub">Bayesianische Funnel-Analyse, Monte-Carlo-Simulation und KI — in einem Check.</p>
+
+        <div class="tabs" id="tabs">
+            <button class="tab active" data-tab="single">Einzel-Check</button>
+            <button class="tab" data-tab="batch">Batch-Suche</button>
+            <button class="tab" data-tab="scanner">Branchen-Scanner</button>
+        </div>
+
+        <!-- Single -->
+        <div class="input-area" id="input-single">
+            <div class="input-row">
+                <input type="url" id="url-input" placeholder="https://www.beispiel.de" autocomplete="url">
+                <button class="btn-primary" id="btn-analyze">Analysieren</button>
+            </div>
+        </div>
+
+        <!-- Batch -->
+        <div class="input-area hidden" id="input-batch">
+            <div class="input-row">
+                <input type="text" id="batch-query" placeholder="Branche + Stadt, z.B. Friseur Hamburg">
+            </div>
+            <div class="input-row">
+                <select id="batch-max">
+                    <option value="5">5 Ergebnisse</option>
+                    <option value="10" selected>10 Ergebnisse</option>
+                    <option value="20">20 Ergebnisse</option>
+                </select>
+                <button class="btn-primary" id="btn-batch">Leads finden</button>
+            </div>
+        </div>
+
+        <!-- Scanner -->
+        <div class="input-area hidden" id="input-scanner">
+            <p class="input-hint">Welche Branche hat das grösste Potenzial? Testet automatisch alle Branchen.</p>
+            <div class="input-row">
+                <input type="text" id="scanner-city" placeholder="Stadt, z.B. Köln">
+                <button class="btn-primary" id="btn-scanner">Branchen scannen</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ LOADING ═══ -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p id="loading-text">Wird analysiert...</p>
+        <button class="btn-abort" id="btn-abort">Abbrechen</button>
+    </div>
+
+    <!-- ═══ PROGRESS ═══ -->
+    <div id="progress" class="progress hidden">
+        <div class="progress-bg"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="progress-text" id="progress-text"></p>
+        <button class="btn-abort" id="btn-abort-progress">Abbrechen</button>
+    </div>
+
+    <!-- ═══ ERROR ═══ -->
+    <div id="error" class="error hidden"><p id="error-text"></p></div>
+
+    <!-- ═══ RESULTS ═══ -->
+    <div id="results" class="results hidden">
+        <!-- Ebene 1: Score + Erklärung (immer sichtbar) -->
+        <div id="result-score"></div>
+
+        <!-- Ebene 2: Funnel + Entscheidung (expandierbar) -->
+        <details class="result-section" open>
+            <summary class="section-title">Conversion-Funnel &amp; Entscheidung</summary>
+            <div id="result-funnel"></div>
+            <div id="result-decision"></div>
+        </details>
+
+        <!-- Ebene 2b: Branchen-UX + Zukunft -->
+        <details class="result-section" open>
+            <summary class="section-title">Branchen-Analyse &amp; Zukunfts-Readiness</summary>
+            <div id="result-ux"></div>
+            <div id="result-future"></div>
+        </details>
+
+        <!-- Ebene 3: Wissenschaft + KI (geschlossen) -->
+        <details class="result-section">
+            <summary class="section-title">Wissenschaftliche Analyse</summary>
+            <div id="result-science"></div>
+        </details>
+
+        <!-- Ebene 3b: KI-Analyse (geschlossen) -->
+        <details class="result-section">
+            <summary class="section-title">KI-Analyse &amp; Enrichment</summary>
+            <div id="result-ai"></div>
+        </details>
+
+        <!-- Ebene 3c: Umsatz + Strategie -->
+        <details class="result-section">
+            <summary class="section-title">Umsatzverlust &amp; Pitch-Strategie</summary>
+            <div id="result-revenue"></div>
+            <div id="result-strategy"></div>
+        </details>
+
+        <!-- Ebene 4: Expert (geschlossen) -->
+        <details class="result-section">
+            <summary class="section-title">Expert-Daten</summary>
+            <div id="result-expert"></div>
+        </details>
+
+        <!-- Actions -->
+        <div id="result-actions"></div>
+    </div>
+
+    <!-- ═══ BATCH RESULTS ═══ -->
+    <div id="batch-results" class="batch-results hidden"></div>
+
+    <!-- ═══ CRM ═══ -->
+    <div id="crm-view" class="crm-view hidden"></div>
+
+    <!-- ═══ ONBOARDING ═══ -->
+    <div id="onboarding" class="onboarding hidden"></div>
+
+    <!-- App Bundle -->
+    <script type="module" src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "karriaro-lead-intelligence",
+  "version": "2.0.0",
+  "description": "Lead Intelligence Tool — Bayesian Funnel, Monte-Carlo, Multi-Signal Analysis",
+  "type": "module",
+  "scripts": {
+    "dev": "node esbuild.config.mjs --watch",
+    "build": "node esbuild.config.mjs",
+    "test": "node --test tests/**/*.test.js",
+    "preview": "npx serve dist"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  },
+  "private": true
+}
