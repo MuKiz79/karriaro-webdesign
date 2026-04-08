@@ -399,35 +399,134 @@ function renderResult(data) {
     });
 }
 
-// ── #12: Klartext-Erklärung ──
+// ── #12: Klartext-Erklärung (verständlich für jeden, nutzbar als E-Mail) ──
 function generateExplanation(r, ws, tech, data) {
     const s = r.leadScore;
-    const cr = r.conversionRate;
-    const bn = r.bottleneck;
+    const domain = new URL(data.url).hostname.replace('www.', '');
+    const name = data.place?.displayName?.text || domain;
+    const rev = data.revenue;
+    const footprint = data.footprint;
 
+    // ══════════════════════════════════════
+    // STARKER LEAD (55+)
+    // ══════════════════════════════════════
     if (s >= 55) {
-        const reasons = [];
-        if (ws.perf < 30) reasons.push(`Google bewertet die Geschwindigkeit mit nur ${ws.perf}/100`);
-        else if (ws.perf < 65) reasons.push(`Googles Performance-Score liegt bei ${ws.perf}/100 — Ranking-Nachteil`);
-        if (!ws.isHttps) reasons.push('Kein SSL — Browser zeigt "Nicht sicher"');
-        if (ws.seo < 60) reasons.push(`SEO-Score ${ws.seo}/100 — wird kaum gefunden`);
-        if (ws.a11y < 60) reasons.push(`Barrierefreiheit ${ws.a11y}/100 — BFSG seit 2025 Pflicht`);
-        if (tech.isBaukasten) reasons.push(`${tech.cms} — Baukasten limitiert alles`);
+        let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong><br><br>`;
 
-        let text = `<strong style="color:var(--green)">Diesen Lead kontaktieren.</strong>`;
-        if (reasons.length > 0) text += `<br><br><strong>Warum vielversprechend:</strong><br>${reasons.map(r => '• ' + r).join('<br>')}`;
-        text += `<br><br>${cr}% Conversion-Rate bei Kaltakquise ist gut. Zeitaufwand: max ${r.kelly?.optimalHours || '?'}h.`;
-        if (bn) text += `<br><br><strong>Aufpassen:</strong> Engpass "${bn.name}" (${bn.mean}%).`;
+        // ── Was wir gefunden haben (für den User) ──
+        text += `<strong>Was wir bei ${name} gefunden haben:</strong><br><br>`;
+
+        // Probleme sammeln — in Alltagssprache
+        const problems = [];
+        const emailArgs = [];  // Für die Kontakt-E-Mail
+
+        if (ws.perf < 40) {
+            problems.push(`Die Website lädt <strong>deutlich langsamer als die Konkurrenz</strong>. Google bestraft das mit schlechterem Ranking — potenzielle Kunden finden stattdessen die Wettbewerber.`);
+            emailArgs.push(`Ihre Website lädt langsamer als die Ihrer Konkurrenten — Google zeigt deshalb zuerst andere Ergebnisse`);
+        } else if (ws.perf < 65) {
+            problems.push(`Google bewertet die Ladegeschwindigkeit mit <strong>${ws.perf} von 100 Punkten</strong>. Zum Vergleich: Die besten Websites in der Branche erreichen 90+. Langsamere Seiten werden in den Suchergebnissen nach unten geschoben.`);
+            emailArgs.push(`Googles Geschwindigkeits-Bewertung liegt bei ${ws.perf}/100 — schnellere Konkurrenten werden bevorzugt angezeigt`);
+        }
+
+        if (!ws.isHttps) {
+            problems.push(`Die Website hat <strong>kein Sicherheitszertifikat (SSL)</strong>. Jeder Besucher sieht im Browser die Warnung "Nicht sicher". Studien zeigen: Jeder zweite Besucher verlässt die Seite sofort wenn er diese Warnung sieht.`);
+            emailArgs.push(`der Browser zeigt Ihren Besuchern "Nicht sicher" an — jeder zweite verlässt die Seite sofort`);
+        }
+
+        if (tech.isBaukasten) {
+            problems.push(`Die Website läuft auf <strong>${tech.cms}</strong> — einem Baukasten-System. Das bedeutet: Design, Geschwindigkeit und Suchmaschinenoptimierung sind strukturell eingeschränkt. Egal wie viel man optimiert, der Baukasten setzt Grenzen die nicht überwunden werden können.`);
+            emailArgs.push(`die Seite läuft auf ${tech.cms} — ein Baukasten der Design und Geschwindigkeit begrenzt`);
+        }
+
+        if (ws.seo < 60) {
+            problems.push(`Der <strong>Suchmaschinen-Score liegt bei ${ws.seo}/100</strong>. Das bedeutet: Wenn potenzielle Kunden nach "${data.place?.primaryTypeDisplayName?.text || 'Ihrem Angebot'}" in der Nähe suchen, erscheint diese Website wahrscheinlich nicht auf der ersten Seite.`);
+            emailArgs.push(`bei einer Google-Suche nach "${data.place?.primaryTypeDisplayName?.text || 'Ihrem Angebot'}" erscheint die Website wahrscheinlich nicht auf Seite 1`);
+        }
+
+        if (ws.a11y < 60) {
+            problems.push(`Die <strong>Barrierefreiheit liegt bei ${ws.a11y}/100</strong>. Seit Juni 2025 ist das in Deutschland gesetzlich vorgeschrieben (BFSG). Die ersten Abmahnwellen laufen bereits — Bußgelder bis 100.000€ sind möglich.`);
+            emailArgs.push(`seit Juni 2025 ist Barrierefreiheit Pflicht — Ihre Seite erreicht nur ${ws.a11y}/100`);
+        }
+
+        // Positives Signal: Aktives Business
+        if (data.place?.userRatingCount > 30 && data.place?.rating >= 4.0) {
+            problems.push(`<strong>Das Geschäft selbst läuft offensichtlich gut</strong> — ${data.place.rating} Sterne bei ${data.place.userRatingCount} Google-Bewertungen. Die Kunden sind zufrieden. Aber die Website spiegelt diese Qualität nicht wider. Das ist eine verpasste Chance.`);
+        }
+
+        // Digital Footprint
+        if (footprint?.hasInstagram && ws.perf < 65) {
+            problems.push(`${name} ist <strong>auf Instagram aktiv</strong> — das zeigt Marketing-Bewusstsein. Aber die Website hält nicht mit. Instagram bringt Bestandskunden, aber Google bringt Neukunden. Ohne gute Website fehlt die Hälfte.`);
+        }
+        if (footprint?.hasFbPixel) {
+            problems.push(`${name} schaltet bereits <strong>Facebook-Werbung</strong> (wir haben den Facebook Pixel erkannt). Das bedeutet: Hier wird bereits Geld für Online-Marketing ausgegeben — aber die Website, auf der die Werbung landet, ist das schwächste Glied.`);
+        }
+
+        // Umsatzverlust
+        if (rev?.yearlyLoss > 1000) {
+            problems.push(`<strong>Geschätzter Umsatzverlust: ~${rev.yearlyLoss.toLocaleString('de-DE')} € pro Jahr</strong> — durch verlorene Besucher die wegen Ladezeit, fehlender Mobiloptimierung oder schlechter Suchplatzierung nicht zu Kunden werden. Eine neue Website für 990-1.990 € hätte sich in ${rev.roi > 0 ? Math.ceil(1990 / (rev.yearlyLoss / 12)) + ' Monaten' : 'kurzer Zeit'} amortisiert.`);
+            emailArgs.push(`wir schätzen den jährlichen Verlust durch die aktuelle Website auf ~${rev.yearlyLoss.toLocaleString('de-DE')} €`);
+        }
+
+        if (problems.length > 0) {
+            text += problems.join('<br><br>');
+        }
+
+        // ── Empfehlung ──
+        text += `<br><br><strong>Unsere Empfehlung:</strong> Investiere maximal ${r.kelly?.optimalHours || 2} Stunden in diesen Lead. `;
+        if (r.channelResult?.best) {
+            text += `Der beste Kontaktkanal ist <strong>${r.channelResult.best.name}</strong>. `;
+        }
+
+        // ── Generierte E-Mail-Argumente (kopierbar) ──
+        if (emailArgs.length > 0) {
+            text += `<br><br><div style="background:#1d1d1f;color:rgba(255,255,255,0.85);padding:16px 20px;border-radius:12px;margin-top:8px">`;
+            text += `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:8px">Argument für die Kontakt-E-Mail</div>`;
+            text += `<div style="font-size:13px;line-height:1.7">Ich habe mir ${domain} angeschaut und ein paar Dinge fallen auf: ${emailArgs.join(', ')}. Das sind Punkte die Sie messbar Kunden kosten.</div>`;
+            text += `</div>`;
+        }
+
         return text;
     }
 
+    // ══════════════════════════════════════
+    // MITTLERER LEAD (30-54)
+    // ══════════════════════════════════════
     if (s >= 30) {
-        let text = `<strong style="color:var(--orange)">Vielversprechend, aber mit Vorsicht.</strong> ${cr}% Conversion-Rate.`;
-        if (bn) text += ` Engpass: "${bn.name}" (${bn.mean}%).`;
+        let text = `<strong style="color:var(--orange)">Möglich, aber kein Selbstläufer.</strong><br><br>`;
+
+        const pros = [];
+        const cons = [];
+
+        if (ws.perf < 50) pros.push(`Googles Geschwindigkeits-Score ist niedrig (${ws.perf}/100) — ein gutes Argument`);
+        if (tech.isBaukasten) pros.push(`Läuft auf ${tech.cms} — Baukasten mit klaren Grenzen`);
+        if (!ws.isHttps) pros.push(`Kein SSL-Zertifikat — Browser-Warnung ist ein starkes Argument`);
+        if (ws.perf >= 65) cons.push(`Die Website ist technisch in Ordnung (${ws.perf}/100) — schwerer zu argumentieren warum eine neue nötig ist`);
+        if (!data.place) cons.push(`Wir konnten keine Google-Bewertungen finden — unklar ob das Unternehmen aktiv ist und Budget hat`);
+        if (data.place?.userRatingCount < 10) cons.push(`Nur ${data.place?.userRatingCount || 0} Google-Bewertungen — möglicherweise ein sehr kleines Unternehmen`);
+
+        if (pros.length > 0) text += `<strong>Was für diesen Lead spricht:</strong><br>${pros.map(p => '✓ ' + p).join('<br>')}<br><br>`;
+        if (cons.length > 0) text += `<strong>Was dagegen spricht:</strong><br>${cons.map(c => '✗ ' + c).join('<br>')}<br><br>`;
+
+        text += `<strong>Empfehlung:</strong> Nur kontaktieren wenn du gerade wenig stärkere Leads hast. Halte den Zeitaufwand unter 1 Stunde — ein kurzer Pitch, mehr nicht.`;
         return text;
     }
 
-    let text = `<strong style="color:var(--red)">Überspringen.</strong> Nur ${cr}% Conversion — du müsstest ~${cr > 0 ? Math.round(100/parseFloat(cr)) : '∞'} solcher Leads kontaktieren.`;
+    // ══════════════════════════════════════
+    // SCHWACHER LEAD (0-29)
+    // ══════════════════════════════════════
+    let text = `<strong style="color:var(--red)">Diesen Lead überspringen.</strong><br><br>`;
+
+    const reasons = [];
+    if (ws.perf >= 70) reasons.push(`Die Website ist bereits in gutem Zustand (Performance ${ws.perf}/100) — der Inhaber würde nicht verstehen warum er eine neue braucht`);
+    if (!data.place) reasons.push(`Wir haben keine Google-Bewertungen gefunden. Entweder ist das Unternehmen nicht lokal, nicht aktiv, oder hat keinen Google-Eintrag. Ohne diese Informationen ist eine Einschätzung zu unsicher`);
+    if (data.place?.userRatingCount < 5) reasons.push(`Nur ${data.place?.userRatingCount || 0} Bewertungen — wahrscheinlich ein sehr kleines Unternehmen ohne Budget für eine neue Website`);
+    if (ws.perf >= 50 && ws.seo >= 70 && ws.isHttps) reasons.push(`Website hat keine offensichtlichen Probleme — kein Ansatzpunkt für ein Verkaufsgespräch`);
+
+    if (reasons.length > 0) {
+        text += `<strong>Warum:</strong><br>${reasons.map(r => '• ' + r).join('<br>')}<br><br>`;
+    }
+
+    text += `Deine Zeit ist besser investiert in Leads mit einem Score über 50. Bei diesem Lead müsstest du statistisch ${Math.round(100 / Math.max(0.1, parseFloat(r.conversionRate)))} ähnliche kontaktieren um einen einzigen Kunden zu gewinnen.`;
     return text;
 }
 
