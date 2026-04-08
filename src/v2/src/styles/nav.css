@@ -1,0 +1,57 @@
+/* Navigation */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: var(--s4) var(--s6);
+    background: rgba(251,251,253,0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav-logo {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+}
+.nav-logo:hover { color: var(--accent); text-decoration: none; }
+.nav-right { display: flex; align-items: center; gap: 4px; }
+.nav-btn {
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--font);
+    padding: var(--s2) var(--s3);
+}
+.nav-btn:hover { color: var(--text); }
+.nav-auth.logged-in { color: var(--green); }
+
+/* Settings Panel */
+.panel {
+    max-width: 680px;
+    margin: 80px auto 0;
+    padding: var(--s6);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.panel h3 { font-size: 15px; font-weight: 700; margin-bottom: var(--s3); }
+.panel label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; margin-top: var(--s3); }
+.panel input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    color: var(--text);
+}
+.panel .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }

@@ -1,0 +1,27 @@
+/* ══════════════════════════════════════
+   Responsive Breakpoints — Mobile First
+   ══════════════════════════════════════ */
+
+/* Tablet (560px+) */
+@media (min-width: 560px) {
+    .scores-grid { grid-template-columns: repeat(2, 1fr); }
+    .input-row { flex-direction: row; }
+}
+
+/* Desktop (768px+) */
+@media (min-width: 768px) {
+    .hero { padding: 120px var(--s6) var(--s7); }
+    .results { padding: 0 var(--s8) var(--s8); }
+}
+
+/* Mobile (<560px) */
+@media (max-width: 559px) {
+    .input-row { flex-direction: column; }
+    .btn-primary { width: 100%; }
+    .nav-right { gap: 0; }
+    .nav-btn { padding: var(--s1) var(--s2); font-size: 12px; }
+    .tabs { max-width: 100%; }
+    .tab { padding: var(--s2) var(--s2); font-size: 12px; }
+    .stat-row { flex-direction: column; gap: 2px; }
+    .stat-value { font-size: 13px; }
+}

@@ -1,0 +1,188 @@
+/* ══════════════════════════════════════
+   Lead Intelligence v2 — Design System
+   Mobile-First, Apple-Inspired
+   ══════════════════════════════════════ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #fbfbfd;
+    --text: #1d1d1f;
+    --muted: #86868b;
+    --accent: #0071e3;
+    --green: #30d158;
+    --orange: #ff9f0a;
+    --red: #ff453a;
+    --card: #ffffff;
+    --border: #e5e5ea;
+    --radius: 16px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    /* Spacing Scale (4px base) */
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
+    --s5: 20px; --s6: 24px; --s7: 32px; --s8: 48px;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Utility */
+.hidden { display: none !important; }
+.good { color: var(--green); }
+.ok { color: var(--orange); }
+.bad { color: var(--red); }
+
+/* Cards */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--s6);
+    margin-bottom: var(--s3);
+}
+
+/* Score Cards Grid */
+.scores-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--s3);
+    margin-bottom: var(--s3);
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: var(--s7) 0 var(--s3);
+    cursor: pointer;
+    user-select: none;
+}
+.section-title::marker { color: var(--muted); }
+
+/* Result Section (details/summary) */
+.result-section {
+    border: none;
+    margin-bottom: var(--s2);
+}
+.result-section[open] > summary { margin-bottom: var(--s3); }
+.result-section summary {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: var(--s3) 0;
+    cursor: pointer;
+    list-style: none;
+}
+.result-section summary::before {
+    content: '▸ ';
+    display: inline;
+}
+.result-section[open] summary::before {
+    content: '▾ ';
+}
+
+/* Buttons */
+.btn-primary {
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font);
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover { background: #0077ed; }
+.btn-primary:active { transform: scale(0.97); }
+.btn-primary:disabled { background: #c7c7cc; cursor: not-allowed; }
+
+.btn-abort {
+    margin-top: var(--s3);
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font);
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+/* Stat Rows */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--s2) 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-label { color: var(--muted); }
+.stat-value { font-weight: 600; }
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.badge-green { background: rgba(48,209,88,0.1); color: var(--green); }
+.badge-orange { background: rgba(255,159,10,0.1); color: var(--orange); }
+.badge-red { background: rgba(255,69,58,0.1); color: var(--red); }
+
+/* Pitch Box */
+.pitch-box {
+    background: #1d1d1f;
+    color: #fff;
+    border-radius: var(--radius);
+    padding: var(--s6);
+    margin-bottom: var(--s3);
+}
+.pitch-box h3 {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--s3);
+}
+.pitch-box p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    white-space: pre-line;
+}
+
+/* Spinner */
+.spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto var(--s4);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
