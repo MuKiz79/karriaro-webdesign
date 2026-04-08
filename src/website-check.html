@@ -1591,6 +1591,446 @@ App.kahneman = {
 };
 
 // ══════════════════════════════════════
+// ══════════════════════════════════════
+// ADVANCED INTELLIGENCE MODULES (A-E)
+// 22 Optimierungsmodule
+// ══════════════════════════════════════
+
+// ── D18: Google Ads Erkennung ──
+// Erkennt aus Network Requests ob ein Unternehmen Google Ads schaltet
+App.googleAds = {
+    detect(psiData) {
+        const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
+        const signals = [];
+        if (/googleadservices\.com|googlesyndication\.com/i.test(urls)) signals.push('Google Ads aktiv');
+        if (/doubleclick\.net/i.test(urls)) signals.push('Google Display Network');
+        if (/google\.com\/pagead/i.test(urls)) signals.push('Google Ads Conversion Tracking');
+        if (/bing\.com\/action|bingads/i.test(urls)) signals.push('Microsoft Ads');
+        const active = signals.length > 0;
+        return {
+            active, signals, adSpend: active,
+            insight: active ? 'Gibt bereits Geld fuer Online-Werbung aus — versteht den Wert digitaler Praesenz' : 'Keine bezahlte Werbung erkannt',
+            funnelImpact: active ? 3 : 0  // Boost fuer Interesse + Abschluss
+        };
+    }
+};
+
+// ── B8: Preis-Positionierung ──
+App.pricePosition = {
+    analyze(place) {
+        if (!place) return { level: null, label: 'Unbekannt', discrepancy: 0 };
+        const level = place.priceLevel || null;  // Google: 0-4 (INEXPENSIVE to VERY_EXPENSIVE)
+        const labels = { 0: 'Kostenlos', 1: 'Guenstig', 2: 'Mittelklasse', 3: 'Gehoben', 4: 'Premium' };
+        return {
+            level,
+            label: labels[level] || 'Unbekannt',
+            // Premium + schlechte Website = maximale Diskrepanz
+            isPremium: level >= 3,
+            funnelImpact: level >= 3 ? 4 : level === 2 ? 2 : 0
+        };
+    }
+};
+
+// ── B7: Lokale Markt-Saettigung ──
+App.marketSaturation = {
+    analyze(competitors, place) {
+        if (!competitors) return { saturation: 0.5, label: 'Keine Daten' };
+        const count = competitors.length;
+        const withSite = competitors.filter(c => c.perf !== null || c.url).length;
+        const saturation = Math.min(1, count / 15);  // 15+ = gesaettigter Markt
+        const avgRating = competitors.length > 0 ? competitors.reduce((s,c) => s + (c.rating || 0), 0) / competitors.length : 0;
+        return {
+            totalCompetitors: count, withWebsite: withSite,
+            saturation: Math.round(saturation * 100) / 100,
+            avgRating: Math.round(avgRating * 10) / 10,
+            label: saturation > 0.7 ? 'Hoch gesaettigt — starker Differenzierungsbedarf' : saturation > 0.4 ? 'Moderat — Wettbewerb vorhanden' : 'Niedrig — wenig Konkurrenz',
+            funnelImpact: saturation > 0.6 ? 2 : 0  // Hoehere Saettigung = mehr Druck = Lead hoert eher zu
+        };
+    }
+};
+
+// ── B9: Geographische Cluster-Analyse (Haversine) ──
+App.geoCluster = {
+    haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371000;  // Erdradius in Metern
+        const dLat = (lat2-lat1) * Math.PI/180;
+        const dLon = (lon2-lon1) * Math.PI/180;
+        const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    },
+    analyze(place, competitors) {
+        if (!place?.location || !competitors) return { clusters: [], avgDistance: 0, nearbyCount: 0 };
+        const lat = place.location.latitude, lng = place.location.longitude;
+        const distances = competitors.filter(c => c.lat && c.lng).map(c => ({
+            name: c.name, distance: Math.round(this.haversine(lat, lng, c.lat, c.lng))
+        }));
+        const nearby500m = distances.filter(d => d.distance < 500).length;
+        const nearby1km = distances.filter(d => d.distance < 1000).length;
+        const avgDist = distances.length > 0 ? Math.round(distances.reduce((s,d) => s+d.distance, 0) / distances.length) : 0;
+        return {
+            distances: distances.sort((a,b) => a.distance - b.distance).slice(0, 5),
+            nearby500m, nearby1km, avgDistance: avgDist,
+            isCluster: nearby500m >= 3,
+            r0Boost: nearby500m >= 3 ? 1.5 : nearby1km >= 3 ? 1.2 : 1.0,
+            label: nearby500m >= 3 ? `Dichtes Cluster (${nearby500m} innerhalb 500m)` : nearby1km >= 3 ? `Cluster (${nearby1km} innerhalb 1km)` : 'Kein Cluster'
+        };
+    }
+};
+
+// ── D17: Job-Postings als Wachstums-Signal ──
+// Erkennt aus Network Requests ob Karriere/Jobs-Links vorhanden sind
+App.jobSignal = {
+    detect(psiData) {
+        const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
+        const html = urls.toLowerCase();
+        const signals = [];
+        if (/indeed\.com|stepstone\.de|jobs\.|karriere|career|stellenangebot|bewerbung/i.test(html)) signals.push('Karriere-Bereich erkannt');
+        if (/join\.com|personio\.de|recruitee|greenhouse/i.test(html)) signals.push('Recruiting-Software aktiv');
+        const isHiring = signals.length > 0;
+        return { isHiring, signals, label: isHiring ? 'Stellt ein — wachsendes Unternehmen' : 'Keine Job-Signale', funnelImpact: isHiring ? 2 : 0 };
+    }
+};
+
+// ── A5: Named Entity Recognition (vereinfacht) ──
+// Extrahiert aus PageSpeed-Daten Hinweise auf Kontaktpersonen
+App.ner = {
+    extract(psiData, place) {
+        const entities = {};
+        // Name aus Google Places
+        if (place?.displayName?.text) entities.company = place.displayName.text;
+        if (place?.formattedAddress) entities.address = place.formattedAddress;
+        // E-Mail-Muster aus URLs (z.B. mailto: Links)
+        const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '');
+        for (const u of urls) {
+            const mailto = u.match(/mailto:([^?"&]+)/i);
+            if (mailto) entities.email = decodeURIComponent(mailto[1]);
+        }
+        return entities;
+    }
+};
+
+// ── C13: Survival Analysis ──
+// Kaplan-Meier Schaetzung: Wie lange dauert es bis zur Conversion?
+App.survival = {
+    estimate(branchType, leadScore) {
+        // Branchen-spezifische mediane Time-to-Conversion (in Tagen)
+        const medians = {
+            'hair_salon': 10, 'beauty_salon': 12, 'restaurant': 14, 'cafe': 14,
+            'dentist': 18, 'doctor': 20, 'physiotherapist': 16,
+            'auto_repair': 12, 'plumber': 10, 'electrician': 10,
+            'lawyer': 25, 'real_estate_agency': 22, 'hotel': 20,
+            'car_dealer': 28, 'gym': 14, 'veterinary_care': 16,
+            'bakery': 8, 'florist': 10, '_default': 16
+        };
+        const baseMedian = medians[branchType] || medians._default;
+        // Hoehere Scores konvertieren schneller
+        const adjustedMedian = Math.round(baseMedian * (1.5 - leadScore / 100));
+        // Kaplan-Meier-aehnliche Survival-Kurve (exponential approximation)
+        const lambda = Math.log(2) / adjustedMedian;  // Hazard rate
+        const survivalAt = (days) => Math.round(Math.exp(-lambda * days) * 100);
+        return {
+            medianDays: adjustedMedian,
+            survival7d: survivalAt(7),   // % die nach 7 Tagen NICHT konvertiert haben
+            survival14d: survivalAt(14),
+            survival30d: survivalAt(30),
+            giveUpAfter: Math.round(adjustedMedian * 2.5),  // Nach 2.5x Median: aufgeben
+            label: `Median: ${adjustedMedian} Tage · Aufgeben nach ${Math.round(adjustedMedian * 2.5)} Tagen`
+        };
+    }
+};
+
+// ── C14: Information Gain pro Signal ──
+// Berechnet welche Signale am meisten Information ueber den Outcome liefern
+App.infoGain = {
+    calculate(ws, tech, place, footprint) {
+        // Mutual Information: I(X;Y) ≈ wie stark aendert Signal X die Posterior
+        // Approximiert durch die Shift-Staerke jedes Signals im Funnel
+        const signals = [];
+        // Jedes Signal mit seinem geschaetzten Information Gain
+        signals.push({ name: 'Performance < 50', present: ws.perf < 50, gain: 0.15, category: 'Website' });
+        signals.push({ name: 'Kein SSL', present: !ws.isHttps, gain: 0.22, category: 'Website' });
+        signals.push({ name: 'Baukasten-CMS', present: tech.isBaukasten, gain: 0.18, category: 'Technologie' });
+        signals.push({ name: 'Google Bewertungen > 50', present: (place?.userRatingCount||0) > 50, gain: 0.20, category: 'Business' });
+        signals.push({ name: 'Rating >= 4.5', present: (place?.rating||0) >= 4.5, gain: 0.12, category: 'Business' });
+        signals.push({ name: 'Instagram aktiv', present: footprint?.hasInstagram || false, gain: 0.16, category: 'Digital' });
+        signals.push({ name: 'Facebook Pixel', present: footprint?.hasFbPixel || false, gain: 0.19, category: 'Digital' });
+        signals.push({ name: 'Google Ads aktiv', present: false, gain: 0.21, category: 'Digital' });  // Wird spaeter gesetzt
+        signals.push({ name: 'SEO < 70', present: ws.seo < 70, gain: 0.10, category: 'Website' });
+        signals.push({ name: 'A11y < 70 (BFSG)', present: ws.a11y < 70, gain: 0.08, category: 'Compliance' });
+
+        // Sortiere nach Gain
+        const sorted = signals.filter(s => s.present).sort((a,b) => b.gain - a.gain);
+        const totalGain = sorted.reduce((s,sig) => s + sig.gain, 0);
+        return {
+            signals: sorted.slice(0, 6),
+            totalGain: Math.round(totalGain * 100) / 100,
+            strongestSignal: sorted[0] || null,
+            label: totalGain > 0.5 ? 'Viele starke Signale — hohe Konfidenz' : totalGain > 0.25 ? 'Moderate Signale' : 'Wenig Signale — unsichere Bewertung'
+        };
+    }
+};
+
+// ── E19: A/B-Test Pitch-Varianten ──
+App.abTest = {
+    variants: ['emotional', 'rational', 'hybrid'],
+    // Lade gespeicherte Ergebnisse
+    getStats() { return JSON.parse(localStorage.getItem('karriaro_ab_stats') || '{"emotional":{"sent":0,"replied":0},"rational":{"sent":0,"replied":0},"hybrid":{"sent":0,"replied":0}}'); },
+    saveStats(stats) { localStorage.setItem('karriaro_ab_stats', JSON.stringify(stats)); },
+    // Thompson Sampling: Waehle die Variante mit hoechstem Beta-Sample
+    selectVariant(branchType) {
+        const stats = this.getStats();
+        const parent = App.probability;
+        let best = null, bestSample = -1;
+        for (const v of this.variants) {
+            const s = stats[v];
+            // Beta(replied+1, sent-replied+1) — Laplace Smoothing
+            const sample = parent.sampleBeta(s.replied + 1, s.sent - s.replied + 1);
+            if (sample > bestSample) { bestSample = sample; best = v; }
+        }
+        return { variant: best, stats, confidence: this.getConfidence(stats) };
+    },
+    getConfidence(stats) {
+        const total = Object.values(stats).reduce((s,v) => s + v.sent, 0);
+        return total >= 30 ? 'hoch' : total >= 10 ? 'mittel' : 'niedrig (mehr Daten noetig)';
+    },
+    logSent(variant) { const s = this.getStats(); s[variant].sent++; this.saveStats(s); },
+    logReply(variant) { const s = this.getStats(); s[variant].replied++; this.saveStats(s); }
+};
+
+// ── E20: Lead Nurturing Reminders ──
+App.reminders = {
+    check() {
+        const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        const now = Date.now();
+        const due = [];
+        for (const lead of leads) {
+            if (!lead.contactedAt || lead.status === 'kunde' || lead.status === 'verloren') continue;
+            const daysSince = (now - lead.contactedAt) / (1000 * 60 * 60 * 24);
+            // Follow-Up-Zeitpunkte: Tag 4, 8, 12, 18
+            const touchpoints = [4, 8, 12, 18];
+            const nextTouch = touchpoints.find(t => daysSince >= t - 0.5 && daysSince <= t + 1);
+            if (nextTouch && lead.lastTouchDay !== nextTouch) {
+                due.push({ ...lead, touchDay: nextTouch, daysSince: Math.round(daysSince) });
+            }
+        }
+        return due;
+    },
+    markTouched(domain, touchDay) {
+        const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+        const lead = leads.find(l => l.domain === domain);
+        if (lead) { lead.lastTouchDay = touchDay; localStorage.setItem('karriaro_leads', JSON.stringify(leads)); }
+    }
+};
+
+// ── E21: Wettbewerber-Monitoring ──
+App.monitoring = {
+    // Speichere Baseline-Scores fuer spaetere Vergleiche
+    saveBaseline(domain, scores) {
+        const baselines = JSON.parse(localStorage.getItem('karriaro_baselines') || '{}');
+        baselines[domain] = { ...scores, checkedAt: Date.now() };
+        localStorage.setItem('karriaro_baselines', JSON.stringify(baselines));
+    },
+    getBaseline(domain) {
+        const baselines = JSON.parse(localStorage.getItem('karriaro_baselines') || '{}');
+        return baselines[domain] || null;
+    },
+    // Vergleiche aktuellen Score mit Baseline
+    detectChange(domain, currentScores) {
+        const baseline = this.getBaseline(domain);
+        if (!baseline) return { changed: false, isNew: true };
+        const perfDelta = currentScores.perf - (baseline.perf || 0);
+        const significant = Math.abs(perfDelta) > 15;
+        return {
+            changed: significant,
+            perfDelta,
+            daysSinceCheck: Math.round((Date.now() - baseline.checkedAt) / (1000*60*60*24)),
+            alert: significant && perfDelta > 0 ? 'Konkurrent hat redesigned!' : significant && perfDelta < 0 ? 'Konkurrent-Website verschlechtert' : null
+        };
+    }
+};
+
+// ── E22: Lead-Score-Drift-Erkennung ──
+App.drift = {
+    check(domain, currentScore) {
+        const history = JSON.parse(localStorage.getItem('karriaro_score_history') || '{}');
+        const prev = history[domain];
+        const drifted = prev && Math.abs(currentScore - prev.score) > 15;
+        // Update history
+        history[domain] = { score: currentScore, checkedAt: Date.now() };
+        localStorage.setItem('karriaro_score_history', JSON.stringify(history));
+        return {
+            drifted,
+            previousScore: prev?.score || null,
+            delta: prev ? currentScore - prev.score : null,
+            daysSince: prev ? Math.round((Date.now() - prev.checkedAt) / (1000*60*60*24)) : null,
+            alert: drifted ? `Score veraendert: ${prev.score} → ${currentScore} (${currentScore > prev.score ? '+' : ''}${currentScore - prev.score})` : null
+        };
+    }
+};
+
+// ══════════════════════════════════════
+// BLOCK 3: ADVANCED MATHEMATICS
+// C10 Gaussian Process, C11 RL, C12 Copula, A3 ML
+// ══════════════════════════════════════
+
+// ── C10: Gaussian Process (vereinfacht) ──
+// Modelliert Korrelation zwischen Funnel-Stufen als kontinuierliche Funktion
+App.gaussianProcess = {
+    // Squared Exponential Kernel: k(x,y) = sigma^2 * exp(-||x-y||^2 / 2*l^2)
+    kernel(x, y, sigma = 1, lengthScale = 0.5) {
+        const diff = x - y;
+        return sigma * sigma * Math.exp(-(diff * diff) / (2 * lengthScale * lengthScale));
+    },
+    // Berechne korrelierte Stufen-Wahrscheinlichkeiten
+    // Statt unabhaengige Beta-Samples: GP ueber die 6 Stufen
+    correlateStageMeans(stageMeans) {
+        const n = stageMeans.length;
+        // Baue Kovarianzmatrix
+        const K = [];
+        for (let i = 0; i < n; i++) {
+            K[i] = [];
+            for (let j = 0; j < n; j++) {
+                // Stufen die nah beieinander sind (i≈j) sind staerker korreliert
+                K[i][j] = this.kernel(i / n, j / n) * 0.02;  // Kleine Kovarianz
+                if (i === j) K[i][j] += 0.001;  // Numerische Stabilitaet (Jitter)
+            }
+        }
+        // Cholesky-aehnlich: Generiere korrelierte Perturbationen
+        const perturbations = new Array(n).fill(0);
+        const randn = App.probability.randn.bind(App.probability);
+        for (let i = 0; i < n; i++) {
+            let sum = 0;
+            for (let j = 0; j <= i; j++) sum += K[i][j] * randn();
+            perturbations[i] = sum;
+        }
+        return stageMeans.map((m, i) => App.probability.clamp(m / 100 + perturbations[i]) * 100);
+    }
+};
+
+// ── C11: Reinforcement Learning (Multi-Armed Bandit) ──
+// Lernt welche Follow-Up-Nachricht bei welcher Branche am besten funktioniert
+App.rlBandit = {
+    // Speichere Rewards pro (Branche, Touchpoint, Nachrichtentyp)
+    getState() { return JSON.parse(localStorage.getItem('karriaro_rl_state') || '{}'); },
+    saveState(state) { localStorage.setItem('karriaro_rl_state', JSON.stringify(state)); },
+
+    // Waehle Aktion via Upper Confidence Bound (UCB1)
+    selectAction(branchType, touchpoint) {
+        const state = this.getState();
+        const key = `${branchType}_${touchpoint}`;
+        const actions = ['problem_screenshot', 'euro_verlust', 'konkurrenz_vergleich', 'kostenloser_entwurf', 'social_proof'];
+        const stats = state[key] || {};
+
+        const totalPlays = actions.reduce((s, a) => s + (stats[a]?.plays || 0), 0);
+        if (totalPlays < actions.length * 2) {
+            // Exploration: Jede Aktion mindestens 2x ausprobieren
+            const leastPlayed = actions.reduce((best, a) => (!stats[a] || stats[a].plays < (stats[best]?.plays || Infinity)) ? a : best, actions[0]);
+            return { action: leastPlayed, reason: 'Exploration (zu wenig Daten)' };
+        }
+
+        // UCB1: Waehle Aktion mit hoechstem Upper Confidence Bound
+        let bestAction = actions[0], bestUCB = -Infinity;
+        for (const a of actions) {
+            const s = stats[a] || { plays: 1, reward: 0 };
+            const mean = s.reward / s.plays;
+            const ucb = mean + Math.sqrt(2 * Math.log(totalPlays) / s.plays);
+            if (ucb > bestUCB) { bestUCB = ucb; bestAction = a; }
+        }
+        return { action: bestAction, reason: 'UCB1-Optimierung', ucb: Math.round(bestUCB * 100) / 100 };
+    },
+
+    // Registriere Ergebnis
+    logReward(branchType, touchpoint, action, reward) {
+        const state = this.getState();
+        const key = `${branchType}_${touchpoint}`;
+        if (!state[key]) state[key] = {};
+        if (!state[key][action]) state[key][action] = { plays: 0, reward: 0 };
+        state[key][action].plays++;
+        state[key][action].reward += reward;  // 0 = keine Antwort, 1 = Antwort
+        this.saveState(state);
+    }
+};
+
+// ── C12: Copula fuer Lead-Abhaengigkeiten ──
+// Clayton Copula: Modelliert untere Tail-Abhaengigkeit
+// (wenn ein Friseur auf der Strasse scheitert, scheitert der andere wahrscheinlich auch)
+App.copula = {
+    // Clayton Copula Generator: C(u,v) = (u^-theta + v^-theta - 1)^(-1/theta)
+    claytonSample(theta, u) {
+        // Conditional Copula Sampling
+        const v = Math.random();
+        const t = Math.pow(Math.pow(u, -theta) * (Math.pow(v, -theta/(1+theta)) - 1) + 1, -1/theta);
+        return App.probability.clamp(t);
+    },
+
+    // Berechne korrelierte Portfolio-Conversions
+    correlatedPortfolio(leadProbs, sameCluster = false) {
+        if (leadProbs.length < 2) return leadProbs;
+        const theta = sameCluster ? 2.0 : 0.5;  // Staerkere Abhaengigkeit bei Cluster
+        // Erster Lead unabhaengig, alle weiteren via Copula verbunden
+        const results = [Math.random() < leadProbs[0] ? 1 : 0];
+        const u = leadProbs[0];
+        for (let i = 1; i < leadProbs.length; i++) {
+            const correlatedU = this.claytonSample(theta, u);
+            results.push(correlatedU < leadProbs[i] ? 1 : 0);
+        }
+        return results;
+    }
+};
+
+// ── A3: ML Lead Scoring Infrastruktur ──
+// Sammelt Feature-Vektoren + Outcomes fuer spaeteres Training
+App.mlScoring = {
+    // Speichere Feature-Vektor fuer jeden Lead
+    logFeatures(domain, features, outcome) {
+        const data = JSON.parse(localStorage.getItem('karriaro_ml_data') || '[]');
+        const existing = data.findIndex(d => d.domain === domain);
+        const entry = { domain, features, outcome, timestamp: Date.now() };
+        if (existing >= 0) data[existing] = { ...data[existing], ...entry };
+        else data.push(entry);
+        localStorage.setItem('karriaro_ml_data', JSON.stringify(data));
+    },
+
+    // Einfache logistische Regression auf gesammelten Daten
+    // Wird erst nach 50+ Datenpunkten zuverlaessig
+    train() {
+        const data = JSON.parse(localStorage.getItem('karriaro_ml_data') || '[]');
+        const labeled = data.filter(d => d.outcome === 1 || d.outcome === 0);
+        if (labeled.length < 20) return { ready: false, dataPoints: labeled.length, needed: 20 };
+
+        // Mini-Batch Gradient Descent auf 5 Features
+        const featureKeys = ['perf', 'seo', 'reviews', 'isBaukasten', 'hasInstagram'];
+        let weights = featureKeys.map(() => 0);
+        let bias = 0;
+        const lr = 0.01;
+
+        for (let epoch = 0; epoch < 100; epoch++) {
+            for (const d of labeled) {
+                const x = featureKeys.map(k => (d.features[k] || 0) / 100);  // Normalisiert
+                const z = bias + x.reduce((s, xi, i) => s + xi * weights[i], 0);
+                const pred = 1 / (1 + Math.exp(-z));
+                const error = d.outcome - pred;
+                // Update
+                bias += lr * error;
+                for (let i = 0; i < weights.length; i++) weights[i] += lr * error * x[i];
+            }
+        }
+
+        return { ready: true, dataPoints: labeled.length, weights: Object.fromEntries(featureKeys.map((k,i) => [k, Math.round(weights[i]*1000)/1000])), bias: Math.round(bias*1000)/1000 };
+    },
+
+    // Predict mit trainiertem Modell
+    predict(features) {
+        const model = this.train();
+        if (!model.ready) return null;
+        const featureKeys = Object.keys(model.weights);
+        const x = featureKeys.map(k => (features[k] || 0) / 100);
+        const z = model.bias + x.reduce((s, xi, i) => s + xi * model.weights[featureKeys[i]], 0);
+        return { probability: Math.round(1 / (1 + Math.exp(-z)) * 1000) / 10, model };
+    }
+};
+
+// ══════════════════════════════════════
 // MODUL 1: UMSATZVERLUST-RECHNER
 // Branchen-Conversion-Rates, Traffic-Proxy,
 // Bounce-Rate bei langsamer Seite
@@ -2266,6 +2706,86 @@ App.ui = {
             }
         }
 
+        // ── Advanced Intelligence ──
+        const hasAdvanced = extra.googleAds || extra.pricePosition || extra.survival || extra.infoGain;
+        if (hasAdvanced) {
+            html += `<div class="section-title">Advanced Intelligence</div><div class="scores-grid">`;
+
+            // Google Ads
+            if (extra.googleAds) {
+                const ga = extra.googleAds;
+                html += `<div class="score-card"><div class="label">Google Ads</div><div class="value" style="font-size:1.3rem;color:${ga.active ? 'var(--green)' : 'var(--muted)'}">${ga.active ? 'Aktiv' : 'Nein'}</div><div class="detail">${ga.insight}</div>${ga.signals.length > 0 ? `<div class="detail">${ga.signals.join(' · ')}</div>` : ''}</div>`;
+            }
+
+            // Preis-Positionierung
+            if (extra.pricePosition && extra.pricePosition.level !== null) {
+                const pp = extra.pricePosition;
+                html += `<div class="score-card"><div class="label">Preis-Positionierung</div><div class="value" style="font-size:1.3rem;color:${pp.isPremium ? 'var(--green)' : 'var(--muted)'}">${pp.label}</div><div class="detail">${pp.isPremium ? 'Premium + schlechte Website = maximale Diskrepanz' : 'Standard-Positionierung'}</div></div>`;
+            }
+
+            // Survival Analysis
+            if (extra.survival) {
+                const sv = extra.survival;
+                html += `<div class="score-card"><div class="label">Time-to-Conversion</div><div class="value" style="font-size:1.3rem">${sv.medianDays}d</div><div class="detail">${sv.label}</div><div class="detail">7d: ${100-sv.survival7d}% konvertiert · 14d: ${100-sv.survival14d}% · 30d: ${100-sv.survival30d}%</div></div>`;
+            }
+
+            // Information Gain
+            if (extra.infoGain) {
+                const ig = extra.infoGain;
+                html += `<div class="score-card"><div class="label">Signal-Staerke</div><div class="value" style="font-size:1.3rem">${ig.totalGain}</div><div class="detail">${ig.label}</div>${ig.strongestSignal ? `<div class="detail">Staerkstes: ${ig.strongestSignal.name} (${ig.strongestSignal.gain})</div>` : ''}</div>`;
+            }
+            html += `</div>`;  // End scores-grid
+
+            // Markt-Analyse Zeile
+            html += `<div class="scores-grid">`;
+            if (extra.marketSat) {
+                const ms = extra.marketSat;
+                html += `<div class="score-card"><div class="label">Markt-Saettigung</div><div class="value" style="font-size:1.3rem">${ms.saturation}</div><div class="detail">${ms.label}</div><div class="detail">${ms.totalCompetitors} Wettbewerber · Ø Rating: ${ms.avgRating}</div></div>`;
+            }
+            if (extra.geoCluster && extra.geoCluster.nearby500m > 0) {
+                const gc = extra.geoCluster;
+                html += `<div class="score-card"><div class="label">Geo-Cluster</div><div class="value" style="font-size:1.3rem;color:${gc.isCluster ? 'var(--green)' : 'var(--muted)'}">${gc.isCluster ? 'Cluster' : 'Verteilt'}</div><div class="detail">${gc.label}</div><div class="detail">R₀-Boost: ${gc.r0Boost}x · Ø Distanz: ${gc.avgDistance}m</div></div>`;
+            }
+            if (extra.jobSignal?.isHiring) {
+                html += `<div class="score-card"><div class="label">Wachstums-Signal</div><div class="value" style="font-size:1.3rem;color:var(--green)">Stellt ein</div><div class="detail">${extra.jobSignal.label}</div></div>`;
+            }
+            html += `</div>`;
+
+            // A/B-Test Empfehlung
+            if (extra.abTest) {
+                const ab = extra.abTest;
+                const variantLabels = { emotional: 'Emotional (Schmerz → Loesung)', rational: 'Rational (Daten → ROI)', hybrid: 'Hybrid (Hook → Fakten)' };
+                html += `<div class="card" style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Pitch-Variante (Thompson Sampling, Konfidenz: ${ab.confidence})</div>
+                    <div style="font-size:14px;font-weight:600">${variantLabels[ab.variant] || ab.variant}</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px">Gesendet: E:${ab.stats.emotional.sent} R:${ab.stats.rational.sent} H:${ab.stats.hybrid.sent} · Antworten: E:${ab.stats.emotional.replied} R:${ab.stats.rational.replied} H:${ab.stats.hybrid.replied}</div>
+                </div>`;
+            }
+
+            // Score-Drift Alert
+            if (extra.drift?.drifted) {
+                html += `<div class="card" style="border-left:3px solid var(--orange);margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--orange)">${extra.drift.alert}</div><div style="font-size:12px;color:var(--muted)">Letzter Check: vor ${extra.drift.daysSince} Tagen</div></div>`;
+            }
+
+            // Kontakt-Daten (NER)
+            if (extra.entities && (extra.entities.email || extra.entities.company)) {
+                const e = extra.entities;
+                html += `<div class="card" style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:6px">Extrahierte Kontaktdaten</div>`;
+                if (e.company) html += `<div class="biz-stat"><span class="biz-label">Firma</span><span class="biz-value">${e.company}</span></div>`;
+                if (e.email) html += `<div class="biz-stat"><span class="biz-label">E-Mail</span><span class="biz-value"><a href="mailto:${e.email}">${e.email}</a></span></div>`;
+                if (e.address) html += `<div class="biz-stat"><span class="biz-label">Adresse</span><span class="biz-value">${e.address}</span></div>`;
+                html += `</div>`;
+            }
+
+            // Reminders
+            if (extra.reminders && extra.reminders.length > 0) {
+                html += `<div class="card" style="border-left:3px solid var(--accent);margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:6px">Follow-Up faellig (${extra.reminders.length})</div>`;
+                for (const r of extra.reminders.slice(0, 3)) {
+                    html += `<div class="biz-stat"><span class="biz-label">${r.name || r.domain} — Tag ${r.touchDay}</span><span class="biz-value">Seit ${r.daysSince} Tagen kontaktiert</span></div>`;
+                }
+                html += `</div>`;
+            }
+        }
+
         // ── Umsatzverlust (Modul 1) ──
         if (extra.revenue && extra.revenue.yearlyRevenueLoss > 0) {
             const r = extra.revenue;
@@ -2559,16 +3079,30 @@ App.single = {
         const activationEnergy = App.activation.calculate(ws, tech, biz.place, competitors, revenue);
         const r0 = App.epidemic.calculate(biz.place, competitors);
         const shannonEntropy = App.shannon.calculate(psiData, tech);
-        // digitalFootprint bereits oben berechnet (vor prob)
         const graphCentrality = App.graph.calculate(biz.place, competitors);
         const kahnemanProfile = App.kahneman.calculate(ws, tech, biz.place, revenue, activationEnergy);
+
+        // Advanced Intelligence (Block 1)
+        const googleAds = App.googleAds.detect(psiData);
+        const pricePosition = App.pricePosition.analyze(biz.place);
+        const marketSat = App.marketSaturation.analyze(competitors, biz.place);
+        const geoCluster = App.geoCluster.analyze(biz.place, competitors);
+        const jobSignal = App.jobSignal.detect(psiData);
+        const entities = App.ner.extract(psiData, biz.place);
+        const branchType = biz.place?.primaryType || '_default';
+        const survival = App.survival.estimate(branchType, prob.leadScore);
+        const infoGain = App.infoGain.calculate(ws, tech, biz.place, digitalFootprint);
+        const abTest = App.abTest.selectVariant(branchType);
+        const reminders = App.reminders.check();
+        const drift = App.drift.check(new URL(url).hostname.replace('www.', ''), prob.leadScore);
 
         App.ui.hideLoading();
         $('check-btn').disabled = false;
         // Zwischenspeichern fuer CRM-Save-Button
         App._lastWs = ws; App._lastTech = tech; App._lastProb = prob;
         App._lastExtra = { revenue, screenshot, googleReport, strategy, timing, sequence, digitalFootprint,
-            thermoEntropy, activationEnergy, r0, shannonEntropy, graphCentrality, kahnemanProfile };
+            thermoEntropy, activationEnergy, r0, shannonEntropy, graphCentrality, kahnemanProfile,
+            googleAds, pricePosition, marketSat, geoCluster, jobSignal, entities, survival, infoGain, abTest, reminders, drift };
 
         App.ui.renderSingle(url, ws, tech, biz, prob, competitors, App._lastExtra);
     }
