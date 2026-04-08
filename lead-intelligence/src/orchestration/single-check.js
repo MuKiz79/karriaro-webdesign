@@ -19,6 +19,7 @@ import { auditUX } from '../analysis/ux-audit.js';
 import { analyzeFutureReadiness } from '../analysis/future-readiness.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
+import { generateGoogleReport } from '../strategy/google-report.js';
 
 export async function runSingleCheck() {
     let url = document.getElementById('url-input').value.trim();
@@ -85,8 +86,16 @@ export async function runSingleCheck() {
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
 
+        // Fix 4: A/B-Test Variante wählen
+        const { selectVariant, checkDrift } = await import('../main.js');
+        const abTest = selectVariant();
+
+        // Fix 5: Score-Drift prüfen
+        const drift = checkDrift(new URL(url).hostname.replace('www.', ''), result.leadScore);
+
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
-            contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData };
+            contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
+            abTest, drift };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
@@ -254,6 +263,13 @@ function renderResult(data) {
         </div>`;
     } else { revEl.innerHTML = ''; }
 
+    // ── Fix 6: Google-Report (Core Web Vitals) ──
+    const gr = generateGoogleReport(ws);
+    revEl.innerHTML += `<div class="card" style="margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px">Google Core Web Vitals — ${gr.passed}/${gr.total} bestanden</div>
+        ${gr.cwv.map(c => `<div class="stat-row"><span class="stat-label"><span style="color:${c.pass ? 'var(--green)' : 'var(--red)'};margin-right:6px">${c.pass ? '✓' : '✗'}</span>${c.name}</span><span class="stat-value">${c.value} <span style="font-size:10px;color:var(--muted)">(${c.threshold})</span></span></div>`).join('')}
+    </div>`;
+
     // ── #7: Kontakt-Strategie ──
     const stratEl = document.getElementById('result-strategy');
     let stratHtml = '';
@@ -350,8 +366,19 @@ function renderResult(data) {
     // ── Expert ──
     document.getElementById('result-expert').innerHTML = `<div class="card"><pre style="font-size:11px;overflow-x:auto;max-height:400px">${JSON.stringify(r, null, 2)}</pre></div>`;
 
+    // ── Fix 4: A/B-Test + Fix 5: Drift ──
+    let actionsExtra = '';
+    if (data.abTest) {
+        const labels = { emotional: 'Emotional (Schmerz → Lösung)', rational: 'Rational (Daten → ROI)', hybrid: 'Hybrid (Hook → Fakten)' };
+        actionsExtra += `<div class="card" style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:4px">Pitch-Variante (Thompson Sampling, Konfidenz: ${data.abTest.confidence})</div><div style="font-size:14px;font-weight:600">${labels[data.abTest.variant] || data.abTest.variant}</div></div>`;
+    }
+    if (data.drift?.drifted) {
+        actionsExtra += `<div class="card" style="border-left:3px solid var(--orange);margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--orange)">Score verändert: ${data.drift.previousScore} → ${r.leadScore}</div></div>`;
+    }
+
     // ── #4: Actions (CRM Save) ──
     document.getElementById('result-actions').innerHTML = `
+        ${actionsExtra}
         <div style="text-align:center;padding:24px 0">
             <button class="btn-primary" id="btn-save-crm" style="margin-right:12px;background:var(--text)">Im CRM speichern</button>
             <a href="https://karriaro-webdesign.de/#kontakt" class="btn-primary" style="display:inline-block;text-decoration:none">Kostenlos beraten lassen</a>

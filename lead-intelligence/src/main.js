@@ -5,6 +5,10 @@
 
 import { config, loadConfig, saveConfig } from './config.js';
 import { state } from './state.js';
+import { loadCloudSettings, saveCloudSettings } from './crm/settings.js';
+import { checkReminders } from './crm/reminders.js';
+import { selectVariant } from './learning/ab-test.js';
+import { checkDrift } from './learning/tracking.js';
 
 // ── Config laden ──
 loadConfig();
@@ -105,6 +109,10 @@ function initAuth() {
         if (user) {
             btn.textContent = user.email.split('@')[0];
             btn.classList.add('logged-in');
+            // Fix 1: Settings aus Firestore laden
+            loadCloudSettings();
+            // Fix 3: Reminders prüfen
+            showReminders();
         } else {
             btn.textContent = 'Anmelden';
             btn.classList.remove('logged-in');
@@ -141,6 +149,7 @@ function toggleSettings() {
             config.psiKey = document.getElementById('cfg-psi-key').value.trim();
             config.fnUrl = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
             saveConfig();
+            saveCloudSettings();  // Fix 1: Auch in Firestore speichern
             panel.classList.add('hidden');
         });
     }
@@ -163,12 +172,49 @@ function abort() {
     errorEl.classList.remove('hidden');
 }
 
-// ── Onboarding ──
+// ── Fix 2: Onboarding ──
 function checkOnboarding() {
-    if (!localStorage.getItem('karriaro_onboarded')) {
-        // TODO: Phase 7 — Onboarding-Overlay
-    }
+    if (localStorage.getItem('karriaro_onboarded')) return;
+    const el = document.getElementById('onboarding');
+    el.classList.remove('hidden');
+    el.innerHTML = `
+        <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px">
+            <div style="background:var(--card);border-radius:var(--radius);padding:32px;max-width:480px;width:100%">
+                <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px">Willkommen bei Lead Intelligence</h2>
+                <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px">
+                    Dieses Tool analysiert Websites potenzieller Kunden und berechnet mit Bayesianischer Statistik
+                    wie wahrscheinlich eine Konversion ist.<br><br>
+                    <strong>3 Schritte:</strong><br>
+                    1. URL eingeben → Website wird analysiert<br>
+                    2. Ergebnis lesen → Score, Gründe, Strategie<br>
+                    3. Lead speichern → Im CRM weiterverfolgen<br><br>
+                    <strong>Tipp:</strong> Trage zuerst unter "Einstellungen" deinen API-Key ein.
+                </p>
+                <button class="btn-primary" id="btn-onboarding-close" style="width:100%">Verstanden — loslegen</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('btn-onboarding-close').addEventListener('click', () => {
+        localStorage.setItem('karriaro_onboarded', '1');
+        el.classList.add('hidden');
+        el.innerHTML = '';
+    });
+}
+
+// ── Fix 3: Follow-Up Reminders anzeigen ──
+function showReminders() {
+    const due = checkReminders();
+    if (!due.length) return;
+    // Banner oben in den Results-Bereich
+    const banner = document.createElement('div');
+    banner.className = 'card';
+    banner.style.cssText = 'border-left:3px solid var(--accent);margin:80px auto 0;max-width:680px;padding:16px 20px';
+    banner.innerHTML = `
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:6px">Follow-Up fällig (${due.length})</div>
+        ${due.slice(0, 3).map(r => `<div class="stat-row"><span class="stat-label">${r.name || r.domain} — Tag ${r.touchDay}</span><span class="stat-value">Seit ${r.daysSince} Tagen</span></div>`).join('')}
+    `;
+    document.querySelector('nav').after(banner);
 }
 
 // Export for use in orchestration modules
-export { abort };
+export { abort, selectVariant, checkDrift };
