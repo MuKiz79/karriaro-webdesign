@@ -517,7 +517,11 @@ App.score = {
             fcp: audits['first-contentful-paint']?.displayValue || '—',
             lcp: audits['largest-contentful-paint']?.displayValue || '—',
             cls: audits['cumulative-layout-shift']?.displayValue || '—',
-            viewport: audits['viewport']?.score === 1,
+            // Viewport: null/undefined = Audit nicht geladen (behandle als vorhanden)
+            // 0 = explizit durchgefallen (aber kann zoom-disabled sein, nicht "nicht mobil")
+            // 1 = perfekt
+            viewport: audits['viewport']?.score !== 0,
+            viewportMissing: audits['viewport']?.score === 0 && !audits['viewport']?.warnings?.length,
             isHttps: (psiData.lighthouseResult?.finalDisplayedUrl || '').startsWith('https')
         };
     },
@@ -1010,7 +1014,8 @@ App.probability = {
 
         // Interesse — JEDE Website die nicht perfekt ist, ist ein Argument
         if (!ws.isHttps) s.interest[0] += 4;           // Kritisch: Browser-Warnung
-        if (!ws.viewport) s.interest[0] += 3;           // Kritisch: Mobile kaputt
+        if (ws.viewportMissing) s.interest[0] += 3;       // Wirklich kein Viewport
+        else if (!ws.viewport) s.interest[0] += 1;      // Viewport eingeschraenkt (Zoom deaktiviert)
         if (ws.perf < 30) s.interest[0] += 3;           // Katastrophal langsam
         else if (ws.perf < 50) s.interest[0] += 2;      // Deutlich langsam
         else if (ws.perf < 70) s.interest[0] += 1;      // Verbesserungswuerdig
@@ -2380,7 +2385,7 @@ App.ui = {
         const issues = [];
         if (ws.perf < 50) issues.push({ c: 'red', t: `Performance ${ws.perf}/100 — Google stuft langsame Seiten herab.` });
         else if (ws.perf < 75) issues.push({ c: 'orange', t: `Performance ${ws.perf}/100 — spuerbar langsam auf Mobile.` });
-        if (!ws.viewport) issues.push({ c: 'red', t: 'Kein Viewport-Tag — nicht mobilfreundlich.' });
+        if (!ws.viewport) issues.push({ c: 'red', t: 'Viewport eingeschraenkt oder fehlend — Mobile-Darstellung pruefen.' });
         if (!ws.isHttps) issues.push({ c: 'red', t: 'Kein HTTPS — Browser zeigen "Nicht sicher".' });
         if (ws.seo < 75) issues.push({ c: 'orange', t: `SEO ${ws.seo}/100 — Meta-Tags oder strukturierte Daten fehlen.` });
         if (ws.a11y < 70) issues.push({ c: 'orange', t: `Barrierefreiheit ${ws.a11y}/100 — BFSG-relevant seit 2025.` });
