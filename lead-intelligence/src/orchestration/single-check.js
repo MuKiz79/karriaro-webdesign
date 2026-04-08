@@ -80,25 +80,42 @@ export async function runSingleCheck() {
 
         // Phase 4: Scoring
         showLoading('Lead wird bewertet...');
-        const revenue = calculateRevenueLoss(ws, place);
-        const result = scoreLead(ws, tech, place, competitors, footprint, revenue);
+        let revenue = null, result = null;
+        try {
+            revenue = calculateRevenueLoss(ws, place);
+        } catch(e) { console.error('Revenue calc failed:', e); }
+        try {
+            result = scoreLead(ws, tech, place, competitors, footprint, revenue);
+        } catch(e) {
+            console.error('ScoreLead failed:', e);
+            // Fallback-Ergebnis
+            result = { leadScore: 50, conversionRate: 2.0, ci: { lower: 0.5, upper: 5 }, ciMargin: 2, N: 100,
+                stages: [], bottleneck: null, drivers: [], kelly: { optimalHours: 2, recommendation: 'Standard' },
+                channelResult: { best: { name: 'E-Mail' }, all: [] }, survival: { label: '~14 Tage' },
+                nextAction: { action: 'E-Mail senden', state: 'Kalt' }, dealSize: 990, expectedValue: 0,
+                sensitivity: [], seasonFactor: 100, timePerLead: 2 };
+        }
 
-        // Phase 5: KI-Analyse (parallel)
+        // Phase 5: KI-Analyse (parallel, alle mit try/catch)
         showLoading('KI-Analyse...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
-        // KI-Branchenanalyse: Was ist Standard, was fehlt? (das stärkste Argument)
         const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
-        const uxFound = auditUX(psiData, place)?.found?.map(f => f.name) || [];
+        let uxFound = [];
+        try { uxFound = auditUX(psiData, place)?.found?.map(f => f.name) || []; } catch(e) {}
 
-        const [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, branchStandards] = await Promise.all([
-            analyzeContent(url),
-            analyzeScreenshot(screenshot),
-            analyzeReviews(domain),
-            getDomainAge(domain),
-            getDomainAuthority(domain),
-            getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain),
-            analyzeBranchStandards(url, brancheForAI, uxFound)
-        ]);
+        let contentAnalysis = null, screenshotAnalysis = null, reviewSentiment = null,
+            domainAge = null, domainAuthority = null, searchVolume = null, branchStandards = null;
+        try {
+            [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, branchStandards] = await Promise.all([
+                analyzeContent(url).catch(() => null),
+                analyzeScreenshot(screenshot).catch(() => null),
+                analyzeReviews(domain).catch(() => null),
+                getDomainAge(domain).catch(() => null),
+                getDomainAuthority(domain).catch(() => null),
+                getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain).catch(() => null),
+                analyzeBranchStandards(url, brancheForAI, uxFound).catch(() => null)
+            ]);
+        } catch(e) { console.error('KI-Analyse failed:', e); }
 
         // Render
         hideLoading();
