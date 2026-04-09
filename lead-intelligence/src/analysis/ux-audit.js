@@ -2,7 +2,7 @@
  * Branchen-UX-Audit mit 9 Personas
  *
  * Prueft ob branchenspezifische Must-Have-Features vorhanden sind.
- * Erkennung ueber Network Requests URL-Patterns.
+ * Erkennung ueber Lighthouse-Audits (bevorzugt) und Network-Request URL-Patterns (Fallback).
  *
  * @module analysis/ux-audit
  */
@@ -17,7 +17,7 @@ const PERSONAS = {
         persona: 'Patient sucht Zahnarzt auf dem Handy, will sofort Termin buchen',
         mustHave: [
             { id: 'booking', name: 'Online-Terminbuchung', why: '73% der Patienten erwarten Online-Buchung (Doctolib-Generation)', patterns: /doctolib|jameda|samedi|terminland|appointly|booking|termin|buchung|calendly|acuity/i, critical: true },
-            { id: 'maps', name: 'Google Maps / Anfahrt', why: 'Patient will wissen wie er hinkommt', patterns: /maps\.google|google\.com\/maps|mapbox|openstreetmap|leaflet/i, critical: true },
+            { id: 'maps', name: 'Google Maps / Anfahrt', why: 'Patient will wissen wie er hinkommt', patterns: /maps\.google|google\.com\/maps|maps\.googleapis|mapbox|openstreetmap|leaflet|anfahrt/i, critical: true },
             { id: 'team', name: 'Team-Vorstellung mit Fotos', why: 'Vertrauen entsteht durch Gesichter — 68% waehlen Arzt nach Sympathie', patterns: /team|aerzte|zahnarzt.*portrait|mitarbeiter/i, critical: false },
             { id: 'reviews', name: 'Bewertungen / Referenzen', why: 'Social Proof — 84% lesen Reviews vor Arztbesuch', patterns: /jameda|google.*review|bewertung|rezension|trustpilot|provenexpert/i, critical: false },
             { id: 'services', name: 'Leistungsuebersicht', why: 'Patient will wissen ob Implantologie/Prophylaxe angeboten wird', patterns: /leistung|behandlung|implant|prophylaxe|bleaching|zahnersatz/i, critical: false },
@@ -30,7 +30,7 @@ const PERSONAS = {
         persona: 'Patient googelt Symptome, sucht Arzt in der Naehe, will schnell Termin',
         mustHave: [
             { id: 'booking', name: 'Online-Terminbuchung', why: 'Doctolib hat die Erwartung gesetzt — wer es nicht hat, wirkt veraltet', patterns: /doctolib|jameda|samedi|terminland|appointly|booking|termin|calendly/i, critical: true },
-            { id: 'maps', name: 'Anfahrt / Lageplan', why: 'Besonders wichtig bei Aerzten — Patient ist oft krank und orientierungslos', patterns: /maps\.google|google\.com\/maps|anfahrt|lageplan/i, critical: true },
+            { id: 'maps', name: 'Anfahrt / Lageplan', why: 'Besonders wichtig bei Aerzten — Patient ist oft krank und orientierungslos', patterns: /maps\.google|google\.com\/maps|maps\.googleapis|anfahrt|lageplan|mapbox|openstreetmap/i, critical: true },
             { id: 'hours', name: 'Sprechzeiten prominent', why: '91% suchen zuerst nach Oeffnungszeiten', patterns: /sprechzeit|oeffnungszeit|praxiszeit|montag.*freitag/i, critical: true },
             { id: 'emergency', name: 'Notfall-Info', why: 'Muss sofort sichtbar sein — kann lebensrettend sein', patterns: /notfall|notdienst|bereitschaft|akut/i, critical: false },
         ],
@@ -91,7 +91,8 @@ const PERSONAS = {
         persona: 'Mandant hat ein Problem, googelt panisch, braucht sofort Vertrauen und Kontakt',
         mustHave: [
             { id: 'specialization', name: 'Rechtsgebiete klar dargestellt', why: 'Mandant muss sofort sehen ob sein Problem abgedeckt ist', patterns: /rechtsgebiet|fachanwalt|arbeitsrecht|familienrecht|strafrecht|mietrecht/i, critical: true },
-            { id: 'contact', name: 'Sofort-Kontakt (Telefon prominent)', why: 'Rechtsprobleme sind dringend — Telefonnummer muss in 2 Sekunden sichtbar sein', patterns: /tel:|telefon|anruf|ruf.*an|hotline|kontakt/i, critical: true },
+            { id: 'contact', name: 'Sofort-Kontakt (Telefon prominent)', why: 'Rechtsprobleme sind dringend — Telefonnummer muss in 2 Sekunden sichtbar sein', patterns: /tel:|telefon|anruf|ruf.*an|hotline|kontakt|impressum|mailto:/i, critical: true,
+              check: (_psi, _urls, place) => !!(place && (place.internationalPhoneNumber || place.nationalPhoneNumber)) },
             { id: 'consultation', name: 'Erstberatung buchbar', why: '72% suchen zuerst online nach Anwaelten — wer Erstberatung anbietet gewinnt', patterns: /erstberatung|erstgespraech|beratungstermin|kostenlos.*beratung/i, critical: false },
             { id: 'team', name: 'Anwalts-Profile', why: 'Mandanten waehlen den Anwalt, nicht die Kanzlei', patterns: /anwalt|rechtsanwalt|partner|profil|vita|team/i, critical: false },
         ],
@@ -102,7 +103,8 @@ const PERSONAS = {
         name: 'KFZ-Werkstatt',
         persona: 'Auto ist kaputt, googelt panisch "Werkstatt in der Naehe", will JETZT Hilfe',
         mustHave: [
-            { id: 'phone', name: 'Telefonnummer sofort sichtbar', why: 'Pannen sind Notfaelle — Nummer muss in 1 Sekunde sichtbar sein', patterns: /tel:|telefon|anruf|notdienst|pannenhilfe/i, critical: true },
+            { id: 'phone', name: 'Telefonnummer sofort sichtbar', why: 'Pannen sind Notfaelle — Nummer muss in 1 Sekunde sichtbar sein', patterns: /tel:|telefon|anruf|notdienst|pannenhilfe|kontakt|impressum/i, critical: true,
+              check: (_psi, _urls, place) => !!(place && (place.internationalPhoneNumber || place.nationalPhoneNumber)) },
             { id: 'services', name: 'Leistungen / Marken', why: 'Autofahrer will wissen: "Koennen die mein Auto?"', patterns: /leistung|service|inspektion|tuev|oelwechsel|bremse|reifen/i, critical: true },
             { id: 'hours', name: 'Oeffnungszeiten', why: 'Panne passiert nicht nur Mo-Fr 9-17', patterns: /oeffnungszeit|geoeffnet|notdienst|samstag/i, critical: true },
             { id: 'appointment', name: 'Termin vereinbaren', why: 'Fuer geplante Inspektionen will niemand mehr anrufen', patterns: /termin|werkstatt.*termin|buchung|appointment/i, critical: false },
@@ -115,7 +117,8 @@ const PERSONAS = {
         persona: 'Rohr geplatzt, Wasser laeuft, googelt "Sanitaer Notdienst" — Panik-Modus',
         mustHave: [
             { id: 'emergency', name: 'Notdienst-Nummer GROSS', why: 'Das ist die wichtigste Info — muss in 0.5 Sekunden sichtbar sein', patterns: /notdienst|notfall|24.*stunden|rund.*uhr|sofort.*hilfe/i, critical: true },
-            { id: 'phone', name: 'Telefon sofort klickbar', why: 'Auf dem Handy: Ein Tipp = Anruf. Keine Suche noetig.', patterns: /tel:|href.*tel|click.*call|anruf/i, critical: true },
+            { id: 'phone', name: 'Telefon sofort klickbar', why: 'Auf dem Handy: Ein Tipp = Anruf. Keine Suche noetig.', patterns: /tel:|href.*tel|click.*call|anruf|kontakt|impressum/i, critical: true,
+              check: (_psi, _urls, place) => !!(place && (place.internationalPhoneNumber || place.nationalPhoneNumber)) },
             { id: 'area', name: 'Einsatzgebiet', why: 'Kunde will wissen ob der Betrieb zu ihm kommt', patterns: /einsatzgebiet|region|umkreis|wir.*kommen/i, critical: false },
         ],
         missingPitch: 'Wenn ein Rohr platzt, googelt der Kunde "Sanitaer Notdienst [Stadt]". Wer keine riesige Notdienst-Nummer auf der Website hat, verliert an den Naechsten.',
@@ -125,9 +128,11 @@ const PERSONAS = {
         name: 'Lokales Unternehmen',
         persona: 'Kunde sucht Dienstleister in der Naehe, vergleicht 3-5 Optionen',
         mustHave: [
-            { id: 'contact', name: 'Kontaktdaten sichtbar', why: 'Telefon + E-Mail + Adresse muessen sofort findbar sein', patterns: /kontakt|telefon|tel:|email|adresse|anfahrt/i, critical: true },
-            { id: 'maps', name: 'Standort / Maps', why: 'Lokale Kunden brauchen Anfahrt', patterns: /maps\.google|google\.com\/maps|anfahrt|standort/i, critical: true },
-            { id: 'mobile', name: 'Mobile-Optimierung', why: '60%+ der Besucher kommen vom Handy', patterns: /viewport|responsive|mobile/i, critical: true },
+            { id: 'contact', name: 'Kontaktdaten sichtbar', why: 'Telefon + E-Mail + Adresse muessen sofort findbar sein', patterns: /kontakt|telefon|tel:|email|adresse|anfahrt|impressum|mailto:|href="tel:/i, critical: true,
+              check: (_psi, _urls, place) => !!(place && (place.internationalPhoneNumber || place.nationalPhoneNumber || place.formattedAddress)) },
+            { id: 'maps', name: 'Standort / Maps', why: 'Lokale Kunden brauchen Anfahrt', patterns: /maps\.google|google\.com\/maps|maps\.googleapis|anfahrt|standort|leaflet|mapbox|openstreetmap/i, critical: true },
+            { id: 'mobile', name: 'Mobile-Optimierung', why: '60%+ der Besucher kommen vom Handy',
+              check: (psi) => { const s = psi?.lighthouseResult?.audits?.['viewport']?.score; return s !== 0 && s !== null; }, critical: true },
         ],
         missingPitch: 'Eine Website ohne sichtbare Kontaktdaten und Mobile-Optimierung verliert 60% der potenziellen Kunden.',
         modernFeatures: ['Online-Kontaktformular', 'WhatsApp-Button', 'Google Maps Integration', 'FAQ-Bereich']
@@ -149,8 +154,34 @@ export function auditUX(psiData, place) {
     const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || [])
         .map(i => i.url || '').join(' ');
 
-    const results = persona.mustHave.map(feature => {
-        const found = feature.patterns.test(urls);
+    // Universelle Checks die JEDE Branche bekommt (wenn nicht schon in Persona)
+    let features = [...persona.mustHave];
+    const hasIds = new Set(features.map(f => f.id));
+
+    if (!hasIds.has('mobile')) {
+        features.push({
+            id: 'mobile', name: 'Mobile-Optimierung', why: '60%+ der Besucher kommen vom Handy',
+            check: (psi) => { const s = psi?.lighthouseResult?.audits?.['viewport']?.score; return s !== 0 && s !== null; },
+            critical: true
+        });
+    }
+    if (!hasIds.has('contact') && !hasIds.has('phone')) {
+        features.push({
+            id: 'contact', name: 'Kontaktdaten sichtbar', why: 'Telefon + Adresse muessen sofort findbar sein',
+            patterns: /kontakt|telefon|tel:|email|impressum|mailto:|href="tel:/i,
+            check: (_psi, _urls, pl) => !!(pl && (pl.internationalPhoneNumber || pl.nationalPhoneNumber || pl.formattedAddress)),
+            critical: true
+        });
+    }
+
+    const results = features.map(feature => {
+        let found = false;
+        if (feature.check) {
+            found = feature.check(psiData, urls, place);
+        }
+        if (!found && feature.patterns) {
+            found = feature.patterns.test(urls);
+        }
         return { ...feature, found };
     });
 
