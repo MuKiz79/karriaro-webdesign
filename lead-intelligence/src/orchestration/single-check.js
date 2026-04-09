@@ -80,31 +80,13 @@ export async function runSingleCheck() {
         }
         if (state.aborted) return cleanup();
 
-        // Phase 4: Scoring
-        showLoading('Lead wird bewertet...');
-        let revenue = null, result = null;
-        try {
-            revenue = calculateRevenueLoss(ws, place);
-        } catch(e) { console.error('Revenue calc failed:', e); }
-        try {
-            result = scoreLead(ws, tech, place, competitors, footprint, revenue);
-        } catch(e) {
-            console.error('ScoreLead failed:', e);
-            // Fallback-Ergebnis
-            result = { leadScore: 50, conversionRate: 2.0, ci: { lower: 0.5, upper: 5 }, ciMargin: 2, N: 100,
-                stages: [], bottleneck: null, drivers: [], kelly: { optimalHours: 2, recommendation: 'Standard' },
-                channelResult: { best: { name: 'E-Mail' }, all: [] }, survival: { label: '~14 Tage' },
-                nextAction: { action: 'E-Mail senden', state: 'Kalt' }, dealSize: 990, expectedValue: 0,
-                sensitivity: [], seasonFactor: 100, timePerLead: 2 };
-        }
-
-        // Firmen-Profil ZUERST (wird in Phase 5 referenziert)
+        // Firmen-Profil (wird in Phase 4 referenziert)
         let companyProfile = null;
         try {
             companyProfile = analyzeCompanyProfile(url, psiData, place, null);
         } catch(e) { console.error('CompanyProfile failed:', e); companyProfile = { domain: new URL(url).hostname.replace('www.',''), branche: '', isEnterprise: false, enterpriseWarning: null, owner: { name: null, nationality: null }, companyName: '' }; }
 
-        // Phase 5: KI-Analyse (parallel, alle mit try/catch)
+        // Phase 4: KI-Analyse ZUERST (Design-Qualität beeinflusst Scoring)
         showLoading('KI-Analyse...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
         const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
@@ -125,11 +107,28 @@ export async function runSingleCheck() {
             ]);
         } catch(e) { console.error('KI-Analyse failed:', e); }
 
+        // Phase 5: Scoring — NACH KI-Analyse (Design-Qualität fließt ein)
+        showLoading('Lead wird bewertet...');
+        let revenue = null, result = null;
+        try {
+            revenue = calculateRevenueLoss(ws, place);
+        } catch(e) { console.error('Revenue calc failed:', e); }
+        try {
+            result = scoreLead(ws, tech, place, competitors, footprint, revenue, null, screenshotAnalysis, contentAnalysis);
+        } catch(e) {
+            console.error('ScoreLead failed:', e);
+            result = { leadScore: 50, conversionRate: 2.0, ci: { lower: 0.5, upper: 5 }, ciMargin: 2, N: 100,
+                stages: [], bottleneck: null, drivers: [], kelly: { optimalHours: 2, recommendation: 'Standard' },
+                channelResult: { best: { name: 'E-Mail' }, all: [] }, survival: { label: '~14 Tage' },
+                nextAction: { action: 'E-Mail senden', state: 'Kalt' }, dealSize: 990, expectedValue: 0,
+                sensitivity: [], seasonFactor: 100, timePerLead: 2 };
+        }
+
         // Render
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
 
-        // Fix 4: A/B-Test Variante wählen
+        // A/B-Test Variante wählen
         const abTest = sv();
 
         // ── Analyse-Module ──

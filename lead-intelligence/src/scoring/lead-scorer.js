@@ -80,13 +80,13 @@ function optimizeChannels(channels, conversionRate, dealSize) {
  * @param {Object|null} epidemicResult - R0-Ergebnis (optional)
  * @returns {Object} Vollstaendiges Lead-Scoring-Ergebnis
  */
-export function scoreLead(ws, tech, place, competitors, footprint, revenue = null, epidemicResult = null) {
+export function scoreLead(ws, tech, place, competitors, footprint, revenue = null, epidemicResult = null, screenshotAnalysis = null, contentAnalysis = null) {
     const type = place?.primaryType || '_default';
     const branch = getBranchPrior(type);
     const seasonFactor = SEASONALITY.getCurrentFactor();
 
-    // Shifts berechnen
-    const shifts = calculateShifts(ws, tech, place, competitors, revenue, footprint);
+    // Shifts berechnen — mit Design-Qualität als Dämpfung
+    const shifts = calculateShifts(ws, tech, place, competitors, revenue, footprint, screenshotAnalysis, contentAnalysis);
 
     // Wissenschaftliche Module: Boost fuer Interesse
     let sciBoost = 0;
