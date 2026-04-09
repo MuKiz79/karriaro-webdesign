@@ -135,6 +135,19 @@ export async function runSingleCheck() {
                 sensitivity: [], seasonFactor: 100, timePerLead: 2 };
         }
 
+        // ── Post-Scoring Overrides ──
+        // Konkurrenz oder Enterprise → Score = 0, kein Pitch
+        if (companyProfile?.isCompetitor || companyProfile?.isEnterprise) {
+            result.leadScore = 0;
+            result.conversionRate = 0;
+            result.expectedValue = 0;
+            result._skipPitch = true;
+        }
+        // Perfekte Website (Perf ≥ 90 + alle CWVs) → Umsatzverlust = 0
+        if (ws.perf >= 90 && ws.isHttps && ws.viewport) {
+            if (revenue) { revenue.yearlyLoss = 0; revenue.monthlyLoss = 0; revenue.roi = 0; }
+        }
+
         // Render
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
@@ -257,17 +270,27 @@ function renderResult(data) {
     const ws = data.ws;
     const tech = data.tech;
     const domain = new URL(data.url).hostname.replace('www.', '');
-    const color = r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
-    const rawColor = r.leadScore >= 55 ? '#30d158' : r.leadScore >= 30 ? '#ff9f0a' : '#ff453a';
-    const label = r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead';
+    const cp = data.companyProfile || {};
+    const isSkip = r._skipPitch || cp.isCompetitor || cp.isEnterprise;
+    const color = isSkip ? 'var(--muted)' : r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
+    const rawColor = isSkip ? '#86868b' : r.leadScore >= 55 ? '#30d158' : r.leadScore >= 30 ? '#ff9f0a' : '#ff453a';
+    const label = isSkip
+        ? (cp.isCompetitor ? 'Konkurrenz — nicht kontaktieren' : 'Nicht Ihre Zielgruppe')
+        : r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead';
 
     // UX-Audit VOR Erklärung berechnen
     const uxForExplanation = auditUX(data.psiData, data.place);
-    const explanation = generateExplanation(r, ws, tech, data, uxForExplanation);
+    let explanation;
+    if (isSkip && cp.isCompetitor) {
+        explanation = `<strong style="color:var(--muted)">Diesen Lead überspringen.</strong><br><br>${domain} ist selbst eine Webdesign-Agentur oder IT-Dienstleister — ein Mitbewerber, kein potenzieller Kunde.`;
+    } else if (isSkip && cp.isEnterprise) {
+        explanation = `<strong style="color:var(--muted)">Diesen Lead überspringen.</strong><br><br>${cp.enterpriseWarning?.message || 'Großunternehmen — nicht Ihre Zielgruppe.'}`;
+    } else {
+        explanation = generateExplanation(r, ws, tech, data, uxForExplanation);
+    }
 
     // ── Score Section mit SVG-Ring ──
     const scoreEl = document.getElementById('result-score');
-    const cp = data.companyProfile || {};
     const circumference = 2 * Math.PI * 70; // r=70
     const offset = circumference - (r.leadScore / 100) * circumference;
     let scoreHtml = '';
@@ -576,6 +599,20 @@ function renderResult(data) {
     // ── Kontakt-Strategie ──
     const stratEl = document.getElementById('result-strategy');
     let stratHtml = '';
+
+    // Bei Konkurrenz/Enterprise: Nur Screenshot zeigen, keine Pitch-Sequenz
+    if (data.result._skipPitch) {
+        if (data.screenshot) {
+            stratHtml += `<div class="card anim-in" style="text-align:center;padding:24px">
+                <div class="phone-frame"><img src="${data.screenshot}" alt="Mobile Screenshot"></div>
+                <div class="phone-caption">So sieht die Website auf dem Smartphone aus</div>
+            </div>`;
+        }
+        stratEl.innerHTML = stratHtml;
+        document.getElementById('result-expert').innerHTML = `<div class="card"><pre style="font-size:11px;overflow-x:auto;max-height:400px">${JSON.stringify(r, null, 2)}</pre></div>`;
+        document.getElementById('result-actions').innerHTML = '';
+        return;
+    }
 
     // Screenshot
     if (data.screenshot) {
