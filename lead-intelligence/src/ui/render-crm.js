@@ -1,96 +1,248 @@
 /**
- * CRM View Renderer
+ * CRM View Renderer — Pipeline, Suche, Export, Responsive
  */
-import { loadLeads, updateLead, deleteLead } from '../crm/leads.js';
+import { loadLeads, updateLead, deleteLead, exportCSV } from '../crm/leads.js';
 import { currentUser } from '../crm/firebase.js';
 
-export async function renderCRM(filter = 'alle') {
+const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
+const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
+const STATUS_COLORS = { neu: 'var(--muted)', kontaktiert: 'var(--orange)', interessiert: 'var(--accent)', angebot: 'var(--accent)', kunde: 'var(--green)', verloren: 'var(--red)' };
+
+// AbortController für Event-Listener Cleanup
+let crmController = null;
+
+export async function renderCRM(filter = 'alle', searchQuery = '') {
     const el = document.getElementById('crm-view');
     document.getElementById('results').classList.add('hidden');
     document.getElementById('batch-results').classList.add('hidden');
 
+    // Cleanup vorherige Event-Listener
+    if (crmController) crmController.abort();
+    crmController = new AbortController();
+    const signal = crmController.signal;
+
     if (!currentUser()) {
-        el.innerHTML = `<div style="text-align:center;padding:40px"><p style="color:var(--muted);margin-bottom:16px">Bitte zuerst anmelden.</p></div>`;
+        el.innerHTML = `<div class="crm-empty"><p>Bitte zuerst anmelden um deine Leads zu sehen.</p></div>`;
         el.classList.remove('hidden');
         return;
     }
 
-    el.innerHTML = `<div style="text-align:center;padding:40px"><div class="spinner"></div></div>`;
+    el.innerHTML = `<div class="crm-loading"><div class="spinner"></div></div>`;
     el.classList.remove('hidden');
 
     const leads = await loadLeads();
-    const statuses = ['alle','neu','kontaktiert','interessiert','angebot','kunde','verloren'];
-    const filtered = filter === 'alle' ? leads : leads.filter(l => l.status === filter);
 
+    // Suche
+    let searched = leads;
+    if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        searched = leads.filter(l =>
+            (l.name || '').toLowerCase().includes(q) ||
+            (l.domain || '').toLowerCase().includes(q) ||
+            (l.type || '').toLowerCase().includes(q) ||
+            (l.notes || '').toLowerCase().includes(q)
+        );
+    }
+
+    const filtered = filter === 'alle' ? searched : searched.filter(l => l.status === filter);
+
+    // ── Stats ──
+    const pipelineLeads = leads.filter(l => ['kontaktiert', 'interessiert', 'angebot'].includes(l.status));
     const stats = {
         total: leads.length,
         neu: leads.filter(l => l.status === 'neu').length,
-        kontaktiert: leads.filter(l => l.status === 'kontaktiert').length,
+        pipeline: pipelineLeads.length,
+        pipelineValue: pipelineLeads.reduce((s, l) => s + (l.expectedValue || 0), 0),
         kunde: leads.filter(l => l.status === 'kunde').length,
-        pipeline: leads.filter(l => ['kontaktiert','interessiert','angebot'].includes(l.status)).reduce((s,l) => s + (l.expectedValue || 0), 0)
+        conversionRate: leads.length > 0 ? Math.round(leads.filter(l => l.status === 'kunde').length / leads.length * 100) : 0
     };
 
-    let html = `<h2 style="font-size:1.3rem;font-weight:700;margin-bottom:16px">Lead-CRM</h2>`;
+    let html = '';
 
-    // Stats
-    html += `<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
-        <div class="card" style="min-width:100px;text-align:center"><div style="font-size:1.5rem;font-weight:700">${stats.total}</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Gesamt</div></div>
-        <div class="card" style="min-width:100px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--orange)">${stats.kontaktiert}</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Kontaktiert</div></div>
-        <div class="card" style="min-width:100px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--green)">${stats.kunde}</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Kunden</div></div>
-        <div class="card" style="min-width:100px;text-align:center"><div style="font-size:1.5rem;font-weight:700;color:var(--accent)">€${Math.round(stats.pipeline)}</div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">Pipeline</div></div>
+    // ── Header mit Aktionen ──
+    html += `<div class="crm-header">
+        <h2 class="crm-title">Lead-CRM</h2>
+        <div class="crm-actions-top">
+            <button class="crm-btn-export" data-action="export">CSV Export</button>
+        </div>
     </div>`;
 
-    // Filters
-    html += `<div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">`;
-    for (const s of statuses) {
-        const count = s === 'alle' ? leads.length : leads.filter(l => l.status === s).length;
-        const active = s === filter;
-        html += `<button style="padding:6px 14px;font-size:12px;font-weight:600;border:1px solid ${active ? 'var(--accent)' : 'var(--border)'};border-radius:8px;background:${active ? 'var(--accent)' : 'var(--card)'};color:${active ? '#fff' : 'var(--muted)'};cursor:pointer" data-filter="${s}">${s.charAt(0).toUpperCase()+s.slice(1)} (${count})</button>`;
+    // ── Pipeline-Visualisierung ──
+    const pipeStages = ['neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde'];
+    html += `<div class="crm-pipeline">`;
+    for (const stage of pipeStages) {
+        const count = leads.filter(l => l.status === stage).length;
+        const value = leads.filter(l => l.status === stage).reduce((s, l) => s + (l.expectedValue || 0), 0);
+        const isActive = filter === stage;
+        html += `<div class="crm-pipe-stage${isActive ? ' active' : ''}" data-filter="${stage}">
+            <div class="crm-pipe-count" style="color:${STATUS_COLORS[stage]}">${count}</div>
+            <div class="crm-pipe-label">${STATUS_LABELS[stage]}</div>
+            ${value > 0 ? `<div class="crm-pipe-value">${Math.round(value)}€</div>` : ''}
+        </div>`;
     }
     html += `</div>`;
 
-    // Table
-    if (filtered.length === 0) {
-        html += `<div style="text-align:center;padding:40px;color:var(--muted)">Keine Leads in "${filter}"</div>`;
-    } else {
-        html += `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-            <thead><tr><th style="text-align:left;padding:12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Lead</th><th style="padding:12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Score</th><th style="padding:12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Status</th><th style="padding:12px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Notizen</th><th style="padding:12px;border-bottom:1px solid var(--border)"></th></tr></thead><tbody>`;
+    // ── Stats Karten ──
+    html += `<div class="crm-stats">
+        <div class="card crm-stat anim-in"><div class="metric-xl">${stats.total}</div><div class="section-label">Gesamt</div></div>
+        <div class="card crm-stat anim-in"><div class="metric-xl" style="color:var(--accent)">${stats.pipeline}</div><div class="section-label">In Pipeline</div></div>
+        <div class="card crm-stat anim-in"><div class="metric-xl" style="color:var(--accent)">${Math.round(stats.pipelineValue)}€</div><div class="section-label">Pipeline-Wert</div></div>
+        <div class="card crm-stat anim-in"><div class="metric-xl" style="color:var(--green)">${stats.kunde}</div><div class="section-label">Kunden</div></div>
+        <div class="card crm-stat anim-in"><div class="metric-xl" style="color:${stats.conversionRate >= 10 ? 'var(--green)' : 'var(--muted)'}">${stats.conversionRate}%</div><div class="section-label">Conversion</div></div>
+    </div>`;
 
+    // ── Suche + Filter ──
+    html += `<div class="crm-toolbar">
+        <input type="text" class="crm-search" placeholder="Lead suchen..." value="${searchQuery}" data-action="search">
+        <div class="crm-filters">`;
+    for (const s of STATUSES) {
+        const count = s === 'alle' ? searched.length : searched.filter(l => l.status === s).length;
+        html += `<button class="crm-filter-btn${s === filter ? ' active' : ''}" data-filter="${s}">${s === 'alle' ? 'Alle' : STATUS_LABELS[s]} (${count})</button>`;
+    }
+    html += `</div></div>`;
+
+    // ── Lead-Liste ──
+    if (filtered.length === 0) {
+        html += `<div class="crm-empty">${searchQuery ? `Keine Leads für "${searchQuery}"` : `Keine Leads in "${filter === 'alle' ? 'Alle' : STATUS_LABELS[filter] || filter}"`}</div>`;
+    } else {
+        html += `<div class="crm-list">`;
         for (const l of filtered) {
-            const sc = (l.leadScore || 0) >= 55 ? 'badge-green' : (l.leadScore || 0) >= 30 ? 'badge-orange' : 'badge-red';
-            html += `<tr>
-                <td style="padding:12px;border-bottom:1px solid var(--border)"><strong>${l.name || l.domain}</strong><br><a href="${l.url}" target="_blank" style="font-size:11px">${l.domain}</a></td>
-                <td style="padding:12px;border-bottom:1px solid var(--border)"><span class="badge ${sc}">${l.leadScore || 0}</span></td>
-                <td style="padding:12px;border-bottom:1px solid var(--border)"><select style="padding:4px 8px;font-size:11px;border:1px solid var(--border);border-radius:6px" data-lead-id="${l.id}" data-action="status">
-                    ${['neu','kontaktiert','interessiert','angebot','kunde','verloren'].map(s => `<option value="${s}" ${l.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
-                </select></td>
-                <td style="padding:12px;border-bottom:1px solid var(--border)"><input style="width:100%;padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px" value="${(l.notes||'').replace(/"/g,'&quot;')}" placeholder="Notiz..." data-lead-id="${l.id}" data-action="notes"></td>
-                <td style="padding:12px;border-bottom:1px solid var(--border)"><button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:12px" data-lead-id="${l.id}" data-action="delete">✕</button></td>
-            </tr>`;
+            const scoreColor = (l.leadScore || 0) >= 55 ? 'var(--green)' : (l.leadScore || 0) >= 30 ? 'var(--orange)' : 'var(--red)';
+            const scoreBg = (l.leadScore || 0) >= 55 ? 'rgba(48,209,88,0.1)' : (l.leadScore || 0) >= 30 ? 'rgba(255,159,10,0.1)' : 'rgba(255,69,58,0.1)';
+            const savedDate = l.savedAt ? new Date(l.savedAt).toLocaleDateString('de-DE') : '';
+            const updatedDate = l.updatedAt ? timeAgo(l.updatedAt) : '';
+
+            html += `<div class="card crm-lead-card anim-in">
+                <div class="crm-lead-top">
+                    <div class="crm-lead-score" style="background:${scoreBg};color:${scoreColor}">${l.leadScore || 0}</div>
+                    <div class="crm-lead-info">
+                        <div class="crm-lead-name">${l.name || l.domain}</div>
+                        <div class="crm-lead-meta">
+                            <a href="${l.url || 'https://' + l.domain}" target="_blank" rel="noopener">${l.domain}</a>
+                            ${l.type ? ` · ${l.type}` : ''}
+                            ${l.perf ? ` · Perf ${l.perf}` : ''}
+                            ${l.seo ? ` · SEO ${l.seo}` : ''}
+                        </div>
+                        <div class="crm-lead-dates">
+                            ${savedDate ? `Gespeichert: ${savedDate}` : ''}
+                            ${updatedDate ? ` · ${updatedDate}` : ''}
+                        </div>
+                    </div>
+                    <div class="crm-lead-actions">
+                        <select class="crm-status-select" data-lead-id="${l.id}" data-action="status" style="color:${STATUS_COLORS[l.status] || 'var(--muted)'}">
+                            ${Object.entries(STATUS_LABELS).map(([k, v]) => `<option value="${k}" ${l.status === k ? 'selected' : ''}>${v}</option>`).join('')}
+                        </select>
+                        <button class="crm-btn-delete" data-lead-id="${l.id}" data-action="delete" title="Löschen">✕</button>
+                    </div>
+                </div>
+                <div class="crm-lead-bottom">
+                    <input type="text" class="crm-notes-input" value="${(l.notes || '').replace(/"/g, '&quot;')}" placeholder="Notiz hinzufügen..." data-lead-id="${l.id}" data-action="notes">
+                    ${l.expectedValue ? `<span class="crm-lead-ev">EV: ${l.expectedValue}€</span>` : ''}
+                </div>
+            </div>`;
         }
-        html += '</tbody></table></div>';
+        html += `</div>`;
+    }
+
+    // ── Zusammenfassung ──
+    if (filtered.length > 0) {
+        const avgScore = Math.round(filtered.reduce((s, l) => s + (l.leadScore || 0), 0) / filtered.length);
+        const totalEV = Math.round(filtered.reduce((s, l) => s + (l.expectedValue || 0), 0));
+        html += `<div class="crm-summary">
+            ${filtered.length} Leads · Ø Score: ${avgScore} · Gesamt-EV: ${totalEV}€
+        </div>`;
     }
 
     el.innerHTML = html;
 
-    // Event Delegation
+    // ── Events (mit AbortController für Cleanup) ──
+    // Status-Änderung
     el.addEventListener('change', async (e) => {
         const id = e.target.dataset.leadId;
         if (!id) return;
-        if (e.target.dataset.action === 'status') await updateLead(id, { status: e.target.value });
-    });
+        if (e.target.dataset.action === 'status') {
+            await updateLead(id, { status: e.target.value });
+            showToast(`Status → ${STATUS_LABELS[e.target.value] || e.target.value}`);
+            // Stats + Pipeline refreshen
+            renderCRM(filter, searchQuery);
+        }
+    }, { signal });
+
+    // Notes (blur + Enter)
     el.addEventListener('blur', async (e) => {
         const id = e.target.dataset.leadId;
-        if (id && e.target.dataset.action === 'notes') await updateLead(id, { notes: e.target.value });
-    }, true);
-    el.addEventListener('click', async (e) => {
-        const id = e.target.dataset.leadId;
-        if (id && e.target.dataset.action === 'delete' && confirm('Lead löschen?')) {
-            await deleteLead(id);
-            renderCRM(filter);
+        if (id && e.target.dataset.action === 'notes') {
+            await updateLead(id, { notes: e.target.value });
         }
-    });
-    el.querySelectorAll('[data-filter]').forEach(btn => {
-        btn.addEventListener('click', () => renderCRM(btn.dataset.filter));
-    });
+    }, { capture: true, signal });
+    el.addEventListener('keydown', async (e) => {
+        if (e.key === 'Enter' && e.target.dataset.action === 'notes') {
+            e.target.blur();
+            showToast('Notiz gespeichert');
+        }
+    }, { signal });
+
+    // Delete
+    el.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-action="delete"]');
+        if (!btn) return;
+        const id = btn.dataset.leadId;
+        if (id && confirm('Lead wirklich löschen?')) {
+            await deleteLead(id);
+            showToast('Lead gelöscht');
+            renderCRM(filter, searchQuery);
+        }
+    }, { signal });
+
+    // Filter
+    el.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-filter]');
+        if (btn) renderCRM(btn.dataset.filter, searchQuery);
+    }, { signal });
+
+    // Suche (debounced)
+    let searchTimer;
+    const searchInput = el.querySelector('[data-action="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => renderCRM(filter, e.target.value), 300);
+        }, { signal });
+        // Focus erhalten nach re-render
+        if (searchQuery) {
+            searchInput.focus();
+            searchInput.setSelectionRange(searchQuery.length, searchQuery.length);
+        }
+    }
+
+    // CSV Export
+    el.addEventListener('click', (e) => {
+        if (e.target.dataset.action === 'export') {
+            exportCSV(filtered.length > 0 ? filtered : leads);
+            showToast(`${filtered.length || leads.length} Leads exportiert`);
+        }
+    }, { signal });
+}
+
+// ── Helpers ──
+function timeAgo(ts) {
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'Gerade eben';
+    if (mins < 60) return `vor ${mins}m`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `vor ${hours}h`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `vor ${days}T`;
+    return `vor ${Math.floor(days / 7)}W`;
+}
+
+function showToast(msg) {
+    const existing = document.querySelector('.toast');
+    if (existing) existing.remove();
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
 }
