@@ -1,1 +1,292 @@
-/* cards styles — Phase 5 */
+/* ══════════════════════════════════════
+   Card Variants & Components
+   ══════════════════════════════════════ */
+
+/* Card with colored left border */
+.card-accent { border-left: 3px solid var(--accent); }
+.card-warn   { border-left: 3px solid var(--red); }
+.card-success { border-left: 3px solid var(--green); }
+.card-alert  { border-left: 3px solid var(--orange); }
+
+/* Enterprise Warning */
+.enterprise-warn-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 8px;
+}
+.enterprise-warn-body {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+.enterprise-warn-signals {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+}
+.enterprise-warn-rec {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--red);
+    margin-top: 8px;
+}
+
+/* Company Info Row */
+.company-info {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Section Header (11px uppercase) */
+.section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+.section-label-accent {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+/* Explanation Box */
+.explanation-box {
+    max-width: 480px;
+    margin: 20px auto 0;
+    padding: 16px 20px;
+    background: var(--bg);
+    border-radius: 12px;
+    text-align: left;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--muted);
+}
+
+/* Metric Display (big number + label) */
+.metric-big {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.metric-xl {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.metric-desc {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+/* Feature Check Row */
+.feature-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-icon {
+    font-weight: 700;
+    margin-right: 6px;
+}
+.feature-icon.found { color: var(--green); }
+.feature-icon.missing { color: var(--red); }
+.feature-icon.warn { color: var(--orange); }
+.feature-detail {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    max-width: 50%;
+    text-align: right;
+}
+.feature-critical {
+    font-size: 10px;
+    color: var(--red);
+}
+
+/* Missing Feature Block */
+.missing-feature {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+.missing-feature:last-child { border-bottom: none; }
+.missing-feature-name {
+    font-size: 13px;
+}
+.missing-feature-why {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+.missing-feature-impact {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 2px;
+}
+
+/* Found Features */
+.found-list {
+    font-size: 12px;
+    color: var(--green);
+    margin-top: 12px;
+}
+
+/* Flex Row Helpers */
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.flex-gap { gap: 24px; }
+
+/* Summary / Quote */
+.card-quote {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 8px;
+}
+.card-summary {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+}
+
+/* Revenue Hero */
+.revenue-big {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--red);
+    letter-spacing: -0.03em;
+}
+.revenue-unit {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+}
+.revenue-detail {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Phone Frame (Screenshot) */
+.phone-frame {
+    display: inline-block;
+    border: 6px solid #1d1d1f;
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 200px;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+}
+.phone-frame img {
+    width: 100%;
+    display: block;
+}
+.phone-caption {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+}
+
+/* Copy Button */
+.btn-copy {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-copy:hover { background: rgba(255,255,255,0.2); }
+.btn-copy-large {
+    margin-top: 12px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* Highlight Box */
+.highlight-box {
+    background: rgba(0,113,227,0.05);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+    margin: 4px 0;
+}
+.highlight-box-red {
+    background: rgba(255,69,58,0.05);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--red);
+}
+
+/* Email Args Box */
+.email-args {
+    background: #1d1d1f;
+    color: rgba(255,255,255,0.85);
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-top: 8px;
+}
+.email-args-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+}
+.email-args-body {
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+/* Actions */
+.actions-center {
+    text-align: center;
+    padding: 24px 0;
+}
+.actions-center .btn-primary {
+    margin-right: 12px;
+}
+.btn-cta-link {
+    display: inline-block;
+    text-decoration: none;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border-radius: var(--radius-md);
+}

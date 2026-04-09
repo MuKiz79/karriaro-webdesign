@@ -186,3 +186,99 @@ a:hover { text-decoration: underline; }
     margin: 0 auto var(--s4);
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════
+   Skeleton Loading
+   ══════════════════════════════════════ */
+.skeleton {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 var(--s6);
+}
+.skel-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: var(--s6);
+    margin-bottom: var(--s3);
+    overflow: hidden;
+}
+.skel-line {
+    height: 14px;
+    border-radius: 7px;
+    background: linear-gradient(90deg, var(--border) 25%, #f0f0f5 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    margin-bottom: 10px;
+}
+.skel-line:last-child { margin-bottom: 0; }
+.skel-line-short { width: 60%; }
+.skel-line-xs { width: 35%; }
+.skel-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--border) 25%, #f0f0f5 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    margin: 0 auto 16px;
+}
+.skel-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--border) 25%, #f0f0f5 50%, var(--border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    margin-bottom: 14px;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ══════════════════════════════════════
+   Staggered Card Animations
+   ══════════════════════════════════════ */
+.anim-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.anim-in:nth-child(1)  { animation-delay: 0s; }
+.anim-in:nth-child(2)  { animation-delay: 0.06s; }
+.anim-in:nth-child(3)  { animation-delay: 0.12s; }
+.anim-in:nth-child(4)  { animation-delay: 0.18s; }
+.anim-in:nth-child(5)  { animation-delay: 0.24s; }
+.anim-in:nth-child(6)  { animation-delay: 0.30s; }
+.anim-in:nth-child(7)  { animation-delay: 0.36s; }
+.anim-in:nth-child(8)  { animation-delay: 0.42s; }
+.anim-in:nth-child(9)  { animation-delay: 0.48s; }
+.anim-in:nth-child(10) { animation-delay: 0.54s; }
+@keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Score count-up (JS sets --target) */
+.score-count {
+    transition: color 0.4s;
+}
+
+/* Toast Notification */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    background: #1d1d1f;
+    color: #fff;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    z-index: 300;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 2.5s forwards;
+}
+@keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes toastOut { to { opacity: 0; transform: translateY(12px); } }

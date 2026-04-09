@@ -1,1 +1,118 @@
-/* probability styles — Phase 5 */
+/* ══════════════════════════════════════
+   Score Ring, Funnel, Confidence
+   ══════════════════════════════════════ */
+
+/* Animated Score Ring */
+.score-ring-wrap {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 16px;
+}
+.score-ring-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+.score-ring-bg {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 10;
+}
+.score-ring-fill {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.score-ring-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.score-number {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.score-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 6px;
+}
+.score-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* Funnel Stages */
+.funnel-stage {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+.funnel-stage:last-child { border-bottom: none; }
+.funnel-stage-name {
+    font-size: 13px;
+    color: var(--muted);
+    width: 120px;
+    flex-shrink: 0;
+}
+.funnel-stage-name.bottleneck { color: var(--orange); font-weight: 600; }
+.funnel-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.funnel-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.funnel-stage-value {
+    font-size: 13px;
+    font-weight: 700;
+    width: 44px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Confidence Interval */
+.ci-bar {
+    position: relative;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: visible;
+    margin: 12px 0;
+}
+.ci-range {
+    position: absolute;
+    height: 100%;
+    border-radius: 4px;
+    opacity: 0.3;
+}
+.ci-point {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    transform: translate(-50%, -50%);
+}
