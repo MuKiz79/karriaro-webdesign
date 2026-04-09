@@ -69,17 +69,18 @@ export function calculateRevenueLoss(ws, place) {
     // Cholesky von [[1, 0.3, 0.4], [0.3, 1, 0.2], [0.4, 0.2, 1]]
     const L = [[1, 0, 0], [0.3, 0.9539, 0], [0.4, 0.0838, 0.9129]];  // Pre-computed
 
+    // FIX K1: visitorsPerReview aus estMonthlyVisitors / reviews ableiten (nicht aus ind)
+    const baseVPR = reviews > 0 ? estMonthlyVisitors / reviews : 10;
+
     const samples = [];
     for (let i = 0; i < 500; i++) {
-        // Ziehe unkorrelierte Normalvariablen
         const z = [randn(), randn(), randn()];
-        // Korreliere via Cholesky: x = L × z
         const x0 = L[0][0]*z[0];
         const x1 = L[1][0]*z[0] + L[1][1]*z[1];
         const x2 = L[2][0]*z[0] + L[2][1]*z[1] + L[2][2]*z[2];
 
-        const vpr = Math.max(1, ind.visitorsPerReview * (1 + x0 * 0.5));
-        const cr = Math.max(0.01, ind.convRate * (1 + x1 * 0.3));
+        const vpr = Math.max(1, baseVPR * (1 + x0 * 0.5));
+        const cr = Math.max(0.001, ind.convRate * (1 + x1 * 0.3));
         const av = Math.max(5, ind.avgValue * (1 + x2 * 0.25));
         const vis = reviews * vpr;
         const base = vis * cr;

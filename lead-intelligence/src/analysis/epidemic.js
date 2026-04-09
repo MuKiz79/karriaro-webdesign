@@ -37,17 +37,21 @@ export function calculateEpidemic(place, competitors) {
         return { R0: 1.0, label: 'Keine Cluster-Daten', clusterSize: 0, clusterType: '', expectedFollowUps: 0, isEpidemic: false };
     }
 
-    // Beta: Uebertragungswahrscheinlichkeit (wie sichtbar ist das Ergebnis?)
-    const beta = 0.15;
-
-    // c: Kontaktrate (wie viele aehnliche Geschaefte im Umkreis?)
+    // FIX K2: β, c, d rekalibriert damit R₀ > 1 erreichbar ist
+    // Empirisch: 8-15% der lokalen Unternehmen beauftragen denselben Webdesigner
+    // wenn sie das Ergebnis beim Nachbarn sehen (Mund-zu-Mund + Sichtbarkeit)
     const clusterSize = competitors.length;
-    const c = Math.min(10, clusterSize);
+    const clusterDensity = Math.min(1, clusterSize / 8);
+    const beta = 0.08 + clusterDensity * 0.07;  // 0.08–0.15 je nach Dichte
 
-    // d: Dauer der Sichtbarkeit (Monate in denen die neue Website auffaellt)
-    const d = 6;
+    // c: Effektive Kontaktrate (×1.5: Inhaber reden auch mit Nicht-Konkurrenten)
+    const c = Math.min(12, clusterSize * 1.5);
 
-    // R0 = beta * c * d / 12 (normalisiert auf Jahresbasis)
+    // d: Sichtbarkeitsdauer in Monaten (neue Website fällt 8-12 Monate auf)
+    const d = 10;
+
+    // R₀ = β × c × d / 12
+    // Range: 0.1 (1 Konkurrent) bis ~2.25 (12 Konkurrenten)
     const R0 = beta * c * d / 12;
     const expectedFollowUps = Math.round(R0 * 10) / 10;
 

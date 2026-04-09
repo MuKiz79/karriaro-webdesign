@@ -54,15 +54,15 @@ export function runSimulation(stages, activationEa = 40, seasonFactor = 1.0, N =
         if (sim.converted > 0) convSteps.push(sim.medianSteps || 1);
         allSteps.push(sim.avgSteps);
 
-        // I3 FIX: Tracke welche Stufen TATSÄCHLICH erreicht wurden
-        // Im Markov: State 0→1 = Stufe 1 erreicht, 1→2 = Stufe 2, etc.
-        // Vereinfachung: Wenn converted, wurden alle Stufen erreicht
-        // Wenn nicht: Stufen bis zum Abbruch wurden erreicht
-        const maxStateReached = sim.converted ? 5 : Math.max(0, ...allSteps.map(() => 0));
-        // Genauer: Die Markov-Simulation gibt uns nicht direkt welche Stufe erreicht wurde
-        // Wir approximieren: Bei Conversion = alle 6 Stufen reached+passed
-        if (sim.converted) {
-            for (let s = 0; s < stages.length; s++) { stageReachedCount[s]++; stagePassedCount[s]++; }
+        // FIX K4: Conditional Pass-Rate aus MC-Ergebnissen ableiten
+        // Approximation über Stufen-Samples: Wenn Rate für Stufe i > Median,
+        // zählt die Stufe als "reached AND passed" für diesen Sample
+        for (let s = 0; s < stages.length; s++) {
+            // Jede Stufe wird immer "reached" (im Markov fließt alles durch)
+            stageReachedCount[s]++;
+            // "Passed" wenn die gesampelte Rate über dem Prior-Mean liegt
+            const priorMean = stages[s].alpha / (stages[s].alpha + stages[s].beta);
+            if (rates[s] >= priorMean * 0.8) stagePassedCount[s]++;
         }
     }
 

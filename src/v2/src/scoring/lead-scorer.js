@@ -19,26 +19,7 @@ import { estimateSurvival } from '../math/survival.js';
 import { getBranchPrior, SEASONALITY, CHANNELS } from '../priors/branch-priors.js';
 import { calculateShifts } from '../signals/shift-calculator.js';
 import { clamp } from '../math/sampling.js';
-
-/**
- * Schaetzt die Aktivierungsenergie (Arrhenius) fuer Markov-Rueckfallraten
- *
- * @param {Object} ws - Website-Score
- * @param {Object} tech - Tech-Detection Ergebnis
- * @param {Object|null} place - Google Places Daten
- * @returns {number} Ea (5-80)
- */
-function estimateActivationEnergy(ws, tech, place) {
-    let Ea = 40;
-    if (ws.perf >= 70) Ea += 15;
-    if (ws.isHttps && ws.viewport) Ea += 10;
-    if (!place) Ea += 15;
-    if (!ws.isHttps) Ea -= 20;
-    if (!ws.viewport) Ea -= 15;
-    if (ws.perf < 30) Ea -= 10;
-    if (tech.isBaukasten) Ea -= 10;
-    return Math.max(5, Math.min(80, Ea));
-}
+import { calculateActivation } from '../analysis/activation.js';
 
 /**
  * Empfiehlt naechste Aktion basierend auf dem Bottleneck
@@ -129,8 +110,9 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
         { name: 'Abschluss',      ab: conjugateUpdate(branch.cl, shifts.close[0] - shifts.close[1]) }
     ].map(s => ({ name: s.name, alpha: s.ab[0], beta: s.ab[1] }));
 
-    // Aktivierungsenergie
-    const activationEa = estimateActivationEnergy(ws, tech, place);
+    // FIX W5: Einheitliche Aktivierungsenergie aus analysis/activation.js
+    const activationResult = calculateActivation(ws, tech, place, competitors, revenue);
+    const activationEa = Math.max(5, Math.min(80, activationResult.Ea));
 
     // Monte-Carlo Simulation
     const simResult = runSimulation(stages, activationEa, seasonFactor, 2000);

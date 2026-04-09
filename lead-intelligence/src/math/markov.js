@@ -25,8 +25,9 @@ export function buildTransitionMatrix(stageRates, activationEa = 40, seasonFacto
     // Rückfallrate abhängig von Aktivierungsenergie
     const fb = Math.min(0.25, 0.05 + (activationEa / 100) * 0.15);
 
-    return [
-        //  Kalt   Kont   Inter  Gespr  Angeb  Kunde  Verl
+    // FIX K3: Zeilen-Normalisierung garantieren
+    // Baue Rohwerte, dann normalisiere jede Zeile auf Summe = 1
+    const raw = [
         [0,      p1,    0,     0,     0,     0,     1 - p1],                              // Kalt
         [fb,     0,     p2adj, 0,     0,     0,     Math.max(0, 1 - p2adj - fb)],         // Kontaktiert
         [0,      fb*.8, 0,     p3,    0,     0,     Math.max(0, 1 - p3 - fb * .8)],       // Interessiert
@@ -35,6 +36,16 @@ export function buildTransitionMatrix(stageRates, activationEa = 40, seasonFacto
         [0,      0,     0,     0,     0,     1,     0],                                    // Kunde (absorbing)
         [0,      0,     0,     0,     0,     0,     1]                                     // Verloren (absorbing)
     ];
+    // Normalisiere: Jede Zeile muss exakt 1 ergeben
+    for (let i = 0; i < 5; i++) {  // Nur transiente Zustände (0-4)
+        const sum = raw[i].reduce((a, b) => a + Math.max(0, b), 0);
+        if (sum > 0 && Math.abs(sum - 1) > 1e-10) {
+            for (let j = 0; j < raw[i].length; j++) {
+                raw[i][j] = Math.max(0, raw[i][j]) / sum;
+            }
+        }
+    }
+    return raw;
 }
 
 /**

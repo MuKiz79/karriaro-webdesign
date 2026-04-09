@@ -9,10 +9,21 @@
  * Positive shift = more successes observed → Alpha rises
  * Negative shift = more failures observed → Beta rises
  */
+/**
+ * FIX W8: Shifts skaliert als Pseudo-Beobachtungen
+ * Problem vorher: shift=+4 wurde als "4 echte Conversions beobachtet" behandelt,
+ * was die Posterior unnatürlich stark verschob.
+ * Fix: Shifts werden mit einem Dämpfungsfaktor skaliert (0.5),
+ * sodass sie wie "schwache Evidenz" wirken statt wie harte Daten.
+ * Stärke der Prior bleibt dominant bei wenig Signalen.
+ */
+const SHIFT_DAMPING = 0.5;
+
 export function conjugateUpdate(prior, shift) {
     const [a0, b0] = prior;
-    const alpha = Math.max(1, a0 + Math.max(0, shift));
-    const beta = Math.max(1, b0 + Math.max(0, -shift));
+    const dampedShift = shift * SHIFT_DAMPING;
+    const alpha = Math.max(1, a0 + Math.max(0, dampedShift));
+    const beta = Math.max(1, b0 + Math.max(0, -dampedShift));
     return [alpha, beta];
 }
 
