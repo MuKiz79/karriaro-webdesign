@@ -50,6 +50,10 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
     // ── 1. Branche zuordnen ──
     const branche = place?.primaryTypeDisplayName?.text || guessIndustry(domain, urls);
 
+    // ── 4. Konkurrenz-Erkennung (Webdesign-Agenturen = nicht kontaktieren) ──
+    const isCompetitor = branche === 'Webdesign-Agentur (Konkurrenz)' ||
+        COMPETITOR_PATTERNS.some(p => p.test(domainBase));
+
     // ── 2. GF/Inhaber + Nationalität ──
     const ownerInfo = extractOwnerInfo(psiData, place, contentAnalysis);
 
@@ -69,19 +73,48 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
         };
     }
 
+    // Konkurrenz-Warnung
+    let competitorWarning = null;
+    if (isCompetitor) {
+        competitorWarning = {
+            isCompetitor: true,
+            message: `${place?.displayName?.text || domainBase} ist selbst eine Webdesign-Agentur oder IT-Dienstleister. Das ist ein Konkurrent, kein Lead.`,
+            recommendation: 'Nicht kontaktieren — das ist ein Mitbewerber.'
+        };
+    }
+
     return {
         domain,
         branche,
         isEnterprise: isLikelyEnterprise,
+        isCompetitor,
         enterpriseWarning,
+        competitorWarning,
         owner: ownerInfo,
         companyName: place?.displayName?.text || domainBase
     };
 }
 
+// Webdesign/IT-Agenturen — KONKURRENZ, kein Lead!
+const COMPETITOR_PATTERNS = [
+    /webdesign|web-design|webentwickl|web-entwickl|webagentur|web-agentur/i,
+    /werbeagentur|kreativagentur|digitalagentur|digital-agentur/i,
+    /webseiten|homepage.*erstell|website.*erstell|internetagentur/i,
+    /seo-agentur|online-marketing.*agentur|social-media.*agentur/i,
+    /it-dienstleist|softwareentwickl|app-entwickl/i
+];
+
 function guessIndustry(domain, urls) {
-    // Versuche Branche aus Domain/URLs abzuleiten
-    const patterns = [
+    // ZUERST: Nur Domain prüfen (nicht URLs — dort stehen Portfolio-Projekte)
+    const domainOnly = domain.toLowerCase();
+
+    // Konkurrenz-Check (Webdesign-Agenturen)
+    for (const p of COMPETITOR_PATTERNS) {
+        if (p.test(domainOnly)) return 'Webdesign-Agentur (Konkurrenz)';
+    }
+
+    // Branchen-Erkennung NUR aus Domain (nicht aus URL-Content!)
+    const domainPatterns = [
         { match: /zahnarzt|dental|zahn/i, name: 'Zahnarztpraxis' },
         { match: /arzt|praxis|medizin|doktor/i, name: 'Arztpraxis' },
         { match: /friseur|hair|salon|coiffeur/i, name: 'Friseursalon' },
@@ -97,8 +130,15 @@ function guessIndustry(domain, urls) {
         { match: /baecker|bakery|brot/i, name: 'Bäckerei' },
         { match: /blumen|florist|flower/i, name: 'Florist' },
     ];
-    const combined = domain + ' ' + urls.slice(0, 1000);
-    for (const p of patterns) if (p.match.test(combined)) return p.name;
+    for (const p of domainPatterns) if (p.match.test(domainOnly)) return p.name;
+
+    // Fallback: URL-Content prüfen (nur wenn Domain nichts ergab)
+    const combined = urls.slice(0, 1000);
+    // Konkurrenz-Check in URLs
+    for (const p of COMPETITOR_PATTERNS) {
+        if (p.test(combined)) return 'Webdesign-Agentur (Konkurrenz)';
+    }
+
     return 'Unternehmen (Branche nicht erkannt)';
 }
 

@@ -282,6 +282,15 @@ function renderResult(data) {
         </div>`;
     }
 
+    // Konkurrenz-Warnung
+    if (cp?.isCompetitor) {
+        scoreHtml += `<div class="card card-warn anim-in" style="text-align:left">
+            <div class="enterprise-warn-title">⚠ Konkurrenz erkannt</div>
+            <div class="enterprise-warn-body">${cp.competitorWarning.message}</div>
+            <div class="enterprise-warn-rec">${cp.competitorWarning.recommendation}</div>
+        </div>`;
+    }
+
     // Firmen-Info
     scoreHtml += `<div class="company-info anim-in">
         <span><strong>Branche:</strong> ${cp?.branche || '—'}</span>

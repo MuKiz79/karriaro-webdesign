@@ -168,10 +168,12 @@ export function auditUX(psiData, place) {
     if (!hasIds.has('contact') && !hasIds.has('phone')) {
         features.push({
             id: 'contact', name: 'Kontaktdaten sichtbar', why: 'Telefon + Adresse muessen sofort findbar sein',
-            patterns: /kontakt|telefon|tel:|email|impressum|mailto:|href="tel:/i,
+            patterns: /kontakt|telefon|tel:|email|impressum|mailto:|href="tel:|@[a-z].*\.[a-z]/i,
             check: (_psi, _urls, pl) => !!(pl && (pl.internationalPhoneNumber || pl.nationalPhoneNumber || pl.formattedAddress)),
             critical: true
         });
+        // HINWEIS: check() und patterns sind ODER-verknüpft — wenn check() false (kein Place),
+        // wird patterns geprüft. "kontakt" oder "impressum" in irgendeiner URL = found.
     }
 
     const results = features.map(feature => {
