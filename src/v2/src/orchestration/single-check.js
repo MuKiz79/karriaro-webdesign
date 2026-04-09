@@ -242,6 +242,17 @@ export async function runSingleCheck() {
 }
 
 function renderResult(data) {
+    // Sicherheitscheck: Alle DOM-Elemente müssen existieren
+    const requiredIds = ['result-score','result-funnel','result-decision','result-ux','result-future','result-science','result-ai','result-revenue','result-strategy','result-expert','result-actions'];
+    for (const id of requiredIds) {
+        if (!document.getElementById(id)) {
+            console.error(`renderResult: #${id} nicht gefunden — DOM beschädigt`);
+            document.getElementById('error-text').textContent = 'Render-Fehler: Bitte Seite neu laden (Cmd+Shift+R)';
+            document.getElementById('error').classList.remove('hidden');
+            return;
+        }
+    }
+
     const r = data.result;
     const ws = data.ws;
     const tech = data.tech;
