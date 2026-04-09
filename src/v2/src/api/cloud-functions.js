@@ -35,3 +35,6 @@ export function getSearchVolume(query) { return call('searchVolume', { query });
 
 /** KI-Branchenanalyse: Was ist Standard, was fehlt? */
 export function analyzeBranchStandards(url, branche, features) { return call('analyzeBranchStandards', { url, branche, features }); }
+
+/** Social Profile Analyzer: Instagram Followers, FB Likes, LinkedIn, TikTok */
+export function analyzeSocialProfiles(websiteUrl, profileUrls) { return call('analyzeSocialProfiles', { websiteUrl, profileUrls }); }

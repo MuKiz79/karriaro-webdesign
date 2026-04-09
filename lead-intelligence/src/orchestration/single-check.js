@@ -4,7 +4,9 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards } from '../api/cloud-functions.js';
+import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles } from '../api/cloud-functions.js';
+import { analyzeSocialSignals } from '../analysis/social-signals.js';
+import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { analyzeDigitalFootprint as analyzeFootprint } from '../signals/digital-footprint.js';
@@ -130,7 +132,7 @@ export async function runSingleCheck() {
         // Fix 4: A/B-Test Variante wählen
         const abTest = sv();
 
-        // ── 10 innovative Analyse-Module ──
+        // ── Analyse-Module ──
         const wayback = await checkFreshness(url).catch(() => null);
         const surgeIntent = detectSurgeIntent(footprint, null, null, place);
         const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
@@ -141,13 +143,23 @@ export async function runSingleCheck() {
         const emotionalReady = assessEmotionalReadiness(reviewSentiment);
         const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
 
-        // Fix 5: Score-Drift prüfen
+        // ── Social Signals (1-4, 9): aus Places-Daten ──
+        const socialSignals = analyzeSocialSignals(place);
+
+        // ── Social Comparison (10): Lead vs. Konkurrenz ──
+        const socialComparison = compareSocialPresence(place, competitors);
+
+        // ── Social Profiles (6-8, 11-12): Cloud Function (parallel, optional) ──
+        const socialProfiles = await analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null);
+
+        // Score-Drift prüfen
         const drift = cd(new URL(url).hostname.replace('www.', ''), result.leadScore);
 
         state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
             abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
-            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile, branchStandards };
+            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile, branchStandards,
+            socialSignals, socialComparison, socialProfiles };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
@@ -306,6 +318,76 @@ function renderResult(data) {
             <div class="card anim-in"><div class="section-label-accent">Was eine moderne ${uxResult.persona.name}-Website 2026 braucht</div><div style="display:flex;flex-wrap:wrap;gap:6px">${uxResult.modernFeatures.map(f => `<span class="badge badge-green">${f}</span>`).join('')}</div></div>
         `;
     } else { uxEl.innerHTML = ''; }
+
+    // ── Social Signals (nach UX, vor Future) ──
+    const ss = data.socialSignals;
+    const sc = data.socialComparison;
+    const sp = data.socialProfiles;
+    if (ss?.available || sc?.available || sp) {
+        let socialHtml = '';
+
+        // GBP Social Signals (1-4, 9)
+        if (ss?.available && ss.signals.length > 0) {
+            const ssColor = ss.pct >= 60 ? 'var(--green)' : ss.pct >= 30 ? 'var(--orange)' : 'var(--red)';
+            socialHtml += `<div class="card card-accent anim-in">
+                <div class="section-label-accent">Social Signals — Google Business Profile</div>
+                <div class="flex-between" style="margin-bottom:12px">
+                    <div><span class="metric-xl" style="color:${ssColor}">${ss.pct}%</span> <span class="metric-desc">${ss.label}</span></div>
+                </div>
+                ${ss.signals.map(s => `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${s.strength > 0 ? 'found' : 'missing'}">${s.strength > 0 ? '✓' : '✗'}</span>${s.label}</span><span class="feature-detail">${s.detail}</span></div>`).join('')}
+            </div>`;
+
+            // Review-Trend
+            if (ss.reviewTrend && ss.reviewTrend.direction !== 'stabil') {
+                const tColor = ss.reviewTrend.direction === 'steigend' ? 'var(--green)' : 'var(--red)';
+                socialHtml += `<div class="card anim-in" style="border-left:3px solid ${tColor}">
+                    <div class="section-label">Review-Trend</div>
+                    <div class="metric-xl" style="color:${tColor}">${ss.reviewTrend.olderAvg} → ${ss.reviewTrend.recentAvg} Sterne</div>
+                    <div class="metric-desc">Bewertungen werden ${ss.reviewTrend.direction} (Δ ${ss.reviewTrend.delta > 0 ? '+' : ''}${ss.reviewTrend.delta})</div>
+                </div>`;
+            }
+        }
+
+        // Social Media Profiles (6-8, 11-12)
+        if (sp && !sp.error) {
+            let profileHtml = '';
+            if (sp.instagram?.followers) {
+                profileHtml += `<div class="stat-row"><span class="stat-label">Instagram</span><span class="stat-value">${sp.instagram.followers.toLocaleString('de-DE')} Follower · ${sp.instagram.posts || '?'} Posts</span></div>`;
+            }
+            if (sp.facebook?.likes || sp.facebook?.followers) {
+                profileHtml += `<div class="stat-row"><span class="stat-label">Facebook</span><span class="stat-value">${(sp.facebook.followers || sp.facebook.likes || 0).toLocaleString('de-DE')} ${sp.facebook.followers ? 'Follower' : 'Likes'}</span></div>`;
+            }
+            if (sp.linkedin?.detected) {
+                profileHtml += `<div class="stat-row"><span class="stat-label">LinkedIn</span><span class="stat-value">${sp.linkedin.isCompanyPage ? 'Company Page' : 'Profil'} vorhanden</span></div>`;
+            }
+            if (sp.tiktok?.followers) {
+                profileHtml += `<div class="stat-row"><span class="stat-label">TikTok</span><span class="stat-value">${sp.tiktok.followers.toLocaleString('de-DE')} Follower</span></div>`;
+            }
+            if (profileHtml) {
+                socialHtml += `<div class="card anim-in">
+                    <div class="section-label">Social-Media-Reichweite</div>
+                    ${profileHtml}
+                </div>`;
+            }
+        }
+
+        // Konkurrenz-Vergleich (10)
+        if (sc?.available && sc.gaps.length > 0) {
+            socialHtml += `<div class="card anim-in">
+                <div class="section-label">Konkurrenz-Vergleich (Social)</div>
+                ${sc.gaps.map(g => `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${g.severity === 'paradox' ? 'found' : 'missing'}">${g.severity === 'paradox' ? '★' : '⚠'}</span>${g.label}</span><span class="feature-detail">${g.detail}</span></div>`).join('')}
+            </div>`;
+
+            // Pitch-Argumente aus Social Comparison
+            if (sc.pitchArgs.length > 0) {
+                socialHtml += `<div class="pitch-box anim-in"><h3>Social-Argument für den Pitch</h3><p>${sc.pitchArgs[0]}</p></div>`;
+            }
+        }
+
+        // In den UX-Container einfügen (nach UX-Audit)
+        const uxContainer = document.getElementById('result-ux');
+        uxContainer.innerHTML += socialHtml;
+    }
 
     // ── Zukunfts-Readiness ──
     const futureResult = analyzeFutureReadiness(data.ws, data.psiData);

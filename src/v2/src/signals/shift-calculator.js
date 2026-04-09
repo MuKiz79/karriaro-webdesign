@@ -96,3 +96,58 @@ export function calculateShifts(ws, tech, place, competitors, revenue, footprint
 
     return s;
 }
+
+/**
+ * Erweitert Shifts mit Social-Signal-Daten (aufgerufen wenn Daten verfügbar)
+ * @param {Object} shifts - Bestehende Shifts
+ * @param {Object} socialSignals - Ergebnis von analyzeSocialSignals
+ * @param {Object} socialComparison - Ergebnis von compareSocialPresence
+ * @param {Object} socialProfiles - Ergebnis von analyzeSocialProfiles
+ * @returns {Object} Erweiterte Shifts
+ */
+export function applySocialShifts(shifts, socialSignals, socialComparison, socialProfiles) {
+    const s = { ...shifts };
+
+    // Social Signals (1-4, 9): GBP-basierte Signale
+    if (socialSignals?.available) {
+        const fi = socialSignals.funnelImpact;
+        s.interest[0] += fi.interest || 0;
+        s.convo[0] += fi.convo || 0;
+        s.close[0] += fi.close || 0;
+    }
+
+    // Social Comparison (10): Konkurrenz-Gap
+    if (socialComparison?.available) {
+        const fi = socialComparison.funnelImpact;
+        s.interest[0] += fi.interest || 0;
+        s.close[0] += fi.close || 0;
+    }
+
+    // Social Profiles (6-8, 11-12): Externe Profildaten
+    if (socialProfiles && !socialProfiles.error) {
+        // Instagram-Follower + schlechte Website = Paradox-Lead
+        if (socialProfiles.instagram?.followers > 500) {
+            s.interest[0] += 2;  // Reichweite vorhanden, Website passt nicht
+            s.close[0] += 1;    // Hat Budget (Social Media kostet Zeit/Geld)
+        }
+        if (socialProfiles.instagram?.followers > 5000) {
+            s.interest[0] += 1;  // Zusätzlich bei großer Reichweite
+        }
+        // Facebook Likes = hat Community
+        if (socialProfiles.facebook?.likes > 200 || socialProfiles.facebook?.followers > 200) {
+            s.interest[0] += 1;
+            s.close[0] += 1;
+        }
+        // LinkedIn Company Page = professioneller Anspruch
+        if (socialProfiles.linkedin?.isCompanyPage) {
+            s.convo[0] += 1;  // Einfacher Gesprächseinstieg über LinkedIn
+        }
+        // TikTok = besonders digital-affin, investiert in Content
+        if (socialProfiles.tiktok?.followers > 100) {
+            s.interest[0] += 2;
+            s.close[0] += 1;
+        }
+    }
+
+    return s;
+}
