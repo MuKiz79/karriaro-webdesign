@@ -97,7 +97,10 @@ export async function runSingleCheck() {
         }
 
         // Firmen-Profil ZUERST (wird in Phase 5 referenziert)
-        const companyProfile = analyzeCompanyProfile(url, psiData, place, null);
+        let companyProfile = null;
+        try {
+            companyProfile = analyzeCompanyProfile(url, psiData, place, null);
+        } catch(e) { console.error('CompanyProfile failed:', e); companyProfile = { domain: new URL(url).hostname.replace('www.',''), branche: '', isEnterprise: false, enterpriseWarning: null, owner: { name: null, nationality: null }, companyName: '' }; }
 
         // Phase 5: KI-Analyse (parallel, alle mit try/catch)
         showLoading('KI-Analyse...');
@@ -173,7 +176,7 @@ function renderResult(data) {
 
     // ── Enterprise-Warnung + Firmen-Info + Score + Erklärung ──
     const scoreEl = document.getElementById('result-score');
-    const cp = data.companyProfile;
+    const cp = data.companyProfile || {};
     let scoreHtml = '';
 
     // Enterprise-Warnung (Punkt 3)
