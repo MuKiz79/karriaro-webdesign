@@ -228,10 +228,12 @@ export async function runSingleCheck() {
             pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore,
             feedbackInsight, emailCheck, mockupSuggestion };
 
+        hideSkeleton();
         renderResult(state.lastResult);
         results.classList.remove('hidden');
 
     } catch (e) {
+        hideSkeleton();
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
         document.getElementById('error-text').textContent = `Analyse fehlgeschlagen: ${e.message}`;
@@ -877,10 +879,15 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 }
 
 // ── Skeleton Loading ──
+// WICHTIG: Skeleton als EIGENES Element, NICHT den results-Container überschreiben
+// sonst werden #result-score, #result-funnel etc. zerstört und renderResult() crasht
+let skelEl = null;
 function showSkeleton() {
-    const el = document.getElementById('results');
-    el.innerHTML = `
-        <div class="skeleton">
+    if (!skelEl) {
+        skelEl = document.createElement('div');
+        skelEl.id = 'skeleton-overlay';
+        skelEl.className = 'skeleton';
+        skelEl.innerHTML = `
             <div class="skel-card" style="text-align:center;padding:32px">
                 <div class="skel-circle"></div>
                 <div class="skel-line skel-line-short" style="margin:0 auto 8px"></div>
@@ -897,13 +904,16 @@ function showSkeleton() {
                 <div class="skel-line"></div>
                 <div class="skel-line skel-line-short"></div>
             </div>
-        </div>
-    `;
-    el.classList.remove('hidden');
+        `;
+    }
+    // Füge VOR den results-Container ein (nicht hinein!)
+    const results = document.getElementById('results');
+    results.parentNode.insertBefore(skelEl, results);
+    skelEl.style.display = '';
 }
 
 function hideSkeleton() {
-    // Will be overwritten by renderResult
+    if (skelEl) skelEl.style.display = 'none';
 }
 
 function showLoading(text) {
