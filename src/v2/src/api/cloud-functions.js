@@ -38,3 +38,11 @@ export function analyzeBranchStandards(url, branche, features) { return call('an
 
 /** Social Profile Analyzer: Instagram Followers, FB Likes, LinkedIn, TikTok */
 export function analyzeSocialProfiles(websiteUrl, profileUrls) { return call('analyzeSocialProfiles', { websiteUrl, profileUrls }); }
+
+/** #11: E-Mail Deliverability Check (SPF, DKIM, DMARC) */
+export function checkEmailDeliverability(domain) { return call('checkEmailDeliverability', { domain }); }
+
+/** #13: Auto-Mockup Generator (KI-Redesign-Vorschlag) */
+export function generateMockupSuggestion(domain, branche, currentIssues, screenshotBase64) {
+    return call('generateMockupSuggestion', { domain, branche, currentIssues, screenshotBase64 });
+}

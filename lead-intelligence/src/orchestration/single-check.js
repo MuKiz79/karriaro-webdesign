@@ -4,9 +4,20 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles } from '../api/cloud-functions.js';
+import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
+import { analyzeSignalStack } from '../analysis/signal-stacking.js';
+import { checkBFSGCompliance } from '../analysis/bfsg-compliance.js';
+import { detectTriggerEvents } from '../analysis/trigger-events.js';
+import { checkSchema } from '../analysis/schema-check.js';
+import { calculatePXIndex } from '../analysis/px-index.js';
+import { analyzeContentFreshness } from '../analysis/content-freshness.js';
+import { analyzeTechDepth } from '../analysis/tech-depth.js';
+import { checkMessaging } from '../analysis/messaging-check.js';
+import { calculateCompositeScore } from '../scoring/composite-score.js';
+import { fetchCrUX } from '../api/crux.js';
+import { getScoreInsight } from '../learning/feedback-loop.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { analyzeDigitalFootprint as analyzeFootprint } from '../signals/digital-footprint.js';
@@ -131,7 +142,7 @@ export async function runSingleCheck() {
         // A/B-Test Variante wählen
         const abTest = sv();
 
-        // ── Analyse-Module ──
+        // ── Bestehende Analyse-Module ──
         const wayback = await checkFreshness(url).catch(() => null);
         const surgeIntent = detectSurgeIntent(footprint, null, null, place);
         const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
@@ -141,15 +152,68 @@ export async function runSingleCheck() {
         const localSEO = assessLocalSEO(ws, place, psiData);
         const emotionalReady = assessEmotionalReadiness(reviewSentiment);
         const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
-
-        // ── Social Signals (1-4, 9): aus Places-Daten ──
         const socialSignals = analyzeSocialSignals(place);
-
-        // ── Social Comparison (10): Lead vs. Konkurrenz ──
         const socialComparison = compareSocialPresence(place, competitors);
 
-        // ── Social Profiles (6-8, 11-12): Cloud Function (parallel, optional) ──
-        const socialProfiles = await analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null);
+        // ── 15 neue Module ──
+        // #2: CrUX Real-User-Daten
+        const cruxData = await fetchCrUX(`https://${domain}`).catch(() => null);
+
+        // #3: BFSG-Compliance
+        const bfsgScore = checkBFSGCompliance(psiData);
+
+        // #4: Trigger Events
+        const triggerEvents = detectTriggerEvents({ ws, tech, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors });
+
+        // #5: Technographische Tiefe
+        const techDepth = analyzeTechDepth(psiData, tech);
+
+        // #6: Content Freshness (erweitert)
+        const contentFreshness = analyzeContentFreshness(psiData, contentAnalysis, wayback);
+
+        // #9: PX Index
+        const pxIndex = calculatePXIndex(ws, psiData, contentAnalysis, screenshotAnalysis);
+
+        // #10: Schema.org Check
+        const schemaCheck = checkSchema(psiData);
+
+        // #14: WhatsApp/Messaging Check
+        const messagingCheck = checkMessaging(psiData);
+
+        // #1: Signal Stacking (braucht alle anderen Module)
+        const signalStack = analyzeSignalStack({
+            ws, tech, place, footprint, revenue, wayback,
+            screenshotAnalysis, socialSignals, surgeIntent,
+            emotionalReady, conversationReady, bfsgScore
+        });
+
+        // #7: Composite Score (Fit × Intent × Timing)
+        const compositeScore = calculateCompositeScore({
+            ws, tech, place, footprint, revenue, result,
+            screenshotAnalysis, contentAnalysis, socialSignals,
+            triggerEvents, bfsgScore, signalStack, techDepth,
+            contentFreshness, companyProfile
+        });
+
+        // #12: Feedback Loop — historischer Hinweis
+        const feedbackInsight = getScoreInsight(result.leadScore);
+
+        // #11 + #6-8: Cloud Functions (parallel, optional)
+        const [socialProfiles, emailCheck] = await Promise.all([
+            analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null),
+            checkEmailDeliverability(domain).catch(() => null)
+        ]);
+
+        // #13: Mockup-Suggestion (nur bei starken Leads, spart API-Kosten)
+        let mockupSuggestion = null;
+        if (result.leadScore >= 50 && screenshotAnalysis?.designQuality <= 5) {
+            mockupSuggestion = await generateMockupSuggestion(
+                domain,
+                companyProfile?.branche || '',
+                bfsgScore?.criticalFails?.map(f => f.name).join(', ') || '',
+                screenshot
+            ).catch(() => null);
+        }
 
         // Score-Drift prüfen
         const drift = cd(new URL(url).hostname.replace('www.', ''), result.leadScore);
@@ -158,7 +222,11 @@ export async function runSingleCheck() {
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
             abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
             techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile, branchStandards,
-            socialSignals, socialComparison, socialProfiles };
+            socialSignals, socialComparison, socialProfiles,
+            // 15 neue Module
+            cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
+            pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore,
+            feedbackInsight, emailCheck, mockupSuggestion };
 
         renderResult(state.lastResult);
         results.classList.remove('hidden');
