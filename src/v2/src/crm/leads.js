@@ -129,6 +129,27 @@ export async function deleteLead(leadId) {
     }
 }
 
+// ── Alle Leads löschen ──
+export async function deleteAllLeads() {
+    // localStorage leeren
+    setLocal([]);
+
+    // Firestore: alle Leads des Users löschen
+    const user = currentUser();
+    if (user && fb()?.db) {
+        try {
+            const q = fb().fns.query(
+                fb().fns.collection(fb().db, 'leads'),
+                fb().fns.where('uid', '==', user.uid)
+            );
+            const snap = await fb().fns.getDocs(q);
+            for (const doc of snap.docs) {
+                await fb().fns.deleteDoc(doc.ref);
+            }
+        } catch (e) { console.error('Delete all leads:', e); }
+    }
+}
+
 // ── CSV Export ──
 export function exportCSV(leads) {
     const headers = ['Domain', 'Name', 'Branche', 'Score', 'Conversion%', 'EV€', 'Performance', 'SEO', 'A11y', 'CMS', 'Status', 'Notizen', 'Gespeichert'];

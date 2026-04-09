@@ -1,7 +1,7 @@
 /**
  * CRM View Renderer — Pipeline, Suche, Export, Responsive
  */
-import { loadLeads, updateLead, deleteLead, exportCSV } from '../crm/leads.js';
+import { loadLeads, updateLead, deleteLead, deleteAllLeads, exportCSV } from '../crm/leads.js';
 import { currentUser } from '../crm/firebase.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
@@ -64,6 +64,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         <h2 class="crm-title">Lead-CRM</h2>
         <div class="crm-actions-top">
             <button class="crm-btn-export" data-action="export">CSV Export</button>
+            <button class="crm-btn-export crm-btn-danger" data-action="deleteAll">Alle löschen</button>
         </div>
     </div>`;
 
@@ -215,11 +216,18 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         }
     }
 
-    // CSV Export
-    el.addEventListener('click', (e) => {
+    // CSV Export + Alle löschen
+    el.addEventListener('click', async (e) => {
         if (e.target.dataset.action === 'export') {
             exportCSV(filtered.length > 0 ? filtered : leads);
             showToast(`${filtered.length || leads.length} Leads exportiert`);
+        }
+        if (e.target.dataset.action === 'deleteAll') {
+            if (!confirm(`Wirklich ALLE ${leads.length} Leads unwiderruflich löschen?`)) return;
+            if (!confirm('Sicher? Das kann nicht rückgängig gemacht werden.')) return;
+            await deleteAllLeads();
+            showToast('Alle Leads gelöscht');
+            renderCRM();
         }
     }, { signal });
 }

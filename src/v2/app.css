@@ -905,6 +905,14 @@ nav {
     color: var(--text);
     border-color: var(--text);
 }
+.crm-btn-danger {
+    color: var(--red);
+}
+.crm-btn-danger:hover {
+    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+}
 
 /* Pipeline Visualization */
 .crm-pipeline {
