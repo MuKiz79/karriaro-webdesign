@@ -140,98 +140,37 @@ export async function runSingleCheck() {
             if (revenue) { revenue.yearlyLoss = 0; revenue.monthlyLoss = 0; revenue.roi = 0; }
         }
 
-        // Render
-        hideLoading();
-        document.getElementById('btn-analyze').disabled = false;
-
-        // A/B-Test Variante wählen
-        const abTest = sv();
-
-        // ── Bestehende Analyse-Module ──
+        // ── Phase 6: Lokale Analyse-Module (synchron, schnell) ──
+        showLoading('Analyse wird ausgewertet...');
         const wayback = await checkFreshness(url).catch(() => null);
-        const surgeIntent = detectSurgeIntent(footprint, null, null, place);
-        const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
-        const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
-        const stakeholder = detectStakeholder(psiData, place);
-        const techTrajectory = assessTechTrajectory(tech, wayback);
-        const localSEO = assessLocalSEO(ws, place, psiData);
-        const emotionalReady = assessEmotionalReadiness(reviewSentiment);
-        const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
-        const socialSignals = analyzeSocialSignals(place);
-        const socialComparison = compareSocialPresence(place, competitors);
+        const abTest = sv();
+        const drift = cd(domain, result.leadScore);
 
-        // ── 15 neue Module ──
-        // #2: CrUX Real-User-Daten
-        const cruxData = await fetchCrUX(`https://${domain}`).catch(() => null);
+        const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
 
-        // #3: BFSG-Compliance
-        const bfsgScore = checkBFSGCompliance(psiData);
-
-        // #4: Trigger Events
-        const triggerEvents = detectTriggerEvents({ ws, tech, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors });
-
-        // #5: Technographische Tiefe
-        const techDepth = analyzeTechDepth(psiData, tech);
-
-        // #6: Content Freshness (erweitert)
-        const contentFreshness = analyzeContentFreshness(psiData, contentAnalysis, wayback);
-
-        // #9: PX Index
-        const pxIndex = calculatePXIndex(ws, psiData, contentAnalysis, screenshotAnalysis);
-
-        // #10: Schema.org Check
-        const schemaCheck = checkSchema(psiData);
-
-        // #14: WhatsApp/Messaging Check
-        const messagingCheck = checkMessaging(psiData);
-
-        // #1: Signal Stacking (braucht alle anderen Module)
-        const signalStack = analyzeSignalStack({
-            ws, tech, place, footprint, revenue, wayback,
-            screenshotAnalysis, socialSignals, surgeIntent,
-            emotionalReady, conversationReady, bfsgScore
-        });
-
-        // #7: Composite Score (Fit × Intent × Timing)
-        const compositeScore = calculateCompositeScore({
-            ws, tech, place, footprint, revenue, result,
-            screenshotAnalysis, contentAnalysis, socialSignals,
-            triggerEvents, bfsgScore, signalStack, techDepth,
-            contentFreshness, companyProfile
-        });
-
-        // #12: Feedback Loop — historischer Hinweis
-        const feedbackInsight = getScoreInsight(result.leadScore);
-
-        // #11 + #6-8: Cloud Functions (parallel, optional)
+        // ── Phase 7: Cloud Functions (parallel, optional) ──
         const [socialProfiles, emailCheck] = await Promise.all([
             analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null),
             checkEmailDeliverability(domain).catch(() => null)
         ]);
 
-        // #13: Mockup-Suggestion (nur bei starken Leads, spart API-Kosten)
+        // Mockup nur bei starken Leads mit schlechtem Design (spart API-Kosten)
         let mockupSuggestion = null;
         if (result.leadScore >= 50 && screenshotAnalysis?.designQuality <= 5) {
-            mockupSuggestion = await generateMockupSuggestion(
-                domain,
-                companyProfile?.branche || '',
-                bfsgScore?.criticalFails?.map(f => f.name).join(', ') || '',
-                screenshot
-            ).catch(() => null);
+            mockupSuggestion = await generateMockupSuggestion(domain, companyProfile?.branche || '', localAnalysis.bfsgScore?.criticalFails?.map(f => f.name).join(', ') || '', screenshot).catch(() => null);
         }
 
-        // Score-Drift prüfen
-        const drift = cd(new URL(url).hostname.replace('www.', ''), result.leadScore);
+        // Render
+        hideLoading();
+        document.getElementById('btn-analyze').disabled = false;
 
-        state.lastResult = { url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
-            contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, psiData,
-            abTest, drift, wayback, surgeIntent, digitalMaturity, conversationReady, stakeholder,
-            techTrajectory, localSEO, emotionalReady, revenueWeighted, companyProfile, branchStandards,
-            socialSignals, socialComparison, socialProfiles,
-            // 15 neue Module
-            cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
-            pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore,
-            feedbackInsight, emailCheck, mockupSuggestion };
+        state.lastResult = {
+            url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
+            contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority,
+            searchVolume, psiData, abTest, drift, wayback, companyProfile, branchStandards,
+            socialProfiles, emailCheck, mockupSuggestion,
+            ...localAnalysis
+        };
 
         hideSkeleton();
         renderResult(state.lastResult);
@@ -297,6 +236,43 @@ function renderResult(data) {
 }
 
 // ── #12: Klartext-Erklärung (verständlich für jeden, nutzbar als E-Mail) ──
+/**
+ * Alle synchronen Analyse-Module gebündelt.
+ * Keine DOM-Zugriffe, keine API-Calls — pure Berechnung.
+ */
+function runLocalAnalysis(p) {
+    const { ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile } = p;
+
+    const surgeIntent = detectSurgeIntent(footprint, null, null, place);
+    const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
+    const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
+    const stakeholder = detectStakeholder(psiData, place);
+    const techTrajectory = assessTechTrajectory(tech, wayback);
+    const localSEO = assessLocalSEO(ws, place, psiData);
+    const emotionalReady = assessEmotionalReadiness(reviewSentiment);
+    const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
+    const socialSignals = analyzeSocialSignals(place);
+    const socialComparison = compareSocialPresence(place, competitors);
+    const cruxData = null; // CrUX wird async separat geholt wenn nötig
+    const bfsgScore = checkBFSGCompliance(psiData);
+    const triggerEvents = detectTriggerEvents({ ws, tech, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors });
+    const techDepth = analyzeTechDepth(psiData, tech);
+    const contentFreshness = analyzeContentFreshness(psiData, contentAnalysis, wayback);
+    const pxIndex = calculatePXIndex(ws, psiData, contentAnalysis, screenshotAnalysis);
+    const schemaCheck = checkSchema(psiData);
+    const messagingCheck = checkMessaging(psiData);
+    const signalStack = analyzeSignalStack({ ws, tech, place, footprint, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
+    const compositeScore = calculateCompositeScore({ ws, tech, place, footprint, revenue, result, screenshotAnalysis, contentAnalysis, socialSignals, triggerEvents, bfsgScore, signalStack, techDepth, contentFreshness, companyProfile });
+    const feedbackInsight = getScoreInsight(result.leadScore);
+
+    return {
+        surgeIntent, digitalMaturity, conversationReady, stakeholder, techTrajectory,
+        localSEO, emotionalReady, revenueWeighted, socialSignals, socialComparison,
+        cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
+        pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight
+    };
+}
+
 function generateExplanation(r, ws, tech, data, uxAudit) {
     const s = r.leadScore;
     const domain = new URL(data.url).hostname.replace('www.', '');
