@@ -3,6 +3,7 @@
  */
 import { loadLeads, updateLead, deleteLead, deleteAllLeads, exportCSV } from '../crm/leads.js';
 import { currentUser } from '../crm/firebase.js';
+import { recordOutcome, getCalibration } from '../learning/feedback-loop.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
 const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
@@ -139,6 +140,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                 <div class="crm-lead-bottom">
                     <input type="text" class="crm-notes-input" value="${(l.notes || '').replace(/"/g, '&quot;')}" placeholder="Notiz hinzufügen..." data-lead-id="${l.id}" data-action="notes">
                     ${l.expectedValue ? `<span class="crm-lead-ev">EV: ${l.expectedValue}€</span>` : ''}
+                    ${l.status === 'angebot' || l.status === 'interessiert' ? `<button class="crm-btn-outcome crm-btn-won" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-outcome="kunde" title="Kunde geworden">✓ Gewonnen</button><button class="crm-btn-outcome crm-btn-lost" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-outcome="verloren" title="Lead verloren">✗ Verloren</button>` : ''}
                 </div>
             </div>`;
         }
@@ -151,6 +153,21 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         const totalEV = Math.round(filtered.reduce((s, l) => s + (l.expectedValue || 0), 0));
         html += `<div class="crm-summary">
             ${filtered.length} Leads · Ø Score: ${avgScore} · Gesamt-EV: ${totalEV}€
+        </div>`;
+    }
+
+    // ── Persönliche Kalibrierung ──
+    const cal = getCalibration();
+    if (cal.available) {
+        html += `<div class="card anim-in" style="margin-top:16px">
+            <div class="section-label">Deine persönliche Conversion-Rate</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${cal.overall.rate >= 10 ? 'var(--green)' : 'var(--muted)'}">${cal.overall.rate}%</span> <span class="metric-desc">${cal.overall.converted} von ${cal.overall.total} Leads konvertiert</span></div>
+            </div>
+            <div class="metric-desc">${cal.insight}</div>
+            ${Object.entries(cal.buckets).map(([bucket, stats]) =>
+                `<div class="stat-row"><span class="stat-label">Score ${bucket}</span><span class="stat-value">${stats.conversionRate}% (${stats.converted}/${stats.total})</span></div>`
+            ).join('')}
         </div>`;
     }
 
@@ -215,6 +232,17 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             searchInput.setSelectionRange(searchQuery.length, searchQuery.length);
         }
     }
+
+    // Outcome-Tracking (Feedback Loop)
+    el.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-outcome]');
+        if (!btn) return;
+        const { leadId, domain, score, outcome } = btn.dataset;
+        recordOutcome(domain, parseInt(score), outcome);
+        await updateLead(leadId, { status: outcome });
+        showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : 'Als verloren markiert.');
+        renderCRM(filter, searchQuery);
+    }, { signal });
 
     // CSV Export + Alle löschen
     el.addEventListener('click', async (e) => {

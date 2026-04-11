@@ -88,26 +88,37 @@ function renderScannerResults(city, results) {
     const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
     const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
 
-    let html = `<h2 style="font-size:1.2rem;font-weight:700;margin-bottom:16px">Branchen-Ranking für ${city}</h2>`;
+    let html = `<h2 class="crm-title" style="margin-bottom:16px">Branchen-Ranking für ${city}</h2>`;
 
-    if (best) {
-        html += `<div class="card" style="border-left:3px solid var(--green);margin-bottom:16px">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--green);margin-bottom:8px">Größtes Potenzial</div>
-            <div style="font-size:1.3rem;font-weight:700">${best.name}</div>
-            <div style="font-size:13px;color:var(--muted)">Ø Score: ${best.avgScore} · Ø Performance: ${best.avgPerf} ${best.baukastenPct > 0 ? '· '+best.baukastenPct+'% Baukasten' : ''}</div>
-            <div style="font-size:13px;margin-top:4px">→ "${best.q} ${city}" als Batch-Suche empfohlen</div>
-        </div>`;
+    // Top 3 Empfehlungen
+    const top3 = results.filter(r => r.avgScore > 0).slice(0, 3);
+    if (top3.length > 0) {
+        html += `<div class="science-grid" style="grid-template-columns:repeat(${Math.min(top3.length, 3)},1fr);margin-bottom:16px">`;
+        top3.forEach((r, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
+            html += `<div class="card card-accent anim-in">
+                <div class="section-label-accent">${medal} #${i+1} Potenzial</div>
+                <div style="font-size:1.1rem;font-weight:700">${r.name}</div>
+                <div class="metric-desc">Score ${r.avgScore} · Perf ${r.avgPerf} ${r.baukastenPct > 0 ? `· ${r.baukastenPct}% Baukasten` : ''}</div>
+                <div class="metric-desc" style="margin-top:4px">→ "${r.q} ${city}"</div>
+            </div>`;
+        });
+        html += `</div>`;
     }
 
-    html += `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-        <thead><tr><th style="text-align:left;padding:10px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">#</th><th style="text-align:left;padding:10px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Branche</th><th style="padding:10px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Score</th><th style="padding:10px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Perf.</th><th style="padding:10px;border-bottom:1px solid var(--border);color:var(--muted);font-size:11px">Getestet</th></tr></thead><tbody>`;
+    // Tabelle
+    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+        <thead><tr><th style="text-align:left">#</th><th style="text-align:left">Branche</th><th>Score</th><th>Perf.</th><th>Baukasten</th><th>Gefunden</th></tr></thead><tbody>`;
 
     results.forEach((r, i) => {
-        html += `<tr><td style="padding:8px 10px;border-bottom:1px solid var(--border);font-weight:700;color:var(--muted)">${i+1}</td>
-            <td style="padding:8px 10px;border-bottom:1px solid var(--border)"><strong>${r.name}</strong>${r.error ? `<br><span style="font-size:11px;color:var(--red)">${r.error}</span>` : ''}</td>
-            <td style="padding:8px 10px;border-bottom:1px solid var(--border)"><span class="badge ${sc(r.avgScore)}">${r.avgScore || '—'}</span></td>
-            <td style="padding:8px 10px;border-bottom:1px solid var(--border)" class="${perf(r.avgPerf)}">${r.avgPerf || '—'}</td>
-            <td style="padding:8px 10px;border-bottom:1px solid var(--border);color:var(--muted)">${r.tested}/${r.count}</td></tr>`;
+        html += `<tr>
+            <td style="font-weight:700;color:var(--muted)">${i+1}</td>
+            <td><strong>${r.name}</strong>${r.error ? `<br><span style="font-size:11px;color:var(--red)">${r.error}</span>` : ''}</td>
+            <td><span class="badge ${sc(r.avgScore)}">${r.avgScore || '—'}</span></td>
+            <td class="${perf(r.avgPerf)}">${r.avgPerf || '—'}</td>
+            <td>${r.baukastenPct > 0 ? `<span class="badge badge-orange">${r.baukastenPct}%</span>` : '—'}</td>
+            <td style="color:var(--muted)">${r.tested}/${r.count}</td>
+        </tr>`;
     });
     html += '</tbody></table></div>';
 

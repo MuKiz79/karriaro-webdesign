@@ -220,13 +220,16 @@ function checkOnboarding() {
             <div style="background:var(--card);border-radius:var(--radius);padding:32px;max-width:480px;width:100%">
                 <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px">Willkommen bei Lead Intelligence</h2>
                 <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px">
-                    Dieses Tool analysiert Websites potenzieller Kunden und berechnet mit Bayesianischer Statistik
-                    wie wahrscheinlich eine Konversion ist.<br><br>
-                    <strong>3 Schritte:</strong><br>
-                    1. URL eingeben → Website wird analysiert<br>
-                    2. Ergebnis lesen → Score, Gründe, Strategie<br>
-                    3. Lead speichern → Im CRM weiterverfolgen<br><br>
-                    <strong>Tipp:</strong> Trage zuerst unter "Einstellungen" deinen API-Key ein.
+                    Finde Leads die wirklich konvertieren — mit Bayesianischer Statistik,
+                    Monte-Carlo-Simulation und KI-Analyse.<br><br>
+                    <strong>3 Modi:</strong><br>
+                    <strong>Einzel-Check</strong> — Eine URL analysieren (Score, Funnel, Pitch)<br>
+                    <strong>Batch-Suche</strong> — "Friseur Köln" → 10 Leads auf einmal<br>
+                    <strong>Branchen-Scanner</strong> — Welche Branche hat das meiste Potenzial?<br><br>
+                    <strong>Was du bekommst:</strong><br>
+                    Lead-Score · BFSG-Compliance · Signal-Stacking · KI-Branchenanalyse ·
+                    Konkurrenz-Vergleich · Pitch-Vorlagen · CRM mit Pipeline<br><br>
+                    <strong>Tipp:</strong> Trage zuerst unter "Einstellungen" deinen API-Key + Cloud Function URL ein.
                 </p>
                 <button class="btn-primary" id="btn-onboarding-close" style="width:100%">Verstanden — loslegen</button>
             </div>
