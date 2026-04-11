@@ -93,7 +93,7 @@ export function renderScore(el, data, explanation) {
     </div>`;
 
     // SVG Ring
-    html += `<div style="text-align:center;margin-bottom:32px" class="anim-in">
+    html += `<div style="text-align:center;margin-bottom:32px;" class="anim-in">
         <div class="score-ring-wrap">
             <svg class="score-ring-svg" viewBox="0 0 160 160">
                 <circle class="score-ring-bg" cx="80" cy="80" r="70"/>
@@ -462,7 +462,7 @@ export function renderSignals(el, data) {
             <div class="flex-between" style="margin-bottom:12px">
                 <div><span class="metric-xl" style="color:${csColor}">${cs.composite}</span> <span class="metric-desc">${cs.label}</span></div>
             </div>
-            <div class="science-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:8px">
+            <div class="composite-grid">
                 <div style="text-align:center"><div class="metric-xl">${cs.fit}</div><div class="metric-desc">Fit</div></div>
                 <div style="text-align:center"><div class="metric-xl">${cs.intent}</div><div class="metric-desc">Intent</div></div>
                 <div style="text-align:center"><div class="metric-xl">${cs.timing}</div><div class="metric-desc">Timing</div></div>
@@ -533,7 +533,7 @@ export function renderSignals(el, data) {
                 <div><span class="metric-xl" style="color:${pxColor}">${px.pxIndex}</span> <span class="metric-desc">${px.label}</span></div>
                 ${px.psDiff !== 0 ? `<div class="metric-desc">${px.psDiff > 0 ? '+' : ''}${px.psDiff} vs. PageSpeed</div>` : ''}
             </div>
-            <div class="science-grid" style="grid-template-columns:repeat(4,1fr)">
+            <div class="dimension-grid">
                 <div style="text-align:center"><div class="metric-desc">Speed</div><div style="font-weight:700">${px.dimensions.speed.score}</div></div>
                 <div style="text-align:center"><div class="metric-desc">Interaktiv</div><div style="font-weight:700">${px.dimensions.interactivity.score}</div></div>
                 <div style="text-align:center"><div class="metric-desc">Visual</div><div style="font-weight:700">${px.dimensions.visual.score}</div></div>
@@ -565,7 +565,7 @@ export function renderSignals(el, data) {
             <h3>KI-Redesign-Vorschlag</h3>
             <p><strong>${mk.headline || ''}</strong></p>
             <p>${mk.designDirection || ''}</p>
-            ${mk.colorPalette ? `<div style="display:flex;gap:4px;margin:8px 0">${mk.colorPalette.map(c => `<div style="width:28px;height:28px;border-radius:6px;background:${c}"></div>`).join('')}</div>` : ''}
+            ${mk.colorPalette ? `<div class="color-swatches">${mk.colorPalette.map(c => `<div class="color-swatch" style="background:${c}"></div>`).join('')}</div>` : ''}
             ${mk.keyFeatures ? `<div style="margin:8px 0">${mk.keyFeatures.map(f => `<span class="badge badge-green" style="margin:2px">${f}</span>`).join('')}</div>` : ''}
             ${mk.oneLinePitch ? `<div style="margin-top:8px;font-style:italic;opacity:0.8">"${mk.oneLinePitch}"</div>` : ''}
         </div>`;

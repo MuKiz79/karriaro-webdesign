@@ -17,6 +17,7 @@ import { scoreLead } from '../scoring/lead-scorer.js';
 import { portfolioProbability } from '../scoring/portfolio.js';
 import { saveLead, exportCSV as exportLeadsCSV } from '../crm/leads.js';
 import { analyzeCompanyProfile } from '../analysis/company-profile.js';
+import { checkBFSGCompliance } from '../analysis/bfsg-compliance.js';
 import { showToast } from '../ui/render-components.js';
 
 const COMPETITOR_PATTERNS = [
@@ -67,7 +68,10 @@ export async function runBatchSearch() {
                 try { companyProfile = analyzeCompanyProfile(p.websiteUri, psiData, p, null); } catch(e) {}
                 const skipLead = isCompetitor || companyProfile?.isCompetitor || companyProfile?.isEnterprise;
 
-                // Empfehlungstext
+                // BFSG Quick-Check
+                const bfsg = checkBFSGCompliance(psiData);
+
+                // Empfehlungstext (mit neuen Modulen)
                 const reasons = [];
                 if (skipLead) reasons.push(companyProfile?.isCompetitor ? 'Konkurrenz' : 'Nicht Zielgruppe');
                 else {
@@ -75,7 +79,8 @@ export async function runBatchSearch() {
                     if (tech.isBaukasten) reasons.push(tech.cms);
                     if (!ws.isHttps) reasons.push('Kein SSL');
                     if (p.userRatingCount > 50) reasons.push(`${p.userRatingCount} Bewertungen`);
-                    if (ws.a11y < 60) reasons.push(`A11y ${ws.a11y}`);
+                    if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') reasons.push(`BFSG: ${bfsg.riskLabel}`);
+                    else if (ws.a11y < 60) reasons.push(`A11y ${ws.a11y}`);
                 }
 
                 return {
@@ -89,6 +94,8 @@ export async function runBatchSearch() {
                     expectedValue: skipLead ? 0 : prob.expectedValue,
                     timePerLead: prob.timePerLead,
                     isCompetitor: !!skipLead,
+                    bfsgRisk: bfsg.risk,
+                    bfsgScore: bfsg.complianceScore,
                     reasons: reasons.join('. ')
                 };
             } catch (e) { return null; }
@@ -129,7 +136,10 @@ function renderBatchResults(query, results) {
 
     // Table
     html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-        <thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>Score</th></tr></thead><tbody>`;
+        <thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>BFSG</th><th>Score</th></tr></thead><tbody>`;
+
+    const bfsgBadge = risk => risk === 'kritisch' ? 'badge-red' : risk === 'hoch' ? 'badge-orange' : risk === 'mittel' ? 'badge-orange' : 'badge-green';
+    const bfsgLabel = risk => risk === 'kritisch' ? '✗' : risk === 'hoch' ? '⚠' : risk === 'mittel' ? '~' : '✓';
 
     for (const r of results) {
         const dimmed = r.isCompetitor ? ' style="opacity:0.4"' : '';
@@ -138,9 +148,10 @@ function renderBatchResults(query, results) {
             <td>${r.rating || '—'}</td>
             <td>${r.reviews}</td>
             <td class="${perf(r.perf)}">${r.perf}</td>
+            <td><span class="badge ${bfsgBadge(r.bfsgRisk)}" title="BFSG ${r.bfsgScore || '?'}%">${bfsgLabel(r.bfsgRisk)}</span></td>
             <td><span class="badge ${r.isCompetitor ? 'badge-red' : sc(r.leadScore)}">${r.isCompetitor ? '✗' : r.leadScore}</span></td>
         </tr>
-        <tr${dimmed}><td colspan="6" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">${
+        <tr${dimmed}><td colspan="7" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">${
             r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
             : r.leadScore >= 55 ? `<strong class="good">→ Kontaktieren.</strong> ${r.reasons}`
             : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
