@@ -31,38 +31,48 @@ export async function runScanner() {
     const results = [];
     showProgress(0, `Scanne 0/${BRANCHES.length}...`);
 
-    for (let i = 0; i < BRANCHES.length; i++) {
+    // Phase 1: Alle Places-Suchen parallel (schnell, nur API-Calls)
+    showProgress(10, 'Suche Unternehmen in allen Branchen...');
+    const placeResults = await Promise.all(
+        BRANCHES.map(b => searchPlaces(`${b.q} ${city}`, 3).catch(() => null))
+    );
+    if (state.aborted) { hideProgress(); document.getElementById('btn-scanner').disabled = false; return; }
+
+    // Phase 2: Je 1 PageSpeed-Call pro Branche — in 3er-Batches parallel
+    const BATCH_SIZE = 3;
+    for (let i = 0; i < BRANCHES.length; i += BATCH_SIZE) {
         if (state.aborted) break;
-        const b = BRANCHES[i];
-        showProgress(Math.round(((i+1)/BRANCHES.length)*100), `${i+1}/${BRANCHES.length}: ${b.name} in ${city}...`);
+        const batch = BRANCHES.slice(i, i + BATCH_SIZE);
+        showProgress(Math.round(((i + batch.length) / BRANCHES.length) * 100), `${i + batch.length}/${BRANCHES.length}: ${batch.map(b => b.name).join(', ')}...`);
 
-        try {
-            const data = await searchPlaces(`${b.q} ${city}`, 3);
-            const places = (data?.places || []).filter(p => p.websiteUri);
-            if (!places.length) { results.push({...b, city, avgScore:0, count:0, tested:0, avgPerf:0}); continue; }
+        const batchPromises = batch.map(async (b, bIdx) => {
+            const idx = i + bIdx;
+            const places = (placeResults[idx]?.places || []).filter(p => p.websiteUri);
+            if (!places.length) return { ...b, city, avgScore: 0, count: 0, tested: 0, avgPerf: 0 };
 
-            const tested = [];
-            for (let j = 0; j < Math.min(places.length, 2); j++) {
-                try {
-                    const psi = await fetchPageSpeed(places[j].websiteUri);
-                    const ws = extractWebsiteScore(psi);
-                    const tech = detectTech(psi);
-                    const prob = scoreLead(ws, tech, places[j], null, null);
-                    tested.push({ ws, tech, prob });
-                    await delay(1500);
-                } catch(e) {}
+            // Nur 1 Place testen (statt 2) — spart 50% der Zeit
+            try {
+                const psi = await fetchPageSpeed(places[0].websiteUri);
+                const ws = extractWebsiteScore(psi);
+                const tech = detectTech(psi);
+                const prob = scoreLead(ws, tech, places[0], null, null);
+                return {
+                    ...b, city,
+                    avgScore: prob.leadScore,
+                    avgPerf: ws.perf,
+                    count: places.length, tested: 1,
+                    baukastenPct: tech.isBaukasten ? 100 : 0
+                };
+            } catch (e) {
+                return { ...b, city, avgScore: 0, count: places.length, tested: 0, avgPerf: 0, error: e.message };
             }
-            if (!tested.length) { results.push({...b, city, avgScore:0, count:places.length, tested:0, avgPerf:0}); continue; }
+        });
 
-            results.push({
-                ...b, city,
-                avgScore: Math.round(tested.reduce((s,t) => s+t.prob.leadScore, 0) / tested.length),
-                avgPerf: Math.round(tested.reduce((s,t) => s+t.ws.perf, 0) / tested.length),
-                count: places.length, tested: tested.length,
-                baukastenPct: Math.round(tested.filter(t => t.tech.isBaukasten).length / tested.length * 100)
-            });
-        } catch(e) { results.push({...b, city, avgScore:0, count:0, tested:0, avgPerf:0, error:e.message}); }
-        if (!state.aborted) await delay(1000);
+        const batchResults = await Promise.all(batchPromises);
+        results.push(...batchResults);
+
+        // Kurzer Delay zwischen Batches (API-Rate-Limit)
+        if (i + BATCH_SIZE < BRANCHES.length && !state.aborted) await delay(500);
     }
 
     hideProgress();
