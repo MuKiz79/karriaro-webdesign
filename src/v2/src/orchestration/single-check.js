@@ -402,6 +402,33 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             problems.push(data.techTrajectory.pitchArg);
         }
 
+        // ── Module 11-15 ──
+        if (data.bfsgScore?.pitchArg) {
+            problems.push(`<div class="highlight-box-red"><strong>BFSG-Risiko:</strong> ${data.bfsgScore.pitchArg}</div>`);
+            emailArgs.push(`die Website erfüllt nur ${data.bfsgScore.complianceScore}% der Barrierefreiheits-Anforderungen`);
+        }
+
+        if (data.triggerEvents?.hasSofort) {
+            const top = data.triggerEvents.topEvent;
+            problems.push(`<strong>Dringender Handlungsbedarf:</strong> ${top.label}`);
+        }
+
+        if (data.techDepth?.pitchArg) {
+            problems.push(data.techDepth.pitchArg);
+        }
+
+        if (data.contentFreshness?.pitchArg) {
+            problems.push(data.contentFreshness.pitchArg);
+        }
+
+        if (data.emailCheck?.pitchArg) {
+            problems.push(data.emailCheck.pitchArg);
+        }
+
+        if (data.signalStack?.clusterCount >= 2) {
+            problems.push(`<div class="highlight-box"><strong>Signal-Häufung:</strong> ${data.signalStack.label}. ${data.signalStack.pitchArgs[0] || ''}</div>`);
+        }
+
         if (problems.length > 0) {
             text += problems.join('<br><br>');
         }

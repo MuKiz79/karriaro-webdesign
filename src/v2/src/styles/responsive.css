@@ -1,10 +1,11 @@
 /* ══════════════════════════════════════
-   Responsive Breakpoints — Mobile First
+   Responsive — Mobile First
    ══════════════════════════════════════ */
 
 /* Tablet (560px+) */
 @media (min-width: 560px) {
     .scores-grid { grid-template-columns: repeat(2, 1fr); }
+    .science-grid { grid-template-columns: repeat(2, 1fr); }
     .input-row { flex-direction: row; }
 }
 
@@ -14,14 +15,115 @@
     .results { padding: 0 var(--s8) var(--s8); }
 }
 
-/* Mobile (<560px) */
+/* Large Desktop (1024px+) */
+@media (min-width: 1024px) {
+    .results { max-width: 800px; }
+    .batch-results { max-width: 960px; }
+}
+
+/* ══════════════════════════════════════
+   Mobile (<560px) — Umfassend
+   ══════════════════════════════════════ */
 @media (max-width: 559px) {
+    /* Layout */
     .input-row { flex-direction: column; }
     .btn-primary { width: 100%; }
+    .hero { padding: 80px 16px var(--s6); }
+    .results { padding: 0 12px var(--s7); }
+    .batch-results { padding: 0 12px var(--s7); }
+
+    /* Navigation */
     .nav-right { gap: 0; }
-    .nav-btn { padding: var(--s1) var(--s2); font-size: 12px; }
+    .nav-btn { padding: var(--s1) var(--s2); font-size: 11px; }
+
+    /* Tabs */
     .tabs { max-width: 100%; }
-    .tab { padding: var(--s2) var(--s2); font-size: 12px; }
+    .tab { padding: var(--s2) var(--s2); font-size: 11px; }
+
+    /* Score Ring */
+    .score-ring-wrap { width: 140px; height: 140px; }
+    .score-number { font-size: 2.8rem; }
+    .score-label { font-size: 10px; }
+    .score-meta { font-size: 11px; }
+    .explanation-box { font-size: 12px; padding: 12px 14px; }
+
+    /* Cards */
+    .card { padding: 14px 16px; }
+
+    /* Stat Rows */
     .stat-row { flex-direction: column; gap: 2px; }
     .stat-value { font-size: 13px; }
+
+    /* Feature Rows */
+    .feature-row { flex-direction: column; gap: 4px; }
+    .feature-detail { max-width: 100%; text-align: left; font-size: 11px; }
+
+    /* Grids */
+    .scores-grid,
+    .science-grid { grid-template-columns: 1fr; }
+
+    /* Funnel */
+    .funnel-stage-name { width: 90px; font-size: 11px; }
+    .funnel-stage-value { width: 36px; font-size: 12px; }
+
+    /* Kahneman */
+    .kahneman-wrap { flex-direction: column; gap: 12px; }
+
+    /* Company Info */
+    .company-info { flex-direction: column; gap: 4px; align-items: flex-start; }
+
+    /* Pitch Box */
+    .pitch-box { padding: 16px; }
+    .pitch-box p { font-size: 12px; }
+
+    /* Tables */
+    .data-table { font-size: 11px; }
+    .data-table th, .data-table td { padding: 6px 8px; }
+
+    /* Metrics */
+    .metric-big { font-size: 1.5rem; }
+    .metric-xl { font-size: 1.2rem; }
+    .revenue-big { font-size: 1.5rem; }
+
+    /* Badges */
+    .badge { font-size: 10px; padding: 3px 8px; }
+
+    /* Section Labels */
+    .section-label, .section-label-accent { font-size: 10px; }
+
+    /* Actions */
+    .actions-center { flex-direction: column; gap: 8px; }
+    .actions-center .btn-primary { margin-right: 0; width: 100%; }
+    .btn-cta-link { width: 100%; text-align: center; box-sizing: border-box; }
+
+    /* Phone Frame */
+    .phone-frame { max-width: 160px; }
+
+    /* CRM */
+    .crm-view { margin-top: 70px; }
+    .crm-stats { grid-template-columns: repeat(2, 1fr); }
+    .crm-stats .crm-stat:last-child { grid-column: span 2; }
+    .crm-pipeline { flex-wrap: wrap; }
+    .crm-pipe-stage { min-width: calc(33% - 2px); }
+    .crm-pipe-count { font-size: 1.2rem; }
+    .crm-pipe-label { font-size: 9px; }
+    .crm-lead-top { flex-wrap: wrap; }
+    .crm-lead-actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    .crm-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+
+    /* Flex helpers */
+    .flex-between { flex-direction: column; gap: 8px; align-items: flex-start; }
+}
+
+/* ══════════════════════════════════════
+   Small Mobile (<380px)
+   ══════════════════════════════════════ */
+@media (max-width: 379px) {
+    .hero h1 { font-size: 1.5rem; }
+    .hero-sub { font-size: 13px; }
+    .score-ring-wrap { width: 120px; height: 120px; }
+    .score-number { font-size: 2.2rem; }
+    .nav-logo { font-size: 12px; }
+    .crm-stats { grid-template-columns: 1fr; }
+    .crm-stats .crm-stat:last-child { grid-column: span 1; }
 }
