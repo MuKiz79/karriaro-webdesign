@@ -2,16 +2,16 @@
  * Advanced Cloud Function Calls (A1, A2, A4, B6, D15, D16)
  */
 import { config } from '../config.js';
+import { cachedFetch } from './client.js';
 
 async function call(endpoint, body) {
     if (!config.fnUrl) return null;
     try {
-        const res = await fetch(`${config.fnUrl}/${endpoint}`, {
+        return await cachedFetch(`${config.fnUrl}/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
-        });
-        return res.ok ? await res.json() : null;
+        }, { timeout: 20000, retries: 1, cacheKey: `cf_${endpoint}_${JSON.stringify(body)}` });
     } catch (e) { return null; }
 }
 
