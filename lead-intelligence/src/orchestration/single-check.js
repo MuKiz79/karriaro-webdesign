@@ -37,7 +37,7 @@ import { analyzeCompanyProfile } from '../analysis/company-profile.js';
 import { selectVariant as sv } from '../learning/ab-test.js';
 import { checkDrift as cd } from '../learning/tracking.js';
 import { saveLead } from '../crm/leads.js';
-import { renderScore, renderFunnel, renderUX, renderFuture, renderScience, renderAI, renderRevenue, renderStrategy, showToast } from '../ui/render-components.js';
+import { renderScore, renderFunnel, renderUX, renderFuture, renderScience, renderAI, renderRevenue, renderStrategy, renderSignals, showToast } from '../ui/render-components.js';
 
 export async function runSingleCheck() {
     let url = document.getElementById('url-input').value.trim();
@@ -187,7 +187,7 @@ export async function runSingleCheck() {
 
 function renderResult(data) {
     // Sicherheitscheck
-    const ids = ['result-score','result-funnel','result-decision','result-ux','result-future','result-science','result-ai','result-revenue','result-strategy','result-expert','result-actions'];
+    const ids = ['result-score','result-funnel','result-decision','result-ux','result-future','result-signals','result-science','result-ai','result-revenue','result-strategy','result-expert','result-actions'];
     for (const id of ids) {
         if (!document.getElementById(id)) {
             document.getElementById('error-text').textContent = 'Render-Fehler: Bitte Seite neu laden (Cmd+Shift+R)';
@@ -219,6 +219,7 @@ function renderResult(data) {
         ['result-future',   'Readiness',  el => renderFuture(el, data)],
         ['result-science',  'Wissenschaft', el => renderScience(el, data)],
         ['result-ai',       'KI-Analyse', el => renderAI(el, data)],
+        ['result-signals',  'Signale',    el => renderSignals(el, data)],
         ['result-revenue',  'Umsatz',     el => renderRevenue(el, data)],
         ['result-strategy', 'Strategie',  el => renderStrategy(el, document.getElementById('result-expert'), document.getElementById('result-actions'), data)],
     ];

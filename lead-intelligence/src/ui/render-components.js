@@ -445,3 +445,140 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         showToast('Lead im CRM gespeichert');
     });
 }
+
+// ══════════════════════════════════════
+// 9. Signal Analyse + BFSG + Trigger + Tech + Composite
+// ══════════════════════════════════════
+
+export function renderSignals(el, data) {
+    let html = '';
+
+    // Composite Score (Fit × Intent × Timing)
+    const cs = data.compositeScore;
+    if (cs) {
+        const csColor = cs.composite >= 65 ? 'var(--green)' : cs.composite >= 45 ? 'var(--orange)' : cs.composite >= 30 ? 'var(--muted)' : 'var(--red)';
+        html += `<div class="card card-accent anim-in">
+            <div class="section-label-accent">Composite Score — Fit × Intent × Timing</div>
+            <div class="flex-between" style="margin-bottom:12px">
+                <div><span class="metric-xl" style="color:${csColor}">${cs.composite}</span> <span class="metric-desc">${cs.label}</span></div>
+            </div>
+            <div class="science-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:8px">
+                <div style="text-align:center"><div class="metric-xl">${cs.fit}</div><div class="metric-desc">Fit</div></div>
+                <div style="text-align:center"><div class="metric-xl">${cs.intent}</div><div class="metric-desc">Intent</div></div>
+                <div style="text-align:center"><div class="metric-xl">${cs.timing}</div><div class="metric-desc">Timing</div></div>
+            </div>
+            <div class="metric-desc">Engpass: <strong>${cs.bottleneck.name}</strong> (${cs.bottleneck.value}) — ${cs.recommendation}</div>
+        </div>`;
+    }
+
+    // Signal Stacking
+    const ss = data.signalStack;
+    if (ss && ss.clusterCount > 0) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Signal Stacking — ${ss.signalCount} Signale, ${ss.clusterCount} Cluster</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${ss.stackMultiplier >= 2 ? 'var(--green)' : 'var(--orange)'}">${ss.stackMultiplier}×</span> <span class="metric-desc">Multiplikator</span></div>
+            </div>
+            ${ss.activeClusters.map(c => `<div class="feature-row"><span class="stat-label"><span class="feature-icon found">★</span>${c.name} (${c.matchCount}/${c.totalSignals} Signale)</span><span class="feature-detail">${c.multiplier}×</span></div>`).join('')}
+        </div>`;
+        if (ss.pitchArgs.length > 0) {
+            html += `<div class="pitch-box anim-in"><h3>Signal-Stack Argument</h3><p>${ss.pitchArgs[0]}</p></div>`;
+        }
+    }
+
+    // BFSG Compliance
+    const bf = data.bfsgScore;
+    if (bf) {
+        const bfColor = bf.risk === 'niedrig' ? 'var(--green)' : bf.risk === 'mittel' ? 'var(--orange)' : 'var(--red)';
+        html += `<div class="card anim-in" style="border-left:3px solid ${bfColor}">
+            <div class="section-label">BFSG-Compliance (Barrierefreiheit seit 2025)</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${bfColor}">${bf.complianceScore}%</span> <span class="metric-desc">${bf.riskLabel}</span></div>
+                <div><span class="badge ${bf.risk === 'niedrig' ? 'badge-green' : bf.risk === 'mittel' ? 'badge-orange' : 'badge-red'}">${bf.fine}</span></div>
+            </div>
+            <div class="metric-desc">${bf.passed} bestanden · ${bf.failed} nicht bestanden · ${bf.criticalFails.length} kritisch</div>
+            ${bf.pitchArg ? `<div class="highlight-box-red" style="margin-top:8px;font-size:12px">${bf.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
+    // Trigger Events
+    const te = data.triggerEvents;
+    if (te && te.eventCount > 0) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Trigger Events — ${te.label}</div>
+            ${te.events.slice(0, 5).map(e => {
+                const uColor = e.urgency === 'sofort' ? 'var(--red)' : e.urgency === 'hoch' ? 'var(--orange)' : 'var(--muted)';
+                return `<div class="feature-row"><span class="stat-label"><span class="badge" style="background:${uColor}20;color:${uColor};font-size:10px;padding:2px 6px">${e.urgency}</span> ${e.label}</span><span class="feature-detail">${e.timing}</span></div>`;
+            }).join('')}
+        </div>`;
+    }
+
+    // Tech Depth
+    const td = data.techDepth;
+    if (td && td.findings.length > 0) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Technologie-Analyse — ${td.techAge}</div>
+            ${td.findings.filter(f => f.severity !== 'info').map(f => `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${f.severity === 'hoch' ? 'missing' : 'warn'}">${f.severity === 'hoch' ? '✗' : '⚠'}</span>${f.label}</span><span class="feature-detail">${f.risk || ''}</span></div>`).join('')}
+            ${td.securityRisk >= 3 ? `<div class="metric-desc" style="color:var(--red);margin-top:8px">${td.findings.filter(f => f.severity === 'hoch').length} Sicherheitsrisiken erkannt</div>` : ''}
+        </div>`;
+    }
+
+    // PX Index
+    const px = data.pxIndex;
+    if (px) {
+        const pxColor = px.pxIndex >= 75 ? 'var(--green)' : px.pxIndex >= 50 ? 'var(--orange)' : 'var(--red)';
+        html += `<div class="card anim-in">
+            <div class="section-label">Performance Experience Index</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${pxColor}">${px.pxIndex}</span> <span class="metric-desc">${px.label}</span></div>
+                ${px.psDiff !== 0 ? `<div class="metric-desc">${px.psDiff > 0 ? '+' : ''}${px.psDiff} vs. PageSpeed</div>` : ''}
+            </div>
+            <div class="science-grid" style="grid-template-columns:repeat(4,1fr)">
+                <div style="text-align:center"><div class="metric-desc">Speed</div><div style="font-weight:700">${px.dimensions.speed.score}</div></div>
+                <div style="text-align:center"><div class="metric-desc">Interaktiv</div><div style="font-weight:700">${px.dimensions.interactivity.score}</div></div>
+                <div style="text-align:center"><div class="metric-desc">Visual</div><div style="font-weight:700">${px.dimensions.visual.score}</div></div>
+                <div style="text-align:center"><div class="metric-desc">Content</div><div style="font-weight:700">${px.dimensions.content.score}</div></div>
+            </div>
+        </div>`;
+    }
+
+    // Email Deliverability
+    const em = data.emailCheck;
+    if (em && !em.error) {
+        const emColor = em.score >= 90 ? 'var(--green)' : em.score >= 50 ? 'var(--orange)' : 'var(--red)';
+        html += `<div class="card anim-in">
+            <div class="section-label">E-Mail Deliverability</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${emColor}">${em.score}%</span> <span class="metric-desc">${em.label}</span></div>
+            </div>
+            <div class="feature-row"><span class="stat-label"><span class="feature-icon ${em.spf ? 'found' : 'missing'}">${em.spf ? '✓' : '✗'}</span>SPF</span><span class="feature-detail">${em.spf ? 'Konfiguriert' : 'Fehlt'}</span></div>
+            <div class="feature-row"><span class="stat-label"><span class="feature-icon ${em.dkim ? 'found' : 'missing'}">${em.dkim ? '✓' : '✗'}</span>DKIM</span><span class="feature-detail">${em.dkim ? 'Konfiguriert' : 'Fehlt'}</span></div>
+            <div class="feature-row"><span class="stat-label"><span class="feature-icon ${em.dmarc ? 'found' : 'missing'}">${em.dmarc ? '✓' : '✗'}</span>DMARC</span><span class="feature-detail">${em.dmarc ? 'Konfiguriert' : 'Fehlt'}</span></div>
+            ${em.pitchArg ? `<div class="metric-desc" style="margin-top:8px;color:var(--red)">${em.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
+    // Mockup Suggestion
+    const mk = data.mockupSuggestion;
+    if (mk && !mk.error) {
+        html += `<div class="pitch-box anim-in">
+            <h3>KI-Redesign-Vorschlag</h3>
+            <p><strong>${mk.headline || ''}</strong></p>
+            <p>${mk.designDirection || ''}</p>
+            ${mk.colorPalette ? `<div style="display:flex;gap:4px;margin:8px 0">${mk.colorPalette.map(c => `<div style="width:28px;height:28px;border-radius:6px;background:${c}"></div>`).join('')}</div>` : ''}
+            ${mk.keyFeatures ? `<div style="margin:8px 0">${mk.keyFeatures.map(f => `<span class="badge badge-green" style="margin:2px">${f}</span>`).join('')}</div>` : ''}
+            ${mk.oneLinePitch ? `<div style="margin-top:8px;font-style:italic;opacity:0.8">"${mk.oneLinePitch}"</div>` : ''}
+        </div>`;
+    }
+
+    // Feedback Insight (persönliche Kalibrierung)
+    const fi = data.feedbackInsight;
+    if (fi) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Persönliche Kalibrierung</div>
+            <div class="metric-desc">${fi.message}</div>
+        </div>`;
+    }
+
+    el.innerHTML = html || '<div class="metric-desc" style="padding:16px;text-align:center">Keine zusätzlichen Signale erkannt</div>';
+}

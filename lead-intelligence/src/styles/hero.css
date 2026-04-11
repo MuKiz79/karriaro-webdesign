@@ -24,7 +24,7 @@
     display: flex;
     justify-content: center;
     gap: 4px;
-    background: #e5e5ea;
+    background: var(--border);
     border-radius: 10px;
     padding: 3px;
     max-width: 480px;
@@ -65,7 +65,7 @@
     transition: border-color 0.2s;
 }
 .input-row input:focus, .input-row select:focus { border-color: var(--accent); }
-.input-row input::placeholder { color: #c7c7cc; }
+.input-row input::placeholder { color: var(--muted); opacity: 0.5; }
 .input-hint { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: var(--s4); }
 
 /* Loading / Progress */

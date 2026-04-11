@@ -4,7 +4,7 @@ nav {
     top: 0;
     width: 100%;
     padding: var(--s4) var(--s6);
-    background: rgba(251,251,253,0.9);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     z-index: 100;
