@@ -124,6 +124,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                             ${l.type ? ` · ${l.type}` : ''}
                             ${l.perf ? ` · Perf ${l.perf}` : ''}
                             ${l.seo ? ` · SEO ${l.seo}` : ''}
+                            · <a href="#" class="crm-reanalyze" data-url="${l.url || 'https://' + l.domain}">neu analysieren</a>
                         </div>
                         <div class="crm-lead-dates">
                             ${savedDate ? `Gespeichert: ${savedDate}` : ''}
@@ -232,6 +233,25 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             searchInput.setSelectionRange(searchQuery.length, searchQuery.length);
         }
     }
+
+    // Re-Analyse Link
+    el.addEventListener('click', (e) => {
+        const link = e.target.closest('.crm-reanalyze');
+        if (!link) return;
+        e.preventDefault();
+        const url = link.dataset.url;
+        // Switch to single-check, fill URL, hide CRM
+        document.getElementById('crm-view').classList.add('hidden');
+        const urlInput = document.getElementById('url-input');
+        if (urlInput) urlInput.value = url;
+        // Activate single tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('[data-tab="single"]')?.classList.add('active');
+        document.getElementById('input-single')?.classList.remove('hidden');
+        document.getElementById('input-batch')?.classList.add('hidden');
+        document.getElementById('input-scanner')?.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, { signal });
 
     // Outcome-Tracking (Feedback Loop)
     el.addEventListener('click', async (e) => {

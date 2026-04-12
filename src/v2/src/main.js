@@ -53,41 +53,70 @@ function initTabs() {
     });
 }
 
+// ── URL History ──
+const URL_HISTORY_KEY = 'karriaro_url_history';
+function addToHistory(url) {
+    const history = JSON.parse(localStorage.getItem(URL_HISTORY_KEY) || '[]');
+    const filtered = history.filter(u => u !== url);
+    filtered.unshift(url);
+    localStorage.setItem(URL_HISTORY_KEY, JSON.stringify(filtered.slice(0, 10)));
+    renderUrlHistory();
+}
+function renderUrlHistory() {
+    const input = document.getElementById('url-input');
+    if (!input) return;
+    const history = JSON.parse(localStorage.getItem(URL_HISTORY_KEY) || '[]');
+    let dl = document.getElementById('url-history-list');
+    if (!dl) {
+        dl = document.createElement('datalist');
+        dl.id = 'url-history-list';
+        input.parentNode.appendChild(dl);
+        input.setAttribute('list', 'url-history-list');
+    }
+    dl.innerHTML = history.map(u => `<option value="${u}">`).join('');
+}
+
 // ── Button Events ──
 function initButtons() {
-    // Analyze
-    document.getElementById('btn-analyze')?.addEventListener('click', async () => {
-        
+    // Analyze (+ URL History)
+    document.getElementById('btn-analyze')?.addEventListener('click', () => {
+        const url = document.getElementById('url-input')?.value.trim();
+        if (url) addToHistory(url.startsWith('http') ? url : 'https://' + url);
         runSingleCheck();
     });
 
     // Batch
-    document.getElementById('btn-batch')?.addEventListener('click', async () => {
-        
-        runBatchSearch();
-    });
+    document.getElementById('btn-batch')?.addEventListener('click', () => runBatchSearch());
 
     // Scanner
-    document.getElementById('btn-scanner')?.addEventListener('click', async () => {
-        
-        runScanner();
-    });
+    document.getElementById('btn-scanner')?.addEventListener('click', () => runScanner());
 
     // Abort
     document.getElementById('btn-abort')?.addEventListener('click', () => abort());
     document.getElementById('btn-abort-progress')?.addEventListener('click', () => abort());
 
     // Enter keys
-    document.getElementById('url-input')?.addEventListener('keydown', async (e) => {
+    document.getElementById('url-input')?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-            
+            const url = e.target.value.trim();
+            if (url) addToHistory(url.startsWith('http') ? url : 'https://' + url);
             runSingleCheck();
         }
     });
-    document.getElementById('batch-query')?.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter') {
-            
-            runBatchSearch();
+    document.getElementById('batch-query')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') runBatchSearch();
+    });
+    document.getElementById('scanner-city')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') runScanner();
+    });
+
+    // Keyboard shortcut: Cmd/Ctrl+Enter anywhere → analyze current mode
+    document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+            e.preventDefault();
+            if (state.mode === 'single') runSingleCheck();
+            else if (state.mode === 'batch') runBatchSearch();
+            else if (state.mode === 'scanner') runScanner();
         }
     });
 
@@ -100,6 +129,9 @@ function initButtons() {
             if (action === 'auth') toggleAuth();
         });
     });
+
+    // URL History laden
+    renderUrlHistory();
 }
 
 // ── Auth ──
@@ -138,44 +170,41 @@ function toggleSettings() {
     panel.classList.toggle('hidden');
     if (!panel.classList.contains('hidden')) {
         const p = config.profile;
+        const field = (id, label, value, placeholder, hint) =>
+            `<label>${label}</label><input type="text" id="${id}" value="${value || ''}" placeholder="${placeholder}">${hint ? `<div class="hint">${hint}</div>` : ''}`;
+
         panel.innerHTML = `
             <h3>API-Konfiguration</h3>
-            <label>Google PageSpeed API Key</label>
-            <input type="text" id="cfg-psi-key" value="${config.psiKey}" placeholder="AIza...">
-            <div class="hint">Kostenlos unter console.cloud.google.com</div>
-            <label>Cloud Function URL</label>
-            <input type="text" id="cfg-fn-url" value="${config.fnUrl}" placeholder="https://us-central1-projekt.cloudfunctions.net">
+            ${field('cfg-psi-key', 'Google PageSpeed API Key', config.psiKey, 'AIza...', 'Kostenlos unter console.cloud.google.com')}
+            ${field('cfg-fn-url', 'Cloud Function URL', config.fnUrl, 'https://us-central1-projekt.cloudfunctions.net')}
 
-            <h3 style="margin-top:24px;padding-top:16px;border-top:1px solid var(--border)">Mein Profil (SuperPrompt)</h3>
+            <h3 class="settings-divider">Mein Profil (SuperPrompt)</h3>
             <div class="hint" style="margin-bottom:12px">Diese Daten werden in Pitches und E-Mail-Vorlagen verwendet.</div>
 
-            <label>Mein Name</label>
-            <input type="text" id="cfg-name" value="${p.name}" placeholder="Muammer Kizilaslan">
-            <label>Mein Unternehmen</label>
-            <input type="text" id="cfg-company" value="${p.company}" placeholder="Karriaro Webdesign">
-            <label>Meine Rolle</label>
-            <input type="text" id="cfg-role" value="${p.role}" placeholder="Gründer & Webdesigner">
-            <label>Meine Leistungen</label>
-            <input type="text" id="cfg-services" value="${p.services}" placeholder="Handcodierte Websites, SEO, BFSG-Compliance">
-            <label>Preisbereich</label>
-            <input type="text" id="cfg-price" value="${p.priceRange}" placeholder="990-1.990€ einmalig, kein Abo">
-            <label>Meine Zielgruppe</label>
-            <input type="text" id="cfg-target" value="${p.targetGroup}" placeholder="Lokale Unternehmen (Handwerk, Gastronomie, Ärzte, Makler)">
-            <label>Mein USP (Was macht mich besonders?)</label>
-            <input type="text" id="cfg-usp" value="${p.usp}" placeholder="Kein Baukasten, kein Template. Handcodiert, in 2 Wochen fertig.">
-            <label>Mein Standort</label>
-            <input type="text" id="cfg-location" value="${p.location}" placeholder="Schwarzwald / Ortenau">
-            <label>Referenz-Projekte</label>
-            <input type="text" id="cfg-portfolio" value="${p.portfolio}" placeholder="karriaro-webdesign.de, Spedition Kolbe">
+            ${field('cfg-name', 'Mein Name', p.name, 'Muammer Kizilaslan')}
+            ${field('cfg-company', 'Mein Unternehmen', p.company, 'Karriaro Webdesign')}
+            ${field('cfg-role', 'Meine Rolle', p.role, 'Gründer & Webdesigner')}
+            ${field('cfg-services', 'Meine Leistungen', p.services, 'Handcodierte Websites, SEO, BFSG-Compliance')}
+            ${field('cfg-price', 'Preisbereich', p.priceRange, '990-1.990€ einmalig, kein Abo')}
+            ${field('cfg-target', 'Meine Zielgruppe', p.targetGroup, 'Lokale Unternehmen (Handwerk, Gastronomie, Ärzte, Makler)')}
+            ${field('cfg-usp', 'Mein USP', p.usp, 'Kein Baukasten, kein Template. Handcodiert, in 2 Wochen fertig.')}
+            ${field('cfg-location', 'Mein Standort', p.location, 'Schwarzwald / Ortenau')}
+            ${field('cfg-portfolio', 'Referenz-Projekte', p.portfolio, 'karriaro-webdesign.de, Spedition Kolbe')}
             <label>Tonalität</label>
             <select id="cfg-tone"><option value="professionell" ${p.tone==='professionell'?'selected':''}>Professionell</option><option value="freundlich" ${p.tone==='freundlich'?'selected':''}>Freundlich</option><option value="direkt" ${p.tone==='direkt'?'selected':''}>Direkt</option></select>
 
             <button class="btn-primary" style="margin-top:16px;width:100%" id="btn-save-settings">Speichern</button>
+
+            <div class="settings-info">
+                <div class="section-label" style="margin-top:20px">Status</div>
+                <div class="metric-desc">API-Key: ${config.psiKey ? '✓ Konfiguriert' : '✗ Fehlt'}</div>
+                <div class="metric-desc">Cloud Functions: ${config.fnUrl ? '✓ Konfiguriert' : '✗ Fehlt (KI-Analyse deaktiviert)'}</div>
+                <div class="metric-desc">Profil: ${p.name ? '✓ ' + p.name : '✗ Nicht ausgefüllt'}</div>
+            </div>
         `;
         document.getElementById('btn-save-settings').addEventListener('click', () => {
             config.psiKey = document.getElementById('cfg-psi-key').value.trim();
             config.fnUrl = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
-            // Profil speichern
             config.profile.name = document.getElementById('cfg-name').value.trim();
             config.profile.company = document.getElementById('cfg-company').value.trim();
             config.profile.role = document.getElementById('cfg-role').value.trim();
@@ -187,7 +216,7 @@ function toggleSettings() {
             config.profile.portfolio = document.getElementById('cfg-portfolio').value.trim();
             config.profile.tone = document.getElementById('cfg-tone').value;
             saveConfig();
-            saveCloudSettings();  // Fix 1: Auch in Firestore speichern
+            saveCloudSettings();
             panel.classList.add('hidden');
         });
     }

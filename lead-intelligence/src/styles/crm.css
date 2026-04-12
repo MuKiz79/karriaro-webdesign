@@ -193,6 +193,7 @@
     text-decoration: none;
 }
 .crm-lead-meta a:hover { text-decoration: underline; }
+.crm-reanalyze { color: var(--accent); font-size: 11px; }
 .crm-lead-dates {
     font-size: 11px;
     color: var(--muted);
