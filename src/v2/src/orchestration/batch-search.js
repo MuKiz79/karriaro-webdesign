@@ -1,16 +1,14 @@
 /**
- * Batch Search Workflow — Refactored
+ * Batch Search — MIT KI-Analyse pro Lead
  *
- * Verbesserungen:
- * - Konkurrenz-Erkennung (Webdesign-Agenturen gefiltert)
- * - PageSpeed in 3er-Batches parallel (3× schneller)
- * - CSS-Klassen statt Inline-Styles
- * - Bessere Empfehlungstexte
+ * Vorher: Nur PageSpeed → blinder Score
+ * Jetzt: PageSpeed + KI-Screenshot + KI-Content → sieht ob Website modern oder veraltet ist
  */
 import { state } from '../state.js';
 import { config } from '../config.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces } from '../api/places.js';
+import { analyzeScreenshot, analyzeContent } from '../api/cloud-functions.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
@@ -45,48 +43,76 @@ export async function runBatchSearch() {
 
     hideLoading();
 
-    // PageSpeed in 3er-Batches parallel
-    const BATCH_SIZE = 3;
+    // 2er-Batches (statt 3) weil wir jetzt auch KI-Calls machen
+    const BATCH_SIZE = 2;
     const results = [];
 
     for (let i = 0; i < places.length; i += BATCH_SIZE) {
         if (state.aborted) break;
         const batch = places.slice(i, i + BATCH_SIZE);
-        showProgress(Math.round(((i + batch.length) / places.length) * 100), `${Math.min(i + batch.length, places.length)}/${places.length}: ${batch.map(p => p.displayName?.text || '').join(', ')}...`);
+        showProgress(Math.round(((i + batch.length) / places.length) * 100), `${Math.min(i + batch.length, places.length)}/${places.length}: KI analysiert ${batch.map(p => p.displayName?.text || '').join(', ')}...`);
 
         const batchResults = await Promise.all(batch.map(async (p) => {
             try {
                 const psiData = await fetchPageSpeed(p.websiteUri);
                 const ws = extractWebsiteScore(psiData);
                 const tech = detectTech(psiData);
-                const prob = scoreLead(ws, tech, p, null, null);
                 const domain = new URL(p.websiteUri).hostname.replace('www.', '');
 
-                // Konkurrenz-Erkennung (nur Webdesign-Agenturen = skip)
+                // Konkurrenz + Enterprise
                 const domainBase = domain.split('.')[0].toLowerCase();
                 const isCompetitorDomain = COMPETITOR_PATTERNS.some(pat => pat.test(domainBase));
                 let companyProfile = null;
                 try { companyProfile = analyzeCompanyProfile(p.websiteUri, psiData, p, null); } catch(e) {}
-                // WICHTIG: Enterprise = Warnung aber NICHT skippen (könnte lokales Hotel sein)
-                // Nur echte Konkurrenz (Webdesign-Agenturen) wird übersprungen
                 const skipLead = isCompetitorDomain || companyProfile?.isCompetitor;
+                if (skipLead) {
+                    return { name: p.displayName?.text || domain, domain, url: p.websiteUri, rating: p.rating, reviews: p.userRatingCount || 0, type: p.primaryTypeDisplayName?.text || '—', perf: ws.perf, seo: ws.seo, a11y: ws.a11y, cms: tech.cms, isBaukasten: tech.isBaukasten, leadScore: 0, isCompetitor: true, reasons: 'Konkurrenz' };
+                }
 
-                // BFSG Quick-Check
+                // ── KI-Analyse (DAS war vorher nicht da) ──
+                const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
+                let screenshotAnalysis = null;
+                let contentAnalysis = null;
+                try {
+                    // Parallel: Screenshot + Content
+                    [screenshotAnalysis, contentAnalysis] = await Promise.all([
+                        screenshot ? analyzeScreenshot(screenshot).catch(() => null) : null,
+                        analyzeContent(p.websiteUri).catch(() => null)
+                    ]);
+                } catch(e) { /* KI optional */ }
+
+                // Scoring MIT Design-Qualität
+                const prob = scoreLead(ws, tech, p, null, null, null, null, screenshotAnalysis, contentAnalysis);
                 const bfsg = checkBFSGCompliance(psiData);
+                const isEnterprise = companyProfile?.isEnterprise;
 
-                const isEnterprise = companyProfile?.isEnterprise && !skipLead;
+                // Design-Bewertung in den Gründen
+                const designQuality = screenshotAnalysis?.designQuality || null;
+                const designEra = screenshotAnalysis?.designEra || null;
 
-                // Empfehlungstext
                 const reasons = [];
-                if (skipLead) reasons.push('Konkurrenz');
-                else if (isEnterprise) reasons.push('Großunternehmen — prüfen');
-                else {
-                    if (ws.perf < 50) reasons.push(`Perf ${ws.perf}`);
-                    if (tech.isBaukasten) reasons.push(tech.cms);
-                    if (!ws.isHttps) reasons.push('Kein SSL');
-                    if (p.userRatingCount > 50) reasons.push(`${p.userRatingCount} Bewertungen`);
-                    if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') reasons.push(`BFSG: ${bfsg.riskLabel}`);
-                    else if (ws.a11y < 60) reasons.push(`A11y ${ws.a11y}`);
+                if (isEnterprise) reasons.push('Großunternehmen — prüfen');
+                if (designQuality !== null && designQuality <= 3) reasons.push(`Design ${designQuality}/10 — veraltet`);
+                else if (designQuality !== null && designQuality >= 8) reasons.push(`Design ${designQuality}/10 — modern`);
+                if (tech.isBaukasten) reasons.push(tech.cms);
+                if (ws.perf < 50) reasons.push(`Perf ${ws.perf}`);
+                if (!ws.isHttps) reasons.push('Kein SSL');
+                if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') reasons.push(`BFSG: ${bfsg.riskLabel}`);
+                if (p.userRatingCount > 50) reasons.push(`${p.userRatingCount} Bewertungen`);
+                if (contentAnalysis?.freshness === 'veraltet') reasons.push('Content veraltet');
+
+                // Empfehlung basierend auf Design + Score
+                let recommendation;
+                if (prob.leadScore >= 55 && designQuality !== null && designQuality <= 5) {
+                    recommendation = 'hot'; // Hoher Score + schlechtes Design = BESTER Lead
+                } else if (prob.leadScore >= 55) {
+                    recommendation = 'warm';
+                } else if (prob.leadScore >= 30 && designQuality !== null && designQuality <= 4) {
+                    recommendation = 'warm'; // Mittlerer Score + veraltetes Design = noch gut
+                } else if (prob.leadScore >= 30) {
+                    recommendation = 'maybe';
+                } else {
+                    recommendation = 'skip';
                 }
 
                 return {
@@ -95,15 +121,18 @@ export async function runBatchSearch() {
                     type: p.primaryTypeDisplayName?.text || companyProfile?.branche || '—',
                     perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
                     cms: tech.cms, isBaukasten: tech.isBaukasten,
-                    leadScore: skipLead ? 0 : prob.leadScore,
+                    leadScore: prob.leadScore,
                     conversionRate: prob.conversionRate,
-                    expectedValue: skipLead ? 0 : prob.expectedValue,
+                    expectedValue: prob.expectedValue,
                     timePerLead: prob.timePerLead,
-                    isCompetitor: !!skipLead,
+                    isCompetitor: false,
                     isEnterprise: !!isEnterprise,
-                    bfsgRisk: bfsg.risk,
-                    bfsgScore: bfsg.complianceScore,
-                    reasons: reasons.join('. ')
+                    designQuality, designEra,
+                    bfsgRisk: bfsg.risk, bfsgScore: bfsg.complianceScore,
+                    recommendation,
+                    reasons: reasons.join('. '),
+                    contentFreshness: contentAnalysis?.freshness || null,
+                    screenshotData: screenshot // Für Vorschau
                 };
             } catch (e) { return null; }
         }));
@@ -116,35 +145,37 @@ export async function runBatchSearch() {
     document.getElementById('btn-batch').disabled = false;
     if (state.aborted || !results.length) return;
 
-    // Default-Sortierung
+    // Sortierung: Hot zuerst, dann warm, dann maybe, skip zuletzt
     state._batchResults = results;
     state._batchQuery = query;
-    sortAndRenderBatch('score');
+    sortAndRenderBatch('recommendation');
 }
 
 function sortAndRenderBatch(sortBy) {
     const results = [...(state._batchResults || [])];
     const query = state._batchQuery || '';
 
-    if (sortBy === 'score') results.sort((a, b) => b.leadScore - a.leadScore);
-    else if (sortBy === 'perf') results.sort((a, b) => a.perf - b.perf); // Niedrigste Perf zuerst = schlechteste Website
+    if (sortBy === 'recommendation') {
+        const order = { hot: 0, warm: 1, maybe: 2, skip: 3 };
+        results.sort((a, b) => (order[a.recommendation] ?? 9) - (order[b.recommendation] ?? 9) || b.leadScore - a.leadScore);
+    } else if (sortBy === 'score') results.sort((a, b) => b.leadScore - a.leadScore);
+    else if (sortBy === 'perf') results.sort((a, b) => a.perf - b.perf);
+    else if (sortBy === 'design') results.sort((a, b) => (a.designQuality || 99) - (b.designQuality || 99));
     else if (sortBy === 'reviews') results.sort((a, b) => b.reviews - a.reviews);
-    else if (sortBy === 'a11y') results.sort((a, b) => a.a11y - b.a11y);
 
     renderBatchResults(query, results, sortBy);
 }
 
-function renderBatchResults(query, results, currentSort = 'score') {
+function renderBatchResults(query, results, currentSort = 'recommendation') {
     const validResults = results.filter(r => !r.isCompetitor);
     const portfolio = portfolioProbability(validResults);
-    const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
-    const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
     const competitorCount = results.filter(r => r.isCompetitor).length;
+    const hotCount = results.filter(r => r.recommendation === 'hot').length;
 
     const sortBtn = (key, label) => `<button class="crm-filter-btn${currentSort === key ? ' active' : ''}" data-sort="${key}">${label}</button>`;
 
     let html = `<div class="crm-header">
-        <h2 class="crm-title">${validResults.length} Leads für "${query}"${competitorCount > 0 ? ` <span class="metric-desc">(${competitorCount} Konkurrenten gefiltert)</span>` : ''}</h2>
+        <h2 class="crm-title">${validResults.length} Leads für "${query}"${competitorCount > 0 ? ` <span class="metric-desc">(${competitorCount} Konkurrenten gefiltert)</span>` : ''}${hotCount > 0 ? ` · <span style="color:var(--green);font-weight:700">${hotCount} heiße Leads</span>` : ''}</h2>
         <div class="crm-actions-top">
             <button class="crm-btn-export" id="btn-export-csv">CSV Export</button>
             <button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${validResults.length} speichern</button>
@@ -152,10 +183,11 @@ function renderBatchResults(query, results, currentSort = 'score') {
     </div>
     <div class="crm-filters" style="margin-bottom:12px">
         <span class="metric-desc" style="margin-right:8px">Sortierung:</span>
+        ${sortBtn('recommendation', 'Empfehlung')}
         ${sortBtn('score', 'Score')}
+        ${sortBtn('design', 'Schlechtestes Design')}
         ${sortBtn('perf', 'Schlechteste Perf.')}
         ${sortBtn('reviews', 'Meiste Bewertungen')}
-        ${sortBtn('a11y', 'Schlechteste A11y')}
     </div>`;
 
     // Portfolio
@@ -164,31 +196,40 @@ function renderBatchResults(query, results, currentSort = 'score') {
         <div><div class="section-label">Erwartete Conversions</div><div class="revenue-big">${portfolio.expectedConversions}</div></div>
     </div>`;
 
-    // Table
-    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-        <thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>BFSG</th><th>Score</th></tr></thead><tbody>`;
-
+    // Table mit Design-Spalte
+    const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
+    const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
     const bfsgBadge = risk => risk === 'kritisch' ? 'badge-red' : risk === 'hoch' ? 'badge-orange' : risk === 'mittel' ? 'badge-orange' : 'badge-green';
     const bfsgLabel = risk => risk === 'kritisch' ? '✗' : risk === 'hoch' ? '⚠' : risk === 'mittel' ? '~' : '✓';
 
+    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
+        <thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>Design</th><th>BFSG</th><th>Score</th></tr></thead><tbody>`;
+
     for (const r of results) {
         const dimmed = r.isCompetitor ? ' style="opacity:0.4"' : '';
+        const designColor = r.designQuality === null ? '' : r.designQuality <= 3 ? 'bad' : r.designQuality <= 5 ? 'ok' : 'good';
+        const recIcon = r.recommendation === 'hot' ? '🔥' : r.recommendation === 'warm' ? '→' : r.recommendation === 'maybe' ? '~' : '✗';
+        const recColor = r.recommendation === 'hot' ? 'var(--green)' : r.recommendation === 'warm' ? 'var(--green)' : r.recommendation === 'maybe' ? 'var(--orange)' : 'var(--red)';
+
         html += `<tr${dimmed}><td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank" style="font-size:11px">${r.domain}</a>${!r.isCompetitor ? ` · <a href="#" class="crm-reanalyze" data-url="${r.url}" style="font-size:10px;color:var(--accent)">Einzel-Check</a>` : ''}</td>
             <td>${r.type}</td>
             <td>${r.rating || '—'}</td>
             <td>${r.reviews}</td>
             <td class="${perf(r.perf)}">${r.perf}</td>
+            <td class="${designColor}">${r.designQuality !== null ? r.designQuality + '/10' : '—'}</td>
             <td><span class="badge ${bfsgBadge(r.bfsgRisk)}" title="BFSG ${r.bfsgScore || '?'}%">${bfsgLabel(r.bfsgRisk)}</span></td>
             <td><span class="badge ${r.isCompetitor ? 'badge-red' : sc(r.leadScore)}">${r.isCompetitor ? '✗' : r.leadScore}</span></td>
         </tr>
-        <tr${dimmed}><td colspan="7" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">
+        <tr${dimmed}><td colspan="8" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
                 <span>${
                     r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
-                    : r.isEnterprise ? `<strong style="color:var(--orange)">→ Möglicherweise Großunternehmen.</strong> ${r.reasons}`
-                    : r.leadScore >= 55 ? `<strong class="good">→ Kontaktieren.</strong> ${r.reasons}`
-                    : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
-                    : `<strong class="bad">→ Überspringen.</strong> ${r.reasons}`
+                    : `<strong style="color:${recColor}">${recIcon} ${
+                        r.recommendation === 'hot' ? 'Heißer Lead — sofort kontaktieren!'
+                        : r.recommendation === 'warm' ? 'Kontaktieren.'
+                        : r.recommendation === 'maybe' ? 'Möglich.'
+                        : 'Überspringen.'
+                    }</strong> ${r.reasons}`
                 }</span>
                 ${!r.isCompetitor ? `<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0;align-items:center">
                     <button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="correct" title="Score passt">✓</button>
@@ -225,38 +266,33 @@ function renderBatchResults(query, results, currentSort = 'score') {
         showToast(`${validResults.length} Leads im CRM gespeichert`);
     });
 
-    // Sort buttons
-    el.querySelectorAll('[data-sort]').forEach(btn => {
-        btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
-    });
-
-    // Batch-Feedback: ✓ Button
+    // Feedback: ✓ Button
     el.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-fb-action="correct"]');
         if (!btn) return;
-        const domain = btn.dataset.fbDomain;
-        const score = parseInt(btn.dataset.fbScore);
-        saveFeedback(domain, score, 'correct', { branch: 'batch' });
+        saveFeedback(btn.dataset.fbDomain, parseInt(btn.dataset.fbScore), 'correct', { branch: 'batch' });
         btn.classList.add('active');
         const select = btn.parentNode.querySelector('.fb-skip-select');
         if (select) select.disabled = true;
-        showToast(`${domain}: Score bestätigt`);
+        showToast(`${btn.dataset.fbDomain}: Score bestätigt`);
     });
 
-    // Batch-Feedback: Skip-Dropdown
+    // Feedback: Skip-Dropdown
     el.addEventListener('change', (e) => {
         const select = e.target.closest('.fb-skip-select');
         if (!select || !select.value) return;
-        const domain = select.dataset.fbDomain;
-        const score = parseInt(select.dataset.fbScore);
-        const skipReason = select.value;
         const label = select.options[select.selectedIndex].text;
-        saveFeedback(domain, score, 'too_high', { branch: 'batch' }, label, skipReason);
+        saveFeedback(select.dataset.fbDomain, parseInt(select.dataset.fbScore), 'too_high', { branch: 'batch' }, label, select.value);
         select.style.color = 'var(--red)';
         select.disabled = true;
         const btn = select.parentNode.querySelector('.fb-btn');
         if (btn) btn.style.opacity = '0.3';
-        showToast(`${domain}: "${label}" notiert`);
+        showToast(`${select.dataset.fbDomain}: "${label}" notiert`);
+    });
+
+    // Sort buttons
+    el.querySelectorAll('[data-sort]').forEach(btn => {
+        btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
     });
 
     // Einzel-Check Links
@@ -264,10 +300,9 @@ function renderBatchResults(query, results, currentSort = 'score') {
         const link = e.target.closest('.crm-reanalyze');
         if (!link) return;
         e.preventDefault();
-        const url = link.dataset.url;
         el.classList.add('hidden');
         const urlInput = document.getElementById('url-input');
-        if (urlInput) urlInput.value = url;
+        if (urlInput) urlInput.value = link.dataset.url;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelector('[data-tab="single"]')?.classList.add('active');
         document.getElementById('input-single')?.classList.remove('hidden');
@@ -278,8 +313,8 @@ function renderBatchResults(query, results, currentSort = 'score') {
 }
 
 function exportBatchCSV(results) {
-    const headers = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','SEO','A11y','CMS','Score','Konkurrenz','Gründe'];
-    const rows = results.map(r => [r.name,r.domain,r.url,r.type,r.rating,r.reviews,r.perf,r.seo,r.a11y,r.cms,r.leadScore,r.isCompetitor?'Ja':'Nein',r.reasons]);
+    const headers = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','SEO','A11y','CMS','Design','BFSG','Score','Empfehlung','Gründe'];
+    const rows = results.map(r => [r.name,r.domain,r.url,r.type,r.rating,r.reviews,r.perf,r.seo,r.a11y,r.cms,r.designQuality||'',r.bfsgRisk||'',r.leadScore,r.recommendation||'',r.reasons]);
     const csv = [headers,...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(';')).join('\n');
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
