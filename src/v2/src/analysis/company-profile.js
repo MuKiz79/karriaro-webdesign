@@ -2,37 +2,19 @@
  * Company Profile Analysis
  * 1. Branche erkennen und anzeigen
  * 2. GF/Inhaber Name + wahrscheinliche Nationalität
- * 3. Großunternehmen-Erkennung (NICHT Zielgruppe)
+ * 3. Großunternehmen-Erkennung via enterprise-db.js (300+ Einträge)
  */
 
-// Bekannte Großunternehmen / Konzerne (wächst über Zeit)
-const KNOWN_ENTERPRISES = [
-    'hansgrohe', 'bosch', 'siemens', 'mercedes', 'bmw', 'audi', 'volkswagen', 'porsche',
-    'sap', 'allianz', 'basf', 'bayer', 'daimler', 'adidas', 'puma', 'henkel', 'beiersdorf',
-    'commerzbank', 'deutsche-bank', 'telekom', 'vodafone', 'lidl', 'aldi', 'rewe', 'edeka',
-    'dm-drogerie', 'rossmann', 'ikea', 'otto', 'zalando', 'mediamarkt', 'saturn',
-    'lufthansa', 'tui', 'fresenius', 'continental', 'thyssen', 'krupp', 'evonik',
-    'miele', 'liebherr', 'trumpf', 'zeiss', 'stihl', 'wuerth', 'festo', 'kärcher',
-    'herrenknecht', 'burda', 'duravit', 'grohe', 'viessmann', 'vaillant'
-];
+import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 
-// Signale die auf ein Großunternehmen hindeuten
-// WICHTIG: "standorte" entfernt — jedes lokale Unternehmen hat eine Standort-Seite
-// "presse" allein reicht nicht — auch kleine Unternehmen haben Pressemitteilungen
+// URL-basierte Enterprise-Signale (Fallback wenn Domain nicht in DB)
 const ENTERPRISE_SIGNALS = [
-    /investor|annual-report|jahresbericht|geschaeftsbericht/i, // IR-Sektion (starkes Signal)
-    /compliance|datenschutzbeauftragter|whistleblow/i,        // Compliance-Abteilung
-    /karriere.*portal|jobs\..*\.de|stellenangebote.*\d/i,     // Karriere-PORTAL (nicht nur /karriere)
-    /niederlassung.*en|filialen|branches/i,                    // Mehrere Niederlassungen (Plural!)
-    /\.com.*\.de|worldwide|international/i,                    // Internationaler Auftritt
-    /newsroom|media-center|presseportal/i                      // Newsroom (nicht nur /presse)
-];
-
-// Bekannte Hotelketten (Enterprise, nicht unsere Zielgruppe)
-const KNOWN_HOTEL_CHAINS = [
-    'nh-hotels', 'accor', 'marriott', 'hilton', 'ihg', 'hyatt', 'radisson',
-    'motel-one', 'premier-inn', 'b-b-hotels', 'aohostels', 'meininger',
-    'novum', 'dorint', 'steigenberger', 'kempinski', 'maritim'
+    /investor|annual-report|jahresbericht|geschaeftsbericht/i,
+    /compliance|datenschutzbeauftragter|whistleblow/i,
+    /karriere.*portal|jobs\..*\.de|stellenangebote.*\d/i,
+    /niederlassung.*en|filialen|branches/i,
+    /\.com.*\.de|worldwide|international/i,
+    /newsroom|media-center|presseportal/i
 ];
 
 /**
@@ -46,49 +28,45 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
     const domain = new URL(url).hostname.replace('www.', '');
     const domainBase = domain.split('.')[0].toLowerCase();
 
-    // ── 3. Großunternehmen-Erkennung ──
-    const isKnownEnterprise = KNOWN_ENTERPRISES.some(e => domainBase.includes(e));
+    // ── 3. Großunternehmen-Erkennung via Datenbank (300+ Einträge) ──
+    const dbResult = checkEnterpriseDB(domain);
 
-    // Prüfe Enterprise-Signale in Network Requests
+    // Zusätzliche Signale aus Network Requests (für unbekannte Unternehmen)
     const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
     const enterpriseSignalCount = ENTERPRISE_SIGNALS.filter(p => p.test(urls)).length;
     const hasMultipleSubdomains = (urls.match(/https?:\/\/[a-z]+\./gi) || []).length > 20;
 
-    // Bekannte Hotelkette?
-    const isKnownHotelChain = KNOWN_HOTEL_CHAINS.some(h => domainBase.includes(h));
-
-    // Enterprise-Schwelle: 4 Signale ODER bekannter Konzern/Kette ODER 20+ Subdomains
-    // Review-Count als Gegengewicht: Ein Hotel mit 500 Reviews auf Google ist wahrscheinlich
-    // ein einzelnes lokales Hotel, kein Konzern — auch wenn die Website "karriere" hat.
-    const reviews = place?.userRatingCount || 0;
-    const isSmallLocal = reviews > 0 && reviews < 2000 && !isKnownEnterprise && !isKnownHotelChain;
-    const signalThreshold = isSmallLocal ? 5 : 4; // Höhere Schwelle für lokale Unternehmen
-
-    const isLikelyEnterprise = isKnownEnterprise || isKnownHotelChain || enterpriseSignalCount >= signalThreshold || hasMultipleSubdomains;
+    // Enterprise-Entscheidung:
+    // 1. DB-Match → sofort Enterprise (hohe Konfidenz)
+    // 2. 4+ URL-Signale ODER 20+ Subdomains → wahrscheinlich Enterprise
+    const isLikelyEnterprise = dbResult.isEnterprise || enterpriseSignalCount >= 4 || hasMultipleSubdomains;
 
     // ── 1. Branche zuordnen ──
     const branche = place?.primaryTypeDisplayName?.text || guessIndustry(domain, urls);
 
-    // ── 4. Konkurrenz-Erkennung (Webdesign-Agenturen = nicht kontaktieren) ──
-    const isCompetitor = branche === 'Webdesign-Agentur (Konkurrenz)' ||
+    // ── 4. Konkurrenz-Erkennung (via DB + Branchen-Guess) ──
+    const isCompetitor = dbResult.isCompetitor || branche === 'Webdesign-Agentur (Konkurrenz)' ||
         COMPETITOR_PATTERNS.some(p => p.test(domainBase));
 
     // ── 2. GF/Inhaber + Nationalität ──
     const ownerInfo = extractOwnerInfo(psiData, place, contentAnalysis);
 
     // Enterprise-Warnung
+    const categoryLabels = { hotel: 'Hotelkette', restaurant: 'Gastro-Kette', beauty: 'Friseur-/Beauty-Kette', fitness: 'Fitness-Kette', realestate: 'Immobilien-Konzern', medical: 'Klinik-/MVZ-Kette', auto: 'KFZ-Kette', craft: 'Handwerks-Franchise', dax: 'DAX/MDAX-Konzern' };
     let enterpriseWarning = null;
     if (isLikelyEnterprise) {
+        const catLabel = categoryLabels[dbResult.category] || 'Großunternehmen';
         enterpriseWarning = {
             isEnterprise: true,
             name: place?.displayName?.text || domainBase,
-            message: `${place?.displayName?.text || domainBase} ist ein Großunternehmen${isKnownEnterprise ? ' (bekannter Konzern)' : ''}. Karriaro Webdesign richtet sich an lokale Unternehmen — dieser Lead ist wahrscheinlich nicht Ihre Zielgruppe.`,
+            category: dbResult.category,
+            message: `${place?.displayName?.text || domainBase} ist ${dbResult.isEnterprise ? `eine ${catLabel} (${dbResult.match})` : 'wahrscheinlich ein Großunternehmen'}. Karriaro Webdesign richtet sich an lokale Unternehmen.`,
             signals: [
-                isKnownEnterprise ? 'Bekannter Konzern/Marke' : null,
-                enterpriseSignalCount > 0 ? `${enterpriseSignalCount} Enterprise-Signale (Karriere, Presse, IR)` : null,
-                hasMultipleSubdomains ? 'Komplexe Website-Struktur (20+ Subdomains)' : null
+                dbResult.isEnterprise ? `Erkannt: ${catLabel}` : null,
+                enterpriseSignalCount > 0 ? `${enterpriseSignalCount} Enterprise-Signale` : null,
+                hasMultipleSubdomains ? '20+ Subdomains' : null
             ].filter(Boolean),
-            recommendation: 'Nicht kontaktieren — Konzerne haben eigene Agenturen und Ausschreibungsverfahren. Ihre Zeit ist besser in lokale Leads investiert.'
+            recommendation: 'Nicht kontaktieren — Ketten und Konzerne haben eigene Agenturen.'
         };
     }
 
