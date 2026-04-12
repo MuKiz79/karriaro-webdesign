@@ -17,13 +17,22 @@ const KNOWN_ENTERPRISES = [
 ];
 
 // Signale die auf ein Großunternehmen hindeuten
+// WICHTIG: "standorte" entfernt — jedes lokale Unternehmen hat eine Standort-Seite
+// "presse" allein reicht nicht — auch kleine Unternehmen haben Pressemitteilungen
 const ENTERPRISE_SIGNALS = [
-    /karriere|careers|jobs\..*\.de|stellenangebote/i,       // Karriere-Sektion
-    /investor|annual-report|jahresbericht|geschaeftsbericht/i, // IR-Sektion
-    /standorte|locations|niederlassung/i,                     // Mehrere Standorte
-    /presse|press|newsroom|media-center/i,                    // Presseabteilung
-    /compliance|datenschutzbeauftragter|whistleblow/i,        // Compliance
-    /\.com.*\.de|global|worldwide|international/i             // International
+    /investor|annual-report|jahresbericht|geschaeftsbericht/i, // IR-Sektion (starkes Signal)
+    /compliance|datenschutzbeauftragter|whistleblow/i,        // Compliance-Abteilung
+    /karriere.*portal|jobs\..*\.de|stellenangebote.*\d/i,     // Karriere-PORTAL (nicht nur /karriere)
+    /niederlassung.*en|filialen|branches/i,                    // Mehrere Niederlassungen (Plural!)
+    /\.com.*\.de|worldwide|international/i,                    // Internationaler Auftritt
+    /newsroom|media-center|presseportal/i                      // Newsroom (nicht nur /presse)
+];
+
+// Bekannte Hotelketten (Enterprise, nicht unsere Zielgruppe)
+const KNOWN_HOTEL_CHAINS = [
+    'nh-hotels', 'accor', 'marriott', 'hilton', 'ihg', 'hyatt', 'radisson',
+    'motel-one', 'premier-inn', 'b-b-hotels', 'aohostels', 'meininger',
+    'novum', 'dorint', 'steigenberger', 'kempinski', 'maritim'
 ];
 
 /**
@@ -45,7 +54,17 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
     const enterpriseSignalCount = ENTERPRISE_SIGNALS.filter(p => p.test(urls)).length;
     const hasMultipleSubdomains = (urls.match(/https?:\/\/[a-z]+\./gi) || []).length > 20;
 
-    const isLikelyEnterprise = isKnownEnterprise || enterpriseSignalCount >= 3 || hasMultipleSubdomains;
+    // Bekannte Hotelkette?
+    const isKnownHotelChain = KNOWN_HOTEL_CHAINS.some(h => domainBase.includes(h));
+
+    // Enterprise-Schwelle: 4 Signale ODER bekannter Konzern/Kette ODER 20+ Subdomains
+    // Review-Count als Gegengewicht: Ein Hotel mit 500 Reviews auf Google ist wahrscheinlich
+    // ein einzelnes lokales Hotel, kein Konzern — auch wenn die Website "karriere" hat.
+    const reviews = place?.userRatingCount || 0;
+    const isSmallLocal = reviews > 0 && reviews < 2000 && !isKnownEnterprise && !isKnownHotelChain;
+    const signalThreshold = isSmallLocal ? 5 : 4; // Höhere Schwelle für lokale Unternehmen
+
+    const isLikelyEnterprise = isKnownEnterprise || isKnownHotelChain || enterpriseSignalCount >= signalThreshold || hasMultipleSubdomains;
 
     // ── 1. Branche zuordnen ──
     const branche = place?.primaryTypeDisplayName?.text || guessIndustry(domain, urls);

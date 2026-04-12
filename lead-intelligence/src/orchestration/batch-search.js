@@ -61,19 +61,24 @@ export async function runBatchSearch() {
                 const prob = scoreLead(ws, tech, p, null, null);
                 const domain = new URL(p.websiteUri).hostname.replace('www.', '');
 
-                // Konkurrenz-Erkennung
+                // Konkurrenz-Erkennung (nur Webdesign-Agenturen = skip)
                 const domainBase = domain.split('.')[0].toLowerCase();
-                const isCompetitor = COMPETITOR_PATTERNS.some(pat => pat.test(domainBase));
+                const isCompetitorDomain = COMPETITOR_PATTERNS.some(pat => pat.test(domainBase));
                 let companyProfile = null;
                 try { companyProfile = analyzeCompanyProfile(p.websiteUri, psiData, p, null); } catch(e) {}
-                const skipLead = isCompetitor || companyProfile?.isCompetitor || companyProfile?.isEnterprise;
+                // WICHTIG: Enterprise = Warnung aber NICHT skippen (könnte lokales Hotel sein)
+                // Nur echte Konkurrenz (Webdesign-Agenturen) wird übersprungen
+                const skipLead = isCompetitorDomain || companyProfile?.isCompetitor;
 
                 // BFSG Quick-Check
                 const bfsg = checkBFSGCompliance(psiData);
 
-                // Empfehlungstext (mit neuen Modulen)
+                const isEnterprise = companyProfile?.isEnterprise && !skipLead;
+
+                // Empfehlungstext
                 const reasons = [];
-                if (skipLead) reasons.push(companyProfile?.isCompetitor ? 'Konkurrenz' : 'Nicht Zielgruppe');
+                if (skipLead) reasons.push('Konkurrenz');
+                else if (isEnterprise) reasons.push('Großunternehmen — prüfen');
                 else {
                     if (ws.perf < 50) reasons.push(`Perf ${ws.perf}`);
                     if (tech.isBaukasten) reasons.push(tech.cms);
@@ -94,6 +99,7 @@ export async function runBatchSearch() {
                     expectedValue: skipLead ? 0 : prob.expectedValue,
                     timePerLead: prob.timePerLead,
                     isCompetitor: !!skipLead,
+                    isEnterprise: !!isEnterprise,
                     bfsgRisk: bfsg.risk,
                     bfsgScore: bfsg.complianceScore,
                     reasons: reasons.join('. ')
@@ -176,6 +182,7 @@ function renderBatchResults(query, results, currentSort = 'score') {
         </tr>
         <tr${dimmed}><td colspan="7" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">${
             r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
+            : r.isEnterprise ? `<strong style="color:var(--orange)">→ Möglicherweise Großunternehmen.</strong> ${r.reasons}`
             : r.leadScore >= 55 ? `<strong class="good">→ Kontaktieren.</strong> ${r.reasons}`
             : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
             : `<strong class="bad">→ Überspringen.</strong> ${r.reasons}`
