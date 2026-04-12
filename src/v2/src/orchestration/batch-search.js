@@ -190,10 +190,18 @@ function renderBatchResults(query, results, currentSort = 'score') {
                     : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
                     : `<strong class="bad">→ Überspringen.</strong> ${r.reasons}`
                 }</span>
-                ${!r.isCompetitor ? `<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0">
-                    <button class="fb-btn fb-too-high" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="too_high" title="Score zu hoch">↓</button>
+                ${!r.isCompetitor ? `<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0;align-items:center">
                     <button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="correct" title="Score passt">✓</button>
-                    <button class="fb-btn fb-too-low" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="too_low" title="Score zu niedrig">↑</button>
+                    <select class="fb-skip-select" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}">
+                        <option value="">Skip ▾</option>
+                        <option value="too_modern">Website gut</option>
+                        <option value="too_big">Zu groß</option>
+                        <option value="too_small">Zu klein</option>
+                        <option value="wrong_branch">Falsche Branche</option>
+                        <option value="no_need">Kein Bedarf</option>
+                        <option value="regional">Außerhalb Region</option>
+                        <option value="already_contacted">Schon kontaktiert</option>
+                    </select>
                 </span>` : ''}
             </div>
         </td></tr>`;
@@ -222,29 +230,34 @@ function renderBatchResults(query, results, currentSort = 'score') {
         btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
     });
 
-    // Batch-Feedback
+    // Batch-Feedback: ✓ Button
     el.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-fb-action]');
+        const btn = e.target.closest('[data-fb-action="correct"]');
         if (!btn) return;
-        const { fbDomain, fbScore, fbAction } = btn.dataset;
         const domain = btn.dataset.fbDomain;
         const score = parseInt(btn.dataset.fbScore);
-        const action = btn.dataset.fbAction;
+        saveFeedback(domain, score, 'correct', { branch: 'batch' });
+        btn.classList.add('active');
+        const select = btn.parentNode.querySelector('.fb-skip-select');
+        if (select) select.disabled = true;
+        showToast(`${domain}: Score bestätigt`);
+    });
 
-        if (action === 'correct') {
-            saveFeedback(domain, score, 'correct', { branch: 'batch' });
-            btn.classList.add('active');
-            showToast(`${domain}: Score bestätigt`);
-        } else {
-            // Quick-Feedback ohne Freitext im Batch
-            const reason = action === 'too_high' ? 'Batch: zu hoch bewertet' : 'Batch: zu niedrig bewertet';
-            saveFeedback(domain, score, action, { branch: 'batch' }, reason);
-            btn.classList.add('active');
-            showToast(`${domain}: ${action === 'too_high' ? 'Score zu hoch' : 'Score zu niedrig'} notiert`);
-        }
-        // Andere Buttons deaktivieren
-        btn.parentNode.querySelectorAll('.fb-btn').forEach(b => { if (b !== btn) b.style.opacity = '0.3'; });
-    }, { passive: true });
+    // Batch-Feedback: Skip-Dropdown
+    el.addEventListener('change', (e) => {
+        const select = e.target.closest('.fb-skip-select');
+        if (!select || !select.value) return;
+        const domain = select.dataset.fbDomain;
+        const score = parseInt(select.dataset.fbScore);
+        const skipReason = select.value;
+        const label = select.options[select.selectedIndex].text;
+        saveFeedback(domain, score, 'too_high', { branch: 'batch' }, label, skipReason);
+        select.style.color = 'var(--red)';
+        select.disabled = true;
+        const btn = select.parentNode.querySelector('.fb-btn');
+        if (btn) btn.style.opacity = '0.3';
+        showToast(`${domain}: "${label}" notiert`);
+    });
 
     // Einzel-Check Links
     el.addEventListener('click', (e) => {

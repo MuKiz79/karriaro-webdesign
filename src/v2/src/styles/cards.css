@@ -402,6 +402,20 @@
     color: var(--text);
 }
 .fb-reason-input::placeholder { color: var(--muted); opacity: 0.5; }
+
+/* Batch Skip Select */
+.fb-skip-select {
+    padding: 4px 8px;
+    font-size: 11px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--muted);
+    cursor: pointer;
+}
+.fb-skip-select:hover { border-color: var(--accent); color: var(--text); }
+.fb-skip-select:disabled { opacity: 0.5; cursor: default; }
 .fb-btn {
     padding: 6px 14px;
     font-size: 12px;
