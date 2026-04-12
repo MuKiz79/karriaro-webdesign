@@ -166,7 +166,7 @@ function renderBatchResults(query, results, currentSort = 'score') {
 
     for (const r of results) {
         const dimmed = r.isCompetitor ? ' style="opacity:0.4"' : '';
-        html += `<tr${dimmed}><td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank" style="font-size:11px">${r.domain}</a></td>
+        html += `<tr${dimmed}><td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank" style="font-size:11px">${r.domain}</a>${!r.isCompetitor ? ` · <a href="#" class="crm-reanalyze" data-url="${r.url}" style="font-size:10px;color:var(--accent)">Einzel-Check</a>` : ''}</td>
             <td>${r.type}</td>
             <td>${r.rating || '—'}</td>
             <td>${r.reviews}</td>
@@ -203,6 +203,23 @@ function renderBatchResults(query, results, currentSort = 'score') {
     // Sort buttons
     el.querySelectorAll('[data-sort]').forEach(btn => {
         btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
+    });
+
+    // Einzel-Check Links
+    el.addEventListener('click', (e) => {
+        const link = e.target.closest('.crm-reanalyze');
+        if (!link) return;
+        e.preventDefault();
+        const url = link.dataset.url;
+        el.classList.add('hidden');
+        const urlInput = document.getElementById('url-input');
+        if (urlInput) urlInput.value = url;
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('[data-tab="single"]')?.classList.add('active');
+        document.getElementById('input-single')?.classList.remove('hidden');
+        document.getElementById('input-batch')?.classList.add('hidden');
+        document.getElementById('input-scanner')?.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 }
 

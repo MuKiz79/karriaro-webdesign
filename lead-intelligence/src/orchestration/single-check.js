@@ -54,7 +54,7 @@ export async function runSingleCheck() {
 
     try {
         // Phase 1: PageSpeed
-        showLoading('Website wird analysiert...');
+        showLoading('① Website wird analysiert (PageSpeed)...');
         const psiData = await fetchPageSpeed(url);
         if (state.aborted) return cleanup();
 
@@ -63,7 +63,7 @@ export async function runSingleCheck() {
         const footprint = analyzeFootprint(psiData);
 
         // Phase 2: Business-Daten
-        showLoading('Business-Daten werden geladen...');
+        showLoading('② Google Business Profile...');
         const domain = new URL(url).hostname.replace('www.', '');
         let place = null;
         try {
@@ -73,7 +73,7 @@ export async function runSingleCheck() {
         if (state.aborted) return cleanup();
 
         // Phase 3: Konkurrenz
-        showLoading('Konkurrenz wird verglichen...');
+        showLoading('③ Konkurrenz-Analyse...');
         let competitors = [];
         if (place?.location && place?.primaryType) {
             try {
@@ -90,7 +90,7 @@ export async function runSingleCheck() {
         } catch(e) { console.error('CompanyProfile failed:', e); companyProfile = { domain: new URL(url).hostname.replace('www.',''), branche: '', isEnterprise: false, enterpriseWarning: null, owner: { name: null, nationality: null }, companyName: '' }; }
 
         // Phase 4: KI-Analyse ZUERST (Design-Qualität beeinflusst Scoring)
-        showLoading('KI-Analyse...');
+        showLoading('④ KI-Analyse (7 Module parallel)...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
         const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
         let uxFound = [];
@@ -111,7 +111,7 @@ export async function runSingleCheck() {
         } catch(e) { console.error('KI-Analyse failed:', e); }
 
         // Phase 5: Scoring — NACH KI-Analyse (Design-Qualität fließt ein)
-        showLoading('Lead wird bewertet...');
+        showLoading('⑤ Scoring (Monte-Carlo × 2000)...');
         let revenue = null, result = null;
         try {
             revenue = calculateRevenueLoss(ws, place);
@@ -141,7 +141,7 @@ export async function runSingleCheck() {
         }
 
         // ── Phase 6: Lokale Analyse-Module (synchron, schnell) ──
-        showLoading('Analyse wird ausgewertet...');
+        showLoading('⑥ Signal-Analyse (21 Module)...');
         const wayback = await checkFreshness(url).catch(() => null);
         const abTest = sv();
         const drift = cd(domain, result.leadScore);
@@ -180,8 +180,13 @@ export async function runSingleCheck() {
         hideSkeleton();
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
-        document.getElementById('error-text').textContent = `Analyse fehlgeschlagen: ${e.message}`;
-        document.getElementById('error').classList.remove('hidden');
+        const errorEl = document.getElementById('error');
+        document.getElementById('error-text').innerHTML = `Analyse fehlgeschlagen: ${e.message}<br><button class="btn-primary" style="margin-top:12px;font-size:13px;padding:8px 20px" id="btn-retry">Erneut versuchen</button>`;
+        errorEl.classList.remove('hidden');
+        document.getElementById('btn-retry')?.addEventListener('click', () => {
+            errorEl.classList.add('hidden');
+            runSingleCheck();
+        });
     }
 }
 
