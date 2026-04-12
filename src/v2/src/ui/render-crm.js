@@ -201,6 +201,8 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             <div class="stat-row"><span class="stat-label">Zu hoch / Passt / Zu niedrig</span><span class="stat-value">${fbStats.tooHigh} / ${fbStats.correct} / ${fbStats.tooLow}</span></div>
             <div class="stat-row"><span class="stat-label">Kalibriert</span><span class="stat-value ${fbStats.isCalibrated ? 'good' : ''}">${fbStats.isCalibrated ? 'Ja — Korrekturen aktiv' : `Nein (${10 - fbStats.total} Bewertungen fehlen)`}</span></div>
             ${corrKeys.length > 0 ? `<div class="section-label" style="margin-top:8px">Gelernte Korrekturen</div>${corrKeys.map(k => `<div class="stat-row"><span class="stat-label">${k}</span><span class="stat-value">${fbStats.corrections[k].multiplier}× (n=${fbStats.corrections[k].sampleSize})</span></div>`).join('')}` : ''}
+            ${fbStats.topSkipReason ? `<div class="metric-desc" style="margin-top:8px">Häufigster Skip-Grund: <strong>${fbStats.topSkipReason[0]}</strong> (${fbStats.topSkipReason[1]}×)</div>` : ''}
+            ${fbStats.freeTextReasons.length > 0 ? `<div class="section-label" style="margin-top:8px">Letzte Kommentare</div>${fbStats.freeTextReasons.slice(-3).map(r => `<div class="metric-desc">${r.domain}: "${r.reason}" (Score ${r.score})</div>`).join('')}` : ''}
         </div>`;
     }
 

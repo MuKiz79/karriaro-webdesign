@@ -17,7 +17,7 @@ import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
 import { saveSnapshot } from '../crm/rescan.js';
 import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
-import { saveFeedback, extractSignals, getFeedbackStats } from '../learning/score-feedback.js';
+import { saveFeedback, extractSignals, getFeedbackStats, SKIP_REASONS } from '../learning/score-feedback.js';
 
 // ══════════════════════════════════════
 // Helper
@@ -128,33 +128,62 @@ export function renderScore(el, data, explanation) {
         </div>
         <div style="text-align:center;margin-bottom:24px"><button class="crm-btn-export" id="btn-print-report">Als PDF speichern</button></div>`;
 
-        // Feedback-Buttons (#feedback)
+        // Feedback-Buttons
         const fbStats = getFeedbackStats();
         html += `<div class="feedback-bar anim-in">
-            <span class="metric-desc">Stimmt der Score?</span>
-            <button class="fb-btn fb-too-high" data-feedback="too_high">Zu hoch</button>
-            <button class="fb-btn fb-correct" data-feedback="correct">Passt</button>
-            <button class="fb-btn fb-too-low" data-feedback="too_low">Zu niedrig</button>
-            ${fbStats.total > 0 ? `<span class="metric-desc" style="margin-left:8px">${fbStats.accuracy}% korrekt (n=${fbStats.total})</span>` : ''}
+            <div class="fb-row">
+                <span class="metric-desc">Stimmt der Score?</span>
+                <button class="fb-btn fb-too-high" data-feedback="too_high">Zu hoch</button>
+                <button class="fb-btn fb-correct" data-feedback="correct">Passt</button>
+                <button class="fb-btn fb-too-low" data-feedback="too_low">Zu niedrig</button>
+                ${fbStats.total > 0 ? `<span class="metric-desc">${fbStats.accuracy}% korrekt (n=${fbStats.total})</span>` : ''}
+            </div>
+            <div class="fb-reason-row" id="fb-reason-row" style="display:none">
+                <select class="fb-reason-select" id="fb-skip-reason">
+                    <option value="">Warum? (optional)</option>
+                    ${SKIP_REASONS.map(r => `<option value="${r.key}">${r.label}</option>`).join('')}
+                </select>
+                <input type="text" class="fb-reason-input" id="fb-reason-text" placeholder="Details (z.B. hat schon eine Agentur, zu weit weg...)">
+                <button class="fb-btn fb-correct" id="fb-submit-reason">Absenden</button>
+            </div>
         </div>`;
     }
 
     el.innerHTML = html;
 
     // Feedback-Handler
+    let pendingFeedback = null;
     el.querySelectorAll('[data-feedback]').forEach(btn => {
         btn.addEventListener('click', function() {
-            const feedback = this.dataset.feedback;
-            const domain = new URL(data.url).hostname.replace('www.', '');
-            const signals = extractSignals(data);
-            const corrections = saveFeedback(domain, r.leadScore, feedback, signals);
-            // Visuelles Feedback
+            pendingFeedback = this.dataset.feedback;
             el.querySelectorAll('[data-feedback]').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            showToast(feedback === 'correct' ? 'Danke! Score bestätigt.' :
-                feedback === 'too_high' ? 'Notiert — Score wird in Zukunft gedämpft.' :
-                'Notiert — Score wird in Zukunft angehoben.');
+
+            if (pendingFeedback === 'correct') {
+                // Bei "Passt" sofort speichern
+                const domain = new URL(data.url).hostname.replace('www.', '');
+                saveFeedback(domain, r.leadScore, 'correct', extractSignals(data));
+                showToast('Danke! Score bestätigt.');
+            } else {
+                // Bei "Zu hoch" / "Zu niedrig" → Begründung anzeigen
+                const reasonRow = document.getElementById('fb-reason-row');
+                if (reasonRow) reasonRow.style.display = 'flex';
+            }
         });
+    });
+
+    // Begründung absenden
+    document.getElementById('fb-submit-reason')?.addEventListener('click', () => {
+        if (!pendingFeedback) return;
+        const domain = new URL(data.url).hostname.replace('www.', '');
+        const skipReason = document.getElementById('fb-skip-reason')?.value || '';
+        const reason = document.getElementById('fb-reason-text')?.value || '';
+        saveFeedback(domain, r.leadScore, pendingFeedback, extractSignals(data), reason, skipReason);
+        document.getElementById('fb-reason-row').style.display = 'none';
+        showToast(pendingFeedback === 'too_high'
+            ? `Notiert: Score zu hoch${skipReason ? ' — ' + SKIP_REASONS.find(r => r.key === skipReason)?.label : ''}. Wird angepasst.`
+            : `Notiert: Score zu niedrig. Wird angepasst.`);
+        pendingFeedback = null;
     });
 
     // PDF-Export (Browser-Print)

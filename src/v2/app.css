@@ -823,16 +823,49 @@ nav {
 /* Feedback Bar */
 .feedback-bar {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding: 12px 16px;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 16px;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin-bottom: 16px;
 }
+.fb-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.fb-reason-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.fb-reason-select {
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    min-width: 160px;
+}
+.fb-reason-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: var(--font);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+}
+.fb-reason-input::placeholder { color: var(--muted); opacity: 0.5; }
 .fb-btn {
     padding: 6px 14px;
     font-size: 12px;

@@ -21,14 +21,18 @@ const STORAGE_KEY = 'karriaro_score_feedback';
  * @param {number} score - Der angezeigte Score
  * @param {string} feedback - 'too_high' | 'correct' | 'too_low'
  * @param {Object} signals - Aktive Signale die zum Score beigetragen haben
+ * @param {string} reason - Freitext-Begründung (z.B. "zu modern", "zu groß", "kein Budget")
+ * @param {string} skipReason - Vordefinierter Grund (z.B. 'too_modern', 'too_big', 'no_budget')
  */
-export function saveFeedback(domain, score, feedback, signals = {}) {
+export function saveFeedback(domain, score, feedback, signals = {}, reason = '', skipReason = '') {
     const data = loadData();
     data.entries.push({
         domain,
         score,
         feedback,
-        signals, // z.B. { perf: 35, hasSSL: false, isBaukasten: true, reviews: 120, ... }
+        signals,
+        reason,
+        skipReason,
         ts: Date.now()
     });
     // Max 200 Einträge
@@ -157,11 +161,41 @@ export function applyCorrections(shifts) {
 }
 
 /**
+ * Vordefinierte Skip-Gründe mit Labels
+ */
+export const SKIP_REASONS = [
+    { key: 'too_modern', label: 'Website zu modern/gut' },
+    { key: 'too_big', label: 'Unternehmen zu groß' },
+    { key: 'too_small', label: 'Unternehmen zu klein / kein Budget' },
+    { key: 'wrong_branch', label: 'Falsche Branche' },
+    { key: 'competitor', label: 'Ist ein Konkurrent' },
+    { key: 'already_contacted', label: 'Bereits kontaktiert' },
+    { key: 'no_need', label: 'Kein Bedarf erkennbar' },
+    { key: 'regional', label: 'Außerhalb meiner Region' },
+    { key: 'other', label: 'Anderer Grund' }
+];
+
+/**
  * Statistiken über das Feedback
  */
 export function getFeedbackStats() {
     const data = loadData();
     const entries = data.entries || [];
+
+    // Skip-Reason Häufigkeiten
+    const skipReasons = {};
+    for (const e of entries) {
+        if (e.skipReason) {
+            skipReasons[e.skipReason] = (skipReasons[e.skipReason] || 0) + 1;
+        }
+    }
+
+    // Top Freitext-Gründe
+    const freeTextReasons = entries
+        .filter(e => e.reason && e.reason.length > 2)
+        .map(e => ({ domain: e.domain, reason: e.reason, score: e.score, feedback: e.feedback }))
+        .slice(-10);
+
     return {
         total: entries.length,
         tooHigh: entries.filter(e => e.feedback === 'too_high').length,
@@ -169,7 +203,10 @@ export function getFeedbackStats() {
         tooLow: entries.filter(e => e.feedback === 'too_low').length,
         corrections: data.corrections || {},
         isCalibrated: entries.length >= 10,
-        accuracy: entries.length > 0 ? Math.round(entries.filter(e => e.feedback === 'correct').length / entries.length * 100) : 0
+        accuracy: entries.length > 0 ? Math.round(entries.filter(e => e.feedback === 'correct').length / entries.length * 100) : 0,
+        skipReasons,
+        freeTextReasons,
+        topSkipReason: Object.entries(skipReasons).sort((a, b) => b[1] - a[1])[0] || null
     };
 }
 
