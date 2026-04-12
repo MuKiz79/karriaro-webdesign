@@ -15,6 +15,11 @@ import { calculatePXIndex } from '../analysis/px-index.js';
 import { analyzeContentFreshness } from '../analysis/content-freshness.js';
 import { analyzeTechDepth } from '../analysis/tech-depth.js';
 import { checkMessaging } from '../analysis/messaging-check.js';
+import { calculateReviewVelocity } from '../analysis/review-velocity.js';
+import { analyzeGBPDynamics } from '../analysis/gbp-dynamics.js';
+import { assessWPSecurity } from '../analysis/wp-security.js';
+import { assessCognitiveLoad } from '../analysis/cognitive-load.js';
+import { checkSitemapFreshness } from '../analysis/sitemap-freshness.js';
 import { calculateCompositeScore } from '../scoring/composite-score.js';
 import { fetchCrUX } from '../api/crux.js';
 import { getScoreInsight } from '../learning/feedback-loop.js';
@@ -149,10 +154,11 @@ export async function runSingleCheck() {
         const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
 
         // ── Phase 7: Cloud Functions (parallel, optional) ──
-        const [socialProfiles, emailCheck, contactData] = await Promise.all([
+        const [socialProfiles, emailCheck, contactData, sitemapFreshness] = await Promise.all([
             analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null),
             checkEmailDeliverability(domain).catch(() => null),
-            enrichContact(url).catch(() => null)
+            enrichContact(url).catch(() => null),
+            checkSitemapFreshness(url).catch(() => null)
         ]);
 
         // Mockup nur bei starken Leads mit schlechtem Design (spart API-Kosten)
@@ -169,7 +175,7 @@ export async function runSingleCheck() {
             url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority,
             searchVolume, psiData, abTest, drift, wayback, companyProfile, branchStandards,
-            socialProfiles, emailCheck, contactData, mockupSuggestion,
+            socialProfiles, emailCheck, contactData, sitemapFreshness, mockupSuggestion,
             ...localAnalysis
         };
 
@@ -268,6 +274,10 @@ function runLocalAnalysis(p) {
     const pxIndex = calculatePXIndex(ws, psiData, contentAnalysis, screenshotAnalysis);
     const schemaCheck = checkSchema(psiData);
     const messagingCheck = checkMessaging(psiData);
+    const reviewVelocity = calculateReviewVelocity(place?.reviews, place?.userRatingCount);
+    const gbpDynamics = analyzeGBPDynamics(place);
+    const wpSecurity = assessWPSecurity(psiData, tech);
+    const cognitiveLoad = assessCognitiveLoad(psiData);
     const signalStack = analyzeSignalStack({ ws, tech, place, footprint, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
     const compositeScore = calculateCompositeScore({ ws, tech, place, footprint, revenue, result, screenshotAnalysis, contentAnalysis, socialSignals, triggerEvents, bfsgScore, signalStack, techDepth, contentFreshness, companyProfile });
     const feedbackInsight = getScoreInsight(result.leadScore);
@@ -276,7 +286,8 @@ function runLocalAnalysis(p) {
         surgeIntent, digitalMaturity, conversationReady, stakeholder, techTrajectory,
         localSEO, emotionalReady, revenueWeighted, socialSignals, socialComparison,
         cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
-        pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight
+        pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight,
+        reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad
     };
 }
 

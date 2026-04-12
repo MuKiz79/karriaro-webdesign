@@ -672,6 +672,57 @@ export function renderSignals(el, data) {
         </div>`;
     }
 
+    // Review-Velocity
+    const rv = data.reviewVelocity;
+    if (rv?.available) {
+        const rvColor = rv.velocity >= 5 ? 'var(--green)' : rv.velocity >= 2 ? 'var(--accent)' : 'var(--muted)';
+        html += `<div class="card anim-in">
+            <div class="section-label">Review-Velocity</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${rvColor}">${rv.velocity}</span> <span class="metric-desc">Reviews/Monat</span></div>
+                <div class="metric-desc">Trend: ${rv.trend} · Letzte Review vor ${rv.daysSinceLastReview}T</div>
+            </div>
+            <div class="metric-desc">${rv.signal}</div>
+            ${rv.pitchArg ? `<div class="metric-desc" style="color:var(--accent);margin-top:4px">${rv.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
+    // GBP-Dynamik
+    const gd = data.gbpDynamics;
+    if (gd?.available && gd.signals.length > 0) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Google-Profil Aktivität</div>
+            ${gd.signals.map(s => `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${s.impact > 0 ? 'found' : 'missing'}">${s.impact > 0 ? '✓' : '✗'}</span>${s.label}</span><span class="feature-detail">${s.detail || ''}</span></div>`).join('')}
+            ${gd.pitchArg ? `<div class="metric-desc" style="color:var(--accent);margin-top:8px">${gd.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
+    // WordPress Security
+    const wps = data.wpSecurity;
+    if (wps?.available && wps.isWordPress) {
+        const wpsColor = wps.riskLevel === 'kritisch' ? 'var(--red)' : wps.riskLevel === 'hoch' ? 'var(--orange)' : 'var(--green)';
+        html += `<div class="card anim-in" style="border-left:3px solid ${wpsColor}">
+            <div class="section-label">WordPress-Sicherheit</div>
+            <div class="flex-between" style="margin-bottom:8px">
+                <div><span class="metric-xl" style="color:${wpsColor}">${wps.riskScore}/100</span> <span class="metric-desc">Risiko: ${wps.riskLevel}</span></div>
+                <div class="metric-desc">${wps.pluginCount} Plugins · ${wps.criticalVulns.length} kritisch</div>
+            </div>
+            ${wps.criticalVulns.length > 0 ? wps.criticalVulns.map(v => `<div class="feature-row"><span class="stat-label"><span class="feature-icon missing">⚠</span>${v.name}</span><span class="feature-detail">${v.cve}</span></div>`).join('') : ''}
+            ${wps.isOutdatedWP ? `<div class="metric-desc" style="color:var(--red)">WordPress ${wps.wpVersion} — veraltet</div>` : ''}
+            ${wps.pitchArg ? `<div class="metric-desc" style="color:var(--red);margin-top:8px">${wps.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
+    // Cognitive Load
+    const cl = data.cognitiveLoad;
+    if (cl && cl.loadScore >= 30) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Kognitive Belastung</div>
+            <div class="metric-desc">${cl.label} · ${cl.requests} Requests · ${cl.domSize} DOM-Elemente · ${cl.bloat} ungenutzte Dateien</div>
+            ${cl.pitchArg ? `<div class="metric-desc" style="color:var(--orange);margin-top:4px">${cl.pitchArg}</div>` : ''}
+        </div>`;
+    }
+
     // Email Deliverability
     const em = data.emailCheck;
     if (em && !em.error) {
