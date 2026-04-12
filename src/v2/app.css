@@ -799,6 +799,42 @@ nav {
     text-align: center;
 }
 
+/* Quick Summary Bar */
+.quick-summary {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+}
+.qs-item { text-align: center; min-width: 50px; }
+.qs-value { font-size: 1.2rem; font-weight: 700; }
+.qs-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+
+@media (max-width: 559px) {
+    .quick-summary { gap: 10px; padding: 12px; }
+    .qs-value { font-size: 1rem; }
+}
+
+/* Print Styles */
+@media print {
+    nav, .hero, .loading, .progress, .error, .btn-primary,
+    .btn-abort, .btn-copy, .btn-copy-large, .crm-btn-export,
+    #btn-print-report, .onboarding, .actions-center { display: none !important; }
+    .results { max-width: 100% !important; padding: 0 !important; }
+    .card { break-inside: avoid; }
+    .result-section { break-inside: avoid; }
+    .result-section[open] > summary { margin-bottom: 8px; }
+    details { open: true; }
+    .anim-in { opacity: 1 !important; transform: none !important; animation: none !important; }
+    body { background: #fff; color: #000; font-size: 11px; }
+    .score-ring-wrap { width: 120px; height: 120px; }
+}
+
 /* ══════════════════════════════════════
    Score Ring, Funnel, Confidence
    ══════════════════════════════════════ */

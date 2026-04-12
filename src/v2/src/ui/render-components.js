@@ -109,7 +109,28 @@ export function renderScore(el, data, explanation) {
         <div class="explanation-box">${explanation}</div>
     </div>`;
 
+    // Quick-Summary Leiste (die wichtigsten Zahlen auf einen Blick)
+    if (!isSkip) {
+        const ws = data.ws;
+        const rev = data.revenue;
+        const cs = data.compositeScore;
+        html += `<div class="quick-summary anim-in">
+            <div class="qs-item"><div class="qs-value ${ws.perf >= 75 ? 'good' : ws.perf >= 50 ? 'ok' : 'bad'}">${ws.perf}</div><div class="qs-label">Perf.</div></div>
+            <div class="qs-item"><div class="qs-value ${ws.seo >= 75 ? 'good' : ws.seo >= 50 ? 'ok' : 'bad'}">${ws.seo}</div><div class="qs-label">SEO</div></div>
+            <div class="qs-item"><div class="qs-value ${ws.a11y >= 80 ? 'good' : ws.a11y >= 60 ? 'ok' : 'bad'}">${ws.a11y}</div><div class="qs-label">A11y</div></div>
+            ${rev?.yearlyLoss > 0 ? `<div class="qs-item"><div class="qs-value bad">~${rev.yearlyLoss > 999 ? Math.round(rev.yearlyLoss/1000)+'K' : rev.yearlyLoss}€</div><div class="qs-label">Verlust/J</div></div>` : ''}
+            ${cs ? `<div class="qs-item"><div class="qs-value" style="color:${cs.composite >= 65 ? 'var(--green)' : cs.composite >= 45 ? 'var(--orange)' : 'var(--muted)'}">${cs.composite}</div><div class="qs-label">Composite</div></div>` : ''}
+            <div class="qs-item"><div class="qs-value">${r.kelly?.optimalHours || '?'}h</div><div class="qs-label">Invest</div></div>
+        </div>
+        <div style="text-align:center;margin-bottom:24px"><button class="crm-btn-export" id="btn-print-report">Als PDF speichern</button></div>`;
+    }
+
     el.innerHTML = html;
+
+    // PDF-Export (Browser-Print)
+    document.getElementById('btn-print-report')?.addEventListener('click', () => {
+        window.print();
+    });
 
     // Animate
     requestAnimationFrame(() => {

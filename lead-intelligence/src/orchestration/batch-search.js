@@ -109,23 +109,46 @@ export async function runBatchSearch() {
     document.getElementById('btn-batch').disabled = false;
     if (state.aborted || !results.length) return;
 
-    results.sort((a, b) => b.leadScore - a.leadScore);
-    renderBatchResults(query, results);
+    // Default-Sortierung
+    state._batchResults = results;
+    state._batchQuery = query;
+    sortAndRenderBatch('score');
 }
 
-function renderBatchResults(query, results) {
+function sortAndRenderBatch(sortBy) {
+    const results = [...(state._batchResults || [])];
+    const query = state._batchQuery || '';
+
+    if (sortBy === 'score') results.sort((a, b) => b.leadScore - a.leadScore);
+    else if (sortBy === 'perf') results.sort((a, b) => a.perf - b.perf); // Niedrigste Perf zuerst = schlechteste Website
+    else if (sortBy === 'reviews') results.sort((a, b) => b.reviews - a.reviews);
+    else if (sortBy === 'a11y') results.sort((a, b) => a.a11y - b.a11y);
+
+    renderBatchResults(query, results, sortBy);
+}
+
+function renderBatchResults(query, results, currentSort = 'score') {
     const validResults = results.filter(r => !r.isCompetitor);
     const portfolio = portfolioProbability(validResults);
     const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
     const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
     const competitorCount = results.filter(r => r.isCompetitor).length;
 
+    const sortBtn = (key, label) => `<button class="crm-filter-btn${currentSort === key ? ' active' : ''}" data-sort="${key}">${label}</button>`;
+
     let html = `<div class="crm-header">
         <h2 class="crm-title">${validResults.length} Leads für "${query}"${competitorCount > 0 ? ` <span class="metric-desc">(${competitorCount} Konkurrenten gefiltert)</span>` : ''}</h2>
         <div class="crm-actions-top">
             <button class="crm-btn-export" id="btn-export-csv">CSV Export</button>
-            <button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${results.length} speichern</button>
+            <button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${validResults.length} speichern</button>
         </div>
+    </div>
+    <div class="crm-filters" style="margin-bottom:12px">
+        <span class="metric-desc" style="margin-right:8px">Sortierung:</span>
+        ${sortBtn('score', 'Score')}
+        ${sortBtn('perf', 'Schlechteste Perf.')}
+        ${sortBtn('reviews', 'Meiste Bewertungen')}
+        ${sortBtn('a11y', 'Schlechteste A11y')}
     </div>`;
 
     // Portfolio
@@ -175,6 +198,11 @@ function renderBatchResults(query, results) {
         this.textContent = `${validResults.length} gespeichert ✓`;
         this.disabled = true;
         showToast(`${validResults.length} Leads im CRM gespeichert`);
+    });
+
+    // Sort buttons
+    el.querySelectorAll('[data-sort]').forEach(btn => {
+        btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
     });
 }
 
