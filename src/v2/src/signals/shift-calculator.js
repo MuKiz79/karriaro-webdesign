@@ -111,12 +111,41 @@ export function calculateShifts(ws, tech, place, competitors, revenue, footprint
     else if (count > 30) s.close[0] += 1;
     else if (count < 5) s.close[1] += 1;
 
-    // ── Digital Footprint ──
+    // ── Digital Footprint mit Plattform-Relevanz ──
+    // Instagram ist für Friseure/Restaurants KRITISCH, für Anwälte irrelevant
+    // LinkedIn ist für Makler/Anwälte wichtig, für Friseure irrelevant
+    const PLATFORM_RELEVANCE = {
+        'hair_salon': { instagram: 3, facebook: 1, linkedin: 0, tiktok: 2 },
+        'beauty_salon': { instagram: 3, facebook: 1, linkedin: 0, tiktok: 2 },
+        'restaurant': { instagram: 2, facebook: 2, linkedin: 0, tiktok: 1 },
+        'cafe': { instagram: 2, facebook: 1, linkedin: 0, tiktok: 1 },
+        'hotel': { instagram: 2, facebook: 2, linkedin: 1, tiktok: 0 },
+        'dentist': { instagram: 1, facebook: 1, linkedin: 1, tiktok: 0 },
+        'doctor': { instagram: 0, facebook: 1, linkedin: 1, tiktok: 0 },
+        'lawyer': { instagram: 0, facebook: 0, linkedin: 3, tiktok: 0 },
+        'real_estate_agency': { instagram: 2, facebook: 1, linkedin: 3, tiktok: 0 },
+        'auto_repair': { instagram: 1, facebook: 2, linkedin: 0, tiktok: 0 },
+        'gym': { instagram: 3, facebook: 1, linkedin: 0, tiktok: 3 },
+        '_default': { instagram: 2, facebook: 1, linkedin: 1, tiktok: 1 }
+    };
+    const plType = place?.primaryType || '_default';
+    const plRel = PLATFORM_RELEVANCE[plType] || PLATFORM_RELEVANCE._default;
+
     if (footprint) {
-        // Instagram aktiv + visuell SCHLECHTE Website = BESTER Lead
-        // Instagram aktiv + visuell GUTE Website = kein Argument
-        if (footprint.hasInstagram && ws.perf < 60 && !isVisuallyGood) s.interest[0] += 3;
-        else if (footprint.hasInstagram && isVisuallyGood) s.interest[0] += 0; // kein Bonus
+        // Plattform-relevanter Check: Friseur ohne Instagram = starkes Signal
+        if (footprint.hasInstagram && ws.perf < 60 && !isVisuallyGood) {
+            s.interest[0] += plRel.instagram; // Branchenabhängig statt fix 3
+        } else if (footprint.hasInstagram && isVisuallyGood) {
+            s.interest[0] += 0;
+        }
+
+        // Fehlende relevante Plattform = Pitch-Argument
+        if (!footprint.hasInstagram && plRel.instagram >= 2) {
+            s.interest[0] += 1; // "Ein Friseur ohne Instagram verliert Kunden"
+        }
+        if (!footprint.hasLinkedIn && plRel.linkedin >= 2) {
+            s.interest[0] += 1; // "Ein Makler ohne LinkedIn verpasst B2B-Kontakte"
+        }
 
         if (footprint.hasFbPixel) { s.close[0] += 2; s.interest[0] += 1; }
         if (footprint.platformCount >= 3) { s.interest[0] += 2; s.close[0] += 1; }

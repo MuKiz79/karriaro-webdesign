@@ -592,7 +592,21 @@ export function renderSignals(el, data) {
         </div>`;
     }
 
-    // Feedback Insight (persönliche Kalibrierung)
+    // Contact Enrichment
+    const cd = data.contactData;
+    if (cd && !cd.error) {
+        html += `<div class="card anim-in">
+            <div class="section-label">Kontaktdaten (aus Impressum)</div>
+            ${cd.owner ? `<div class="stat-row"><span class="stat-label">Inhaber</span><span class="stat-value">${cd.owner}</span></div>` : ''}
+            ${cd.emails?.length > 0 ? `<div class="stat-row"><span class="stat-label">E-Mail (persönlich)</span><span class="stat-value">${cd.emails.map(e => `<a href="mailto:${e}">${e}</a>`).join(', ')}</span></div>` : ''}
+            ${cd.genericEmails?.length > 0 && !cd.emails?.length ? `<div class="stat-row"><span class="stat-label">E-Mail (generisch)</span><span class="stat-value">${cd.genericEmails.join(', ')}</span></div>` : ''}
+            ${cd.phones?.length > 0 ? `<div class="stat-row"><span class="stat-label">Telefon</span><span class="stat-value">${cd.phones.map(p => `<a href="tel:${p.replace(/\s/g,'')}">${p}</a>`).join(', ')}</span></div>` : ''}
+            ${Object.keys(cd.social || {}).length > 0 ? `<div class="stat-row"><span class="stat-label">Social</span><span class="stat-value">${Object.entries(cd.social).map(([k,v]) => `<a href="${v}" target="_blank">${k}</a>`).join(' · ')}</span></div>` : ''}
+            <div class="metric-desc" style="margin-top:6px">Kontakt-Score: ${cd.contactScore || 0}% · ${cd.quality === 'persönlich' ? 'Persönliche E-Mail gefunden' : cd.quality === 'generisch' ? 'Nur info@-Adresse' : 'Keine E-Mail gefunden'}</div>
+        </div>`;
+    }
+
+    // Feedback Insight
     const fi = data.feedbackInsight;
     if (fi) {
         html += `<div class="card anim-in">

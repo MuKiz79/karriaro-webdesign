@@ -75,6 +75,18 @@ export function analyzeDigitalFootprint(psiData) {
         if (px.pattern.test(urlJoined)) activePixels.push(px);
     }
 
+    // Social Proof auf der Website (eingebettete Feeds, Bewertungs-Widgets)
+    const socialProofPatterns = [
+        { key: 'ig_feed', pattern: /instagram.*embed|instafeed|elfsight.*instagram|snapwidget/i, name: 'Instagram-Feed eingebettet' },
+        { key: 'google_reviews', pattern: /elfsight.*google|widget.*review|provenexpert.*widget|trustpilot.*widget/i, name: 'Bewertungs-Widget' },
+        { key: 'testimonials', pattern: /testimonial|kundenstimm|referenz.*slider|review.*carousel/i, name: 'Testimonials/Referenzen' },
+        { key: 'social_feed', pattern: /juicer\.io|curator\.io|smash.*balloon|social.*feed.*widget/i, name: 'Social-Feed-Widget' }
+    ];
+    const socialProof = [];
+    for (const sp of socialProofPatterns) {
+        if (sp.pattern.test(urlJoined)) socialProof.push(sp);
+    }
+
     // Scoring
     const platformCount = found.length;
     const hasInstagram = found.some(f => f.key === 'instagram');
@@ -112,6 +124,8 @@ export function analyzeDigitalFootprint(psiData) {
     return {
         platforms: found.map(f => ({ ...f, profileUrl: profileUrls[f.key] || null })),
         pixels: activePixels,
+        socialProof,
+        hasSocialProof: socialProof.length > 0,
         platformCount,
         maturity: Math.round(maturity * 100) / 100,
         hasInstagram, hasLinkedIn, hasFbPixel, hasAnalytics,

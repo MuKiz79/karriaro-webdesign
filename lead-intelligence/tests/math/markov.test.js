@@ -16,10 +16,11 @@ describe('buildTransitionMatrix', () => {
         expect(T[STATE_LOST][STATE_LOST]).toBe(1);
     });
 
-    it('higher Ea should increase fallback rates', () => {
+    it('higher Ea should reduce forward rates (damping)', () => {
         const T1 = buildTransitionMatrix([0.8, 0.3, 0.4, 0.35, 0.6, 0.5], 20);
         const T2 = buildTransitionMatrix([0.8, 0.3, 0.4, 0.35, 0.6, 0.5], 70);
-        expect(T2[1][0]).toBeGreaterThan(T1[1][0]);
+        // Higher Ea = lower forward rate = higher lost rate
+        expect(T2[1][2]).toBeLessThan(T1[1][2]); // p2 (Öffnung → Interesse) gedämpft
     });
 });
 

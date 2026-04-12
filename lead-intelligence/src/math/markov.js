@@ -1,9 +1,11 @@
 /**
- * Markov Decision Process — FIX I7: Markov IST der Funnel
+ * Markov Decision Process — Sales Funnel als absorbierende Markov-Kette
  *
  * 7 Zustände: Kalt → Kontaktiert → Interessiert → Gespräch → Angebot → Kunde → Verloren
- * Rückfallraten abhängig von Aktivierungsenergie (Ea)
- * EINZIGES Modell für Conversion-Rate (kein separater Produkt-Funnel)
+ *
+ * FIX: Ea wirkt als DÄMPFUNG der Forward-Rate, nicht als Rückfall-Pfad.
+ * Höhere Ea → Forward-Rate ×(1-damping) → niedrigere Conversion.
+ * Kein Rückfall-Zustand mehr — Lead geht entweder vorwärts oder ist verloren.
  */
 
 export const STATE_NAMES = ['Kalt', 'Kontaktiert', 'Interessiert', 'Im Gespräch', 'Angebot', 'Kunde', 'Verloren'];
@@ -13,39 +15,36 @@ export const STATE_LOST = 6;
 /**
  * Baue Übergangsmatrix aus Stufen-Wahrscheinlichkeiten
  * @param {number[]} stageRates - [pReach, pOpen, pInterest, pConvo, pProposal, pClose] je 0-1
- * @param {number} activationEa - Aktivierungsenergie (5-80), höher = mehr Rückfall
- * @param {number} seasonFactor - Saisonalitätsfaktor (nur auf Öffnungs-Stufe, Index 1)
+ * @param {number} activationEa - Aktivierungsenergie (5-80), höher = schwerer zu überzeugen
+ * @param {number} seasonFactor - Saisonalitätsfaktor (nur auf Öffnungs-Stufe)
  */
 export function buildTransitionMatrix(stageRates, activationEa = 40, seasonFactor = 1.0) {
     const [p1, p2, p3, p4, p5, p6] = stageRates;
 
-    // P2 FIX: Saisonalität nur auf Öffnung
+    // Ea-Dämpfung: Höhere Ea → Forward-Rate wird reduziert
+    // Ea=5 → damping=0.02 (kaum Widerstand)
+    // Ea=40 → damping=0.10
+    // Ea=80 → damping=0.18 (starker Widerstand)
+    const damping = Math.min(0.20, 0.02 + (activationEa / 100) * 0.20);
+
+    // Saisonalität nur auf Öffnung
     const p2adj = Math.min(1, p2 * seasonFactor);
 
-    // Rückfallrate abhängig von Aktivierungsenergie
-    const fb = Math.min(0.25, 0.05 + (activationEa / 100) * 0.15);
+    // Gedämpfte Forward-Rates
+    const dp = (p, factor = 1.0) => Math.max(0.01, p * (1 - damping * factor));
 
-    // FIX K3: Zeilen-Normalisierung garantieren
-    // Baue Rohwerte, dann normalisiere jede Zeile auf Summe = 1
-    const raw = [
-        [0,      p1,    0,     0,     0,     0,     1 - p1],                              // Kalt
-        [fb,     0,     p2adj, 0,     0,     0,     Math.max(0, 1 - p2adj - fb)],         // Kontaktiert
-        [0,      fb*.8, 0,     p3,    0,     0,     Math.max(0, 1 - p3 - fb * .8)],       // Interessiert
-        [0,      0,     fb*.6, 0,     p4,    0,     Math.max(0, 1 - p4 - fb * .6)],       // Gespräch
-        [0,      0,     0,     fb*.5, 0,     p5*p6, Math.max(0, 1 - p5 * p6 - fb * .5)],  // Angebot
-        [0,      0,     0,     0,     0,     1,     0],                                    // Kunde (absorbing)
-        [0,      0,     0,     0,     0,     0,     1]                                     // Verloren (absorbing)
+    const T = [
+        //  Kalt      Kont      Inter     Gespr     Angeb     Kunde     Verl
+        [0,         dp(p1),   0,        0,        0,        0,        1 - dp(p1)],
+        [0,         0,        dp(p2adj),0,        0,        0,        1 - dp(p2adj)],
+        [0,         0,        0,        dp(p3),   0,        0,        1 - dp(p3)],
+        [0,         0,        0,        0,        dp(p4),   0,        1 - dp(p4)],
+        [0,         0,        0,        0,        0,        dp(p5*p6, 0.5), 1 - dp(p5*p6, 0.5)],
+        [0,         0,        0,        0,        0,        1,        0],    // Kunde (absorbing)
+        [0,         0,        0,        0,        0,        0,        1]     // Verloren (absorbing)
     ];
-    // Normalisiere: Jede Zeile muss exakt 1 ergeben
-    for (let i = 0; i < 5; i++) {  // Nur transiente Zustände (0-4)
-        const sum = raw[i].reduce((a, b) => a + Math.max(0, b), 0);
-        if (sum > 0 && Math.abs(sum - 1) > 1e-10) {
-            for (let j = 0; j < raw[i].length; j++) {
-                raw[i][j] = Math.max(0, raw[i][j]) / sum;
-            }
-        }
-    }
-    return raw;
+
+    return T;
 }
 
 /**
@@ -69,7 +68,7 @@ export function simulate(T, maxSteps = 25) {
 }
 
 /**
- * Monte-Carlo über N Simulationen — FIX I7: Dies ist die EINZIGE Conversion-Rate
+ * Monte-Carlo über N Simulationen
  */
 export function monteCarloMarkov(T, N = 2000) {
     let converted = 0;

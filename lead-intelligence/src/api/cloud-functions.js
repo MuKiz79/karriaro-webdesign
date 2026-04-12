@@ -46,3 +46,6 @@ export function checkEmailDeliverability(domain) { return call('checkEmailDelive
 export function generateMockupSuggestion(domain, branche, currentIssues, screenshotBase64) {
     return call('generateMockupSuggestion', { domain, branche, currentIssues, screenshotBase64 });
 }
+
+/** Contact Enrichment: E-Mail, Telefon, Inhaber aus Impressum */
+export function enrichContact(url) { return call('enrichContact', { url }); }

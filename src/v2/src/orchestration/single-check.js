@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion } from '../api/cloud-functions.js';
+import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
@@ -149,9 +149,10 @@ export async function runSingleCheck() {
         const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
 
         // ── Phase 7: Cloud Functions (parallel, optional) ──
-        const [socialProfiles, emailCheck] = await Promise.all([
+        const [socialProfiles, emailCheck, contactData] = await Promise.all([
             analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null),
-            checkEmailDeliverability(domain).catch(() => null)
+            checkEmailDeliverability(domain).catch(() => null),
+            enrichContact(url).catch(() => null)
         ]);
 
         // Mockup nur bei starken Leads mit schlechtem Design (spart API-Kosten)
@@ -168,7 +169,7 @@ export async function runSingleCheck() {
             url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority,
             searchVolume, psiData, abTest, drift, wayback, companyProfile, branchStandards,
-            socialProfiles, emailCheck, mockupSuggestion,
+            socialProfiles, emailCheck, contactData, mockupSuggestion,
             ...localAnalysis
         };
 

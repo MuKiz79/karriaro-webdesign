@@ -52,13 +52,29 @@ export function analyzeSocialSignals(place) {
     }
 
     // ── Signal 2: Owner-Reply-Rate ──
+    // ── Signal 2: Owner-Reply-Rate + Qualität ──
     let ownerReplyRate = null;
     if (reviews.length > 0) {
-        const withReply = reviews.filter(r => r.ownerResponse || r.reply).length;
+        const replies = reviews.filter(r => r.ownerResponse || r.reply);
+        const withReply = replies.length;
         const rate = withReply / reviews.length;
-        ownerReplyRate = { replied: withReply, total: reviews.length, rate: Math.round(rate * 100) };
 
-        if (rate >= 0.8) {
+        // Antwort-Qualität: Durchschnittliche Länge der Antworten
+        const replyTexts = replies.map(r => (r.ownerResponse || r.reply || '').toString());
+        const avgReplyLength = replyTexts.length > 0
+            ? Math.round(replyTexts.reduce((s, t) => s + t.length, 0) / replyTexts.length)
+            : 0;
+        const isPersonalized = avgReplyLength > 50; // > 50 Zeichen = nicht nur "Danke"
+
+        ownerReplyRate = {
+            replied: withReply, total: reviews.length, rate: Math.round(rate * 100),
+            avgReplyLength, isPersonalized
+        };
+
+        if (rate >= 0.8 && isPersonalized) {
+            signals.push({ type: 'owner_replies', label: `Inhaber antwortet personalisiert auf ${ownerReplyRate.rate}% der Bewertungen`, detail: `Ø ${avgReplyLength} Zeichen pro Antwort — sehr engagierter Inhaber`, strength: 6 });
+            score += 6;
+        } else if (rate >= 0.8) {
             signals.push({ type: 'owner_replies', label: `Inhaber antwortet auf ${ownerReplyRate.rate}% der Bewertungen`, detail: 'Sehr engagierter Inhaber — versteht digitale Kommunikation', strength: 5 });
             score += 5;
         } else if (rate >= 0.5) {
