@@ -6,6 +6,7 @@ import { currentUser } from '../crm/firebase.js';
 import { recordOutcome, getCalibration } from '../learning/feedback-loop.js';
 import { calculateStats } from '../crm/stats.js';
 import { getStaleLeads } from '../crm/rescan.js';
+import { getFeedbackStats } from '../learning/score-feedback.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
 const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
@@ -187,6 +188,19 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             </div>
             ${perfStats.branches.length > 0 ? `<div class="section-label" style="margin-top:12px">Beste Branchen</div>${perfStats.branches.slice(0, 3).map(([name, s]) => `<div class="stat-row"><span class="stat-label">${name}</span><span class="stat-value">${s.cr}% CR (${s.converted}/${s.total})</span></div>`).join('')}` : ''}
             ${perfStats.insights.length > 0 ? `<div style="margin-top:12px">${perfStats.insights.map(i => `<div class="metric-desc">💡 ${i}</div>`).join('')}</div>` : ''}
+        </div>`;
+    }
+
+    // ── Scoring-Kalibrierung (Feedback-Lernstatus) ──
+    const fbStats = getFeedbackStats();
+    if (fbStats.total > 0) {
+        const corrKeys = Object.keys(fbStats.corrections);
+        html += `<div class="card anim-in" style="margin-top:12px">
+            <div class="section-label">Scoring-Kalibrierung (${fbStats.total} Bewertungen)</div>
+            <div class="stat-row"><span class="stat-label">Genauigkeit</span><span class="stat-value">${fbStats.accuracy}% korrekt</span></div>
+            <div class="stat-row"><span class="stat-label">Zu hoch / Passt / Zu niedrig</span><span class="stat-value">${fbStats.tooHigh} / ${fbStats.correct} / ${fbStats.tooLow}</span></div>
+            <div class="stat-row"><span class="stat-label">Kalibriert</span><span class="stat-value ${fbStats.isCalibrated ? 'good' : ''}">${fbStats.isCalibrated ? 'Ja — Korrekturen aktiv' : `Nein (${10 - fbStats.total} Bewertungen fehlen)`}</span></div>
+            ${corrKeys.length > 0 ? `<div class="section-label" style="margin-top:8px">Gelernte Korrekturen</div>${corrKeys.map(k => `<div class="stat-row"><span class="stat-label">${k}</span><span class="stat-value">${fbStats.corrections[k].multiplier}× (n=${fbStats.corrections[k].sampleSize})</span></div>`).join('')}` : ''}
         </div>`;
     }
 

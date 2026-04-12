@@ -17,6 +17,7 @@ import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
 import { saveSnapshot } from '../crm/rescan.js';
 import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
+import { saveFeedback, extractSignals, getFeedbackStats } from '../learning/score-feedback.js';
 
 // ══════════════════════════════════════
 // Helper
@@ -126,9 +127,35 @@ export function renderScore(el, data, explanation) {
             <div class="qs-item"><div class="qs-value">${r.kelly?.optimalHours || '?'}h</div><div class="qs-label">Invest</div></div>
         </div>
         <div style="text-align:center;margin-bottom:24px"><button class="crm-btn-export" id="btn-print-report">Als PDF speichern</button></div>`;
+
+        // Feedback-Buttons (#feedback)
+        const fbStats = getFeedbackStats();
+        html += `<div class="feedback-bar anim-in">
+            <span class="metric-desc">Stimmt der Score?</span>
+            <button class="fb-btn fb-too-high" data-feedback="too_high">Zu hoch</button>
+            <button class="fb-btn fb-correct" data-feedback="correct">Passt</button>
+            <button class="fb-btn fb-too-low" data-feedback="too_low">Zu niedrig</button>
+            ${fbStats.total > 0 ? `<span class="metric-desc" style="margin-left:8px">${fbStats.accuracy}% korrekt (n=${fbStats.total})</span>` : ''}
+        </div>`;
     }
 
     el.innerHTML = html;
+
+    // Feedback-Handler
+    el.querySelectorAll('[data-feedback]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const feedback = this.dataset.feedback;
+            const domain = new URL(data.url).hostname.replace('www.', '');
+            const signals = extractSignals(data);
+            const corrections = saveFeedback(domain, r.leadScore, feedback, signals);
+            // Visuelles Feedback
+            el.querySelectorAll('[data-feedback]').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            showToast(feedback === 'correct' ? 'Danke! Score bestätigt.' :
+                feedback === 'too_high' ? 'Notiert — Score wird in Zukunft gedämpft.' :
+                'Notiert — Score wird in Zukunft angehoben.');
+        });
+    });
 
     // PDF-Export (Browser-Print)
     document.getElementById('btn-print-report')?.addEventListener('click', () => {

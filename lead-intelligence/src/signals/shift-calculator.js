@@ -1,6 +1,9 @@
 /**
  * Shift-Calculator — Sammelt ALLE Signale und berechnet Funnel-Shifts
  *
+ * Lernt aus Feedback: applyCorrections() passt Shifts basierend auf
+ * deinen "Zu hoch" / "Passt" / "Zu niedrig" Bewertungen an.
+ *
  * FIX: Design-Qualität als Gegengewicht
  * Eine visuell moderne Website mit schlechtem PageSpeed ist KEIN guter Lead.
  * Der Inhaber sieht seine Seite, findet sie gut → kein Argument für Neubau.
@@ -8,6 +11,8 @@
  *
  * @module signals/shift-calculator
  */
+
+import { applyCorrections as applyFeedbackCorrections } from '../learning/score-feedback.js';
 
 /**
  * Berechnet Funnel-Shifts für alle 5 relevanten Stufen
@@ -154,7 +159,8 @@ export function calculateShifts(ws, tech, place, competitors, revenue, footprint
         if (footprint.hasAnalytics) s.interest[0] += 1;
     }
 
-    return s;
+    // ── Feedback-Korrekturen anwenden (lernt aus deinen Bewertungen) ──
+    return applyFeedbackCorrections(s);
 }
 
 /**
