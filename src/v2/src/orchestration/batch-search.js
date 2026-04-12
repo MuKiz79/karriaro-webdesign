@@ -19,6 +19,7 @@ import { saveLead, exportCSV as exportLeadsCSV } from '../crm/leads.js';
 import { analyzeCompanyProfile } from '../analysis/company-profile.js';
 import { checkBFSGCompliance } from '../analysis/bfsg-compliance.js';
 import { showToast } from '../ui/render-components.js';
+import { saveFeedback, SKIP_REASONS } from '../learning/score-feedback.js';
 
 const COMPETITOR_PATTERNS = [
     /webdesign|web-design|webagentur|digitalagentur|werbeagentur/i,
@@ -180,13 +181,22 @@ function renderBatchResults(query, results, currentSort = 'score') {
             <td><span class="badge ${bfsgBadge(r.bfsgRisk)}" title="BFSG ${r.bfsgScore || '?'}%">${bfsgLabel(r.bfsgRisk)}</span></td>
             <td><span class="badge ${r.isCompetitor ? 'badge-red' : sc(r.leadScore)}">${r.isCompetitor ? '✗' : r.leadScore}</span></td>
         </tr>
-        <tr${dimmed}><td colspan="7" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">${
-            r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
-            : r.isEnterprise ? `<strong style="color:var(--orange)">→ Möglicherweise Großunternehmen.</strong> ${r.reasons}`
-            : r.leadScore >= 55 ? `<strong class="good">→ Kontaktieren.</strong> ${r.reasons}`
-            : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
-            : `<strong class="bad">→ Überspringen.</strong> ${r.reasons}`
-        }</td></tr>`;
+        <tr${dimmed}><td colspan="7" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+                <span>${
+                    r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
+                    : r.isEnterprise ? `<strong style="color:var(--orange)">→ Möglicherweise Großunternehmen.</strong> ${r.reasons}`
+                    : r.leadScore >= 55 ? `<strong class="good">→ Kontaktieren.</strong> ${r.reasons}`
+                    : r.leadScore >= 30 ? `<strong class="ok">→ Möglich.</strong> ${r.reasons}`
+                    : `<strong class="bad">→ Überspringen.</strong> ${r.reasons}`
+                }</span>
+                ${!r.isCompetitor ? `<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0">
+                    <button class="fb-btn fb-too-high" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="too_high" title="Score zu hoch">↓</button>
+                    <button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="correct" title="Score passt">✓</button>
+                    <button class="fb-btn fb-too-low" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="too_low" title="Score zu niedrig">↑</button>
+                </span>` : ''}
+            </div>
+        </td></tr>`;
     }
     html += '</tbody></table></div>';
 
@@ -211,6 +221,30 @@ function renderBatchResults(query, results, currentSort = 'score') {
     el.querySelectorAll('[data-sort]').forEach(btn => {
         btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
     });
+
+    // Batch-Feedback
+    el.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-fb-action]');
+        if (!btn) return;
+        const { fbDomain, fbScore, fbAction } = btn.dataset;
+        const domain = btn.dataset.fbDomain;
+        const score = parseInt(btn.dataset.fbScore);
+        const action = btn.dataset.fbAction;
+
+        if (action === 'correct') {
+            saveFeedback(domain, score, 'correct', { branch: 'batch' });
+            btn.classList.add('active');
+            showToast(`${domain}: Score bestätigt`);
+        } else {
+            // Quick-Feedback ohne Freitext im Batch
+            const reason = action === 'too_high' ? 'Batch: zu hoch bewertet' : 'Batch: zu niedrig bewertet';
+            saveFeedback(domain, score, action, { branch: 'batch' }, reason);
+            btn.classList.add('active');
+            showToast(`${domain}: ${action === 'too_high' ? 'Score zu hoch' : 'Score zu niedrig'} notiert`);
+        }
+        // Andere Buttons deaktivieren
+        btn.parentNode.querySelectorAll('.fb-btn').forEach(b => { if (b !== btn) b.style.opacity = '0.3'; });
+    }, { passive: true });
 
     // Einzel-Check Links
     el.addEventListener('click', (e) => {

@@ -38,8 +38,15 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
 
     // Enterprise-Entscheidung:
     // 1. DB-Match → sofort Enterprise (hohe Konfidenz)
-    // 2. 4+ URL-Signale ODER 20+ Subdomains → wahrscheinlich Enterprise
-    const isLikelyEnterprise = dbResult.isEnterprise || enterpriseSignalCount >= 4 || hasMultipleSubdomains;
+    // 2. URL-Signale NUR bei NICHT in DB erkannten Domains
+    //    UND nur wenn genug Signale UND kein lokaler Places-Eintrag mit wenig Reviews
+    // FIX: Kleine lokale Friseure (haar-ibo.de, shinzo.hair) wurden fälschlich als Enterprise erkannt
+    const reviews = place?.userRatingCount || 0;
+    const isLocalBusiness = place && reviews < 5000; // Places-Eintrag = lokal
+    const urlSignalThreshold = isLocalBusiness ? 5 : 4; // Höhere Schwelle für lokale Betriebe
+    const isLikelyEnterprise = dbResult.isEnterprise
+        || (enterpriseSignalCount >= urlSignalThreshold && !isLocalBusiness)
+        || (hasMultipleSubdomains && !isLocalBusiness);
 
     // ── 1. Branche zuordnen ──
     const branche = place?.primaryTypeDisplayName?.text || guessIndustry(domain, urls);
