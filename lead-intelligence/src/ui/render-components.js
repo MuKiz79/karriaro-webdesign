@@ -14,6 +14,9 @@ import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
+import { generatePersonalEmail } from '../strategy/email-generator.js';
+import { saveSnapshot } from '../crm/rescan.js';
+import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
 
 // ══════════════════════════════════════
 // Helper
@@ -450,20 +453,70 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
     if (data.drift?.drifted) {
         actionsExtra += `<div class="card card-alert anim-in"><div style="font-size:13px;font-weight:600;color:var(--orange)">Score verändert: ${data.drift.previousScore} → ${r.leadScore}</div></div>`;
     }
+    // Personalisierte E-Mail generieren (#2)
+    const email = generatePersonalEmail(data);
+    actionsExtra += `<div class="pitch-box anim-in">
+        <h3>Personalisierte E-Mail (kopierbar)</h3>
+        <div class="metric-desc" style="margin-bottom:8px">An: ${email.to} · Betreff: ${email.subject}</div>
+        <p>${email.body.replace(/\n/g, '<br>')}</p>
+        <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn-copy-large" id="btn-copy-email">E-Mail kopieren</button>
+            <a href="mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}" class="btn-copy-large" style="text-decoration:none;text-align:center">In E-Mail-App öffnen</a>
+        </div>
+    </div>`;
+
     actionsEl.innerHTML = `${actionsExtra}<div class="actions-center"><button class="btn-primary" id="btn-save-crm" style="background:var(--text)">Im CRM speichern</button><a href="https://karriaro-webdesign.de/#kontakt" class="btn-cta-link">Kostenlos beraten lassen</a></div>`;
 
+    // Copy Email
+    document.getElementById('btn-copy-email')?.addEventListener('click', function() {
+        navigator.clipboard.writeText(email.copyText).then(() => {
+            this.textContent = 'Kopiert ✓';
+            showToast('E-Mail in Zwischenablage kopiert');
+        });
+    });
+
+    // CRM Save + Snapshot
     document.getElementById('btn-save-crm')?.addEventListener('click', async function() {
-        await saveLead(domain, data.url, {
+        const leadData = {
             name: data.place?.displayName?.text || domain,
             type: data.place?.primaryTypeDisplayName?.text || '',
             perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
             cms: tech.cms, isBaukasten: tech.isBaukasten,
             leadScore: r.leadScore, conversionRate: r.conversionRate,
-            expectedValue: r.expectedValue || 0
-        });
+            expectedValue: r.expectedValue || 0,
+            reviews: data.place?.userRatingCount || 0,
+            rating: data.place?.rating || null,
+            contactEmail: email.to
+        };
+        await saveLead(domain, data.url, leadData);
+        saveSnapshot(domain, leadData);
+
+        // #7: Lead-Page generieren (async, im Hintergrund)
+        const pageData = {
+            domain, name: leadData.name, branche: data.companyProfile?.branche || '',
+            score: r.leadScore, perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
+            cms: tech.cms, bfsgRisk: data.bfsgScore?.risk, bfsgLabel: data.bfsgScore?.riskLabel,
+            problems: data.bfsgScore?.pitchArg ? [data.bfsgScore.pitchArg] : [],
+            mockupHeadline: data.mockupSuggestion?.headline || null
+        };
+        saveLeadPage(pageData).catch(() => null);
+
         this.textContent = 'Gespeichert ✓';
         this.disabled = true;
-        showToast('Lead im CRM gespeichert');
+        showToast('Lead + Analyse-Seite gespeichert');
+
+        // #9: Kalender-Button anzeigen
+        const calUrl = getCalendarUrl(
+            `Lead kontaktieren: ${leadData.name}`, domain, r.leadScore
+        );
+        if (calUrl) {
+            const calBtn = document.createElement('a');
+            calBtn.href = calUrl;
+            calBtn.className = 'crm-btn-export';
+            calBtn.style.marginLeft = '8px';
+            calBtn.textContent = '📅 Termin planen';
+            this.parentNode.appendChild(calBtn);
+        }
     });
 }
 

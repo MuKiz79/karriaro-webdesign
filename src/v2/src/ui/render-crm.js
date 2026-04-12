@@ -4,6 +4,8 @@
 import { loadLeads, updateLead, deleteLead, deleteAllLeads, exportCSV } from '../crm/leads.js';
 import { currentUser } from '../crm/firebase.js';
 import { recordOutcome, getCalibration } from '../learning/feedback-loop.js';
+import { calculateStats } from '../crm/stats.js';
+import { getStaleLeads } from '../crm/rescan.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
 const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
@@ -169,6 +171,32 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             ${Object.entries(cal.buckets).map(([bucket, stats]) =>
                 `<div class="stat-row"><span class="stat-label">Score ${bucket}</span><span class="stat-value">${stats.conversionRate}% (${stats.converted}/${stats.total})</span></div>`
             ).join('')}
+        </div>`;
+    }
+
+    // ── Stats Dashboard (#4) ──
+    const perfStats = calculateStats(leads);
+    if (perfStats.available) {
+        html += `<div class="card anim-in" style="margin-top:16px">
+            <div class="section-label-accent">Dein Performance-Dashboard</div>
+            <div class="science-grid" style="margin-bottom:12px">
+                <div style="text-align:center"><div class="metric-xl">${perfStats.overview.thisMonth}</div><div class="metric-desc">Leads diesen Monat</div></div>
+                <div style="text-align:center"><div class="metric-xl" style="color:${perfStats.conversion.cr >= 10 ? 'var(--green)' : 'var(--muted)'}">${perfStats.conversion.cr}%</div><div class="metric-desc">Conversion-Rate</div></div>
+                <div style="text-align:center"><div class="metric-xl" style="color:var(--accent)">${perfStats.conversion.pipelineValue}€</div><div class="metric-desc">Pipeline-Wert</div></div>
+                <div style="text-align:center"><div class="metric-xl">${perfStats.overview.trend === 'steigend' ? '↑' : perfStats.overview.trend === 'fallend' ? '↓' : '→'}</div><div class="metric-desc">Trend</div></div>
+            </div>
+            ${perfStats.branches.length > 0 ? `<div class="section-label" style="margin-top:12px">Beste Branchen</div>${perfStats.branches.slice(0, 3).map(([name, s]) => `<div class="stat-row"><span class="stat-label">${name}</span><span class="stat-value">${s.cr}% CR (${s.converted}/${s.total})</span></div>`).join('')}` : ''}
+            ${perfStats.insights.length > 0 ? `<div style="margin-top:12px">${perfStats.insights.map(i => `<div class="metric-desc">💡 ${i}</div>`).join('')}</div>` : ''}
+        </div>`;
+    }
+
+    // ── Re-Scan Alerts (#3) ──
+    const stale = getStaleLeads();
+    if (stale.length > 0) {
+        html += `<div class="card card-alert anim-in" style="margin-top:12px">
+            <div class="section-label">Re-Scan fällig (${stale.length} Leads)</div>
+            ${stale.slice(0, 5).map(s => `<div class="stat-row"><span class="stat-label">${s.domain}</span><span class="stat-value">Seit ${s.daysSince} Tagen · Score ${s.lastScore}</span></div>`).join('')}
+            <div class="metric-desc" style="margin-top:8px">Klicke auf "neu analysieren" bei einem Lead um den Score zu aktualisieren.</div>
         </div>`;
     }
 

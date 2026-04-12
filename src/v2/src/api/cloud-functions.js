@@ -49,3 +49,13 @@ export function generateMockupSuggestion(domain, branche, currentIssues, screens
 
 /** Contact Enrichment: E-Mail, Telefon, Inhaber aus Impressum */
 export function enrichContact(url) { return call('enrichContact', { url }); }
+
+/** #7: Lead-Page speichern (für personalisierte Landingpage) */
+export function saveLeadPage(data) { return call('saveLeadPage', data); }
+
+/** #9: Kalender-Event URL generieren */
+export function getCalendarUrl(title, domain, score, date, time) {
+    if (!config.fnUrl) return null;
+    const base = config.fnUrl.replace(/\/[^/]+$/, ''); // Extract base URL
+    return `${config.fnUrl.split('/').slice(0, -1).join('/')}/calendarEvent?title=${encodeURIComponent(title)}&domain=${encodeURIComponent(domain)}&score=${score || ''}&date=${date || ''}&time=${time || ''}`;
+}

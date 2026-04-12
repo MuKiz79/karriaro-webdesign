@@ -7,6 +7,7 @@ import { config, loadConfig, saveConfig } from './config.js';
 import { state } from './state.js';
 import { loadCloudSettings, saveCloudSettings } from './crm/settings.js';
 import { checkReminders } from './crm/reminders.js';
+import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } from './crm/auto-scan.js';
 import { runSingleCheck } from './orchestration/single-check.js';
 import { runBatchSearch } from './orchestration/batch-search.js';
 import { runScanner } from './orchestration/scanner.js';
@@ -21,7 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initButtons();
     initAuth();
     checkOnboarding();
+    checkAutoScanAlerts();
 });
+
+// ── Auto-Scan Alert ──
+function checkAutoScanAlerts() {
+    const newLeads = getNewLeads();
+    if (newLeads.length === 0) return;
+    const banner = document.createElement('div');
+    banner.className = 'card card-success';
+    banner.style.cssText = 'margin:80px auto 0;max-width:680px;padding:16px 20px;cursor:pointer';
+    banner.innerHTML = `<div class="section-label-accent">${newLeads.length} neue Leads gefunden</div><div class="metric-desc">Klicke um sie im CRM zu sehen</div>`;
+    banner.addEventListener('click', () => { banner.remove(); showCRM(); });
+    document.querySelector('nav').after(banner);
+}
 
 // ── Tab Navigation ──
 function initTabs() {
@@ -170,6 +184,7 @@ function toggleSettings() {
     panel.classList.toggle('hidden');
     if (!panel.classList.contains('hidden')) {
         const p = config.profile;
+        const autoScan = loadAutoScanConfig();
         const field = (id, label, value, placeholder, hint) =>
             `<label>${label}</label><input type="text" id="${id}" value="${value || ''}" placeholder="${placeholder}">${hint ? `<div class="hint">${hint}</div>` : ''}`;
 
@@ -195,11 +210,21 @@ function toggleSettings() {
 
             <button class="btn-primary" style="margin-top:16px;width:100%" id="btn-save-settings">Speichern</button>
 
+            <h3 class="settings-divider">Auto-Scan & Alerts</h3>
+            <div class="hint" style="margin-bottom:12px">Automatische Lead-Suche in deiner Region. Ergebnisse erscheinen im CRM.</div>
+            <label>Such-Queries (eine pro Zeile)</label>
+            <textarea id="cfg-autoscan-queries" rows="4" style="width:100%;padding:10px;font-size:13px;font-family:var(--font);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);resize:vertical" placeholder="Friseur Offenburg&#10;Zahnarzt Lahr&#10;Restaurant Ortenau">${(autoScan.queries || []).join('\n')}</textarea>
+            <label>Mindest-Score für Alerts</label>
+            <input type="number" id="cfg-autoscan-minscore" value="${autoScan.minScore || 50}" min="0" max="100">
+            <label>Mitbewerber-Domains (eine pro Zeile)</label>
+            <textarea id="cfg-competitor-watch" rows="2" style="width:100%;padding:10px;font-size:13px;font-family:var(--font);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);resize:vertical" placeholder="andere-agentur.de">${(autoScan.competitorDomains || []).join('\n')}</textarea>
+
             <div class="settings-info">
                 <div class="section-label" style="margin-top:20px">Status</div>
                 <div class="metric-desc">API-Key: ${config.psiKey ? '✓ Konfiguriert' : '✗ Fehlt'}</div>
                 <div class="metric-desc">Cloud Functions: ${config.fnUrl ? '✓ Konfiguriert' : '✗ Fehlt (KI-Analyse deaktiviert)'}</div>
                 <div class="metric-desc">Profil: ${p.name ? '✓ ' + p.name : '✗ Nicht ausgefüllt'}</div>
+                <div class="metric-desc">Auto-Scan: ${autoScan.queries?.length > 0 ? `✓ ${autoScan.queries.length} Queries konfiguriert` : '✗ Nicht konfiguriert'}</div>
             </div>
         `;
         document.getElementById('btn-save-settings').addEventListener('click', () => {
@@ -217,6 +242,11 @@ function toggleSettings() {
             config.profile.tone = document.getElementById('cfg-tone').value;
             saveConfig();
             saveCloudSettings();
+            // Auto-Scan speichern
+            const queries = document.getElementById('cfg-autoscan-queries').value.split('\n').map(q => q.trim()).filter(Boolean);
+            const competitors = document.getElementById('cfg-competitor-watch').value.split('\n').map(q => q.trim()).filter(Boolean);
+            const minScore = parseInt(document.getElementById('cfg-autoscan-minscore').value) || 50;
+            saveAutoScanConfig({ ...loadAutoScanConfig(), queries, competitorDomains: competitors, minScore, enabled: queries.length > 0 });
             panel.classList.add('hidden');
         });
     }
