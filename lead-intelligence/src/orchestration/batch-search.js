@@ -1,8 +1,12 @@
 /**
- * Batch Search — MIT KI-Analyse pro Lead
+ * Batch Search — Smart Pre-Filter + KI nur für vielversprechende Leads
  *
- * Vorher: Nur PageSpeed → blinder Score
- * Jetzt: PageSpeed + KI-Screenshot + KI-Content → sieht ob Website modern oder veraltet ist
+ * Flow:
+ * 1. Places API: 2× max Ergebnisse holen
+ * 2. SCHNELL-FILTER (0 API-Calls): Enterprise/Konkurrenz/zu klein raus
+ * 3. Ranking: Baukasten + viele Reviews = top Priorität
+ * 4. NUR Top-N → teure PageSpeed + KI-Analyse
+ * 5. Ergebnis: Weniger analysiert, mehr echte Leads
  */
 import { state } from '../state.js';
 import { config } from '../config.js';
@@ -13,15 +17,22 @@ import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { portfolioProbability } from '../scoring/portfolio.js';
-import { saveLead, exportCSV as exportLeadsCSV } from '../crm/leads.js';
+import { saveLead } from '../crm/leads.js';
 import { analyzeCompanyProfile } from '../analysis/company-profile.js';
 import { checkBFSGCompliance } from '../analysis/bfsg-compliance.js';
+import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { showToast } from '../ui/render-components.js';
 import { saveFeedback, SKIP_REASONS } from '../learning/score-feedback.js';
 
-const COMPETITOR_PATTERNS = [
-    /webdesign|web-design|webagentur|digitalagentur|werbeagentur/i,
-    /seo-agentur|online-marketing|internetagentur|homepage.*erstell/i
+const BAUKASTEN_URL = [
+    { pattern: /\.wixsite\.com|wix\.com/i, name: 'Wix', prio: 10 },
+    { pattern: /\.jimdo\.|jimdofree\.|jimdosite\./i, name: 'Jimdo', prio: 10 },
+    { pattern: /\.squarespace\.com/i, name: 'Squarespace', prio: 8 },
+    { pattern: /\.weebly\.com/i, name: 'Weebly', prio: 9 },
+    { pattern: /\.webnode\./i, name: 'Webnode', prio: 9 },
+    { pattern: /\.strato\.de|\.strato-hosting\./i, name: 'Strato', prio: 7 },
+    { pattern: /\.1und1\.de|\.ionos\./i, name: '1&1/IONOS', prio: 7 },
+    { pattern: /\.wordpress\.com/i, name: 'WordPress.com', prio: 8 },
 ];
 
 export async function runBatchSearch() {
@@ -30,298 +41,172 @@ export async function runBatchSearch() {
     if (!config.fnUrl) { showError('Batch braucht Cloud Function URL.'); return; }
     state.aborted = false;
     document.getElementById('btn-batch').disabled = true;
-
     const max = parseInt(document.getElementById('batch-max').value);
-    showLoading(`Suche "${query}"...`);
 
+    // ── Phase 1: Mehr Kandidaten holen ──
+    showLoading(`Suche "${query}" — sammle Kandidaten...`);
     let places;
     try {
-        const data = await searchPlaces(query, max);
+        const data = await searchPlaces(query, Math.min(max * 2, 20));
         places = (data?.places || []).filter(p => p.websiteUri && p.businessStatus !== 'CLOSED_PERMANENTLY');
-    } catch (e) { hideLoading(); document.getElementById('btn-batch').disabled = false; showError('Suche fehlgeschlagen.'); return; }
-    if (!places.length) { hideLoading(); document.getElementById('btn-batch').disabled = false; showError('Keine Unternehmen mit Website gefunden.'); return; }
+    } catch (e) { cleanup(); showError('Suche fehlgeschlagen.'); return; }
+    if (!places.length) { cleanup(); showError('Keine Unternehmen mit Website gefunden.'); return; }
 
+    // ── Phase 2: Schnellfilter (0 API-Calls) ──
+    showLoading(`${places.length} gefunden — filtere Ketten & Konkurrenz...`);
+    const candidates = [], filtered = [];
+
+    for (const p of places) {
+        const url = p.websiteUri;
+        const domain = new URL(url).hostname.replace('www.', '');
+        const reviews = p.userRatingCount || 0;
+        const db = checkEnterpriseDB(domain);
+
+        if (db.isCompetitor) { filtered.push({ ...p, domain, reason: 'Konkurrenz', ft: 'competitor' }); continue; }
+        if (db.isEnterprise) { filtered.push({ ...p, domain, reason: `Kette: ${db.match}`, ft: 'enterprise' }); continue; }
+        if (reviews < 3 && !p.rating) { filtered.push({ ...p, domain, reason: 'Zu wenig Daten', ft: 'too_small' }); continue; }
+
+        // Baukasten aus URL?
+        let bk = null;
+        for (const bp of BAUKASTEN_URL) { if (bp.pattern.test(url)) { bk = bp; break; } }
+
+        // Priorität (höher = vielversprechender für uns)
+        let prio = 0;
+        if (bk) prio += bk.prio;
+        if (reviews > 100) prio += 5; else if (reviews > 30) prio += 3; else if (reviews > 10) prio += 1;
+        if (p.rating >= 4.5 && reviews > 20) prio += 2;
+
+        candidates.push({ place: p, domain, url, reviews, rating: p.rating, bk, prio, name: p.displayName?.text || domain, type: p.primaryTypeDisplayName?.text || '' });
+    }
+
+    candidates.sort((a, b) => b.prio - a.prio);
+    const toAnalyze = candidates.slice(0, max);
     hideLoading();
 
-    // 2er-Batches (statt 3) weil wir jetzt auch KI-Calls machen
-    const BATCH_SIZE = 2;
+    if (!toAnalyze.length) { cleanup(); showError(`Alle ${places.length} Ergebnisse gefiltert.`); return; }
+
+    // ── Phase 3: KI-Analyse nur für Top-Kandidaten ──
     const results = [];
-
-    for (let i = 0; i < places.length; i += BATCH_SIZE) {
+    for (let i = 0; i < toAnalyze.length; i += 2) {
         if (state.aborted) break;
-        const batch = places.slice(i, i + BATCH_SIZE);
-        showProgress(Math.round(((i + batch.length) / places.length) * 100), `${Math.min(i + batch.length, places.length)}/${places.length}: KI analysiert ${batch.map(p => p.displayName?.text || '').join(', ')}...`);
+        const batch = toAnalyze.slice(i, i + 2);
+        showProgress(Math.round(((i + batch.length) / toAnalyze.length) * 100), `${Math.min(i + batch.length, toAnalyze.length)}/${toAnalyze.length}: KI analysiert ${batch.map(c => c.name).join(', ')}...`);
 
-        const batchResults = await Promise.all(batch.map(async (p) => {
+        const br = await Promise.all(batch.map(async (c) => {
             try {
-                const psiData = await fetchPageSpeed(p.websiteUri);
-                const ws = extractWebsiteScore(psiData);
-                const tech = detectTech(psiData);
-                const domain = new URL(p.websiteUri).hostname.replace('www.', '');
-
-                // Konkurrenz + Enterprise
-                const domainBase = domain.split('.')[0].toLowerCase();
-                const isCompetitorDomain = COMPETITOR_PATTERNS.some(pat => pat.test(domainBase));
-                let companyProfile = null;
-                try { companyProfile = analyzeCompanyProfile(p.websiteUri, psiData, p, null); } catch(e) {}
-                const skipLead = isCompetitorDomain || companyProfile?.isCompetitor;
-                if (skipLead) {
-                    return { name: p.displayName?.text || domain, domain, url: p.websiteUri, rating: p.rating, reviews: p.userRatingCount || 0, type: p.primaryTypeDisplayName?.text || '—', perf: ws.perf, seo: ws.seo, a11y: ws.a11y, cms: tech.cms, isBaukasten: tech.isBaukasten, leadScore: 0, isCompetitor: true, reasons: 'Konkurrenz' };
-                }
-
-                // ── KI-Analyse (DAS war vorher nicht da) ──
-                const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
-                let screenshotAnalysis = null;
-                let contentAnalysis = null;
-                try {
-                    // Parallel: Screenshot + Content
-                    [screenshotAnalysis, contentAnalysis] = await Promise.all([
-                        screenshot ? analyzeScreenshot(screenshot).catch(() => null) : null,
-                        analyzeContent(p.websiteUri).catch(() => null)
-                    ]);
-                } catch(e) { /* KI optional */ }
-
-                // Scoring MIT Design-Qualität
-                const prob = scoreLead(ws, tech, p, null, null, null, null, screenshotAnalysis, contentAnalysis);
-                const bfsg = checkBFSGCompliance(psiData);
-                const isEnterprise = companyProfile?.isEnterprise;
-
-                // Design-Bewertung in den Gründen
-                const designQuality = screenshotAnalysis?.designQuality || null;
-                const designEra = screenshotAnalysis?.designEra || null;
+                const p = c.place;
+                const psi = await fetchPageSpeed(c.url);
+                const ws = extractWebsiteScore(psi);
+                const tech = detectTech(psi);
+                const shot = psi?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
+                let sa = null, ca = null;
+                try { [sa, ca] = await Promise.all([shot ? analyzeScreenshot(shot).catch(() => null) : null, analyzeContent(c.url).catch(() => null)]); } catch(e) {}
+                const prob = scoreLead(ws, tech, p, null, null, null, null, sa, ca);
+                const bfsg = checkBFSGCompliance(psi);
+                let cp = null; try { cp = analyzeCompanyProfile(c.url, psi, p, null); } catch(e) {}
+                const dq = sa?.designQuality || null;
 
                 const reasons = [];
-                if (isEnterprise) reasons.push('Großunternehmen — prüfen');
-                if (designQuality !== null && designQuality <= 3) reasons.push(`Design ${designQuality}/10 — veraltet`);
-                else if (designQuality !== null && designQuality >= 8) reasons.push(`Design ${designQuality}/10 — modern`);
-                if (tech.isBaukasten) reasons.push(tech.cms);
+                if (c.bk) reasons.push(c.bk.name);
+                else if (tech.isBaukasten) reasons.push(tech.cms);
+                if (dq !== null && dq <= 3) reasons.push(`Design ${dq}/10`);
+                else if (dq !== null && dq >= 8) reasons.push(`Design ${dq}/10 — modern`);
                 if (ws.perf < 50) reasons.push(`Perf ${ws.perf}`);
                 if (!ws.isHttps) reasons.push('Kein SSL');
                 if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') reasons.push(`BFSG: ${bfsg.riskLabel}`);
-                if (p.userRatingCount > 50) reasons.push(`${p.userRatingCount} Bewertungen`);
-                if (contentAnalysis?.freshness === 'veraltet') reasons.push('Content veraltet');
+                if (c.reviews > 50) reasons.push(`${c.reviews} Bewertungen`);
+                if (ca?.freshness === 'veraltet') reasons.push('Content veraltet');
 
-                // Empfehlung basierend auf Design + Score
-                let recommendation;
-                if (prob.leadScore >= 55 && designQuality !== null && designQuality <= 5) {
-                    recommendation = 'hot'; // Hoher Score + schlechtes Design = BESTER Lead
-                } else if (prob.leadScore >= 55) {
-                    recommendation = 'warm';
-                } else if (prob.leadScore >= 30 && designQuality !== null && designQuality <= 4) {
-                    recommendation = 'warm'; // Mittlerer Score + veraltetes Design = noch gut
-                } else if (prob.leadScore >= 30) {
-                    recommendation = 'maybe';
-                } else {
-                    recommendation = 'skip';
-                }
+                let rec = prob.leadScore >= 55 && (dq === null || dq <= 5) ? 'hot' : prob.leadScore >= 55 ? 'warm' : prob.leadScore >= 30 && (dq === null || dq <= 4) ? 'warm' : prob.leadScore >= 30 ? 'maybe' : 'skip';
+                if (c.bk && c.reviews > 20 && rec === 'skip') { rec = 'maybe'; reasons.unshift(`${c.bk.name} — strukturelle Limitierung`); }
+                if (c.bk && c.reviews > 50 && rec === 'maybe') rec = 'warm';
 
-                return {
-                    name: p.displayName?.text || domain, domain, url: p.websiteUri,
-                    rating: p.rating, reviews: p.userRatingCount || 0,
-                    type: p.primaryTypeDisplayName?.text || companyProfile?.branche || '—',
-                    perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
-                    cms: tech.cms, isBaukasten: tech.isBaukasten,
-                    leadScore: prob.leadScore,
-                    conversionRate: prob.conversionRate,
-                    expectedValue: prob.expectedValue,
-                    timePerLead: prob.timePerLead,
-                    isCompetitor: false,
-                    isEnterprise: !!isEnterprise,
-                    designQuality, designEra,
-                    bfsgRisk: bfsg.risk, bfsgScore: bfsg.complianceScore,
-                    recommendation,
-                    reasons: reasons.join('. '),
-                    contentFreshness: contentAnalysis?.freshness || null,
-                    screenshotData: screenshot // Für Vorschau
-                };
+                return { name: c.name, domain: c.domain, url: c.url, rating: c.rating, reviews: c.reviews, type: c.type, perf: ws.perf, seo: ws.seo, a11y: ws.a11y, cms: tech.cms || c.bk?.name || '', isBaukasten: tech.isBaukasten || !!c.bk, leadScore: prob.leadScore, conversionRate: prob.conversionRate, expectedValue: prob.expectedValue, isCompetitor: false, isEnterprise: !!cp?.isEnterprise, designQuality: dq, designEra: sa?.designEra, bfsgRisk: bfsg.risk, bfsgScore: bfsg.complianceScore, recommendation: rec, reasons: reasons.join('. '), prio: c.prio };
             } catch (e) { return null; }
         }));
-
-        results.push(...batchResults.filter(Boolean));
-        if (i + BATCH_SIZE < places.length && !state.aborted) await delay(500);
+        results.push(...br.filter(Boolean));
+        if (i + 2 < toAnalyze.length && !state.aborted) await delay(500);
     }
 
     hideProgress();
     document.getElementById('btn-batch').disabled = false;
     if (state.aborted || !results.length) return;
 
-    // Sortierung: Hot zuerst, dann warm, dann maybe, skip zuletzt
+    // Gefilterte anfügen
+    for (const f of filtered) {
+        results.push({ name: f.displayName?.text || f.domain, domain: f.domain, url: f.websiteUri, rating: f.rating, reviews: f.userRatingCount || 0, type: f.primaryTypeDisplayName?.text || '', perf: null, leadScore: 0, isCompetitor: f.ft === 'competitor', isEnterprise: f.ft === 'enterprise', recommendation: 'filtered', reasons: f.reason });
+    }
+
     state._batchResults = results;
     state._batchQuery = query;
+    state._batchStats = { totalFound: places.length, preFiltered: filtered.length, analyzed: toAnalyze.length };
     sortAndRenderBatch('recommendation');
 }
 
 function sortAndRenderBatch(sortBy) {
     const results = [...(state._batchResults || [])];
     const query = state._batchQuery || '';
-
-    if (sortBy === 'recommendation') {
-        const order = { hot: 0, warm: 1, maybe: 2, skip: 3 };
-        results.sort((a, b) => (order[a.recommendation] ?? 9) - (order[b.recommendation] ?? 9) || b.leadScore - a.leadScore);
-    } else if (sortBy === 'score') results.sort((a, b) => b.leadScore - a.leadScore);
-    else if (sortBy === 'perf') results.sort((a, b) => a.perf - b.perf);
+    const order = { hot: 0, warm: 1, maybe: 2, skip: 3, filtered: 4 };
+    if (sortBy === 'recommendation') results.sort((a, b) => (order[a.recommendation] ?? 9) - (order[b.recommendation] ?? 9) || b.leadScore - a.leadScore);
+    else if (sortBy === 'score') results.sort((a, b) => b.leadScore - a.leadScore);
+    else if (sortBy === 'perf') results.sort((a, b) => (a.perf || 100) - (b.perf || 100));
     else if (sortBy === 'design') results.sort((a, b) => (a.designQuality || 99) - (b.designQuality || 99));
     else if (sortBy === 'reviews') results.sort((a, b) => b.reviews - a.reviews);
-
     renderBatchResults(query, results, sortBy);
 }
 
-function renderBatchResults(query, results, currentSort = 'recommendation') {
-    const validResults = results.filter(r => !r.isCompetitor);
-    const portfolio = portfolioProbability(validResults);
-    const competitorCount = results.filter(r => r.isCompetitor).length;
-    const hotCount = results.filter(r => r.recommendation === 'hot').length;
+function renderBatchResults(query, results, currentSort) {
+    const analyzed = results.filter(r => r.recommendation !== 'filtered');
+    const portfolio = portfolioProbability(analyzed.filter(r => r.leadScore > 0));
+    const hot = results.filter(r => r.recommendation === 'hot').length;
+    const warm = results.filter(r => r.recommendation === 'warm').length;
+    const stats = state._batchStats || {};
+    const sb = (key, label) => `<button class="crm-filter-btn${currentSort === key ? ' active' : ''}" data-sort="${key}">${label}</button>`;
 
-    const sortBtn = (key, label) => `<button class="crm-filter-btn${currentSort === key ? ' active' : ''}" data-sort="${key}">${label}</button>`;
+    let html = `<div class="crm-header"><h2 class="crm-title">${analyzed.length} Leads${hot ? ` · <span style="color:var(--green)">${hot} heiß</span>` : ''}${warm ? ` · <span style="color:var(--accent)">${warm} warm</span>` : ''}</h2><div class="crm-actions-top"><button class="crm-btn-export" id="btn-export-csv">CSV Export</button><button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${analyzed.length} speichern</button></div></div>`;
+    if (stats.totalFound) html += `<div class="metric-desc" style="margin-bottom:12px">${stats.totalFound} gefunden → ${stats.preFiltered} vorab gefiltert → <strong>${stats.analyzed} analysiert</strong></div>`;
+    html += `<div class="crm-filters" style="margin-bottom:12px"><span class="metric-desc" style="margin-right:8px">Sortierung:</span>${sb('recommendation','Empfehlung')}${sb('score','Score')}${sb('design','Design')}${sb('perf','Perf.')}${sb('reviews','Bewertungen')}</div>`;
+    html += `<div class="card anim-in" style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px"><div><div class="section-label">P(min. 1 Conversion)</div><div class="revenue-big" style="color:var(--green)">${portfolio.atLeastOne}%</div></div><div><div class="section-label">Erwartete Conversions</div><div class="revenue-big">${portfolio.expectedConversions}</div></div></div>`;
 
-    let html = `<div class="crm-header">
-        <h2 class="crm-title">${validResults.length} Leads für "${query}"${competitorCount > 0 ? ` <span class="metric-desc">(${competitorCount} Konkurrenten gefiltert)</span>` : ''}${hotCount > 0 ? ` · <span style="color:var(--green);font-weight:700">${hotCount} heiße Leads</span>` : ''}</h2>
-        <div class="crm-actions-top">
-            <button class="crm-btn-export" id="btn-export-csv">CSV Export</button>
-            <button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${validResults.length} speichern</button>
-        </div>
-    </div>
-    <div class="crm-filters" style="margin-bottom:12px">
-        <span class="metric-desc" style="margin-right:8px">Sortierung:</span>
-        ${sortBtn('recommendation', 'Empfehlung')}
-        ${sortBtn('score', 'Score')}
-        ${sortBtn('design', 'Schlechtestes Design')}
-        ${sortBtn('perf', 'Schlechteste Perf.')}
-        ${sortBtn('reviews', 'Meiste Bewertungen')}
-    </div>`;
-
-    // Portfolio
-    html += `<div class="card anim-in" style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px">
-        <div><div class="section-label">P(min. 1 Conversion)</div><div class="revenue-big" style="color:var(--green)">${portfolio.atLeastOne}%</div></div>
-        <div><div class="section-label">Erwartete Conversions</div><div class="revenue-big">${portfolio.expectedConversions}</div></div>
-    </div>`;
-
-    // Table mit Design-Spalte
     const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
-    const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
-    const bfsgBadge = risk => risk === 'kritisch' ? 'badge-red' : risk === 'hoch' ? 'badge-orange' : risk === 'mittel' ? 'badge-orange' : 'badge-green';
-    const bfsgLabel = risk => risk === 'kritisch' ? '✗' : risk === 'hoch' ? '⚠' : risk === 'mittel' ? '~' : '✓';
+    const pf = v => v === null ? '' : v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
+    const bb = r => !r ? '' : r === 'kritisch' ? 'badge-red' : r === 'hoch' ? 'badge-orange' : r === 'mittel' ? 'badge-orange' : 'badge-green';
+    const bl = r => !r ? '—' : r === 'kritisch' ? '✗' : r === 'hoch' ? '⚠' : r === 'mittel' ? '~' : '✓';
 
-    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-        <thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>Design</th><th>BFSG</th><th>Score</th></tr></thead><tbody>`;
+    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)"><thead><tr><th style="text-align:left">Unternehmen</th><th>Branche</th><th>★</th><th>Bew.</th><th>Perf.</th><th>Design</th><th>BFSG</th><th>Score</th></tr></thead><tbody>`;
 
     for (const r of results) {
-        const dimmed = r.isCompetitor ? ' style="opacity:0.4"' : '';
-        const designColor = r.designQuality === null ? '' : r.designQuality <= 3 ? 'bad' : r.designQuality <= 5 ? 'ok' : 'good';
-        const recIcon = r.recommendation === 'hot' ? '🔥' : r.recommendation === 'warm' ? '→' : r.recommendation === 'maybe' ? '~' : '✗';
-        const recColor = r.recommendation === 'hot' ? 'var(--green)' : r.recommendation === 'warm' ? 'var(--green)' : r.recommendation === 'maybe' ? 'var(--orange)' : 'var(--red)';
+        const isFilt = r.recommendation === 'filtered';
+        const dim = isFilt ? ' style="opacity:0.35"' : '';
+        const dc = r.designQuality == null ? '' : r.designQuality <= 3 ? 'bad' : r.designQuality <= 5 ? 'ok' : 'good';
+        const ri = r.recommendation === 'hot' ? '🔥' : r.recommendation === 'warm' ? '→' : r.recommendation === 'maybe' ? '~' : r.recommendation === 'filtered' ? '⊘' : '✗';
+        const rc = r.recommendation === 'hot' ? 'var(--green)' : r.recommendation === 'warm' ? 'var(--green)' : r.recommendation === 'maybe' ? 'var(--orange)' : 'var(--muted)';
 
-        html += `<tr${dimmed}><td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank" style="font-size:11px">${r.domain}</a>${!r.isCompetitor ? ` · <a href="#" class="crm-reanalyze" data-url="${r.url}" style="font-size:10px;color:var(--accent)">Einzel-Check</a>` : ''}</td>
-            <td>${r.type}</td>
-            <td>${r.rating || '—'}</td>
-            <td>${r.reviews}</td>
-            <td class="${perf(r.perf)}">${r.perf}</td>
-            <td class="${designColor}">${r.designQuality !== null ? r.designQuality + '/10' : '—'}</td>
-            <td><span class="badge ${bfsgBadge(r.bfsgRisk)}" title="BFSG ${r.bfsgScore || '?'}%">${bfsgLabel(r.bfsgRisk)}</span></td>
-            <td><span class="badge ${r.isCompetitor ? 'badge-red' : sc(r.leadScore)}">${r.isCompetitor ? '✗' : r.leadScore}</span></td>
-        </tr>
-        <tr${dimmed}><td colspan="8" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-                <span>${
-                    r.isCompetitor ? '<strong style="color:var(--red)">→ Konkurrenz — übersprungen.</strong>'
-                    : `<strong style="color:${recColor}">${recIcon} ${
-                        r.recommendation === 'hot' ? 'Heißer Lead — sofort kontaktieren!'
-                        : r.recommendation === 'warm' ? 'Kontaktieren.'
-                        : r.recommendation === 'maybe' ? 'Möglich.'
-                        : 'Überspringen.'
-                    }</strong> ${r.reasons}`
-                }</span>
-                ${!r.isCompetitor ? `<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0;align-items:center">
-                    <button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="correct" title="Score passt">✓</button>
-                    <select class="fb-skip-select" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}">
-                        <option value="">Skip ▾</option>
-                        <option value="too_modern">Website gut</option>
-                        <option value="too_big">Zu groß</option>
-                        <option value="too_small">Zu klein</option>
-                        <option value="wrong_branch">Falsche Branche</option>
-                        <option value="no_need">Kein Bedarf</option>
-                        <option value="regional">Außerhalb Region</option>
-                        <option value="already_contacted">Schon kontaktiert</option>
-                    </select>
-                </span>` : ''}
-            </div>
-        </td></tr>`;
+        html += `<tr${dim}><td><strong>${r.name}</strong><br><a href="${r.url}" target="_blank" style="font-size:11px">${r.domain}</a>${!isFilt ? ` · <a href="#" class="crm-reanalyze" data-url="${r.url}" style="font-size:10px;color:var(--accent)">Einzel-Check</a>` : ''}</td><td>${r.type||'—'}</td><td>${r.rating||'—'}</td><td>${r.reviews||0}</td><td class="${pf(r.perf)}">${r.perf??'—'}</td><td class="${dc}">${r.designQuality!=null?r.designQuality+'/10':'—'}</td><td>${r.bfsgRisk?`<span class="badge ${bb(r.bfsgRisk)}">${bl(r.bfsgRisk)}</span>`:'—'}</td><td>${r.leadScore>0?`<span class="badge ${sc(r.leadScore)}">${r.leadScore}</span>`:isFilt?'<span class="metric-desc">⊘</span>':'—'}</td></tr>`;
+        html += `<tr${dim}><td colspan="8" style="padding:4px 12px 12px;font-size:12px;color:var(--muted);border-bottom:2px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><span><strong style="color:${rc}">${ri} ${r.recommendation==='hot'?'Heißer Lead — sofort kontaktieren!':r.recommendation==='warm'?'Kontaktieren.':r.recommendation==='maybe'?'Möglich.':r.recommendation==='filtered'?'Vorab gefiltert.':'Überspringen.'}</strong> ${r.reasons||''}</span>${!isFilt?`<span class="batch-feedback" style="display:flex;gap:4px;flex-shrink:0;align-items:center"><button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}" data-fb-action="correct" title="Passt">✓</button><select class="fb-skip-select" data-fb-domain="${r.domain}" data-fb-score="${r.leadScore}"><option value="">Skip ▾</option><option value="too_modern">Website gut</option><option value="too_big">Zu groß</option><option value="too_small">Zu klein</option><option value="wrong_branch">Falsche Branche</option><option value="no_need">Kein Bedarf</option><option value="regional">Außerhalb Region</option><option value="already_contacted">Schon kontaktiert</option></select></span>`:''}</div></td></tr>`;
     }
     html += '</tbody></table></div>';
 
     const el = document.getElementById('batch-results');
-    el.innerHTML = html;
-    el.classList.remove('hidden');
-    el.scrollIntoView({ behavior: 'smooth' });
+    el.innerHTML = html; el.classList.remove('hidden'); el.scrollIntoView({ behavior: 'smooth' });
 
     // Events
-    document.getElementById('btn-export-csv')?.addEventListener('click', () => {
-        exportBatchCSV(results);
-        showToast(`${results.length} Leads exportiert`);
-    });
-    document.getElementById('btn-save-batch')?.addEventListener('click', async function() {
-        for (const r of results.filter(r => !r.isCompetitor)) await saveLead(r.domain, r.url, r);
-        this.textContent = `${validResults.length} gespeichert ✓`;
-        this.disabled = true;
-        showToast(`${validResults.length} Leads im CRM gespeichert`);
-    });
-
-    // Feedback: ✓ Button
-    el.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-fb-action="correct"]');
-        if (!btn) return;
-        saveFeedback(btn.dataset.fbDomain, parseInt(btn.dataset.fbScore), 'correct', { branch: 'batch' });
-        btn.classList.add('active');
-        const select = btn.parentNode.querySelector('.fb-skip-select');
-        if (select) select.disabled = true;
-        showToast(`${btn.dataset.fbDomain}: Score bestätigt`);
-    });
-
-    // Feedback: Skip-Dropdown
-    el.addEventListener('change', (e) => {
-        const select = e.target.closest('.fb-skip-select');
-        if (!select || !select.value) return;
-        const label = select.options[select.selectedIndex].text;
-        saveFeedback(select.dataset.fbDomain, parseInt(select.dataset.fbScore), 'too_high', { branch: 'batch' }, label, select.value);
-        select.style.color = 'var(--red)';
-        select.disabled = true;
-        const btn = select.parentNode.querySelector('.fb-btn');
-        if (btn) btn.style.opacity = '0.3';
-        showToast(`${select.dataset.fbDomain}: "${label}" notiert`);
-    });
-
-    // Sort buttons
-    el.querySelectorAll('[data-sort]').forEach(btn => {
-        btn.addEventListener('click', () => sortAndRenderBatch(btn.dataset.sort));
-    });
-
-    // Einzel-Check Links
-    el.addEventListener('click', (e) => {
-        const link = e.target.closest('.crm-reanalyze');
-        if (!link) return;
-        e.preventDefault();
-        el.classList.add('hidden');
-        const urlInput = document.getElementById('url-input');
-        if (urlInput) urlInput.value = link.dataset.url;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector('[data-tab="single"]')?.classList.add('active');
-        document.getElementById('input-single')?.classList.remove('hidden');
-        document.getElementById('input-batch')?.classList.add('hidden');
-        document.getElementById('input-scanner')?.classList.add('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    document.getElementById('btn-export-csv')?.addEventListener('click', () => { exportCSV(results); showToast('Exportiert'); });
+    document.getElementById('btn-save-batch')?.addEventListener('click', async function() { for (const r of analyzed.filter(r => r.leadScore > 0)) await saveLead(r.domain, r.url, r); this.textContent = 'Gespeichert ✓'; this.disabled = true; showToast(`${analyzed.length} Leads gespeichert`); });
+    el.addEventListener('click', (e) => { const b = e.target.closest('[data-fb-action="correct"]'); if (!b) return; saveFeedback(b.dataset.fbDomain, parseInt(b.dataset.fbScore), 'correct', {branch:'batch'}); b.classList.add('active'); const s = b.parentNode.querySelector('.fb-skip-select'); if (s) s.disabled = true; showToast(`${b.dataset.fbDomain}: Bestätigt`); });
+    el.addEventListener('change', (e) => { const s = e.target.closest('.fb-skip-select'); if (!s||!s.value) return; const l = s.options[s.selectedIndex].text; saveFeedback(s.dataset.fbDomain, parseInt(s.dataset.fbScore), 'too_high', {branch:'batch'}, l, s.value); s.style.color='var(--red)'; s.disabled=true; const b = s.parentNode.querySelector('.fb-btn'); if (b) b.style.opacity='0.3'; showToast(`${s.dataset.fbDomain}: "${l}"`); });
+    el.querySelectorAll('[data-sort]').forEach(b => { b.addEventListener('click', () => sortAndRenderBatch(b.dataset.sort)); });
+    el.addEventListener('click', (e) => { const l = e.target.closest('.crm-reanalyze'); if (!l) return; e.preventDefault(); el.classList.add('hidden'); const u = document.getElementById('url-input'); if (u) u.value = l.dataset.url; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelector('[data-tab="single"]')?.classList.add('active'); document.getElementById('input-single')?.classList.remove('hidden'); document.getElementById('input-batch')?.classList.add('hidden'); document.getElementById('input-scanner')?.classList.add('hidden'); window.scrollTo({top:0,behavior:'smooth'}); });
 }
 
-function exportBatchCSV(results) {
-    const headers = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','SEO','A11y','CMS','Design','BFSG','Score','Empfehlung','Gründe'];
-    const rows = results.map(r => [r.name,r.domain,r.url,r.type,r.rating,r.reviews,r.perf,r.seo,r.a11y,r.cms,r.designQuality||'',r.bfsgRisk||'',r.leadScore,r.recommendation||'',r.reasons]);
-    const csv = [headers,...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(';')).join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-    a.download = `karriaro-leads-${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
+function exportCSV(results) {
+    const h = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','SEO','A11y','CMS','Design','BFSG','Score','Empfehlung','Gründe'];
+    const rows = results.map(r => [r.name,r.domain,r.url,r.type,r.rating,r.reviews,r.perf||'',r.seo||'',r.a11y||'',r.cms||'',r.designQuality||'',r.bfsgRisk||'',r.leadScore||0,r.recommendation||'',r.reasons||'']);
+    const csv = [h,...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(';')).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'})); a.download = `karriaro-leads-${new Date().toISOString().slice(0,10)}.csv`; a.click();
 }
 
+function cleanup() { hideLoading(); document.getElementById('btn-batch').disabled = false; }
 function showLoading(t) { document.getElementById('loading-text').textContent = t; document.getElementById('loading').classList.remove('hidden'); }
 function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
 function showProgress(pct, t) { document.getElementById('progress').classList.remove('hidden'); document.getElementById('progress-fill').style.width = pct+'%'; document.getElementById('progress-text').textContent = t; }
