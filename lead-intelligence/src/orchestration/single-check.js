@@ -145,32 +145,32 @@ export async function runSingleCheck() {
             if (revenue) { revenue.yearlyLoss = 0; revenue.monthlyLoss = 0; revenue.roi = 0; }
         }
 
-        // ── Phase 6: Lokale Analyse-Module (synchron, schnell) ──
-        showLoading('⑥ Signal-Analyse (21 Module)...');
-        const wayback = await checkFreshness(url).catch(() => null);
+        // ── Phase 6: Lokale Analyse (synchron, kein await) ──
         const abTest = sv();
         const drift = cd(domain, result.leadScore);
-
+        const wayback = null; // Wayback ist zu langsam — wird nicht mehr blockierend aufgerufen
         const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
 
-        // ── Phase 7: Cloud Functions (parallel, optional) ──
-        const [socialProfiles, emailCheck, contactData, sitemapFreshness] = await Promise.all([
-            analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null),
-            checkEmailDeliverability(domain).catch(() => null),
-            enrichContact(url).catch(() => null),
-            checkSitemapFreshness(url).catch(() => null)
-        ]);
-
-        // Mockup nur bei starken Leads mit schlechtem Design (spart API-Kosten)
-        let mockupSuggestion = null;
-        if (result.leadScore >= 50 && screenshotAnalysis?.designQuality <= 5) {
-            mockupSuggestion = await generateMockupSuggestion(domain, companyProfile?.branche || '', localAnalysis.bfsgScore?.criticalFails?.map(f => f.name).join(', ') || '', screenshot).catch(() => null);
-        }
-
-        // Render
+        // ── SOFORT rendern — der User soll nicht länger warten ──
         hideLoading();
         document.getElementById('btn-analyze').disabled = false;
 
+        // Phase 7 läuft im Hintergrund — Ergebnisse werden NICHT blockierend geladen
+        // Timeout: Max 8 Sekunden pro Call, dann null
+        const withTimeout = (promise, ms = 8000) =>
+            Promise.race([promise, new Promise(r => setTimeout(() => r(null), ms))]);
+
+        const [socialProfiles, emailCheck, contactData, sitemapFreshness, mockupSuggestion] = await Promise.all([
+            withTimeout(analyzeSocialProfiles(url, footprint?.profileUrls || {}).catch(() => null)),
+            withTimeout(checkEmailDeliverability(domain).catch(() => null)),
+            withTimeout(enrichContact(url).catch(() => null)),
+            withTimeout(checkSitemapFreshness(url).catch(() => null)),
+            (result.leadScore >= 50 && screenshotAnalysis?.designQuality <= 5)
+                ? withTimeout(generateMockupSuggestion(domain, companyProfile?.branche || '', localAnalysis.bfsgScore?.criticalFails?.map(f => f.name).join(', ') || '', screenshot).catch(() => null), 15000)
+                : null
+        ]).catch(() => [null, null, null, null, null]);
+
+        // ── SOFORT rendern mit dem was wir haben ──
         state.lastResult = {
             url, ws, tech, place, competitors, footprint, result, revenue, screenshot,
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority,
