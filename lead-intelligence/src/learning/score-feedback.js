@@ -55,7 +55,7 @@ export function getCorrections() {
     return {
         corrections: data.corrections || {},
         sampleSize: data.entries?.length || 0,
-        isCalibrated: (data.entries?.length || 0) >= 10,
+        isCalibrated: (data.entries?.length || 0) >= 5,
         lastUpdated: data.lastUpdated
     };
 }
@@ -69,7 +69,7 @@ export function getCorrections() {
  * Ergebnis: Multiplikator pro Signal (0.5 = halb so stark, 1.5 = anderthalbfach)
  */
 function calculateCorrections(entries) {
-    if (entries.length < 5) return {};
+    if (entries.length < 3) return {}; // Schon nach 3 Feedbacks anfangen zu lernen
 
     // Signale die wir tracken
     const signalNames = [
@@ -83,7 +83,7 @@ function calculateCorrections(entries) {
 
     for (const signal of signalNames) {
         const withSignal = entries.filter(e => e.signals?.[signal]);
-        if (withSignal.length < 3) continue; // Zu wenig Daten
+        if (withSignal.length < 2) continue; // Schon ab 2 Beobachtungen lernen
 
         const tooHigh = withSignal.filter(e => e.feedback === 'too_high').length;
         const tooLow = withSignal.filter(e => e.feedback === 'too_low').length;
@@ -97,7 +97,9 @@ function calculateCorrections(entries) {
         // Multiplikator: 1.0 = keine Änderung
         // bias > 0 (oft "zu hoch") → Multiplikator < 1.0 (Signal weniger wichtig)
         // bias < 0 (oft "zu niedrig") → Multiplikator > 1.0 (Signal wichtiger)
-        const multiplier = Math.max(0.3, Math.min(2.0, 1.0 - bias * 0.5));
+        // Stärkere Korrekturen: ×0.1 bis ×3.0 (vorher ×0.3 bis ×2.0)
+        // bias × 0.8 statt × 0.5 → schnelleres Lernen
+        const multiplier = Math.max(0.1, Math.min(3.0, 1.0 - bias * 0.8));
 
         // Nur speichern wenn signifikant abweichend
         if (Math.abs(multiplier - 1.0) > 0.1) {

@@ -159,6 +159,16 @@ export function calculateShifts(ws, tech, place, competitors, revenue, footprint
         if (footprint.hasAnalytics) s.interest[0] += 1;
     }
 
+    // ── Shift-Caps: Verhindert unrealistisch hohe Shifts ──
+    // Interest +14 → Posterior 80% ist absurd für Cold Outreach
+    // Cap: Max +8 pro Richtung (mit Damping 0.5 → effektiv +4)
+    s.interest[0] = Math.min(8, s.interest[0]);
+    s.interest[1] = Math.min(6, s.interest[1]);
+    s.close[0] = Math.min(8, s.close[0]);
+    s.close[1] = Math.min(6, s.close[1]);
+    s.convo[0] = Math.min(6, s.convo[0]);
+    s.open[0] = Math.min(6, s.open[0]);
+
     // ── Feedback-Korrekturen anwenden (lernt aus deinen Bewertungen) ──
     return applyFeedbackCorrections(s);
 }

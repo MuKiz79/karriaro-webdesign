@@ -132,11 +132,23 @@ export async function runBatchSearch() {
         let bk = null;
         for (const bp of BAUKASTEN_URL) { if (bp.pattern.test(url)) { bk = bp; break; } }
 
-        // Priorität (höher = vielversprechender für uns)
+        // Priorität (höher = vielversprechender = schlechtere Website wahrscheinlicher)
         let prio = 0;
-        if (bk) prio += bk.prio;
-        if (reviews > 100) prio += 5; else if (reviews > 30) prio += 3; else if (reviews > 10) prio += 1;
+
+        // POSITIV: Zeichen dass die Website schlecht ist
+        if (bk) prio += bk.prio;                    // Baukasten in URL = starkes Signal
+        // Gutes Geschäft + vermutlich schlechte Website = Paradox-Lead
+        if (reviews > 100) prio += 4;
+        else if (reviews > 30) prio += 2;
+        else if (reviews > 10) prio += 1;
         if (p.rating >= 4.5 && reviews > 20) prio += 2;
+
+        // NEGATIV: Zeichen dass die Website wahrscheinlich gut ist
+        // Premium-Domain (.com, kurz, Brand-artig) = eher professionelle Website
+        const domainLen = domain.split('.')[0].length;
+        if (domainLen <= 8 && /\.com$/.test(domain)) prio -= 3; // Kurze .com = oft professionell
+        // Sehr viele Reviews ohne Baukasten = hat wahrscheinlich schon investiert
+        if (reviews > 500 && !bk) prio -= 2;
 
         candidates.push({ place: p, domain, url, reviews, rating: p.rating, bk, prio, name: p.displayName?.text || domain, type: p.primaryTypeDisplayName?.text || '' });
     }

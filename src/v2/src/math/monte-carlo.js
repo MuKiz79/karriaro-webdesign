@@ -93,10 +93,9 @@ export function runSimulation(stages, activationEa = 40, seasonFactor = 1.0, N =
 
     const bottleneck = [...stageResults].sort((a, b) => a.mean - b.mean)[0];
 
-    // Lead Score — EV-gewichtet (CR × DealSize / TimePerLead)
-    // Ein 3% CR Zahnarzt (1990€, 2.5h) = EV 23.88€/h
-    // Ein 3% CR Bäcker (990€, 1.5h) = EV 19.80€/h
-    // Logarithmische Skalierung auf 0-100
+    // Lead Score — logarithmische Skalierung auf 0-100
+    // Basis bleibt CR, aber runSimulation gibt auch CR zurück
+    // EV-Gewichtung passiert im lead-scorer.js (hat dealSize + timePerLead)
     const leadScore = Math.round(Math.min(100, Math.max(0,
         conversionRate <= 0 ? 0 :
         conversionRate < 0.01 ? conversionRate / 0.01 * 20 :

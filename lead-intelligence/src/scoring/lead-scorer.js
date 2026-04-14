@@ -100,6 +100,15 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
     // R0 aus Epidemie-Modul
     const r0 = epidemicResult?.R0 || 1.0;
 
+    // Open-Rate nach bestem Kanal boosten
+    // E-Mail Open: 27.7% (Snov.io) → Prior Beta(5,15) = 25% ✓
+    // Besuch: 80% → +6 Shift
+    // Instagram DM: 15% → -2 Shift
+    // Telefon: 55% → +4 Shift
+    const channelOpenBoost = { 'visit': 6, 'phone': 4, 'linkedin': 1, 'instagram': -1, 'email': 0 };
+    const bestChannel = branch.ch[0] || 'email';
+    shifts.open[0] += channelOpenBoost[bestChannel] || 0;
+
     // Stages mit Conjugate Beta Update bauen
     const stages = [
         { name: 'Erreichbarkeit', ab: conjugateUpdate(branch.r, shifts.reach[0] - shifts.reach[1]) },
@@ -191,9 +200,22 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
         ].map(v => Math.round(v * 1000) / 10)
     };
 
+    // EV-gewichteter Score: CR allein reicht nicht.
+    // 3% CR Zahnarzt (1990€, 2.5h) = EV +23€/h → Score soll höher sein
+    // 3% CR Friseur (990€, 1.5h) = EV -15€/h → Score soll niedriger sein
+    const evPerHour = kellyResult.expectedValue / Math.max(0.5, branch.tpl);
+    let evBoost = 0;
+    if (evPerHour > 20) evBoost = 8;      // Sehr profitabel
+    else if (evPerHour > 10) evBoost = 5;  // Profitabel
+    else if (evPerHour > 0) evBoost = 2;   // Marginal profitabel
+    else if (evPerHour < -10) evBoost = -5; // Verlustgeschäft
+    else if (evPerHour < 0) evBoost = -3;  // Leicht negativ
+
+    const adjustedScore = Math.max(0, Math.min(100, simResult.leadScore + evBoost));
+
     return {
-        leadScore: simResult.leadScore,
-        probability: simResult.leadScore,
+        leadScore: adjustedScore,
+        probability: adjustedScore,
         conversionRate: simResult.conversionRatePct,
         ci: simResult.ci,
         ciLow: simResult.ci.lower,
