@@ -35,6 +35,16 @@ const BAUKASTEN_URL = [
     { pattern: /\.wordpress\.com/i, name: 'WordPress.com', prio: 8 },
 ];
 
+// Bereits analysierte Domains (aus CRM + Feedback)
+function getAlreadyAnalyzed() {
+    const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
+    const feedback = JSON.parse(localStorage.getItem('karriaro_score_feedback') || '{"entries":[]}');
+    const domains = new Set();
+    for (const l of leads) if (l.domain) domains.add(l.domain);
+    for (const e of feedback.entries) if (e.domain) domains.add(e.domain);
+    return domains;
+}
+
 export async function runBatchSearch() {
     const query = document.getElementById('batch-query').value.trim();
     if (!query) return;
@@ -43,14 +53,66 @@ export async function runBatchSearch() {
     document.getElementById('btn-batch').disabled = true;
     const max = parseInt(document.getElementById('batch-max').value);
 
-    // ── Phase 1: Mehr Kandidaten holen ──
-    showLoading(`Suche "${query}" — sammle Kandidaten...`);
-    let places;
+    // ── Phase 1: Breite Suche (Hauptquery + Stadtteil-Varianten) ──
+    showLoading(`Suche "${query}" — sammle Kandidaten aus verschiedenen Quellen...`);
+
+    // Extrahiere Branche und Stadt aus der Query
+    const parts = query.trim().split(/\s+/);
+    const city = parts.length >= 2 ? parts.slice(1).join(' ') : '';
+    const branch = parts[0] || query;
+
+    // Stadtteil-Varianten generieren
+    const searchQueries = [query]; // Immer die Originalquery zuerst
+    if (city) {
+        // Bekannte Stadtteile für größere Städte
+        const STADTTEILE = {
+            'köln': ['Ehrenfeld', 'Nippes', 'Deutz', 'Sülz', 'Lindenthal', 'Mülheim', 'Porz', 'Kalk'],
+            'berlin': ['Kreuzberg', 'Neukölln', 'Prenzlauer Berg', 'Friedrichshain', 'Charlottenburg', 'Schöneberg', 'Mitte', 'Wedding'],
+            'münchen': ['Schwabing', 'Haidhausen', 'Sendling', 'Bogenhausen', 'Pasing', 'Maxvorstadt', 'Giesing'],
+            'hamburg': ['Altona', 'Eimsbüttel', 'Wandsbek', 'Barmbek', 'Eppendorf', 'Ottensen', 'Winterhude'],
+            'frankfurt': ['Sachsenhausen', 'Bornheim', 'Nordend', 'Bockenheim', 'Westend', 'Höchst'],
+            'stuttgart': ['Bad Cannstatt', 'Vaihingen', 'Feuerbach', 'Degerloch', 'Zuffenhausen'],
+            'düsseldorf': ['Bilk', 'Flingern', 'Pempelfort', 'Oberkassel', 'Unterbilk', 'Derendorf'],
+        };
+        const cityLower = city.toLowerCase();
+        const stadtteile = STADTTEILE[cityLower] || [];
+        // Füge 3-4 zufällige Stadtteile hinzu
+        const shuffled = stadtteile.sort(() => Math.random() - 0.5).slice(0, 4);
+        for (const st of shuffled) {
+            searchQueries.push(`${branch} ${city} ${st}`);
+        }
+    }
+
+    // Parallele Suchen
+    let allPlaces = [];
     try {
-        const data = await searchPlaces(query, Math.min(max * 2, 20));
-        places = (data?.places || []).filter(p => p.websiteUri && p.businessStatus !== 'CLOSED_PERMANENTLY');
+        const results = await Promise.all(
+            searchQueries.map(q => searchPlaces(q, 10).catch(() => ({ places: [] })))
+        );
+        for (const r of results) {
+            if (r?.places) allPlaces.push(...r.places);
+        }
     } catch (e) { cleanup(); showError('Suche fehlgeschlagen.'); return; }
-    if (!places.length) { cleanup(); showError('Keine Unternehmen mit Website gefunden.'); return; }
+
+    // Deduplizieren (nach Domain)
+    const seenDomains = new Set();
+    const alreadyAnalyzed = getAlreadyAnalyzed();
+    let skippedDuplicates = 0;
+    let skippedAlreadyKnown = 0;
+
+    const places = [];
+    for (const p of allPlaces) {
+        if (!p.websiteUri || p.businessStatus === 'CLOSED_PERMANENTLY') continue;
+        try {
+            const domain = new URL(p.websiteUri).hostname.replace('www.', '');
+            if (seenDomains.has(domain)) { skippedDuplicates++; continue; }
+            seenDomains.add(domain);
+            if (alreadyAnalyzed.has(domain)) { skippedAlreadyKnown++; continue; }
+            places.push(p);
+        } catch { continue; }
+    }
+
+    if (!places.length) { cleanup(); showError(`${allPlaces.length} Ergebnisse, aber alle bereits bekannt oder Duplikate.`); return; }
 
     // ── Phase 2: Schnellfilter (0 API-Calls) ──
     showLoading(`${places.length} gefunden — filtere Ketten & Konkurrenz...`);
@@ -139,7 +201,15 @@ export async function runBatchSearch() {
 
     state._batchResults = results;
     state._batchQuery = query;
-    state._batchStats = { totalFound: places.length, preFiltered: filtered.length, analyzed: toAnalyze.length };
+    state._batchStats = {
+        totalFound: allPlaces.length,
+        unique: places.length + skippedAlreadyKnown,
+        skippedDuplicates,
+        skippedAlreadyKnown,
+        preFiltered: filtered.length,
+        analyzed: toAnalyze.length,
+        searchQueries: searchQueries.length
+    };
     sortAndRenderBatch('recommendation');
 }
 
@@ -164,7 +234,7 @@ function renderBatchResults(query, results, currentSort) {
     const sb = (key, label) => `<button class="crm-filter-btn${currentSort === key ? ' active' : ''}" data-sort="${key}">${label}</button>`;
 
     let html = `<div class="crm-header"><h2 class="crm-title">${analyzed.length} Leads${hot ? ` · <span style="color:var(--green)">${hot} heiß</span>` : ''}${warm ? ` · <span style="color:var(--accent)">${warm} warm</span>` : ''}</h2><div class="crm-actions-top"><button class="crm-btn-export" id="btn-export-csv">CSV Export</button><button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">${analyzed.length} speichern</button></div></div>`;
-    if (stats.totalFound) html += `<div class="metric-desc" style="margin-bottom:12px">${stats.totalFound} gefunden → ${stats.preFiltered} vorab gefiltert → <strong>${stats.analyzed} analysiert</strong></div>`;
+    if (stats.totalFound) html += `<div class="metric-desc" style="margin-bottom:12px">${stats.searchQueries || 1} Suche${stats.searchQueries > 1 ? 'n' : ''} → ${stats.totalFound} Treffer → ${stats.skippedDuplicates || 0} Duplikate → ${stats.skippedAlreadyKnown || 0} bereits bekannt → ${stats.preFiltered} Ketten/Konkurrenz → <strong>${stats.analyzed} analysiert</strong></div>`;
     html += `<div class="crm-filters" style="margin-bottom:12px"><span class="metric-desc" style="margin-right:8px">Sortierung:</span>${sb('recommendation','Empfehlung')}${sb('score','Score')}${sb('design','Design')}${sb('perf','Perf.')}${sb('reviews','Bewertungen')}</div>`;
     html += `<div class="card anim-in" style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px"><div><div class="section-label">P(min. 1 Conversion)</div><div class="revenue-big" style="color:var(--green)">${portfolio.atLeastOne}%</div></div><div><div class="section-label">Erwartete Conversions</div><div class="revenue-big">${portfolio.expectedConversions}</div></div></div>`;
 
