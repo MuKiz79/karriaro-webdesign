@@ -29,10 +29,10 @@ export async function runScanner() {
     document.getElementById('btn-scanner').disabled = true;
 
     const results = [];
-    showProgress(0, `Scanne 0/${BRANCHES.length}...`);
+    showProgress(0, `Bitte diesen Tab offen lassen — Scan läuft...`);
 
-    // Phase 1: Alle Places-Suchen parallel (schnell, nur API-Calls)
-    showProgress(10, 'Suche Unternehmen in allen Branchen...');
+    // Phase 1: Alle Places-Suchen parallel
+    showProgress(10, 'Suche Unternehmen in allen Branchen (Tab offen lassen!)...');
     const placeResults = await Promise.all(
         BRANCHES.map(b => searchPlaces(`${b.q} ${city}`, 3).catch(() => null))
     );
@@ -71,8 +71,8 @@ export async function runScanner() {
         const batchResults = await Promise.all(batchPromises);
         results.push(...batchResults);
 
-        // Kurzer Delay zwischen Batches (API-Rate-Limit)
-        if (i + BATCH_SIZE < BRANCHES.length && !state.aborted) await delay(500);
+        // Kein delay — fetch ist schon sequentiell genug
+        // delay(500) wurde entfernt weil Browser Background-Tabs auf 1000ms+ drosseln
     }
 
     hideProgress();
@@ -81,6 +81,8 @@ export async function runScanner() {
 
     results.sort((a,b) => b.avgScore - a.avgScore);
     renderScannerResults(city, results);
+    // Benachrichtige den User wenn der Tab im Hintergrund war
+    notifyDone(`Scanner fertig: ${results.filter(r => r.avgScore > 0).length} Branchen mit Potenzial`);
 }
 
 function renderScannerResults(city, results) {
@@ -132,3 +134,16 @@ function showProgress(pct, t) { document.getElementById('progress').classList.re
 function hideProgress() { document.getElementById('progress').classList.add('hidden'); }
 function showError(t) { document.getElementById('error-text').textContent=t; document.getElementById('error').classList.remove('hidden'); }
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function notifyDone(msg) {
+    // Titel blinken lassen
+    const origTitle = document.title;
+    document.title = '✅ ' + msg;
+    setTimeout(() => { document.title = origTitle; }, 5000);
+    // Browser-Notification wenn erlaubt
+    if (Notification?.permission === 'granted') {
+        new Notification('Lead Intelligence', { body: msg });
+    } else if (Notification?.permission !== 'denied') {
+        Notification.requestPermission();
+    }
+}

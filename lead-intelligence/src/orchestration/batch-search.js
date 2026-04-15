@@ -66,7 +66,7 @@ export async function runBatchSearch() {
     // ══════════════════════════════════════
     // PHASE 1: Kandidaten sammeln (parallel, alle Stadtteile)
     // ══════════════════════════════════════
-    showLoading('Sammle Kandidaten aus verschiedenen Stadtteilen...');
+    showLoading('Sammle Kandidaten (bitte Tab offen lassen)...');
 
     const parts = query.trim().split(/\s+/);
     const city = parts.length >= 2 ? parts.slice(1).join(' ') : '';
@@ -190,6 +190,14 @@ export async function runBatchSearch() {
     state._batchStats = { total: allPlaces.length, unique: seen.size, filtered: filteredCount, scanned: toScan.length };
 
     renderProspectingResults(query, results);
+
+    // Benachrichtige wenn Tab im Hintergrund
+    const origTitle = document.title;
+    document.title = `✅ ${results.length} Leads gefunden`;
+    setTimeout(() => { document.title = origTitle; }, 5000);
+    if (Notification?.permission === 'granted') {
+        new Notification('Lead Intelligence', { body: `${results.length} Leads für "${query}" gefunden` });
+    }
 }
 
 // ══════════════════════════════════════
