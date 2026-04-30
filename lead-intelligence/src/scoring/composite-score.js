@@ -1,12 +1,19 @@
 /**
- * #7 Composite Score — Fit × Intent × Timing
+ * #7 Aufmerksamkeits-Index — Fit × Intent × Timing
  *
- * Statt linearer Addition: Drei Dimensionen die multipliziert werden.
- * Fit = Passt der Lead zu uns? (Branche, Größe, Budget)
- * Intent = Will der Lead eine neue Website? (Signale, Schmerz)
- * Timing = Ist JETZT der richtige Zeitpunkt? (Trigger Events)
+ * WICHTIG: Das Ergebnis ist KEINE Conversion-Wahrscheinlichkeit.
+ * Die Inputs (fit, intent, timing) sind hand-vergebene Punkte auf einer
+ * 0..100-Skala — keine Likelihoods. Die multiplikative Aggregation als
+ * gewichtetes geometrisches Mittel (Exponenten 0.3 + 0.5 + 0.2 = 1)
+ * dient nur dazu, den Score zu killen, sobald eine Dimension nahe Null
+ * ist ("Engpass-Logik"). Es ist ein Aufmerksamkeits-Index für die
+ * Priorisierung, kein statistischer Schätzer.
  *
- * Composite = Fit^0.3 × Intent^0.5 × Timing^0.2
+ * Empirisch validiert wird das Mapping in learning/calibration.js
+ * (Reliability Diagram). Wenn dort der ECE auseinandergeht, sind die
+ * +/- Punkte hier neu zu kalibrieren.
+ *
+ * attentionIndex = Fit^0.3 × Intent^0.5 × Timing^0.2 × 100
  */
 
 /**
@@ -100,9 +107,9 @@ export function calculateCompositeScore(params) {
 
     timing = Math.max(0, Math.min(100, timing));
 
-    // ── COMPOSITE SCORE ──
+    // ── AUFMERKSAMKEITS-INDEX ──
     // Gewichtete geometrische Mittelung: Fit^0.3 × Intent^0.5 × Timing^0.2
-    // Normalisiert auf 0-100
+    // Normalisiert auf 0-100. KEINE Conversion-Wahrscheinlichkeit.
     const composite = Math.round(
         Math.pow(fit / 100, 0.3) *
         Math.pow(intent / 100, 0.5) *
@@ -119,12 +126,14 @@ export function calculateCompositeScore(params) {
     const bottleneck = dims[0];
 
     return {
-        composite,
+        composite,            // bestehender Schlüssel — Aufmerksamkeits-Index 0..100
+        attentionIndex: composite, // expliziterer Alias
         fit,
         intent,
         timing,
         bottleneck,
         dimensions: { fit, intent, timing },
+        isProbability: false, // explizit: das ist KEINE Wahrscheinlichkeit
         label: composite >= 65 ? 'Exzellenter Lead — Fit, Intent und Timing stimmen'
             : composite >= 45 ? 'Guter Lead — kontaktieren'
             : composite >= 30 ? 'Möglich — Engpass: ' + bottleneck.name

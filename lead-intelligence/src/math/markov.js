@@ -1,11 +1,14 @@
 /**
- * Markov Decision Process — Sales Funnel als absorbierende Markov-Kette
+ * "Markov"-Kette — DEPRECATED, nur noch für Tests + Backward-Compat.
+ *
+ * Ohne Rückfälle und ohne Schleifen ist diese Kette mathematisch keine
+ * Markov-Kette mit echtem Mehrwert, sondern ein sequenzielles Bernoulli-
+ * Funnel. Neue Aufrufer sollen math/funnel-chain.js nutzen, das die
+ * gleiche Conversion-Rate analytisch (ohne MC-Varianz) liefert.
  *
  * 7 Zustände: Kalt → Kontaktiert → Interessiert → Gespräch → Angebot → Kunde → Verloren
  *
- * FIX: Ea wirkt als DÄMPFUNG der Forward-Rate, nicht als Rückfall-Pfad.
- * Höhere Ea → Forward-Rate ×(1-damping) → niedrigere Conversion.
- * Kein Rückfall-Zustand mehr — Lead geht entweder vorwärts oder ist verloren.
+ * Ea wirkt als Dämpfung der Forward-Rate, nicht als Rückfall-Pfad.
  */
 
 export const STATE_NAMES = ['Kalt', 'Kontaktiert', 'Interessiert', 'Im Gespräch', 'Angebot', 'Kunde', 'Verloren'];

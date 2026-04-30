@@ -1,17 +1,21 @@
 /**
- * Monte-Carlo Hauptberechnung — FIX I7: Einheitliches Markov-Modell
+ * Monte-Carlo Hauptberechnung.
  *
- * FIXES:
- * I1: Keine Momentum-Verzerrung der Beta-Verteilung
- *     → Stufen-Korrelation über die Markov-Rückfallraten (nicht Beta-Parameter)
- * I2: Wilson CI aus binären Markov-Ergebnissen
- * I3: stagePassRates nur conditional (für erreichte Stufen)
- * I7: Markov IST der Funnel — eine einzige Conversion-Rate
+ * NEU (Audit 2026-04-30): Die alte "Markov"-Schicht war forward-only und
+ * mathematisch identisch zu einem sequenziellen Bernoulli-Funnel. Wir
+ * delegieren jetzt an math/funnel-chain.js — selbe Semantik, weniger
+ * MC-Varianz, ehrliche conditionalPassRate. Diese Datei bleibt als
+ * Aufrufer-API stehen (Tests + lead-scorer importieren von hier).
+ *
+ * FIXES (alt):
+ * I2: Wilson CI aus N Beta-Samples (jetzt: aus runFunnelSimulation)
+ * I7: Eine einzige Conversion-Rate aus Bernoulli-Produkt
  */
 
 import { sampleBeta, wilsonCI, percentile } from './sampling.js';
 import { conjugateUpdate, betaMean } from './beta-update.js';
 import { buildTransitionMatrix, monteCarloMarkov } from './markov.js';
+import { runFunnelSimulation } from './funnel-chain.js';
 
 /**
  * Hauptberechnung: Sampelt Beta-Verteilungen → baut Markov-Matrix → simuliert
@@ -23,104 +27,7 @@ import { buildTransitionMatrix, monteCarloMarkov } from './markov.js';
  * @returns {Object} Vollständiges Ergebnis
  */
 export function runSimulation(stages, activationEa = 40, seasonFactor = 1.0, N = 2000) {
-    // Für jede MC-Iteration: Sample Stufen-Raten, baue Matrix, simuliere
-    let totalConverted = 0;
-    const allSteps = [];
-    const convSteps = [];
-
-    // I3 FIX: Conditional Pass-Rates (nur für Leads die die Stufe erreicht haben)
-    const stageReachedCount = stages.map(() => 0);
-    const stagePassedCount = stages.map(() => 0);
-
-    // Sammle Stufen-Raten-Samples für Unsicherheitsband
-    const stageSamples = stages.map(() => []);
-
-    for (let i = 0; i < N; i++) {
-        // Sample Stufen-Wahrscheinlichkeiten aus Beta-Posteriors
-        const rates = stages.map((s, idx) => {
-            const p = sampleBeta(s.alpha, s.beta);
-            stageSamples[idx].push(p);
-            return p;
-        });
-
-        // Baue Transition-Matrix mit gesampelten Raten
-        const T = buildTransitionMatrix(rates, activationEa, seasonFactor);
-
-        // Fix 6+12: K=5 Markov-Simulationen pro Rate-Sample (reduziert MC-Varianz um √5)
-        const K = 5;
-        const sim = monteCarloMarkov(T, K);
-
-        totalConverted += sim.converted;
-        if (sim.converted > 0) convSteps.push(sim.medianSteps || 1);
-        allSteps.push(sim.avgSteps);
-
-        // FIX K4: Conditional Pass-Rate aus MC-Ergebnissen ableiten
-        // Approximation über Stufen-Samples: Wenn Rate für Stufe i > Median,
-        // zählt die Stufe als "reached AND passed" für diesen Sample
-        for (let s = 0; s < stages.length; s++) {
-            // Jede Stufe wird immer "reached" (im Markov fließt alles durch)
-            stageReachedCount[s]++;
-            // "Passed" wenn die gesampelte Rate über dem Prior-Mean liegt
-            const priorMean = stages[s].alpha / (stages[s].alpha + stages[s].beta);
-            if (rates[s] >= priorMean * 0.8) stagePassedCount[s]++;
-        }
-    }
-
-    // I7 FIX: Eine einzige Conversion-Rate aus Markov
-    // Fix 12: totalConverted zählt über N*K Simulationen
-    const totalSimulations = N * 5;  // K=5
-    const conversionRate = totalConverted / totalSimulations;
-
-    // I2 FIX: Wilson Score CI aus binären Ergebnissen
-    const ci = wilsonCI(totalConverted, totalSimulations);
-
-    // Stufen-Ergebnisse (I3: conditional rates)
-    const stageResults = stages.map((s, idx) => {
-        const samples = stageSamples[idx];
-        const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
-        return {
-            name: s.name,
-            mean: Math.round(mean * 1000) / 10,
-            alpha: s.alpha,
-            beta: s.beta,
-            ci5: Math.round(percentile(samples, 5) * 1000) / 10,
-            ci95: Math.round(percentile(samples, 95) * 1000) / 10,
-            conditionalPassRate: stageReachedCount[idx] > 0
-                ? Math.round((stagePassedCount[idx] / stageReachedCount[idx]) * 1000) / 10
-                : null
-        };
-    });
-
-    const bottleneck = [...stageResults].sort((a, b) => a.mean - b.mean)[0];
-
-    // Lead Score — logarithmische Skalierung auf 0-100
-    // Basis bleibt CR, aber runSimulation gibt auch CR zurück
-    // EV-Gewichtung passiert im lead-scorer.js (hat dealSize + timePerLead)
-    const leadScore = Math.round(Math.min(100, Math.max(0,
-        conversionRate <= 0 ? 0 :
-        conversionRate < 0.01 ? conversionRate / 0.01 * 20 :
-        conversionRate < 0.03 ? 20 + (conversionRate - 0.01) / 0.02 * 30 :
-        conversionRate < 0.06 ? 50 + (conversionRate - 0.03) / 0.03 * 25 :
-        75 + (conversionRate - 0.06) / 0.06 * 25
-    )));
-
-    // Median Steps to Conversion
-    const medianSteps = convSteps.length > 0
-        ? [...convSteps].sort((a, b) => a - b)[Math.floor(convSteps.length / 2)]
-        : null;
-
-    return {
-        leadScore,
-        conversionRate,
-        conversionRatePct: Math.round(conversionRate * 1000) / 10,
-        ci: { lower: Math.round(ci.lower * 1000) / 10, upper: Math.round(ci.upper * 1000) / 10 },
-        ciMargin: Math.round((ci.upper - ci.lower) / 2 * 1000) / 10,
-        stageResults,
-        bottleneck,
-        medianSteps,
-        converted: totalConverted,
-        N
-    };
+    return runFunnelSimulation(stages, activationEa, seasonFactor, N);
 }
 
 /**

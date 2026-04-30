@@ -20,6 +20,8 @@ import { getBranchPrior, SEASONALITY, CHANNELS } from '../priors/branch-priors.j
 import { calculateShifts } from '../signals/shift-calculator.js';
 import { clamp } from '../math/sampling.js';
 import { calculateActivation } from '../analysis/activation.js';
+import { logScore } from '../learning/score-distribution.js';
+import { getBranchMultiplier } from '../learning/prior-update.js';
 
 /**
  * Empfiehlt naechste Aktion basierend auf dem Bottleneck
@@ -211,11 +213,28 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
     else if (evPerHour < -10) evBoost = -5; // Verlustgeschäft
     else if (evPerHour < 0) evBoost = -3;  // Leicht negativ
 
-    const adjustedScore = Math.max(0, Math.min(100, simResult.leadScore + evBoost));
+    // Posterior-Update aus echten Outcomes: skaliert die End-CR der Branche.
+    // Wirkt nur wenn n>=20 Outcomes für die Branche existieren — sonst 1.0.
+    const branchMultiplier = (() => {
+        try { return getBranchMultiplier(type); }
+        catch { return 1.0; }
+    })();
+    const learnedConversionRate = simResult.conversionRate * branchMultiplier;
+    const learnedScore = Math.round(Math.min(100, Math.max(0,
+        simResult.leadScore * Math.sqrt(branchMultiplier) // sqrt dämpft den Score-Effekt
+    )));
+
+    const adjustedScore = Math.max(0, Math.min(100, learnedScore + evBoost));
+
+    // Score-Inflation-Tracker (best effort — Tests / SSR brechen das nicht).
+    try { logScore(adjustedScore, type); } catch {}
+
 
     return {
         leadScore: adjustedScore,
         probability: adjustedScore,
+        branchMultiplier: Math.round(branchMultiplier * 100) / 100,
+        learnedConversionRate: Math.round(learnedConversionRate * 1000) / 10,
         conversionRate: simResult.conversionRatePct,
         ci: simResult.ci,
         ciLow: simResult.ci.lower,

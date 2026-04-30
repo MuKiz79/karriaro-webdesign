@@ -1,10 +1,18 @@
 /**
- * #12 Feedback Loop — Trackt echte Conversions um das Modell zu personalisieren
+ * #12 Feedback Loop — Trackt echte Conversions, ermöglicht echte
+ * Kalibrierung & Prior-Update.
  *
- * Speichert: Score → tatsächliches Outcome (Kunde ja/nein)
- * Berechnet: Persönliche Conversion-Rate nach Score-Bucket
- * Kalibriert: Über Zeit werden die Priors angepasst
+ * Diese Datei ist nur die Datenschicht (record/load). Die statistische
+ * Auswertung (Brier, Log-Loss, Reliability Diagram, ECE) liegt in
+ * learning/calibration.js. Prior-Update pro Branche in
+ * learning/prior-update.js. Drift-Detection in learning/drift-monitor.js.
+ *
+ * Output von getCalibration() / getScoreInsight() bekommt jetzt zusätz-
+ * lich Wilson-CI auf jeden Score-Bucket — Punkt-Schätzer ohne CI ist
+ * irreführend, sobald n klein ist.
  */
+
+import { wilsonCI } from '../math/sampling.js';
 
 const STORAGE_KEY = 'karriaro_feedback';
 
@@ -14,7 +22,7 @@ const STORAGE_KEY = 'karriaro_feedback';
  * @param {number} score - Lead-Score bei Analyse
  * @param {string} outcome - 'kunde' | 'verloren' | 'kein_kontakt'
  */
-export function recordOutcome(domain, score, outcome) {
+export function recordOutcome(domain, score, outcome, branch = null) {
     const data = loadFeedback();
     const bucket = scoreBucket(score);
 
@@ -25,10 +33,13 @@ export function recordOutcome(domain, score, outcome) {
         score,
         bucket,
         outcome,
+        branch: branch || null,
         timestamp: Date.now()
     };
 
     if (idx >= 0) {
+        // Behalte den älteren Branch, falls neu nicht gesetzt
+        entry.branch = entry.branch || data.entries[idx].branch || null;
         data.entries[idx] = entry;
     } else {
         data.entries.push(entry);
@@ -64,11 +75,17 @@ export function getCalibration() {
     const calibration = {};
     for (const [bucket, stats] of Object.entries(buckets)) {
         const rate = stats.total > 0 ? stats.converted / stats.total : 0;
+        const ci = wilsonCI(stats.converted, stats.total);
         calibration[bucket] = {
             conversionRate: Math.round(rate * 100),
             total: stats.total,
             converted: stats.converted,
-            avgScore: Math.round(stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length)
+            avgScore: Math.round(stats.scores.reduce((a, b) => a + b, 0) / stats.scores.length),
+            ci: {
+                lower: Math.round(ci.lower * 1000) / 10,
+                upper: Math.round(ci.upper * 1000) / 10
+            },
+            ciWidth: Math.round((ci.upper - ci.lower) * 1000) / 10
         };
     }
 
@@ -105,7 +122,10 @@ export function getScoreInsight(score) {
     return {
         historicalRate: bucketData.conversionRate,
         sampleSize: bucketData.total,
-        message: `Leads mit Score ${bucket} konvertieren bei dir zu ${bucketData.conversionRate}% (n=${bucketData.total})`
+        ci: bucketData.ci,
+        message: bucketData.ci
+            ? `Score ${bucket}: ${bucketData.conversionRate}% (95% CI: ${bucketData.ci.lower}–${bucketData.ci.upper}%, n=${bucketData.total})`
+            : `Leads mit Score ${bucket} konvertieren bei dir zu ${bucketData.conversionRate}% (n=${bucketData.total})`
     };
 }
 

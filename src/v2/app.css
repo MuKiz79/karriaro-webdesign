@@ -1530,6 +1530,96 @@ nav {
 }
 
 /* ══════════════════════════════════════
+   Statistik-Panel (Calibration / Drift / Inflation)
+   ══════════════════════════════════════ */
+.stat-section {
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.stat-card {
+    padding: 20px;
+}
+.stat-subtitle {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 16px 0 8px;
+}
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.stat-cell {
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+}
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 4px 0 2px;
+    font-variant-numeric: tabular-nums;
+}
+.stat-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.3;
+}
+.stat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+}
+.stat-table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 6px 8px;
+}
+.stat-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.stat-verdict {
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+.stat-verdict-line {
+    margin-top: 8px;
+    font-size: 0.85rem;
+}
+.stat-flag {
+    font-size: 0.85rem;
+    margin: 8px 0 12px;
+    font-weight: 500;
+}
+.stat-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+.stat-bar-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+/* ══════════════════════════════════════
    Responsive — Mobile First
    ══════════════════════════════════════ */
 

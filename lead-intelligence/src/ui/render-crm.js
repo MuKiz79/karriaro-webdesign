@@ -7,6 +7,7 @@ import { recordOutcome, getCalibration } from '../learning/feedback-loop.js';
 import { calculateStats } from '../crm/stats.js';
 import { getStaleLeads } from '../crm/rescan.js';
 import { getFeedbackStats } from '../learning/score-feedback.js';
+import { renderStatisticsPanel } from './render-statistics.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
 const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
@@ -67,10 +68,17 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     html += `<div class="crm-header">
         <h2 class="crm-title">Lead-CRM</h2>
         <div class="crm-actions-top">
+            <button class="crm-btn-export" data-action="toggleStats">Wissenschaft</button>
             <button class="crm-btn-export" data-action="export">CSV Export</button>
             <button class="crm-btn-export crm-btn-danger" data-action="deleteAll">Alle löschen</button>
         </div>
     </div>`;
+
+    // ── Statistik-Panel (toggle, default geschlossen) ──
+    const showStats = el.dataset.showStats === 'true';
+    if (showStats) {
+        html += renderStatisticsPanel();
+    }
 
     // ── Pipeline-Visualisierung ──
     const pipeStages = ['neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde'];
@@ -144,7 +152,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                 <div class="crm-lead-bottom">
                     <input type="text" class="crm-notes-input" value="${(l.notes || '').replace(/"/g, '&quot;')}" placeholder="Notiz hinzufügen..." data-lead-id="${l.id}" data-action="notes">
                     ${l.expectedValue ? `<span class="crm-lead-ev">EV: ${l.expectedValue}€</span>` : ''}
-                    ${l.status === 'angebot' || l.status === 'interessiert' ? `<button class="crm-btn-outcome crm-btn-won" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-outcome="kunde" title="Kunde geworden">✓ Gewonnen</button><button class="crm-btn-outcome crm-btn-lost" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-outcome="verloren" title="Lead verloren">✗ Verloren</button>` : ''}
+                    ${l.status === 'angebot' || l.status === 'interessiert' ? `<button class="crm-btn-outcome crm-btn-won" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-branch="${l.type || ''}" data-outcome="kunde" title="Kunde geworden">✓ Gewonnen</button><button class="crm-btn-outcome crm-btn-lost" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-branch="${l.type || ''}" data-outcome="verloren" title="Lead verloren">✗ Verloren</button>` : ''}
                 </div>
             </div>`;
         }
@@ -297,18 +305,19 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, { signal });
 
-    // Outcome-Tracking (Feedback Loop)
+    // Outcome-Tracking (Feedback Loop) — Branch wird mit gespeichert für
+    // Calibration / Drift-Monitor / Prior-Update.
     el.addEventListener('click', async (e) => {
         const btn = e.target.closest('[data-outcome]');
         if (!btn) return;
-        const { leadId, domain, score, outcome } = btn.dataset;
-        recordOutcome(domain, parseInt(score), outcome);
+        const { leadId, domain, score, outcome, branch } = btn.dataset;
+        recordOutcome(domain, parseInt(score), outcome, branch || null);
         await updateLead(leadId, { status: outcome });
         showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : 'Als verloren markiert.');
         renderCRM(filter, searchQuery);
     }, { signal });
 
-    // CSV Export + Alle löschen
+    // CSV Export + Alle löschen + Wissenschafts-Toggle
     el.addEventListener('click', async (e) => {
         if (e.target.dataset.action === 'export') {
             exportCSV(filtered.length > 0 ? filtered : leads);
@@ -320,6 +329,10 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             await deleteAllLeads();
             showToast('Alle Leads gelöscht');
             renderCRM();
+        }
+        if (e.target.dataset.action === 'toggleStats') {
+            el.dataset.showStats = el.dataset.showStats === 'true' ? 'false' : 'true';
+            renderCRM(filter, searchQuery);
         }
     }, { signal });
 }
