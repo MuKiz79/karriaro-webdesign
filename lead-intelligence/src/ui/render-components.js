@@ -15,6 +15,8 @@ import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
+import { buildOutreachPack } from '../strategy/outreach.js';
+import { analyzeTechAge } from '../analysis/tech-age.js';
 import { saveSnapshot } from '../crm/rescan.js';
 import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
 import { saveFeedback, extractSignals, getFeedbackStats, SKIP_REASONS } from '../learning/score-feedback.js';
@@ -443,6 +445,45 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         return;
     }
 
+    // ── Tech-Alter Karte (prominent ganz oben) ──
+    const techAge = analyzeTechAge(tech, data.wayback || {});
+    {
+        const sevColor = techAge.severity >= 4 ? 'var(--red)'
+            : techAge.severity >= 3 ? 'var(--orange)'
+            : techAge.severity >= 2 ? 'var(--accent)' : 'var(--green)';
+        const since = techAge.firstSeen ? `seit ${techAge.firstSeen.slice(0, 4)}` : '';
+        const lastChanged = techAge.lastChanged
+            ? `letzte Änderung ${techAge.lastChanged.slice(0, 7)}`
+            : '';
+        html += `<div class="card tech-age-card anim-in" style="border-left:3px solid ${sevColor}">
+            <div class="section-label" style="color:${sevColor}">${techAge.headline}</div>
+            <div class="tech-age-grid">
+                <div class="tech-age-cell">
+                    <div class="tech-age-label">CMS / Tech</div>
+                    <div class="tech-age-value">${techAge.cms || '—'}${techAge.majorVersion ? ' ' + techAge.majorVersion + '.x' : ''}</div>
+                    <div class="tech-age-hint">${techAge.cmsReleaseYear ? `Major-Release ${techAge.cmsReleaseYear}` : (techAge.isBaukasten ? 'Baukasten-System' : '')}</div>
+                </div>
+                <div class="tech-age-cell">
+                    <div class="tech-age-label">Domain online</div>
+                    <div class="tech-age-value">${techAge.domainAgeYears ? techAge.domainAgeYears + ' J.' : '—'}</div>
+                    <div class="tech-age-hint">${since}</div>
+                </div>
+                <div class="tech-age-cell">
+                    <div class="tech-age-label">Aktualisierungs-Stand</div>
+                    <div class="tech-age-value">${techAge.yearsSinceLastChange !== null ? `vor ${techAge.yearsSinceLastChange.toFixed(1)} J.` : '—'}</div>
+                    <div class="tech-age-hint">${lastChanged}</div>
+                </div>
+                <div class="tech-age-cell">
+                    <div class="tech-age-label">EOL-Status</div>
+                    <div class="tech-age-value" style="color:${techAge.cmsEolYear ? 'var(--red)' : 'var(--muted)'}">${techAge.cmsEolYear ? `seit ${techAge.cmsEolYear}` : '—'}</div>
+                    <div class="tech-age-hint">${techAge.cmsEolYear ? 'keine Sicherheitsupdates' : ''}</div>
+                </div>
+            </div>
+            <p class="tech-age-verdict">${techAge.composite}</p>
+            ${techAge.pitchArg ? `<p class="tech-age-pitch">💬 <em>${techAge.pitchArg}</em></p>` : ''}
+        </div>`;
+    }
+
     // Screenshot
     if (data.screenshot) {
         html += `<div class="card anim-in" style="text-align:center;padding:24px"><div class="phone-frame"><img src="${data.screenshot}" alt="Mobile Screenshot"></div><div class="phone-caption">So sieht die Website auf dem Smartphone aus</div></div>`;
@@ -509,21 +550,88 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
     if (data.drift?.drifted) {
         actionsExtra += `<div class="card card-alert anim-in"><div style="font-size:13px;font-weight:600;color:var(--orange)">Score verändert: ${data.drift.previousScore} → ${r.leadScore}</div></div>`;
     }
-    // Personalisierte E-Mail generieren (#2)
+    // Legacy-E-Mail (für CRM-Save-Hook und Fallback wenn Outreach-Pack nicht verfügbar)
     const email = generatePersonalEmail(data);
-    actionsExtra += `<div class="pitch-box anim-in">
-        <h3>Personalisierte E-Mail (kopierbar)</h3>
-        <div class="metric-desc" style="margin-bottom:8px">An: ${email.to} · Betreff: ${email.subject}</div>
-        <p>${email.body.replace(/\n/g, '<br>')}</p>
-        <div style="display:flex;gap:8px;margin-top:12px">
-            <button class="btn-copy-large" id="btn-copy-email">E-Mail kopieren</button>
-            <a href="mailto:${email.to}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(email.body)}" class="btn-copy-large" style="text-decoration:none;text-align:center">In E-Mail-App öffnen</a>
-        </div>
-    </div>`;
+
+    // ── Outreach-Paket (Tech-Alter + Konkurrenz + BFSG + Mockup → E-Mail) ──
+    const pack = buildOutreachPack(data);
+    if (pack.available) {
+        const variant = pack.primary;
+        const argsList = pack.allArgs.slice(0, 5).map(a =>
+            `<li><strong>${a.short}</strong> — ${a.text}</li>`
+        ).join('');
+        const competitorsList = pack.competitors.length > 0
+            ? `<div class="outreach-block"><div class="outreach-block-label">Konkurrenz-Spiegel</div>
+                ${pack.competitors.map(c => `<div class="outreach-comp">${c.name} · ★${c.rating} (${c.reviews} Bewertungen)${c.website ? ` · <a href="${c.website}" target="_blank" rel="noopener">site</a>` : ''}</div>`).join('')}
+              </div>`
+            : '';
+        const mockupBlock = pack.mockupHeadline
+            ? `<div class="outreach-block outreach-mockup"><div class="outreach-block-label">Mockup-Vorschlag</div>
+                <div class="outreach-mockup-headline">"${pack.mockupHeadline}"</div>
+                ${pack.mockupSubline ? `<div class="outreach-mockup-subline">${pack.mockupSubline}</div>` : ''}
+              </div>`
+            : '';
+        const tonesHtml = pack.variants.map((v, i) => `
+            <button class="outreach-tone-btn${i === 0 ? ' active' : ''}" data-tone-idx="${i}">${v.tone}</button>
+        `).join('');
+
+        actionsExtra += `<div class="outreach-pack anim-in" id="outreach-pack" data-pack='${JSON.stringify(pack.variants).replace(/'/g, '&#39;')}'>
+            <h3 class="outreach-title">📬 Outreach-Paket</h3>
+            <div class="outreach-meta">
+                Hauptanker: <strong>${pack.bestPitchAngle}</strong> · Empfänger: <code>${pack.recipientEmail}</code>
+            </div>
+
+            <div class="outreach-block">
+                <div class="outreach-block-label">Schmerz-Stack (priorisiert)</div>
+                <ul class="outreach-args">${argsList}</ul>
+            </div>
+
+            ${competitorsList}
+            ${mockupBlock}
+
+            <div class="outreach-email">
+                <div class="outreach-block-label">E-Mail-Variante <span class="outreach-tonebar">${tonesHtml}</span></div>
+                <div class="outreach-subject" id="outreach-subject">${variant.subject}</div>
+                <pre class="outreach-body" id="outreach-body">${variant.body}</pre>
+                <div class="outreach-actions">
+                    <button class="btn-copy-large" id="btn-copy-outreach">E-Mail kopieren</button>
+                    <a href="mailto:${pack.recipientEmail}?subject=${encodeURIComponent(variant.subject)}&body=${encodeURIComponent(variant.body)}" class="btn-copy-large" style="text-decoration:none;text-align:center" id="btn-mailto-outreach">In E-Mail-App öffnen</a>
+                </div>
+                <div class="outreach-hint">Wörter: <span id="outreach-words">${variant.wordCount}</span> · &lt; 80 = optimal</div>
+            </div>
+        </div>`;
+    }
 
     actionsEl.innerHTML = `${actionsExtra}<div class="actions-center"><button class="btn-primary" id="btn-save-crm" style="background:var(--text)">Im CRM speichern</button><a href="https://karriaro-webdesign.de/#kontakt" class="btn-cta-link">Kostenlos beraten lassen</a></div>`;
 
-    // Copy Email
+    // Outreach: Tonalität wechseln
+    if (pack.available) {
+        const packEl = document.getElementById('outreach-pack');
+        const variants = pack.variants;
+        packEl?.querySelectorAll('.outreach-tone-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                packEl.querySelectorAll('.outreach-tone-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const idx = parseInt(this.dataset.toneIdx, 10);
+                const v = variants[idx];
+                document.getElementById('outreach-subject').textContent = v.subject;
+                document.getElementById('outreach-body').textContent = v.body;
+                document.getElementById('outreach-words').textContent = v.wordCount;
+                const mailto = document.getElementById('btn-mailto-outreach');
+                if (mailto) mailto.href = `mailto:${pack.recipientEmail}?subject=${encodeURIComponent(v.subject)}&body=${encodeURIComponent(v.body)}`;
+            });
+        });
+        document.getElementById('btn-copy-outreach')?.addEventListener('click', function() {
+            const activeIdx = parseInt(packEl.querySelector('.outreach-tone-btn.active')?.dataset.toneIdx || '0', 10);
+            const v = variants[activeIdx];
+            navigator.clipboard.writeText(v.copyText).then(() => {
+                this.textContent = 'Kopiert ✓';
+                showToast('E-Mail in Zwischenablage kopiert');
+            });
+        });
+    }
+
+    // Copy Email (Legacy — falls vorhanden)
     document.getElementById('btn-copy-email')?.addEventListener('click', function() {
         navigator.clipboard.writeText(email.copyText).then(() => {
             this.textContent = 'Kopiert ✓';
