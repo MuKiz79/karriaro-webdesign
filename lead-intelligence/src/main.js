@@ -10,7 +10,7 @@ import { checkReminders } from './crm/reminders.js';
 import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } from './crm/auto-scan.js';
 import { runSingleCheck } from './orchestration/single-check.js';
 import { runBatchSearch } from './orchestration/batch-search.js';
-import { runScanner } from './orchestration/scanner.js';
+import { runScanner, requestNotificationPermissionOnGesture } from './orchestration/scanner.js';
 import { renderCRM } from './ui/render-crm.js';
 
 // ── Config laden ──
@@ -100,10 +100,16 @@ function initButtons() {
     });
 
     // Batch
-    document.getElementById('btn-batch')?.addEventListener('click', () => runBatchSearch());
+    document.getElementById('btn-batch')?.addEventListener('click', () => {
+        requestNotificationPermissionOnGesture();
+        runBatchSearch();
+    });
 
     // Scanner
-    document.getElementById('btn-scanner')?.addEventListener('click', () => runScanner());
+    document.getElementById('btn-scanner')?.addEventListener('click', () => {
+        requestNotificationPermissionOnGesture();
+        runScanner();
+    });
 
     // Abort
     document.getElementById('btn-abort')?.addEventListener('click', () => abort());

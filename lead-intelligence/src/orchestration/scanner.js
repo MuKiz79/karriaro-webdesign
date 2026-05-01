@@ -136,14 +136,25 @@ function showError(t) { document.getElementById('error-text').textContent=t; doc
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function notifyDone(msg) {
-    // Titel blinken lassen
+    // Titel blinken lassen — funktioniert immer
     const origTitle = document.title;
     document.title = '✅ ' + msg;
     setTimeout(() => { document.title = origTitle; }, 5000);
-    // Browser-Notification wenn erlaubt
-    if (Notification?.permission === 'granted') {
-        new Notification('Lead Intelligence', { body: msg });
-    } else if (Notification?.permission !== 'denied') {
-        Notification.requestPermission();
+    // Browser-Notification nur wenn bereits genehmigt — silent fail sonst.
+    // requestPermission() darf hier NICHT laufen, weil der Aufruf nach einem
+    // async Scanner-Promise nicht mehr als User-Geste zaehlt (Browser blockiert
+    // mit "Notification prompting can only be done from a user gesture").
+    if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        try { new Notification('Lead Intelligence', { body: msg }); } catch {}
     }
+}
+
+/**
+ * Bittet den User um Notification-Permission. Muss aus einem User-Gesture-
+ * Handler aufgerufen werden (Klick auf Scan-Button etc.).
+ */
+export function requestNotificationPermissionOnGesture() {
+    if (typeof Notification === 'undefined') return;
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+    try { Notification.requestPermission(); } catch {}
 }
