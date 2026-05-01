@@ -8,8 +8,7 @@ const { runAuditPipeline } = require("./lib/audit-pipeline.js");
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
 
-const PLACES_KEY = defineString("PLACES_API_KEY");
-const PSI_KEY = defineString("PSI_KEY");
+const PLACES_KEY = defineSecret("PLACES_API_KEY");
 const SMTP_HOST = defineSecret("SMTP_HOST");
 const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
@@ -49,7 +48,7 @@ function rateLimit(req, res) {
 }
 
 // ── Text Search: "Friseur Berlin" or "beispiel.de" ──
-exports.searchPlaces = onRequest({ region: "europe-west1", cors: false }, async (req, res) => {
+exports.searchPlaces = onRequest({ region: "europe-west1", cors: false, secrets: [PLACES_KEY] }, async (req, res) => {
     if (cors(req, res)) return;
     if (rateLimit(req, res)) return;
 
@@ -78,7 +77,7 @@ exports.searchPlaces = onRequest({ region: "europe-west1", cors: false }, async 
 });
 
 // ── Nearby Search: competitors in same area + category ──
-exports.nearbyPlaces = onRequest({ region: "europe-west1", cors: false }, async (req, res) => {
+exports.nearbyPlaces = onRequest({ region: "europe-west1", cors: false, secrets: [PLACES_KEY] }, async (req, res) => {
     if (cors(req, res)) return;
     if (rateLimit(req, res)) return;
 
@@ -203,7 +202,7 @@ exports.requestAudit = onRequest(
         memory: "512MiB",
         timeoutSeconds: 60,
         cors: false,
-        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS]
+        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS, PLACES_KEY]
     },
     async (req, res) => {
         if (cors(req, res)) return;
@@ -230,7 +229,7 @@ exports.requestAudit = onRequest(
         // Aber: im 60s-Timeout läuft alles, wir warten doch — vereinfacht den Mail-Versand.
         let pipelineResult;
         try {
-            pipelineResult = await runAuditPipeline(auditUrl, PSI_KEY.value());
+            pipelineResult = await runAuditPipeline(auditUrl, "");
         } catch (err) {
             console.error("Pipeline failed:", err.message);
             return res.status(502).json({ error: "Audit-Pipeline fehlgeschlagen", details: err.message });
