@@ -9,13 +9,13 @@
     <meta name="theme-color" content="#fbfbfd" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
-    <link rel="stylesheet" href="app.css?v=38">
+    <link rel="stylesheet" href="app.css?v=39">
 
     <!-- Firebase SDK (extern, nicht gebundelt) -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, onSnapshot, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
         // Firebase Config
         const fbApp = initializeApp({
@@ -31,7 +31,7 @@
         window.__firebase = {
             auth: getAuth(fbApp),
             db: getFirestore(fbApp),
-            fns: { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+            fns: { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, onSnapshot, limit, Timestamp }
         };
     </script>
 </head>
@@ -175,7 +175,7 @@
     <div id="onboarding" class="onboarding hidden"></div>
 
     <!-- App Bundle -->
-    <script src="app.js?v=38"></script>
+    <script src="app.js?v=39"></script>
 
 </body>
 </html>

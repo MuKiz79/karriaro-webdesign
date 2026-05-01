@@ -8,6 +8,8 @@ import { calculateStats } from '../crm/stats.js';
 import { getStaleLeads } from '../crm/rescan.js';
 import { getFeedbackStats } from '../learning/score-feedback.js';
 import { renderStatisticsPanel } from './render-statistics.js';
+import { subscribeToInboundLeads, HEAT_CONSTANTS } from '../learning/inbound-signals.js';
+import { requestNotificationPermissionOnGesture } from '../orchestration/scanner.js';
 
 const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
 const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
@@ -15,6 +17,11 @@ const STATUS_COLORS = { neu: 'var(--muted)', kontaktiert: 'var(--orange)', inter
 
 // AbortController für Event-Listener Cleanup
 let crmController = null;
+
+// Inbound-Heat-Listener — global, lebt über CRM-Re-Renders hinweg
+let inboundUnsubscribe = null;
+let lastNotifiedHotSlugs = new Set();
+let cachedHotLeads = [];
 
 export async function renderCRM(filter = 'alle', searchQuery = '') {
     const el = document.getElementById('crm-view');
@@ -34,6 +41,27 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
 
     el.innerHTML = `<div class="crm-loading"><div class="spinner"></div></div>`;
     el.classList.remove('hidden');
+
+    // CRM-Tab-Open ist eine User-Geste → Notification-Permission anfragen
+    requestNotificationPermissionOnGesture();
+
+    // Inbound-Listener starten (läuft im Hintergrund, re-rendert CRM bei Änderung)
+    if (!inboundUnsubscribe && window.__firebase) {
+        inboundUnsubscribe = subscribeToInboundLeads(window.__firebase, (hotLeads) => {
+            // Diff: neue very-hot-Slugs gegen bisherige → Notification
+            const currentVeryHot = new Set(hotLeads.filter(l => l.tier === 'very_hot').map(l => l.slug));
+            for (const slug of currentVeryHot) {
+                if (!lastNotifiedHotSlugs.has(slug)) {
+                    notifyHotLead(hotLeads.find(l => l.slug === slug));
+                    lastNotifiedHotSlugs.add(slug);
+                }
+            }
+            cachedHotLeads = hotLeads;
+            // Soft-Re-Render der Hot-Sektion ohne den ganzen CRM neu zu bauen
+            const hotSection = document.getElementById('crm-hot-leads');
+            if (hotSection) hotSection.innerHTML = renderHotLeadsHtml(hotLeads);
+        });
+    }
 
     const leads = await loadLeads();
 
@@ -63,6 +91,9 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     };
 
     let html = '';
+
+    // ── Hot-Leads-Sektion (Inbound mit Heat ≥ 60) ──
+    html += `<div id="crm-hot-leads">${renderHotLeadsHtml(cachedHotLeads)}</div>`;
 
     // ── Header mit Aktionen ──
     html += `<div class="crm-header">
@@ -335,6 +366,58 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             renderCRM(filter, searchQuery);
         }
     }, { signal });
+}
+
+// ── Hot-Leads-Rendering ──
+function renderHotLeadsHtml(hotLeads) {
+    if (!hotLeads || hotLeads.length === 0) return '';
+    const cards = hotLeads.slice(0, 6).map(l => {
+        const pulseClass = l.tier === 'very_hot' ? ' hot-pulse' : '';
+        const badge = l.tier === 'very_hot' ? '🔥 Heißer Lead' : '🔥 Warm';
+        const lastSeen = l.lastVisitAtMs ? timeAgo(l.lastVisitAtMs) : 'noch keine Page-Visits';
+        const visits = l.visitCount > 0 ? ` · ${l.visitCount} Visits` : '';
+        const ctas = l.ctaClicks > 0 ? ` · ${l.ctaClicks} CTA-Klicks` : '';
+        const auditUrl = `https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(l.slug)}`;
+        const mailto = l.email
+            ? `mailto:${l.email}?subject=${encodeURIComponent('Ihr Audit für ' + l.domain)}&body=${encodeURIComponent('Hallo ' + (l.name || '') + ',\n\nvielen Dank für die Audit-Anfrage. Schön, dass Sie sich die Ergebnisse angesehen haben — ich würde gerne ein 30-Minuten-Gespräch dazu mit Ihnen führen.\n\n')}`
+            : '#';
+        return `<div class="hot-lead-card${pulseClass}">
+            <div class="hot-lead-top">
+                <span class="hot-lead-badge">${badge}</span>
+                <span class="hot-lead-heat">${l.heat}</span>
+            </div>
+            <div class="hot-lead-domain">${l.domain || '—'}</div>
+            <div class="hot-lead-meta">${l.name || '—'}${l.email ? ' · ' + l.email : ''}</div>
+            <div class="hot-lead-meta">${l.techHeadline || ''}${visits}${ctas}</div>
+            <div class="hot-lead-meta">Letzter Visit: ${lastSeen}</div>
+            <div class="hot-lead-actions">
+                <a href="${mailto}" class="hot-lead-btn hot-lead-btn-primary">E-Mail schreiben</a>
+                <a href="${auditUrl}" target="_blank" rel="noopener" class="hot-lead-btn">Audit-Seite öffnen</a>
+            </div>
+        </div>`;
+    }).join('');
+    return `<div class="hot-leads-section">
+        <div class="hot-leads-header">
+            <span class="hot-leads-title">🔥 Heiße Leads</span>
+            <span class="hot-leads-sub">Inbound-Form-Anfragen mit hoher Konvertierungs-Wahrscheinlichkeit (Heat ≥ ${HEAT_CONSTANTS.HOT_THRESHOLD})</span>
+        </div>
+        <div class="hot-leads-grid">${cards}</div>
+    </div>`;
+}
+
+function notifyHotLead(lead) {
+    if (!lead) return;
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+    try {
+        const n = new Notification('🔥 Heißer Lead — sofort kontaktieren', {
+            body: `${lead.domain} hat die Audit-Seite gerade geöffnet (Heat ${lead.heat})`,
+            tag: `hot-lead-${lead.slug}`
+        });
+        n.onclick = () => {
+            window.focus();
+            n.close();
+        };
+    } catch {}
 }
 
 // ── Helpers ──

@@ -319,3 +319,106 @@
     .crm-lead-actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
     .crm-header { flex-direction: column; gap: 12px; align-items: flex-start; }
 }
+
+/* ══════════════════════════════════════
+   Hot Leads Sektion (Inbound-Heat ≥ 60)
+   ══════════════════════════════════════ */
+.hot-leads-section {
+    margin: 24px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255,69,58,0.05), rgba(255,159,10,0.05));
+    border: 1px solid rgba(255,69,58,0.2);
+    border-radius: 14px;
+}
+.hot-leads-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.hot-leads-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.hot-leads-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+.hot-leads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+.hot-lead-card {
+    background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 14px;
+    transition: transform 0.2s, border-color 0.2s;
+}
+.hot-lead-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255,69,58,0.4);
+}
+.hot-lead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.hot-lead-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.hot-lead-heat {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+}
+.hot-lead-domain {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+.hot-lead-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin: 2px 0;
+    line-height: 1.45;
+}
+.hot-lead-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+.hot-lead-btn {
+    flex: 1;
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+    text-decoration: none;
+}
+.hot-lead-btn-primary {
+    background: var(--red);
+    color: #fff;
+    border-color: var(--red);
+}
+.hot-lead-btn-primary:hover { opacity: 0.9; }
+
+@keyframes hotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,69,58,0.6); }
+    50% { box-shadow: 0 0 0 8px rgba(255,69,58,0); }
+}
+.hot-pulse {
+    border-color: var(--red);
+    animation: hotPulse 1.8s ease-in-out infinite;
+}

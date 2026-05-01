@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-Audit Ihrer Website | Karriaro Webdesign</title>
+    <meta name="description" content="Wir prüfen Ihre Website auf Tech-Alter, Performance, BFSG-Compliance und schicken Ihnen die Ergebnisse als persönliche Audit-Seite.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/audit">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://karriaro-webdesign.de/audit">
+    <meta property="og:title" content="Kostenloser Website-Audit | Karriaro">
+    <meta property="og:description" content="Tech-Alter, Performance, BFSG — als persönliche Audit-Seite per E-Mail.">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #fbfbfd;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+        a { color: #0071e3; text-decoration: none; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 64px 24px; }
+        .muted { color: #86868b; }
+
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(251,251,253,0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        nav .inner { max-width: 980px; margin: 0 auto; padding: 0 24px; display:flex; align-items:center; justify-content:space-between; height:48px; }
+        nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; }
+
+        h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+        h2 { font-size: 22px; font-weight: 600; margin-top: 32px; margin-bottom: 12px; letter-spacing: -0.01em; }
+        h3 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #86868b; margin-bottom: 8px; }
+        p { margin-bottom: 12px; color: #424245; }
+
+        .lede { font-size: 18px; color: #6e6e73; margin-top: 16px; margin-bottom: 32px; }
+
+        form { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+        label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #1d1d1f; }
+        input[type="url"], input[type="text"], input[type="email"] {
+            width: 100%; padding: 12px 14px; font-size: 16px;
+            border: 1px solid #d2d2d7; border-radius: 10px; background: #fff;
+            transition: border-color 0.2s; font-family: inherit;
+        }
+        input[type="url"]:focus, input[type="text"]:focus, input[type="email"]:focus {
+            outline: none; border-color: #0071e3;
+        }
+        .checkbox-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; }
+        .checkbox-row input { margin-top: 2px; }
+        .checkbox-row label { font-size: 13px; color: #6e6e73; font-weight: 400; line-height: 1.45; cursor: pointer; }
+        .honeypot { position: absolute; left: -9999px; }
+
+        button[type="submit"] {
+            background: #0071e3; color: #fff; padding: 14px 24px;
+            border: none; border-radius: 10px; font-size: 15px; font-weight: 500;
+            cursor: pointer; transition: background 0.2s; align-self: flex-start;
+            font-family: inherit;
+        }
+        button[type="submit"]:hover { background: #005bb5; }
+        button[type="submit"]:disabled { background: #d2d2d7; cursor: not-allowed; }
+
+        .alert { padding: 14px 18px; border-radius: 10px; margin: 16px 0; font-size: 14px; }
+        .alert-success { background: #e3f7e8; border: 1px solid #a8e0b6; color: #1f6b34; }
+        .alert-error { background: #ffe8e8; border: 1px solid #ffb3b3; color: #c00; }
+
+        /* Result-Modus */
+        .result-card { background: #fff; border: 1px solid #e5e5e7; border-radius: 14px; padding: 24px; margin-bottom: 16px; }
+        .severity-high { border-left: 3px solid #ff453a; }
+        .severity-mid  { border-left: 3px solid #ff9f0a; }
+        .severity-low  { border-left: 3px solid #30d158; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 12px 0; }
+        .stat-cell { background: #f5f5f7; padding: 12px 14px; border-radius: 8px; }
+        .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #86868b; }
+        .stat-value { font-size: 22px; font-weight: 600; margin-top: 2px; font-variant-numeric: tabular-nums; }
+        .stat-hint { font-size: 12px; color: #86868b; margin-top: 2px; }
+        .pitch-quote { background: #f0f7ff; border-left: 2px solid #0071e3; padding: 12px 14px; border-radius: 6px; margin-top: 12px; font-style: italic; }
+        .cta-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+        .cta-primary { display:inline-block; background: #0071e3; color: #fff; padding: 14px 24px; border-radius: 10px; font-size: 15px; font-weight: 500; }
+        .cta-primary:hover { background: #005bb5; color: #fff; }
+        .cta-secondary { display:inline-block; padding: 14px 20px; border-radius: 10px; font-size: 15px; color: #1d1d1f; border: 1px solid #d2d2d7; }
+        .competitor-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f2; font-size: 14px; }
+        .competitor-row:last-child { border: 0; }
+        .skeleton { animation: pulse 1.5s ease-in-out infinite; background: #e5e5e7; border-radius: 8px; height: 16px; margin: 6px 0; }
+        @keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.4 } }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
+        .badge-red { background: #ffe8e8; color: #c00; }
+        .badge-green { background: #e3f7e8; color: #1f6b34; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="inner">
+        <a href="/"><strong>Karriaro Webdesign</strong></a>
+        <a href="/#kontakt">Kontakt</a>
+    </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ═══ FORM-MODUS (default) ═══ -->
+<section id="form-section">
+    <h1>Mini-Audit Ihrer Website.</h1>
+    <p class="lede">
+        Wir prüfen Ihre Website auf Tech-Alter, Performance und BFSG-Compliance —
+        und schicken Ihnen die Ergebnisse als persönliche Audit-Seite.
+    </p>
+
+    <form id="audit-form" novalidate>
+        <div>
+            <label for="f-url">Ihre Website</label>
+            <input type="url" id="f-url" name="url" placeholder="https://www.ihre-website.de" required>
+        </div>
+        <div>
+            <label for="f-name">Ihr Name</label>
+            <input type="text" id="f-name" name="name" placeholder="Max Mustermann" required>
+        </div>
+        <div>
+            <label for="f-email">Ihre E-Mail-Adresse</label>
+            <input type="email" id="f-email" name="email" placeholder="m.mustermann@beispiel.de" required>
+        </div>
+
+        <!-- Honeypot — nicht für Menschen sichtbar -->
+        <div class="honeypot" aria-hidden="true">
+            <label for="f-company">Firma</label>
+            <input type="text" id="f-company" name="company" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="checkbox-row">
+            <input type="checkbox" id="f-consent" name="consent" required>
+            <label for="f-consent">
+                Ich bin damit einverstanden, dass Karriaro meine Website analysiert und die Ergebnisse an
+                meine E-Mail-Adresse sendet. Die Daten werden nach 90 Tagen automatisch gelöscht.
+                Datenschutzerklärung: <a href="/datenschutz.html">karriaro-webdesign.de/datenschutz</a>.
+            </label>
+        </div>
+
+        <button type="submit" id="f-submit">Audit anfordern</button>
+    </form>
+
+    <div id="alert-area"></div>
+
+    <p class="muted" style="margin-top: 32px; font-size: 13px;">
+        Wir analysieren nur die öffentlich erreichbare Startseite Ihrer Website.
+        Es findet keine automatische Anmeldung oder Newsletter-Eintragung statt.
+    </p>
+</section>
+
+<!-- ═══ RESULT-MODUS (wird via JS aktiviert wenn ?slug=... in URL) ═══ -->
+<section id="result-section" style="display:none">
+    <h1 id="r-title">Ihr Audit</h1>
+    <p class="lede" id="r-subtitle">Wir prüfen Ihre Website…</p>
+
+    <div id="r-tech-age" class="result-card"></div>
+    <div id="r-bfsg" class="result-card"></div>
+    <div id="r-competitors" class="result-card"></div>
+    <div id="r-summary" class="result-card"></div>
+
+    <div class="cta-row">
+        <a href="#" id="r-cta-primary" class="cta-primary">30-Minuten-Beratung anfragen</a>
+        <a href="/" class="cta-secondary">Mehr über Karriaro</a>
+    </div>
+
+    <p class="muted" style="margin-top: 32px; font-size: 13px;">
+        Diese Audit-Seite wurde individuell für Ihre Website erstellt. Sie wird nach 90 Tagen
+        automatisch gelöscht.
+    </p>
+</section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('slug');
+
+    if (slug) {
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('result-section').style.display = 'block';
+        loadAudit(slug);
+    } else {
+        initForm();
+    }
+
+    function initForm() {
+        const form = document.getElementById('audit-form');
+        const submitBtn = document.getElementById('f-submit');
+        const alertArea = document.getElementById('alert-area');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            alertArea.innerHTML = '';
+
+            const data = {
+                url: document.getElementById('f-url').value.trim(),
+                name: document.getElementById('f-name').value.trim(),
+                email: document.getElementById('f-email').value.trim(),
+                consent: document.getElementById('f-consent').checked,
+                company: document.getElementById('f-company').value.trim()  // Honeypot
+            };
+
+            if (!data.consent) {
+                showAlert('error', 'Bitte stimmen Sie der Verarbeitung Ihrer Daten zu.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Audit wird erstellt…';
+
+            try {
+                const res = await fetch(FN_BASE + '/requestAudit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const j = await res.json();
+
+                if (!res.ok) throw new Error(j.error || 'Fehler beim Anfordern');
+
+                showAlert('success',
+                    'Ihr Audit wurde erstellt. Eine E-Mail mit dem Link ist unterwegs an ' +
+                    data.email + '. Falls die Mail nicht ankommt, hier der Direkt-Link: ' +
+                    '<a href="?slug=' + encodeURIComponent(j.slug) + '">Audit-Seite öffnen</a>.'
+                );
+                form.reset();
+            } catch (err) {
+                showAlert('error',
+                    'Fehler: ' + (err.message || 'Bitte versuchen Sie es später erneut') +
+                    '. Bei wiederholten Problemen schreiben Sie an kontakt@karriaro.de.'
+                );
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Audit anfordern';
+            }
+        });
+
+        function showAlert(type, html) {
+            alertArea.innerHTML = '<div class="alert alert-' + type + '">' + html + '</div>';
+        }
+    }
+
+    async function loadAudit(slug) {
+        try {
+            // Tracking: open
+            track(slug, 'open');
+
+            // Heartbeats alle 30s, solange Tab aktiv ist
+            let lastBeat = Date.now();
+            setInterval(function() {
+                if (document.visibilityState === 'visible' && Date.now() - lastBeat >= 25000) {
+                    track(slug, 'heartbeat');
+                    lastBeat = Date.now();
+                }
+            }, 30000);
+
+            const res = await fetch(FN_BASE + '/getAuditData?slug=' + encodeURIComponent(slug));
+            if (!res.ok) {
+                if (res.status === 404) throw new Error('Diese Audit-Seite existiert nicht oder ist abgelaufen.');
+                throw new Error('Audit-Daten konnten nicht geladen werden.');
+            }
+            const data = await res.json();
+            renderAudit(data, slug);
+        } catch (err) {
+            document.getElementById('r-title').textContent = 'Audit nicht gefunden';
+            document.getElementById('r-subtitle').textContent = err.message;
+            document.getElementById('r-tech-age').remove();
+            document.getElementById('r-bfsg').remove();
+            document.getElementById('r-competitors').remove();
+            document.getElementById('r-summary').remove();
+            document.querySelector('.cta-row').remove();
+        }
+    }
+
+    function renderAudit(d, slug) {
+        const dom = d.domain || 'Ihre Website';
+        document.title = 'Audit für ' + dom + ' | Karriaro';
+        document.getElementById('r-title').textContent = 'Audit für ' + dom;
+        document.getElementById('r-subtitle').textContent =
+            'Erstellt ' + new Date(d.createdAt || Date.now()).toLocaleDateString('de-DE') +
+            ' · Diese Seite ist nur für Sie sichtbar.';
+
+        // Tech-Alter-Karte
+        const ta = d.techAge || {};
+        const sevClass = ta.severity >= 4 ? 'severity-high' : ta.severity >= 2 ? 'severity-mid' : 'severity-low';
+        const techCard = document.getElementById('r-tech-age');
+        techCard.className = 'result-card ' + sevClass;
+        techCard.innerHTML = `
+            <h3>${escape(ta.headline || 'Tech-Stand')}</h3>
+            <h2>${escape(ta.cms || '—')}${ta.majorVersion ? ' ' + ta.majorVersion + '.x' : ''}</h2>
+            <div class="stat-grid">
+                <div class="stat-cell"><div class="stat-label">Domain online</div><div class="stat-value">${ta.domainAgeYears ? ta.domainAgeYears + ' J.' : '—'}</div><div class="stat-hint">${ta.firstSeen ? 'seit ' + ta.firstSeen.slice(0,4) : ''}</div></div>
+                <div class="stat-cell"><div class="stat-label">Letzte Aktualisierung</div><div class="stat-value">${ta.yearsSinceLastChange != null ? 'vor ' + ta.yearsSinceLastChange.toFixed(1) + ' J.' : '—'}</div><div class="stat-hint">${ta.lastChanged ? ta.lastChanged.slice(0,7) : ''}</div></div>
+                <div class="stat-cell"><div class="stat-label">EOL-Status</div><div class="stat-value">${ta.cmsEolYear ? 'seit ' + ta.cmsEolYear : '—'}</div><div class="stat-hint">${ta.cmsEolYear ? 'keine Sicherheitsupdates' : 'aktuell unterstützt'}</div></div>
+                <div class="stat-cell"><div class="stat-label">CMS-Release-Jahr</div><div class="stat-value">${ta.cmsReleaseYear || '—'}</div><div class="stat-hint">${ta.techYearsBehind != null ? ta.techYearsBehind + ' Jahre Generation' : ''}</div></div>
+            </div>
+            <p class="muted">${escape(ta.composite || '')}</p>
+            ${ta.pitchArg ? `<div class="pitch-quote">${escape(ta.pitchArg)}</div>` : ''}
+        `;
+
+        // BFSG-Karte
+        const bf = d.bfsg || {};
+        const bfsgCard = document.getElementById('r-bfsg');
+        if (bf.complianceScore != null) {
+            const bfClass = bf.risk === 'kritisch' || bf.risk === 'hoch' ? 'severity-high'
+                : bf.risk === 'mittel' ? 'severity-mid' : 'severity-low';
+            bfsgCard.className = 'result-card ' + bfClass;
+            bfsgCard.innerHTML = `
+                <h3>BFSG-Compliance (Barrierefreiheitsstärkungsgesetz)</h3>
+                <div class="stat-grid">
+                    <div class="stat-cell"><div class="stat-label">Score</div><div class="stat-value">${bf.complianceScore}%</div><div class="stat-hint">WCAG-Anforderungen erfüllt</div></div>
+                    <div class="stat-cell"><div class="stat-label">Risiko</div><div class="stat-value">${escape(bf.risk || '—')}</div><div class="stat-hint">Bußgeld-Stufe</div></div>
+                    <div class="stat-cell"><div class="stat-label">Maximales Bußgeld</div><div class="stat-value">${escape(bf.fine || '—')}</div><div class="stat-hint">seit Juni 2025</div></div>
+                </div>
+                ${bf.pitchArg ? `<div class="pitch-quote">${escape(bf.pitchArg)}</div>` : ''}
+            `;
+        } else {
+            bfsgCard.remove();
+        }
+
+        // Konkurrenz-Karte
+        const comp = d.competitors || [];
+        const compCard = document.getElementById('r-competitors');
+        if (comp.length >= 1) {
+            compCard.innerHTML = `
+                <h3>Drei Mitbewerber im Vergleich</h3>
+                <p class="muted">Direkte Konkurrenten in Ihrem Umfeld mit modernerem Online-Auftritt.</p>
+                ${comp.map(c => `
+                    <div class="competitor-row">
+                        <span><strong>${escape(c.name)}</strong>${c.website ? ' · <a href="' + escape(c.website) + '" target="_blank" rel="noopener">Website</a>' : ''}</span>
+                        <span class="muted">★ ${c.rating || '—'} · ${c.reviews || 0} Bewertungen</span>
+                    </div>
+                `).join('')}
+            `;
+        } else {
+            compCard.remove();
+        }
+
+        // Zusammenfassung
+        const sum = document.getElementById('r-summary');
+        sum.innerHTML = `
+            <h3>Was bedeutet das für Sie?</h3>
+            <p>${escape(d.summary || 'Ihre Website hat ungenutztes Potenzial. Eine moderne, schnelle und barrierefreie Website verbessert Ihre Sichtbarkeit bei Google und schützt Sie vor BFSG-Bußgeldern.')}</p>
+            ${d.leadScore != null ? `<p class="muted" style="margin-top:12px">Gesamt-Score: <span class="badge ${d.leadScore >= 55 ? 'badge-red' : 'badge-green'}">${d.leadScore}/100 · ${d.leadScore >= 55 ? 'Handlungsbedarf' : 'kein dringender Handlungsbedarf'}</span></p>` : ''}
+        `;
+
+        // CTA-Link mit getrackt
+        const cta = document.getElementById('r-cta-primary');
+        const subject = encodeURIComponent('Beratung für ' + dom);
+        const body = encodeURIComponent(
+            'Hallo Karriaro-Team,\n\n' +
+            'ich habe gerade meinen Mini-Audit für ' + dom + ' erhalten und würde gerne ein 30-Minuten-Gespräch vereinbaren.\n\n' +
+            'Mit freundlichen Grüßen'
+        );
+        cta.href = 'mailto:kontakt@karriaro.de?subject=' + subject + '&body=' + body;
+        cta.addEventListener('click', function() { track(slug, 'cta_click'); });
+    }
+
+    function track(slug, event) {
+        // Best-effort, kein await — Fehler werden ignoriert
+        try {
+            fetch(FN_BASE + '/trackLeadView', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug, event }),
+                keepalive: true
+            }).catch(function() {});
+        } catch {}
+    }
+
+    function escape(s) {
+        if (s == null) return '';
+        return String(s).replace(/[<>&"']/g, function(c) {
+            return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+})();
+</script>
+
+</body>
+</html>

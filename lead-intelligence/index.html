@@ -12,7 +12,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, onSnapshot, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
         // Firebase Config
         const fbApp = initializeApp({
@@ -28,7 +28,7 @@
         window.__firebase = {
             auth: getAuth(fbApp),
             db: getFirestore(fbApp),
-            fns: { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+            fns: { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, onSnapshot, limit, Timestamp }
         };
     </script>
 </head>
