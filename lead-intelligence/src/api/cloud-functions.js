@@ -86,3 +86,12 @@ export function deepResearch({ url, branche = null, place = null, psiData = null
     if (!url) return Promise.resolve(null);
     return callWebdesign('deepResearch', { url, branche, place, psiData, force }, { timeout: 60000 });
 }
+
+/**
+ * Generate Mockup — Sonnet entwirft Hero-Spec, Server rendert SVG.
+ * Liefert { ok, cached, spec, svg, svgDataUrl, htmlSnippet, meta }.
+ */
+export function generateMockup({ url, branche = null, businessName = null, currentIssues = null, deepResearchSummary = null, force = false } = {}) {
+    if (!url) return Promise.resolve(null);
+    return callWebdesign('generateMockup', { url, branche, businessName, currentIssues, deepResearchSummary, force }, { timeout: 45000 });
+}

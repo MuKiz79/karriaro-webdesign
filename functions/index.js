@@ -12,6 +12,7 @@ const {
     SYSTEM_PROMPT,
     TOOL_DEFINITION
 } = require("./lib/deep-research.js");
+const mockupGenerator = require("./lib/mockup-generator.js");
 
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
@@ -622,3 +623,149 @@ exports.deepResearch = onRequest(
         }
     }
 );
+
+// ═══════════════════════════════════════════════════════════════
+// GENERATE MOCKUP: Sonnet entwirft Hero-Spec, Server rendert SVG
+// ═══════════════════════════════════════════════════════════════
+
+const MOCKUP_MODEL = "claude-sonnet-4-20250514";
+const MOCKUP_CACHE_DAYS = 7;
+
+function mockupCacheKey(url) {
+    const u = String(url || "").toLowerCase().replace(/\/+$/, "");
+    return crypto.createHash("sha256").update(u).digest("hex").slice(0, 24);
+}
+
+async function loadMockupCache(url) {
+    try {
+        const key = mockupCacheKey(url);
+        const snap = await db.collection("mockups").doc(key).get();
+        if (!snap.exists) return null;
+        const data = snap.data();
+        if ((data.expiresAtMs || 0) < Date.now()) return null;
+        return data;
+    } catch (err) {
+        console.warn("mockup cache read failed:", err.message);
+        return null;
+    }
+}
+
+async function saveMockupCache(url, payload) {
+    try {
+        const key = mockupCacheKey(url);
+        const expiresAtMs = Date.now() + MOCKUP_CACHE_DAYS * 86400000;
+        await db.collection("mockups").doc(key).set({
+            ...payload,
+            cachedUrl: url,
+            cachedAtMs: Date.now(),
+            expiresAtMs,
+            expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+        });
+    } catch (err) {
+        console.warn("mockup cache write failed:", err.message);
+    }
+}
+
+async function callClaudeForMockup(promptText) {
+    const body = {
+        model: MOCKUP_MODEL,
+        max_tokens: 1500,
+        system: [
+            { type: "text", text: mockupGenerator.SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }
+        ],
+        tools: [mockupGenerator.TOOL_DEFINITION],
+        tool_choice: { type: "tool", name: mockupGenerator.TOOL_DEFINITION.name },
+        messages: [{ role: "user", content: promptText }]
+    };
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CLAUDE_API_KEY.value(),
+            "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(30000)
+    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`Claude API ${res.status}: ${errText.slice(0, 200)}`);
+    }
+    const data = await res.json();
+    const toolUse = (data.content || []).find(c => c.type === "tool_use" && c.name === mockupGenerator.TOOL_DEFINITION.name);
+    if (!toolUse?.input) throw new Error("Claude returned no tool_use payload");
+    return { spec: toolUse.input, usage: data.usage || null };
+}
+
+// ─── generateMockup ─── POST {url, branche?, businessName?, currentIssues?, deepResearchSummary?, force?}
+exports.generateMockup = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (rateLimit(req, res)) return;
+
+        const startMs = Date.now();
+        let { url, branche = null, businessName = null, currentIssues = null, deepResearchSummary = null, force = false } = req.body || {};
+        if (!url || typeof url !== "string") return res.status(400).json({ error: "url required" });
+        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+        // Cache lookup
+        if (!force) {
+            const cached = await loadMockupCache(url);
+            if (cached?.spec && cached?.svg) {
+                return res.json({
+                    ok: true,
+                    cached: true,
+                    cachedAtMs: cached.cachedAtMs,
+                    spec: cached.spec,
+                    svg: cached.svg,
+                    svgDataUrl: cached.svgDataUrl,
+                    htmlSnippet: cached.htmlSnippet,
+                    meta: { fromCache: true, durationMs: Date.now() - startMs }
+                });
+            }
+        }
+
+        try {
+            const prompt = mockupGenerator.buildMockupPrompt({
+                url, branche, businessName, currentIssues, deepResearchSummary
+            });
+            const claude = await callClaudeForMockup(prompt);
+            const spec = claude.spec;
+
+            // Server-Side SVG-Render
+            const svg = mockupGenerator.renderSvg(spec);
+            const svgDataUrl = mockupGenerator.svgToDataUrl(svg);
+            const htmlSnippet = mockupGenerator.composeMockupHtmlSnippet(svgDataUrl, spec?.hero?.headline, spec?.hero?.primaryCta);
+
+            const payload = {
+                spec,
+                svg,
+                svgDataUrl,
+                htmlSnippet,
+                meta: {
+                    url,
+                    domain: new URL(url).hostname.replace(/^www\./, ""),
+                    branche,
+                    model: MOCKUP_MODEL,
+                    layoutVariant: spec?.layoutVariant || "centered",
+                    usage: claude.usage,
+                    durationMs: Date.now() - startMs
+                }
+            };
+            await saveMockupCache(url, payload);
+            res.json({ ok: true, cached: false, ...payload });
+        } catch (err) {
+            console.error("generateMockup failed:", err);
+            res.status(500).json({ error: "Mockup-Generierung fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
+

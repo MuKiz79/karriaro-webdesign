@@ -445,6 +445,12 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         return;
     }
 
+    // ── Mockup-Vorschau (Sonnet entwirft Spec, Server rendert SVG) — visuelle Ueberraschung zuerst ──
+    const mockupData = data.mockup || null;
+    if (mockupData?.svgDataUrl) {
+        html += renderMockupCard(mockupData);
+    }
+
     // ── Tiefe Analyse (Deep Research) — die ganzheitliche Bewertung von Sonnet ──
     const deepAssessment = data.deepAssessment || data.deepResearch?.assessment || null;
     if (deepAssessment) {
@@ -982,3 +988,62 @@ function escapeHtml(s) {
     return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;"}[c]));
 }
 
+
+// ══════════════════════════════════════
+// Mockup-Karte (Sonnet entwirft Hero-Spec, Server rendert SVG)
+// ══════════════════════════════════════
+
+function renderMockupCard(m) {
+    if (!m?.svgDataUrl) return "";
+    const headline = m.spec?.hero?.headline || "";
+    const subline = m.spec?.hero?.subline || "";
+    const layoutVariant = m.spec?.layoutVariant || m.meta?.layoutVariant || "";
+    const personality = m.spec?.brandPersonality || "";
+    // SVG-DataUrl in einem data-Attribute speichern, das wir per JS auslesen koennen.
+    // (Nicht im sichtbaren Markup wegen Laenge.)
+    return `<div class="card mockup-card anim-in" id="mockup-card">
+        <div class="mockup-header">
+            <div>
+                <div class="section-label" style="color:var(--accent)">🎨 Mockup-Vorschlag · So koennte Ihre neue Seite aussehen</div>
+                ${headline ? `<div class="mockup-headline">${escapeHtml(headline)}</div>` : ""}
+                ${subline ? `<div class="mockup-subline">${escapeHtml(subline)}</div>` : ""}
+            </div>
+            <div class="mockup-meta">
+                ${layoutVariant ? `<span class="mockup-tag">${escapeHtml(layoutVariant)}</span>` : ""}
+                ${personality ? `<span class="mockup-tag">${escapeHtml(personality)}</span>` : ""}
+            </div>
+        </div>
+        <div class="mockup-image-wrap">
+            <img src="${escapeHtml(m.svgDataUrl)}" alt="Hero-Mockup ${escapeHtml(headline)}" class="mockup-image">
+        </div>
+        <div class="mockup-actions">
+            <button class="btn-copy-large" id="btn-copy-mockup-html">📨 In Outreach-Mail einbetten</button>
+            <button class="btn-copy" id="btn-copy-mockup-svg">SVG kopieren</button>
+            <a href="${escapeHtml(m.svgDataUrl)}" download="karriaro-mockup.svg" class="btn-copy">SVG herunterladen</a>
+        </div>
+        <div class="mockup-hint">Tipp: In Gmail/Apple Mail einfuegen — das Bild rendert direkt in der Mail. (Outlook-Desktop kann SVG-data-URLs nicht zeigen — fuer den Fall: SVG herunterladen + manuell anhaengen.)</div>
+    </div>`;
+}
+
+// Globaler Listener — wird einmal beim Page-Load aktiviert und reagiert auf Mockup-Buttons.
+if (typeof document !== "undefined") {
+    document.addEventListener("click", function(e) {
+        const target = e.target;
+        if (target?.id === "btn-copy-mockup-html") {
+            const data = window.__lastMockupResult;
+            if (!data?.htmlSnippet) { showToast?.("Kein Mockup vorhanden"); return; }
+            navigator.clipboard.writeText(data.htmlSnippet).then(() => {
+                target.textContent = "✓ HTML kopiert — in Mail einfuegen";
+                setTimeout(() => { target.textContent = "📨 In Outreach-Mail einbetten"; }, 3000);
+            });
+        }
+        if (target?.id === "btn-copy-mockup-svg") {
+            const data = window.__lastMockupResult;
+            if (!data?.svg) { showToast?.("Kein Mockup vorhanden"); return; }
+            navigator.clipboard.writeText(data.svg).then(() => {
+                target.textContent = "✓ SVG kopiert";
+                setTimeout(() => { target.textContent = "SVG kopieren"; }, 3000);
+            });
+        }
+    });
+}

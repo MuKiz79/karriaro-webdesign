@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch } from '../api/cloud-functions.js';
+import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch, generateMockup } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
@@ -94,8 +94,9 @@ export async function runSingleCheck() {
             companyProfile = analyzeCompanyProfile(url, psiData, place, null);
         } catch(e) { console.error('CompanyProfile failed:', e); companyProfile = { domain: new URL(url).hostname.replace('www.',''), branche: '', isEnterprise: false, enterpriseWarning: null, owner: { name: null, nationality: null }, companyName: '' }; }
 
-        // Phase 3.5: Deep Research SOFORT starten — läuft parallel zu Phase 4 (Sub-Page-Crawl + Sonnet-Call braucht ~10-15s)
+        // Phase 3.5: Deep Research + Mockup SOFORT starten — laufen parallel zu Phase 4
         const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
+        const businessName = place?.displayName?.text || companyProfile?.companyName || null;
         const deepResearchPromise = deepResearch({
             url,
             branche: brancheForAI || null,
@@ -103,20 +104,29 @@ export async function runSingleCheck() {
             psiData
         }).catch(err => { console.warn('deepResearch promise rejected:', err?.message || err); return null; });
 
+        // Mockup-Generator: laeuft parallel — braucht kein PSI/Place-Detail, nur URL+Branche+Name
+        const mockupPromise = generateMockup({
+            url,
+            branche: brancheForAI || null,
+            businessName,
+            currentIssues: null  // wird ggf. nach Deep Research mit Schwaechen-Liste angereichert
+        }).catch(err => { console.warn('generateMockup promise rejected:', err?.message || err); return null; });
+
         // Phase 4: KI-Analyse parallel — analyzeContent + analyzeBranchStandards entfernt (Deep Research absorbiert beides)
         showLoading('④ KI-Analyse (Screenshot + Reviews + Domain + Deep Research)...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
 
         let screenshotAnalysis = null, reviewSentiment = null,
-            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null;
+            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null, mockupResult = null;
         try {
-            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult] = await Promise.all([
+            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult, mockupResult] = await Promise.all([
                 analyzeScreenshot(screenshot).catch(() => null),
                 analyzeReviews(domain).catch(() => null),
                 getDomainAge(domain).catch(() => null),
                 getDomainAuthority(domain).catch(() => null),
                 getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain).catch(() => null),
-                deepResearchPromise
+                deepResearchPromise,
+                mockupPromise
             ]);
         } catch(e) { console.error('KI-Analyse failed:', e); }
 
@@ -189,8 +199,13 @@ export async function runSingleCheck() {
             socialProfiles, emailCheck, contactData, sitemapFreshness, mockupSuggestion,
             deepResearch: deepResearchResult,
             deepAssessment,
+            mockup: mockupResult,
             ...localAnalysis
         };
+        // Globale Referenz fuer Mockup-Copy-Buttons (siehe render-components.js)
+        if (typeof window !== "undefined") {
+            window.__lastMockupResult = mockupResult || null;
+        }
 
         hideSkeleton();
         renderResult(state.lastResult);

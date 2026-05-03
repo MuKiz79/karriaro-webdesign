@@ -43,9 +43,25 @@ function buildPainArguments(data, techAge) {
         }
     }
 
-    // 1) Mockup verfügbar? Stärkster Hebel — er sieht bereits etwas.
+    // 1) Visueller Mockup-Vorschlag verfuegbar? Staerkster Hebel — der Inhaber
+    //    sieht das Bild direkt in der Mail. Industrie-Reply-Rate: 15-25%.
+    const visualMockup = data.mockup;
+    if (visualMockup?.svgDataUrl && visualMockup?.spec?.hero?.headline) {
+        const heroHeadline = visualMockup.spec.hero.headline;
+        args.push({
+            type: 'visual_mockup',
+            severity: 5,
+            short: 'Mockup im Anhang',
+            text: `Ich habe Ihnen einen visuellen Entwurf einer neuen Seite fuer ${domain} gemacht — als Bild in dieser E-Mail. Der Vorschlag: "${heroHeadline}". Wenn Ihnen die Richtung gefaellt, sprechen wir 15 Minuten ueber die Umsetzung.`,
+            subjectAlt: `Entwurf fuer ${domain}: ${heroHeadline}`,
+            htmlSnippet: visualMockup.htmlSnippet || null,
+            svgDataUrl: visualMockup.svgDataUrl
+        });
+    }
+
+    // 1b) Legacy Mockup-Suggestion (nur Text, kein Bild) — Fallback
     const mockup = data.mockupSuggestion;
-    if (mockup?.headline) {
+    if (!visualMockup?.svgDataUrl && mockup?.headline) {
         args.push({
             type: 'mockup',
             severity: 5,
@@ -178,13 +194,34 @@ ${senderName}
 ${senderCompany}
 ${profile.location ? profile.location + '\n' : ''}${portfolio}`.trim();
 
+    // HTML-Variante mit eingebettetem Mockup-Bild (wenn vorhanden) — kann
+    // direkt in Gmail/Apple-Mail eingefuegt werden. Empfaenger sieht das Bild
+    // ueber dem Text.
+    const visualMockup = data.mockup;
+    const mockupHtml = visualMockup?.htmlSnippet || '';
+    const bodyHtml = `<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.55;color:#1d1d1f">
+${mockupHtml ? mockupHtml + '<div style="height:16px"></div>' : ''}<p>${escapeHtmlSafe(greeting)}</p>
+<p>${escapeHtmlSafe(primaryArg.text)}</p>
+${supporting ? `<p style="color:#6e6e73">${escapeHtmlSafe(supporting)}</p>` : ''}
+<p>Ich baue moderne Websites — handcodiert, ${escapeHtmlSafe(priceRange)}, ${escapeHtmlSafe(usp)}.</p>
+<p>Darf ich Ihnen in 15 Minuten zeigen, wie Ihre neue Seite aussehen könnte? Keine Verpflichtung.</p>
+<p>${escapeHtmlSafe(closing)}<br>${escapeHtmlSafe(senderName)}<br>${escapeHtmlSafe(senderCompany)}${profile.location ? '<br>' + escapeHtmlSafe(profile.location) : ''}<br><a href="https://${escapeHtmlSafe(portfolio)}" style="color:#0071e3">${escapeHtmlSafe(portfolio)}</a></p>
+</div>`;
+
     return {
         tone,
         subject: primaryArg.subjectAlt,
         body,
+        bodyHtml,
+        hasVisualMockup: !!visualMockup?.svgDataUrl,
         copyText: `Betreff: ${primaryArg.subjectAlt}\n\n${body}`,
         wordCount: body.split(/\s+/).length
     };
+}
+
+function escapeHtmlSafe(s) {
+    if (s == null) return '';
+    return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":"&#39;"}[c]));
 }
 
 /**

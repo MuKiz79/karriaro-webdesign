@@ -1545,6 +1545,81 @@ nav {
 }
 
 /* ══════════════════════════════════════
+   Mockup-Karte (visueller Hero-Vorschlag, Sonnet-spec + SVG-Render)
+   ══════════════════════════════════════ */
+.mockup-card {
+    margin-bottom: 16px;
+    padding: 22px;
+    background: linear-gradient(160deg, rgba(0,113,227,0.06), transparent 60%);
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+}
+.mockup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.mockup-headline {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 4px;
+    line-height: 1.35;
+}
+.mockup-subline {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+.mockup-meta {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.mockup-tag {
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    text-transform: lowercase;
+    color: var(--muted);
+}
+.mockup-image-wrap {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #fff;
+    line-height: 0;
+}
+.mockup-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+.mockup-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+.mockup-actions a.btn-copy,
+.mockup-actions button.btn-copy,
+.mockup-actions button.btn-copy-large {
+    text-decoration: none;
+    text-align: center;
+}
+.mockup-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.45;
+}
+
+/* ══════════════════════════════════════
    Score Ring, Funnel, Confidence
    ══════════════════════════════════════ */
 
