@@ -23,6 +23,26 @@ function buildPainArguments(data, techAge) {
     const rev = data.revenue;
     const domain = new URL(data.url).hostname.replace('www.', '');
 
+    // 0) Deep-Research-Schwächen — das stärkste, weil Sonnet das Material gesehen hat.
+    //    Wir nehmen die Top-Severity-5-Schwäche als bestes Argument und nutzen
+    //    keyPitchAngle als Subject-Default.
+    const deep = data.deepAssessment || data.deepResearch?.assessment || null;
+    if (deep && Array.isArray(deep.weaknesses) && deep.weaknesses.length > 0) {
+        const sorted = [...deep.weaknesses].sort((a, b) => (b.severity || 0) - (a.severity || 0));
+        const top = sorted[0];
+        if (top && top.severity >= 4) {
+            args.push({
+                type: 'deep_research',
+                severity: 5,
+                short: top.title || 'Ganzheitliche Analyse',
+                text: `${top.title}: ${top.evidence || ''}`.trim(),
+                subjectAlt: deep.keyPitchAngle || `${domain}: ${top.title}`,
+                evidence: top.evidence,
+                category: top.category
+            });
+        }
+    }
+
     // 1) Mockup verfügbar? Stärkster Hebel — er sieht bereits etwas.
     const mockup = data.mockupSuggestion;
     if (mockup?.headline) {

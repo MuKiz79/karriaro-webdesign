@@ -445,6 +445,12 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         return;
     }
 
+    // ── Tiefe Analyse (Deep Research) — die ganzheitliche Bewertung von Sonnet ──
+    const deepAssessment = data.deepAssessment || data.deepResearch?.assessment || null;
+    if (deepAssessment) {
+        html += renderDeepResearchCard(deepAssessment, data.deepResearch?.meta || null);
+    }
+
     // ── Tech-Alter Karte (prominent ganz oben) ──
     const techAge = analyzeTechAge(tech, data.wayback || {});
     {
@@ -885,3 +891,94 @@ export function renderSignals(el, data) {
 
     el.innerHTML = html || '<div class="metric-desc" style="padding:16px;text-align:center">Keine zusätzlichen Signale erkannt</div>';
 }
+
+
+// ══════════════════════════════════════
+// Deep-Research-Karte (Sonnet-Ganzheitsbewertung, oberhalb Tech-Age)
+// ══════════════════════════════════════
+
+function renderDeepResearchCard(a, meta) {
+    if (!a) return "";
+    const verdictLabel = {
+        "kein_handlungsbedarf": "Kein dringender Handlungsbedarf",
+        "optimierung":          "Optimierung empfehlenswert",
+        "modernisierung_lohnt": "Modernisierung lohnt sich",
+        "neuaufbau":            "Neuaufbau empfehlenswert"
+    }[a.verdict] || a.verdict;
+    const verdictColor = a.leadPotential >= 70 ? "var(--red)"
+        : a.leadPotential >= 50 ? "var(--orange)"
+        : a.leadPotential >= 30 ? "var(--accent)" : "var(--green)";
+
+    const strengths = (a.strengths || []).slice(0, 8).map(s => `
+        <li class="dr-item">
+            <span class="dr-dot" style="background:var(--green)"></span>
+            <div class="dr-body">
+                <div class="dr-title">${escapeHtml(s.title || "")}${s.weight ? ` <span class="dr-weight">${"●".repeat(Math.min(5, s.weight))}</span>` : ""}</div>
+                <div class="dr-evidence">${escapeHtml(s.evidence || "")}</div>
+            </div>
+        </li>`).join("");
+
+    const weaknesses = (a.weaknesses || [])
+        .slice().sort((x, y) => (y.severity || 0) - (x.severity || 0))
+        .slice(0, 8).map(w => {
+            const sevColor = (w.severity || 0) >= 4 ? "var(--red)" : (w.severity || 0) >= 3 ? "var(--orange)" : "var(--muted)";
+            return `<li class="dr-item">
+                <span class="dr-dot" style="background:${sevColor}"></span>
+                <div class="dr-body">
+                    <div class="dr-title">${escapeHtml(w.title || "")} ${w.category ? `<span class="dr-cat">${escapeHtml(w.category)}</span>` : ""} <span class="dr-weight" style="color:${sevColor}">${"●".repeat(Math.min(5, w.severity || 0))}</span></div>
+                    <div class="dr-evidence">${escapeHtml(w.evidence || "")}</div>
+                </div>
+            </li>`;
+        }).join("");
+
+    const actions = (a.recommendedActions || []).slice(0, 6).map(s => `<li>${escapeHtml(s)}</li>`).join("");
+
+    const cachedInfo = meta?.fromCache ? "aus Cache" : (meta?.durationMs ? `${Math.round(meta.durationMs/100)/10}s Recherche` : "");
+    const subPagesInfo = meta?.subPagesAnalyzed?.length ? `${meta.subPagesAnalyzed.length} Sub-Pages analysiert` : "";
+    const metaLine = [cachedInfo, subPagesInfo].filter(Boolean).join(" · ");
+
+    return `<div class="card deep-research-card anim-in">
+        <div class="dr-header">
+            <div>
+                <div class="section-label" style="color:${verdictColor}">🔍 Tiefe Analyse · ${verdictLabel}</div>
+                ${a.oneLineSummary ? `<div class="dr-summary">${escapeHtml(a.oneLineSummary)}</div>` : ""}
+            </div>
+            <div class="dr-scores">
+                <div class="dr-score-block">
+                    <div class="dr-score-label">Site-Qualität</div>
+                    <div class="dr-score-value">${a.overallScore ?? "—"}</div>
+                </div>
+                <div class="dr-score-block">
+                    <div class="dr-score-label">Lead-Potenzial</div>
+                    <div class="dr-score-value" style="color:${verdictColor}">${a.leadPotential ?? "—"}</div>
+                </div>
+            </div>
+        </div>
+
+        ${a.keyPitchAngle ? `<div class="dr-pitch">💬 <em>${escapeHtml(a.keyPitchAngle)}</em></div>` : ""}
+
+        <div class="dr-grid">
+            <div class="dr-col">
+                <div class="dr-col-label" style="color:var(--green)">Stärken</div>
+                <ul class="dr-list">${strengths || "<li class=\"dr-empty\">Keine starken Stärken erkannt.</li>"}</ul>
+            </div>
+            <div class="dr-col">
+                <div class="dr-col-label" style="color:var(--red)">Schwächen</div>
+                <ul class="dr-list">${weaknesses || "<li class=\"dr-empty\">Keine relevanten Schwächen erkannt.</li>"}</ul>
+            </div>
+        </div>
+
+        ${actions ? `<div class="dr-actions-block">
+            <div class="dr-col-label">Empfohlene Schritte</div>
+            <ul class="dr-list dr-actions-list">${actions}</ul>
+        </div>` : ""}
+
+        ${metaLine ? `<div class="dr-meta">${metaLine}</div>` : ""}
+    </div>`;
+}
+
+function escapeHtml(s) {
+    if (s == null) return "";
+    return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;"}[c]));
+}
+

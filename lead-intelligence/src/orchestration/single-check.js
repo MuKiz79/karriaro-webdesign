@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeContent, analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeBranchStandards, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact } from '../api/cloud-functions.js';
+import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
@@ -94,26 +94,37 @@ export async function runSingleCheck() {
             companyProfile = analyzeCompanyProfile(url, psiData, place, null);
         } catch(e) { console.error('CompanyProfile failed:', e); companyProfile = { domain: new URL(url).hostname.replace('www.',''), branche: '', isEnterprise: false, enterpriseWarning: null, owner: { name: null, nationality: null }, companyName: '' }; }
 
-        // Phase 4: KI-Analyse ZUERST (Design-Qualität beeinflusst Scoring)
-        showLoading('④ KI-Analyse (7 Module parallel)...');
-        const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
+        // Phase 3.5: Deep Research SOFORT starten — läuft parallel zu Phase 4 (Sub-Page-Crawl + Sonnet-Call braucht ~10-15s)
         const brancheForAI = place?.primaryTypeDisplayName?.text || companyProfile?.branche || '';
-        let uxFound = [];
-        try { uxFound = auditUX(psiData, place)?.found?.map(f => f.name) || []; } catch(e) {}
+        const deepResearchPromise = deepResearch({
+            url,
+            branche: brancheForAI || null,
+            place: place ? { displayName: place.displayName, formattedAddress: place.formattedAddress, rating: place.rating, userRatingCount: place.userRatingCount, primaryType: place.primaryType, location: place.location, regularOpeningHours: place.regularOpeningHours } : null,
+            psiData
+        }).catch(err => { console.warn('deepResearch promise rejected:', err?.message || err); return null; });
 
-        let contentAnalysis = null, screenshotAnalysis = null, reviewSentiment = null,
-            domainAge = null, domainAuthority = null, searchVolume = null, branchStandards = null;
+        // Phase 4: KI-Analyse parallel — analyzeContent + analyzeBranchStandards entfernt (Deep Research absorbiert beides)
+        showLoading('④ KI-Analyse (Screenshot + Reviews + Domain + Deep Research)...');
+        const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
+
+        let screenshotAnalysis = null, reviewSentiment = null,
+            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null;
         try {
-            [contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, branchStandards] = await Promise.all([
-                analyzeContent(url).catch(() => null),
+            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult] = await Promise.all([
                 analyzeScreenshot(screenshot).catch(() => null),
                 analyzeReviews(domain).catch(() => null),
                 getDomainAge(domain).catch(() => null),
                 getDomainAuthority(domain).catch(() => null),
                 getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain).catch(() => null),
-                analyzeBranchStandards(url, brancheForAI, uxFound).catch(() => null)
+                deepResearchPromise
             ]);
         } catch(e) { console.error('KI-Analyse failed:', e); }
+
+        // Deep Research liefert {ok, cached, assessment, meta} — wir extrahieren das Assessment
+        const deepAssessment = deepResearchResult?.assessment || null;
+        // contentAnalysis / branchStandards halten wir für UI-Kompat noch leer — Deep Research ersetzt sie
+        const contentAnalysis = null;
+        const branchStandards = null;
 
         // Phase 5: Scoring — NACH KI-Analyse (Design-Qualität fließt ein)
         showLoading('⑤ Scoring (Monte-Carlo × 2000)...');
@@ -122,7 +133,7 @@ export async function runSingleCheck() {
             revenue = calculateRevenueLoss(ws, place);
         } catch(e) { console.error('Revenue calc failed:', e); }
         try {
-            result = scoreLead(ws, tech, place, competitors, footprint, revenue, null, screenshotAnalysis, contentAnalysis);
+            result = scoreLead(ws, tech, place, competitors, footprint, revenue, null, screenshotAnalysis, contentAnalysis, deepAssessment);
         } catch(e) {
             console.error('ScoreLead failed:', e);
             result = { leadScore: 50, conversionRate: 2.0, ci: { lower: 0.5, upper: 5 }, ciMargin: 2, N: 100,
@@ -176,6 +187,8 @@ export async function runSingleCheck() {
             contentAnalysis, screenshotAnalysis, reviewSentiment, domainAge, domainAuthority,
             searchVolume, psiData, abTest, drift, wayback, companyProfile, branchStandards,
             socialProfiles, emailCheck, contactData, sitemapFreshness, mockupSuggestion,
+            deepResearch: deepResearchResult,
+            deepAssessment,
             ...localAnalysis
         };
 

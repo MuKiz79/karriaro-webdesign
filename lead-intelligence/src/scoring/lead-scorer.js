@@ -82,13 +82,21 @@ function optimizeChannels(channels, conversionRate, dealSize) {
  * @param {Object|null} epidemicResult - R0-Ergebnis (optional)
  * @returns {Object} Vollstaendiges Lead-Scoring-Ergebnis
  */
-export function scoreLead(ws, tech, place, competitors, footprint, revenue = null, epidemicResult = null, screenshotAnalysis = null, contentAnalysis = null) {
+export function scoreLead(ws, tech, place, competitors, footprint, revenue = null, epidemicResult = null, screenshotAnalysis = null, contentAnalysis = null, deepAssessment = null) {
     const type = place?.primaryType || '_default';
     const branch = getBranchPrior(type);
     const seasonFactor = SEASONALITY.getCurrentFactor();
 
-    // Shifts berechnen — mit Design-Qualität als Dämpfung
-    const shifts = calculateShifts(ws, tech, place, competitors, revenue, footprint, screenshotAnalysis, contentAnalysis);
+    // FIX (Audit 2026-05-03): screenshotAnalysis = null bedeutet KI-Failure/Timeout —
+    // KEIN künstliches Score-Boosting. Wir behandeln das wie "designQuality unbekannt"
+    // (designDamping = 1.0, neutral) statt wie "designQuality 0" (Damping = 1.5).
+    // Konkret: shift-calculator nutzt `screenshotAnalysis?.designQuality || 0`,
+    // 0 wird als isVisuallyBad behandelt und Damping = 1.5. Das war der Bug.
+    const safeScreenshot = screenshotAnalysis && typeof screenshotAnalysis.designQuality === 'number'
+        ? screenshotAnalysis : null;
+
+    // Shifts berechnen — mit Design-Qualität als Dämpfung (nur wenn Daten vorliegen)
+    const shifts = calculateShifts(ws, tech, place, competitors, revenue, footprint, safeScreenshot, contentAnalysis);
 
     // Wissenschaftliche Module: Boost fuer Interesse
     let sciBoost = 0;
@@ -224,7 +232,19 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
         simResult.leadScore * Math.sqrt(branchMultiplier) // sqrt dämpft den Score-Effekt
     )));
 
-    const adjustedScore = Math.max(0, Math.min(100, learnedScore + evBoost));
+    // Quick-Score-Variante (alter Pfad, dient als Fallback wenn Deep Research fehlt)
+    const quickScore = Math.max(0, Math.min(100, learnedScore + evBoost));
+
+    // Deep-Research-Override: wenn das Sonnet-Assessment vorliegt, ersetzt es
+    // den heuristischen Score. Eine Zahl, eine Wahrheit — der ganzheitliche
+    // leadPotential aus Sonnet wird zum primären Score, EV-Boost bleibt drauf.
+    let adjustedScore = quickScore;
+    let scoreSource = 'quick';
+    if (deepAssessment && typeof deepAssessment.leadPotential === 'number') {
+        const deepLp = Math.max(0, Math.min(100, deepAssessment.leadPotential));
+        adjustedScore = Math.max(0, Math.min(100, Math.round(deepLp + evBoost * 0.5)));
+        scoreSource = 'deep';
+    }
 
     // Score-Inflation-Tracker (best effort — Tests / SSR brechen das nicht).
     try { logScore(adjustedScore, type); } catch {}
@@ -232,6 +252,8 @@ export function scoreLead(ws, tech, place, competitors, footprint, revenue = nul
 
     return {
         leadScore: adjustedScore,
+        scoreSource,
+        quickScore,
         probability: adjustedScore,
         branchMultiplier: Math.round(branchMultiplier * 100) / 100,
         learnedConversionRate: Math.round(learnedConversionRate * 1000) / 10,

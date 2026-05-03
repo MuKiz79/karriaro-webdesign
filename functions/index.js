@@ -3,7 +3,15 @@ const { defineString, defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-const { runAuditPipeline } = require("./lib/audit-pipeline.js");
+const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
+const {
+    extractSubPages,
+    htmlToText,
+    fetchPagesParallel,
+    buildResearchPrompt,
+    SYSTEM_PROMPT,
+    TOOL_DEFINITION
+} = require("./lib/deep-research.js");
 
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
@@ -12,6 +20,10 @@ const PLACES_KEY = defineSecret("PLACES_API_KEY");
 const SMTP_HOST = defineSecret("SMTP_HOST");
 const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
+const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
+
+const DEEP_RESEARCH_MODEL = "claude-sonnet-4-6-20250929";
+const DEEP_RESEARCH_CACHE_DAYS = 7;
 
 const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080"];
 const PLACES_BASE = "https://places.googleapis.com/v1/places";
@@ -396,3 +408,217 @@ exports.trackLeadView = onRequest(
     }
 );
 
+// ═══════════════════════════════════════════════════════════════
+// DEEP RESEARCH: ganzheitliche Site-Analyse mit Sub-Pages + Sonnet
+// ═══════════════════════════════════════════════════════════════
+
+function deepResearchCacheKey(url) {
+    const u = String(url || "").toLowerCase().replace(/\/+$/, "");
+    return crypto.createHash("sha256").update(u).digest("hex").slice(0, 24);
+}
+
+async function loadDeepResearchCache(url) {
+    try {
+        const key = deepResearchCacheKey(url);
+        const snap = await db.collection("deepResearch").doc(key).get();
+        if (!snap.exists) return null;
+        const data = snap.data();
+        const expires = data.expiresAtMs || 0;
+        if (expires > 0 && expires < Date.now()) return null;
+        return data;
+    } catch (err) {
+        console.warn("deepResearch cache read failed:", err.message);
+        return null;
+    }
+}
+
+async function saveDeepResearchCache(url, payload) {
+    try {
+        const key = deepResearchCacheKey(url);
+        const expiresAtMs = Date.now() + DEEP_RESEARCH_CACHE_DAYS * 86400000;
+        await db.collection("deepResearch").doc(key).set({
+            ...payload,
+            cachedUrl: url,
+            cachedAtMs: Date.now(),
+            expiresAtMs,
+            expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+        });
+    } catch (err) {
+        console.warn("deepResearch cache write failed:", err.message);
+    }
+}
+
+async function callClaudeForResearch(promptText) {
+    const body = {
+        model: DEEP_RESEARCH_MODEL,
+        max_tokens: 4096,
+        system: [
+            { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }
+        ],
+        tools: [TOOL_DEFINITION],
+        tool_choice: { type: "tool", name: TOOL_DEFINITION.name },
+        messages: [{ role: "user", content: promptText }]
+    };
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CLAUDE_API_KEY.value(),
+            "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(45000)
+    });
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`Claude API ${res.status}: ${errText.slice(0, 200)}`);
+    }
+    const data = await res.json();
+    const toolUse = (data.content || []).find(c => c.type === "tool_use" && c.name === TOOL_DEFINITION.name);
+    if (!toolUse?.input) throw new Error("Claude returned no tool_use payload");
+    return {
+        assessment: toolUse.input,
+        usage: data.usage || null,
+        stopReason: data.stop_reason
+    };
+}
+
+// ─── deepResearch ─── POST {url, branche?, place?, psiData?}
+exports.deepResearch = onRequest(
+    {
+        region: "europe-west1",
+        memory: "1GiB",
+        timeoutSeconds: 90,
+        cors: false,
+        secrets: [CLAUDE_API_KEY, PLACES_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (rateLimit(req, res)) return;
+
+        const startMs = Date.now();
+        let { url, branche = null, place = null, psiData = null, force = false } = req.body || {};
+        if (!url || typeof url !== "string") return res.status(400).json({ error: "url required" });
+        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+        // 1) Cache lookup
+        if (!force) {
+            const cached = await loadDeepResearchCache(url);
+            if (cached?.assessment) {
+                return res.json({
+                    ok: true,
+                    cached: true,
+                    cachedAtMs: cached.cachedAtMs,
+                    assessment: cached.assessment,
+                    debug: { fromCache: true, durationMs: Date.now() - startMs }
+                });
+            }
+        }
+
+        try {
+            // 2) Homepage holen + Sub-Pages parallel
+            const homepageFetch = fetch(url, {
+                headers: { "User-Agent": "Karriaro-LeadBot/1.0", "Accept": "text/html,*/*" },
+                signal: AbortSignal.timeout(10000),
+                redirect: "follow"
+            }).then(async r => ({ ok: r.ok, status: r.status, html: r.ok ? await r.text() : "" }))
+              .catch(err => ({ ok: false, status: 0, html: "", error: String(err?.message || err) }));
+
+            const homepage = await homepageFetch;
+            if (!homepage.ok || !homepage.html) {
+                return res.status(502).json({ error: "Homepage konnte nicht geladen werden", details: homepage.error || `HTTP ${homepage.status}` });
+            }
+
+            const homepageText = htmlToText(homepage.html, 2200);
+            const subPageEntries = extractSubPages(homepage.html, url, 6);
+            const subPages = subPageEntries.length > 0
+                ? await fetchPagesParallel(subPageEntries, { textChars: 1200, timeoutMs: 6000 })
+                : [];
+
+            // 3) Tech + Wayback + Place ggf. ergänzen
+            let psiSnapshot = psiData ? psiData.lighthouseResult ? psiData : { lighthouseResult: psiData } : null;
+            if (!psiSnapshot) {
+                // Falls Aufrufer kein PSI mitgeschickt hat, läuft Deep Research auch ohne
+                psiSnapshot = null;
+            }
+            const tech = psiSnapshot ? detectTech(psiSnapshot) : { cms: null, version: null, isBaukasten: false };
+            const wayback = await checkFreshness(url).catch(() => ({ available: false }));
+
+            const psiScores = psiSnapshot ? {
+                perf: Math.round((psiSnapshot.lighthouseResult?.categories?.performance?.score || 0) * 100),
+                seo: Math.round((psiSnapshot.lighthouseResult?.categories?.seo?.score || 0) * 100),
+                a11y: Math.round((psiSnapshot.lighthouseResult?.categories?.accessibility?.score || 0) * 100),
+                bp: Math.round((psiSnapshot.lighthouseResult?.categories?.["best-practices"]?.score || 0) * 100)
+            } : null;
+
+            // 4) Konkurrenz ergänzen falls Place-Daten vorliegen
+            let competitors = [];
+            try {
+                if (place?.location && place?.primaryType) {
+                    const r = await fetch(`${PLACES_BASE}:searchNearby`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-Goog-Api-Key": PLACES_KEY.value(),
+                            "X-Goog-FieldMask": "places.displayName,places.rating,places.userRatingCount,places.websiteUri"
+                        },
+                        body: JSON.stringify({
+                            includedPrimaryTypes: [place.primaryType],
+                            maxResultCount: 5,
+                            locationRestriction: { circle: { center: place.location, radius: 5000 } },
+                            languageCode: "de"
+                        }),
+                        signal: AbortSignal.timeout(6000)
+                    });
+                    const data = await r.json();
+                    const baseHost = new URL(url).hostname.replace(/^www\./, "");
+                    competitors = (data?.places || [])
+                        .filter(c => c.userRatingCount > 30 && c.rating >= 4.0 && (c.websiteUri || "").indexOf(baseHost) === -1)
+                        .slice(0, 3)
+                        .map(c => ({
+                            name: c.displayName?.text || "—",
+                            rating: c.rating || null,
+                            reviews: c.userRatingCount || 0,
+                            website: c.websiteUri || null
+                        }));
+                }
+            } catch (err) {
+                console.warn("deepResearch competitors fetch failed:", err.message);
+            }
+
+            // 5) Prompt bauen + Claude rufen
+            const prompt = buildResearchPrompt({
+                url, branche, place,
+                homepage: { ok: true, text: homepageText },
+                subPages,
+                psiScores, tech, wayback, competitors
+            });
+
+            const claude = await callClaudeForResearch(prompt);
+            const assessment = claude.assessment;
+
+            // 6) Cache + Return
+            const payload = {
+                assessment,
+                meta: {
+                    url,
+                    branche,
+                    domain: new URL(url).hostname.replace(/^www\./, ""),
+                    subPagesAnalyzed: subPages.map(p => ({ slot: p.slot, url: p.url, ok: p.ok, status: p.status })),
+                    pagesCount: subPages.length + 1,
+                    psiAvailable: !!psiSnapshot,
+                    competitorCount: competitors.length,
+                    model: DEEP_RESEARCH_MODEL,
+                    usage: claude.usage,
+                    durationMs: Date.now() - startMs
+                }
+            };
+            await saveDeepResearchCache(url, payload);
+            res.json({ ok: true, cached: false, ...payload });
+        } catch (err) {
+            console.error("deepResearch failed:", err);
+            res.status(500).json({ error: "Deep Research fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
