@@ -22,7 +22,7 @@ const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
 const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
 
-const DEEP_RESEARCH_MODEL = "claude-sonnet-4-6-20250929";
+const DEEP_RESEARCH_MODEL = "claude-sonnet-4-20250514";
 const DEEP_RESEARCH_CACHE_DAYS = 7;
 
 const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080"];
