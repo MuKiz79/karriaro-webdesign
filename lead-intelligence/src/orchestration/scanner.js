@@ -1,5 +1,17 @@
 /**
- * Branchen-Scanner — Testet alle 18 Branchen in einer Stadt
+ * Stadt-Scanner — Lead-Workspace.
+ *
+ * Vom Branchen-Aggregat zum konkreten Lead. Die UI ist nicht mehr "Friseure
+ * sind 38% interessant", sondern "Friseur Mueller, Score 78, hier kaufen".
+ *
+ * Pipeline:
+ *  1. searchPlaces(branche+stadt, 6) parallel fuer alle 18 Branchen.
+ *  2. Pre-Filter: nur Places mit websiteUri, OPERATIONAL, userRatingCount>=5,
+ *     keine Enterprise/Konkurrenz-Domain.
+ *  3. PSI-Light pro qualifiziertem Place mit Concurrency-Limit 8.
+ *  4. scoreLead() mit Light-Inputs (kein KI-Call) — der Score ist eine
+ *     erste Sortierhilfe; Tiefe Analyse passiert auf Klick im Single-Check.
+ *  5. Output: flache Lead-Liste mit Filter-/Sort-State im URL-Hash.
  */
 import { state } from '../state.js';
 import { config } from '../config.js';
@@ -8,18 +20,37 @@ import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
+import { checkEnterpriseDB } from '../priors/enterprise-db.js';
+import { saveLead } from '../crm/leads.js';
 
 const BRANCHES = [
-    { key:'dentist', q:'Zahnarzt', name:'Zahnärzte' }, { key:'hair_salon', q:'Friseur', name:'Friseure' },
-    { key:'restaurant', q:'Restaurant', name:'Restaurants' }, { key:'auto_repair', q:'KFZ Werkstatt', name:'KFZ-Werkstätten' },
-    { key:'beauty_salon', q:'Kosmetikstudio', name:'Kosmetikstudios' }, { key:'physiotherapist', q:'Physiotherapie', name:'Physiotherapie' },
-    { key:'lawyer', q:'Rechtsanwalt', name:'Rechtsanwälte' }, { key:'real_estate_agency', q:'Immobilienmakler', name:'Immobilienmakler' },
-    { key:'hotel', q:'Hotel', name:'Hotels' }, { key:'plumber', q:'Sanitär Heizung', name:'Sanitärbetriebe' },
-    { key:'electrician', q:'Elektriker', name:'Elektrobetriebe' }, { key:'veterinary_care', q:'Tierarzt', name:'Tierärzte' },
-    { key:'gym', q:'Fitnessstudio', name:'Fitnessstudios' }, { key:'moving_company', q:'Umzugsunternehmen', name:'Umzugsfirmen' },
-    { key:'car_dealer', q:'Autohaus', name:'Autohäuser' }, { key:'bakery', q:'Bäckerei', name:'Bäckereien' },
-    { key:'florist', q:'Blumenladen', name:'Floristen' }, { key:'cafe', q:'Cafe', name:'Cafés' }
+    { key: 'dentist',           q: 'Zahnarzt',          name: 'Zahnärzte' },
+    { key: 'hair_salon',        q: 'Friseur',           name: 'Friseure' },
+    { key: 'restaurant',        q: 'Restaurant',        name: 'Restaurants' },
+    { key: 'auto_repair',       q: 'KFZ Werkstatt',     name: 'KFZ-Werkstätten' },
+    { key: 'beauty_salon',      q: 'Kosmetikstudio',    name: 'Kosmetikstudios' },
+    { key: 'physiotherapist',   q: 'Physiotherapie',    name: 'Physiotherapie' },
+    { key: 'lawyer',            q: 'Rechtsanwalt',      name: 'Rechtsanwälte' },
+    { key: 'real_estate_agency',q: 'Immobilienmakler',  name: 'Immobilienmakler' },
+    { key: 'hotel',             q: 'Hotel',             name: 'Hotels' },
+    { key: 'plumber',           q: 'Sanitär Heizung',   name: 'Sanitärbetriebe' },
+    { key: 'electrician',       q: 'Elektriker',        name: 'Elektrobetriebe' },
+    { key: 'veterinary_care',   q: 'Tierarzt',          name: 'Tierärzte' },
+    { key: 'gym',               q: 'Fitnessstudio',     name: 'Fitnessstudios' },
+    { key: 'moving_company',    q: 'Umzugsunternehmen', name: 'Umzugsfirmen' },
+    { key: 'car_dealer',        q: 'Autohaus',          name: 'Autohäuser' },
+    { key: 'bakery',            q: 'Bäckerei',          name: 'Bäckereien' },
+    { key: 'florist',           q: 'Blumenladen',       name: 'Floristen' },
+    { key: 'cafe',              q: 'Cafe',              name: 'Cafés' }
 ];
+const BRANCH_BY_TYPE = Object.fromEntries(BRANCHES.map(b => [b.key, b]));
+
+const PLACES_PER_BRANCH = 6;
+const PSI_CONCURRENCY = 8;
+const MIN_REVIEWS = 5;
+
+let lastResults = []; // letzte Scanner-Ausgabe — fuer Filter/Sort ohne Re-Run
+let lastCity = '';
 
 export async function runScanner() {
     const city = document.getElementById('scanner-city').value.trim();
@@ -28,131 +59,361 @@ export async function runScanner() {
     state.aborted = false;
     document.getElementById('btn-scanner').disabled = true;
 
-    const results = [];
     showProgress(0, `Bitte diesen Tab offen lassen — Scan läuft...`);
 
     // Phase 1: Alle Places-Suchen parallel
-    showProgress(10, 'Suche Unternehmen in allen Branchen (Tab offen lassen!)...');
+    showProgress(8, '① Geschäfte in allen Branchen suchen...');
     const placeResults = await Promise.all(
-        BRANCHES.map(b => searchPlaces(`${b.q} ${city}`, 3).catch(() => null))
+        BRANCHES.map(b => searchPlaces(`${b.q} ${city}`, PLACES_PER_BRANCH).catch(() => null))
     );
     if (state.aborted) { hideProgress(); document.getElementById('btn-scanner').disabled = false; return; }
 
-    // Phase 2: Je 1 PageSpeed-Call pro Branche — in 3er-Batches parallel
-    const BATCH_SIZE = 3;
-    for (let i = 0; i < BRANCHES.length; i += BATCH_SIZE) {
-        if (state.aborted) break;
-        const batch = BRANCHES.slice(i, i + BATCH_SIZE);
-        showProgress(Math.round(((i + batch.length) / BRANCHES.length) * 100), `${i + batch.length}/${BRANCHES.length}: ${batch.map(b => b.name).join(', ')}...`);
-
-        const batchPromises = batch.map(async (b, bIdx) => {
-            const idx = i + bIdx;
-            const places = (placeResults[idx]?.places || []).filter(p => p.websiteUri);
-            if (!places.length) return { ...b, city, avgScore: 0, count: 0, tested: 0, avgPerf: 0 };
-
-            // Nur 1 Place testen (statt 2) — spart 50% der Zeit
+    // Phase 2: Pre-Filter — sammle alle qualifizierten Leads
+    showProgress(20, '② Pre-Filter (Enterprise raus, ohne Reviews raus)...');
+    const candidates = [];
+    for (let i = 0; i < BRANCHES.length; i++) {
+        const branch = BRANCHES[i];
+        const places = (placeResults[i]?.places || []).filter(p => {
+            if (!p.websiteUri) return false;
+            if ((p.userRatingCount || 0) < MIN_REVIEWS) return false;
+            if (p.businessStatus && p.businessStatus !== 'OPERATIONAL') return false;
             try {
-                const psi = await fetchPageSpeed(places[0].websiteUri);
-                const ws = extractWebsiteScore(psi);
-                const tech = detectTech(psi);
-                const prob = scoreLead(ws, tech, places[0], null, null);
-                return {
-                    ...b, city,
-                    avgScore: prob.leadScore,
-                    avgPerf: ws.perf,
-                    count: places.length, tested: 1,
-                    baukastenPct: tech.isBaukasten ? 100 : 0
-                };
-            } catch (e) {
-                return { ...b, city, avgScore: 0, count: places.length, tested: 0, avgPerf: 0, error: e.message };
-            }
+                const host = new URL(p.websiteUri).hostname.replace(/^www\./, '');
+                const ent = checkEnterpriseDB(host);
+                if (ent.isEnterprise || ent.isCompetitor) return false;
+            } catch { return false; }
+            return true;
         });
-
-        const batchResults = await Promise.all(batchPromises);
-        results.push(...batchResults);
-
-        // Kein delay — fetch ist schon sequentiell genug
-        // delay(500) wurde entfernt weil Browser Background-Tabs auf 1000ms+ drosseln
+        for (const p of places) {
+            candidates.push({ branch, place: p });
+        }
     }
+
+    if (candidates.length === 0) {
+        hideProgress();
+        document.getElementById('btn-scanner').disabled = false;
+        renderEmpty(city);
+        return;
+    }
+
+    // Phase 3: PSI-Light pro Lead, Concurrency-Limit
+    showProgress(30, `③ Analyse von ${candidates.length} Geschäften (parallel)...`);
+    const leads = [];
+    let done = 0;
+    await runWithConcurrency(candidates, PSI_CONCURRENCY, async (cand) => {
+        if (state.aborted) return;
+        const { branch, place } = cand;
+        try {
+            const psi = await fetchPageSpeed(place.websiteUri);
+            const ws = extractWebsiteScore(psi);
+            const tech = detectTech(psi);
+            const result = scoreLead(ws, tech, place, null, null);
+            leads.push({
+                key: `${branch.key}::${place.websiteUri}`,
+                branch,
+                place,
+                domain: hostnameOf(place.websiteUri),
+                websiteUri: place.websiteUri,
+                name: place.displayName?.text || hostnameOf(place.websiteUri),
+                rating: place.rating || null,
+                reviews: place.userRatingCount || 0,
+                address: place.formattedAddress || null,
+                primaryType: place.primaryType || branch.key,
+                ws,
+                tech,
+                leadScore: result.leadScore || 0,
+                quickScore: result.quickScore ?? result.leadScore ?? 0,
+                conversionRate: result.conversionRate || 0,
+                expectedValue: result.expectedValue || 0,
+                isBaukasten: !!tech.isBaukasten,
+                cms: tech.cms || null,
+                version: tech.version || null
+            });
+        } catch (err) {
+            // Schweigend ignorieren — vermutlich PSI-Quota oder unreachable Site.
+            // Nicht in der Liste, kein Score.
+        }
+        done++;
+        const pct = 30 + Math.round((done / candidates.length) * 65);
+        showProgress(pct, `③ ${done}/${candidates.length} analysiert...`);
+    });
 
     hideProgress();
     document.getElementById('btn-scanner').disabled = false;
     if (state.aborted) return;
 
-    results.sort((a,b) => b.avgScore - a.avgScore);
-    renderScannerResults(city, results);
-    // Benachrichtige den User wenn der Tab im Hintergrund war
-    notifyDone(`Scanner fertig: ${results.filter(r => r.avgScore > 0).length} Branchen mit Potenzial`);
+    leads.sort((a, b) => b.leadScore - a.leadScore);
+    lastResults = leads;
+    lastCity = city;
+    persistFilters({}); // setze URL-Hash auf default
+    renderLeadWorkspace(city, leads, getActiveFilters());
+
+    notifyDone(`Scan fertig: ${leads.length} Leads gefunden, ${leads.filter(l => l.leadScore >= 60).length} mit Score ≥60`);
 }
 
-function renderScannerResults(city, results) {
-    const best = results.find(r => r.avgScore > 0);
-    const sc = v => v >= 55 ? 'badge-green' : v >= 30 ? 'badge-orange' : 'badge-red';
-    const perf = v => v >= 75 ? 'good' : v >= 50 ? 'ok' : 'bad';
+// ─────────── Concurrency-Helper ───────────
 
-    let html = `<h2 class="crm-title" style="margin-bottom:16px">Branchen-Ranking für ${city}</h2>`;
-
-    // Top 3 Empfehlungen
-    const top3 = results.filter(r => r.avgScore > 0).slice(0, 3);
-    if (top3.length > 0) {
-        html += `<div class="science-grid" style="grid-template-columns:repeat(${Math.min(top3.length, 3)},1fr);margin-bottom:16px">`;
-        top3.forEach((r, i) => {
-            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉';
-            html += `<div class="card card-accent anim-in">
-                <div class="section-label-accent">${medal} #${i+1} Potenzial</div>
-                <div style="font-size:1.1rem;font-weight:700">${r.name}</div>
-                <div class="metric-desc">Score ${r.avgScore} · Perf ${r.avgPerf} ${r.baukastenPct > 0 ? `· ${r.baukastenPct}% Baukasten` : ''}</div>
-                <div class="metric-desc" style="margin-top:4px">→ "${r.q} ${city}"</div>
-            </div>`;
-        });
-        html += `</div>`;
+async function runWithConcurrency(items, limit, worker) {
+    const queue = items.slice();
+    const running = [];
+    while (queue.length > 0 || running.length > 0) {
+        while (running.length < limit && queue.length > 0) {
+            const item = queue.shift();
+            const p = Promise.resolve().then(() => worker(item)).then(() => {
+                running.splice(running.indexOf(p), 1);
+            });
+            running.push(p);
+        }
+        if (running.length > 0) await Promise.race(running);
     }
+}
 
-    // Tabelle
-    html += `<div style="overflow-x:auto"><table class="data-table" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius)">
-        <thead><tr><th style="text-align:left">#</th><th style="text-align:left">Branche</th><th>Score</th><th>Perf.</th><th>Baukasten</th><th>Gefunden</th></tr></thead><tbody>`;
+function hostnameOf(url) {
+    try { return new URL(url).hostname.replace(/^www\./, ''); }
+    catch { return url; }
+}
 
-    results.forEach((r, i) => {
-        html += `<tr>
-            <td style="font-weight:700;color:var(--muted)">${i+1}</td>
-            <td><strong>${r.name}</strong>${r.error ? `<br><span style="font-size:11px;color:var(--red)">${r.error}</span>` : ''}</td>
-            <td><span class="badge ${sc(r.avgScore)}">${r.avgScore || '—'}</span></td>
-            <td class="${perf(r.avgPerf)}">${r.avgPerf || '—'}</td>
-            <td>${r.baukastenPct > 0 ? `<span class="badge badge-orange">${r.baukastenPct}%</span>` : '—'}</td>
-            <td style="color:var(--muted)">${r.tested}/${r.count}</td>
-        </tr>`;
-    });
-    html += '</tbody></table></div>';
+// ─────────── Filter / Sort State (URL-Hash) ───────────
+
+function getActiveFilters() {
+    const h = new URLSearchParams(location.hash.replace(/^#/, ''));
+    return {
+        minScore: parseInt(h.get('min') || '0', 10),
+        branch:   h.get('branch') || 'all',
+        sort:     h.get('sort') || 'score',
+        baukasten: h.get('baukasten') === '1'
+    };
+}
+
+function persistFilters(updates) {
+    const current = getActiveFilters();
+    const next = { ...current, ...updates };
+    const h = new URLSearchParams();
+    if (next.minScore > 0) h.set('min', String(next.minScore));
+    if (next.branch && next.branch !== 'all') h.set('branch', next.branch);
+    if (next.sort && next.sort !== 'score') h.set('sort', next.sort);
+    if (next.baukasten) h.set('baukasten', '1');
+    const str = h.toString();
+    location.hash = str ? '#' + str : '';
+}
+
+function applyFilters(leads, f) {
+    let out = leads.slice();
+    if (f.minScore > 0) out = out.filter(l => l.leadScore >= f.minScore);
+    if (f.branch && f.branch !== 'all') out = out.filter(l => l.branch.key === f.branch);
+    if (f.baukasten) out = out.filter(l => l.isBaukasten);
+    if (f.sort === 'reviews') out.sort((a, b) => b.reviews - a.reviews);
+    else if (f.sort === 'name')  out.sort((a, b) => a.name.localeCompare(b.name));
+    else if (f.sort === 'perf')  out.sort((a, b) => (a.ws?.perf || 0) - (b.ws?.perf || 0));
+    else /* score */              out.sort((a, b) => b.leadScore - a.leadScore);
+    return out;
+}
+
+// ─────────── Render ───────────
+
+function renderLeadWorkspace(city, leads, filters) {
+    const filtered = applyFilters(leads, filters);
+    const total = leads.length;
+    const hot = leads.filter(l => l.leadScore >= 70).length;
+    const warm = leads.filter(l => l.leadScore >= 50 && l.leadScore < 70).length;
+    const cold = leads.length - hot - warm;
+
+    // Branchen-Filter-Liste — nur die Branchen, die echte Leads haben
+    const branchCounts = {};
+    for (const l of leads) branchCounts[l.branch.key] = (branchCounts[l.branch.key] || 0) + 1;
+    const branchOptions = BRANCHES.filter(b => branchCounts[b.key] > 0)
+        .sort((a, b) => branchCounts[b.key] - branchCounts[a.key]);
+
+    let html = `
+        <div class="ws-header">
+            <div class="ws-title">
+                <h2>Leads in ${escapeHtml(city)}</h2>
+                <div class="ws-stats">
+                    <span><strong>${filtered.length}</strong> ${filtered.length === total ? 'Treffer' : 'gefiltert von ' + total}</span>
+                    <span class="ws-stat-hot">🔥 ${hot} hot</span>
+                    <span class="ws-stat-warm">⚠ ${warm} warm</span>
+                    <span class="ws-stat-cold">○ ${cold} cold</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ws-toolbar">
+            <div class="ws-pills" data-pill-group="minScore">
+                <button class="ws-pill${filters.minScore === 0 ? ' active' : ''}" data-min="0">Alle Scores</button>
+                <button class="ws-pill${filters.minScore === 50 ? ' active' : ''}" data-min="50">≥ 50</button>
+                <button class="ws-pill${filters.minScore === 60 ? ' active' : ''}" data-min="60">≥ 60</button>
+                <button class="ws-pill${filters.minScore === 70 ? ' active' : ''}" data-min="70">≥ 70 (hot)</button>
+            </div>
+            <div class="ws-pills" data-pill-group="baukasten">
+                <button class="ws-pill${filters.baukasten ? ' active' : ''}" data-baukasten="${filters.baukasten ? '0' : '1'}">${filters.baukasten ? '✓ ' : ''}Baukasten-only</button>
+            </div>
+            <div class="ws-select-wrap">
+                <select class="ws-select" data-action="branch">
+                    <option value="all"${filters.branch === 'all' ? ' selected' : ''}>Alle Branchen (${total})</option>
+                    ${branchOptions.map(b => `<option value="${b.key}"${filters.branch === b.key ? ' selected' : ''}>${escapeHtml(b.name)} (${branchCounts[b.key]})</option>`).join('')}
+                </select>
+                <select class="ws-select" data-action="sort">
+                    <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Score ↓</option>
+                    <option value="reviews"${filters.sort === 'reviews' ? ' selected' : ''}>Sort: Reviews ↓</option>
+                    <option value="perf"${filters.sort === 'perf' ? ' selected' : ''}>Sort: Performance ↑</option>
+                    <option value="name"${filters.sort === 'name' ? ' selected' : ''}>Sort: A-Z</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ws-list">
+            ${filtered.length === 0
+                ? `<div class="ws-empty">Mit den aktuellen Filtern keine Leads. <button class="ws-link" data-action="reset-filters">Filter zurücksetzen</button></div>`
+                : filtered.map(renderLeadCard).join('')}
+        </div>
+    `;
 
     const el = document.getElementById('batch-results');
     el.innerHTML = html;
     el.classList.remove('hidden');
-    el.scrollIntoView({ behavior: 'smooth' });
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    bindWorkspaceEvents(el);
 }
 
-function showProgress(pct, t) { document.getElementById('progress').classList.remove('hidden'); document.getElementById('progress-fill').style.width=pct+'%'; document.getElementById('progress-text').textContent=t; }
+function renderEmpty(city) {
+    const el = document.getElementById('batch-results');
+    el.innerHTML = `
+        <div class="ws-empty-block">
+            <h2>Keine Leads in ${escapeHtml(city)} gefunden</h2>
+            <p>Möglich: keine Geschäfte mit Website + ≥${MIN_REVIEWS} Bewertungen + nicht-Enterprise.</p>
+            <p>Versuchen Sie eine andere Stadt oder eine größere Stadt im Umland.</p>
+        </div>`;
+    el.classList.remove('hidden');
+}
+
+function renderLeadCard(l) {
+    const scoreClass = l.leadScore >= 70 ? 'hot' : l.leadScore >= 50 ? 'warm' : 'cold';
+    const techHint = l.isBaukasten ? `${l.cms} (Baukasten)`
+        : l.cms && l.version ? `${l.cms} ${l.version}`
+        : l.cms || '—';
+    const perfBadge = l.ws?.perf >= 90 ? `<span class="ws-perf-good">Perf ${l.ws.perf}</span>`
+        : l.ws?.perf >= 50 ? `<span class="ws-perf-mid">Perf ${l.ws.perf}</span>`
+        : `<span class="ws-perf-bad">Perf ${l.ws?.perf || '?'}</span>`;
+    const ratingStars = l.rating ? `★ ${l.rating.toFixed(1)}` : '';
+    const sslBadge = l.ws?.isHttps === false ? '<span class="ws-flag-bad">kein SSL</span>' : '';
+    const mobileBadge = l.ws?.viewport === false ? '<span class="ws-flag-bad">nicht mobile</span>' : '';
+
+    return `
+        <div class="ws-lead ws-lead-${scoreClass}" data-key="${escapeHtml(l.key)}" data-url="${escapeHtml(l.websiteUri)}">
+            <div class="ws-lead-score">${l.leadScore}</div>
+            <div class="ws-lead-body">
+                <div class="ws-lead-line1">
+                    <span class="ws-lead-name">${escapeHtml(l.name)}</span>
+                    <span class="ws-lead-domain"><a href="${escapeHtml(l.websiteUri)}" target="_blank" rel="noopener" data-no-bubble>${escapeHtml(l.domain)}</a></span>
+                </div>
+                <div class="ws-lead-line2">
+                    <span class="ws-lead-branch">${escapeHtml(l.branch.name)}</span>
+                    ${ratingStars ? `<span class="ws-lead-rating">${ratingStars} (${l.reviews})</span>` : `<span class="ws-lead-rating">${l.reviews} Bew.</span>`}
+                    <span class="ws-lead-tech">${escapeHtml(techHint)}</span>
+                    ${perfBadge} ${sslBadge} ${mobileBadge}
+                </div>
+                ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}
+            </div>
+            <div class="ws-lead-actions">
+                <button class="ws-btn ws-btn-primary" data-action="analyze">Tiefe Analyse →</button>
+                <button class="ws-btn" data-action="save">✚ CRM</button>
+            </div>
+        </div>
+    `;
+}
+
+function bindWorkspaceEvents(el) {
+    el.addEventListener('click', async (e) => {
+        // Filter-Pills
+        const pill = e.target.closest('.ws-pill');
+        if (pill) {
+            const group = pill.closest('.ws-pills')?.dataset.pillGroup;
+            if (group === 'minScore') {
+                persistFilters({ minScore: parseInt(pill.dataset.min, 10) });
+            } else if (group === 'baukasten') {
+                persistFilters({ baukasten: pill.dataset.baukasten === '1' });
+            }
+            renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+            return;
+        }
+
+        // Reset
+        if (e.target.dataset.action === 'reset-filters') {
+            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false });
+            renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+            return;
+        }
+
+        // Lead-Action: Tiefe Analyse → in Single-Check uebernehmen
+        const lead = e.target.closest('.ws-lead');
+        if (!lead) return;
+        if (e.target.dataset.noBubble != null) return;
+
+        const action = e.target.dataset.action;
+        const websiteUri = lead.dataset.url;
+        const leadData = lastResults.find(x => x.key === lead.dataset.key);
+
+        if (action === 'save') {
+            if (!leadData) return;
+            await saveLead(leadData.domain, websiteUri, {
+                name: leadData.name,
+                type: leadData.primaryType,
+                perf: leadData.ws?.perf, seo: leadData.ws?.seo, a11y: leadData.ws?.a11y,
+                cms: leadData.cms, isBaukasten: leadData.isBaukasten,
+                leadScore: leadData.leadScore, conversionRate: leadData.conversionRate,
+                expectedValue: leadData.expectedValue,
+                reviews: leadData.reviews, rating: leadData.rating,
+                source: 'scanner_workspace'
+            });
+            const btn = e.target;
+            btn.textContent = '✓ Gespeichert';
+            btn.disabled = true;
+            return;
+        }
+
+        // Default: zum Single-Check wechseln + auto-analyze
+        const urlInput = document.getElementById('url-input');
+        if (urlInput) urlInput.value = websiteUri;
+        // Switch to single tab
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelector('[data-tab="single"]')?.classList.add('active');
+        document.getElementById('input-single')?.classList.remove('hidden');
+        document.getElementById('input-batch')?.classList.add('hidden');
+        document.getElementById('input-scanner')?.classList.add('hidden');
+        document.getElementById('btn-analyze')?.click();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    el.addEventListener('change', (e) => {
+        if (e.target.dataset.action === 'branch') {
+            persistFilters({ branch: e.target.value });
+            renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+        } else if (e.target.dataset.action === 'sort') {
+            persistFilters({ sort: e.target.value });
+            renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+        }
+    });
+}
+
+function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":"&#39;"}[c]));
+}
+
+function showProgress(pct, t) { document.getElementById('progress').classList.remove('hidden'); document.getElementById('progress-fill').style.width = pct+'%'; document.getElementById('progress-text').textContent = t; }
 function hideProgress() { document.getElementById('progress').classList.add('hidden'); }
-function showError(t) { document.getElementById('error-text').textContent=t; document.getElementById('error').classList.remove('hidden'); }
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function showError(t) { document.getElementById('error-text').textContent = t; document.getElementById('error').classList.remove('hidden'); }
 
 function notifyDone(msg) {
-    // Titel blinken lassen — funktioniert immer
     const origTitle = document.title;
     document.title = '✅ ' + msg;
     setTimeout(() => { document.title = origTitle; }, 5000);
-    // Browser-Notification nur wenn bereits genehmigt — silent fail sonst.
-    // requestPermission() darf hier NICHT laufen, weil der Aufruf nach einem
-    // async Scanner-Promise nicht mehr als User-Geste zaehlt (Browser blockiert
-    // mit "Notification prompting can only be done from a user gesture").
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         try { new Notification('Lead Intelligence', { body: msg }); } catch {}
     }
 }
 
-/**
- * Bittet den User um Notification-Permission. Muss aus einem User-Gesture-
- * Handler aufgerufen werden (Klick auf Scan-Button etc.).
- */
 export function requestNotificationPermissionOnGesture() {
     if (typeof Notification === 'undefined') return;
     if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
