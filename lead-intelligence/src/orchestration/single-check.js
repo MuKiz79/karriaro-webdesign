@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch, generateMockup } from '../api/cloud-functions.js';
+import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch, generateMockup, securityAudit } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
@@ -112,21 +112,28 @@ export async function runSingleCheck() {
             currentIssues: null  // wird ggf. nach Deep Research mit Schwaechen-Liste angereichert
         }).catch(err => { console.warn('generateMockup promise rejected:', err?.message || err); return null; });
 
+        // Security-Audit: HTTP-Header / TLS / DNS / Sensitive Files / Outdated Libs
+        const securityAuditPromise = securityAudit({
+            url,
+            psiData
+        }).catch(err => { console.warn('securityAudit promise rejected:', err?.message || err); return null; });
+
         // Phase 4: KI-Analyse parallel — analyzeContent + analyzeBranchStandards entfernt (Deep Research absorbiert beides)
         showLoading('④ KI-Analyse (Screenshot + Reviews + Domain + Deep Research)...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
 
         let screenshotAnalysis = null, reviewSentiment = null,
-            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null, mockupResult = null;
+            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null, mockupResult = null, securityResult = null;
         try {
-            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult, mockupResult] = await Promise.all([
+            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult, mockupResult, securityResult] = await Promise.all([
                 analyzeScreenshot(screenshot).catch(() => null),
                 analyzeReviews(domain).catch(() => null),
                 getDomainAge(domain).catch(() => null),
                 getDomainAuthority(domain).catch(() => null),
                 getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain).catch(() => null),
                 deepResearchPromise,
-                mockupPromise
+                mockupPromise,
+                securityAuditPromise
             ]);
         } catch(e) { console.error('KI-Analyse failed:', e); }
 
@@ -200,6 +207,7 @@ export async function runSingleCheck() {
             deepResearch: deepResearchResult,
             deepAssessment,
             mockup: mockupResult,
+            security: securityResult,
             ...localAnalysis
         };
         // Globale Referenz fuer Mockup-Copy-Buttons (siehe render-components.js)

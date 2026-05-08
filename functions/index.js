@@ -13,6 +13,7 @@ const {
     TOOL_DEFINITION
 } = require("./lib/deep-research.js");
 const mockupGenerator = require("./lib/mockup-generator.js");
+const { runSecurityAudit } = require("./lib/security-audit.js");
 
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
@@ -769,3 +770,94 @@ exports.generateMockup = onRequest(
     }
 );
 
+// ═══════════════════════════════════════════════════════════════
+// SECURITY AUDIT: HTTP-Header, TLS, DNS, Sensitive Files, Libraries
+// ═══════════════════════════════════════════════════════════════
+
+const SECURITY_CACHE_HOURS = 24;
+
+function securityCacheKey(url) {
+    const u = String(url || "").toLowerCase().replace(/\/+$/, "");
+    return crypto.createHash("sha256").update(u).digest("hex").slice(0, 24);
+}
+
+async function loadSecurityCache(url) {
+    try {
+        const key = securityCacheKey(url);
+        const snap = await db.collection("securityAudits").doc(key).get();
+        if (!snap.exists) return null;
+        const data = snap.data();
+        if ((data.expiresAtMs || 0) < Date.now()) return null;
+        return data;
+    } catch (err) {
+        console.warn("security cache read failed:", err.message);
+        return null;
+    }
+}
+
+async function saveSecurityCache(url, payload) {
+    try {
+        const key = securityCacheKey(url);
+        const expiresAtMs = Date.now() + SECURITY_CACHE_HOURS * 3600000;
+        await db.collection("securityAudits").doc(key).set({
+            ...payload,
+            cachedUrl: url,
+            cachedAtMs: Date.now(),
+            expiresAtMs,
+            expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+        });
+    } catch (err) {
+        console.warn("security cache write failed:", err.message);
+    }
+}
+
+// ─── securityAudit ─── POST {url, psiData?, force?}
+exports.securityAudit = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 45,
+        cors: false
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (rateLimit(req, res)) return;
+
+        const startMs = Date.now();
+        let { url, psiData = null, force = false } = req.body || {};
+        if (!url || typeof url !== "string") return res.status(400).json({ error: "url required" });
+        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+        // Cache lookup
+        if (!force) {
+            const cached = await loadSecurityCache(url);
+            if (cached?.findings) {
+                return res.json({
+                    ok: true,
+                    cached: true,
+                    cachedAtMs: cached.cachedAtMs,
+                    findings: cached.findings,
+                    summary: cached.summary,
+                    severityScore: cached.severityScore,
+                    meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
+                });
+            }
+        }
+
+        try {
+            const result = await runSecurityAudit(url, psiData);
+            const payload = {
+                findings: result.findings,
+                summary: result.summary,
+                severityScore: result.severityScore,
+                meta: { ...result.meta, durationMs: result.durationMs }
+            };
+            await saveSecurityCache(url, payload);
+            res.json({ ok: true, cached: false, ...payload });
+        } catch (err) {
+            console.error("securityAudit failed:", err);
+            res.status(500).json({ error: "Security-Audit fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);

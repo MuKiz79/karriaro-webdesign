@@ -23,6 +23,25 @@ function buildPainArguments(data, techAge) {
     const rev = data.revenue;
     const domain = new URL(data.url).hostname.replace('www.', '');
 
+    // -1) Security-Findings — wenn kritisch/hoch, ist das oft der konkreteste,
+    //     unwiderruflichste Pitch-Anker. ("Ihr .git-Verzeichnis ist offen.")
+    const security = data.security || null;
+    if (security?.summary?.topPitch && (security.summary.critical > 0 || security.summary.high > 0)) {
+        const top = security.findings.find(f => f.severity >= 4 && f.pitchArg) || security.findings[0];
+        if (top) {
+            args.push({
+                type: 'security',
+                severity: top.severity >= 5 ? 5 : 4,
+                short: top.title || 'Sicherheits-Risiko',
+                text: top.pitchArg || top.evidence,
+                subjectAlt: `${domain}: ${top.title}`,
+                evidence: top.evidence,
+                fixAdvice: top.fixAdvice,
+                category: top.category
+            });
+        }
+    }
+
     // 0) Deep-Research-Schwächen — das stärkste, weil Sonnet das Material gesehen hat.
     //    Wir nehmen die Top-Severity-5-Schwäche als bestes Argument und nutzen
     //    keyPitchAngle als Subject-Default.

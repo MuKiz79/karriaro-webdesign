@@ -95,3 +95,12 @@ export function generateMockup({ url, branche = null, businessName = null, curre
     if (!url) return Promise.resolve(null);
     return callWebdesign('generateMockup', { url, branche, businessName, currentIssues, deepResearchSummary, force }, { timeout: 45000 });
 }
+
+/**
+ * Security Audit — HTTP-Header, TLS, DNS, Sensitive Files, Outdated Libs.
+ * Liefert { ok, cached, findings, summary, severityScore, meta }.
+ */
+export function securityAudit({ url, psiData = null, force = false } = {}) {
+    if (!url) return Promise.resolve(null);
+    return callWebdesign('securityAudit', { url, psiData, force }, { timeout: 45000 });
+}

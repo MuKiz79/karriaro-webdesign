@@ -1620,6 +1620,126 @@ nav {
 }
 
 /* ══════════════════════════════════════
+   Security-Audit-Karte (HTTP-Header / TLS / DNS / Exposed / Libs)
+   ══════════════════════════════════════ */
+.security-card {
+    margin-bottom: 16px;
+    padding: 22px;
+    background: linear-gradient(160deg, rgba(255,69,58,0.05), transparent 60%);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+.sec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+.sec-subline {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+.sec-counts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.sec-count {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.sec-count-critical { background: rgba(255,69,58,0.16); color: var(--red); }
+.sec-count-high     { background: rgba(255,159,10,0.16); color: var(--orange); }
+.sec-count-medium   { background: rgba(0,113,227,0.14); color: var(--accent); }
+.sec-count-low      { background: rgba(255,255,255,0.05); color: var(--muted); }
+.sec-top-pitch {
+    margin: 12px 0 16px;
+    padding: 10px 14px;
+    background: rgba(255,69,58,0.08);
+    border-left: 2px solid var(--red);
+    border-radius: 6px;
+    font-size: 0.92rem;
+}
+.sec-findings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+.sec-finding {
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.18);
+    border-radius: 8px;
+    border-left: 3px solid var(--muted);
+}
+.sec-finding-critical { border-left-color: var(--red); }
+.sec-finding-high     { border-left-color: var(--orange); }
+.sec-finding-medium   { border-left-color: var(--accent); }
+.sec-finding-low      { border-left-color: var(--muted); }
+.sec-finding-head {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.sec-finding-sev {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+.sec-finding-critical .sec-finding-sev { color: var(--red); }
+.sec-finding-high     .sec-finding-sev { color: var(--orange); }
+.sec-finding-medium   .sec-finding-sev { color: var(--accent); }
+.sec-finding-low      .sec-finding-sev { color: var(--muted); }
+.sec-finding-cat {
+    font-size: 0.65rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    padding: 1px 8px;
+    border-radius: 8px;
+}
+.sec-finding-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+.sec-finding-evidence {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 3px;
+    line-height: 1.45;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+}
+.sec-finding-pitch {
+    font-size: 0.83rem;
+    margin-top: 8px;
+    padding: 7px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 5px;
+    line-height: 1.5;
+}
+.sec-finding-fix {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.45;
+}
+.sec-finding-fix strong {
+    color: var(--text);
+}
+.sec-more {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ══════════════════════════════════════
    Score Ring, Funnel, Confidence
    ══════════════════════════════════════ */
 

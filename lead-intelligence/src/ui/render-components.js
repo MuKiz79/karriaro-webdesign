@@ -451,6 +451,12 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         html += renderMockupCard(mockupData);
     }
 
+    // ── Security-Audit (HTTP-Header / TLS / DNS / exposed files / outdated libs) ──
+    const securityData = data.security || null;
+    if (securityData?.findings?.length > 0) {
+        html += renderSecurityCard(securityData);
+    }
+
     // ── Tiefe Analyse (Deep Research) — die ganzheitliche Bewertung von Sonnet ──
     const deepAssessment = data.deepAssessment || data.deepResearch?.assessment || null;
     if (deepAssessment) {
@@ -1046,4 +1052,69 @@ if (typeof document !== "undefined") {
             });
         }
     });
+}
+
+// ══════════════════════════════════════
+// Security-Audit-Karte (HTTP-Header / TLS / DNS / Exposed Files / Outdated Libs)
+// ══════════════════════════════════════
+
+const SEC_CATEGORY_LABEL = {
+    header: 'HTTP-Header',
+    tls: 'SSL/TLS',
+    exposure: 'Datei-Exposure',
+    dns: 'DNS-Sicherheit',
+    cookies: 'Cookies',
+    library: 'Veraltete Library'
+};
+
+function renderSecurityCard(s) {
+    if (!s?.findings?.length) return "";
+    const summary = s.summary || {};
+    const verdict = summary.verdict || 'unbekannt';
+    const verdictColor = verdict === 'kritisch' ? 'var(--red)'
+        : verdict === 'hoch' ? 'var(--orange)'
+        : verdict === 'mittel' ? 'var(--accent)' : 'var(--green)';
+
+    const severityCounts = `
+        ${summary.critical ? `<span class="sec-count sec-count-critical">${summary.critical} kritisch</span>` : ''}
+        ${summary.high ? `<span class="sec-count sec-count-high">${summary.high} hoch</span>` : ''}
+        ${summary.medium ? `<span class="sec-count sec-count-medium">${summary.medium} mittel</span>` : ''}
+        ${summary.low ? `<span class="sec-count sec-count-low">${summary.low} niedrig</span>` : ''}
+    `;
+
+    const findingsHtml = s.findings.slice(0, 12).map(f => {
+        const sevLabel = f.severity >= 5 ? 'KRITISCH'
+            : f.severity === 4 ? 'HOCH'
+            : f.severity === 3 ? 'MITTEL' : 'NIEDRIG';
+        const sevClass = f.severity >= 5 ? 'sec-finding-critical'
+            : f.severity === 4 ? 'sec-finding-high'
+            : f.severity === 3 ? 'sec-finding-medium' : 'sec-finding-low';
+        const catLabel = SEC_CATEGORY_LABEL[f.category] || f.category;
+        return `<div class="sec-finding ${sevClass}">
+            <div class="sec-finding-head">
+                <span class="sec-finding-sev">${sevLabel}</span>
+                <span class="sec-finding-cat">${escapeHtml(catLabel)}</span>
+            </div>
+            <div class="sec-finding-title">${escapeHtml(f.title || '')}</div>
+            <div class="sec-finding-evidence">${escapeHtml(f.evidence || '')}</div>
+            ${f.pitchArg ? `<div class="sec-finding-pitch">💬 ${escapeHtml(f.pitchArg)}</div>` : ''}
+            ${f.fixAdvice ? `<div class="sec-finding-fix"><strong>Fix:</strong> ${escapeHtml(f.fixAdvice)}</div>` : ''}
+        </div>`;
+    }).join('');
+
+    const topPitch = summary.topPitch
+        ? `<div class="sec-top-pitch">💬 <em>${escapeHtml(summary.topPitch)}</em></div>` : '';
+
+    return `<div class="card security-card anim-in">
+        <div class="sec-header">
+            <div>
+                <div class="section-label" style="color:${verdictColor}">🛡 Sicherheits-Audit · ${verdict.toUpperCase()}</div>
+                <div class="sec-subline">${summary.total} Befund(e) · Score ${s.severityScore}/100</div>
+            </div>
+            <div class="sec-counts">${severityCounts}</div>
+        </div>
+        ${topPitch}
+        <div class="sec-findings">${findingsHtml}</div>
+        ${s.findings.length > 12 ? `<div class="sec-more">+ ${s.findings.length - 12} weitere Befunde</div>` : ''}
+    </div>`;
 }
