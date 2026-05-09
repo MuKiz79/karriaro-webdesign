@@ -359,6 +359,24 @@
             .hero-audit-form button { width: 100%; }
         }
 
+        /* Hero-Demo-Buttons */
+        .hero-demo-row {
+            margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto;
+            display: flex; flex-direction: column; gap: 10px; align-items: center;
+        }
+        .hero-demo-label { font-size: 13px; color: #86868b; }
+        .hero-demo-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .hero-demo-btn {
+            background: #fff; color: #1d1d1f;
+            border: 1px solid #d2d2d7; border-radius: 999px;
+            padding: 8px 16px; font-size: 14px; font-family: inherit; font-weight: 500;
+            cursor: pointer; transition: border-color 0.2s, background 0.2s;
+        }
+        .hero-demo-btn:hover:not(:disabled) {
+            border-color: #0071e3; background: #f5f9ff;
+        }
+        .hero-demo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
     </style>
 </head>
 <body>
@@ -395,7 +413,7 @@
         <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center; width: 100%;">
             <h1>Jeden Tag verlieren Sie Kunden,<br>ohne es zu merken.</h1>
             <p class="subhead">
-                Weil Ihre Website von gestern ist. Wir zeigen es Ihnen.
+                Weil Ihre Website nicht zeigt, was Ihre Kunden suchen. Wir prüfen das in 5 Sekunden.
             </p>
 
             <form id="hero-audit-form" class="hero-audit-form" style="margin-top: 40px;" novalidate>
@@ -418,6 +436,16 @@
             <p class="hero-audit-hint">
                 Wir analysieren Ihre öffentlich erreichbare Startseite. Ergebnis erscheint hier in wenigen Sekunden.
             </p>
+
+            <div class="hero-demo-row">
+                <span class="hero-demo-label">oder probieren Sie ein Beispiel:</span>
+                <div class="hero-demo-btns">
+                    <button type="button" class="hero-demo-btn" data-demo="lawyer">Anwalt</button>
+                    <button type="button" class="hero-demo-btn" data-demo="doctor">Praxis</button>
+                    <button type="button" class="hero-demo-btn" data-demo="restaurant">Restaurant</button>
+                    <button type="button" class="hero-demo-btn" data-demo="hair_salon">Friseur</button>
+                </div>
+            </div>
 
             <div id="audit-result" class="audit-result-wrap" aria-live="polite">
                 <p id="audit-status" class="audit-status"></p>
@@ -895,8 +923,14 @@
                 }
 
                 cardsEl.innerHTML = cards.join('');
-                let statusText = 'Befund für ' + escape(d.domain || '');
-                if (d.cached) statusText += ' (aus den letzten 24 Stunden)';
+                let statusText;
+                if (d.demo) {
+                    const demoBranch = (d.branch && d.branch.name) ? d.branch.name : 'Website';
+                    statusText = 'Beispiel-Audit für eine typische ' + escape(demoBranch) + ' (Demo-Daten)';
+                } else {
+                    statusText = 'Befund für ' + escape(d.domain || '');
+                    if (d.cached) statusText += ' (aus den letzten 24 Stunden)';
+                }
                 statusEl.textContent = statusText + '.';
 
                 const cardEls = cardsEl.querySelectorAll('.audit-card');
@@ -904,10 +938,29 @@
                     setTimeout(function() { c.classList.add('is-revealed'); }, 80 + i * 150);
                 });
 
-                ctaEl.innerHTML =
-                    '<a href="/audit?url=' + encoded + '" class="audit-cta-primary">Vollständigen Audit per E-Mail erhalten</a>' +
-                    '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
-                setTimeout(function() { ctaEl.style.display = 'flex'; }, 80 + cardEls.length * 150 + 200);
+                if (d.demo) {
+                    ctaEl.innerHTML =
+                        '<button type="button" class="audit-cta-primary" id="audit-cta-own">Jetzt Ihre eigene Seite prüfen →</button>' +
+                        '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
+                } else {
+                    ctaEl.innerHTML =
+                        '<a href="/audit?url=' + encoded + '" class="audit-cta-primary">Vollständigen Audit per E-Mail erhalten</a>' +
+                        '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
+                }
+                setTimeout(function() {
+                    ctaEl.style.display = 'flex';
+                    if (d.demo) {
+                        const ownBtn = document.getElementById('audit-cta-own');
+                        if (ownBtn) ownBtn.addEventListener('click', function() {
+                            resultWrap.classList.remove('is-active');
+                            cardsEl.innerHTML = '';
+                            ctaEl.style.display = 'none';
+                            statusEl.textContent = '';
+                            urlInput.focus();
+                            urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        });
+                    }
+                }, 80 + cardEls.length * 150 + 200);
             }
 
             function showError(msg) {
@@ -957,6 +1010,150 @@
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Schwachstellen zeigen';
                 }
+            });
+
+            // Demo-Audits — clientseitig, keine Backend-Calls.
+            // Datensätze sind Schema-kompatibel zur quickAudit-Response.
+            const DEMO_DATA = {
+                'lawyer': {
+                    ok: true, demo: true, light: true, domain: 'kanzlei-mueller.de',
+                    techAge: {
+                        headline: 'Aktualisierung empfehlenswert',
+                        cms: 'WordPress', majorVersion: '5', severity: 3,
+                        pitchArg: 'Ihre Website läuft auf WordPress 5.x — eine Tech-Generation hinter dem aktuellen Stand.',
+                        composite: 'WordPress 5.x ist von 2018 — Update auf eine neuere Major-Version steht aus · Letzte größere Änderung vor 2.4 Jahren',
+                        yearsSinceLastChange: 2.4
+                    },
+                    bfsg: {
+                        complianceScore: 58, risk: 'hoch', fine: '50.000 €', method: 'heuristic',
+                        pitchArg: 'Heuristik-Score 58 % — Ihre Seite weist sichtbare Barrierefreiheits-Lücken auf. BFSG ist seit Juni 2025 Pflicht, Bußgelder bis 50.000 €.'
+                    },
+                    performance: { score: null, source: null, hint: 'Performance-Score erhalten Sie im Komplettaudit per E-Mail.' },
+                    branch: {
+                        name: 'Anwaltskanzlei', primaryType: 'lawyer', usedDefault: false,
+                        mustHave: [
+                            { id: 'fachgebiete', label: 'Fachgebiete-/Rechtsgebiete-Seite', found: false },
+                            { id: 'team', label: 'Anwalts-/Team-Vorstellung', found: true },
+                            { id: 'impressum-rak', label: 'Impressum mit Rechtsanwaltskammer', found: true },
+                            { id: 'kontakt-adresse', label: 'Kontakt mit Kanzleiadresse', found: false }
+                        ],
+                        shouldHave: [
+                            { id: 'honorar', label: 'Honorar-/Gebühreninformation', found: false },
+                            { id: 'termin-online', label: 'Online-Terminbuchung', found: false }
+                        ],
+                        foundCount: 2, totalCount: 6, severity: 4,
+                        pitchArg: 'Mandanten erwarten heute, dass eine Kanzlei online entscheidbar wird — Fachgebiete, Anwälte und Honorare transparent.'
+                    }
+                },
+                'doctor': {
+                    ok: true, demo: true, light: true, domain: 'praxis-dr-schmitt.de',
+                    techAge: {
+                        headline: '⚠ Veraltete Technologie + lange nicht aktualisiert',
+                        cms: 'TYPO3', majorVersion: '8', severity: 5,
+                        pitchArg: 'TYPO3 8.x ist seit 2022 EOL — keine Sicherheitsupdates mehr.',
+                        composite: 'TYPO3 8.x ist seit 2022 EOL — keine Sicherheitsupdates mehr · Site seit 3.1 Jahren nicht mehr überarbeitet',
+                        yearsSinceLastChange: 3.1
+                    },
+                    bfsg: {
+                        complianceScore: 65, risk: 'hoch', fine: '50.000 €', method: 'heuristic',
+                        pitchArg: 'Heuristik-Score 65 % — Ihre Seite weist sichtbare Barrierefreiheits-Lücken auf. BFSG ist seit Juni 2025 Pflicht, Bußgelder bis 50.000 €.'
+                    },
+                    performance: { score: null, source: null, hint: 'Performance-Score erhalten Sie im Komplettaudit per E-Mail.' },
+                    branch: {
+                        name: 'Zahnarztpraxis', primaryType: 'dentist', usedDefault: false,
+                        mustHave: [
+                            { id: 'leistungen', label: 'Leistungs-/Behandlungs-Seite', found: true },
+                            { id: 'team', label: 'Praxis-/Team-Vorstellung', found: true },
+                            { id: 'sprechzeiten', label: 'Sprechzeiten / Öffnungszeiten', found: false },
+                            { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', found: true }
+                        ],
+                        shouldHave: [
+                            { id: 'termin-online', label: 'Online-Terminbuchung', found: false },
+                            { id: 'notdienst', label: 'Notdienst-Hinweis', found: false }
+                        ],
+                        foundCount: 3, totalCount: 6, severity: 3,
+                        pitchArg: 'Patienten googeln Sprechzeiten und buchen Termine online — wer das nicht zeigt, verliert sie an die Praxis nebenan.'
+                    }
+                },
+                'restaurant': {
+                    ok: true, demo: true, light: true, domain: 'gasthof-zur-linde.de',
+                    techAge: {
+                        headline: 'Aktualisierung empfehlenswert',
+                        cms: 'Wix', majorVersion: null, severity: 3,
+                        pitchArg: 'Läuft auf einem Baukasten-System (Wix) — strukturelle Limits bei SEO, Performance und Design.',
+                        composite: 'Läuft auf einem Baukasten-System (Wix) — strukturelle Limits bei SEO, Performance und Design',
+                        yearsSinceLastChange: 1.8
+                    },
+                    bfsg: {
+                        complianceScore: 72, risk: 'mittel', fine: '10.000 €', method: 'heuristic',
+                        pitchArg: 'Heuristik-Score 72 % — einzelne BFSG-Punkte sind verbesserungswürdig. Vollständige WCAG-Prüfung im Komplettaudit.'
+                    },
+                    performance: { score: null, source: null, hint: 'Performance-Score erhalten Sie im Komplettaudit per E-Mail.' },
+                    branch: {
+                        name: 'Restaurant', primaryType: 'restaurant', usedDefault: false,
+                        mustHave: [
+                            { id: 'speisekarte', label: 'Speisekarte', found: true },
+                            { id: 'oeffnungszeiten', label: 'Öffnungszeiten', found: true },
+                            { id: 'kontakt-adresse', label: 'Adresse + Telefon', found: true },
+                            { id: 'reservierung', label: 'Reservierungs-Möglichkeit', found: false }
+                        ],
+                        shouldHave: [
+                            { id: 'galerie', label: 'Galerie / Foodfotos', found: false },
+                            { id: 'events', label: 'Events / Catering', found: false }
+                        ],
+                        foundCount: 3, totalCount: 6, severity: 3,
+                        pitchArg: 'Speisekarte, Öffnungszeiten und Reservierung sind die drei Klicks, nach denen Gäste suchen — fehlt einer, gehen sie nebenan essen.'
+                    }
+                },
+                'hair_salon': {
+                    ok: true, demo: true, light: true, domain: 'salon-bella-frankfurt.de',
+                    techAge: {
+                        headline: 'Aktualisierung empfehlenswert',
+                        cms: 'Jimdo', majorVersion: null, severity: 3,
+                        pitchArg: 'Läuft auf einem Baukasten-System (Jimdo) — strukturelle Limits bei SEO, Performance und Design.',
+                        composite: 'Läuft auf einem Baukasten-System (Jimdo) — strukturelle Limits bei SEO, Performance und Design',
+                        yearsSinceLastChange: 2.7
+                    },
+                    bfsg: {
+                        complianceScore: 50, risk: 'kritisch', fine: '100.000 €', method: 'heuristic',
+                        pitchArg: 'Heuristik-Score 50 % — Ihre Seite weist sichtbare Barrierefreiheits-Lücken auf. BFSG ist seit Juni 2025 Pflicht, Bußgelder bis 100.000 €.'
+                    },
+                    performance: { score: null, source: null, hint: 'Performance-Score erhalten Sie im Komplettaudit per E-Mail.' },
+                    branch: {
+                        name: 'Friseursalon', primaryType: 'hair_salon', usedDefault: false,
+                        mustHave: [
+                            { id: 'leistungen-preise', label: 'Leistungen mit Preisen', found: false },
+                            { id: 'oeffnungszeiten', label: 'Öffnungszeiten', found: true },
+                            { id: 'kontakt-adresse', label: 'Adresse + Telefon', found: true },
+                            { id: 'team', label: 'Team mit Foto', found: false }
+                        ],
+                        shouldHave: [
+                            { id: 'termin-online', label: 'Online-Terminbuchung', found: false },
+                            { id: 'galerie', label: 'Stil-/Galerie-Beispiele', found: false }
+                        ],
+                        foundCount: 2, totalCount: 6, severity: 4,
+                        pitchArg: 'Kundinnen entscheiden via Bilder und Preise vor dem ersten Termin — wer beides nicht zeigt, kostet Walk-ins.'
+                    }
+                }
+            };
+
+            function triggerDemo(branchKey) {
+                const data = DEMO_DATA[branchKey];
+                if (!data) return;
+                showSkeleton();
+                statusEl.textContent = 'Beispiel wird geladen …';
+                setTimeout(function() {
+                    resultWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+                setTimeout(function() {
+                    renderCards(data);
+                }, 1500);
+            }
+
+            document.querySelectorAll('.hero-demo-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    triggerDemo(btn.getAttribute('data-demo'));
+                });
             });
         })();
     </script>
