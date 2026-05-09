@@ -172,16 +172,42 @@ const ALL_PATTERNS = [
 const COMPETITOR_SET = new Set(COMPETITORS);
 
 /**
+ * Escaped einen String fuer den Einsatz in einer RegExp.
+ */
+function escapeRegex(s) {
+    return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Prueft ob ein Pattern zur Domain-Base passt.
+ * - Pattern mit "-" (z.B. "leg-immobilien", "bmw-deutschland"):
+ *   matcht an Word-Boundary (Anfang/Ende oder von "-" umgeben).
+ * - Atomares Pattern ohne "-" (z.B. "vonovia", "obi"):
+ *   muss exakt ein Token sein (split bei "-") oder die ganze Domain-Base.
+ *
+ * Das verhindert Substring-False-Positives wie "obi" in "amian-immobilien".
+ */
+export function patternMatches(domainBase, pattern) {
+    if (!domainBase || !pattern) return false;
+    if (pattern.includes('-')) {
+        const re = new RegExp('(^|-)' + escapeRegex(pattern) + '($|-)');
+        return re.test(domainBase);
+    }
+    if (domainBase === pattern) return true;
+    return domainBase.split('-').includes(pattern);
+}
+
+/**
  * Prüft ob eine Domain zu einem bekannten Konzern/Kette gehört
  * @param {string} domain - z.B. "nh-hotels.com" oder "motel-one.com"
  * @returns {{ isEnterprise: boolean, isCompetitor: boolean, match: string|null, category: string|null }}
  */
 export function checkEnterpriseDB(domain) {
-    const domainBase = domain.replace(/^www\./, '').split('.')[0].toLowerCase();
+    const domainBase = String(domain || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0].toLowerCase();
 
     // Konkurrenz-Check
     for (const pattern of COMPETITOR_SET) {
-        if (domainBase.includes(pattern)) {
+        if (patternMatches(domainBase, pattern)) {
             return { isEnterprise: false, isCompetitor: true, match: pattern, category: 'competitor' };
         }
     }
@@ -190,7 +216,7 @@ export function checkEnterpriseDB(domain) {
     for (const [category, patterns] of Object.entries(ALL_CHAINS)) {
         if (category === 'competitor') continue;
         for (const pattern of patterns) {
-            if (domainBase.includes(pattern)) {
+            if (patternMatches(domainBase, pattern)) {
                 return { isEnterprise: true, isCompetitor: false, match: pattern, category };
             }
         }

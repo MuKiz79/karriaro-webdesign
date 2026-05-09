@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { checkEnterpriseDB, DB_STATS } from '../../src/priors/enterprise-db.js';
+import { checkEnterpriseDB, DB_STATS, patternMatches } from '../../src/priors/enterprise-db.js';
 
 describe('checkEnterpriseDB', () => {
     // Hotels
@@ -77,5 +77,84 @@ describe('DB_STATS', () => {
     });
     it('should have 10 categories', () => {
         expect(DB_STATS.categories).toBe(10);
+    });
+});
+
+// ════════════════════════════════════════════════════════════════
+// Bugfix 2026-05-09: Word-Boundary-Match statt Blind-Substring
+// ════════════════════════════════════════════════════════════════
+
+describe('patternMatches — primitive', () => {
+    it('atomic pattern matches whole domain-base', () => {
+        expect(patternMatches('vonovia', 'vonovia')).toBe(true);
+    });
+    it('atomic pattern matches as token (split bei "-")', () => {
+        expect(patternMatches('vonovia-shop', 'vonovia')).toBe(true);
+        expect(patternMatches('shop-vonovia', 'vonovia')).toBe(true);
+        expect(patternMatches('shop-vonovia-berlin', 'vonovia')).toBe(true);
+    });
+    it('atomic pattern does NOT match arbitrary substring', () => {
+        // Der gemeldete Bug: "obi" als Substring in "amian-immobilien"
+        expect(patternMatches('amian-immobilien', 'obi')).toBe(false);
+        expect(patternMatches('leonhard-baeckerei', 'eon')).toBe(false);
+        expect(patternMatches('admin-schmidt', 'dm')).toBe(false);
+        expect(patternMatches('studio20-leipzig', 'o2')).toBe(false);
+    });
+    it('hyphenated pattern matches at word boundary', () => {
+        expect(patternMatches('leg-immobilien', 'leg-immobilien')).toBe(true);
+        expect(patternMatches('leg-immobilien-koeln', 'leg-immobilien')).toBe(true);
+        expect(patternMatches('koeln-leg-immobilien', 'leg-immobilien')).toBe(true);
+    });
+    it('hyphenated pattern does NOT match without boundary', () => {
+        // "kollegen-immobilien" enthaelt "leg-immobilien" als Substring,
+        // aber nicht als Token-Sequenz ("kol-leg-immobilien" wuerde matchen,
+        // "kollegen-immobilien" nicht).
+        expect(patternMatches('kollegen-immobilien', 'leg-immobilien')).toBe(false);
+    });
+    it('handles edge cases', () => {
+        expect(patternMatches('', 'obi')).toBe(false);
+        expect(patternMatches('obi', '')).toBe(false);
+    });
+});
+
+describe('checkEnterpriseDB — False Positives (Bugfix)', () => {
+    const knownLocalLeads = [
+        'amian-immobilien.de',     // contains "obi" — der gemeldete Bug
+        'studio20-leipzig.de',     // contains "o2"
+        'leonhard-baeckerei.de',   // contains "eon"
+        'admin-schmidt.de',        // contains "dm"
+        'sappenhausen.de',         // contains "sap"
+        'thamtusik-hannover.de',   // contains "mtu"
+        'arweisen.de',             // contains "rwe"
+        'pumarestaurant.de',       // contains "puma"
+        'beklierung-koblenz.de',   // contains "klier"
+        'kollegen-immobilien.de'   // contains "leg-immobilien" als Substring
+    ];
+    for (const d of knownLocalLeads) {
+        it(`should NOT flag ${d} as enterprise`, () => {
+            const r = checkEnterpriseDB(d);
+            expect(r.isEnterprise, `unerwarteter Match: ${r.match} (${r.category})`).toBe(false);
+        });
+    }
+});
+
+describe('checkEnterpriseDB — Robustness', () => {
+    it('handles empty/null input', () => {
+        expect(checkEnterpriseDB('').isEnterprise).toBe(false);
+        expect(checkEnterpriseDB(null).isEnterprise).toBe(false);
+        expect(checkEnterpriseDB(undefined).isEnterprise).toBe(false);
+    });
+    it('is case-insensitive', () => {
+        expect(checkEnterpriseDB('VONOVIA.DE').isEnterprise).toBe(true);
+        expect(checkEnterpriseDB('Obi.de').isEnterprise).toBe(true);
+    });
+    it('handles URL with protocol', () => {
+        expect(checkEnterpriseDB('https://www.vonovia.de').isEnterprise).toBe(true);
+        expect(checkEnterpriseDB('http://obi.de').isEnterprise).toBe(true);
+    });
+    it('matches token-prefix subdomains', () => {
+        for (const d of ['obi-baumarkt-stuttgart.de', 'vonovia-shop.de', 'remax-real-estate.de']) {
+            expect(checkEnterpriseDB(d).isEnterprise, `${d} sollte Enterprise sein`).toBe(true);
+        }
     });
 });
