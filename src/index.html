@@ -416,7 +416,7 @@
                 <button type="submit" id="hero-audit-submit">Schwachstellen zeigen</button>
             </form>
             <p class="hero-audit-hint">
-                Wir analysieren Ihre öffentlich erreichbare Startseite. Ergebnis erscheint hier in bis zu 30 Sekunden.
+                Wir analysieren Ihre öffentlich erreichbare Startseite. Ergebnis erscheint hier in wenigen Sekunden.
             </p>
 
             <div id="audit-result" class="audit-result-wrap" aria-live="polite">
@@ -766,7 +766,7 @@
             }
 
             function showSkeleton() {
-                statusEl.textContent = 'Wir prüfen Ihre Seite — das dauert bis zu 30 Sekunden.';
+                statusEl.textContent = 'Wir prüfen Ihre Seite …';
                 cardsEl.innerHTML =
                     '<div class="audit-card is-revealed"><div class="audit-skeleton-row long"></div><div class="audit-skeleton-row short"></div></div>' +
                     '<div class="audit-card is-revealed"><div class="audit-skeleton-row long"></div><div class="audit-skeleton-row short"></div></div>' +
@@ -897,7 +897,6 @@
                 cardsEl.innerHTML = cards.join('');
                 let statusText = 'Befund für ' + escape(d.domain || '');
                 if (d.cached) statusText += ' (aus den letzten 24 Stunden)';
-                if (isLight) statusText += ' — Schnellanalyse';
                 statusEl.textContent = statusText + '.';
 
                 const cardEls = cardsEl.querySelectorAll('.audit-card');

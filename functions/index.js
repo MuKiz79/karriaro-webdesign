@@ -454,12 +454,10 @@ exports.quickAudit = onRequest(
         }
 
         const placesKey = safeSecretValue(PLACES_KEY);
-        const psiKeyRaw = safeSecretValue(PSI_API_KEY);
-        // "UNSET"-Sentinel oder zu kurze Werte werden ignoriert.
-        // Echte Google-API-Keys sind ~39 Zeichen.
-        const psiKey = (psiKeyRaw && psiKeyRaw.length >= 20) ? psiKeyRaw : "";
 
-        // Light-Audit ist zwingend (garantiert eine Antwort).
+        // Light-Audit ist die einzige Pipeline im Hero — garantiert 3-5s Antwort.
+        // PSI-basierte Vollpipeline (Performance + WCAG-BFSG) laeuft nur noch in
+        // requestAudit (Komplettaudit per E-Mail), wo der User Wartezeit akzeptiert.
         let lightResult;
         try {
             lightResult = await runLightAudit(auditUrl, placesKey);
@@ -477,21 +475,7 @@ exports.quickAudit = onRequest(
             });
         }
 
-        // Vollpipeline parallel mit hartem Timeout — bringt Performance + WCAG-BFSG.
-        // Wenn PSI-Key fehlt oder Pipeline fehlschlaegt: kein Showstopper, Light reicht.
-        let fullResult = null;
-        if (psiKey) {
-            const psiRace = Promise.race([
-                runAuditPipeline(auditUrl, psiKey).catch(err => {
-                    console.warn("quickAudit full pipeline failed:", err.message);
-                    return null;
-                }),
-                new Promise(resolve => setTimeout(() => resolve(null), 35000))
-            ]);
-            fullResult = await psiRace;
-        }
-
-        const payload = buildQuickResponse(domain, lightResult, fullResult);
+        const payload = buildQuickResponse(domain, lightResult, null);
 
         try {
             await db.collection("quickAudits").doc(cacheKey).set({
