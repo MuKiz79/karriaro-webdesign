@@ -198,6 +198,15 @@
         const submitBtn = document.getElementById('f-submit');
         const alertArea = document.getElementById('alert-area');
 
+        // Pre-Fill aus Query-Param (?url=...) — kommt vom Hero-Audit
+        const prefilledUrl = params.get('url');
+        if (prefilledUrl) {
+            const urlField = document.getElementById('f-url');
+            urlField.value = prefilledUrl;
+            const nameField = document.getElementById('f-name');
+            if (nameField) nameField.focus();
+        }
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             alertArea.innerHTML = '';

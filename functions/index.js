@@ -330,6 +330,133 @@ exports.requestAudit = onRequest(
     }
 );
 
+// ─── quickAudit ─── POST {url, hp(honeypot)}
+//   Hero-Inline-Reveal: 3-Karten-Snippet, KEIN Mail-Versand, KEIN PII-Persist.
+//   Cache 24h frisch, Storage-TTL 7 Tage (Feld `expiresAt`).
+const QUICK_AUDIT_RATE_LIMIT = new Map();           // IP -> { count, resetTime } 5/h
+const QUICK_AUDIT_FRESH_MS = 24 * 3600 * 1000;
+const QUICK_AUDIT_TTL_DAYS = 7;
+
+function quickAuditRateLimit(req, res) {
+    const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
+    const now = Date.now();
+    const entry = QUICK_AUDIT_RATE_LIMIT.get(ip) || { count: 0, resetTime: now + 3600000 };
+    if (now > entry.resetTime) { entry.count = 0; entry.resetTime = now + 3600000; }
+    entry.count++;
+    QUICK_AUDIT_RATE_LIMIT.set(ip, entry);
+    if (entry.count > 5) {
+        res.status(429).json({ error: "Sie haben das stündliche Limit erreicht. Bitte später erneut." });
+        return true;
+    }
+    return false;
+}
+
+function quickAuditCacheKey(url) {
+    return crypto.createHash("sha256").update(url).digest("hex").slice(0, 32);
+}
+
+function buildQuickResponse(domain, pipeline) {
+    const ta = pipeline.techAge || {};
+    const bf = pipeline.bfsg || {};
+    const ws = pipeline.websiteScore || {};
+    return {
+        ok: true,
+        domain,
+        techAge: {
+            headline: ta.headline || null,
+            cms: ta.cms || null,
+            majorVersion: ta.majorVersion || null,
+            severity: ta.severity != null ? ta.severity : null,
+            pitchArg: ta.pitchArg || null,
+            composite: ta.composite || null,
+            yearsSinceLastChange: ta.yearsSinceLastChange != null ? ta.yearsSinceLastChange : null
+        },
+        bfsg: {
+            complianceScore: bf.complianceScore != null ? bf.complianceScore : null,
+            risk: bf.risk || null,
+            fine: bf.fine || null,
+            pitchArg: bf.pitchArg || null
+        },
+        performance: {
+            score: ws.perf != null ? ws.perf : null
+        },
+        summary: pipeline.summary || null
+    };
+}
+
+exports.quickAudit = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [PLACES_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (quickAuditRateLimit(req, res)) return;
+
+        const { url, hp } = req.body || {};
+
+        if (hp && String(hp).trim().length > 0) {
+            return res.status(200).json({ ok: true, bot: true });
+        }
+
+        const auditUrl = normalizeUrl(url);
+        if (!auditUrl) return res.status(400).json({ error: "Ungültige URL" });
+
+        let domain;
+        try { domain = new URL(auditUrl).hostname.replace(/^www\./, ""); }
+        catch { return res.status(400).json({ error: "Ungültige URL" }); }
+
+        const cacheKey = quickAuditCacheKey(auditUrl);
+
+        try {
+            const cached = await db.collection("quickAudits").doc(cacheKey).get();
+            if (cached.exists) {
+                const d = cached.data();
+                if (d.cachedAtMs && Date.now() - d.cachedAtMs < QUICK_AUDIT_FRESH_MS) {
+                    return res.json({ ...d.payload, cached: true });
+                }
+            }
+        } catch (err) {
+            console.warn("quickAudit cache lookup failed:", err.message);
+        }
+
+        let pipelineResult;
+        try {
+            pipelineResult = await runAuditPipeline(auditUrl, "");
+        } catch (err) {
+            console.error("quickAudit pipeline failed:", err.message);
+            return res.json({
+                ok: true,
+                degraded: true,
+                domain,
+                error: "Wir konnten Ihre Seite gerade nicht vollstaendig analysieren."
+            });
+        }
+
+        const payload = buildQuickResponse(domain, pipelineResult);
+
+        try {
+            await db.collection("quickAudits").doc(cacheKey).set({
+                cachedAtMs: Date.now(),
+                domain,
+                url: auditUrl,
+                payload,
+                expiresAt: new admin.firestore.Timestamp(
+                    Math.floor((Date.now() + QUICK_AUDIT_TTL_DAYS * 86400000) / 1000), 0
+                )
+            });
+        } catch (err) {
+            console.warn("quickAudit cache write failed:", err.message);
+        }
+
+        return res.json(payload);
+    }
+);
+
 // ─── getAuditData ─── GET ?slug=... → JSON für Lead-Page
 exports.getAuditData = onRequest(
     { region: "europe-west1", memory: "256MiB", timeoutSeconds: 10, cors: false },

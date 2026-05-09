@@ -281,6 +281,84 @@
             transform: translateY(0);
         }
 
+        /* Hero-Audit-Form */
+        .hero-audit-form { display: flex; gap: 8px; max-width: 540px; margin: 0 auto; }
+        .hero-audit-form input[type="url"] {
+            flex: 1; min-width: 0; background: #fff;
+            border: 1px solid #d2d2d7; border-radius: 12px;
+            padding: 14px 18px; font-size: 16px;
+            font-family: inherit; color: #1d1d1f;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .hero-audit-form input[type="url"]:focus {
+            border-color: #0071e3; box-shadow: 0 0 0 4px rgba(0,113,227,0.12);
+        }
+        .hero-audit-form button {
+            background: #0071e3; color: #fff; border: none; border-radius: 12px;
+            padding: 14px 22px; font-size: 16px; font-family: inherit; font-weight: 500;
+            cursor: pointer; transition: background 0.2s; white-space: nowrap;
+        }
+        .hero-audit-form button:hover:not(:disabled) { background: #005bb5; }
+        .hero-audit-form button:disabled { background: #aeaeb2; cursor: not-allowed; }
+        .hero-audit-hint { font-size: 13px; color: #86868b; margin-top: 12px; max-width: 540px; margin-left: auto; margin-right: auto; }
+        .hero-honeypot { position: absolute; left: -9999px; }
+        .hero-audit-secondary { display: block; font-size: 14px; color: #86868b; margin-top: 24px; }
+        .hero-audit-secondary a { color: #0071e3; }
+
+        /* Audit-Result-Cards */
+        .audit-result-wrap {
+            max-width: 720px; margin: 48px auto 0; text-align: left;
+            display: none;
+        }
+        .audit-result-wrap.is-active { display: block; }
+        .audit-status {
+            font-size: 14px; color: #86868b; text-align: center; margin-bottom: 20px;
+        }
+        .audit-card {
+            background: #fff; border: 1px solid #e5e5e7; border-radius: 16px;
+            padding: 24px 28px; margin-bottom: 14px;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .audit-card.is-revealed { opacity: 1; transform: translateY(0); }
+        .audit-card.severity-high { border-left: 3px solid #ff453a; }
+        .audit-card.severity-mid  { border-left: 3px solid #ff9f0a; }
+        .audit-card.severity-low  { border-left: 3px solid #30d158; }
+        .audit-card-label {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+            color: #86868b; font-weight: 500; margin-bottom: 6px;
+        }
+        .audit-card-headline { font-size: 19px; font-weight: 600; color: #1d1d1f; margin-bottom: 10px; line-height: 1.3; }
+        .audit-card-pitch {
+            font-size: 14px; line-height: 1.55; color: #424245;
+            background: #f5f5f7; border-radius: 10px; padding: 12px 14px; margin-top: 10px;
+        }
+        .audit-card-meta { display: flex; flex-wrap: wrap; gap: 18px; font-size: 13px; color: #6e6e73; margin-top: 6px; }
+        .audit-card-meta strong { color: #1d1d1f; font-weight: 600; }
+        .audit-cta-row {
+            margin-top: 24px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+        }
+        .audit-cta-primary {
+            background: #0071e3; color: #fff; padding: 14px 24px;
+            border-radius: 12px; font-size: 15px; font-weight: 500; text-decoration: none;
+        }
+        .audit-cta-primary:hover { background: #005bb5; color: #fff; }
+        .audit-cta-secondary {
+            padding: 14px 22px; border-radius: 12px; font-size: 15px;
+            color: #1d1d1f; border: 1px solid #d2d2d7; text-decoration: none;
+        }
+
+        /* Skeleton */
+        .audit-skeleton-row { height: 14px; background: #e5e5e7; border-radius: 6px; margin: 10px 0; animation: audit-pulse 1.4s ease-in-out infinite; }
+        .audit-skeleton-row.short { width: 40%; }
+        .audit-skeleton-row.long  { width: 80%; }
+        @keyframes audit-pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.4 } }
+
+        @media (max-width: 540px) {
+            .hero-audit-form { flex-direction: column; }
+            .hero-audit-form button { width: 100%; }
+        }
+
     </style>
 </head>
 <body>
@@ -314,14 +392,42 @@
 
     <!-- 1 · Hero -->
     <section aria-label="Einleitung" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
-        <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
+        <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center; width: 100%;">
             <h1>Jeden Tag verlieren Sie Kunden,<br>ohne es zu merken.</h1>
             <p class="subhead">
-                Weil Ihre Website von gestern ist.
+                Weil Ihre Website von gestern ist. Wir zeigen es Ihnen.
             </p>
-            <div style="margin-top: 40px;">
-                <a href="#kontakt" class="btn">Kostenlos beraten lassen</a>
+
+            <form id="hero-audit-form" class="hero-audit-form" style="margin-top: 40px;" novalidate>
+                <label for="hero-audit-url" class="sr-only" style="position:absolute;left:-9999px;">Ihre Website-Adresse</label>
+                <input
+                    type="url"
+                    id="hero-audit-url"
+                    name="url"
+                    placeholder="https://www.ihre-website.de"
+                    autocomplete="url"
+                    required
+                    aria-label="Ihre Website-Adresse"
+                >
+                <div class="hero-honeypot" aria-hidden="true">
+                    <label for="hero-audit-hp">Firma</label>
+                    <input type="text" id="hero-audit-hp" name="hp" tabindex="-1" autocomplete="off">
+                </div>
+                <button type="submit" id="hero-audit-submit">Schwachstellen zeigen</button>
+            </form>
+            <p class="hero-audit-hint">
+                Wir analysieren Ihre öffentlich erreichbare Startseite. Ergebnis erscheint hier in bis zu 30 Sekunden.
+            </p>
+
+            <div id="audit-result" class="audit-result-wrap" aria-live="polite">
+                <p id="audit-status" class="audit-status"></p>
+                <div id="audit-cards"></div>
+                <div id="audit-cta" class="audit-cta-row" style="display:none;"></div>
             </div>
+
+            <p class="hero-audit-secondary">
+                Lieber direkt sprechen? <a href="#kontakt">Kostenloses Beratungsgespräch anfragen &rarr;</a>
+            </p>
         </div>
     </section>
 
@@ -455,7 +561,7 @@
                     <p class="muted" style="font-size: 14px; margin: 8px 0 32px;">Für Einzelkämpfer und kleine Teams</p>
                     <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 16px;">
                         <li>Eine Seite, die alles zeigt</li>
-                        <li>DSGVO- und BFSG-konform</li>
+                        <li>BFSG-konform (seit Juni 2025 Pflicht)</li>
                         <li>Kontaktformular inklusive</li>
                         <li>Der Quellcode gehört Ihnen</li>
                     </ul>
@@ -622,24 +728,180 @@
         }, { threshold: 0.15 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        // Mini-Audit Floating-CTA — schließbar via X, merkt Auswahl 30 Tage
+        // Hero Mini-Audit — Inline-Reveal via quickAudit-Endpoint, kein Mail-Capture
         (function() {
-            const KEY = 'karriaro_audit_cta_dismissed_until';
-            const dismissedUntil = parseInt(localStorage.getItem(KEY) || '0', 10);
-            if (Date.now() < dismissedUntil) return;
+            const FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+            const form = document.getElementById('hero-audit-form');
+            if (!form) return;
+            const urlInput = document.getElementById('hero-audit-url');
+            const hpInput = document.getElementById('hero-audit-hp');
+            const submitBtn = document.getElementById('hero-audit-submit');
+            const resultWrap = document.getElementById('audit-result');
+            const statusEl = document.getElementById('audit-status');
+            const cardsEl = document.getElementById('audit-cards');
+            const ctaEl = document.getElementById('audit-cta');
 
-            const el = document.createElement('div');
-            el.id = 'audit-floating-cta';
-            el.innerHTML = '<a href="/audit" style="color:#fff;font-weight:500">Mini-Audit anfordern</a><button aria-label="Schliessen" id="audit-cta-close">×</button>';
-            el.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:60;background:#0071e3;color:#fff;padding:10px 14px 10px 18px;border-radius:24px;box-shadow:0 8px 24px -6px rgba(0,113,227,0.4);font-size:13px;display:flex;align-items:center;gap:10px;font-family:-apple-system,Helvetica,Arial,sans-serif';
-            const closeBtnStyle = 'background:rgba(255,255,255,0.15);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;padding:0;display:flex;align-items:center;justify-content:center';
-            document.body.appendChild(el);
-            const btn = document.getElementById('audit-cta-close');
-            btn.style.cssText = closeBtnStyle;
-            btn.addEventListener('click', function(ev) {
-                ev.preventDefault();
-                localStorage.setItem(KEY, String(Date.now() + 30 * 24 * 60 * 60 * 1000));
-                el.remove();
+            function escape(s) {
+                if (s == null) return '';
+                return String(s).replace(/[<>&"']/g, function(c) {
+                    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c];
+                });
+            }
+            function severityClass(sev) {
+                if (sev == null) return '';
+                if (sev >= 4) return 'severity-high';
+                if (sev >= 2) return 'severity-mid';
+                return 'severity-low';
+            }
+            function bfsgSeverityClass(risk) {
+                if (risk === 'kritisch' || risk === 'hoch') return 'severity-high';
+                if (risk === 'mittel') return 'severity-mid';
+                return 'severity-low';
+            }
+            function perfSeverityClass(score) {
+                if (score == null) return '';
+                if (score < 50) return 'severity-high';
+                if (score < 80) return 'severity-mid';
+                return 'severity-low';
+            }
+
+            function showSkeleton() {
+                statusEl.textContent = 'Wir prüfen Ihre Seite — das dauert bis zu 30 Sekunden.';
+                cardsEl.innerHTML =
+                    '<div class="audit-card is-revealed"><div class="audit-skeleton-row long"></div><div class="audit-skeleton-row short"></div></div>' +
+                    '<div class="audit-card is-revealed"><div class="audit-skeleton-row long"></div><div class="audit-skeleton-row short"></div></div>' +
+                    '<div class="audit-card is-revealed"><div class="audit-skeleton-row long"></div><div class="audit-skeleton-row short"></div></div>';
+                ctaEl.style.display = 'none';
+                ctaEl.innerHTML = '';
+                resultWrap.classList.add('is-active');
+            }
+
+            function renderCards(d) {
+                const url = urlInput.value.trim();
+                const encoded = encodeURIComponent(url);
+
+                if (d.degraded) {
+                    showError(d.error || 'Wir konnten Ihre Seite gerade nicht analysieren.');
+                    return;
+                }
+
+                const ta = d.techAge || {};
+                const bf = d.bfsg || {};
+                const perf = d.performance || {};
+                const cards = [];
+
+                const taSev = severityClass(ta.severity);
+                const taTitle = ta.cms
+                    ? escape(ta.cms) + (ta.majorVersion ? ' ' + escape(ta.majorVersion) + '.x' : '')
+                    : escape(ta.headline || 'Tech-Stand');
+                const taMeta = [];
+                if (ta.yearsSinceLastChange != null) {
+                    taMeta.push('<span><strong>vor ' + ta.yearsSinceLastChange.toFixed(1) + ' J.</strong> letzte Änderung</span>');
+                }
+                cards.push(
+                    '<div class="audit-card ' + taSev + '">' +
+                        '<div class="audit-card-label">Tech-Stand & Alter</div>' +
+                        '<div class="audit-card-headline">' + taTitle + '</div>' +
+                        (taMeta.length ? '<div class="audit-card-meta">' + taMeta.join('') + '</div>' : '') +
+                        (ta.pitchArg ? '<div class="audit-card-pitch">' + escape(ta.pitchArg) + '</div>'
+                            : (ta.composite ? '<div class="audit-card-pitch">' + escape(ta.composite) + '</div>' : '')) +
+                    '</div>'
+                );
+
+                if (bf.complianceScore != null) {
+                    const bfSev = bfsgSeverityClass(bf.risk);
+                    const bfMeta = ['<span><strong>' + bf.complianceScore + '%</strong> Compliance</span>'];
+                    if (bf.risk) bfMeta.push('<span>Risiko: <strong>' + escape(bf.risk) + '</strong></span>');
+                    if (bf.fine) bfMeta.push('<span>Bußgeld bis <strong>' + escape(bf.fine) + '</strong></span>');
+                    cards.push(
+                        '<div class="audit-card ' + bfSev + '">' +
+                            '<div class="audit-card-label">Barrierefreiheit — BFSG, seit Juni 2025 Pflicht</div>' +
+                            '<div class="audit-card-headline">BFSG-Compliance</div>' +
+                            '<div class="audit-card-meta">' + bfMeta.join('') + '</div>' +
+                            (bf.pitchArg ? '<div class="audit-card-pitch">' + escape(bf.pitchArg) + '</div>' : '') +
+                        '</div>'
+                    );
+                }
+
+                if (perf.score != null) {
+                    const perfSev = perfSeverityClass(perf.score);
+                    const perfHint = perf.score < 50
+                        ? 'Besucher verlassen Ihre Seite, bevor sie geladen ist.'
+                        : perf.score < 80
+                            ? 'Spürbar langsam — beim ersten Eindruck verlieren Sie Aufmerksamkeit.'
+                            : 'Schnell genug, dass Besucher bleiben.';
+                    cards.push(
+                        '<div class="audit-card ' + perfSev + '">' +
+                            '<div class="audit-card-label">Ladezeit & Performance</div>' +
+                            '<div class="audit-card-headline">Performance-Score: ' + perf.score + '/100</div>' +
+                            '<div class="audit-card-pitch">' + perfHint + '</div>' +
+                        '</div>'
+                    );
+                }
+
+                cardsEl.innerHTML = cards.join('');
+                statusEl.textContent = d.cached
+                    ? 'Befund für ' + escape(d.domain || '') + ' (aus den letzten 24 Stunden).'
+                    : 'Befund für ' + escape(d.domain || '') + '.';
+
+                const cardEls = cardsEl.querySelectorAll('.audit-card');
+                cardEls.forEach(function(c, i) {
+                    setTimeout(function() { c.classList.add('is-revealed'); }, 80 + i * 150);
+                });
+
+                ctaEl.innerHTML =
+                    '<a href="/audit?url=' + encoded + '" class="audit-cta-primary">Vollständigen Audit per E-Mail erhalten</a>' +
+                    '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
+                setTimeout(function() { ctaEl.style.display = 'flex'; }, 80 + cardEls.length * 150 + 200);
+            }
+
+            function showError(msg) {
+                const url = urlInput.value.trim();
+                const encoded = encodeURIComponent(url || '');
+                cardsEl.innerHTML =
+                    '<div class="audit-card severity-mid is-revealed">' +
+                        '<div class="audit-card-label">Hinweis</div>' +
+                        '<div class="audit-card-headline">' + escape(msg) + '</div>' +
+                        '<div class="audit-card-pitch">Fordern Sie den Komplettaudit per E-Mail an, dann melden wir uns mit den Ergebnissen.</div>' +
+                    '</div>';
+                statusEl.textContent = '';
+                ctaEl.innerHTML =
+                    '<a href="/audit' + (encoded ? '?url=' + encoded : '') + '" class="audit-cta-primary">Komplettaudit per E-Mail anfordern</a>';
+                ctaEl.style.display = 'flex';
+            }
+
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const url = urlInput.value.trim();
+                if (!url) { urlInput.focus(); return; }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Wird geprüft …';
+                showSkeleton();
+                setTimeout(function() {
+                    resultWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+
+                try {
+                    const res = await fetch(FN_BASE + '/quickAudit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: url, hp: hpInput.value })
+                    });
+                    const j = await res.json();
+                    if (!res.ok) {
+                        if (res.status === 429) showError('Sie haben das Stunden-Limit erreicht. Bitte etwas später erneut.');
+                        else if (res.status === 400) showError(j.error || 'Bitte prüfen Sie Ihre URL.');
+                        else showError('Wir konnten Ihre Seite gerade nicht analysieren.');
+                    } else {
+                        renderCards(j);
+                    }
+                } catch (err) {
+                    showError('Verbindung unterbrochen. Bitte versuchen Sie es erneut.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Schwachstellen zeigen';
+                }
             });
         })();
     </script>
