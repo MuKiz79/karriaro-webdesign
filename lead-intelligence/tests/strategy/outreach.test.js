@@ -13,9 +13,9 @@ const baseData = {
     },
     wayback: { yearsSince: 4.2, domainAgeYears: 9, firstSeen: '2016-04-01', lastChanged: '2021-01-01' },
     competitors: [
-        { displayName: { text: 'Friseur A' }, rating: 4.8, userRatingCount: 120, websiteUri: 'https://a.de' },
-        { displayName: { text: 'Friseur B' }, rating: 4.6, userRatingCount: 95 },
-        { displayName: { text: 'Friseur C' }, rating: 4.5, userRatingCount: 60 }
+        { displayName: { text: 'Friseur A' }, rating: 4.8, userRatingCount: 120, websiteUri: 'https://a.de', primaryType: 'hair_salon' },
+        { displayName: { text: 'Friseur B' }, rating: 4.6, userRatingCount: 95, primaryType: 'hair_salon' },
+        { displayName: { text: 'Friseur C' }, rating: 4.5, userRatingCount: 60, primaryType: 'hair_salon' }
     ],
     bfsgScore: { risk: 'hoch', complianceScore: 35, fine: '50.000€' },
     revenue: { yearlyLoss: 8500 },
@@ -65,6 +65,27 @@ describe('buildOutreachPack', () => {
             expect(c.rating).toBeGreaterThanOrEqual(4.0);
             expect(c.reviews).toBeGreaterThan(30);
         }
+    });
+
+    it('filters competitors to same primaryType (no cross-branche pollution)', () => {
+        // Bug fixed: vorher wurden Tankstelle/Parkhaus als "Konkurrenz" eines
+        // Immobilienmaklers gezeigt, weil der primaryType-Filter fehlte.
+        const data = {
+            ...baseData,
+            competitors: [
+                { displayName: { text: 'Friseur A' }, rating: 4.8, userRatingCount: 120, primaryType: 'hair_salon' },
+                { displayName: { text: 'JET Tankstelle' }, rating: 4.4, userRatingCount: 678, primaryType: 'gas_station' },
+                { displayName: { text: 'Parkhaus' }, rating: 4.3, userRatingCount: 336, primaryType: 'parking' },
+                { displayName: { text: 'Friseur B' }, rating: 4.6, userRatingCount: 95, primaryType: 'hair_salon' }
+            ]
+        };
+        const pack = buildOutreachPack(data);
+        for (const c of pack.competitors) {
+            expect(c.name).toMatch(/^Friseur/);
+        }
+        // Tankstelle und Parkhaus sollten draussen sein
+        expect(pack.competitors.find(c => c.name.includes('Tankstelle'))).toBeUndefined();
+        expect(pack.competitors.find(c => c.name.includes('Parkhaus'))).toBeUndefined();
     });
 
     it('each variant body stays under ~120 words', () => {

@@ -21,6 +21,7 @@ import { assessWPSecurity } from '../analysis/wp-security.js';
 import { assessCognitiveLoad } from '../analysis/cognitive-load.js';
 import { checkSitemapFreshness } from '../analysis/sitemap-freshness.js';
 import { calculateCompositeScore } from '../scoring/composite-score.js';
+import { decideAction } from '../scoring/decision-engine.js';
 import { fetchCrUX } from '../api/crux.js';
 import { getScoreInsight } from '../learning/feedback-loop.js';
 import { detectTech } from '../signals/tech-detect.js';
@@ -317,13 +318,16 @@ function runLocalAnalysis(p) {
     const signalStack = analyzeSignalStack({ ws, tech, place, footprint, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
     const compositeScore = calculateCompositeScore({ ws, tech, place, footprint, revenue, result, screenshotAnalysis, contentAnalysis, socialSignals, triggerEvents, bfsgScore, signalStack, techDepth, contentFreshness, companyProfile });
     const feedbackInsight = getScoreInsight(result.leadScore);
+    // Konsolidierte Top-Empfehlung — EV ist Top-Filter (siehe decision-engine.js).
+    // Verhindert Widersprueche zwischen "Composite=Exzellent" und "Kelly=Skip".
+    const decision = decideAction({ composite: compositeScore, kelly: result?.kelly, triggers: triggerEvents, leadScore: result?.leadScore });
 
     return {
         surgeIntent, digitalMaturity, conversationReady, stakeholder, techTrajectory,
         localSEO, emotionalReady, revenueWeighted, socialSignals, socialComparison,
         cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
         pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight,
-        reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad
+        reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad, decision
     };
 }
 
@@ -384,9 +388,16 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             problems.push(`Fehlende Features: ${uxAudit.missing.map(m => `<strong>${m.name}</strong>`).join(', ')}. Diese Funktionen erwarten Kunden in der ${branche}-Branche heute als Standard.`);
         }
 
-        // ── Was eine moderne Website in dieser Branche braucht ──
+        // ── Basis-Features (gemessen) und Modern-Empfehlungen (nicht gemessen) klar trennen ──
+        // Vorher: ein Satz vermischte uxAudit.modernFeatures (4 Items, ungeprueft) mit
+        // uxAudit.results.length (3 Items, geprueft) — fuehrte zu "3 von 3 Basis-Features"
+        // direkt unter einer Liste mit 4 Items.
+        if (uxAudit?.results?.length > 0) {
+            const foundNames = (uxAudit.found || []).map(f => f.name).join(', ') || '—';
+            problems.push(`<strong>Basis-Features (geprueft):</strong> ${name} hat ${uxAudit.found?.length || 0} von ${uxAudit.results.length} (${foundNames}).`);
+        }
         if (uxAudit?.modernFeatures?.length > 0) {
-            problems.push(`<strong>Was eine moderne ${uxAudit.persona?.name || branche}-Website 2026 braucht:</strong> ${uxAudit.modernFeatures.join(', ')}. Davon hat ${name} ${uxAudit.found?.length || 0} von ${uxAudit.results?.length || 0} Basis-Features.`);
+            problems.push(`<strong>Empfehlungen fuer eine moderne ${uxAudit.persona?.name || branche}-Website 2026:</strong> ${uxAudit.modernFeatures.join(', ')}.`);
         }
 
         // ── Technische Probleme (sekundär) ──

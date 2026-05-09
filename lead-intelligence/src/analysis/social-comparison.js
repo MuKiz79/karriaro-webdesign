@@ -14,8 +14,20 @@ export function compareSocialPresence(place, competitors) {
         return { available: false };
     }
 
+    // Branchen-Filter: nur Konkurrenten mit gleichem primaryType.
+    // Andernfalls wird der Vergleich verfaelscht (z.B. Tankstelle/Parkhaus als
+    // "Konkurrenz" eines Immobilienmaklers — die haben naturgemaess viel mehr Reviews).
+    const targetType = place.primaryType || null;
+    const sameBranche = targetType
+        ? competitors.filter(c => c?.primaryType === targetType)
+        : competitors;
+
+    if (sameBranche.length < 2) {
+        return { available: false, reason: 'Zu wenig Branchen-Konkurrenten in der Umgebung gefunden.' };
+    }
+
     const lead = extractProfile(place);
-    const compProfiles = competitors.map(extractProfile).filter(p => p.name);
+    const compProfiles = sameBranche.map(extractProfile).filter(p => p.name);
 
     if (compProfiles.length === 0) return { available: false };
 

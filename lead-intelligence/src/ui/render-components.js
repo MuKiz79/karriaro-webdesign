@@ -115,6 +115,25 @@ export function renderScore(el, data, explanation) {
         <div class="explanation-box">${explanation}</div>
     </div>`;
 
+    // ── Decision-Banner (Single Source of Truth — siehe scoring/decision-engine.js) ──
+    // Konsolidiert Composite + Kelly/EV + Trigger-Events zu EINER Top-Empfehlung.
+    // Das vermeidet, dass Composite "Exzellent" und Kelly "Skip" gleichzeitig stehen.
+    if (!isSkip && data.decision) {
+        const d = data.decision;
+        const colors = {
+            'contact_now': { bg: 'rgba(48,209,88,0.10)', border: 'var(--green)', text: 'var(--green)' },
+            'contact_soon': { bg: 'rgba(0,113,227,0.08)', border: 'var(--accent)', text: 'var(--accent)' },
+            'watchlist': { bg: 'rgba(255,159,10,0.08)', border: 'var(--orange)', text: 'var(--orange)' },
+            'skip': { bg: 'rgba(134,134,139,0.10)', border: 'var(--muted)', text: 'var(--muted)' }
+        };
+        const c = colors[d.action] || colors.watchlist;
+        html += `<div class="card anim-in" style="background:${c.bg};border-left:4px solid ${c.border};margin-bottom:24px">
+            <div class="section-label" style="color:${c.text};font-weight:700;letter-spacing:1px">Empfehlung: ${escapeHtml(d.actionLabel)}</div>
+            <div class="metric-desc" style="margin-top:8px;line-height:1.5">${escapeHtml(d.reason)}</div>
+            ${d.diagnostics?.length ? `<div class="metric-desc" style="margin-top:12px;font-size:11px;opacity:0.7">Diagnose: ${d.diagnostics.map(escapeHtml).join(' · ')}</div>` : ''}
+        </div>`;
+    }
+
     // Quick-Summary Leiste (die wichtigsten Zahlen auf einen Blick)
     if (!isSkip) {
         const ws = data.ws;
@@ -341,7 +360,15 @@ export function renderFuture(el, data) {
             </div>
         </div>
         <div class="card anim-in">
-            ${futureResult.results.map(c => `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${c.passed ? 'found' : c.weight >= 3 ? 'missing' : 'warn'}">${c.passed ? '✓' : '✗'}</span>${c.name}${c.weight >= 3 ? ' <span class="feature-critical">PFLICHT</span>' : ''}</span><span class="feature-detail">${c.passed ? 'Bestanden' : c.stat}</span></div>`).join('')}
+            ${futureResult.results.map(c => {
+                const detail = c.passed
+                    ? 'Bestanden'
+                    : (c.stat || c.description || '');
+                const sourceLink = (!c.passed && c.source)
+                    ? ` <a href="${c.source.url}" target="_blank" rel="noopener" style="font-size:10px;opacity:0.6;text-decoration:underline">${c.source.label}</a>`
+                    : '';
+                return `<div class="feature-row"><span class="stat-label"><span class="feature-icon ${c.passed ? 'found' : c.weight >= 3 ? 'missing' : 'warn'}">${c.passed ? '✓' : '✗'}</span>${c.name}${c.weight >= 3 ? ' <span class="feature-critical">PFLICHT</span>' : ''}</span><span class="feature-detail">${detail}${sourceLink}</span></div>`;
+            }).join('')}
         </div>`;
 }
 
@@ -709,12 +736,14 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
 export function renderSignals(el, data) {
     let html = '';
 
-    // Composite Score (Fit × Intent × Timing)
+    // Composite Score (Fit × Intent × Timing) — Diagnose, NICHT Top-Empfehlung.
+    // Top-Empfehlung kommt aus decision-engine.js (renderScore-Banner).
     const cs = data.compositeScore;
     if (cs) {
         const csColor = cs.composite >= 65 ? 'var(--green)' : cs.composite >= 45 ? 'var(--orange)' : cs.composite >= 30 ? 'var(--muted)' : 'var(--red)';
         html += `<div class="card card-accent anim-in">
-            <div class="section-label-accent">Composite Score — Fit × Intent × Timing</div>
+            <div class="section-label-accent">Diagnose: Composite Score — Fit × Intent × Timing</div>
+            <div class="metric-desc" style="margin-top:-4px;margin-bottom:12px;font-size:11px;opacity:0.7">Misst Lead-Qualitaet. Fuer die Aktion zaehlt das Decision-Banner oben (EV-basiert).</div>
             <div class="flex-between" style="margin-bottom:12px">
                 <div><span class="metric-xl" style="color:${csColor}">${cs.composite}</span> <span class="metric-desc">${cs.label}</span></div>
             </div>
@@ -727,15 +756,14 @@ export function renderSignals(el, data) {
         </div>`;
     }
 
-    // Signal Stacking
+    // Signal Stacking — Cluster-Konzept anzeigen, aber Multiplikator-Zahlen
+    // verstecken (sind unkalibrierte Heuristiken, siehe signal-stacking.js).
     const ss = data.signalStack;
     if (ss && ss.clusterCount > 0) {
         html += `<div class="card anim-in">
-            <div class="section-label">Signal Stacking — ${ss.signalCount} Signale, ${ss.clusterCount} Cluster</div>
-            <div class="flex-between" style="margin-bottom:8px">
-                <div><span class="metric-xl" style="color:${ss.stackMultiplier >= 2 ? 'var(--green)' : 'var(--orange)'}">${ss.stackMultiplier}×</span> <span class="metric-desc">Multiplikator</span></div>
-            </div>
-            ${ss.activeClusters.map(c => `<div class="feature-row"><span class="stat-label"><span class="feature-icon found">★</span>${c.name} (${c.matchCount}/${c.totalSignals} Signale)</span><span class="feature-detail">${c.multiplier}×</span></div>`).join('')}
+            <div class="section-label">Signal-Haeufung — ${ss.signalCount} Signale, ${ss.clusterCount} Cluster</div>
+            <div class="metric-desc" style="margin-top:-4px;margin-bottom:8px;font-size:11px;opacity:0.7">Mehrere parallele Schmerz-Signale erhoehen erfahrungsgemaess die Pitch-Wirkung. Konkrete Multiplikatoren sind unkalibriert — wir zeigen sie deshalb nicht als exakte Zahl.</div>
+            ${ss.activeClusters.map(c => `<div class="feature-row"><span class="stat-label"><span class="feature-icon found">★</span>${c.name} (${c.matchCount}/${c.totalSignals} Signale)</span><span class="feature-detail">aktiv</span></div>`).join('')}
         </div>`;
         if (ss.pitchArgs.length > 0) {
             html += `<div class="pitch-box anim-in"><h3>Signal-Stack Argument</h3><p>${ss.pitchArgs[0]}</p></div>`;
@@ -844,7 +872,7 @@ export function renderSignals(el, data) {
     if (cl && cl.loadScore >= 30) {
         html += `<div class="card anim-in">
             <div class="section-label">Kognitive Belastung</div>
-            <div class="metric-desc">${cl.label} · ${cl.requests} Requests · ${cl.domSize} DOM-Elemente · ${cl.bloat} ungenutzte Dateien</div>
+            <div class="metric-desc">${cl.label} · ${cl.requests} Requests${cl.domSize !== null && cl.domSize !== undefined ? ` · ${cl.domSize} DOM-Elemente` : ''} · ${cl.bloat} ungenutzte Dateien</div>
             ${cl.pitchArg ? `<div class="metric-desc" style="color:var(--orange);margin-top:4px">${cl.pitchArg}</div>` : ''}
         </div>`;
     }

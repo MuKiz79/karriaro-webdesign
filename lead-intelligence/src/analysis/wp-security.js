@@ -56,8 +56,9 @@ export function assessWPSecurity(psiData, tech) {
     }
     const criticalVulns = vulnerablePlugins.filter(v => v.severity === 'kritisch' || v.severity === 'hoch');
 
-    // WP-Version
-    const wpVersion = allUrls.match(/ver=(\d+\.\d+\.?\d*)/)?.[1];
+    // WP-Version: Single Source aus tech.version (siehe signals/tech-detect.js).
+    // NICHT mehr selbst /ver=X/ matchen — das matcht zufaellige Plugin/jQuery-Versionen.
+    const wpVersion = tech?.version || null;
     const isOutdatedWP = wpVersion && parseFloat(wpVersion) < 6.4;
 
     // Risk Score

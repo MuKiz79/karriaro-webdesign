@@ -72,9 +72,34 @@ export function detectTech(psiData) {
         }
     }
 
-    // 3. WordPress version from generator meta or URLs
-    const wpVer = urls.match(/wp-includes\/[^?]*\?ver=([0-9.]+)/);
-    if (wpVer) result.version = wpVer[1];
+    // 3. WordPress-Version aus wp-includes/-Asset-URLs ermitteln (Single Source)
+    //
+    // Hintergrund: Lighthouse-Network-Requests enthalten viele ?ver=X.Y.Z-Tags,
+    // die je nach Asset unterschiedliche Versionen tragen koennen:
+    //  - wp-includes/js/wp-emoji-release.min.js?ver=6.4.2  → WP-Core-Version
+    //  - wp-includes/js/jquery/jquery.min.js?ver=3.7.1     → jQuery-Version (NICHT WP)
+    //  - wp-content/plugins/elementor/.../?ver=3.18.0      → Plugin-Version
+    //
+    // Wir matchen nur Assets unter wp-includes/ (NICHT jquery), sammeln alle Versionen
+    // und nehmen die haeufigste als WP-Core-Version. Das vermeidet, dass eine
+    // Plugin/jQuery-Version faelschlich als WP-Core gerendert wird.
+    if ((result.cms && result.cms.includes('WordPress')) || /wp-content|wp-includes/i.test(urls)) {
+        const versions = [];
+        const re = /wp-includes\/(?!js\/jquery\/)[^\s"]*?\?ver=(\d+\.\d+(?:\.\d+)?)/gi;
+        let m;
+        while ((m = re.exec(urls)) !== null) {
+            versions.push(m[1]);
+        }
+        if (versions.length > 0) {
+            // Modus (haeufigste Version)
+            const counts = {};
+            for (const v of versions) counts[v] = (counts[v] || 0) + 1;
+            const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+            result.version = sorted[0][0];
+            // Confidence-Flag: alle Versionen gleich → 'high', sonst 'medium'
+            result.versionConfidence = sorted.length === 1 ? 'high' : 'medium';
+        }
+    }
 
     // 4. Final URL check (subdomain = Baukasten)
     const finalUrl = lh.finalDisplayedUrl || '';

@@ -1,5 +1,18 @@
 /**
- * Survival Analysis — Kaplan-Meier Time-to-Conversion
+ * Survival Analysis — Weibull Time-to-Conversion
+ *
+ * HINWEIS: Sowohl der Shape-Parameter k=1.5 als auch die Branchen-MEDIAN_DAYS
+ * sind DEFAULT-HEURISTIKEN, nicht aus eigenen Outcome-Daten kalibriert. Die
+ * Werte basieren auf der Annahme "moderate fallende Hazard-Rate, branchen-
+ * typische Reaktionszeiten" — sind aber keine empirischen Schaetzer.
+ *
+ * Sobald >=50 echte Outcome-Daten (Lead → Antwort/Auftrag/Absage mit Datum)
+ * vorliegen, sollte k aus einer Maximum-Likelihood-Anpassung an die empirische
+ * Hazard-Rate geschaetzt werden, und die MEDIAN_DAYS aus Kaplan-Meier-Schaetzern
+ * pro Branche.
+ *
+ * Die Zahlen sind besser als nichts (verhindern naive konstante Hazard-Annahme),
+ * aber sollten im UI als "Default-Heuristik" markiert werden.
  */
 
 const MEDIAN_DAYS = {
@@ -12,10 +25,9 @@ const MEDIAN_DAYS = {
 };
 
 /**
- * Fix 8: Weibull statt Exponential
  * S(t) = exp(-(t/λ)^k) mit k > 1 → fallende Hazard-Rate
- * Realität: Wer nach 20 Tagen nicht geantwortet hat, antwortet wahrscheinlich nie.
- * k = 1.5 (moderate fallende Rate), λ aus Median abgeleitet
+ * Idee: Wer nach 20 Tagen nicht geantwortet hat, antwortet wahrscheinlich nie.
+ * k = 1.5 (Default-Heuristik), λ aus Median abgeleitet.
  */
 export function estimateSurvival(branchType, leadScore) {
     const baseMedian = MEDIAN_DAYS[branchType] || MEDIAN_DAYS._default;
@@ -40,6 +52,8 @@ export function estimateSurvival(branchType, leadScore) {
         weibullK: k,
         weibullLambda: Math.round(lambda * 10) / 10,
         hazard14d: Math.round(hazardAt(14) * 1000) / 1000,
-        label: `Median: ${adjustedMedian} Tage · Aufgeben nach ${Math.round(adjustedMedian * 2.5)} Tagen (Weibull k=${k})`
+        // Disclaimer im Label: Default-Heuristik, nicht aus History kalibriert
+        label: `Median: ${adjustedMedian} Tage · Aufgeben nach ${Math.round(adjustedMedian * 2.5)} Tagen (Default-Heuristik, Weibull k=${k})`,
+        isCalibrated: false
     };
 }

@@ -20,16 +20,17 @@ export function analyzeTechDepth(psiData, tech) {
 
     // ── WordPress-Details ──
     if (tech?.cms?.includes('WordPress') || /wp-content|wp-includes/i.test(allUrls)) {
-        // WordPress-Version
-        const wpVersion = allUrls.match(/ver=(\d+\.\d+\.?\d*)/);
+        // WordPress-Version: Single Source aus tech.version (siehe signals/tech-detect.js).
+        // NICHT mehr selbst /ver=X/ matchen — das matcht zufaellige Plugin/jQuery-Versionen.
+        const wpVersion = tech?.version || null;
         if (wpVersion) {
-            const v = parseFloat(wpVersion[1]);
+            const v = parseFloat(wpVersion);
             if (v < 6.0) {
-                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion[1]}`, risk: 'Sicherheitsupdates enden bald', severity: 'hoch' });
+                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: 'Sicherheitsupdates enden bald', severity: 'hoch' });
                 securityRisk += 3;
                 obsoleteScore += 3;
             } else if (v < 6.4) {
-                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion[1]}`, risk: 'Nicht die aktuelle Version', severity: 'mittel' });
+                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: 'Nicht die aktuelle Version', severity: 'mittel' });
                 obsoleteScore += 1;
             }
         }

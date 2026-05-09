@@ -50,6 +50,18 @@ export function calculateRevenueLoss(ws, place) {
     const bounceRate = bounceIncrease(lcpSec);
 
     const baselineConversions = estMonthlyVisitors * ind.convRate;
+    // Damage-Faktoren: Anteil der Traffic-Verluste pro Risiko-Faktor.
+    // Quellen-Annahmen:
+    //  - bounceRate stammt aus bounceIncrease() (Google/Akamai-Studien zu LCP→Bounce).
+    //  - mobilePenalty=0.15: ohne Viewport-Tag verliert man laut StatCounter-Daten
+    //    grob 60 % Mobile-Traffic, davon ~25 % bouncen sofort → 0.6×0.25=0.15.
+    //  - sslPenalty=0.10: Browser-Warnung ("Nicht sicher") fuehrt laut HubSpot-
+    //    Studie zu ~10 % Sofort-Absprung.
+    //  - 0.4-Faktor auf bounceRate: Speed-Bounce wirkt nur auf Conversion-relevante
+    //    Sessions (nicht auf bereits verlorene Visits).
+    // Diese Multiplikatoren sind plausible Annahmen, aber nicht in eigenen Daten
+    // kalibriert. Sobald wir Outcome-Daten haben, sollten sie pro Branche
+    // angepasst werden.
     const mobilePenalty = ws.viewport ? 0 : 0.15;
     const sslPenalty = ws.isHttps ? 0 : 0.10;
     const seoLostPct = ws.seo < 50 ? 0.30 : ws.seo < 75 ? 0.15 : 0.05;

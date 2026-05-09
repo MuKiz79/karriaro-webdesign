@@ -1,11 +1,17 @@
 /**
- * #1 Signal Stacking — Exponentieller Boost bei gestackten Signalen
+ * #1 Signal Stacking — Heuristischer Boost bei gestackten Signalen
  *
- * Forschung: 2-3 gestackte Signale konvertieren 5-10× besser als einzelne.
- * Ein Account mit "SSL fehlt" + "Baukasten" + "263 Reviews" + "Wayback 3J"
- * ist EXPONENTIELL besser als die lineare Summe.
+ * HINWEIS: Die Multiplikatoren in SIGNAL_CLUSTERS (1.5×, 1.6×, 1.8×, 2.0×, 2.5×)
+ * sind UNKALIBRIERTE HEURISTIKEN — nicht aus eigenen Outcome-Daten abgeleitet.
+ * Sie spiegeln die Intuition wider, dass mehrere koexistierende Schmerz-Signale
+ * den Pitch-Hebel erhoehen, sind aber keine empirisch geschaetzten Faktoren.
  *
- * Methodik: Identifiziere Signal-Cluster und berechne Multiplikatoren.
+ * Sobald >=50 Outcome-Daten (Lead → Auftrag/Absage) vorliegen, sollten die
+ * Multiplikatoren aus der Beta-Bernoulli-Posterior pro Cluster geschaetzt werden
+ * (siehe learning/calibration.js fuer den Kalibrierungs-Mechanismus).
+ *
+ * Im UI: Cluster-Konzept ja, exakte Faktoren nein — sonst suggeriert die Zahl
+ * eine Genauigkeit, die wir nicht haben.
  */
 
 // Signal-Kategorien die sich gegenseitig verstärken

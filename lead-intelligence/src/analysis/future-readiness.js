@@ -12,42 +12,44 @@
  * Einzelne Zukunfts-Checks mit Gewichtung
  * @type {Array<Object>}
  */
+/**
+ * Statistik-Quellen — nur was tatsaechlich verifizierbar ist.
+ *
+ * Frueher hatten manche Checks Magic-Number-Statistiken ohne Quelle ("96% haben
+ * WCAG-Fehler", "95%+ kein Chatbot"). Ein Empfaenger der den Pitch erhaelt und
+ * die Zahl googelt, fand keine Quelle — das hat die Glaubwuerdigkeit verspielt.
+ *
+ * Jetzt: nur Aussagen die in einer realen Studie nachzulesen sind, jeweils mit
+ * Source-URL. Was nicht belegbar ist, hat keine Statistik mehr — nur den
+ * Pflicht/Empfehlungs-Hinweis.
+ */
+const SOURCES = {
+    webaim2024: {
+        label: 'WebAIM Million Report 2024',
+        url: 'https://webaim.org/projects/million/'
+    },
+    almanac2024: {
+        label: 'HTTP Archive Web Almanac 2024',
+        url: 'https://almanac.httparchive.org/en/2024/'
+    }
+};
+
 const CHECKS = [
     {
         id: 'bfsg', name: 'BFSG-Compliance (Barrierefreiheit)',
         description: 'Seit Juni 2025 gesetzlich vorgeschrieben. Bussgelder bis 100.000 EUR. Erste Abmahnwellen laufen.',
-        stat: '0% der deutschen Websites sind vollstaendig konform (AccessiWay 2025). 96% haben WCAG-Fehler.',
+        stat: '95,9 % der untersuchten Home-Pages haben WCAG-Fehler.',
+        source: SOURCES.webaim2024,
         check: (ws) => ws.a11y >= 80,
         score: (ws) => ws.a11y,
         weight: 3,
         pitch: 'Barrierefreiheit ist keine Option mehr — es ist Gesetz. Ihre Website erreicht ${score}/100. Die ersten Abmahnungen laufen bereits.'
     },
     {
-        id: 'chatbot', name: 'KI-Chatbot / Sofort-Antworten',
-        description: '87% der Kunden erwarten sofortige Antworten. KI-Chatbots steigern Conversions um 20-30%.',
-        stat: '95%+ der lokalen Unternehmen haben keinen Chatbot. Ihr Wettbewerbsvorteil.',
-        check: (ws, psiData) => {
-            const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
-            return /tidio|intercom|drift|crisp|livechat|tawk|hubspot.*chat|zendesk.*chat|freshchat|chatbot|messenger.*plugin/i.test(urls);
-        },
-        weight: 2,
-        pitch: 'Ihr Konkurrent hat einen Chatbot der um 23 Uhr Termine bucht. Sie haben ein Kontaktformular. 87% der Kunden erwarten sofortige Antworten.'
-    },
-    {
-        id: 'voice', name: 'Voice Search Optimierung',
-        description: '58% nutzen Sprachsuche fuer lokale Geschaefte. 76% der Sprachsuchen sind "in der Naehe"-Anfragen.',
-        stat: '90%+ der lokalen Websites sind nicht fuer Sprachsuche optimiert.',
-        check: (ws, psiData) => {
-            const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
-            return /schema\.org|application\/ld\+json|speakable/i.test(urls) && ws.seo >= 80;
-        },
-        weight: 2,
-        pitch: '"Hey Siri, finde einen ${branche} in der Naehe" — funktioniert das fuer Ihre Website? 58% der Kunden suchen per Stimme.'
-    },
-    {
         id: 'schema', name: 'Strukturierte Daten (Schema.org)',
         description: 'Websites mit Schema.org bekommen Rich Snippets in Google: Sterne, Preise, Oeffnungszeiten direkt in den Suchergebnissen.',
-        stat: '80%+ der lokalen Websites haben kein Schema.org. 40% mehr Klicks mit Rich Snippets.',
+        stat: 'Rund 36 % aller Websites nutzen strukturierte Daten — der Rest verschenkt Sichtbarkeit in Google.',
+        source: SOURCES.almanac2024,
         check: (ws, psiData) => {
             const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
             return /schema\.org|application\/ld\+json|structured.*data/i.test(urls);
@@ -58,15 +60,15 @@ const CHECKS = [
     {
         id: 'https', name: 'HTTPS-Verschluesselung',
         description: 'Google Chrome zeigt "Nicht sicher" an. Pflicht fuer jede serioese Website.',
-        stat: 'Immer noch ~5% der lokalen Websites ohne SSL.',
         check: (ws) => ws.isHttps,
         weight: 3,
         pitch: 'Ihr Browser zeigt "Nicht sicher" — das schreckt jeden zweiten Besucher sofort ab.'
     },
     {
         id: 'speed', name: 'Core Web Vitals (Google-Standard)',
-        description: 'Google belohnt schnelle Websites mit besserem Ranking. 24% weniger Abbrueche bei Einhaltung.',
-        stat: 'Nur ~33% der Websites bestehen alle Core Web Vitals.',
+        description: 'Google belohnt schnelle Websites mit besserem Ranking. CrUX-Daten zeigen, dass nur eine Minderheit der Websites alle Core Web Vitals besteht.',
+        stat: 'Mobile-CWV-Bestehensquote bewegt sich laut CrUX-Daten unter 50 %.',
+        source: SOURCES.almanac2024,
         check: (ws) => ws.perf >= 75,
         score: (ws) => ws.perf,
         weight: 2,
@@ -74,8 +76,7 @@ const CHECKS = [
     },
     {
         id: 'mobile', name: 'Mobile-First Design',
-        description: '60%+ des Traffics kommt vom Handy. Google indexiert seit 2021 NUR die Mobile-Version.',
-        stat: '~30% der lokalen Websites sind immer noch nicht wirklich mobile-optimiert.',
+        description: 'Google indexiert seit 2021 NUR die Mobile-Version (Mobile-First-Indexing). Wenn die Mobile-Variante nicht funktioniert, leidet das Ranking direkt.',
         check: (ws) => ws.viewport && ws.perf >= 50,
         weight: 2,
         pitch: 'Google bewertet nur noch Ihre Mobile-Version. Die Desktop-Seite ist fuer das Ranking irrelevant.'
@@ -83,7 +84,6 @@ const CHECKS = [
     {
         id: 'dsgvo', name: 'DSGVO-konformer Cookie-Banner',
         description: 'Fehlendes oder falsches Cookie-Management kann abgemahnt werden.',
-        stat: 'Viele Websites nutzen noch "Alle akzeptieren"-Buttons ohne echte Wahlmoeglichkeit.',
         check: (ws, psiData) => {
             const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
             return /cookiebot|cookieconsent|onetrust|usercentrics|borlabs.*cookie|tarteaucitron|klaro/i.test(urls);

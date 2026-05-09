@@ -265,8 +265,14 @@ export function buildOutreachPack(data) {
         .map(tone => buildEmail(data, args, primaryArg, supportingArgs, profile, tone));
 
     const domain = new URL(data.url).hostname.replace('www.', '');
+    // Konkurrenz-Spiegel: nur Branchen-Konkurrenten anzeigen (primaryType muss matchen).
+    // Ohne diesen Filter kommen Tankstellen/Parkhaus/Event-Zentren als "Konkurrenz" eines
+    // Immobilienmaklers — das macht den Pitch unglaubwuerdig.
+    const targetType = data.place?.primaryType || null;
     const competitors = (data.competitors || []).filter(c =>
-        c?.userRatingCount > 30 && c.rating >= 4.0
+        c?.userRatingCount > 30 &&
+        c.rating >= 4.0 &&
+        (!targetType || c?.primaryType === targetType)
     ).slice(0, 3);
 
     return {

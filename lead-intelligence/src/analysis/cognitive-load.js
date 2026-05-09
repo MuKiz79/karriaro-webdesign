@@ -17,10 +17,16 @@ export function assessCognitiveLoad(psiData) {
     let loadScore = 0; // 0 = minimal, 100 = maximal überfordernd
 
     // ── DOM-Größe (zu viele Elemente = überladene Seite) ──
-    const domSize = audits['dom-size']?.numericValue || 0;
-    if (domSize > 3000) loadScore += 20;
-    else if (domSize > 1500) loadScore += 10;
-    else if (domSize > 800) loadScore += 5;
+    // null-safe: PSI liefert manchmal kein numericValue (z.B. fehlgeschlagenes Audit).
+    // In dem Fall bleibt domSize=null statt 0, damit der Report nicht "0 DOM-Elemente"
+    // als Tatsache rendert.
+    const rawDom = audits['dom-size']?.numericValue;
+    const domSize = (typeof rawDom === 'number' && rawDom > 0) ? rawDom : null;
+    if (domSize !== null) {
+        if (domSize > 3000) loadScore += 20;
+        else if (domSize > 1500) loadScore += 10;
+        else if (domSize > 800) loadScore += 5;
+    }
 
     // ── Anzahl Requests (zu viele = langsam + chaotisch) ──
     const requests = audits['network-requests']?.details?.items?.length || 0;
@@ -64,7 +70,7 @@ export function assessCognitiveLoad(psiData) {
         thirdParty,
         label: `Cognitive Load: ${level} (${loadScore}/100)`,
         pitchArg: loadScore >= 50
-            ? `Ihre Website hat ${requests} Requests, ${domSize} DOM-Elemente und ${bloat} ungenutzte Dateien. Das überfordert Besucher und verlangsamt alles. Eine schlanke, handcodierte Website löst das sofort.`
+            ? `Ihre Website hat ${requests} Requests${domSize !== null ? `, ${domSize} DOM-Elemente` : ''} und ${bloat} ungenutzte Dateien. Das überfordert Besucher und verlangsamt alles. Eine schlanke, handcodierte Website löst das sofort.`
             : null,
         funnelImpact: loadScore >= 50 ? 2 : 0
     };
