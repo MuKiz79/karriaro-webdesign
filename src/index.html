@@ -776,6 +776,44 @@
                 resultWrap.classList.add('is-active');
             }
 
+            function branchSeverityClass(sev) {
+                if (sev >= 4) return 'severity-high';
+                if (sev >= 2) return 'severity-mid';
+                if (sev >= 1) return 'severity-low';
+                return 'severity-low';
+            }
+
+            function renderBranchCard(b) {
+                if (!b || !b.totalCount) return '';
+                const sevCls = branchSeverityClass(b.severity);
+                const labelText = b.usedDefault
+                    ? 'Branchen-Standards (allgemein)'
+                    : 'Was Ihre Branche erwartet';
+                const headline = b.usedDefault
+                    ? escape(b.name) + ' — Online-Standards'
+                    : escape(b.name) + ' — Standard-Erwartungen';
+                const meta = '<span><strong>' + b.foundCount + ' / ' + b.totalCount + '</strong> Standards erfüllt</span>';
+
+                const items = [].concat(b.mustHave || [], b.shouldHave || []);
+                const itemRows = items.map(function(it) {
+                    const icon = it.found
+                        ? '<span style="color:#30d158;font-weight:600">✓</span>'
+                        : '<span style="color:#ff453a;font-weight:600">✗</span>';
+                    const style = it.found
+                        ? 'color:#6e6e73'
+                        : 'color:#1d1d1f;font-weight:500';
+                    return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;' + style + '">' + icon + '<span>' + escape(it.label) + '</span></div>';
+                }).join('');
+
+                return '<div class="audit-card ' + sevCls + '">' +
+                        '<div class="audit-card-label">' + labelText + '</div>' +
+                        '<div class="audit-card-headline">' + headline + '</div>' +
+                        '<div class="audit-card-meta">' + meta + '</div>' +
+                        '<div style="margin-top:10px">' + itemRows + '</div>' +
+                        (b.pitchArg ? '<div class="audit-card-pitch">' + escape(b.pitchArg) + '</div>' : '') +
+                    '</div>';
+            }
+
             function renderCards(d) {
                 const url = urlInput.value.trim();
                 const encoded = encodeURIComponent(url);
@@ -788,7 +826,13 @@
                 const ta = d.techAge || {};
                 const bf = d.bfsg || {};
                 const perf = d.performance || {};
+                const branch = d.branch;
+                const isLight = !!d.light;
                 const cards = [];
+
+                if (branch) {
+                    cards.push(renderBranchCard(branch));
+                }
 
                 const taSev = severityClass(ta.severity);
                 const taTitle = ta.cms
@@ -810,12 +854,15 @@
 
                 if (bf.complianceScore != null) {
                     const bfSev = bfsgSeverityClass(bf.risk);
+                    const bfLabel = bf.method === 'wcag'
+                        ? 'Barrierefreiheit (WCAG-Prüfung) — BFSG seit Juni 2025'
+                        : 'Barrierefreiheit (Heuristik) — BFSG seit Juni 2025';
                     const bfMeta = ['<span><strong>' + bf.complianceScore + '%</strong> Compliance</span>'];
                     if (bf.risk) bfMeta.push('<span>Risiko: <strong>' + escape(bf.risk) + '</strong></span>');
                     if (bf.fine) bfMeta.push('<span>Bußgeld bis <strong>' + escape(bf.fine) + '</strong></span>');
                     cards.push(
                         '<div class="audit-card ' + bfSev + '">' +
-                            '<div class="audit-card-label">Barrierefreiheit — BFSG, seit Juni 2025 Pflicht</div>' +
+                            '<div class="audit-card-label">' + bfLabel + '</div>' +
                             '<div class="audit-card-headline">BFSG-Compliance</div>' +
                             '<div class="audit-card-meta">' + bfMeta.join('') + '</div>' +
                             (bf.pitchArg ? '<div class="audit-card-pitch">' + escape(bf.pitchArg) + '</div>' : '') +
@@ -837,12 +884,21 @@
                             '<div class="audit-card-pitch">' + perfHint + '</div>' +
                         '</div>'
                     );
+                } else if (isLight && perf.hint) {
+                    cards.push(
+                        '<div class="audit-card severity-low">' +
+                            '<div class="audit-card-label">Performance — folgt im Komplettaudit</div>' +
+                            '<div class="audit-card-headline">Performance-Score</div>' +
+                            '<div class="audit-card-pitch">' + escape(perf.hint) + '</div>' +
+                        '</div>'
+                    );
                 }
 
                 cardsEl.innerHTML = cards.join('');
-                statusEl.textContent = d.cached
-                    ? 'Befund für ' + escape(d.domain || '') + ' (aus den letzten 24 Stunden).'
-                    : 'Befund für ' + escape(d.domain || '') + '.';
+                let statusText = 'Befund für ' + escape(d.domain || '');
+                if (d.cached) statusText += ' (aus den letzten 24 Stunden)';
+                if (isLight) statusText += ' — Schnellanalyse';
+                statusEl.textContent = statusText + '.';
 
                 const cardEls = cardsEl.querySelectorAll('.audit-card');
                 cardEls.forEach(function(c, i) {

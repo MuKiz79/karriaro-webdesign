@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
+const { runLightAudit } = require("./lib/light-audit.js");
 const {
     extractSubPages,
     htmlToText,
@@ -23,6 +24,7 @@ const SMTP_HOST = defineSecret("SMTP_HOST");
 const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
 const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
+const PSI_API_KEY = defineSecret("PSI_API_KEY");
 
 const DEEP_RESEARCH_MODEL = "claude-sonnet-4-20250514";
 const DEEP_RESEARCH_CACHE_DAYS = 7;
@@ -355,13 +357,23 @@ function quickAuditCacheKey(url) {
     return crypto.createHash("sha256").update(url).digest("hex").slice(0, 32);
 }
 
-function buildQuickResponse(domain, pipeline) {
-    const ta = pipeline.techAge || {};
-    const bf = pipeline.bfsg || {};
-    const ws = pipeline.websiteScore || {};
+function buildQuickResponse(domain, light, full) {
+    // Light liefert immer: tech, wayback, techAge (heur.), bfsg (heur.), branch.
+    // Full liefert wenn verfuegbar: techAge (PSI-confirmed), bfsg (WCAG), websiteScore, summary.
+    // Strategie: Tech-Daten bevorzugt aus Full (PSI-confirmed Versionen), sonst Light.
+    //            BFSG bevorzugt Full (WCAG-Pruefung) — wenn nur Light, Heuristik mit method-Flag.
+    //            Performance nur wenn Full.
+    //            Branche immer aus Light.
+    const ta = (full?.techAge && full.techAge.cms) ? full.techAge : (light.techAge || {});
+    const bfsg = (full?.bfsg && typeof full.bfsg.complianceScore === "number")
+        ? { ...full.bfsg, method: "wcag" }
+        : { ...(light.bfsg || {}), method: "heuristic" };
+    const perfScore = full?.websiteScore?.perf;
+
     return {
         ok: true,
         domain,
+        light: !full,
         techAge: {
             headline: ta.headline || null,
             cms: ta.cms || null,
@@ -372,16 +384,33 @@ function buildQuickResponse(domain, pipeline) {
             yearsSinceLastChange: ta.yearsSinceLastChange != null ? ta.yearsSinceLastChange : null
         },
         bfsg: {
-            complianceScore: bf.complianceScore != null ? bf.complianceScore : null,
-            risk: bf.risk || null,
-            fine: bf.fine || null,
-            pitchArg: bf.pitchArg || null
+            complianceScore: bfsg.complianceScore != null ? bfsg.complianceScore : null,
+            risk: bfsg.risk || null,
+            fine: bfsg.fine || null,
+            pitchArg: bfsg.pitchArg || null,
+            method: bfsg.method
         },
-        performance: {
-            score: ws.perf != null ? ws.perf : null
-        },
-        summary: pipeline.summary || null
+        performance: perfScore != null
+            ? { score: perfScore, source: "psi" }
+            : { score: null, source: null, hint: "Performance-Score erhalten Sie im Komplettaudit per E-Mail." },
+        branch: light.branch ? {
+            name: light.branch.branch,
+            primaryType: light.branch.primaryType,
+            usedDefault: light.branch.usedDefault,
+            mustHave: light.branch.mustHave,
+            shouldHave: light.branch.shouldHave,
+            foundCount: light.branch.foundCount,
+            totalCount: light.branch.totalCount,
+            severity: light.branch.severity,
+            pitchArg: light.branch.pitchArg
+        } : null,
+        summary: full?.summary || null
     };
+}
+
+function safeSecretValue(secretRef) {
+    try { return secretRef.value() || ""; }
+    catch { return ""; }
 }
 
 exports.quickAudit = onRequest(
@@ -390,7 +419,7 @@ exports.quickAudit = onRequest(
         memory: "512MiB",
         timeoutSeconds: 60,
         cors: false,
-        secrets: [PLACES_KEY]
+        secrets: [PLACES_KEY, PSI_API_KEY]
     },
     async (req, res) => {
         if (cors(req, res)) return;
@@ -424,26 +453,52 @@ exports.quickAudit = onRequest(
             console.warn("quickAudit cache lookup failed:", err.message);
         }
 
-        let pipelineResult;
+        const placesKey = safeSecretValue(PLACES_KEY);
+        const psiKeyRaw = safeSecretValue(PSI_API_KEY);
+        // "UNSET"-Sentinel oder zu kurze Werte werden ignoriert.
+        // Echte Google-API-Keys sind ~39 Zeichen.
+        const psiKey = (psiKeyRaw && psiKeyRaw.length >= 20) ? psiKeyRaw : "";
+
+        // Light-Audit ist zwingend (garantiert eine Antwort).
+        let lightResult;
         try {
-            pipelineResult = await runAuditPipeline(auditUrl, "");
+            lightResult = await runLightAudit(auditUrl, placesKey);
         } catch (err) {
-            console.error("quickAudit pipeline failed:", err.message);
+            console.error("quickAudit light failed:", err.message);
+            const lower = String(err.message || "").toLowerCase();
+            const isUnreachable = lower.includes("http ") || lower.includes("abort") || lower.includes("fetch");
             return res.json({
                 ok: true,
                 degraded: true,
                 domain,
-                error: "Wir konnten Ihre Seite gerade nicht vollstaendig analysieren."
+                error: isUnreachable
+                    ? "Wir konnten Ihre Seite gerade nicht erreichen."
+                    : "Wir konnten Ihre Seite gerade nicht analysieren."
             });
         }
 
-        const payload = buildQuickResponse(domain, pipelineResult);
+        // Vollpipeline parallel mit hartem Timeout — bringt Performance + WCAG-BFSG.
+        // Wenn PSI-Key fehlt oder Pipeline fehlschlaegt: kein Showstopper, Light reicht.
+        let fullResult = null;
+        if (psiKey) {
+            const psiRace = Promise.race([
+                runAuditPipeline(auditUrl, psiKey).catch(err => {
+                    console.warn("quickAudit full pipeline failed:", err.message);
+                    return null;
+                }),
+                new Promise(resolve => setTimeout(() => resolve(null), 35000))
+            ]);
+            fullResult = await psiRace;
+        }
+
+        const payload = buildQuickResponse(domain, lightResult, fullResult);
 
         try {
             await db.collection("quickAudits").doc(cacheKey).set({
                 cachedAtMs: Date.now(),
                 domain,
                 url: auditUrl,
+                hadFullResult: !!fullResult,
                 payload,
                 expiresAt: new admin.firestore.Timestamp(
                     Math.floor((Date.now() + QUICK_AUDIT_TTL_DAYS * 86400000) / 1000), 0
