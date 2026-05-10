@@ -404,17 +404,19 @@
             content: '';
             position: absolute;
             top: 0; left: 0; bottom: 0;
-            width: 65%;
+            width: 70%;
             background-image:
                 linear-gradient(to right,
-                    rgba(255,255,255,0.55) 0%,
-                    rgba(255,255,255,0.6) 65%,
+                    rgba(255,255,255,0.82) 0%,
+                    rgba(255,255,255,0.86) 60%,
                     rgba(255,255,255,1) 100%),
                 url('images/hero-atelier.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: saturate(0.85);
+            filter: saturate(0.55) blur(10px);
+            transform: scale(1.04);
+            transform-origin: left center;
             pointer-events: none;
             z-index: 0;
         }
