@@ -99,6 +99,9 @@
         .btn-ghost:hover { border-color: var(--text); }
         .hero-trust { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
         .hero-trust .dot { color: var(--accent); }
+        .trust-live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--accent-bg); border-radius: 999px; color: var(--accent-dark); font-weight: 500; }
+        .trust-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent-dark); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
         .hero-img img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -152,6 +155,24 @@
         /* Online-Services */
         .online-services { background: var(--accent-bg); }
         .online-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        /* IGeL */
+        .igel-section { background: var(--bg); }
+        .igel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+        .igel-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-soft); transition: all 0.3s; }
+        .igel-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .igel-card h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .igel-desc { color: var(--text-soft); font-size: 14px; margin-bottom: 16px; }
+        .igel-price { font-size: 22px; font-weight: 600; color: var(--accent-dark); }
+        .igel-note { text-align: center; margin-top: 32px; font-size: 13px; color: var(--text-soft); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+        /* Bewertungs-Aggregat */
+        .reviews-strip { background: var(--bg-soft); padding: 36px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .reviews-strip-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; max-width: 980px; margin: 0 auto; padding: 0 24px; }
+        .reviews-source { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-soft); }
+        .reviews-source-stars { color: var(--accent); font-size: 16px; letter-spacing: 1px; }
+        .reviews-source strong { color: var(--text); font-weight: 600; }
+        .reviews-divider { width: 1px; height: 24px; background: var(--border-strong); }
         .online-card { background: var(--bg); padding: 32px; border-radius: var(--radius-lg); transition: all 0.3s; cursor: pointer; }
         .online-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
         .online-card-tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; margin-bottom: 16px; }
@@ -342,9 +363,9 @@
                             <a href="tel:+498912345678" class="btn btn-ghost">089 234 567</a>
                         </div>
                         <div class="hero-trust">
+                            <span class="trust-live"><span class="trust-dot"></span> Heute pünktlich · Wartezimmer ~5 Min</span>
                             <span><span class="dot">●</span> Online-Termine 24/7</span>
                             <span><span class="dot">●</span> eAU + Rezept digital</span>
-                            <span><span class="dot">●</span> Barrierefrei</span>
                         </div>
                     </div>
                     <div class="hero-img">
@@ -480,29 +501,91 @@
             <div class="container">
                 <div class="section-head">
                     <p class="eyebrow">Digital</p>
-                    <h2>Drei Klicks statt drei Anrufe.</h2>
+                    <h2>Sechs Klicks statt sechs Anrufe.</h2>
                     <p>Was früher Wartezeit am Telefon war, machen Sie heute online — sicher, DSGVO-konform, jederzeit.</p>
                 </div>
                 <div class="online-grid">
                     <a href="#kontakt" class="online-card">
                         <span class="online-card-tag">Folgerezept</span>
                         <h3>Rezept digital anfragen</h3>
-                        <p>Dauermedikation? Schicken Sie Ihre Anfrage online, Rezept liegt am nächsten Werktag bei Ihrer Apotheke oder im E-Rezept-Portal.</p>
+                        <p>Dauermedikation? Schicken Sie Ihre Anfrage online, Rezept liegt am nächsten Werktag im E-Rezept-Portal.</p>
                         <span class="online-card-link">Rezept anfragen →</span>
                     </a>
                     <a href="#kontakt" class="online-card">
                         <span class="online-card-tag">eAU</span>
                         <h3>Krankschreibung digital</h3>
-                        <p>Bekannte Beschwerden — wir stellen die elektronische Arbeitsunfähigkeitsbescheinigung aus. Direkt an Ihre Krankenkasse.</p>
+                        <p>Bekannte Beschwerden — wir stellen die eAU aus. Direkt an Ihre Krankenkasse, kein Postweg.</p>
                         <span class="online-card-link">eAU anfragen →</span>
                     </a>
                     <a href="#kontakt" class="online-card">
-                        <span class="online-card-tag">Patientenportal</span>
-                        <h3>Befunde &amp; Akte einsehen</h3>
-                        <p>Laborwerte, Befunde, Vorsorge-Übersicht — sicherer Login mit Ihrer Versichertenkarte. Befundübermittlung in Echtzeit.</p>
+                        <span class="online-card-tag">Vorab-Anamnese</span>
+                        <h3>Anamnese-Bogen vorab</h3>
+                        <p>Vor dem Termin den Bogen ausfüllen — spart 10 Minuten am Tag und macht das Gespräch zielgerichteter.</p>
+                        <span class="online-card-link">Anamnese starten →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Erinnerung</span>
+                        <h3>SMS &amp; Mail-Erinnerung</h3>
+                        <p>24 h vor Termin SMS oder E-Mail mit Datum, Uhrzeit und Anfahrts-Link. Kein verpasster Termin mehr.</p>
+                        <span class="online-card-link">Aktivieren →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Sicheres Messaging</span>
+                        <h3>Befundfragen sicher klären</h3>
+                        <p>Verschlüsseltes Messaging mit der Praxis — keine E-Mail, keine DSGVO-Lücke. Antwort innerhalb 24 h.</p>
+                        <span class="online-card-link">Nachricht senden →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Patientenportal · Familie</span>
+                        <h3>Akte &amp; Familienkonto</h3>
+                        <p>Laborwerte, Befunde, Vorsorge-Übersicht. Mit Familienkonto verwalten Sie auch Termine für Kinder und Angehörige.</p>
                         <span class="online-card-link">Zum Portal →</span>
                     </a>
                 </div>
+            </div>
+        </section>
+
+        <!-- 4b. IGeL-Preisliste -->
+        <section id="igel" class="igel-section">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">IGeL · Selbstzahler-Leistungen</p>
+                    <h2>Was kostet was?</h2>
+                    <p>Transparent, fair und ohne Überraschungen an der Kasse. Alle Preise nach GOÄ.</p>
+                </div>
+                <div class="igel-grid">
+                    <div class="igel-card">
+                        <h4>Reisemedizin-Beratung</h4>
+                        <p class="igel-desc">Individuelle Beratung zu Reiseimpfungen, Malaria-Prophylaxe, Höhenkrankheit.</p>
+                        <p class="igel-price">ab 45,–&nbsp;€</p>
+                    </div>
+                    <div class="igel-card">
+                        <h4>Hautkrebs-Screening</h4>
+                        <p class="igel-desc">Auflichtmikroskopie aller Muttermale. Ab 35 Jahren alle 2 Jahre Kassenleistung — sonst IGeL.</p>
+                        <p class="igel-price">ab 38,–&nbsp;€</p>
+                    </div>
+                    <div class="igel-card">
+                        <h4>Erweiterte Vorsorge</h4>
+                        <p class="igel-desc">Großes Blutbild + Schilddrüse + Vitamin-D, EKG, Lungenfunktion.</p>
+                        <p class="igel-price">189,–&nbsp;€</p>
+                    </div>
+                    <div class="igel-card">
+                        <h4>Sportmedizin</h4>
+                        <p class="igel-desc">Belastungs-EKG, Spirometrie, Tauglichkeitsbescheinigung für Triathlon, Marathon, Tauchen.</p>
+                        <p class="igel-price">125,–&nbsp;€</p>
+                    </div>
+                    <div class="igel-card">
+                        <h4>Ultraschall Bauchorgane</h4>
+                        <p class="igel-desc">Sonographie Leber, Galle, Niere, Milz — schmerzfrei, ohne Strahlung.</p>
+                        <p class="igel-price">68,–&nbsp;€</p>
+                    </div>
+                    <div class="igel-card">
+                        <h4>Männer-Vorsorge</h4>
+                        <p class="igel-desc">PSA-Wert, Prostata-Tastuntersuchung, Hormon-Status. Ab 45 empfohlen.</p>
+                        <p class="igel-price">95,–&nbsp;€</p>
+                    </div>
+                </div>
+                <p class="igel-note">Preise nach GOÄ. Kostenvoranschlag erhalten Sie immer vor der Leistung — schriftlich, klar, ohne versteckte Posten.</p>
             </div>
         </section>
 
@@ -626,6 +709,26 @@
                 </div>
             </div>
         </section>
+
+        <!-- 8b. Bewertungs-Aggregat -->
+        <div class="reviews-strip">
+            <div class="reviews-strip-inner">
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>4,8</strong> von 412 Google-Bewertungen</span>
+                </div>
+                <div class="reviews-divider" aria-hidden="true"></div>
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>1,3</strong> auf Jameda · 187 Bewertungen</span>
+                </div>
+                <div class="reviews-divider" aria-hidden="true"></div>
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>4,9</strong> auf Doctolib · 256 Bewertungen</span>
+                </div>
+            </div>
+        </div>
 
         <!-- 9. FAQ -->
         <section class="faq">
