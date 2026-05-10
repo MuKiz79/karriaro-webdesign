@@ -138,7 +138,7 @@
         .wrap-sm { max-width: 680px; margin: 0 auto; padding: 0 24px; }
         .wrap-xs { max-width: 500px; margin: 0 auto; padding: 0 24px; }
 
-        .muted { color: #86868b; }
+        .muted { color: #6e6e73; }
         .blue { color: #0071e3; }
 
         nav {
@@ -186,7 +186,7 @@
         }
         .subhead {
             font-size: clamp(17px, 2.2vw, 24px);
-            color: #86868b;
+            color: #6e6e73;
             line-height: 1.5;
             max-width: 520px;
             margin: 28px auto 0;
@@ -214,7 +214,7 @@
         }
         input:focus, textarea:focus { border-color: #0071e3; }
         textarea { resize: none; }
-        ::placeholder { color: #86868b; }
+        ::placeholder { color: #6e6e73; }
 
         .submit-btn {
             width: 100%; background: #0071e3; color: #fff;
@@ -241,7 +241,7 @@
         .preview-card-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.7; margin-bottom: 4px; }
         .preview-card-title { font-size: 19px; font-weight: 600; }
 
-        footer { padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #86868b; }
+        footer { padding: 40px 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 12px; color: #6e6e73; }
         footer a { color: #424245; }
         footer a:hover { color: #1d1d1f; }
 
@@ -300,9 +300,9 @@
         }
         .hero-audit-form button:hover:not(:disabled) { background: #005bb5; }
         .hero-audit-form button:disabled { background: #aeaeb2; cursor: not-allowed; }
-        .hero-audit-hint { font-size: 13px; color: #86868b; margin-top: 12px; max-width: 540px; margin-left: auto; margin-right: auto; }
+        .hero-audit-hint { font-size: 13px; color: #6e6e73; margin-top: 12px; max-width: 540px; margin-left: auto; margin-right: auto; }
         .hero-honeypot { position: absolute; left: -9999px; }
-        .hero-audit-secondary { display: block; font-size: 14px; color: #86868b; margin-top: 24px; }
+        .hero-audit-secondary { display: block; font-size: 14px; color: #6e6e73; margin-top: 24px; }
         .hero-audit-secondary a { color: #0071e3; }
 
         /* Audit-Result-Cards */
@@ -312,7 +312,7 @@
         }
         .audit-result-wrap.is-active { display: block; }
         .audit-status {
-            font-size: 14px; color: #86868b; text-align: center; margin-bottom: 20px;
+            font-size: 14px; color: #6e6e73; text-align: center; margin-bottom: 20px;
         }
         .audit-card {
             background: #fff; border: 1px solid #e5e5e7; border-radius: 16px;
@@ -326,7 +326,7 @@
         .audit-card.severity-low  { border-left: 3px solid #30d158; }
         .audit-card-label {
             font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
-            color: #86868b; font-weight: 500; margin-bottom: 6px;
+            color: #6e6e73; font-weight: 500; margin-bottom: 6px;
         }
         .audit-card-headline { font-size: 19px; font-weight: 600; color: #1d1d1f; margin-bottom: 10px; line-height: 1.3; }
         .audit-card-pitch {
@@ -373,7 +373,7 @@
             .hero-gallery { grid-template-columns: 1fr; }
         }
         .hero-more-branches {
-            font-size: 14px; color: #86868b; margin-top: 24px;
+            font-size: 14px; color: #6e6e73; margin-top: 24px;
         }
         .hero-more-branches a { color: #0071e3; }
         .hero-more-branches a:hover { text-decoration: underline; }
@@ -382,11 +382,11 @@
             align-items: center; gap: 14px;
         }
         .hero-cta-secondary-link {
-            font-size: 14px; color: #86868b;
+            font-size: 14px; color: #6e6e73;
         }
         .hero-cta-secondary-link:hover { color: #1d1d1f; }
 
-        /* Hero — Split mit Browser-Mockup-Cards rechts, exakt viewport-fit */
+        /* Hero — Premium-Atelier-Stil B: 1 großes Mockup mit Story-Caption */
         .hero-with-photo {
             position: relative;
             background: #fff;
@@ -396,7 +396,7 @@
             max-height: 1080px;
             display: flex;
             align-items: center;
-            padding: 72px 0 32px;
+            padding: 100px 0 64px;
             overflow: hidden;
         }
         /* Atelier-Foto hinter Text-Spalte, faded zur Karten-Spalte hin */
@@ -407,14 +407,14 @@
             width: 70%;
             background-image:
                 linear-gradient(to right,
-                    rgba(255,255,255,0.82) 0%,
-                    rgba(255,255,255,0.86) 60%,
+                    rgba(255,255,255,0.55) 0%,
+                    rgba(255,255,255,0.65) 60%,
                     rgba(255,255,255,1) 100%),
                 url('images/hero-atelier.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: saturate(0.55) blur(10px);
+            filter: saturate(0.85) blur(4px);
             transform: scale(1.04);
             transform-origin: left center;
             pointer-events: none;
@@ -422,12 +422,12 @@
         }
         .hero-with-photo .hero-inner {
             width: 100%;
-            max-width: 1480px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 0 24px 0 clamp(24px, 5vw, 96px);
+            padding: 0 24px 0 clamp(40px, 6vw, 120px);
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-            gap: clamp(40px, 6vw, 88px);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+            gap: clamp(56px, 7vw, 104px);
             align-items: center;
             position: relative;
             z-index: 1;
@@ -435,29 +435,168 @@
         .hero-with-photo .hero-text-block {
             text-align: left;
         }
+        .hero-eyebrow {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6e6e73;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
         .hero-with-photo h1 {
             text-align: left;
-            font-size: clamp(40px, 6.2vw, 72px);
-            line-height: 1.04;
+            font-size: clamp(48px, 6.5vw, 84px);
+            font-weight: 600;
+            line-height: 1.08;
+            letter-spacing: -0.018em;
         }
         .hero-with-photo .subhead {
             text-align: left;
             margin: 0;
-            max-width: 560px;
+            max-width: 500px;
+            font-size: 17px;
+            color: #515154;
         }
         .hero-with-photo .hero-cta-row {
             align-items: flex-start;
             margin-top: 36px;
         }
-        .hero-with-photo .hero-gallery {
-            grid-template-columns: repeat(2, 1fr);
-            max-width: none;
-            margin: 0;
-            gap: clamp(14px, 1.6vw, 22px);
+
+        /* Hero-Mockup (Premium-Atelier) */
+        .hero-mockup-block {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 18px;
+            min-width: 0;
+            max-width: 100%;
         }
-        .hero-with-photo .hero-more-branches {
-            text-align: left;
-            margin-top: 24px;
+        .hero-mockup {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            transition: transform 0.3s ease;
+        }
+        .hero-mockup:hover { transform: translateY(-3px); }
+        .browser-frame-large {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease;
+        }
+        .hero-mockup:hover .browser-frame-large {
+            box-shadow: 0 30px 70px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.05);
+        }
+        .browser-screen-large {
+            aspect-ratio: 16/10;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+        .mockup-caption {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 18px;
+            padding-left: 4px;
+        }
+        .mockup-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6e6e73;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .mockup-story {
+            font-size: 16px;
+            color: #1d1d1f;
+            line-height: 1.4;
+        }
+        .branche-switcher {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .branche-tab {
+            position: relative;
+            background: transparent;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #6e6e73;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .branche-tab:hover:not(:disabled) {
+            border-color: #1d1d1f;
+            color: #1d1d1f;
+        }
+        .branche-tab.is-active {
+            background: #1d1d1f;
+            color: #fff;
+            border-color: #1d1d1f;
+        }
+        .branche-tab:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        /* Progress-Indikator unter dem aktiven Tab (nur während Auto-Rotation) */
+        .branche-tab::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            right: 4px;
+            bottom: -5px;
+            height: 2px;
+            background: #1d1d1f;
+            border-radius: 1px;
+            transform: scaleX(0);
+            transform-origin: left;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .branche-switcher.is-rotating .branche-tab.is-active::after {
+            opacity: 1;
+            animation: branche-progress 6s linear forwards;
+        }
+        @keyframes branche-progress {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        /* Crossfade beim Branche-Wechsel */
+        .browser-screen-large,
+        .mockup-label,
+        .mockup-story {
+            transition: opacity 200ms ease;
+        }
+        .hero-mockup.is-fading .browser-screen-large,
+        .hero-mockup.is-fading .mockup-label,
+        .hero-mockup.is-fading .mockup-story {
+            opacity: 0;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .branche-switcher.is-rotating .branche-tab.is-active::after {
+                animation: none;
+                transform: scaleX(0);
+                opacity: 0;
+            }
+            .browser-screen-large,
+            .mockup-label,
+            .mockup-story {
+                transition: none;
+            }
         }
 
         /* Browser-Mockup-Cards */
@@ -497,7 +636,7 @@
         .browser-url {
             margin: 0 auto;
             font-size: 11px;
-            color: #86868b;
+            color: #6e6e73;
             background: #fff;
             border-radius: 4px;
             padding: 3px 14px;
@@ -523,7 +662,7 @@
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: #86868b;
+            color: #6e6e73;
             font-weight: 500;
             display: block;
             margin-bottom: 3px;
@@ -542,25 +681,85 @@
                 min-height: 0;
                 max-height: none;
                 overflow: visible;
-                padding: 64px 0 80px;
+                padding: 96px 0 80px;
             }
             .hero-with-photo::before { display: none; }
             .hero-with-photo .hero-inner {
                 grid-template-columns: 1fr;
-                gap: 56px;
+                gap: 48px;
                 padding: 0 24px;
                 max-width: 980px;
             }
             .hero-with-photo .hero-text-block { text-align: center; }
+            .hero-eyebrow { text-align: center; }
             .hero-with-photo h1 { text-align: center; }
             .hero-with-photo .subhead { text-align: center; margin: 0 auto; }
             .hero-with-photo .hero-cta-row { align-items: center; }
-            .hero-with-photo .hero-more-branches { text-align: center; }
+            .hero-mockup-block { align-items: center; }
+            .mockup-caption { padding-left: 0; align-items: center; text-align: center; }
+            .branche-switcher { justify-content: center; }
         }
-        @media (max-width: 480px) {
-            .hero-with-photo .hero-gallery {
-                grid-template-columns: 1fr;
-            }
+
+        /* Arbeiten-Section (Premium-Galerie unter Hero) */
+        .arbeiten-section {
+            background: #fff;
+            padding: 120px 0;
+        }
+        .arbeiten-section .section-header {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 72px;
+        }
+        .section-eyebrow {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6e6e73;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .arbeiten-section h2 {
+            font-size: clamp(32px, 4.5vw, 52px);
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.1;
+            letter-spacing: -0.018em;
+        }
+        .arbeiten-section .subhead {
+            font-size: 17px;
+            color: #515154;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .arbeiten-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .arbeiten-more {
+            text-align: center;
+            font-size: 15px;
+            color: #6e6e73;
+            margin-top: 56px;
+        }
+        .arbeiten-more a {
+            color: #1d1d1f;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+            padding-bottom: 1px;
+        }
+        .arbeiten-more a:hover { border-bottom-color: #1d1d1f; }
+        @media (max-width: 1024px) {
+            .arbeiten-section { padding: 80px 0; }
+            .arbeiten-section .section-header { margin-bottom: 48px; }
+            .arbeiten-gallery { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        }
+        @media (max-width: 540px) {
+            .arbeiten-gallery { grid-template-columns: 1fr; gap: 32px; }
         }
 
         /* Hero-Demo-Buttons */
@@ -568,7 +767,7 @@
             margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto;
             display: flex; flex-direction: column; gap: 10px; align-items: center;
         }
-        .hero-demo-label { font-size: 13px; color: #86868b; }
+        .hero-demo-label { font-size: 13px; color: #6e6e73; }
         .hero-demo-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
         .hero-demo-btn {
             background: #fff; color: #1d1d1f;
@@ -589,7 +788,6 @@
         <div class="inner">
             <a href="/" style="font-weight: 600; font-size: 14px; opacity: 1;">Karriaro<span style="opacity: 0.55; font-weight: 400; margin-left: 6px;">· Webdesign</span></a>
             <div class="links">
-                <a href="#arbeiten">Arbeiten</a>
                 <a href="#preis">Preis</a>
                 <a href="/blog.html">Blog</a>
                 <a href="/en/" style="font-weight: 500;">EN</a>
@@ -602,7 +800,6 @@
     </nav>
 
     <div id="mobile-menu" class="mobile-menu">
-        <a href="#arbeiten" onclick="this.parentElement.classList.remove('open')">Arbeiten</a>
         <a href="#preis" onclick="this.parentElement.classList.remove('open')">Preis</a>
         <a href="/blog.html">Blog</a>
         <a href="/en/">EN</a>
@@ -612,91 +809,46 @@
 
     <main>
 
-    <!-- 1 · Hero — Atelier-Foto + Text + integrierte Galerie -->
+    <!-- 1 · Hero — Premium-Atelier-Stil B: 1 großes Mockup + Story-Caption -->
     <section aria-label="Einleitung" class="hero-with-photo">
         <div class="hero-inner">
             <div class="hero-text-block">
-                <p style="font-size: 14px; font-weight: 500; color: #0071e3; letter-spacing: 0.02em; margin-bottom: 18px;">Webdesign-Manufaktur für lokale Unternehmen</p>
-                <h1>Ihre neue Website. 990&nbsp;€ einmalig.<br>In 14 Tagen online.</h1>
+                <p class="hero-eyebrow">Webdesign-Manufaktur</p>
+                <h1>Ihre Website.<br>Handgemacht.</h1>
                 <p class="subhead">
-                    Handcodiert, BFSG-konform, ohne Abo. Der Quellcode gehört Ihnen.
+                    990&nbsp;€ einmalig. In 14 Tagen online.<br>
+                    Keine Templates. BFSG-konform. Der Quellcode gehört Ihnen.
                 </p>
                 <div class="hero-cta-row">
-                    <a href="#kontakt" class="btn">Kostenloses Beratungsgespräch buchen</a>
-                    <a href="#audit" class="hero-cta-secondary-link">Schon eine Website? Wir prüfen sie kostenlos &rarr;</a>
+                    <a href="#kontakt" class="btn">Projekt starten</a>
                 </div>
             </div>
 
-            <div class="hero-gallery-block">
-                <div id="arbeiten" class="hero-gallery">
-                    <a href="/portfolio/praxis-weber.html" class="browser-card">
-                        <div class="browser-frame">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span>
-                                <span class="dot dot-y"></span>
-                                <span class="dot dot-g"></span>
-                                <span class="browser-url">praxis-dr-weber.de</span>
-                            </div>
-                            <img class="browser-screen" src="/images/portfolio/praxis-empfang.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis" loading="eager" width="600" height="400">
+            <div class="hero-mockup-block">
+                <a href="/portfolio/praxis-weber.html" class="hero-mockup" id="hero-mockup-link">
+                    <div class="browser-frame browser-frame-large">
+                        <div class="browser-chrome">
+                            <span class="dot dot-r"></span>
+                            <span class="dot dot-y"></span>
+                            <span class="dot dot-g"></span>
+                            <span class="browser-url" id="hero-mockup-url">praxis-dr-weber.de</span>
                         </div>
-                        <div class="card-meta">
-                            <span class="card-label">Praxis</span>
-                            <span class="card-title">Praxis Dr. Weber</span>
-                        </div>
-                    </a>
-                    <a href="/portfolio/meisterbetrieb-mueller.html" class="browser-card">
-                        <div class="browser-frame">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span>
-                                <span class="dot dot-y"></span>
-                                <span class="dot dot-g"></span>
-                                <span class="browser-url">meisterbetrieb-mueller.de</span>
-                            </div>
-                            <img class="browser-screen" src="/images/portfolio/bad-spa-wanne.jpg" alt="Website für Meisterbetrieb Müller — Sanitär & Heizung" loading="eager" width="600" height="400">
-                        </div>
-                        <div class="card-meta">
-                            <span class="card-label">Handwerk</span>
-                            <span class="card-title">Meisterbetrieb Müller</span>
-                        </div>
-                    </a>
-                    <a href="/portfolio/restaurant-template.html" class="browser-card">
-                        <div class="browser-frame">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span>
-                                <span class="dot dot-y"></span>
-                                <span class="dot dot-g"></span>
-                                <span class="browser-url">goldener-hirsch.de</span>
-                            </div>
-                            <img class="browser-screen" src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Restaurant" loading="eager" width="600" height="400">
-                        </div>
-                        <div class="card-meta">
-                            <span class="card-label">Gastronomie</span>
-                            <span class="card-title">Goldener Hirsch</span>
-                        </div>
-                    </a>
-                    <a href="/portfolio/spedition-schwaben.html" class="browser-card">
-                        <div class="browser-frame">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span>
-                                <span class="dot dot-y"></span>
-                                <span class="dot dot-g"></span>
-                                <span class="browser-url">schwaben-logistik.de</span>
-                            </div>
-                            <img class="browser-screen" src="/images/portfolio/spedition-lkw.jpg" alt="Website für Schwaben Logistik — Spedition" loading="eager" width="600" height="400">
-                        </div>
-                        <div class="card-meta">
-                            <span class="card-label">Spedition</span>
-                            <span class="card-title">Schwaben Logistik</span>
-                        </div>
-                    </a>
+                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/praxis-weber-mockup.jpg" alt="Website-Mockup für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung" loading="eager" width="1586" height="992">
+                    </div>
+                    <div class="mockup-caption">
+                        <span class="mockup-label" id="hero-mockup-label">Praxis Dr. Weber · Hausarztpraxis</span>
+                        <span class="mockup-story" id="hero-mockup-story">Online-Termine sind ab Woche zwei buchbar.</span>
+                    </div>
+                </a>
+                <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
+                    <button type="button" class="branche-tab is-active" data-branche="praxis" role="tab" aria-selected="true">Praxis</button>
+                    <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false">Handwerk</button>
+                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false">Gastronomie</button>
+                    <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false">Logistik</button>
+                    <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false">Friseur</button>
+                    <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
+                    <button type="button" class="branche-tab" data-branche="immobilien" role="tab" aria-selected="false">Immobilien</button>
                 </div>
-
-                <p class="hero-more-branches">
-                    Auch für
-                    <a href="/portfolio/friseur-salon.html">Friseur</a>,
-                    <a href="/portfolio/dachdecker-meisterbetrieb.html">Dachdecker</a> und
-                    <a href="/portfolio/immobilien-makler.html">Immobilien</a>.
-                </p>
             </div>
         </div>
     </section>
@@ -705,7 +857,7 @@
     <!-- 1b · Audit-Werkzeug — sekundär -->
     <section id="audit" aria-label="Mini-Audit" class="fade-in" style="background: #fbfbfd; padding: 96px 0;">
         <div style="max-width: 720px; margin: 0 auto; padding: 0 24px; text-align: center;">
-            <p style="font-size: 12px; font-weight: 600; color: #86868b; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase;">Werkzeug</p>
+            <p style="font-size: 12px; font-weight: 600; color: #6e6e73; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase;">Werkzeug</p>
             <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Schon eine Website?<br>Wir prüfen sie in 5 Sekunden.</h2>
             <p class="subhead" style="margin-bottom: 36px;">
                 Geben Sie Ihre Adresse ein — oder probieren Sie ein Beispiel.
@@ -930,7 +1082,7 @@
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
                 <textarea name="message" rows="3" placeholder="Was möchten Sie erreichen?"></textarea>
-                <label style="font-size: 12px; color: #86868b; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0;">
+                <label style="font-size: 12px; color: #6e6e73; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0;">
                     <input type="checkbox" name="privacy" required style="margin-top: 3px;">
                     Ich stimme der <a href="/datenschutz.html" style="color: #424245; text-decoration: underline;">Datenschutzerklärung</a> zu.
                 </label>
@@ -1424,6 +1576,222 @@
             document.querySelectorAll('.hero-demo-btn').forEach(function(btn) {
                 btn.addEventListener('click', function() {
                     triggerDemo(btn.getAttribute('data-demo'));
+                });
+            });
+        })();
+
+        // Branche-Switcher im Hero — Auto-Rotation mit Hover-Pause + Crossfade
+        (function () {
+            var INTERVAL_MS = 6000;
+            var FADE_MS = 200;
+
+            var data = {
+                praxis: {
+                    src: '/images/praxis-weber-mockup.jpg',
+                    alt: 'Website-Mockup für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung',
+                    url: 'praxis-dr-weber.de',
+                    label: 'Praxis Dr. Weber · Hausarztpraxis',
+                    story: 'Online-Termine sind ab Woche zwei buchbar.',
+                    href: '/portfolio/praxis-weber.html'
+                },
+                handwerk: {
+                    src: '/images/handwerk-mueller-mockup.jpg',
+                    alt: 'Website-Mockup für Meisterbetrieb Müller — Sanitär & Heizung',
+                    url: 'meisterbetrieb-mueller.de',
+                    label: 'Meisterbetrieb Müller · Handwerk',
+                    story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
+                    href: '/portfolio/meisterbetrieb-mueller.html'
+                },
+                gastro: {
+                    src: '/images/gastro-hirsch-mockup.jpg',
+                    alt: 'Website-Mockup für Goldener Hirsch — Restaurant',
+                    url: 'goldener-hirsch.de',
+                    label: 'Goldener Hirsch · Gastronomie',
+                    story: 'Reservierung und Speisekarte auf einem Bildschirm.',
+                    href: '/portfolio/restaurant-template.html'
+                },
+                logistik: {
+                    src: '/images/logistik-schwaben-mockup.jpg',
+                    alt: 'Website-Mockup für Schwaben Logistik — Spedition',
+                    url: 'schwaben-logistik.de',
+                    label: 'Schwaben Logistik · Spedition',
+                    story: 'Disposition und Frachtanfrage in einem Formular.',
+                    href: '/portfolio/spedition-schwaben.html'
+                },
+                friseur: {
+                    src: '/images/friseur-mueller-mockup.jpg',
+                    alt: 'Website-Mockup für Salon Müller — Friseur',
+                    url: 'salon-mueller.de',
+                    label: 'Salon Müller · Friseur',
+                    story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
+                    href: '/portfolio/friseur-salon.html'
+                },
+                dachdecker: {
+                    src: '/images/dachdecker-meister-mockup.jpg',
+                    alt: 'Website-Mockup für Dachdecker-Meister Berger',
+                    url: 'dachdecker-berger.de',
+                    label: 'Dachdecker Berger · Meisterbetrieb',
+                    story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
+                    href: '/portfolio/dachdecker-meisterbetrieb.html'
+                },
+                immobilien: {
+                    src: '/images/immobilien-stadtmakler-mockup.jpg',
+                    alt: 'Website-Mockup für Stadtmakler Stuttgart — Immobilien',
+                    url: 'stadtmakler-stuttgart.de',
+                    label: 'Stadtmakler Stuttgart · Immobilien',
+                    story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
+                    href: '/portfolio/immobilien-makler.html'
+                }
+            };
+
+            // Fallback-Pfad für noch-nicht-generierte Mockup-Bilder
+            var PLACEHOLDER_SRC = '/images/placeholder-mockup.svg';
+
+            var switcher = document.querySelector('.branche-switcher');
+            var mockupBlock = document.querySelector('.hero-mockup-block');
+            var img = document.getElementById('hero-mockup-img');
+            var url = document.getElementById('hero-mockup-url');
+            var label = document.getElementById('hero-mockup-label');
+            var story = document.getElementById('hero-mockup-story');
+            var link = document.getElementById('hero-mockup-link');
+            var allTabs = Array.prototype.slice.call(document.querySelectorAll('.branche-tab'));
+            if (!switcher || !mockupBlock || !img || !url || !label || !story || !link || allTabs.length === 0) return;
+
+            // Fehlende Mockup-Bilder fallen auf den Placeholder zurück
+            img.addEventListener('error', function () {
+                if (img.src.indexOf('placeholder-mockup.svg') === -1) {
+                    img.src = PLACEHOLDER_SRC;
+                }
+            });
+
+            // Reihenfolge nur aus aktivierten Tabs (disabled = noch kein Bild)
+            var enabledOrder = allTabs.filter(function (t) { return !t.disabled; }).map(function (t) { return t.dataset.branche; });
+
+            // Bilder vorab laden für instantes Crossfade
+            enabledOrder.forEach(function (k) {
+                if (data[k] && data[k].src) {
+                    var pre = new Image();
+                    pre.src = data[k].src;
+                }
+            });
+
+            var currentIdx = 0;
+            var timer = null;
+            var hoverPaused = false;
+            var docHidden = false;
+            var offscreen = false;
+            var manuallyStopped = false;
+            var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReduced) manuallyStopped = true;
+
+            function applyData(branche) {
+                var d = data[branche];
+                if (!d) return;
+                img.src = d.src;
+                img.alt = d.alt;
+                url.textContent = d.url;
+                label.textContent = d.label;
+                story.textContent = d.story;
+                link.href = d.href;
+            }
+
+            function setActiveTab(branche) {
+                allTabs.forEach(function (t) {
+                    var match = t.dataset.branche === branche;
+                    t.classList.toggle('is-active', match);
+                    t.setAttribute('aria-selected', match ? 'true' : 'false');
+                });
+            }
+
+            function gotoBranche(branche, opts) {
+                opts = opts || {};
+                var i = enabledOrder.indexOf(branche);
+                if (i === -1) return;
+                currentIdx = i;
+                setActiveTab(branche);
+
+                if (opts.instant || prefersReduced) {
+                    applyData(branche);
+                    return;
+                }
+
+                link.classList.add('is-fading');
+                setTimeout(function () {
+                    applyData(branche);
+                    requestAnimationFrame(function () {
+                        link.classList.remove('is-fading');
+                    });
+                }, FADE_MS);
+            }
+
+            function nextSlide() {
+                if (enabledOrder.length < 2) return;
+                var next = (currentIdx + 1) % enabledOrder.length;
+                gotoBranche(enabledOrder[next]);
+            }
+
+            function startRotation() {
+                if (manuallyStopped || hoverPaused || docHidden || offscreen) return;
+                if (enabledOrder.length < 2) return;
+                if (timer) return;
+                switcher.classList.add('is-rotating');
+                timer = setInterval(nextSlide, INTERVAL_MS);
+            }
+
+            function stopRotation() {
+                switcher.classList.remove('is-rotating');
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+            }
+
+            // Hover/Focus-Pause
+            mockupBlock.addEventListener('mouseenter', function () {
+                hoverPaused = true;
+                stopRotation();
+            });
+            mockupBlock.addEventListener('mouseleave', function () {
+                hoverPaused = false;
+                startRotation();
+            });
+            mockupBlock.addEventListener('focusin', function () {
+                hoverPaused = true;
+                stopRotation();
+            });
+            mockupBlock.addEventListener('focusout', function (e) {
+                if (!mockupBlock.contains(e.relatedTarget)) {
+                    hoverPaused = false;
+                    startRotation();
+                }
+            });
+
+            // Pause wenn Tab im Hintergrund
+            document.addEventListener('visibilitychange', function () {
+                docHidden = document.visibilityState === 'hidden';
+                if (docHidden) stopRotation(); else startRotation();
+            });
+
+            // Pause wenn Hero ausserhalb des Viewports
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        offscreen = !entry.isIntersecting;
+                        if (offscreen) stopRotation(); else startRotation();
+                    });
+                }, { threshold: 0.2 });
+                io.observe(mockupBlock);
+            } else {
+                startRotation();
+            }
+
+            // Tab-Click: setzt Branche und stoppt Auto-Rotation für diese Session
+            allTabs.forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    if (tab.disabled) return;
+                    manuallyStopped = true;
+                    stopRotation();
+                    gotoBranche(tab.dataset.branche);
                 });
             });
         })();
