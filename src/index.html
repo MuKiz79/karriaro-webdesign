@@ -386,7 +386,7 @@
         }
         .hero-cta-secondary-link:hover { color: #1d1d1f; }
 
-        /* Hero — Galerie stark, ohne Foto-Hintergrund */
+        /* Hero — Split mit Browser-Mockup-Cards rechts */
         .hero-with-photo {
             position: relative;
             background: #fff;
@@ -395,56 +395,133 @@
         }
         .hero-with-photo .hero-inner {
             width: 100%;
-            max-width: 1280px;
+            max-width: 1480px;
             margin: 0 auto;
-            padding: 0 24px;
-            text-align: center;
+            padding: 0 24px 0 clamp(24px, 5vw, 96px);
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+            gap: clamp(40px, 6vw, 88px);
+            align-items: center;
         }
         .hero-with-photo .hero-text-block {
-            max-width: 780px;
-            margin: 0 auto;
-            text-align: center;
+            text-align: left;
         }
         .hero-with-photo h1 {
-            text-align: center;
-            font-size: clamp(40px, 6vw, 72px);
+            text-align: left;
+            font-size: clamp(40px, 6.2vw, 72px);
             line-height: 1.04;
         }
         .hero-with-photo .subhead {
-            text-align: center;
-            margin: 0 auto;
-            max-width: 580px;
+            text-align: left;
+            margin: 0;
+            max-width: 560px;
         }
         .hero-with-photo .hero-cta-row {
-            align-items: center;
+            align-items: flex-start;
             margin-top: 36px;
         }
-        .hero-with-photo .hero-gallery-block {
-            margin-top: 80px;
-        }
         .hero-with-photo .hero-gallery {
-            grid-template-columns: repeat(4, 1fr);
-            max-width: 1280px;
-            margin: 0 auto;
-            gap: 18px;
-        }
-        .hero-with-photo .hero-gallery .preview-card {
-            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            grid-template-columns: repeat(2, 1fr);
+            max-width: none;
+            margin: 0;
+            gap: clamp(14px, 1.6vw, 22px);
         }
         .hero-with-photo .hero-more-branches {
-            text-align: center;
-            margin-top: 32px;
+            text-align: left;
+            margin-top: 24px;
         }
-        @media (max-width: 768px) {
+
+        /* Browser-Mockup-Cards */
+        .browser-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.3s ease;
+        }
+        .browser-card:hover { transform: translateY(-3px); }
+        .browser-frame {
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease;
+        }
+        .browser-card:hover .browser-frame {
+            box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+        }
+        .browser-chrome {
+            background: #f5f5f7;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            height: 28px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 12px;
+        }
+        .browser-chrome .dot {
+            width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+        }
+        .browser-chrome .dot-r { background: #ff5f57; }
+        .browser-chrome .dot-y { background: #febc2e; }
+        .browser-chrome .dot-g { background: #28c840; }
+        .browser-url {
+            margin: 0 auto;
+            font-size: 11px;
+            color: #86868b;
+            background: #fff;
+            border-radius: 4px;
+            padding: 3px 14px;
+            max-width: 70%;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border: 1px solid rgba(0,0,0,0.04);
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+        }
+        .browser-screen {
+            aspect-ratio: 3/2;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .card-meta {
+            margin-top: 14px;
+            padding-left: 4px;
+        }
+        .card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #86868b;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 3px;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1d1d1f;
+            display: block;
+            line-height: 1.3;
+        }
+
+        @media (max-width: 1024px) {
             .hero-with-photo {
-                padding: 56px 0 72px;
+                padding: 64px 0 80px;
             }
-            .hero-with-photo .hero-gallery {
-                grid-template-columns: repeat(2, 1fr);
+            .hero-with-photo .hero-inner {
+                grid-template-columns: 1fr;
+                gap: 56px;
+                padding: 0 24px;
+                max-width: 980px;
             }
-            .hero-with-photo .hero-gallery-block {
-                margin-top: 56px;
-            }
+            .hero-with-photo .hero-text-block { text-align: center; }
+            .hero-with-photo h1 { text-align: center; }
+            .hero-with-photo .subhead { text-align: center; margin: 0 auto; }
+            .hero-with-photo .hero-cta-row { align-items: center; }
+            .hero-with-photo .hero-more-branches { text-align: center; }
         }
         @media (max-width: 480px) {
             .hero-with-photo .hero-gallery {
@@ -518,36 +595,64 @@
 
             <div class="hero-gallery-block">
                 <div id="arbeiten" class="hero-gallery">
-                    <a href="/portfolio/praxis-weber.html" class="preview-card">
-                        <img src="/images/portfolio/praxis-empfang.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis" loading="eager" width="600" height="400">
-                        <div class="preview-card-overlay"></div>
-                        <div class="preview-card-content">
-                            <div class="preview-card-label">Praxis</div>
-                            <div class="preview-card-title">Praxis Dr. Weber</div>
+                    <a href="/portfolio/praxis-weber.html" class="browser-card">
+                        <div class="browser-frame">
+                            <div class="browser-chrome">
+                                <span class="dot dot-r"></span>
+                                <span class="dot dot-y"></span>
+                                <span class="dot dot-g"></span>
+                                <span class="browser-url">praxis-dr-weber.de</span>
+                            </div>
+                            <img class="browser-screen" src="/images/portfolio/praxis-empfang.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis" loading="eager" width="600" height="400">
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-label">Praxis</span>
+                            <span class="card-title">Praxis Dr. Weber</span>
                         </div>
                     </a>
-                    <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
-                        <img src="/images/portfolio/bad-spa-wanne.jpg" alt="Website für Meisterbetrieb Müller — Sanitär & Heizung" loading="eager" width="600" height="400">
-                        <div class="preview-card-overlay"></div>
-                        <div class="preview-card-content">
-                            <div class="preview-card-label">Handwerk</div>
-                            <div class="preview-card-title">Meisterbetrieb Müller</div>
+                    <a href="/portfolio/meisterbetrieb-mueller.html" class="browser-card">
+                        <div class="browser-frame">
+                            <div class="browser-chrome">
+                                <span class="dot dot-r"></span>
+                                <span class="dot dot-y"></span>
+                                <span class="dot dot-g"></span>
+                                <span class="browser-url">meisterbetrieb-mueller.de</span>
+                            </div>
+                            <img class="browser-screen" src="/images/portfolio/bad-spa-wanne.jpg" alt="Website für Meisterbetrieb Müller — Sanitär & Heizung" loading="eager" width="600" height="400">
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-label">Handwerk</span>
+                            <span class="card-title">Meisterbetrieb Müller</span>
                         </div>
                     </a>
-                    <a href="/portfolio/restaurant-template.html" class="preview-card">
-                        <img src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Restaurant" loading="eager" width="600" height="400">
-                        <div class="preview-card-overlay"></div>
-                        <div class="preview-card-content">
-                            <div class="preview-card-label">Gastronomie</div>
-                            <div class="preview-card-title">Goldener Hirsch</div>
+                    <a href="/portfolio/restaurant-template.html" class="browser-card">
+                        <div class="browser-frame">
+                            <div class="browser-chrome">
+                                <span class="dot dot-r"></span>
+                                <span class="dot dot-y"></span>
+                                <span class="dot dot-g"></span>
+                                <span class="browser-url">goldener-hirsch.de</span>
+                            </div>
+                            <img class="browser-screen" src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Restaurant" loading="eager" width="600" height="400">
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-label">Gastronomie</span>
+                            <span class="card-title">Goldener Hirsch</span>
                         </div>
                     </a>
-                    <a href="/portfolio/spedition-schwaben.html" class="preview-card">
-                        <img src="/images/portfolio/spedition-lkw.jpg" alt="Website für Schwaben Logistik — Spedition" loading="eager" width="600" height="400">
-                        <div class="preview-card-overlay"></div>
-                        <div class="preview-card-content">
-                            <div class="preview-card-label">Spedition</div>
-                            <div class="preview-card-title">Schwaben Logistik</div>
+                    <a href="/portfolio/spedition-schwaben.html" class="browser-card">
+                        <div class="browser-frame">
+                            <div class="browser-chrome">
+                                <span class="dot dot-r"></span>
+                                <span class="dot dot-y"></span>
+                                <span class="dot dot-g"></span>
+                                <span class="browser-url">schwaben-logistik.de</span>
+                            </div>
+                            <img class="browser-screen" src="/images/portfolio/spedition-lkw.jpg" alt="Website für Schwaben Logistik — Spedition" loading="eager" width="600" height="400">
+                        </div>
+                        <div class="card-meta">
+                            <span class="card-label">Spedition</span>
+                            <span class="card-title">Schwaben Logistik</span>
                         </div>
                     </a>
                 </div>
