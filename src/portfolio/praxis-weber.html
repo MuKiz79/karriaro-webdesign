@@ -3,438 +3,939 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Praxis Dr. Med. Weber — Ihr Spezialist für Gesundheit</title>
-    <meta name="description" content="Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.">
+    <title>Praxis Dr. Weber · Hausarztpraxis München-Schwabing — Termine online, Rezept & eAU digital</title>
+    <meta name="description" content="Hausarztpraxis Dr. Weber in München-Schwabing. Online-Termine 24/7, digitales Rezept, eAU. Persönliche Medizin, kurze Wartezeiten.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/praxis-weber.html">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://karriaro-webdesign.de/portfolio/praxis-weber.html">
-    <meta property="og:title" content="Praxis Dr. Med. Weber — Ihr Spezialist für Gesundheit">
-    <meta property="og:description" content="Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.">
+    <meta property="og:title" content="Praxis Dr. Weber — Hausarztpraxis München-Schwabing">
+    <meta property="og:description" content="Online-Termine 24/7. Digitales Rezept. eAU. Persönliche Medizin.">
     <meta property="og:locale" content="de_DE">
-    <meta property="og:image" content="https://karriaro-webdesign.de/images/portfolio/praxis-empfang.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Praxis Dr. Med. Weber — Ihr Spezialist für Gesundheit">
-    <meta name="twitter:description" content="Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.">
-    <meta name="twitter:image" content="https://karriaro-webdesign.de/images/portfolio/praxis-empfang.jpg">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "MedicalBusiness",
-        "name": "Praxis Dr. Med. Weber",
-        "description": "Moderne Praxis im Herzen der Stadt. Wir nehmen uns Zeit für Sie.",
+        "name": "Praxis Dr. Sarah Weber",
+        "description": "Hausarztpraxis in München-Schwabing mit Online-Terminbuchung, digitalem Rezept und eAU.",
         "url": "https://karriaro-webdesign.de/portfolio/praxis-weber.html",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Hauptstraße 10",
-            "postalCode": "10115",
-            "addressLocality": "Berlin",
-            "addressCountry": "DE"
-        },
-        "telephone": "030 / 123 456 78",
-        "openingHours": ["Mo-Fr 08:00-12:00", "Mo,Di,Do 14:00-18:00"]
+        "address": {"@type": "PostalAddress", "streetAddress": "Leopoldstraße 23", "postalCode": "80802", "addressLocality": "München", "addressCountry": "DE"},
+        "telephone": "+49 89 123 456 78",
+        "openingHours": ["Mo,Tu,We,Th,Fr 08:00-12:00", "Mo,Tu,Th 14:00-18:00"],
+        "medicalSpecialty": "Allgemeinmedizin"
     }
     </script>
-    <link rel="stylesheet" href="/style.css">
     <style>
         :root {
-            --green: #0f5132;
-            --green-hover: #0a3b24;
-            --gold: #c5a059;
-            --gold-hover: #b08c42;
-            --bg-alt: #f8faf9;
-            --text: #1a1a1a;
-            --muted: #6b7280;
-            --border: #e8ebe9;
-            --serif: Georgia, 'Times New Roman', serif;
-            --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --accent: #9CAF88;
+            --accent-dark: #7d9070;
+            --accent-bg: #f4f7f1;
+            --bg: #ffffff;
+            --bg-soft: #fafbf9;
+            --text: #1a1d1a;
+            --text-soft: #525752;
+            --text-light: #8c8f8c;
+            --border: #e8ebe6;
+            --border-strong: #d6d9d3;
+            --danger: #c0392b;
+            --radius: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 8px 24px rgba(40,55,30,0.06);
+            --shadow-lg: 0 24px 60px rgba(40,55,30,0.10);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --max: 1240px;
         }
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--sans); color: var(--text); background: #fff; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
-        img { display: block; max-width: 100%; }
-        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--green); color: #fff; padding: 8px 16px; border-radius: 0 0 8px 8px; z-index: 100; font-size: 14px; }
+        img { display: block; max-width: 100%; height: auto; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; }
+        ul { list-style: none; }
+        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
+        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h2 { font-size: clamp(30px, 3.8vw, 44px); }
+        h3 { font-size: 20px; }
+
+        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 var(--radius) var(--radius); z-index: 200; font-size: 14px; font-weight: 500; }
         .skip-link:focus { top: 0; }
 
-        /* Top Bar */
-        .top-bar { background: var(--bg-alt); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); padding: 8px 32px; text-align: center; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        section { padding: 96px 0; }
+        .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+        .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .section-head h2 { margin-bottom: 16px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+
+        /* Topbar */
+        .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 8px 24px; text-align: center; letter-spacing: 0.01em; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
 
         /* Nav */
-        .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.04); }
-        .nav-inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; height: 72px; display: flex; align-items: center; justify-content: space-between; }
-        .nav-brand { font-family: var(--serif); font-weight: 700; font-size: 18px; letter-spacing: -0.01em; color: var(--green); }
-        .nav-links { display: flex; gap: 32px; font-size: 15px; color: var(--muted); }
-        .nav-links a { transition: color 0.2s; }
+        .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 700; font-size: 18px; }
+        .nav-links { display: flex; gap: 30px; font-size: 15px; color: var(--text-soft); }
         .nav-links a:hover { color: var(--text); }
-        .nav-cta { background: var(--green); color: #fff; padding: 10px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; transition: background 0.2s; }
-        .nav-cta:hover { background: var(--green-hover); }
-        .nav-mobile-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 8px; }
-        .nav-mobile-menu { display: none; }
-
-        /* Sections */
-        section { padding: 96px 32px; }
-        .section-alt { background: var(--bg-alt); }
-        .container { max-width: 1120px; margin: 0 auto; }
-        .section-head { text-align: center; margin-bottom: 56px; }
-        .section-head h2 { font-family: var(--serif); font-size: 36px; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 12px; }
-        .section-head p { font-size: 17px; color: var(--muted); max-width: 540px; margin: 0 auto; }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--accent-dark); }
+        .mobile-toggle { display: none; padding: 8px; }
+        .mobile-toggle svg { width: 24px; height: 24px; }
+        .mobile-menu { display: none; }
 
         /* Hero */
-        .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 0; background: #fff; }
-        .hero-text { max-width: 680px; }
-        .hero h1 { font-family: var(--serif); font-size: clamp(40px, 5.5vw, 64px); line-height: 1.1; letter-spacing: -0.025em; color: var(--text); margin-bottom: 20px; font-weight: 400; }
-        .hero p { font-size: 19px; color: var(--muted); margin-bottom: 40px; line-height: 1.7; }
-        .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-        .btn-primary { display: inline-block; background: var(--green); color: #fff; padding: 16px 40px; border-radius: 12px; font-size: 16px; font-weight: 600; transition: background 0.2s; }
-        .btn-primary:hover { background: var(--green-hover); }
-        .btn-ghost { display: inline-block; border: 1.5px solid var(--green); color: var(--green); padding: 15px 36px; border-radius: 12px; font-size: 16px; font-weight: 600; transition: all 0.2s; }
-        .btn-ghost:hover { background: var(--green); color: #fff; }
-        .hero-note { display: block; margin-top: 24px; font-size: 14px; color: var(--muted); }
+        .hero { padding: 80px 0 96px; background: linear-gradient(180deg, var(--accent-bg) 0%, var(--bg) 100%); }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 18px; }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero h1 { margin-bottom: 24px; }
+        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 36px; }
+        .hero-ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 32px; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
+        .btn-ghost:hover { border-color: var(--text); }
+        .hero-trust { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .dot { color: var(--accent); }
+        .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+        .hero-img img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* About */
-        .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center; }
-        .about-img { border-radius: 20px; aspect-ratio: 3/4; object-fit: cover; width: 100%; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-        .about-content h2 { font-family: var(--serif); font-size: 28px; font-weight: 400; margin-bottom: 4px; }
-        .about-content .subtitle { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
-        .about-content .bio { font-size: 16px; color: #374151; line-height: 1.8; margin-bottom: 24px; }
-        .about-content blockquote { font-family: var(--serif); font-size: 20px; color: var(--green); font-style: italic; padding-left: 20px; border-left: 2.5px solid var(--green); line-height: 1.5; margin-bottom: 28px; }
-        .about-quals { font-size: 14px; color: var(--muted); letter-spacing: 0.02em; }
+        /* Termin-Widget (KEY-Differentiator) */
+        .termin-widget { background: var(--bg-soft); padding: 96px 0; }
+        .termin-card { background: var(--bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 48px; max-width: 920px; margin: 0 auto; border: 1px solid var(--border); }
+        .termin-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+        .termin-card-head h2 { font-size: 28px; margin-bottom: 4px; }
+        .termin-card-head p { color: var(--text-soft); font-size: 15px; }
+        .termin-badge { background: var(--accent-bg); color: var(--accent-dark); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; letter-spacing: 0.04em; }
+        .termin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .termin-section h3 { font-size: 13px; font-weight: 600; color: var(--text-soft); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .termin-doctors { display: flex; gap: 10px; flex-wrap: wrap; }
+        .termin-doctor { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .termin-doctor:hover, .termin-doctor.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .termin-doctor .ava { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .termin-reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .termin-reason { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .termin-reason:hover, .termin-reason.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .termin-reason svg { width: 18px; height: 18px; color: var(--accent-dark); flex-shrink: 0; }
+        .termin-calendar { background: var(--bg-soft); border-radius: var(--radius); padding: 20px; }
+        .termin-cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .termin-cal-head .month { font-weight: 600; font-size: 15px; }
+        .termin-cal-nav { display: flex; gap: 4px; }
+        .termin-cal-nav button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; }
+        .termin-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .termin-cal-day-label { text-align: center; font-size: 11px; color: var(--text-light); padding: 6px 0; }
+        .termin-cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; border-radius: 50%; cursor: pointer; transition: all 0.2s; }
+        .termin-cal-day:hover { background: var(--bg); }
+        .termin-cal-day.is-selected { background: var(--accent); color: #fff; }
+        .termin-cal-day.is-today { font-weight: 600; outline: 1px solid var(--accent); }
+        .termin-cal-day.is-disabled { color: var(--text-light); cursor: not-allowed; }
+        .termin-cal-day.is-empty { cursor: default; }
+        .termin-slots { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .termin-slot { padding: 8px 6px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .termin-slot:hover, .termin-slot.is-selected { border-color: var(--accent); background: var(--accent); color: #fff; }
+        .termin-slot.is-booked { color: var(--text-light); cursor: not-allowed; text-decoration: line-through; opacity: 0.5; }
+        .termin-cta-row { margin-top: 28px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .termin-summary { font-size: 14px; color: var(--text-soft); }
+        .termin-summary strong { color: var(--text); }
 
         /* Leistungen */
-        .leistungen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-        .leistung-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; transition: box-shadow 0.3s; }
-        .leistung-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-        .leistung-icon { width: 44px; height: 44px; margin-bottom: 20px; color: var(--green); }
-        .leistung-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
-        .leistung-card p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+        .leistungen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .leistung { padding: 32px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); transition: all 0.3s; }
+        .leistung:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+        .leistung-icon { width: 44px; height: 44px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+        .leistung-icon svg { width: 22px; height: 22px; }
+        .leistung h3 { margin-bottom: 8px; }
+        .leistung p { color: var(--text-soft); font-size: 15px; }
 
-        /* Praxis */
-        .praxis-img { width: 100%; border-radius: 16px; aspect-ratio: 16/9; object-fit: cover; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-        .praxis-note { text-align: center; margin-top: 24px; font-size: 16px; color: var(--muted); }
+        /* Online-Services */
+        .online-services { background: var(--accent-bg); }
+        .online-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .online-card { background: var(--bg); padding: 32px; border-radius: var(--radius-lg); transition: all 0.3s; cursor: pointer; }
+        .online-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .online-card-tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; margin-bottom: 16px; }
+        .online-card h3 { margin-bottom: 8px; }
+        .online-card p { color: var(--text-soft); font-size: 14px; margin-bottom: 18px; }
+        .online-card-link { color: var(--accent-dark); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+        .online-card-link:hover { color: var(--text); }
+
+        /* Team */
+        .team-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
+        .team-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        .team-text .role { color: var(--accent-dark); font-size: 14px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .team-text h2 { margin-bottom: 18px; }
+        .team-text p { color: var(--text-soft); margin-bottom: 16px; font-size: 16px; }
+        .team-quals { margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .qual-pill { padding: 6px 14px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 12px; color: var(--text-soft); }
+
+        /* Galerie */
+        .galerie { background: var(--bg-soft); }
+        .galerie-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 16px; height: 500px; }
+        .galerie-grid > div { border-radius: var(--radius); overflow: hidden; background: var(--accent-bg); }
+        .galerie-grid > div:nth-child(1) { grid-row: span 2; }
+        .galerie-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .galerie-grid > div:hover img { transform: scale(1.04); }
 
         /* Sprechzeiten */
-        .zeiten-wrapper { max-width: 560px; margin: 0 auto; }
-        .zeiten-row { display: flex; justify-content: space-between; font-size: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-        .zeiten-row:last-child { border-bottom: none; }
-        .zeiten-row .day { font-weight: 600; }
-        .zeiten-row .closed { color: var(--muted); }
-        .zeiten-note { text-align: center; margin-top: 32px; font-size: 15px; color: var(--muted); }
-        .zeiten-cta { display: block; text-align: center; margin-top: 16px; font-size: 16px; color: var(--green); font-weight: 600; }
-        .zeiten-cta:hover { text-decoration: underline; }
+        .sprech-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
+        .sprech-table { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .sprech-row { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 16px 24px; border-bottom: 1px solid var(--border); font-size: 15px; align-items: center; }
+        .sprech-row:last-child { border-bottom: none; }
+        .sprech-row.is-head { background: var(--bg-soft); font-size: 12px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 24px; }
+        .sprech-day { font-weight: 500; }
+        .sprech-row.is-closed { color: var(--text-light); }
+        .sprech-row.is-today { background: var(--accent-bg); }
+        .sprech-aside .info-card { padding: 24px; border-radius: var(--radius-lg); margin-bottom: 14px; }
+        .sprech-aside .info-card.notdienst { background: linear-gradient(135deg, #fef4f3, #fbeae8); border: 1px solid #f4c5bf; }
+        .sprech-aside .info-card.hausbesuch { background: var(--accent-bg); border: 1px solid #d4dccb; }
+        .info-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .info-card p { font-size: 14px; color: var(--text-soft); margin-bottom: 8px; }
+        .info-card .num { font-size: 22px; font-weight: 600; color: var(--text); margin-top: 6px; }
 
-        /* Testimonials */
-        .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-        .testimonial-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; }
-        .testimonial-stars { color: var(--gold); font-size: 18px; margin-bottom: 16px; letter-spacing: 2px; }
-        .testimonial-card blockquote { font-size: 15px; line-height: 1.75; color: #374151; margin-bottom: 20px; font-style: italic; }
-        .testimonial-author { font-size: 14px; font-weight: 700; }
-        .testimonial-since { font-size: 13px; color: var(--muted); }
+        /* Stimmen */
+        .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .stimme { padding: 32px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+        .stimme-stars { color: var(--accent); margin-bottom: 14px; font-size: 14px; letter-spacing: 2px; }
+        .stimme p { color: var(--text); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+        .stimme-author { display: flex; gap: 12px; align-items: center; }
+        .stimme-ava { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-bg); color: var(--accent-dark); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+        .stimme-name { font-size: 14px; font-weight: 500; }
+        .stimme-role { font-size: 12px; color: var(--text-light); }
+
+        /* FAQ */
+        .faq { background: var(--bg-soft); }
+        .faq-list { max-width: 760px; margin: 0 auto; }
+        .faq-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; font-weight: 500; font-size: 16px; gap: 16px; }
+        .faq-icon { width: 24px; height: 24px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s; font-size: 16px; line-height: 1; }
+        .faq-item.is-open .faq-icon { transform: rotate(45deg); }
+        .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.3s, padding 0.3s; color: var(--text-soft); font-size: 15px; }
+        .faq-item.is-open .faq-a { padding: 0 24px 20px; max-height: 320px; }
+
+        /* News */
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .news-card { display: block; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s; }
+        .news-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .news-img { aspect-ratio: 16/10; background: var(--accent-bg); overflow: hidden; }
+        .news-img img { width: 100%; height: 100%; object-fit: cover; }
+        .news-body { padding: 24px; }
+        .news-tag { font-size: 11px; color: var(--accent-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .news-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .news-date { font-size: 13px; color: var(--text-light); }
 
         /* Kontakt */
-        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 48px; align-items: start; }
-        .kontakt-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 16px; }
-        .kontakt-phone { font-size: 22px; font-weight: 700; color: var(--green); display: block; margin-bottom: 12px; }
-        .kontakt-phone:hover { text-decoration: underline; }
-        .kontakt-info { font-size: 15px; line-height: 2; }
-        .kontakt-info a { color: var(--green); font-weight: 500; }
-        .kontakt-info a:hover { text-decoration: underline; }
-        .kontakt-badge { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--green); background: rgba(15,81,50,0.06); padding: 4px 12px; border-radius: 20px; }
-        .form-container { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-        .form-container label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
-        .form-container input, .form-container textarea { width: 100%; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 15px; font-family: var(--sans); margin-bottom: 20px; transition: border-color 0.2s; outline: none; background: #fff; }
-        .form-container input:focus, .form-container textarea:focus { border-color: var(--green); }
-        .form-container textarea { resize: vertical; min-height: 100px; }
-        .btn-gold { display: inline-block; width: 100%; background: var(--gold); color: #fff; padding: 14px 32px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; font-family: var(--sans); cursor: pointer; transition: background 0.2s; }
-        .btn-gold:hover { background: var(--gold-hover); }
-        .kontakt-response { text-align: center; margin-top: 32px; font-size: 14px; color: var(--muted); }
+        .kontakt { background: var(--bg-soft); }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+        .kontakt-info h2 { margin-bottom: 24px; }
+        .kontakt-info p.lead { color: var(--text-soft); font-size: 17px; margin-bottom: 32px; }
+        .kontakt-blocks { display: flex; flex-direction: column; gap: 18px; margin-bottom: 32px; }
+        .kontakt-block { display: flex; gap: 14px; align-items: flex-start; }
+        .kontakt-block-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .kontakt-block-icon svg { width: 18px; height: 18px; }
+        .kontakt-block h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .kontakt-block p, .kontakt-block a { color: var(--text-soft); font-size: 14px; }
+        .kontakt-block a:hover { color: var(--text); text-decoration: underline; }
+        .kontakt-form { background: var(--bg); padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; transition: border-color 0.2s; background: var(--bg); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 96px; }
+        .form-checkbox { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); margin-bottom: 16px; }
+        .form-checkbox input { margin-top: 3px; }
+        .form-submit { width: 100%; }
+
+        .map-mini { aspect-ratio: 16/9; background: var(--accent-bg); border-radius: var(--radius); margin-top: 20px; position: relative; overflow: hidden; }
+        .map-mini svg { width: 100%; height: 100%; }
+        .map-pin { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); width: 36px; height: 36px; background: var(--accent); border-radius: 50% 50% 50% 0; transform-origin: bottom; transform: translate(-50%, -50%) rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .map-pin::after { content: ''; width: 12px; height: 12px; background: #fff; border-radius: 50%; transform: rotate(45deg); }
 
         /* Footer */
-        footer { background: var(--bg-alt); padding: 48px 32px; text-align: center; font-size: 14px; color: var(--muted); border-top: 1px solid var(--border); }
-        .footer-brand { font-family: var(--serif); font-size: 18px; color: var(--green); font-weight: 700; margin-bottom: 4px; }
-        .footer-tagline { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-        footer a { color: var(--muted); }
-        footer a:hover { color: var(--text); }
-        .footer-legal { margin-top: 16px; font-size: 13px; }
+        footer { background: var(--text); color: #aab1a8; padding: 64px 0 32px; font-size: 14px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+        .footer-brand { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+        footer p { margin-bottom: 8px; }
+        footer h5 { color: #fff; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+        footer ul li { margin-bottom: 8px; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 12px; }
+        .karriaro-back { color: rgba(255,255,255,0.55); }
+        .karriaro-back:hover { color: #fff; }
+
+        /* Modal */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+        .modal-bg.is-open { display: flex; }
+        .modal { background: #fff; border-radius: var(--radius-lg); max-width: 480px; width: 100%; padding: 36px; text-align: center; }
+        .modal-icon { width: 64px; height: 64px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+        .modal h3 { font-size: 22px; margin-bottom: 12px; }
+        .modal p { color: var(--text-soft); margin-bottom: 24px; font-size: 15px; }
 
         /* Mobile */
-        @media (max-width: 768px) {
-            .top-bar { font-size: 12px; padding: 6px 16px; }
-            section { padding: 72px 24px; }
-            .nav-inner { padding: 0 24px; }
+        @media (max-width: 920px) {
+            section { padding: 64px 0; }
+            .hero { padding: 48px 0 64px; }
+            .hero-grid, .team-grid, .kontakt-grid, .sprech-grid { grid-template-columns: 1fr; gap: 40px; }
+            .leistungen-grid, .online-grid, .stimmen-grid, .news-grid { grid-template-columns: 1fr; }
+            .termin-grid { grid-template-columns: 1fr; gap: 20px; }
+            .termin-card { padding: 28px; }
+            .galerie-grid { grid-template-columns: 1fr 1fr; height: auto; }
+            .galerie-grid > div:nth-child(1) { grid-row: auto; aspect-ratio: 4/3; }
+            .galerie-grid > div { aspect-ratio: 4/3; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
             .nav-links { display: none; }
-            .nav-cta { display: none; }
-            .nav-mobile-toggle { display: block; }
-            .nav-mobile-menu.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: #fff; padding: 24px 32px; gap: 16px; border-bottom: 1px solid #f0f0f0; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-            .nav-mobile-menu.open a { font-size: 16px; color: var(--text); }
-            .hero h1 { font-size: 36px; }
-            .hero-ctas { flex-direction: column; align-items: flex-start; }
-            .about-grid { grid-template-columns: 1fr; gap: 40px; }
-            .leistungen-grid { grid-template-columns: 1fr; gap: 24px; }
-            .testimonials-grid { grid-template-columns: 1fr; gap: 24px; }
-            .kontakt-grid { grid-template-columns: 1fr; gap: 40px; }
-            .section-head h2 { font-size: 28px; }
-        }
-
-
-        /* Scroll animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Nav scroll */
-        .nav.scrolled {
-            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+            .nav-cta { padding: 9px 18px; font-size: 13px; }
+            .mobile-toggle { display: inline-flex; }
+            .mobile-menu.is-open { display: flex; flex-direction: column; padding: 16px 24px 24px; gap: 14px; background: var(--bg); border-bottom: 1px solid var(--border); }
+            .mobile-menu a { padding: 8px 0; font-size: 16px; color: var(--text-soft); }
         }
     </style>
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
+    <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <!-- Top Bar -->
-    <div class="top-bar" aria-hidden="true">Mo – Fr 8:00 – 18:00 &nbsp;&middot;&nbsp; 030 / 123 456 78</div>
+    <div class="topbar">Sprechzeiten Mo–Fr 8–12, Mo/Di/Do 14–18 · Notdienst <a href="tel:116117">116 117</a> · <a href="tel:+498912345678">089 234 567</a></div>
 
-    <!-- Navigation -->
-    <nav class="nav" aria-label="Hauptnavigation">
+    <header class="nav">
         <div class="nav-inner">
-            <span class="nav-brand">Praxis Dr. Weber</span>
-            <div class="nav-links">
-                <a href="#about">Ihre Ärztin</a>
+            <a href="/portfolio/praxis-weber.html" class="brand">
+                <span class="brand-mark">+</span>
+                Praxis Dr. Weber
+            </a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
                 <a href="#leistungen">Leistungen</a>
-                <a href="#praxis">Praxis</a>
+                <a href="#online-services">Online-Services</a>
+                <a href="#team">Team</a>
                 <a href="#sprechzeiten">Sprechzeiten</a>
                 <a href="#kontakt">Kontakt</a>
-            </div>
-            <a href="#kontakt" class="nav-cta" aria-label="Termin vereinbaren">Termin vereinbaren</a>
-            <button class="nav-mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="toggleMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </nav>
+            <a href="#termin" class="nav-cta">Termin buchen</a>
+            <button class="mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('is-open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
-        <div class="nav-mobile-menu" id="mobileMenu">
-            <a href="#about" onclick="closeMenu()">Ihre Ärztin</a>
-            <a href="#leistungen" onclick="closeMenu()">Leistungen</a>
-            <a href="#praxis" onclick="closeMenu()">Praxis</a>
-            <a href="#sprechzeiten" onclick="closeMenu()">Sprechzeiten</a>
-            <a href="#kontakt" onclick="closeMenu()">Kontakt</a>
-            <a href="#kontakt" onclick="closeMenu()">Termin vereinbaren</a>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#leistungen">Leistungen</a>
+            <a href="#online-services">Online-Services</a>
+            <a href="#team">Team</a>
+            <a href="#sprechzeiten">Sprechzeiten</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
-    </nav>
+    </header>
 
-    <main id="main-content">
-
+    <main id="main">
         <!-- 1. Hero -->
         <section class="hero">
             <div class="container">
-                <div class="hero-text">
-                    <h1>Ihre Gesundheit.<br>In besten Händen.</h1>
-                    <p>Hausarztpraxis in Berlin-Mitte. Moderne Medizin mit persönlicher Betreuung.</p>
-                    <div class="hero-ctas">
-                        <a href="#kontakt" class="btn-primary" aria-label="Jetzt Termin vereinbaren">Termin vereinbaren</a>
-                        <a href="#leistungen" class="btn-ghost">Unsere Leistungen</a>
+                <div class="hero-grid">
+                    <div>
+                        <p class="hero-eyebrow">Hausarztpraxis · München-Schwabing</p>
+                        <h1>Ihre Hausarztpraxis. Persönlich. Modern.</h1>
+                        <p class="lead">Termine online buchen, Folgerezepte digital anfragen, eAU per Klick. Persönliche Medizin mit kurzen Wartezeiten — seit 15 Jahren in Schwabing.</p>
+                        <div class="hero-ctas">
+                            <a href="#termin" class="btn btn-primary">Online-Termin buchen
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
+                            <a href="tel:+498912345678" class="btn btn-ghost">089 234 567</a>
+                        </div>
+                        <div class="hero-trust">
+                            <span><span class="dot">●</span> Online-Termine 24/7</span>
+                            <span><span class="dot">●</span> eAU + Rezept digital</span>
+                            <span><span class="dot">●</span> Barrierefrei</span>
+                        </div>
                     </div>
-                    <span class="hero-note">Auch online Termine möglich.</span>
+                    <div class="hero-img">
+                        <img src="https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?q=80&w=1200&auto=format&fit=crop" alt="Dr. Sarah Weber in ihrer Hausarztpraxis in München-Schwabing" loading="eager" width="800" height="1000">
+                    </div>
                 </div>
             </div>
         </section>
 
-
-        <!-- 2. Über Dr. Weber -->
-        <section id="about" class="section-alt fade-in">
+        <!-- 2. ⭐ Termin-Widget -->
+        <section id="termin" class="termin-widget" aria-label="Online-Termin buchen">
             <div class="container">
-                <div class="about-grid">
-                    <img src="/images/portfolio/stethoskop.jpg" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" class="about-img" loading="lazy" width="560" height="747">
-                    <div class="about-content">
-                        <h2>Dr. med. Sarah Weber</h2>
-                        <p class="subtitle">Fachärztin für Allgemeinmedizin</p>
-                        <p class="bio">Seit über 15 Jahren begleite ich meine Patientinnen und Patienten durch alle Lebensphasen -- von der Vorsorge bis zur Behandlung chronischer Erkrankungen. Nach meinem Studium an der Charité Berlin und mehrjähriger Klinikarbeit habe ich mich bewusst für die Hausarztmedizin entschieden.</p>
-                        <p class="bio">Ich glaube daran, dass gute Medizin Zeit braucht. Deshalb nehme ich mir bei jedem Termin die Ruhe, Ihnen zuzuhören, Ihre Fragen zu beantworten und gemeinsam den besten Weg für Ihre Gesundheit zu finden. Meine Patientinnen und Patienten sind keine Nummern -- sie sind Menschen, die mir vertrauen.</p>
-                        <blockquote>Gute Medizin beginnt mit Zuhören.</blockquote>
-                        <p class="about-quals">Facharzt Allgemeinmedizin &middot; Notfallmedizin &middot; Reisemedizin</p>
+                <div class="termin-card">
+                    <div class="termin-card-head">
+                        <div>
+                            <h2>Termin online buchen</h2>
+                            <p>Wählen Sie Ihre Wunsch-Ärztin, Anliegen und Datum.</p>
+                        </div>
+                        <span class="termin-badge">24/7 verfügbar</span>
+                    </div>
+                    <div class="termin-grid">
+                        <div>
+                            <div class="termin-section">
+                                <h3>1. Ärztin wählen</h3>
+                                <div class="termin-doctors" id="doctors">
+                                    <button type="button" class="termin-doctor is-active" data-doc="weber"><span class="ava">SW</span> Dr. Weber</button>
+                                    <button type="button" class="termin-doctor" data-doc="vertretung"><span class="ava">MK</span> Dr. Klein</button>
+                                </div>
+                            </div>
+                            <div class="termin-section" style="margin-top: 28px;">
+                                <h3>2. Anliegen</h3>
+                                <div class="termin-reasons" id="reasons">
+                                    <button type="button" class="termin-reason is-active" data-reason="vorsorge">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        Vorsorge
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="akut">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                                        Akut
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="impfung">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2l4 4-9 9-4-1-1-4 9-9z"/><path d="M9 11L4 16l-2 2 2 2 2-2 5-5"/></svg>
+                                        Impfung
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="check">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                        Check-up
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="termin-section">
+                                <h3>3. Datum &amp; Uhrzeit</h3>
+                                <div class="termin-calendar">
+                                    <div class="termin-cal-head">
+                                        <span class="month">Mai 2026</span>
+                                        <div class="termin-cal-nav">
+                                            <button type="button" aria-label="Vorheriger Monat">‹</button>
+                                            <button type="button" aria-label="Nächster Monat">›</button>
+                                        </div>
+                                    </div>
+                                    <div class="termin-cal-grid" id="calendar"></div>
+                                </div>
+                                <div class="termin-slots" id="slots">
+                                    <button type="button" class="termin-slot">08:30</button>
+                                    <button type="button" class="termin-slot is-booked">09:00</button>
+                                    <button type="button" class="termin-slot is-selected">09:30</button>
+                                    <button type="button" class="termin-slot">10:00</button>
+                                    <button type="button" class="termin-slot is-booked">10:30</button>
+                                    <button type="button" class="termin-slot">11:00</button>
+                                    <button type="button" class="termin-slot">14:00</button>
+                                    <button type="button" class="termin-slot">14:30</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="termin-cta-row">
+                        <p class="termin-summary"><strong>Dr. Weber · Vorsorge</strong> · Montag, 11. Mai · <strong>09:30</strong></p>
+                        <button type="button" class="btn btn-primary" onclick="openModal('termin')">Termin bestätigen
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- 3. Leistungen -->
-        <section id="leistungen" class="fade-in">
+        <section id="leistungen">
             <div class="container">
                 <div class="section-head">
-                    <h2>Unsere Leistungen.</h2>
-                    <p>Ganzheitliche Versorgung für die ganze Familie.</p>
+                    <p class="eyebrow">Leistungen</p>
+                    <h2>Hausärztliche Versorgung für die ganze Familie.</h2>
+                    <p>Vom Säugling bis zum Senior — wir begleiten Sie in allen Lebensphasen.</p>
                 </div>
                 <div class="leistungen-grid">
-                    <div class="leistung-card">
-                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="16" r="8"/><path d="M22 8v16M18 16h8"/><path d="M10 36c0-6.627 5.373-12 12-12s12 5.373 12 12"/></svg>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
                         <h3>Allgemeinmedizin</h3>
-                        <p>Umfassende hausärztliche Versorgung für akute und chronische Erkrankungen. Von der Erstdiagnose über die Therapie bis zur langfristigen Begleitung -- wir sind Ihre erste Anlaufstelle für alle gesundheitlichen Fragen.</p>
+                        <p>Diagnose und Behandlung akuter und chronischer Erkrankungen — von Erkältung bis Diabetes-Einstellung.</p>
                     </div>
-                    <div class="leistung-card">
-                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 38s-14-8.4-14-18.2C8 12.6 12.5 8 18 8c3 0 4 2.5 4 2.5S23 8 26 8c5.5 0 10 4.6 10 11.8C36 29.6 22 38 22 38z"/><path d="M16 20l4 4 8-8"/></svg>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
                         <h3>Vorsorge &amp; Check-ups</h3>
-                        <p>Regelmäßige Gesundheitsuntersuchungen helfen, Erkrankungen frühzeitig zu erkennen. Wir bieten Herz-Kreislauf-Checks, Krebsvorsorge, Hautscreening und individuelle Vorsorgeprogramme -- abgestimmt auf Ihr Alter und Ihre Bedürfnisse.</p>
+                        <p>Gesundheits-Check-up ab 35, Hautkrebs-Screening, Krebsvorsorge — auf Kassenkosten oder als IGeL.</p>
                     </div>
-                    <div class="leistung-card">
-                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6v20"/><path d="M18 6h8"/><circle cx="22" cy="32" r="6"/><path d="M22 26v6"/></svg>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
                         <h3>Impfberatung</h3>
-                        <p>Individuelle Beratung zu allen Standard-, Auffrischungs- und Reiseimpfungen nach aktueller STIKO-Empfehlung. Wir prüfen Ihren Impfstatus, erstellen einen persönlichen Impfplan und führen alle Impfungen direkt in der Praxis durch.</p>
+                        <p>Standard-, Auffrischungs- und Reiseimpfungen nach STIKO. Persönliche Beratung und Impfausweis-Check.</p>
                     </div>
-                    <div class="leistung-card">
-                        <svg class="leistung-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="22" cy="18" r="4"/><path d="M22 22v10"/><path d="M14 10h16v24H14z"/><path d="M18 38h8"/><path d="M22 34h0"/></svg>
-                        <h3>Labor &amp; Diagnostik</h3>
-                        <p>Blutuntersuchungen, Urinanalysen und weitere Labordiagnostik direkt in unserer Praxis. Durch unsere modernen Geräte erhalten Sie schnelle, zuverlässige Ergebnisse -- oft noch am selben Tag. EKG und Lungenfunktion ergänzen unser Angebot.</p>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                        <h3>EKG &amp; Labor</h3>
+                        <p>Ruhe-EKG, Belastungs-EKG, Lungenfunktion. Blutwerte direkt im hauseigenen Labor — Ergebnisse oft am selben Tag.</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Praxis-Impressionen -->
-        <section id="praxis" class="section-alt fade-in">
-            <div class="container">
-                <div class="section-head">
-                    <h2>Unsere Praxis.</h2>
-                </div>
-                <img src="/images/portfolio/praxis-empfang.jpg" alt="Helle, moderne Praxisräume der Praxis Dr. Weber in Berlin-Mitte" class="praxis-img" loading="lazy" width="1120" height="630">
-                <p class="praxis-note">Moderne Ausstattung in hellen, freundlichen Räumen. Barrierefreier Zugang.</p>
-            </div>
-        </section>
-
-        <!-- 5. Sprechzeiten -->
-        <section id="sprechzeiten" class="fade-in">
-            <div class="container">
-                <div class="section-head">
-                    <h2>Sprechzeiten.</h2>
-                </div>
-                <div class="zeiten-wrapper">
-                    <div class="zeiten-row"><span class="day">Montag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
-                    <div class="zeiten-row"><span class="day">Dienstag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
-                    <div class="zeiten-row"><span class="day">Mittwoch</span><span>8:00 – 13:00</span></div>
-                    <div class="zeiten-row"><span class="day">Donnerstag</span><span>8:00 – 12:00 &amp; 14:00 – 18:00</span></div>
-                    <div class="zeiten-row"><span class="day">Freitag</span><span>8:00 – 13:00</span></div>
-                    <div class="zeiten-row"><span class="day">Samstag</span><span class="closed">Geschlossen</span></div>
-                    <div class="zeiten-row"><span class="day">Sonntag</span><span class="closed">Geschlossen</span></div>
-                    <p class="zeiten-note">Termine nach Vereinbarung auch außerhalb der Sprechzeiten möglich.</p>
-                    <a href="#kontakt" class="zeiten-cta">Jetzt Termin vereinbaren &rarr;</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. Patientenstimmen -->
-        <section id="stimmen" class="section-alt fade-in">
-            <div class="container">
-                <div class="section-head">
-                    <h2>Das sagen unsere Patienten.</h2>
-                </div>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <blockquote>Frau Dr. Weber nimmt sich wirklich Zeit. Ich habe mich zum ersten Mal bei einem Arzt richtig verstanden gefühlt. Die Praxis ist modern, das Team freundlich -- ich komme seit Jahren gerne hierher.</blockquote>
-                        <p class="testimonial-author">Markus</p>
-                        <p class="testimonial-since">Patient seit 2019</p>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+                        <h3>DMP-Programme</h3>
+                        <p>Strukturierte Behandlung für Diabetes, KHK, Asthma und COPD. Wir koordinieren alle Untersuchungen.</p>
                     </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <blockquote>Meine ganze Familie geht zu Dr. Weber. Die Kinder fühlen sich wohl, die Wartezeiten sind kurz, und man bekommt immer alles verständlich erklärt. Eine Hausärztin, wie man sie sich wünscht.</blockquote>
-                        <p class="testimonial-author">Sabine</p>
-                        <p class="testimonial-since">Patientin seit 2020</p>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial-stars" aria-label="5 von 5 Sternen">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                        <blockquote>Nach einem Umzug nach Berlin habe ich lange nach einem guten Hausarzt gesucht. Bei Dr. Weber bin ich geblieben. Gründlich, ehrlich, menschlich. Die Praxis ist genau so, wie Medizin sein sollte.</blockquote>
-                        <p class="testimonial-author">Thomas</p>
-                        <p class="testimonial-since">Patient seit 2021</p>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                        <h3>Hausbesuche</h3>
+                        <p>Bei Pflegebedürftigkeit oder schwerer Erkrankung kommen wir zu Ihnen. Im Stadtteil Schwabing.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 7. Kontakt -->
-        <section id="kontakt" class="fade-in">
+        <!-- 4. Online-Services -->
+        <section id="online-services" class="online-services">
             <div class="container">
                 <div class="section-head">
-                    <h2>Besuchen Sie uns.</h2>
+                    <p class="eyebrow">Digital</p>
+                    <h2>Drei Klicks statt drei Anrufe.</h2>
+                    <p>Was früher Wartezeit am Telefon war, machen Sie heute online — sicher, DSGVO-konform, jederzeit.</p>
                 </div>
+                <div class="online-grid">
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Folgerezept</span>
+                        <h3>Rezept digital anfragen</h3>
+                        <p>Dauermedikation? Schicken Sie Ihre Anfrage online, Rezept liegt am nächsten Werktag bei Ihrer Apotheke oder im E-Rezept-Portal.</p>
+                        <span class="online-card-link">Rezept anfragen →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">eAU</span>
+                        <h3>Krankschreibung digital</h3>
+                        <p>Bekannte Beschwerden — wir stellen die elektronische Arbeitsunfähigkeitsbescheinigung aus. Direkt an Ihre Krankenkasse.</p>
+                        <span class="online-card-link">eAU anfragen →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Patientenportal</span>
+                        <h3>Befunde &amp; Akte einsehen</h3>
+                        <p>Laborwerte, Befunde, Vorsorge-Übersicht — sicherer Login mit Ihrer Versichertenkarte. Befundübermittlung in Echtzeit.</p>
+                        <span class="online-card-link">Zum Portal →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Team -->
+        <section id="team">
+            <div class="container">
+                <div class="team-grid">
+                    <div class="team-img">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=900&auto=format&fit=crop" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" loading="lazy" width="900" height="900">
+                    </div>
+                    <div class="team-text">
+                        <p class="role">Praxisinhaberin</p>
+                        <h2>Dr. med. Sarah Weber</h2>
+                        <p>Seit 15 Jahren begleite ich meine Patientinnen und Patienten in Schwabing — von der ersten Vorsorge bis zur chronischen Erkrankung. Nach Studium und Facharztausbildung an der LMU München habe ich mich bewusst für die Hausarztmedizin entschieden, weil hier Beziehung möglich ist.</p>
+                        <p>Gute Medizin braucht Zeit. Deshalb plane ich für jeden Termin mindestens 15 Minuten ein. Sie sind bei mir keine Nummer — Sie sind Teil meiner Praxis-Familie.</p>
+                        <div class="team-quals">
+                            <span class="qual-pill">Allgemeinmedizin</span>
+                            <span class="qual-pill">Notfallmedizin</span>
+                            <span class="qual-pill">Reisemedizin DTG</span>
+                            <span class="qual-pill">Diabetologie DDG</span>
+                            <span class="qual-pill">Sprachen: DE · EN · FR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Galerie -->
+        <section class="galerie">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Praxis</p>
+                    <h2>Hell. Ruhig. Barrierefrei.</h2>
+                    <p>Moderne Räume in einem Schwabinger Altbau — Aufzug, Wartezimmer mit Tageslicht, separater Eingang für Infektpatienten.</p>
+                </div>
+                <div class="galerie-grid">
+                    <div><img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=1200&auto=format&fit=crop" alt="Heller Empfangsbereich der Praxis Dr. Weber" loading="lazy" width="800" height="1000"></div>
+                    <div><img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=900&auto=format&fit=crop" alt="Wartezimmer mit Tageslicht" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?q=80&w=900&auto=format&fit=crop" alt="Behandlungszimmer" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=900&auto=format&fit=crop" alt="EKG-Raum mit moderner Diagnostik" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=900&auto=format&fit=crop" alt="Labor-Ausstattung" loading="lazy" width="600" height="500"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Sprechzeiten -->
+        <section id="sprechzeiten">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Sprechzeiten</p>
+                    <h2>Wann wir für Sie da sind.</h2>
+                    <p>Akut-Sprechstunde täglich ohne Termin von 8–9 Uhr. Außerhalb der Sprechzeiten: <strong>Notdienst 116 117</strong>.</p>
+                </div>
+                <div class="sprech-grid">
+                    <div class="sprech-table">
+                        <div class="sprech-row is-head"><span>Tag</span><span>Vormittag</span><span>Nachmittag</span></div>
+                        <div class="sprech-row is-today"><span class="sprech-day">Montag</span><span>08:00 – 12:00</span><span>14:00 – 18:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Dienstag</span><span>08:00 – 12:00</span><span>14:00 – 18:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Mittwoch</span><span>08:00 – 12:00</span><span class="is-closed">geschlossen</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Donnerstag</span><span>08:00 – 12:00</span><span>14:00 – 18:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Freitag</span><span>08:00 – 12:00</span><span class="is-closed">geschlossen</span></div>
+                        <div class="sprech-row is-closed"><span class="sprech-day">Sa &amp; So</span><span colspan="2" style="grid-column: span 2;">Notdienst 116 117</span></div>
+                    </div>
+                    <aside class="sprech-aside">
+                        <div class="info-card notdienst">
+                            <h4>🚑 Außerhalb der Sprechzeiten</h4>
+                            <p>Ärztlicher Bereitschaftsdienst, kostenlos, rund um die Uhr.</p>
+                            <a href="tel:116117" class="num">116 117</a>
+                        </div>
+                        <div class="info-card hausbesuch">
+                            <h4>Hausbesuch anfragen</h4>
+                            <p>Bei Pflegebedürftigkeit oder schwerer Erkrankung. Stadtteil Schwabing.</p>
+                            <a href="#kontakt" class="online-card-link">Hausbesuch anfragen →</a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Stimmen -->
+        <section class="online-services" style="background:var(--bg-soft);">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Patientenstimmen</p>
+                    <h2>Was unsere Patienten sagen.</h2>
+                </div>
+                <div class="stimmen-grid">
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Online-Termin sonntags abends gebucht, Montag früh empfangen. Frau Dr. Weber nimmt sich Zeit, hört zu — das ist heute selten geworden."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">FW</div>
+                            <div>
+                                <div class="stimme-name">Familie Wagner</div>
+                                <div class="stimme-role">Patient seit 2018</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Folgerezept übers Online-Formular angefragt — am nächsten Tag im E-Rezept-Portal verfügbar. Ich muss nicht mehr in der Telefonschleife hängen."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">MK</div>
+                            <div>
+                                <div class="stimme-name">Markus K.</div>
+                                <div class="stimme-role">Patient seit 2021</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Kompetent, modern, freundlich. Mein Vorsorge-Check ist mir wichtig — und ich werde aktiv erinnert. Genauso wünscht man sich seinen Hausarzt."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">SR</div>
+                            <div>
+                                <div class="stimme-name">Sabine R.</div>
+                                <div class="stimme-role">Patientin seit 2015</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. FAQ -->
+        <section class="faq">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Häufige Fragen</p>
+                    <h2>FAQ.</h2>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie lange dauert es bis zum Wunsch-Termin?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">In der Regel können Sie binnen 1–3 Werktagen einen Routinetermin bekommen. Akut-Patienten werden täglich von 8 bis 9 Uhr ohne Voranmeldung gesehen.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Nehmen Sie neue Patienten auf?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ja. Wir nehmen sowohl gesetzlich als auch privat versicherte Neupatientinnen und Neupatienten auf. Bringen Sie zur Erstvorstellung Ihre Versichertenkarte und ggf. Vorbefunde mit.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie funktioniert das Folgerezept online?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Sie senden uns über das Online-Formular Ihre Anfrage mit Medikamentenname und Dosierung. Wir prüfen die Indikation und stellen das E-Rezept aus — direkt in Ihre Apotheke oder ins E-Rezept-Portal Ihrer Krankenkasse.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Sind Hausbesuche möglich?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ja, in begründeten Fällen — bei Pflegebedürftigkeit, schwerer akuter Erkrankung oder eingeschränkter Mobilität. Beschränkt auf den Stadtteil Schwabing. Bitte rufen Sie uns dazu morgens an.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Welche Sprachen werden in der Praxis gesprochen?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Deutsch, Englisch, Französisch (Dr. Weber) sowie Italienisch und Türkisch (Praxisteam). Für andere Sprachen organisieren wir auf Wunsch einen Dolmetscher.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie ist die Praxis erreichbar?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">U-Bahn U3/U6 Station Münchner Freiheit (3 Min. Fußweg). Tramlinie 23. Parkhaus Leopoldstraße direkt gegenüber. Barrierefreier Zugang über den Aufzug im Innenhof.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. News -->
+        <section>
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Aktuelles</p>
+                    <h2>News aus der Praxis.</h2>
+                </div>
+                <div class="news-grid">
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1584118624012-df056829fbd0?q=80&w=900&auto=format&fit=crop" alt="Grippeimpfung Saison 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Impfkampagne</p>
+                            <h3>Grippeimpfung — Termine ab Oktober</h3>
+                            <p class="news-date">Veröffentlicht 8. Mai 2026</p>
+                        </div>
+                    </a>
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=900&auto=format&fit=crop" alt="Erkältungswelle München" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Hinweis</p>
+                            <h3>Erkältungswelle: Akut-Sprechstunde verlängert</h3>
+                            <p class="news-date">Veröffentlicht 2. Mai 2026</p>
+                        </div>
+                    </a>
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=900&auto=format&fit=crop" alt="Reisemedizin-Beratung" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Neu im Programm</p>
+                            <h3>Reisemedizin — Beratung &amp; Tropenimpfung</h3>
+                            <p class="news-date">Veröffentlicht 28. April 2026</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. Kontakt -->
+        <section id="kontakt" class="kontakt">
+            <div class="container">
                 <div class="kontakt-grid">
-                    <div>
-                        <p class="kontakt-label">Kontakt</p>
-                        <a href="tel:+493012345678" class="kontakt-phone">030 / 123 456 78</a>
-                        <div class="kontakt-info">
-                            <p><a href="mailto:info@praxis-weber.de">info@praxis-weber.de</a></p>
-                            <p><span class="kontakt-badge">Termine auch online</span></p>
+                    <div class="kontakt-info">
+                        <p class="eyebrow" style="color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;">Kontakt</p>
+                        <h2>Schreiben Sie uns.</h2>
+                        <p class="lead">Routine-Anfrage, Rezept, eAU oder Hausbesuch — wir antworten innerhalb von 24 Stunden an Werktagen.</p>
+                        <div class="kontakt-blocks">
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                                <div>
+                                    <h4>Adresse</h4>
+                                    <p>Leopoldstraße 23, 80802 München-Schwabing</p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+                                <div>
+                                    <h4>Telefon</h4>
+                                    <p><a href="tel:+498912345678">+49 89 234 567</a> · Akut: <a href="tel:116117">116 117</a></p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                                <div>
+                                    <h4>E-Mail</h4>
+                                    <p><a href="mailto:praxis@dr-weber-muc.de">praxis@dr-weber-muc.de</a></p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                                <div>
+                                    <h4>Anfahrt</h4>
+                                    <p>U3/U6 Münchner Freiheit · Tram 23 · Parkhaus Leopold</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-mini">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="800" height="450" fill="#f4f7f1"/>
+                                <path d="M 0 200 L 800 240" stroke="#d6d9d3" stroke-width="2" fill="none"/>
+                                <path d="M 200 0 L 240 450" stroke="#d6d9d3" stroke-width="2" fill="none"/>
+                                <path d="M 0 320 L 800 280" stroke="#e8ebe6" stroke-width="1.5" fill="none"/>
+                                <path d="M 500 0 L 530 450" stroke="#e8ebe6" stroke-width="1.5" fill="none"/>
+                                <text x="60" y="180" font-family="Inter, sans-serif" font-size="11" fill="#8c8f8c">Leopoldstraße</text>
+                                <text x="60" y="350" font-family="Inter, sans-serif" font-size="11" fill="#aab1a8">Hohenzollernstraße</text>
+                            </svg>
+                            <div class="map-pin"></div>
                         </div>
                     </div>
-                    <div>
-                        <p class="kontakt-label">Adresse</p>
-                        <div class="kontakt-info">
-                            <p>Hauptstraße 10<br>10115 Berlin-Mitte</p>
-                            <p><span class="kontakt-badge">Barrierefreier Zugang</span></p>
+                    <form class="kontakt-form" onsubmit="event.preventDefault(); openModal('kontakt');">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kf-name">Vor- und Nachname</label>
+                                <input id="kf-name" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kf-email">E-Mail</label>
+                                <input id="kf-email" type="email" required>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="form-container">
-                            <form aria-label="Kontaktformular">
-                                <label for="name">Name</label>
-                                <input type="text" id="name" name="name" required autocomplete="name" placeholder="Ihr vollständiger Name">
-                                <label for="email">E-Mail</label>
-                                <input type="email" id="email" name="email" required autocomplete="email" placeholder="ihre@email.de">
-                                <label for="message">Anliegen</label>
-                                <textarea id="message" name="message" rows="4" required placeholder="Wie können wir Ihnen helfen?"></textarea>
-                                <button type="submit" class="btn-gold" aria-label="Nachricht absenden">Nachricht senden</button>
-                            </form>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kf-tel">Telefon (optional)</label>
+                                <input id="kf-tel" type="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="kf-anliegen">Anliegen</label>
+                                <select id="kf-anliegen" required>
+                                    <option value="termin">Termin-Anfrage</option>
+                                    <option value="rezept">Folgerezept</option>
+                                    <option value="eau">eAU / Krankschreibung</option>
+                                    <option value="hausbesuch">Hausbesuch</option>
+                                    <option value="andere">Sonstiges</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="kf-msg">Nachricht</label>
+                            <textarea id="kf-msg" rows="4" required></textarea>
+                        </div>
+                        <label class="form-checkbox">
+                            <input type="checkbox" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß <a href="#" style="color: var(--accent-dark); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
+                        </label>
+                        <button type="submit" class="btn btn-primary form-submit">Nachricht senden
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </form>
                 </div>
-                <p class="kontakt-response">Wir antworten innerhalb eines Werktages.</p>
             </div>
         </section>
-
     </main>
 
-    <!-- 8. Footer -->
     <footer>
-        <p class="footer-brand">Praxis Dr. Weber</p>
-        <p class="footer-tagline">Hausarztpraxis in Berlin-Mitte</p>
-        <p><a href="/impressum">Impressum</a> &nbsp;&middot;&nbsp; <a href="/datenschutz">Datenschutz</a></p>
-        <p class="footer-legal">&copy; 2026 Praxis Dr. med. Weber. Alle Rechte vorbehalten.</p>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">+ Praxis Dr. Weber</div>
+                    <p>Ihre Hausarztpraxis in München-Schwabing seit 2010. Persönliche Medizin mit kurzen Wartezeiten.</p>
+                    <p style="margin-top: 16px;">Leopoldstraße 23<br>80802 München</p>
+                </div>
+                <div>
+                    <h5>Praxis</h5>
+                    <ul>
+                        <li><a href="#leistungen">Leistungen</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#sprechzeiten">Sprechzeiten</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Online</h5>
+                    <ul>
+                        <li><a href="#termin">Termin buchen</a></li>
+                        <li><a href="#online-services">Rezept-Anfrage</a></li>
+                        <li><a href="#online-services">eAU</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Rechtliches</h5>
+                    <ul>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">Barrierefreiheits-Erklärung</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 Praxis Dr. Sarah Weber · Alle Rechte vorbehalten.</span>
+                <a href="https://karriaro-webdesign.de/" class="karriaro-back">Made by Karriaro · Webdesign-Manufaktur ↗</a>
+            </div>
+        </div>
     </footer>
 
+    <!-- Modal (für Termin- und Kontakt-Mocks) -->
+    <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this) closeModal();">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 id="modal-title">Demo-Modus</h3>
+            <p id="modal-text">In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.</p>
+            <button type="button" class="btn btn-primary" onclick="closeModal()">Verstanden</button>
+        </div>
+    </div>
+
     <script>
-        function toggleMenu() {
-            var menu = document.getElementById('mobileMenu');
-            var btn = document.querySelector('.nav-mobile-toggle');
-            var isOpen = menu.classList.toggle('open');
-            btn.setAttribute('aria-expanded', isOpen);
-            btn.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
-        }
-        function closeMenu() {
-            document.getElementById('mobileMenu').classList.remove('open');
-            var btn = document.querySelector('.nav-mobile-toggle');
-            btn.setAttribute('aria-expanded', 'false');
-            btn.setAttribute('aria-label', 'Menü öffnen');
-        }
+        // Mobile menu close on link click
+        document.querySelectorAll('.mobile-menu a').forEach(function (a) {
+            a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
 
-        // Nav scroll shadow
-        var nav = document.querySelector('.nav');
-        window.addEventListener('scroll', function() {
-            nav.classList.toggle('scrolled', window.scrollY > 60);
-        }, { passive: true });
-
-        // Fade-in on scroll
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+        // Termin-Widget: Tab-Switcher (Doctors + Reasons)
+        function makeToggle(group) {
+            document.querySelectorAll('#' + group + ' button').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    document.querySelectorAll('#' + group + ' button').forEach(function (x) { x.classList.remove('is-active'); });
+                    b.classList.add('is-active');
+                });
             });
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.fade-in').forEach(function(el) { observer.observe(el); });
+        }
+        makeToggle('doctors'); makeToggle('reasons');
 
+        // Termin-Slot Toggle
+        document.querySelectorAll('#slots .termin-slot:not(.is-booked)').forEach(function (s) {
+            s.addEventListener('click', function () {
+                document.querySelectorAll('#slots .termin-slot').forEach(function (x) { x.classList.remove('is-selected'); });
+                s.classList.add('is-selected');
+            });
+        });
+
+        // Mini-Kalender (Mai 2026, 31 Tage, 1. Mai = Freitag)
+        (function () {
+            var cal = document.getElementById('calendar');
+            if (!cal) return;
+            ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach(function (l) {
+                var el = document.createElement('div');
+                el.className = 'termin-cal-day-label';
+                el.textContent = l;
+                cal.appendChild(el);
+            });
+            // 1. Mai 2026 = Freitag → 4 leere Spalten vorne (Mo-Do)
+            for (var i = 0; i < 4; i++) {
+                var e = document.createElement('div');
+                e.className = 'termin-cal-day is-empty';
+                cal.appendChild(e);
+            }
+            for (var d = 1; d <= 31; d++) {
+                var day = document.createElement('button');
+                day.type = 'button';
+                day.className = 'termin-cal-day';
+                day.textContent = d;
+                if (d === 11) day.classList.add('is-selected');
+                if (d === 8) day.classList.add('is-today');
+                if (d < 8) day.classList.add('is-disabled');
+                // Wochenenden disablen
+                var dow = (i + d - 1) % 7;
+                if (dow >= 5) day.classList.add('is-disabled');
+                if (!day.classList.contains('is-disabled')) {
+                    (function (b) {
+                        b.addEventListener('click', function () {
+                            cal.querySelectorAll('.termin-cal-day').forEach(function (x) { x.classList.remove('is-selected'); });
+                            b.classList.add('is-selected');
+                        });
+                    })(day);
+                }
+                cal.appendChild(day);
+            }
+        })();
+
+        // FAQ — accordions are <details>/<summary>, native, no JS needed.
+        // BUT custom +/× icon: rotate via .is-open class
+        document.querySelectorAll('.faq-item').forEach(function (item) {
+            item.addEventListener('toggle', function () {
+                if (item.open) item.classList.add('is-open'); else item.classList.remove('is-open');
+            });
+        });
+
+        // Modal
+        function openModal(kind) {
+            var modal = document.getElementById('modal');
+            var t = document.getElementById('modal-title');
+            var p = document.getElementById('modal-text');
+            if (kind === 'termin') {
+                t.textContent = 'Demo-Termin gebucht';
+                p.textContent = 'In der echten Praxis wäre Ihr Termin am Montag, 11. Mai um 09:30 Uhr bei Dr. Weber bestätigt. Diese Seite ist ein Karriaro-Designbeispiel.';
+            } else if (kind === 'kontakt') {
+                t.textContent = 'Demo-Nachricht gesendet';
+                p.textContent = 'In der echten Praxis wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet. Diese Seite ist ein Karriaro-Designbeispiel.';
+            }
+            modal.classList.add('is-open');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.remove('is-open');
+        }
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
 </html>
