@@ -359,6 +359,33 @@
             .hero-audit-form button { width: 100%; }
         }
 
+        /* Hero-Galerie */
+        .hero-gallery {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 16px; max-width: 1080px;
+            margin: 48px auto 0;
+        }
+        .hero-gallery .preview-card { aspect-ratio: 4/3; }
+        @media (max-width: 900px) {
+            .hero-gallery { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        }
+        @media (max-width: 480px) {
+            .hero-gallery { grid-template-columns: 1fr; }
+        }
+        .hero-more-branches {
+            font-size: 14px; color: #86868b; margin-top: 24px;
+        }
+        .hero-more-branches a { color: #0071e3; }
+        .hero-more-branches a:hover { text-decoration: underline; }
+        .hero-cta-row {
+            margin-top: 36px; display: flex; flex-direction: column;
+            align-items: center; gap: 14px;
+        }
+        .hero-cta-secondary-link {
+            font-size: 14px; color: #86868b;
+        }
+        .hero-cta-secondary-link:hover { color: #1d1d1f; }
+
         /* Hero-Demo-Buttons */
         .hero-demo-row {
             margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto;
@@ -408,16 +435,75 @@
 
     <main>
 
-    <!-- 1 · Hero -->
-    <section aria-label="Einleitung" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
+    <!-- 1 · Hero — Beweis-First -->
+    <section aria-label="Einleitung" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; padding-bottom: 64px; background: #fff;">
         <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center; width: 100%;">
             <p style="font-size: 14px; font-weight: 500; color: #0071e3; letter-spacing: 0.02em; margin-bottom: 18px;">Webdesign-Manufaktur für lokale Unternehmen</p>
-            <h1>Jeden Tag verlieren Sie Kunden,<br>ohne es zu merken.</h1>
+            <h1>Ihre neue Website. 990&nbsp;€ einmalig.<br>In 14 Tagen online.</h1>
             <p class="subhead">
-                Weil Ihre Website nicht zeigt, was Ihre Kunden suchen. Wir prüfen das in 5 Sekunden.
+                Handcodiert, BFSG-konform, ohne Abo. Der Quellcode gehört Ihnen.
             </p>
 
-            <form id="hero-audit-form" class="hero-audit-form" style="margin-top: 40px;" novalidate>
+            <div id="arbeiten" class="hero-gallery">
+                <a href="/portfolio/praxis-weber.html" class="preview-card">
+                    <img src="/images/portfolio/praxis-empfang.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Praxis</div>
+                        <div class="preview-card-title">Praxis Dr. Weber</div>
+                    </div>
+                </a>
+                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
+                    <img src="/images/portfolio/bad-spa-wanne.jpg" alt="Website für Meisterbetrieb Müller — Sanitär & Heizung" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Handwerk</div>
+                        <div class="preview-card-title">Meisterbetrieb Müller</div>
+                    </div>
+                </a>
+                <a href="/portfolio/restaurant-template.html" class="preview-card">
+                    <img src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Restaurant" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Gastronomie</div>
+                        <div class="preview-card-title">Goldener Hirsch</div>
+                    </div>
+                </a>
+                <a href="/portfolio/spedition-schwaben.html" class="preview-card">
+                    <img src="/images/portfolio/spedition-lkw.jpg" alt="Website für Schwaben Logistik — Spedition" loading="lazy" width="600" height="400">
+                    <div class="preview-card-overlay"></div>
+                    <div class="preview-card-content">
+                        <div class="preview-card-label">Spedition</div>
+                        <div class="preview-card-title">Schwaben Logistik</div>
+                    </div>
+                </a>
+            </div>
+
+            <p class="hero-more-branches">
+                Auch für
+                <a href="/portfolio/friseur-salon.html">Friseur</a>,
+                <a href="/portfolio/dachdecker-meisterbetrieb.html">Dachdecker</a> und
+                <a href="/portfolio/immobilien-makler.html">Immobilien</a>.
+            </p>
+
+            <div class="hero-cta-row">
+                <a href="#kontakt" class="btn">Kostenloses Beratungsgespräch buchen</a>
+                <a href="#audit" class="hero-cta-secondary-link">Schon eine Website? Wir prüfen sie kostenlos &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 1b · Audit-Werkzeug — sekundär -->
+    <section id="audit" aria-label="Mini-Audit" class="fade-in" style="background: #fbfbfd; padding: 96px 0;">
+        <div style="max-width: 720px; margin: 0 auto; padding: 0 24px; text-align: center;">
+            <p style="font-size: 12px; font-weight: 600; color: #86868b; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase;">Werkzeug</p>
+            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Schon eine Website?<br>Wir prüfen sie in 5 Sekunden.</h2>
+            <p class="subhead" style="margin-bottom: 36px;">
+                Geben Sie Ihre Adresse ein — oder probieren Sie ein Beispiel.
+            </p>
+
+            <form id="hero-audit-form" class="hero-audit-form" novalidate>
                 <label for="hero-audit-url" class="sr-only" style="position:absolute;left:-9999px;">Ihre Website-Adresse</label>
                 <input
                     type="url"
@@ -453,10 +539,6 @@
                 <div id="audit-cards"></div>
                 <div id="audit-cta" class="audit-cta-row" style="display:none;"></div>
             </div>
-
-            <p class="hero-audit-secondary">
-                Lieber direkt sprechen? <a href="#kontakt">Kostenloses Beratungsgespräch anfragen &rarr;</a>
-            </p>
         </div>
     </section>
 
@@ -488,49 +570,6 @@
                     <p class="muted" style="font-size: 14px; line-height: 1.6;">Neun von zehn Besuchern verlassen eine veraltete Website sofort. Sie kommen nie zurück.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-
-    <!-- 3 · Arbeiten -->
-    <section id="arbeiten" aria-label="Portfolio" class="fade-in" style="background: #f5f5f7;">
-        <div class="wrap" style="text-align: center;">
-            <h2 style="font-size: clamp(28px, 4vw, 40px);">So sieht eine moderne<br>Website aus.</h2>
-            <p class="subhead" style="margin-bottom: 60px;">Drei Branchen. Ein Standard.</p>
-
-            <div class="grid-3">
-                <a href="/portfolio/meisterbetrieb-mueller.html" class="preview-card">
-                    <img src="/images/portfolio/bad-spa-wanne.jpg" alt="Website für Sanitär Hartmann — Gas, Wasser, Heizung in Stuttgart" loading="lazy" width="600" height="400">
-                    <div class="preview-card-overlay"></div>
-                    <div class="preview-card-content">
-                        <div class="preview-card-label">Installateur</div>
-                        <div class="preview-card-title">Sanitär Hartmann</div>
-                    </div>
-                </a>
-                <a href="/portfolio/spedition-schwaben.html" class="preview-card">
-                    <img src="/images/portfolio/spedition-lkw.jpg" alt="Website für Schwaben Logistik — Spedition & Kühltransporte in Augsburg" loading="lazy" width="600" height="400">
-                    <div class="preview-card-overlay"></div>
-                    <div class="preview-card-content">
-                        <div class="preview-card-label">Spedition</div>
-                        <div class="preview-card-title">Schwaben Logistik</div>
-                    </div>
-                </a>
-                <a href="/portfolio/restaurant-template.html" class="preview-card">
-                    <img src="/images/portfolio/restaurant-interior.jpg" alt="Website für Goldener Hirsch — Feines Restaurant in München" loading="lazy" width="600" height="400">
-                    <div class="preview-card-overlay"></div>
-                    <div class="preview-card-content">
-                        <div class="preview-card-label">Gastronomie</div>
-                        <div class="preview-card-title">Goldener Hirsch</div>
-                    </div>
-                </a>
-            </div>
-
-            <p class="muted" style="font-size: 14px; margin-top: 48px; max-width: 520px; margin-left: auto; margin-right: auto;">
-                Schnell. Sicher. Von Google bevorzugt.
-            </p>
-            <p style="margin-top: 20px;">
-                <a href="/portfolio/immobilien-makler.html" class="link-arrow">Mehr Branchen ansehen &rarr;</a>
-            </p>
         </div>
     </section>
 
