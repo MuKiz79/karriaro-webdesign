@@ -408,9 +408,8 @@
         }
         .hero-with-photo .hero-inner {
             position: relative; z-index: 1;
-            max-width: 1280px; margin: 0 auto;
-            padding: 0 24px 0 clamp(24px, 8vw, 120px);
             width: 100%;
+            padding: 0 24px 0 clamp(20px, 5vw, 96px);
         }
         .hero-with-photo .hero-text-block {
             max-width: 720px;
@@ -431,13 +430,13 @@
             margin-top: 40px;
         }
         .hero-werkstatt-hint {
-            display: inline-flex; align-items: center; gap: 12px;
-            margin-top: 32px; padding: 6px 14px 6px 12px;
+            display: inline-flex; align-items: center; gap: 14px;
+            margin-top: 32px; padding: 8px 18px 8px 16px;
             background: rgba(255,255,255,0.55);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(0,0,0,0.06);
             border-radius: 999px;
-            font-size: 13px; color: #424245;
+            font-size: 14px; color: #424245;
             text-decoration: none;
             transition: background 0.2s, border-color 0.2s, transform 0.2s;
         }
@@ -449,14 +448,14 @@
         .hero-werkstatt-hint .label { font-weight: 500; }
         .hero-werkstatt-hint .arrow { font-size: 14px; opacity: 0.55; }
         .hero-werkstatt-hint .thumbs {
-            display: inline-flex; gap: 4px; align-items: center;
+            display: inline-flex; gap: 6px; align-items: center;
         }
         .hero-werkstatt-hint .thumbs img {
-            width: 36px; height: 36px;
-            border-radius: 8px;
+            width: 56px; height: 56px;
+            border-radius: 10px;
             object-fit: cover;
             border: 1px solid rgba(255,255,255,0.7);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         @media (max-width: 768px) {
             .hero-with-photo::before {
