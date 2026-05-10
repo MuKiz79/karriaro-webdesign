@@ -386,6 +386,60 @@
         }
         .hero-cta-secondary-link:hover { color: #1d1d1f; }
 
+        /* Hero mit Atelier-Foto-Hintergrund */
+        .hero-with-photo {
+            position: relative;
+            background-image: url('/images/hero-atelier.jpg');
+            background-size: cover;
+            background-position: center right;
+            color: #1d1d1f;
+            overflow: hidden;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding-top: 48px;
+            padding-bottom: 64px;
+        }
+        .hero-with-photo::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to right, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.85) 35%, rgba(255,255,255,0.45) 65%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+        }
+        .hero-with-photo .hero-inner {
+            position: relative; z-index: 1;
+            max-width: 1080px; margin: 0 auto;
+            padding: 0 24px; width: 100%;
+        }
+        .hero-with-photo .hero-text-block {
+            max-width: 560px;
+            text-align: left;
+        }
+        .hero-with-photo h1 { text-align: left; }
+        .hero-with-photo .subhead {
+            text-align: left;
+            margin-left: 0; margin-right: 0;
+            max-width: 520px;
+        }
+        .hero-with-photo .hero-cta-row {
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .hero-with-photo::before {
+                background: linear-gradient(to bottom, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.88) 60%, rgba(255,255,255,0.78) 100%);
+            }
+            .hero-with-photo .hero-text-block { max-width: 100%; }
+        }
+
+        /* Werkstatt-Galerie-Sektion */
+        .werkstatt-section {
+            background: #fff;
+            padding: 96px 0;
+        }
+        .werkstatt-section .hero-gallery { margin-top: 48px; }
+        .werkstatt-section .hero-more-branches { text-align: center; }
+
         /* Hero-Demo-Buttons */
         .hero-demo-row {
             margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto;
@@ -435,16 +489,33 @@
 
     <main>
 
-    <!-- 1 · Hero — Beweis-First -->
-    <section aria-label="Einleitung" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; padding-bottom: 64px; background: #fff;">
-        <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center; width: 100%;">
-            <p style="font-size: 14px; font-weight: 500; color: #0071e3; letter-spacing: 0.02em; margin-bottom: 18px;">Webdesign-Manufaktur für lokale Unternehmen</p>
-            <h1>Ihre neue Website. 990&nbsp;€ einmalig.<br>In 14 Tagen online.</h1>
-            <p class="subhead">
-                Handcodiert, BFSG-konform, ohne Abo. Der Quellcode gehört Ihnen.
+    <!-- 1 · Hero — Atelier-Foto + linksbündiger Text-Block -->
+    <section aria-label="Einleitung" class="hero-with-photo">
+        <div class="hero-inner">
+            <div class="hero-text-block">
+                <p style="font-size: 14px; font-weight: 500; color: #0071e3; letter-spacing: 0.02em; margin-bottom: 18px;">Webdesign-Manufaktur für lokale Unternehmen</p>
+                <h1>Ihre neue Website. 990&nbsp;€ einmalig.<br>In 14 Tagen online.</h1>
+                <p class="subhead">
+                    Handcodiert, BFSG-konform, ohne Abo. Der Quellcode gehört Ihnen.
+                </p>
+                <div class="hero-cta-row">
+                    <a href="#kontakt" class="btn">Kostenloses Beratungsgespräch buchen</a>
+                    <a href="#audit" class="hero-cta-secondary-link">Schon eine Website? Wir prüfen sie kostenlos &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 1b · Aus unserer Werkstatt — Galerie als eigener Beweis-Block -->
+    <section id="arbeiten" aria-label="Aus unserer Werkstatt" class="werkstatt-section fade-in">
+        <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px;">
+            <h2 style="font-size: clamp(28px, 4vw, 40px); text-align: center; margin-bottom: 14px;">Aus unserer Werkstatt</h2>
+            <p class="muted" style="text-align: center; font-size: 15px; max-width: 520px; margin: 0 auto;">
+                Eine Auswahl unserer Arbeiten — vier Branchen, ein Standard.
             </p>
 
-            <div id="arbeiten" class="hero-gallery">
+            <div class="hero-gallery">
                 <a href="/portfolio/praxis-weber.html" class="preview-card">
                     <img src="/images/portfolio/praxis-empfang.jpg" alt="Website für Praxis Dr. Weber — Hausarztpraxis" loading="lazy" width="600" height="400">
                     <div class="preview-card-overlay"></div>
@@ -479,17 +550,12 @@
                 </a>
             </div>
 
-            <p class="hero-more-branches">
+            <p class="hero-more-branches" style="margin-top: 36px;">
                 Auch für
                 <a href="/portfolio/friseur-salon.html">Friseur</a>,
                 <a href="/portfolio/dachdecker-meisterbetrieb.html">Dachdecker</a> und
                 <a href="/portfolio/immobilien-makler.html">Immobilien</a>.
             </p>
-
-            <div class="hero-cta-row">
-                <a href="#kontakt" class="btn">Kostenloses Beratungsgespräch buchen</a>
-                <a href="#audit" class="hero-cta-secondary-link">Schon eine Website? Wir prüfen sie kostenlos &rarr;</a>
-            </div>
         </div>
     </section>
 
