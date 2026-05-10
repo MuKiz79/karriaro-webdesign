@@ -399,6 +399,25 @@
             padding: 72px 0 32px;
             overflow: hidden;
         }
+        /* Atelier-Foto hinter Text-Spalte, faded zur Karten-Spalte hin */
+        .hero-with-photo::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 65%;
+            background-image:
+                linear-gradient(to right,
+                    rgba(255,255,255,0.55) 0%,
+                    rgba(255,255,255,0.6) 65%,
+                    rgba(255,255,255,1) 100%),
+                url('images/hero-atelier.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: saturate(0.85);
+            pointer-events: none;
+            z-index: 0;
+        }
         .hero-with-photo .hero-inner {
             width: 100%;
             max-width: 1480px;
@@ -408,6 +427,8 @@
             grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
             gap: clamp(40px, 6vw, 88px);
             align-items: center;
+            position: relative;
+            z-index: 1;
         }
         .hero-with-photo .hero-text-block {
             text-align: left;
@@ -521,6 +542,7 @@
                 overflow: visible;
                 padding: 64px 0 80px;
             }
+            .hero-with-photo::before { display: none; }
             .hero-with-photo .hero-inner {
                 grid-template-columns: 1fr;
                 gap: 56px;
