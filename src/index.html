@@ -386,77 +386,64 @@
         }
         .hero-cta-secondary-link:hover { color: #1d1d1f; }
 
-        /* Hero mit Atelier-Foto + Split-Layout (Text links, Galerie rechts) */
+        /* Hero — Galerie stark, ohne Foto-Hintergrund */
         .hero-with-photo {
             position: relative;
-            background-image: url('/images/hero-atelier.jpg');
-            background-size: cover;
-            background-position: center;
+            background: #fff;
             color: #1d1d1f;
-            overflow: hidden;
-            padding-top: 80px;
-            padding-bottom: 80px;
-        }
-        .hero-with-photo::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(to right, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.78) 30%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0.05) 100%);
-            pointer-events: none;
+            padding: 88px 0 96px;
         }
         .hero-with-photo .hero-inner {
-            position: relative; z-index: 1;
             width: 100%;
-            max-width: 1480px;
-            padding: 0 24px 0 clamp(20px, 5vw, 96px);
-            display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.95fr);
-            gap: clamp(32px, 5vw, 72px);
-            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            text-align: center;
         }
         .hero-with-photo .hero-text-block {
-            text-align: left;
+            max-width: 780px;
+            margin: 0 auto;
+            text-align: center;
         }
         .hero-with-photo h1 {
-            text-align: left;
-            font-size: clamp(44px, 6.8vw, 78px);
+            text-align: center;
+            font-size: clamp(40px, 6vw, 72px);
             line-height: 1.04;
         }
         .hero-with-photo .subhead {
-            text-align: left;
-            margin-left: 0; margin-right: 0;
-            max-width: 600px;
+            text-align: center;
+            margin: 0 auto;
+            max-width: 580px;
         }
         .hero-with-photo .hero-cta-row {
-            align-items: flex-start;
-            margin-top: 40px;
+            align-items: center;
+            margin-top: 36px;
+        }
+        .hero-with-photo .hero-gallery-block {
+            margin-top: 80px;
         }
         .hero-with-photo .hero-gallery {
-            grid-template-columns: repeat(2, 1fr);
-            max-width: none;
-            margin: 0;
-            gap: 14px;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 1280px;
+            margin: 0 auto;
+            gap: 18px;
         }
         .hero-with-photo .hero-gallery .preview-card {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
         }
         .hero-with-photo .hero-more-branches {
-            text-align: left;
-            margin-top: 24px;
+            text-align: center;
+            margin-top: 32px;
         }
         @media (max-width: 768px) {
             .hero-with-photo {
-                padding-top: 56px;
-                padding-bottom: 64px;
-            }
-            .hero-with-photo::before {
-                background: linear-gradient(to bottom, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.9) 45%, rgba(255,255,255,0.96) 100%);
-            }
-            .hero-with-photo .hero-inner {
-                grid-template-columns: 1fr;
-                gap: 40px;
+                padding: 56px 0 72px;
             }
             .hero-with-photo .hero-gallery {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .hero-with-photo .hero-gallery-block {
+                margin-top: 56px;
             }
         }
         @media (max-width: 480px) {
