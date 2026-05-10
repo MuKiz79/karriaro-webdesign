@@ -386,12 +386,18 @@
         }
         .hero-cta-secondary-link:hover { color: #1d1d1f; }
 
-        /* Hero — Split mit Browser-Mockup-Cards rechts */
+        /* Hero — Split mit Browser-Mockup-Cards rechts, exakt viewport-fit */
         .hero-with-photo {
             position: relative;
             background: #fff;
             color: #1d1d1f;
-            padding: 88px 0 96px;
+            height: 100vh;
+            min-height: 640px;
+            max-height: 1080px;
+            display: flex;
+            align-items: center;
+            padding: 72px 0 32px;
+            overflow: hidden;
         }
         .hero-with-photo .hero-inner {
             width: 100%;
@@ -481,7 +487,7 @@
             font-family: -apple-system, 'Helvetica Neue', sans-serif;
         }
         .browser-screen {
-            aspect-ratio: 3/2;
+            aspect-ratio: 16/10;
             width: 100%;
             object-fit: cover;
             display: block;
@@ -509,6 +515,10 @@
 
         @media (max-width: 1024px) {
             .hero-with-photo {
+                height: auto;
+                min-height: 0;
+                max-height: none;
+                overflow: visible;
                 padding: 64px 0 80px;
             }
             .hero-with-photo .hero-inner {
