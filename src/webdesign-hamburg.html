@@ -76,6 +76,7 @@
         .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
     </style>
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
 <body>
 
@@ -143,7 +144,7 @@
         <div class="wrap-xs" style="text-align: center;">
             <h2>Projekt in Hamburg starten.</h2>
             <p class="subhead" style="margin-bottom: 40px;">Schicken Sie uns Ihre Website — wir sagen Ihnen ehrlich, was fehlt.</p>
-            <form id="kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
+            <form id="kontakt-form" data-lead="kwd-kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="stadt" value="Hamburg">
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">

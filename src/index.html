@@ -781,6 +781,7 @@
         .hero-demo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     </style>
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
 <body>
 
@@ -863,7 +864,7 @@
                 Geben Sie Ihre Adresse ein — oder probieren Sie ein Beispiel.
             </p>
 
-            <form id="hero-audit-form" class="hero-audit-form" novalidate>
+            <form id="hero-audit-form" data-lead="kwd-hero-audit-form" class="hero-audit-form" novalidate>
                 <label for="hero-audit-url" class="sr-only" style="position:absolute;left:-9999px;">Ihre Website-Adresse</label>
                 <input
                     type="url"
@@ -1071,7 +1072,7 @@
                 Erzählen Sie uns von Ihrem Projekt. Wir melden uns innerhalb von 24h mit ersten Ideen.
             </p>
 
-            <form id="kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
+            <form id="kontakt-form" data-lead="kwd-kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="paket" id="paket-field" value="">
                 <div id="paket-badge" style="display: none; background: #f5f5f7; border-radius: 12px; padding: 12px 16px; font-size: 15px; font-weight: 500; color: #1d1d1f; text-align: center;"></div>
                 <label id="wartung-checkbox" style="display: none; font-size: 15px; color: #1d1d1f; gap: 10px; align-items: center; background: #f5f5f7; border-radius: 12px; padding: 12px 16px; cursor: pointer;">
