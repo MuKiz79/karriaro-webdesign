@@ -345,6 +345,63 @@
         .tour-preview-inner .icon-360 { font-size: 36px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 8px; }
         .tour-preview-inner p { font-size: 13px; color: var(--text-soft); margin: 0; }
 
+        /* Hypothekenrechner */
+        .financing { background: var(--accent-bg); padding: 80px 0; }
+        .financing-card { max-width: 980px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); padding: 44px 48px; box-shadow: var(--shadow); }
+        .financing-head { text-align: center; margin-bottom: 32px; }
+        .financing-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
+        .financing-head h2 { margin-bottom: 10px; }
+        .financing-head p { color: var(--text-soft); font-size: 17px; max-width: 620px; margin: 0 auto; }
+        .financing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+        .financing-inputs { display: flex; flex-direction: column; gap: 22px; }
+        .fin-input label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+        .fin-input label .val { color: var(--accent); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
+        .fin-input input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+        .fin-input .meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); margin-top: 4px; }
+        .financing-output { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #fff; border-radius: var(--radius-lg); padding: 28px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .financing-output::before { content: '€'; position: absolute; top: -20px; right: -10px; font-size: 200px; font-family: Georgia, serif; opacity: 0.06; line-height: 1; }
+        .fin-result-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+        .fin-result-main { font-size: 42px; font-weight: 700; line-height: 1; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
+        .fin-result-sub { font-size: 13px; opacity: 0.85; }
+        .fin-result-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); position: relative; z-index: 1; }
+        .fin-result-row { display: flex; justify-content: space-between; font-size: 13px; }
+        .fin-result-row strong { font-variant-numeric: tabular-nums; }
+        .financing-plan-toggle { background: var(--bg-soft); padding: 14px 20px; border-radius: var(--radius); margin-top: 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500; color: var(--text); border: 1px solid var(--border); transition: all 0.2s; }
+        .financing-plan-toggle:hover { border-color: var(--accent); }
+        .financing-plan-toggle::after { content: '+'; font-size: 18px; color: var(--accent); transition: transform 0.3s; }
+        details[open] .financing-plan-toggle::after { transform: rotate(45deg); }
+        .financing-plan { margin-top: 14px; }
+        .financing-plan-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .financing-plan-table th { text-align: left; font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+        .financing-plan-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+        .financing-plan-table tr:last-child td { border-bottom: none; }
+        .financing-plan-source { font-size: 11px; color: var(--text-light); margin-top: 12px; }
+        .financing-cta { text-align: center; margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--border); }
+        .financing-cta p { font-size: 13px; color: var(--text-soft); margin-bottom: 14px; }
+
+        /* Verkaufsprozess-Visualizer */
+        .process { background: var(--bg); padding: 80px 0; }
+        .process-head { text-align: center; max-width: 720px; margin: 0 auto 40px; }
+        .process-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
+        .process-head h2 { margin-bottom: 12px; }
+        .process-head p { color: var(--text-soft); font-size: 17px; }
+        .process-timeline { max-width: 1100px; margin: 0 auto; position: relative; }
+        .process-line { position: absolute; left: 32px; top: 16px; bottom: 16px; width: 2px; background: linear-gradient(180deg, var(--accent) 0%, var(--gold) 100%); }
+        .process-step { display: grid; grid-template-columns: 64px 1fr; gap: 24px; padding: 20px 0; align-items: flex-start; }
+        .process-num { width: 64px; height: 64px; background: var(--bg); border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--accent); position: relative; z-index: 1; flex-shrink: 0; }
+        .process-step.is-active .process-num { background: var(--accent); color: #fff; }
+        .process-content .day { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+        .process-content h4 { font-size: 18px; margin-bottom: 6px; }
+        .process-content p { color: var(--text-soft); font-size: 14px; line-height: 1.55; margin: 0; }
+
+        /* Energieausweis-Wizard (Modal-Form) */
+        .energy-options { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+        .energy-options label { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .energy-options label:has(input:checked) { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+        .energy-options input { margin: 0; accent-color: var(--accent); }
+        .energy-result { margin-top: 16px; padding: 16px 18px; background: var(--accent-bg); border-radius: 6px; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .energy-result strong { color: var(--accent); font-weight: 700; }
+
         @media (max-width: 920px) {
             section { padding: 64px 0; }
             .hero, .bewertung, .team, .kontakt { padding: 56px 0; }
@@ -353,6 +410,11 @@
             .matching-grid { grid-template-columns: 1fr; }
             .newsletter-card { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
             .chat-panel { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
+            .financing-grid { grid-template-columns: 1fr; gap: 28px; }
+            .financing-card { padding: 28px 24px; }
+            .process-step { grid-template-columns: 48px 1fr; gap: 16px; }
+            .process-num { width: 48px; height: 48px; font-size: 18px; }
+            .process-line { left: 24px; }
             .trust-strip-inner { grid-template-columns: 1fr 1fr; }
             .bewertung-inputs { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
@@ -666,6 +728,158 @@
             </div>
         </section>
 
+        <!-- I7. Hypothekenrechner (KRITISCH) -->
+        <section class="financing" id="finanzierung" aria-label="Hypothekenrechner">
+            <div class="container">
+                <div class="financing-card">
+                    <div class="financing-head">
+                        <p class="eyebrow">Finanzierungs-Check · Live</p>
+                        <h2>Was kostet der Kauf monatlich?</h2>
+                        <p>Bewegen Sie die drei Regler — wir zeigen Ihre voraussichtliche Monatsrate, Gesamt-Zinskosten und Restschuld nach zehn Jahren. Standard-Annuität auf 20 Jahre Laufzeit.</p>
+                    </div>
+                    <div class="financing-grid">
+                        <div class="financing-inputs">
+                            <div class="fin-input">
+                                <label>Kaufpreis <span class="val" id="fin-price-val">800.000 €</span></label>
+                                <input type="range" id="fin-price" min="200000" max="2500000" step="10000" value="800000" oninput="updateFinancing()">
+                                <div class="meta"><span>200.000 €</span><span>2,5 Mio €</span></div>
+                            </div>
+                            <div class="fin-input">
+                                <label>Eigenkapital <span class="val" id="fin-equity-val">40 % · 320.000 €</span></label>
+                                <input type="range" id="fin-equity" min="10" max="100" step="5" value="40" oninput="updateFinancing()">
+                                <div class="meta"><span>10 %</span><span>100 %</span></div>
+                            </div>
+                            <div class="fin-input">
+                                <label>Effektivzins <span class="val" id="fin-rate-val">3,8 % p.a.</span></label>
+                                <input type="range" id="fin-rate" min="2" max="6" step="0.1" value="3.8" oninput="updateFinancing()">
+                                <div class="meta"><span>2,0 %</span><span>6,0 %</span></div>
+                            </div>
+                            <div class="fin-input">
+                                <label>Tilgung anfänglich <span class="val" id="fin-tilg-val">2,0 % p.a.</span></label>
+                                <input type="range" id="fin-tilg" min="1" max="5" step="0.5" value="2" oninput="updateFinancing()">
+                                <div class="meta"><span>1,0 %</span><span>5,0 %</span></div>
+                            </div>
+                        </div>
+                        <div class="financing-output">
+                            <span class="fin-result-label">Monatliche Rate</span>
+                            <div class="fin-result-main" id="fin-rate-monthly">2.320 €</div>
+                            <span class="fin-result-sub">Annuität (Zins + Tilgung), gleichbleibend bis Zinsbindung</span>
+                            <div class="fin-result-rows">
+                                <div class="fin-result-row"><span>Darlehenshöhe</span><strong id="fin-loan">480.000 €</strong></div>
+                                <div class="fin-result-row"><span>Zinskosten gesamt (20 J)</span><strong id="fin-zins-total">227.500 €</strong></div>
+                                <div class="fin-result-row"><span>Tilgung gesamt (20 J)</span><strong id="fin-tilg-total">329.300 €</strong></div>
+                                <div class="fin-result-row"><span>Restschuld nach 10 J</span><strong id="fin-rest">329.700 €</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <details>
+                        <summary class="financing-plan-toggle">Tilgungsplan ansehen (Jahre 1, 5, 10, 15, 20)</summary>
+                        <div class="financing-plan">
+                            <table class="financing-plan-table">
+                                <thead>
+                                    <tr><th>Jahr</th><th>Zins p.a.</th><th>Tilgung p.a.</th><th>Restschuld</th></tr>
+                                </thead>
+                                <tbody id="fin-plan-body">
+                                    <!-- gefüllt via JS -->
+                                </tbody>
+                            </table>
+                            <p class="financing-plan-source">Berechnung nach klassischer Annuitäten-Formel. Echte Konditionen variieren je nach Bonität, Beleihungsauslauf und Bank-Konditionen. Verbindliches Finanzierungsangebot über unsere Bank-Partner.</p>
+                        </div>
+                    </details>
+                    <div class="financing-cta">
+                        <p>Verbindliches Finanzierungs-Angebot binnen 48 h über unsere Partner-Banken (Comdirect, ING, Sparkasse Stuttgart, DSL).</p>
+                        <button type="button" class="btn btn-primary" onclick="openModal('finanzierung')">Mit Finanzierungs-Experten klären →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- I8. Verkaufsprozess-Visualizer -->
+        <section class="process" aria-label="Verkaufsprozess">
+            <div class="container">
+                <div class="process-head">
+                    <p class="eyebrow">So läuft Ihr Verkauf</p>
+                    <h2>Neun Schritte. 65 bis 85 Tage. Transparent.</h2>
+                    <p>Verkauf ist Vertrauenssache — Sie sollen jederzeit wissen, an welcher Stelle wir gerade sind. Keine Überraschungen, kein Telefon-Pingpong.</p>
+                </div>
+                <div class="process-timeline">
+                    <div class="process-line" aria-hidden="true"></div>
+                    <div class="process-step is-active">
+                        <div class="process-num">1</div>
+                        <div class="process-content">
+                            <div class="day">Tag 1–3</div>
+                            <h4>Wertermittlung &amp; Erstgespräch</h4>
+                            <p>Vor-Ort-Begehung durch HypZert-Sachverständigen, Substanz-Check, Marktanalyse. Sie erhalten innerhalb von 72 Stunden die schriftliche Wert-Indikation mit Spannenbegründung.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">2</div>
+                        <div class="process-content">
+                            <div class="day">Tag 4–7</div>
+                            <h4>Vermarktungs-Strategie &amp; Exposé</h4>
+                            <p>Off-Market vs. Vermarktung entscheiden, professionelle Foto-Aufnahmen, Grundriss-Aufbereitung, Energieausweis-Check. Exposé-Draft zur Freigabe binnen 4 Werktagen.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">3</div>
+                        <div class="process-content">
+                            <div class="day">Tag 8–10</div>
+                            <h4>360°-Tour &amp; Premium-Aufbereitung</h4>
+                            <p>Drohne, 360°-Aufnahmen, Stuttgart-Premium-Lageportrait. Tour wird Bestandteil des Exposés und bleibt 12 Monate online verfügbar.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">4</div>
+                        <div class="process-content">
+                            <div class="day">Tag 11–15</div>
+                            <h4>Käufer-Register-Matching</h4>
+                            <p>Wir matchen Ihr Objekt gegen unsere 1.400 vorqualifizierten Käufer-Profile. Sie erhalten Shortlist mit Bonität, Finanzierungsnachweis, Suchprofil.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">5</div>
+                        <div class="process-content">
+                            <div class="day">Tag 15–35</div>
+                            <h4>Besichtigungen — geführt &amp; diskret</h4>
+                            <p>Maximal 3 Besichtigungs-Termine pro Woche, immer mit Vorab-Briefing der Interessenten. Bei Off-Market: Einzeltermine ohne Open-House-Atmosphäre.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">6</div>
+                        <div class="process-content">
+                            <div class="day">Tag 35–45</div>
+                            <h4>Angebote sammeln &amp; verhandeln</h4>
+                            <p>Wir sammeln Kaufangebote schriftlich mit Finanzierungsnachweis. Strukturierte Bieterrunde, transparente Verhandlung — Sie entscheiden, wir verhandeln im Detail.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">7</div>
+                        <div class="process-content">
+                            <div class="day">Tag 45–55</div>
+                            <h4>Notar-Vorbereitung</h4>
+                            <p>Kaufvertrag-Entwurf mit unserem Notar-Partner, Grundbuch-Abfrage, Lastenfreiheit prüfen, alle Unterlagen für die Beurkundung.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">8</div>
+                        <div class="process-content">
+                            <div class="day">Tag 55–65</div>
+                            <h4>Beurkundung beim Notar</h4>
+                            <p>Termin beim Notar, Vertragsbesprechung mit beiden Parteien, Beurkundung. Wir begleiten Sie auch beim Notartermin — keine Sie-allein-Situation.</p>
+                        </div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-num">9</div>
+                        <div class="process-content">
+                            <div class="day">Tag 65–85</div>
+                            <h4>Schlüsselübergabe &amp; Abrechnung</h4>
+                            <p>Nach Kaufpreis-Zahlung und Eigentumsübergang: gemeinsame Übergabe mit Übergabe-Protokoll, Zählerstände, Schlüssel-Anzahl. Vermarktungs-Erfolg ist erreicht.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- 8a. Käufer-Newsletter -->
         <section class="newsletter" id="newsletter" aria-label="Markt-Updates">
             <div class="container">
@@ -849,6 +1063,16 @@
                         <div class="faq-a">Alle Miterben müssen dem Verkauf zustimmen und den Maklervertrag unterzeichnen — wir vermitteln zwischen den Parteien, wenn es Differenzen gibt. Bei festgefahrener Lage ist Teilungsversteigerung möglich, sollte aber Ultima Ratio sein (Versteigerungs-Erlös typisch 15–25 % unter Marktwert). Unsere HypZert-Wertermittlung ist eine belastbare Verhandlungsbasis für alle Miterben.</div>
                     </details>
                 </div>
+
+                <!-- I9. Energieausweis-Bestellservice -->
+                <div style="max-width: 760px; margin: 32px auto 0; padding: 24px 28px; background: var(--accent-bg); border-radius: var(--radius-lg); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap;">
+                    <div>
+                        <p style="font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px;">BFSG-Pflicht-Helfer</p>
+                        <h4 style="font-size: 17px; margin-bottom: 4px;">Energieausweis fehlt oder abgelaufen?</h4>
+                        <p style="color: var(--text-soft); font-size: 14px; margin: 0;">Drei Fragen, wir vermitteln einen zertifizierten Energieberater binnen 48 Stunden.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="openEnergy()">Energieausweis-Check starten →</button>
+                </div>
             </div>
         </section>
 
@@ -945,6 +1169,47 @@
             <h3 id="modal-title">Demo-Modus</h3>
             <p id="modal-text">In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.</p>
             <button type="button" class="btn btn-primary" onclick="closeModal()">Verstanden</button>
+        </div>
+    </div>
+
+    <!-- I9. Energieausweis-Wizard-Modal -->
+    <div class="modal-bg" id="energy-modal" role="dialog" aria-modal="true" aria-labelledby="energy-title" onclick="if(event.target===this) closeEnergy();">
+        <div class="modal modal-wide">
+            <div class="modal-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <h3 id="energy-title">Energieausweis — was brauche ich?</h3>
+            <p>Drei Fragen, dann wissen Sie ob Bedarfs- oder Verbrauchsausweis ausreicht. Erforderlich für Inserat (BFSG-Pflicht seit Juni 2025).</p>
+            <div class="modal-form">
+                <div>
+                    <label>1. Baujahr des Gebäudes</label>
+                    <div class="energy-options">
+                        <label><input type="radio" name="eb-baujahr" value="vor1977" onchange="updateEnergyResult()"> Vor 1977</label>
+                        <label><input type="radio" name="eb-baujahr" value="1977-2000" onchange="updateEnergyResult()" checked> 1977 – 2000</label>
+                        <label><input type="radio" name="eb-baujahr" value="nach2000" onchange="updateEnergyResult()"> Nach 2000</label>
+                    </div>
+                </div>
+                <div>
+                    <label>2. Wurde das Gebäude umfassend energetisch saniert?</label>
+                    <div class="energy-options">
+                        <label><input type="radio" name="eb-saniert" value="ja" onchange="updateEnergyResult()"> Ja, vollständig (Fenster + Dach + Heizung + Dämmung)</label>
+                        <label><input type="radio" name="eb-saniert" value="teils" onchange="updateEnergyResult()" checked> Teil-Sanierung (z.B. Fenster + Heizung)</label>
+                        <label><input type="radio" name="eb-saniert" value="nein" onchange="updateEnergyResult()"> Nein, weitgehend Original-Zustand</label>
+                    </div>
+                </div>
+                <div>
+                    <label>3. Geht es um Verkauf oder Vermietung?</label>
+                    <div class="energy-options">
+                        <label><input type="radio" name="eb-zweck" value="verkauf" onchange="updateEnergyResult()" checked> Verkauf</label>
+                        <label><input type="radio" name="eb-zweck" value="vermietung" onchange="updateEnergyResult()"> Vermietung (Neuvermietung)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="energy-result" id="energy-result">
+                <strong>Empfehlung wird berechnet …</strong>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 18px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" onclick="closeEnergy(); setTimeout(function(){openModal('energy-order');}, 200);">Energieberater binnen 48 h vermitteln</button>
+                <button type="button" class="btn btn-ghost" onclick="closeEnergy()">Schließen</button>
+            </div>
         </div>
     </div>
 
@@ -1055,8 +1320,88 @@
             matching: ['Demo-Matching angefordert', 'In der echten Anwendung erhalten Sie binnen 24 h eine Shortlist mit drei bis sieben anonymisierten Käufer-Profilen, die zu Ihrem Objekt passen — inklusive Bonitäts-Indikator.'],
             newsletter: ['Demo-Anmeldung gespeichert', 'In der echten Anwendung erhalten Sie sofort eine Bestätigungs-Mail mit Doppel-Opt-in. Erste Markt-Update kommt am nächsten ersten Donnerstag.'],
             chat: ['Demo-Chat-Anfrage gespeichert', 'In der echten Anwendung meldet sich Herr Hofmann persönlich binnen 24 Stunden — nicht automatisiert, nicht über Bot.'],
-            'tour-anfrage': ['Demo-Tour-Anfrage', 'In der echten Anwendung vereinbaren wir einen 90-Minuten-Termin für die 360°-Aufnahme. Tour ist Premium-Service inklusive bei jeder Vermarktung.']
+            'tour-anfrage': ['Demo-Tour-Anfrage', 'In der echten Anwendung vereinbaren wir einen 90-Minuten-Termin für die 360°-Aufnahme. Tour ist Premium-Service inklusive bei jeder Vermarktung.'],
+            finanzierung: ['Demo-Finanzierungs-Anfrage', 'In der echten Anwendung erhalten Sie binnen 48 h drei Finanzierungs-Angebote von unseren Partner-Banken (Comdirect, ING, Sparkasse Stuttgart, DSL) — mit konkreten Konditionen, Sondertilgungs-Option und Bereitstellungs-Zeit.'],
+            'energy-order': ['Demo-Energieberater vermittelt', 'In der echten Anwendung erhalten Sie binnen 48 h drei dena-zertifizierte Energieberater aus Stuttgart-Region mit Verfügbarkeits-Slots und Honorar-Schätzung (typ. 290–490 € für Bedarfsausweis).']
         };
+
+        // Hypothekenrechner
+        function updateFinancing() {
+            var price = +document.getElementById('fin-price').value;
+            var equityPct = +document.getElementById('fin-equity').value;
+            var ratePct = +document.getElementById('fin-rate').value;
+            var tilgPct = +document.getElementById('fin-tilg').value;
+            var equity = price * equityPct / 100;
+            var loan = price - equity;
+            var annualRate = ratePct / 100;
+            var annualTilg = tilgPct / 100;
+            var annuityRate = (annualRate + annualTilg);
+            var monthly = (loan * annuityRate) / 12;
+            // Restschuld nach 10 Jahren: approximation via Annuitäten-Formel
+            // R(n) = K * ((1+i)^n) - A * ((1+i)^n - 1) / i, mit A = monatlich*12 (jährlich)
+            var n10 = 10;
+            var n20 = 20;
+            var annualPay = monthly * 12;
+            var i = annualRate;
+            var rest10 = (i > 0) ? (loan * Math.pow(1 + i, n10) - annualPay * (Math.pow(1 + i, n10) - 1) / i) : (loan - annualPay * n10);
+            if (rest10 < 0) rest10 = 0;
+            var rest20 = (i > 0) ? (loan * Math.pow(1 + i, n20) - annualPay * (Math.pow(1 + i, n20) - 1) / i) : (loan - annualPay * n20);
+            if (rest20 < 0) rest20 = 0;
+            var totalPaid20 = annualPay * n20;
+            var tilg20 = loan - rest20;
+            var zins20 = totalPaid20 - tilg20;
+
+            function fmt(n) { return Math.round(n).toLocaleString('de-DE') + ' €'; }
+            document.getElementById('fin-price-val').textContent = fmt(price);
+            document.getElementById('fin-equity-val').textContent = equityPct + ' % · ' + fmt(equity);
+            document.getElementById('fin-rate-val').textContent = ratePct.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' % p.a.';
+            document.getElementById('fin-tilg-val').textContent = tilgPct.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' % p.a.';
+            document.getElementById('fin-rate-monthly').textContent = fmt(monthly);
+            document.getElementById('fin-loan').textContent = fmt(loan);
+            document.getElementById('fin-zins-total').textContent = fmt(zins20);
+            document.getElementById('fin-tilg-total').textContent = fmt(tilg20);
+            document.getElementById('fin-rest').textContent = fmt(rest10);
+
+            // Tilgungsplan-Tabelle
+            var planYears = [1, 5, 10, 15, 20];
+            var planBody = document.getElementById('fin-plan-body');
+            if (planBody) {
+                planBody.innerHTML = '';
+                planYears.forEach(function (y) {
+                    var rest = (i > 0) ? (loan * Math.pow(1 + i, y) - annualPay * (Math.pow(1 + i, y) - 1) / i) : (loan - annualPay * y);
+                    if (rest < 0) rest = 0;
+                    var prevRest = (i > 0 && y > 1) ? (loan * Math.pow(1 + i, y - 1) - annualPay * (Math.pow(1 + i, y - 1) - 1) / i) : (y === 1 ? loan : (loan - annualPay * (y - 1)));
+                    if (prevRest < 0) prevRest = 0;
+                    var zinsYear = prevRest * i;
+                    var tilgYear = annualPay - zinsYear;
+                    if (tilgYear < 0) tilgYear = 0;
+                    var row = '<tr><td><strong>' + y + '</strong></td><td>' + fmt(zinsYear) + '</td><td>' + fmt(tilgYear) + '</td><td>' + fmt(rest) + '</td></tr>';
+                    planBody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+        }
+        if (document.getElementById('fin-price')) updateFinancing();
+
+        // Energieausweis-Wizard
+        function openEnergy() { document.getElementById('energy-modal').classList.add('is-open'); updateEnergyResult(); }
+        function closeEnergy() { document.getElementById('energy-modal').classList.remove('is-open'); }
+        function updateEnergyResult() {
+            var baujahr = (document.querySelector('input[name="eb-baujahr"]:checked') || {}).value;
+            var saniert = (document.querySelector('input[name="eb-saniert"]:checked') || {}).value;
+            var zweck = (document.querySelector('input[name="eb-zweck"]:checked') || {}).value;
+            var result = document.getElementById('energy-result');
+            if (!result) return;
+            var bedarfRequired = (baujahr === 'vor1977' && saniert !== 'ja');
+            var text;
+            if (bedarfRequired) {
+                text = '<strong>Bedarfsausweis erforderlich.</strong> Bei Gebäuden vor 1977 ohne vollständige energetische Sanierung schreibt das GEG den Bedarfsausweis vor. Kosten ca. 290–490 € durch dena-zertifizierten Energieberater.';
+            } else if (zweck === 'verkauf') {
+                text = '<strong>Verbrauchsausweis ausreichend.</strong> Günstiger und schneller. Kosten ca. 60–150 €. Erstellung auf Basis Heizkostenabrechnungen der letzten drei Jahre.';
+            } else {
+                text = '<strong>Verbrauchsausweis ausreichend für Neuvermietung.</strong> Kosten ca. 60–150 €. Hinweis: Energiekennwerte gehören schon ins Inserat (BFSG-Pflicht seit 2025), sonst Bußgeld bis 15.000 €.';
+            }
+            result.innerHTML = text;
+        }
         function openModal(kind) {
             var modal = document.getElementById('modal');
             var t = document.getElementById('modal-title');
@@ -1085,7 +1430,7 @@
         }
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
-                closeModal(); closeTour();
+                closeModal(); closeTour(); closeEnergy();
                 if (document.getElementById('chat-panel').classList.contains('is-open')) toggleChat();
             }
         });
