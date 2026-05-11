@@ -286,6 +286,68 @@
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 24px; font-size: 15px; }
 
+        /* Live-Slot-Indicator */
+        .live-slots { background: var(--accent-bg); padding: 18px 0; border-bottom: 1px solid var(--border); }
+        .live-slots-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+        .live-slots-label { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-strong); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; }
+        .live-slots-label::before { content: ''; width: 8px; height: 8px; background: var(--accent-dark); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        .live-slots-slots { display: flex; gap: 10px; flex-wrap: wrap; }
+        .live-slots-slot { padding: 6px 14px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: 999px; font-size: 13px; color: var(--text); transition: all 0.2s; cursor: pointer; }
+        .live-slots-slot:hover { border-color: var(--accent); background: var(--accent); color: #fff; }
+        .live-slots-cta { color: var(--accent-dark); font-size: 13px; font-weight: 500; }
+
+        /* Vorberatungs-Button im Termin-Widget */
+        .termin-secondary-cta { background: transparent; color: var(--accent-dark); border: 1px solid var(--border-strong); padding: 10px 18px; border-radius: 999px; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+        .termin-secondary-cta:hover { border-color: var(--accent); background: var(--accent-bg); }
+
+        /* Video-Testimonials */
+        .video-stimme { padding: 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .video-stimme-media { aspect-ratio: 9/16; max-height: 280px; background: var(--accent-bg); position: relative; overflow: hidden; }
+        .video-stimme-media video { width: 100%; height: 100%; object-fit: cover; }
+        .video-stimme-media .video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.15); }
+        .video-stimme-media .video-play-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.92); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .video-stimme-media .video-play-icon svg { width: 22px; height: 22px; color: var(--accent-strong); margin-left: 3px; }
+        .video-stimme-body { padding: 22px 24px 24px; }
+        .video-stimme-quote { color: var(--text); font-size: 14px; line-height: 1.55; margin-bottom: 14px; font-style: italic; }
+        .video-stimme-author { display: flex; gap: 10px; align-items: center; }
+
+        /* Empfehlungs-Bonus */
+        .referral { background: linear-gradient(135deg, var(--accent-bg) 0%, #f6ede6 100%); }
+        .referral-card { max-width: 920px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); padding: 40px 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 36px; box-shadow: var(--shadow); }
+        .referral-side h3 { font-size: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .referral-side h3 .ico { width: 32px; height: 32px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 16px; }
+        .referral-side p { color: var(--text-soft); font-size: 14px; margin-bottom: 8px; }
+        .referral-side .reward { font-size: 22px; font-weight: 600; color: var(--accent-strong); margin: 10px 0; }
+        .referral-cta-row { grid-column: span 2; display: flex; gap: 10px; justify-content: center; padding-top: 24px; border-top: 1px solid var(--border); margin-top: 4px; flex-wrap: wrap; }
+        .referral-note { grid-column: span 2; text-align: center; font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+        /* Gutschein-Card im Online-Services */
+        .gutschein-card-form { background: var(--bg); border: 1px solid var(--accent); border-radius: var(--radius-lg); padding: 32px; position: relative; }
+        .gutschein-card-form .featured-pill { position: absolute; top: -12px; right: 24px; background: var(--accent); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+        .gutschein-card-form h3 { margin-bottom: 8px; }
+        .gutschein-card-form > p { color: var(--text-soft); font-size: 14px; margin-bottom: 18px; }
+        .gutschein-form-grid { display: grid; gap: 10px; margin-bottom: 14px; }
+        .gutschein-form-grid label { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; display: block; text-transform: uppercase; letter-spacing: 0.06em; }
+        .gutschein-form-grid select, .gutschein-form-grid input, .gutschein-form-grid textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; font-family: inherit; background: var(--bg-soft); }
+        .gutschein-form-grid select:focus, .gutschein-form-grid input:focus, .gutschein-form-grid textarea:focus { outline: none; border-color: var(--accent); background: var(--bg); }
+        .gutschein-form-grid textarea { resize: vertical; min-height: 60px; }
+
+        /* Vorberatungs-Modal (groesseres Modal mit Form) */
+        .modal-wide { max-width: 600px; text-align: left; }
+        .modal-wide h3 { text-align: center; margin-bottom: 8px; }
+        .modal-wide > p { text-align: center; }
+        .modal-form { display: grid; gap: 14px; margin: 24px 0 18px; }
+        .modal-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .modal-form label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .modal-form-radios { display: flex; gap: 8px; flex-wrap: wrap; }
+        .modal-form-radios label { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border: 1px solid var(--border-strong); border-radius: 999px; cursor: pointer; transition: all 0.2s; font-size: 13px; font-weight: 500; text-transform: none; letter-spacing: 0; margin: 0; }
+        .modal-form-radios label:hover, .modal-form-radios input:checked + span { color: var(--accent-strong); }
+        .modal-form-radios label:has(input:checked) { border-color: var(--accent); background: var(--accent-bg); color: var(--accent-strong); }
+        .modal-form-radios input { position: absolute; opacity: 0; pointer-events: none; }
+        .modal-form-checkboxes { display: flex; flex-direction: column; gap: 8px; }
+        .modal-form-checkboxes label { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-soft); margin: 0; }
+        .modal-form select, .modal-form input[type="file"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; background: var(--bg-soft); font-family: inherit; }
+
         .img-pending {
             background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
             position: relative;
@@ -305,6 +367,9 @@
             .hero { padding: 48px 0 64px; }
             .hero-grid, .team-grid, .kontakt-grid, .sprech-grid { grid-template-columns: 1fr; gap: 40px; }
             .leistungen-grid, .online-grid, .stimmen-grid, .news-grid, .preis-grid { grid-template-columns: 1fr; }
+            .referral-card { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
+            .live-slots-inner { flex-direction: column; gap: 12px; }
+            .modal-form-row { grid-template-columns: 1fr; }
             .termin-grid { grid-template-columns: 1fr; gap: 20px; }
             .termin-card { padding: 28px; }
             .galerie-grid { grid-template-columns: 1fr 1fr; height: auto; }
@@ -457,13 +522,28 @@
                     </div>
                     <div class="termin-cta-row">
                         <p class="termin-summary"><strong>Laura · Schnitt</strong> · Montag, 11. Mai · <strong>14:30</strong></p>
-                        <button type="button" class="btn btn-primary" onclick="openModal('termin')">Termin bestätigen
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                        </button>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button type="button" class="termin-secondary-cta" onclick="openVorberatung()">Vorberatung ausfüllen</button>
+                            <button type="button" class="btn btn-primary" onclick="openModal('termin')">Termin bestätigen
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <div class="live-slots" aria-label="Aktuelle Verfügbarkeit diese Woche">
+            <div class="live-slots-inner">
+                <span class="live-slots-label">Diese Woche noch frei bei Laura</span>
+                <div class="live-slots-slots">
+                    <button type="button" class="live-slots-slot" onclick="document.querySelector('#termin').scrollIntoView({behavior:'smooth'});">Mo · 14:30</button>
+                    <button type="button" class="live-slots-slot" onclick="document.querySelector('#termin').scrollIntoView({behavior:'smooth'});">Di · 10:00</button>
+                    <button type="button" class="live-slots-slot" onclick="document.querySelector('#termin').scrollIntoView({behavior:'smooth'});">Mi · 17:00</button>
+                </div>
+                <a href="#termin" class="live-slots-cta">Alle Slots ansehen →</a>
+            </div>
+        </div>
 
         <div class="trust-strip">
             <div class="trust-strip-inner">
@@ -557,12 +637,32 @@
                         <p>Erstbesuch mit Coloration? Sensitivitätstest verpflichtend — Sie kommen vorbei oder erhalten das Testkit per Post.</p>
                         <span class="online-card-link">Test anfordern →</span>
                     </a>
-                    <a href="#kontakt" class="online-card">
-                        <span class="online-card-tag">Gutscheine</span>
-                        <h3>Per E-Mail in 2 Minuten</h3>
-                        <p>Geburtstag, Hochzeit, Muttertag — Gutschein digital, ausdruckbar oder per Post. Beträge ab 50 €.</p>
-                        <span class="online-card-link">Gutschein bestellen →</span>
-                    </a>
+                    <div class="gutschein-card-form">
+                        <span class="featured-pill">Neu</span>
+                        <h3>Gutschein-Sofortkauf</h3>
+                        <p>Geburtstag, Hochzeit, Muttertag — Gutschein als PDF in zwei Minuten in Ihrem Postfach.</p>
+                        <div class="gutschein-form-grid">
+                            <div>
+                                <label for="gs-betrag">Betrag</label>
+                                <select id="gs-betrag">
+                                    <option>50 €</option>
+                                    <option selected>75 €</option>
+                                    <option>100 €</option>
+                                    <option>150 €</option>
+                                    <option>Individuell</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="gs-empfaenger">E-Mail Empfänger</label>
+                                <input id="gs-empfaenger" type="email" placeholder="freundin@example.de">
+                            </div>
+                            <div>
+                                <label for="gs-msg">Persönliche Nachricht (optional)</label>
+                                <textarea id="gs-msg" rows="2" placeholder="Alles Liebe zum Geburtstag …"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="width:100%; justify-content:center;" onclick="openModal('gutschein')">PDF erzeugen →</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -689,7 +789,53 @@
                 <div class="section-head">
                     <p class="eyebrow">Kundenstimmen</p>
                     <h2>Was unsere Gäste sagen.</h2>
+                    <p>Drei Vorher-Nachher-Stories in eigenen Worten — plus zwei kurze Video-Erinnerungen aus dem Salon.</p>
                 </div>
+
+                <!-- Video-Testimonials -->
+                <div class="stimmen-grid" style="margin-bottom: 32px;">
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/friseur/video-poster-1.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/friseur/video-stimme-1.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier die Vorher-Nachher-Story von Sandra abspielen.');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Nach 15 Jahren Bob — endlich der Long Pixie, den ich mir nie traute."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">SK</div>
+                                <div>
+                                    <div class="stimme-name">Sandra K.</div>
+                                    <div class="stimme-role">Vorher-Nachher-Story · 38 Sek</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/friseur/video-poster-2.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/friseur/video-stimme-2.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Julias Balayage-Reportage abspielen.');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Drei Monate später sieht die Balayage noch wie frisch gemacht aus."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">JB</div>
+                                <div>
+                                    <div class="stimme-name">Julia B.</div>
+                                    <div class="stimme-role">Coloration-Reportage · 25 Sek</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="stimmen-grid">
                     <div class="stimme">
                         <div class="stimme-stars">★★★★★</div>
@@ -746,6 +892,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- Empfehlungs-Bonus -->
+        <section class="referral" aria-label="Freundin empfehlen">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Empfehlung</p>
+                    <h2>Freundin empfehlen — beide profitieren.</h2>
+                    <p>Stammkundinnen kennen die besten Stylistinnen. Wer eine Freundin in den Salon Müller bringt, bekommt selbst etwas zurück — und die Freundin auch.</p>
+                </div>
+                <div class="referral-card">
+                    <div class="referral-side">
+                        <h3><span class="ico">👥</span> Sie bringen eine Freundin</h3>
+                        <p>Sie erhalten beim nächsten Besuch eine kostenlose Kopfhautanalyse mit individuellem Aveda-Pflegeplan.</p>
+                        <p class="reward">Kopfhautanalyse gratis</p>
+                        <p style="font-size: 13px; color: var(--text-light);">Wert: 48 €. Einlösbar binnen sechs Monaten.</p>
+                    </div>
+                    <div class="referral-side">
+                        <h3><span class="ico">🎁</span> Ihre Freundin bei uns</h3>
+                        <p>Beim ersten Termin nach Empfehlung erhält sie 15 € Guthaben auf jede Leistung ab 50 €.</p>
+                        <p class="reward">15 € Erst-Guthaben</p>
+                        <p style="font-size: 13px; color: var(--text-light);">Nicht kombinierbar mit anderen Aktionen. Pro Person einmalig.</p>
+                    </div>
+                    <div class="referral-cta-row">
+                        <a href="https://wa.me/4921186321119?text=Hallo%20Salon%20Müller,%20ich%20möchte%20eine%20Freundin%20empfehlen." class="btn btn-primary" rel="noopener">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A8 8 0 003.55 14.7l-1.21 4.42 4.53-1.19a8 8 0 0010.73-11.6z"/></svg>
+                            Per WhatsApp empfehlen
+                        </a>
+                        <button type="button" class="btn btn-ghost" onclick="openModal('empfehlung')">Per E-Mail empfehlen</button>
+                    </div>
+                    <p class="referral-note">Empfehlung wird beim nächsten Besuch verrechnet. Bei mehreren Empfehlungen sammelt sich das Guthaben.</p>
+                </div>
+            </div>
+        </section>
 
         <section class="faq">
             <div class="container">
@@ -962,6 +1141,57 @@
         </div>
     </div>
 
+    <!-- Vorberatungs-Modal -->
+    <div class="modal-bg" id="vorberatung-modal" role="dialog" aria-modal="true" aria-labelledby="vb-title" onclick="if(event.target===this) closeVorberatung();">
+        <div class="modal modal-wide">
+            <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3 id="vb-title">Vorberatung — damit Laura Sie kennt, bevor sie Sie sieht</h3>
+            <p>Vier kurze Fragen, ca. zwei Minuten. Wir lesen Ihre Antworten vor dem Termin und planen die Stuhl-Zeit gezielt für Sie.</p>
+            <form class="modal-form" onsubmit="event.preventDefault(); closeVorberatung(); setTimeout(function(){openModal('vorberatung-saved');}, 200);">
+                <div>
+                    <label>1. Haarstruktur</label>
+                    <div class="modal-form-radios">
+                        <label><input type="radio" name="haartyp" value="fein"><span>Fein</span></label>
+                        <label><input type="radio" name="haartyp" value="normal" checked><span>Normal</span></label>
+                        <label><input type="radio" name="haartyp" value="dick"><span>Dick</span></label>
+                        <label><input type="radio" name="haartyp" value="lockig"><span>Lockig/Kraus</span></label>
+                    </div>
+                </div>
+                <div>
+                    <label>2. Bekannte Empfindlichkeiten / Allergien</label>
+                    <div class="modal-form-checkboxes">
+                        <label><input type="checkbox"> PPD (Coloration-Inhaltsstoff)</label>
+                        <label><input type="checkbox"> Empfindliche Kopfhaut</label>
+                        <label><input type="checkbox"> Duftstoffe / Parfum</label>
+                        <label><input type="checkbox"> Keine bekannten Empfindlichkeiten</label>
+                    </div>
+                </div>
+                <div class="modal-form-row">
+                    <div>
+                        <label for="vb-letzte">3. Letzte Coloration</label>
+                        <select id="vb-letzte">
+                            <option>Noch nie</option>
+                            <option>Vor wenigen Wochen</option>
+                            <option selected>Vor 1–3 Monaten</option>
+                            <option>Vor 6+ Monaten</option>
+                            <option>Vor über einem Jahr</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="vb-inspiration">4. Inspirations-Foto (optional)</label>
+                        <input type="file" id="vb-inspiration" accept="image/*">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 6px;">
+                    <button type="button" class="btn btn-ghost" onclick="closeVorberatung()">Abbrechen</button>
+                    <button type="submit" class="btn btn-primary">Vorberatung speichern → Termin buchen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
@@ -1026,23 +1256,35 @@
             });
         });
 
+        var MODAL_TEXTS = {
+            'termin': ['Demo-Termin gebucht', 'In der echten Anwendung wäre Ihr Termin am Montag, 11. Mai um 14:30 Uhr bei Laura bestätigt.'],
+            'kontakt': ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet.'],
+            'gutschein': ['Demo-Gutschein erzeugt', 'In der echten Anwendung erhalten die Beschenkte das PDF binnen Sekunden per E-Mail. Sie bekommen eine Bestätigung mit Beleg.'],
+            'empfehlung': ['Demo-Empfehlung verschickt', 'In der echten Anwendung würde Ihre Freundin jetzt eine persönliche Einladung erhalten. Beim ersten Termin gilt der 15-€-Gutschrift automatisch.'],
+            'vorberatung-saved': ['Vorberatung gespeichert', 'Laura sieht Ihre Antworten vor dem Termin. Beim nächsten Klick auf "Termin bestätigen" wird die Vorberatung mit Ihrer Buchung verknüpft.']
+        };
+
         function openModal(kind) {
             var modal = document.getElementById('modal');
             var t = document.getElementById('modal-title');
             var p = document.getElementById('modal-text');
-            if (kind === 'termin') {
-                t.textContent = 'Demo-Termin gebucht';
-                p.textContent = 'In der echten Anwendung wäre Ihr Termin am Montag, 11. Mai um 14:30 Uhr bei Laura bestätigt. Diese Seite ist ein Karriaro-Designbeispiel.';
-            } else if (kind === 'kontakt') {
-                t.textContent = 'Demo-Nachricht gesendet';
-                p.textContent = 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet. Diese Seite ist ein Karriaro-Designbeispiel.';
-            }
+            var pair = MODAL_TEXTS[kind] || ['Demo-Modus', 'In der echten Anwendung würde Ihre Anfrage jetzt verschickt.'];
+            t.textContent = pair[0];
+            p.textContent = pair[1] + ' Diese Seite ist ein Karriaro-Designbeispiel.';
             modal.classList.add('is-open');
         }
         function closeModal() {
             document.getElementById('modal').classList.remove('is-open');
         }
-        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+        function openVorberatung() {
+            document.getElementById('vorberatung-modal').classList.add('is-open');
+        }
+        function closeVorberatung() {
+            document.getElementById('vorberatung-modal').classList.remove('is-open');
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { closeModal(); closeVorberatung(); }
+        });
     </script>
 </body>
 </html>
