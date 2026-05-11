@@ -293,6 +293,88 @@
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
 
+        /* Drohnen-Inspektion-Showcase */
+        .drohne { background: var(--bg-soft); padding: 80px 0; border-top: 1px solid var(--border); }
+        .drohne-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+        .drohne-content .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .drohne-content h2 { margin-bottom: 14px; }
+        .drohne-content p.lead { font-size: 17px; color: var(--text-soft); margin-bottom: 24px; max-width: 480px; }
+        .drohne-bullets { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+        .drohne-bullets li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text); }
+        .drohne-bullets li svg { width: 18px; height: 18px; color: var(--accent); flex-shrink: 0; margin-top: 3px; }
+        .drohne-bullets li strong { color: var(--text); font-weight: 600; }
+        .drohne-media { aspect-ratio: 4/3; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; position: relative; box-shadow: var(--shadow-lg); }
+        .drohne-media video { width: 100%; height: 100%; object-fit: cover; }
+        .drohne-media .video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0,0,0,0.12); }
+        .drohne-media .video-play-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.94); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .drohne-media .video-play-icon svg { width: 26px; height: 26px; color: var(--accent-strong); margin-left: 3px; }
+
+        /* Hersteller-Partner-Strip */
+        .hersteller { padding: 56px 0; background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .hersteller-head { text-align: center; margin-bottom: 28px; }
+        .hersteller-head .eyebrow { color: var(--accent-dark); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+        .hersteller-head h3 { font-size: 20px; }
+        .hersteller-logos { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; opacity: 0.65; }
+        .hersteller-logo { font-size: 20px; font-weight: 700; color: var(--text-light); letter-spacing: -0.02em; transition: color 0.2s; }
+        .hersteller-logo:hover { color: var(--text); opacity: 1; }
+        .hersteller-logo i { font-style: italic; font-weight: 600; }
+
+        /* iSFP-Bonus-Box (neben Foerderrechner) */
+        .foerder-row-extended { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: start; }
+        .isfp-card { background: linear-gradient(135deg, #fef9e7, #fdf3d0); border: 1px solid #f4dc85; border-radius: var(--radius-lg); padding: 28px; position: relative; }
+        .isfp-card .isfp-badge { position: absolute; top: -10px; left: 22px; background: var(--accent); color: #fff; padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+        .isfp-card h4 { font-size: 17px; margin-bottom: 10px; color: var(--text); }
+        .isfp-card .isfp-amount { font-size: 28px; font-weight: 600; color: #8b6a16; margin: 6px 0 12px; }
+        .isfp-card p { color: var(--text-soft); font-size: 14px; line-height: 1.55; margin-bottom: 16px; }
+        .isfp-card .btn { width: 100%; justify-content: center; background: #b48a1f; }
+        .isfp-card .btn:hover { background: #8b6a16; }
+
+        /* Live-Status + Anrueckzeit-Karte */
+        .status { padding: 64px 0; background: var(--bg-soft); }
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1100px; margin: 0 auto; align-items: center; }
+        .status-card { background: var(--bg); border-radius: var(--radius-lg); padding: 32px; border: 1px solid var(--border); }
+        .status-pill { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 999px; font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+        .status-pill .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .status-pill.is-open .dot { background: #2c8a4b; box-shadow: 0 0 0 4px rgba(44,138,75,0.18); animation: pulse 2s ease-in-out infinite; }
+        .status-pill.is-closed .dot { background: #b54040; box-shadow: 0 0 0 4px rgba(181,64,64,0.18); }
+        .status-card h3 { font-size: 22px; margin-bottom: 8px; }
+        .status-card p { color: var(--text-soft); font-size: 14px; }
+        .anrueck-card { background: var(--bg); border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--border); }
+        .anrueck-card h4 { font-size: 14px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+        .anrueck-list { display: flex; flex-direction: column; gap: 10px; }
+        .anrueck-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-soft); border-radius: 8px; font-size: 14px; }
+        .anrueck-row .area { font-weight: 500; color: var(--text); }
+        .anrueck-row .time { color: var(--accent-strong); font-weight: 600; font-size: 13px; }
+
+        /* Solar-Kombi-Toggle im Foerderrechner */
+        .solar-toggle-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: var(--accent-bg); border-radius: var(--radius); margin-bottom: 18px; }
+        .solar-toggle-row label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: var(--text); font-weight: 500; }
+        .solar-toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-dark); cursor: pointer; }
+        .solar-toggle-row .hint { color: var(--text-soft); font-size: 12px; margin-left: auto; }
+        .foerder-line.solar { color: var(--accent-strong); }
+        .foerder-line.solar.is-hidden { display: none; }
+
+        /* Sturmschaden-Checkliste-Modal */
+        .modal-wide { max-width: 600px; text-align: left; }
+        .modal-wide h3 { text-align: center; margin-bottom: 8px; }
+        .modal-wide > p { text-align: center; margin-bottom: 20px; }
+        .checklist-list { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
+        .checklist-list li { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; background: var(--bg-soft); border-radius: var(--radius); font-size: 14px; line-height: 1.5; }
+        .checklist-list .num { width: 24px; height: 24px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+        .checklist-list strong { color: var(--text); display: block; margin-bottom: 2px; }
+        .checklist-list span { color: var(--text-soft); }
+
+        /* Video-Testimonial (analog stimme aber mit Video-Slot) */
+        .video-stimme { padding: 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .video-stimme-media { aspect-ratio: 16/10; background: var(--accent-bg); position: relative; overflow: hidden; }
+        .video-stimme-media video { width: 100%; height: 100%; object-fit: cover; }
+        .video-stimme-media .video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.15); cursor: pointer; }
+        .video-stimme-media .video-play-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.94); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .video-stimme-media .video-play-icon svg { width: 22px; height: 22px; color: var(--accent-strong); margin-left: 3px; }
+        .video-stimme-body { padding: 22px 24px; }
+        .video-stimme-quote { color: var(--text); font-size: 14px; line-height: 1.55; margin-bottom: 14px; font-style: italic; }
+        .video-stimme-author { display: flex; gap: 10px; align-items: center; }
+
         .img-pending {
             background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
             position: relative;
@@ -312,6 +394,8 @@
             .hero, .foto-anfrage, .konfig, .foerder, .wartung, .team, .karriere, .kontakt { padding: 56px 0; }
             .hero-grid, .team-grid, .kontakt-grid, .foto-grid, .foerder-row, .wartung-grid { grid-template-columns: 1fr; gap: 32px; }
             .leistungen-grid, .stimmen-grid, .galerie-grid, .karriere-grid { grid-template-columns: 1fr; }
+            .drohne-grid, .status-grid, .foerder-row-extended { grid-template-columns: 1fr; gap: 24px; }
+            .hersteller-logos { gap: 28px; }
             .trust-strip-inner { grid-template-columns: 1fr 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -375,6 +459,36 @@
             </div>
         </section>
 
+        <!-- 3a. Drohnen-Inspektion-Showcase -->
+        <section class="drohne" aria-label="Drohnen-Inspektion">
+            <div class="container">
+                <div class="drohne-grid">
+                    <div class="drohne-content">
+                        <p class="eyebrow">Differenzierer · Kein Aufpreis</p>
+                        <h2>Drohnen-Inspektion vor jedem Angebot.</h2>
+                        <p class="lead">Wir steigen erst auf das Dach, wenn wir wissen, was es braucht. Vorher fliegt unsere Drohne — präzise, sicher, mit voller Foto-Doku für Sie und die Versicherung.</p>
+                        <ul class="drohne-bullets">
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Sicher.</strong> Kein Gerüst, kein Risiko bei der Bestandsaufnahme — auch bei steilen Dächern oder Witterung.</span></li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Lückenlos.</strong> 200+ hochauflösende Aufnahmen pro Dach, inklusive Wärmebild-Modus bei Verdacht auf Feuchteschaden.</span></li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Versicherungs-fest.</strong> Geodatenmarkierte Foto-Dokumentation als PDF-Bericht — von der Allianz Bauwirtschaft anerkannt.</span></li>
+                            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span><strong>Kostenlos.</strong> Im Angebotsprozess immer inklusive — nicht erst ab Auftragsvergabe.</span></li>
+                        </ul>
+                        <a href="#anfrage" class="btn btn-primary">Drohnen-Termin anfragen
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </a>
+                    </div>
+                    <div class="drohne-media">
+                        <video poster="/images/dachdecker/drohne-poster.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                            <source src="/images/dachdecker/drohne-flight.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier der Drohnen-Flug über ein Stuttgarter Dach abspielen (90 Sek).');">
+                            <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div class="notdienst-banner">
             <div class="notdienst-inner">
                 <div class="notdienst-text">
@@ -387,6 +501,7 @@
                 <div class="notdienst-cta">
                     <a href="tel:+49711924788" class="btn btn-primary">0711 92 47 880</a>
                     <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" rel="noopener">WhatsApp Notdienst</a>
+                    <button type="button" class="btn btn-ghost" style="background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.25);" onclick="openSturmChecklist()">📋 Notfall-Checkliste</button>
                 </div>
             </div>
         </div>
@@ -459,6 +574,25 @@
             </div>
         </section>
 
+        <!-- 7a. Hersteller-Partner-Strip -->
+        <div class="hersteller">
+            <div class="container">
+                <div class="hersteller-head">
+                    <p class="eyebrow">Hersteller-Partner</p>
+                    <h3>Autorisierter Service-Partner führender Hersteller</h3>
+                </div>
+                <div class="hersteller-logos">
+                    <span class="hersteller-logo">PREFA</span>
+                    <span class="hersteller-logo"><i>Eternit</i></span>
+                    <span class="hersteller-logo">Velux</span>
+                    <span class="hersteller-logo">BRAAS</span>
+                    <span class="hersteller-logo">ZinCo</span>
+                    <span class="hersteller-logo"><i>Roto</i></span>
+                    <span class="hersteller-logo">IKO</span>
+                </div>
+            </div>
+        </div>
+
         <section id="referenzen" class="galerie">
             <div class="container">
                 <div class="section-head"><p class="eyebrow">Referenzen</p><h2>Vorher. Nachher.</h2><p>Drei Projekte aus 2025 — echte Dächer, echte Familien, echte Festpreise inklusive Förder-Abzug.</p></div>
@@ -490,25 +624,46 @@
 
         <section id="foerder" class="foerder">
             <div class="container">
-                <div class="section-head"><p class="eyebrow">Förderrechner</p><h2>Was bekommt der Staat dazu?</h2><p>Dachsanierung mit Dämmung wird seit 2024 doppelt gefördert: BAFA Einzelmaßnahme plus KfW-Tilgungszuschuss plus Stadt-Stuttgart-Topf.</p></div>
-                <div class="foerder-card">
-                    <div class="foerder-row">
-                        <div class="foerder-input"><label for="fr-typ">Maßnahme</label>
-                            <select id="fr-typ"><option>Dachsanierung mit Aufsparrendämmung</option><option>Zwischensparrendämmung nachträglich</option><option>Komplett-Neueindeckung</option><option>Indach-PV mit Sanierung</option></select>
+                <div class="section-head"><p class="eyebrow">Förderrechner</p><h2>Was bekommt der Staat dazu?</h2><p>Dachsanierung mit Dämmung wird seit 2024 doppelt gefördert: BAFA Einzelmaßnahme plus KfW-Tilgungszuschuss plus Stadt-Stuttgart-Topf. Mit Solar-Anlage steigt die Förderung weiter.</p></div>
+                <div class="foerder-row-extended">
+                    <div class="foerder-card">
+                        <div class="foerder-row">
+                            <div class="foerder-input"><label for="fr-typ">Maßnahme</label>
+                                <select id="fr-typ"><option>Dachsanierung mit Aufsparrendämmung</option><option>Zwischensparrendämmung nachträglich</option><option>Komplett-Neueindeckung</option><option>Indach-PV mit Sanierung</option></select>
+                            </div>
+                            <div class="foerder-input"><label for="fr-jahr">Baujahr Ihres Hauses</label>
+                                <select id="fr-jahr"><option>vor 1978</option><option>1978–1995</option><option>1995–2009</option><option>nach 2009</option></select>
+                            </div>
                         </div>
-                        <div class="foerder-input"><label for="fr-jahr">Baujahr Ihres Hauses</label>
-                            <select id="fr-jahr"><option>vor 1978</option><option>1978–1995</option><option>1995–2009</option><option>nach 2009</option></select>
+                        <div class="solar-toggle-row">
+                            <label>
+                                <input type="checkbox" id="solar-toggle" onchange="document.querySelectorAll('.foerder-line.solar').forEach(function(el){el.classList.toggle('is-hidden', !this.checked);}, this);">
+                                Mit PV-Anlage kombinieren
+                            </label>
+                            <span class="hint">+ KfW 270 Kredit & gemeinsame BAFA-Bonus-Stufe</span>
                         </div>
+                        <div class="foerder-output">
+                            <div class="foerder-line"><span>Investitionskosten Dach (geschätzt)</span><span>34.200 €</span></div>
+                            <div class="foerder-line solar is-hidden"><span>+ Investitionskosten PV-Anlage 8 kWp</span><span>14.800 €</span></div>
+                            <div class="foerder-line"><span>BAFA Einzelmaßnahme Dach 15 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 5.130 €</span></div>
+                            <div class="foerder-line solar is-hidden"><span>BAFA-Bonus iSFP +5 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.710 €</span></div>
+                            <div class="foerder-line"><span>KfW 261 Effizienzhaus-Bonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 3.420 €</span></div>
+                            <div class="foerder-line solar is-hidden"><span>KfW 270 Solarkredit (0,01 %, separat)</span><span style="color: var(--accent-dark); font-weight: 600;">– 14.800 €</span></div>
+                            <div class="foerder-line"><span>Stadt Stuttgart Klimabonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.000 €</span></div>
+                            <div class="foerder-line total"><span>Ihr Eigenanteil</span><span id="foerder-total">24.650 €</span></div>
+                            <p class="foerder-source">Stand 2026, je nach Einzelfall. Verbindliche Berechnung im Beratungsgespräch — kostenlos, wir übernehmen die Antragsstellung.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" style="margin-top: 18px; width: 100%; justify-content: center;" onclick="openModal('foerder')">Persönliche Förderberatung anfragen</button>
                     </div>
-                    <div class="foerder-output">
-                        <div class="foerder-line"><span>Investitionskosten (geschätzt)</span><span>34.200 €</span></div>
-                        <div class="foerder-line"><span>BAFA Einzelmaßnahme Dach 15 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 5.130 €</span></div>
-                        <div class="foerder-line"><span>KfW 261 Effizienzhaus-Bonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 3.420 €</span></div>
-                        <div class="foerder-line"><span>Stadt Stuttgart Klimabonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.000 €</span></div>
-                        <div class="foerder-line total"><span>Ihr Eigenanteil</span><span>24.650 €</span></div>
-                        <p class="foerder-source">Stand 2026, je nach Einzelfall. Verbindliche Berechnung im Beratungsgespräch — kostenlos, wir übernehmen die Antragsstellung.</p>
+
+                    <!-- iSFP-Bonus-Box -->
+                    <div class="isfp-card">
+                        <span class="isfp-badge">+ 5 % BAFA-Bonus</span>
+                        <h4>iSFP — Individueller Sanierungsfahrplan</h4>
+                        <p class="isfp-amount">+ bis 7.500 €</p>
+                        <p>Mit iSFP-Bonus steigt die BAFA-Förderung von 15 auf 20 %. Der Sanierungsfahrplan wird durch einen BAFA-zertifizierten Energieberater erstellt — wir vermitteln drei lokale Berater aus Stuttgart-Mitte.</p>
+                        <button type="button" class="btn" onclick="openModal('isfp')">Energieberater vermitteln →</button>
                     </div>
-                    <button type="button" class="btn btn-primary" style="margin-top: 18px; width: 100%; justify-content: center;" onclick="openModal('foerder')">Persönliche Förderberatung anfragen</button>
                 </div>
             </div>
         </section>
@@ -546,6 +701,42 @@
             </div>
         </section>
 
+        <!-- 10a. Live-Status + Anrückzeit -->
+        <section class="status" aria-label="Live-Status & Anrückzeiten">
+            <div class="container">
+                <div class="section-head" style="margin-bottom: 36px;">
+                    <p class="eyebrow">Live-Status · Stuttgart</p>
+                    <h2>Wann wir bei Ihnen sind.</h2>
+                    <p>Transparent statt "gleich"-Versprechen: Sie sehen, ob unser Büro gerade erreichbar ist — und wie lange wir bis zu Ihrem Bezirk brauchen.</p>
+                </div>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="status-pill is-open" id="live-status">
+                            <span class="dot"></span>
+                            <span id="live-status-text">Derzeit erreichbar — Antwort bis 17:00</span>
+                        </div>
+                        <h3>Mo–Fr 7:00–17:00, Sa 8:00–12:00.</h3>
+                        <p>Außerhalb der Bürozeiten greift der Sturmnotdienst rund um die Uhr — Anrücken in 2 Stunden, Schadensdokumentation für Ihre Versicherung inklusive.</p>
+                        <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                            <a href="tel:+49711924788" class="btn btn-primary">0711 92 47 880</a>
+                            <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" rel="noopener">WhatsApp</a>
+                        </div>
+                    </div>
+                    <div class="anrueck-card">
+                        <h4>Anrückzeiten ab Hedelfingen</h4>
+                        <div class="anrueck-list">
+                            <div class="anrueck-row"><span class="area">Stuttgart-Mitte / Süd</span><span class="time">30 Min</span></div>
+                            <div class="anrueck-row"><span class="area">Stuttgart-Ost / West</span><span class="time">45 Min</span></div>
+                            <div class="anrueck-row"><span class="area">Degerloch / Vaihingen / Möhringen</span><span class="time">45 Min</span></div>
+                            <div class="anrueck-row"><span class="area">Bad Cannstatt / Feuerbach</span><span class="time">60 Min</span></div>
+                            <div class="anrueck-row"><span class="area">Umland 30 km (Leinfelden, Esslingen)</span><span class="time">75 Min</span></div>
+                            <div class="anrueck-row"><span class="area">Umland 60 km (max. Einsatz-Radius)</span><span class="time">90 Min</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="team" class="team">
             <div class="container">
                 <div class="team-grid">
@@ -569,7 +760,46 @@
 
         <section>
             <div class="container">
-                <div class="section-head"><p class="eyebrow">Kundenstimmen</p><h2>Was unsere Bauherren sagen.</h2></div>
+                <div class="section-head"><p class="eyebrow">Kundenstimmen</p><h2>Was unsere Bauherren sagen.</h2><p>Zwei Schadensfall-Stories direkt vom Dach — plus drei Detail-Berichte aus dem Tagesgeschäft.</p></div>
+
+                <!-- Video-Testimonials -->
+                <div class="stimmen-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 28px;">
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/dachdecker/video-poster-1.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/dachdecker/video-testi-1.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier die Schadensfall-Story von Familie Schmidt abspielen (50 Sek).');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Sturmschaden am Sonntag. Plane noch am Sonntag drauf, Montag Festpreis-Angebot in der E-Mail."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">FS</div>
+                                <div><div class="stimme-name">Familie Schmidt</div><div class="stimme-role">Sturmschaden-Story · 50 Sek</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/dachdecker/video-poster-2.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/dachdecker/video-testi-2.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Familie Beckers Indach-PV-Reportage abspielen (75 Sek).');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Drohnen-Bilder am Montag, Angebot am Mittwoch — wir haben sofort gewusst, was wir bekommen."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">UB</div>
+                                <div><div class="stimme-name">Ute Becker</div><div class="stimme-role">Indach-PV-Reportage · 75 Sek</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="stimmen-grid">
                     <div class="stimme">
                         <div class="stimme-stars">★★★★★</div>
@@ -780,6 +1010,29 @@
         </div>
     </div>
 
+    <!-- Sturmschaden-Checklisten-Modal -->
+    <div class="modal-bg" id="sturm-checklist-modal" role="dialog" aria-modal="true" aria-labelledby="sc-title" onclick="if(event.target===this) closeSturmChecklist();">
+        <div class="modal modal-wide">
+            <div class="modal-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <h3 id="sc-title">Sturmschaden — die sieben ersten Schritte</h3>
+            <p>Wenn das Dach undicht ist, zählt jede Stunde. Diese Reihenfolge hat sich in 1.400 Schadensfällen bewährt — speichern Sie sie für den Ernstfall.</p>
+            <ol class="checklist-list">
+                <li><span class="num">1</span><span><strong>Sicherheit zuerst.</strong> Räumen Sie das Gebäude oder den betroffenen Raum. Strom abschalten, falls Wasser eindringt. Niemand steigt aufs Dach, solange der Sturm anhält.</span></li>
+                <li><span class="num">2</span><span><strong>Sofort-Schutz.</strong> Eimer und Plastik-Plane unter Lecks. Möbel zur Seite. Wichtige Dokumente in höher gelegene Räume.</span></li>
+                <li><span class="num">3</span><span><strong>Foto-Dokumentation.</strong> Schaden außen UND innen fotografieren — Weitwinkel und Detail, mit Datums-Stempel. Mindestens 10–15 Aufnahmen aus verschiedenen Winkeln.</span></li>
+                <li><span class="num">4</span><span><strong>Versicherung anrufen.</strong> Wohngebäude-Versicherung mit Sturmschäden-Klausel zahlt fast immer. Schadensnummer aufschreiben — wird ihm Notdienst gebraucht.</span></li>
+                <li><span class="num">5</span><span><strong>Notdienst beauftragen.</strong> Wir rücken in 2 Stunden an, sichern das Dach mit Profi-Plane und Notabdichtung. Dokumentation für die Versicherung übernehmen wir.</span></li>
+                <li><span class="num">6</span><span><strong>Nichts selbst reparieren.</strong> Keine Heimwerker-Versuche auf dem Dach. Versicherer kürzen oft, wenn unsachgemäße Eigenleistung erfolgt ist.</span></li>
+                <li><span class="num">7</span><span><strong>Festpreis-Angebot abwarten.</strong> Innerhalb 48 h erhalten Sie unser schriftliches Reparatur-Angebot — abrechenbar direkt mit der Versicherung, Sie zahlen nur den Eigenanteil.</span></li>
+            </ol>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 12px; flex-wrap: wrap;">
+                <a href="tel:+49711924788" class="btn btn-primary">Jetzt anrufen · 0711 92 47 880</a>
+                <a href="https://wa.me/4971192478800?text=Sturmschaden%20-%20bitte%20Notdienst%20rufen" class="btn btn-whatsapp" rel="noopener">WhatsApp Notdienst</a>
+                <button type="button" class="btn btn-ghost" onclick="closeSturmChecklist()">Schließen</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
@@ -822,6 +1075,7 @@
         var MODAL_TEXTS = {
             anfrage: ['Demo-Anfrage gesendet', 'In der echten Anwendung erhalten Sie binnen 48 h ein verbindliches Festpreis-Angebot per E-Mail — schriftlich, ohne Anfahrt-Pauschale.'],
             foerder: ['Demo-Förderberatung', 'In der echten Anwendung kontaktiert Sie ein Förder-Berater binnen 24 h für ein kostenloses Beratungsgespräch.'],
+            isfp: ['Demo-Energieberater-Vermittlung', 'In der echten Anwendung erhalten Sie drei BAFA-zertifizierte Energieberater aus Stuttgart-Mitte mit Verfügbarkeits-Slots und Erst-Honorar-Schätzung.'],
             wartung: ['Demo-Wartungsvertrag', 'In der echten Anwendung erhalten Sie den Wartungsvertrag per E-Mail mit allen Konditionen und der ersten Termin-Erinnerung.'],
             kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von zwei Stunden beantwortet.']
         };
@@ -835,7 +1089,53 @@
             modal.classList.add('is-open');
         }
         function closeModal() { document.getElementById('modal').classList.remove('is-open'); }
-        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+        function openSturmChecklist() { document.getElementById('sturm-checklist-modal').classList.add('is-open'); }
+        function closeSturmChecklist() { document.getElementById('sturm-checklist-modal').classList.remove('is-open'); }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { closeModal(); closeSturmChecklist(); }
+        });
+
+        // Solar-Toggle: Total-Anzeige aktualisieren
+        (function () {
+            var toggle = document.getElementById('solar-toggle');
+            var total = document.getElementById('foerder-total');
+            if (!toggle || !total) return;
+            toggle.addEventListener('change', function () {
+                // Dach-Eigenanteil: 24.650 € | mit Solar: 24.650 + (14.800 - 1.710 - 14.800) = 22.940 € (KfW-Kredit muss zurückgezahlt werden, daher netto +)
+                // Vereinfacht: Solar-Total inkl. KfW-Kredit-Anteil (Kredit wird zurückgezahlt, also +14.800)
+                total.textContent = this.checked ? '37.740 €' : '24.650 €';
+            });
+        })();
+
+        // Live-Status: Uhrzeit-basiert (Mo-Fr 7-17, Sa 8-12)
+        (function () {
+            var pill = document.getElementById('live-status');
+            var text = document.getElementById('live-status-text');
+            if (!pill || !text) return;
+            function update() {
+                var now = new Date();
+                var dow = now.getDay(); // 0 = Sonntag
+                var h = now.getHours();
+                var m = now.getMinutes();
+                var minutes = h * 60 + m;
+                var open = false, closesAt = null;
+                if (dow >= 1 && dow <= 5) {
+                    // Mo-Fr 7:00-17:00
+                    if (minutes >= 7 * 60 && minutes < 17 * 60) { open = true; closesAt = '17:00'; }
+                } else if (dow === 6) {
+                    if (minutes >= 8 * 60 && minutes < 12 * 60) { open = true; closesAt = '12:00'; }
+                }
+                if (open) {
+                    pill.classList.add('is-open'); pill.classList.remove('is-closed');
+                    text.textContent = 'Derzeit erreichbar — Antwort bis ' + closesAt;
+                } else {
+                    pill.classList.remove('is-open'); pill.classList.add('is-closed');
+                    text.textContent = 'Büro geschlossen — Sturmnotdienst rund um die Uhr aktiv';
+                }
+            }
+            update();
+            setInterval(update, 60 * 1000);
+        })();
     </script>
 </body>
 </html>
