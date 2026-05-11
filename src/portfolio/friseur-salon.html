@@ -286,6 +286,20 @@
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 24px; font-size: 15px; }
 
+        .img-pending {
+            background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
+            position: relative;
+            min-height: 200px;
+        }
+        .img-pending::after {
+            content: "Bild folgt";
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-dark);
+            font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
+            text-transform: uppercase; opacity: 0.4;
+        }
+
         @media (max-width: 920px) {
             section { padding: 64px 0; }
             .hero { padding: 48px 0 64px; }
@@ -359,7 +373,7 @@
                         </div>
                     </div>
                     <div class="hero-img">
-                        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop" alt="Laura Müller, Friseurmeisterin im Salon Müller Düsseldorf" loading="eager" width="800" height="1000">
+                        <img src="/images/friseur/laura-hero.jpg" alt="Laura Müller, Friseurmeisterin im Salon Müller Düsseldorf" loading="eager" width="900" height="1125" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                 </div>
             </div>
@@ -600,7 +614,7 @@
             <div class="container">
                 <div class="team-grid">
                     <div class="team-img">
-                        <img src="https://images.unsplash.com/photo-1614204424926-196a80bf0be8?q=80&w=900&auto=format&fit=crop" alt="Laura Müller, Friseurmeisterin und Inhaberin Salon Müller" loading="lazy" width="900" height="900">
+                        <img src="/images/friseur/laura-team.jpg" alt="Laura Müller, Friseurmeisterin und Inhaberin Salon Müller" loading="lazy" width="900" height="900" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                     <div class="team-text">
                         <p class="role">Inhaberin &amp; Friseurmeisterin</p>
@@ -627,11 +641,11 @@
                     <p>Drei Stuhl-Plätze, viel Tageslicht, eigene Wasch-Lounge. Kein Hektik-Großsalon — sondern eine kleine Manufaktur in der Hohen Straße.</p>
                 </div>
                 <div class="galerie-grid">
-                    <div><img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1200&auto=format&fit=crop" alt="Salon-Empfang Salon Müller mit Aveda-Wand" loading="lazy" width="800" height="1000"></div>
-                    <div><img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=900&auto=format&fit=crop" alt="Stuhl-Platz mit Tageslicht" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=900&auto=format&fit=crop" alt="Wasch-Lounge mit Massagestuhl" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=900&auto=format&fit=crop" alt="Coloration-Anwendung" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=900&auto=format&fit=crop" alt="Brautstyling im Salon" loading="lazy" width="600" height="500"></div>
+                    <div><img src="/images/friseur/salon-empfang.jpg" alt="Salon-Empfang Salon Müller mit Aveda-Wand" loading="lazy" width="800" height="1000" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/friseur/stuhl-tageslicht.jpg" alt="Stuhl-Platz mit Tageslicht" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/friseur/wasch-lounge.jpg" alt="Wasch-Lounge mit Massagestuhl" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/friseur/coloration.jpg" alt="Coloration-Anwendung" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/friseur/brautstyling.jpg" alt="Brautstyling im Salon" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                 </div>
             </div>
         </section>
@@ -776,7 +790,7 @@
                 </div>
                 <div class="news-grid">
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=900&auto=format&fit=crop" alt="Sommer-Trendlooks 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/friseur/news-sommer-trends.jpg" alt="Sommer-Trendlooks 2026" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Trend-Lookbook</p>
                             <h3>Sommer 2026: Warme Naturtöne &amp; Money-Piece</h3>
@@ -784,7 +798,7 @@
                         </div>
                     </a>
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=900&auto=format&fit=crop" alt="Aveda Full-Spectrum-Coloration" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/friseur/news-aveda.jpg" alt="Aveda Full-Spectrum-Coloration" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Neu im Programm</p>
                             <h3>Aveda Full-Spectrum: 96 % pflanzlich, ohne Ammoniak</h3>
@@ -792,7 +806,7 @@
                         </div>
                     </a>
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=900&auto=format&fit=crop" alt="Brautstyling-Saison 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/friseur/news-brautsaison.jpg" alt="Brautstyling-Saison 2026" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Brautstyling</p>
                             <h3>Brautsaison 2026 — Probetermine ab Juni buchbar</h3>

@@ -293,6 +293,20 @@
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
 
+        .img-pending {
+            background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
+            position: relative;
+            min-height: 200px;
+        }
+        .img-pending::after {
+            content: "Bild folgt";
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--accent-dark);
+            font-size: 13px; font-weight: 500; letter-spacing: 0.12em;
+            text-transform: uppercase; opacity: 0.4;
+        }
+
         @media (max-width: 920px) {
             section { padding: 56px 0; }
             .hero, .foto-anfrage, .konfig, .foerder, .wartung, .team, .karriere, .kontakt { padding: 56px 0; }
@@ -355,7 +369,7 @@
                         </div>
                     </div>
                     <div class="hero-img">
-                        <img src="https://images.unsplash.com/photo-1632935568302-1d40d9d70afe?q=80&w=900&auto=format&fit=crop" alt="Dachdeckermeister Thomas Berger mit Sicherheitsgeschirr auf einem Ziegeldach" loading="eager" width="900" height="1100">
+                        <img src="/images/dachdecker/thomas-hero.jpg" alt="Dachdeckermeister Thomas Berger mit Sicherheitsgeschirr auf einem Ziegeldach" loading="eager" width="900" height="1125" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                 </div>
             </div>
@@ -451,22 +465,22 @@
                 <div class="galerie-grid">
                     <div class="gal-project">
                         <div class="gal-imgs">
-                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1632935568302-1d40d9d70afe?q=80&w=600&auto=format&fit=crop" alt="Altes Dach mit Moosbefall vor Sanierung" loading="lazy" width="600" height="400"></div>
-                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1632935189784-5e4b8a3c8e95?q=80&w=600&auto=format&fit=crop" alt="Neues Ziegeldach nach Komplettsanierung" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Vorher"><img src="/images/dachdecker/vorher-1-moos.jpg" alt="Altes Dach mit Moosbefall vor Sanierung" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                            <div data-label="Nachher"><img src="/images/dachdecker/nachher-1-neueindeckung.jpg" alt="Neues Ziegeldach nach Komplettsanierung" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         </div>
                         <div class="gal-meta"><p class="gal-tag">Dachsanierung · 140 m² · 3 Wochen</p><h4>Familie Schmidt, Stuttgart-Degerloch</h4><p>34.200 € Festpreis · inkl. Aufsparrendämmung, neue Rinne, Schiefer-Klassik.</p></div>
                     </div>
                     <div class="gal-project">
                         <div class="gal-imgs">
-                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1582550945154-66d0e6d10b4b?q=80&w=600&auto=format&fit=crop" alt="Sturmschaden mit losen Ziegeln" loading="lazy" width="600" height="400"></div>
-                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=600&auto=format&fit=crop" alt="Saniertes Dach nach Sturmschaden" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Vorher"><img src="/images/dachdecker/vorher-2-sturm.jpg" alt="Sturmschaden mit losen Ziegeln" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                            <div data-label="Nachher"><img src="/images/dachdecker/nachher-2-repariert.jpg" alt="Saniertes Dach nach Sturmschaden" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         </div>
                         <div class="gal-meta"><p class="gal-tag">Sturmnotdienst + Reparatur · 5 Tage</p><h4>Familie Hartmann, Stuttgart-Vaihingen</h4><p>7.800 € · Versicherungs-Abrechnung übernommen, Eigenanteil 250 €.</p></div>
                     </div>
                     <div class="gal-project">
                         <div class="gal-imgs">
-                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=600&auto=format&fit=crop" alt="Dach vor PV-Vorbereitung" loading="lazy" width="600" height="400"></div>
-                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=600&auto=format&fit=crop" alt="Dach mit PV-Indach-System" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Vorher"><img src="/images/dachdecker/vorher-3-pv-leer.jpg" alt="Dach vor PV-Vorbereitung" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                            <div data-label="Nachher"><img src="/images/dachdecker/nachher-3-pv-indach.jpg" alt="Dach mit PV-Indach-System" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         </div>
                         <div class="gal-meta"><p class="gal-tag">Indach-PV + Dämmung · 110 m² · 2 Wochen</p><h4>Familie Becker, Stuttgart-Möhringen</h4><p>42.500 € · BAFA 8.400 € · KfW 261 · Effektiv 32.700 €.</p></div>
                     </div>
@@ -536,7 +550,7 @@
             <div class="container">
                 <div class="team-grid">
                     <div class="team-img">
-                        <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=900&auto=format&fit=crop" alt="Thomas Berger, Dachdeckermeister und Inhaber" loading="lazy" width="900" height="900">
+                        <img src="/images/dachdecker/thomas-team.jpg" alt="Thomas Berger, Dachdeckermeister und Inhaber" loading="lazy" width="900" height="900" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                     <div class="team-text">
                         <p class="role">Inhaber &amp; Dachdeckermeister</p>
