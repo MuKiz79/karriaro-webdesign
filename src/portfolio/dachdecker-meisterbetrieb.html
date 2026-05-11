@@ -1,391 +1,827 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dachdeckerei Braun | Ihr Meisterbetrieb für Dach & Wand</title>
-    <meta name="description" content="Seit über 30 Jahren Ihr Experte für Bedachungen, Sanierung und Flaschnerei in Stuttgart. Schnell, kompetent und zuverlässig.">
+    <title>Dachdecker Berger · Meisterbetrieb Stuttgart — Festpreis in 48 h, Sturmnotdienst 24/7</title>
+    <meta name="description" content="Dachdecker-Meisterbetrieb Berger in Stuttgart. Foto vom Dach senden, Festpreis-Angebot in 48 Stunden. Steildach, Flachdach, Sanierung, BAFA-Förderung. ZVDH-Innung.">
     <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html">
-    <meta property="og:title" content="Dachdeckerei Braun | Ihr Meisterbetrieb für Dach & Wand">
-    <meta property="og:description" content="Seit über 30 Jahren Ihr Experte für Bedachungen, Sanierung und Flaschnerei in Stuttgart.">
+    <meta property="og:title" content="Dachdecker Berger — Meisterbetrieb Stuttgart">
+    <meta property="og:description" content="Festpreis in 48 h. Sturmnotdienst 24/7. ZVDH-Innung, versichert 5 Mio €.">
     <meta property="og:locale" content="de_DE">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1632759972826-67056bbd8d9e?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Dachdeckerei Braun | Ihr Meisterbetrieb für Dach & Wand">
-    <meta name="twitter:description" content="Seit über 30 Jahren Ihr Experte für Bedachungen in Stuttgart.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1632759972826-67056bbd8d9e?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Schema.org LocalBusiness -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "RoofingContractor",
-        "name": "Dachdeckerei Braun",
-        "description": "Seit über 30 Jahren Ihr Experte für Bedachungen, Sanierung und Flaschnerei in Stuttgart.",
+        "name": "Dachdecker Berger Meisterbetrieb",
+        "description": "Dachdecker-Meisterbetrieb in Stuttgart mit Steildach, Flachdach, Dachsanierung, Dämmung und Sturmnotdienst.",
         "url": "https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Stuttgart",
-            "addressCountry": "DE"
-        },
-        "areaServed": "Stuttgart und Umgebung"
+        "address": {"@type": "PostalAddress", "streetAddress": "Heumadener Straße 47", "postalCode": "70329", "addressLocality": "Stuttgart", "addressCountry": "DE"},
+        "telephone": "+49 711 92 47 880",
+        "openingHours": ["Mo-Fr 07:00-17:00", "Sa 08:00-12:00"],
+        "priceRange": "€€€",
+        "areaServed": "Stuttgart und Umkreis 60 km",
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "287"}
     }
     </script>
-
-    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e293b',   // Schiefer-Grau
-                        accent: '#dc2626',    // Ziegel-Rot
-                        secondary: '#f1f5f9', // Helles Grau
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        display: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                    }
-                }
-            }
+    <style>
+        :root {
+            --accent: #7a8b6b;
+            --accent-dark: #5d6b50;
+            --accent-strong: #475438;
+            --accent-bg: #f4f5f0;
+            --bg: #ffffff;
+            --bg-soft: #fafaf8;
+            --text: #1a1d18;
+            --text-soft: #4f534a;
+            --text-light: #8b8e85;
+            --border: #e8eae2;
+            --border-strong: #d2d6c8;
+            --whatsapp: #25D366;
+            --radius: 10px;
+            --radius-lg: 18px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 8px 24px rgba(40,55,30,0.07);
+            --shadow-lg: 0 24px 60px rgba(40,55,30,0.11);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --max: 1240px;
         }
-    </script>
-    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; height: auto; }
+        button, input, textarea, select { font-family: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        ul { list-style: none; }
+        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
+        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h2 { font-size: clamp(30px, 3.8vw, 44px); }
+        h3 { font-size: 20px; }
+        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 10px 10px; z-index: 200; font-size: 14px; }
+        .skip-link:focus { top: 0; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        section { padding: 88px 0; }
+        .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+        .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .section-head h2 { margin-bottom: 14px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+        .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 9px 24px; text-align: center; }
+        .topbar strong { color: var(--accent); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+        .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; }
+        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--accent); color: #fff; border-radius: 6px; font-weight: 700; font-size: 17px; }
+        .nav-links { display: flex; gap: 28px; font-size: 15px; color: var(--text-soft); }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 6px; font-size: 14px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--accent-dark); }
+        .mobile-toggle { display: none; padding: 8px; }
+        .mobile-toggle svg { width: 24px; height: 24px; }
+        .mobile-menu { display: none; }
+
+        .hero { padding: 64px 0 80px; background: linear-gradient(180deg, var(--accent-bg) 0%, var(--bg) 100%); }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero h1 { margin-bottom: 22px; }
+        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 32px; }
+        .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
+        .btn-ghost:hover { border-color: var(--text); }
+        .btn-whatsapp { background: var(--whatsapp); color: #fff; }
+        .btn-whatsapp:hover { background: #1ebe57; }
+        .hero-trust { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .check { color: var(--accent); font-weight: 700; }
+        .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+        .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .notdienst-banner { background: var(--text); color: #fff; padding: 28px 0; }
+        .notdienst-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+        .notdienst-text { display: flex; align-items: center; gap: 16px; }
+        .notdienst-pulse { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; animation: pulse 1.6s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } }
+        .notdienst-text h3 { font-size: 20px; margin-bottom: 4px; color: #fff; }
+        .notdienst-text p { font-size: 14px; color: rgba(255,255,255,0.7); margin: 0; }
+        .notdienst-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+        .notdienst-cta .btn { font-size: 14px; padding: 12px 20px; }
+
+        .foto-anfrage { background: var(--bg-soft); padding: 88px 0; }
+        .foto-card { background: var(--bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 44px; max-width: 920px; margin: 0 auto; border: 1px solid var(--border); }
+        .foto-card-head { margin-bottom: 28px; }
+        .foto-card-head h2 { font-size: 28px; margin-bottom: 6px; }
+        .foto-card-head p { color: var(--text-soft); font-size: 15px; }
+        .foto-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; }
+        .foto-drop { border: 2px dashed var(--border-strong); border-radius: var(--radius); padding: 36px 24px; text-align: center; transition: all 0.2s; cursor: pointer; display: block; }
+        .foto-drop:hover, .foto-drop.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .foto-drop-icon { width: 56px; height: 56px; margin: 0 auto 14px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .foto-drop-icon svg { width: 28px; height: 28px; }
+        .foto-drop h3 { font-size: 17px; margin-bottom: 6px; }
+        .foto-drop p { color: var(--text-soft); font-size: 14px; margin-bottom: 12px; }
+        .foto-drop-mobile { font-size: 12px; color: var(--text-light); }
+        .foto-fields { display: flex; flex-direction: column; gap: 12px; }
+        .foto-fields label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; display: block; }
+        .foto-fields input, .foto-fields select, .foto-fields textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 14px; background: var(--bg); transition: border-color 0.2s; }
+        .foto-fields input:focus, .foto-fields select:focus, .foto-fields textarea:focus { outline: none; border-color: var(--accent); }
+        .foto-fields textarea { resize: vertical; min-height: 70px; }
+        .foto-cta-row { margin-top: 24px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .foto-promise { font-size: 13px; color: var(--text-soft); }
+        .foto-promise strong { color: var(--accent-dark); }
+
+        .trust-strip { background: var(--bg); padding: 36px 0; border-bottom: 1px solid var(--border); }
+        .trust-strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .trust-badge { display: flex; align-items: flex-start; gap: 12px; }
+        .trust-badge-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .trust-badge-icon svg { width: 18px; height: 18px; }
+        .trust-badge strong { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+        .trust-badge span { font-size: 12px; color: var(--text-soft); }
+
+        .leistungen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .leistung { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); transition: all 0.3s; }
+        .leistung:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+        .leistung-icon { width: 44px; height: 44px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .leistung-icon svg { width: 22px; height: 22px; }
+        .leistung h3 { margin-bottom: 8px; }
+        .leistung p { color: var(--text-soft); font-size: 14px; }
+
+        .konfig { background: var(--bg); }
+        .konfig-card { background: var(--bg-soft); border-radius: var(--radius-lg); padding: 40px; max-width: 920px; margin: 0 auto; border: 1px solid var(--border); }
+        .konfig-tabs { display: flex; gap: 8px; margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; }
+        .konfig-tab { padding: 10px 20px; border-radius: 6px; font-size: 14px; color: var(--text-soft); transition: all 0.2s; border: 1px solid transparent; }
+        .konfig-tab.is-active { background: var(--accent); color: #fff; }
+        .konfig-tab:not(.is-active):hover { background: var(--bg); border-color: var(--border-strong); color: var(--text); }
+        .konfig-step { margin-bottom: 22px; }
+        .konfig-step h4 { font-size: 13px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+        .konfig-options { display: flex; gap: 8px; flex-wrap: wrap; }
+        .konfig-option { padding: 10px 16px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: var(--bg); }
+        .konfig-option:hover, .konfig-option.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .konfig-result { margin-top: 28px; padding: 24px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .konfig-price { font-size: 30px; font-weight: 600; color: var(--accent-strong); }
+        .konfig-price small { display: block; font-size: 12px; color: var(--text-soft); font-weight: 400; margin-top: 2px; }
+
+        .galerie { background: var(--bg); }
+        .galerie-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .gal-project { background: var(--bg-soft); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+        .gal-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; aspect-ratio: 16/10; }
+        .gal-imgs > div { position: relative; overflow: hidden; }
+        .gal-imgs img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gal-project:hover .gal-imgs img { transform: scale(1.05); }
+        .gal-imgs > div::before { content: attr(data-label); position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.65); color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; z-index: 1; }
+        .gal-meta { padding: 22px; }
+        .gal-tag { font-size: 11px; color: var(--accent-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+        .gal-meta h4 { font-size: 17px; margin-bottom: 6px; }
+        .gal-meta p { color: var(--text-soft); font-size: 14px; }
+
+        .foerder { background: var(--accent-bg); }
+        .foerder-card { background: var(--bg); border-radius: var(--radius-lg); padding: 40px; max-width: 920px; margin: 0 auto; box-shadow: var(--shadow); }
+        .foerder-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .foerder-input label { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block; color: var(--text); }
+        .foerder-input select, .foerder-input input { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 14px; background: var(--bg); }
+        .foerder-output { background: var(--accent-bg); border-radius: var(--radius); padding: 24px; margin-top: 28px; }
+        .foerder-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+        .foerder-line.total { border-top: 1px solid var(--accent); margin-top: 10px; padding-top: 14px; font-size: 18px; font-weight: 600; color: var(--accent-strong); }
+        .foerder-source { font-size: 12px; color: var(--text-soft); margin-top: 14px; }
+
+        .wartung { background: var(--bg); }
+        .wartung-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 980px; margin: 0 auto; }
+        .wartung-card { padding: 36px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); transition: all 0.3s; position: relative; }
+        .wartung-card.featured { border-color: var(--accent); background: var(--accent-bg); }
+        .wartung-card.featured::before { content: 'Empfohlen'; position: absolute; top: -12px; right: 24px; background: var(--accent); color: #fff; padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; }
+        .wartung-card h3 { font-size: 22px; margin-bottom: 8px; }
+        .wartung-price { font-size: 30px; font-weight: 600; margin-bottom: 4px; color: var(--accent-strong); }
+        .wartung-price small { font-size: 13px; color: var(--text-soft); font-weight: 400; }
+        .wartung-card > p { color: var(--text-soft); margin-bottom: 18px; font-size: 14px; }
+        .wartung-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .wartung-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; }
+        .wartung-list li::before { content: '✓'; color: var(--accent-dark); font-weight: 700; }
+
+        .team { background: var(--bg-soft); }
+        .team-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+        .team-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        .team-text .role { color: var(--accent-dark); font-size: 14px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .team-text h2 { margin-bottom: 16px; }
+        .team-text p { color: var(--text-soft); margin-bottom: 14px; font-size: 16px; }
+        .team-numbers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .team-number .num { font-size: 28px; font-weight: 600; color: var(--accent-dark); margin-bottom: 4px; }
+        .team-number .label { font-size: 13px; color: var(--text-soft); }
+
+        .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .stimme { padding: 28px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+        .stimme-stars { color: var(--accent); margin-bottom: 14px; font-size: 14px; letter-spacing: 2px; }
+        .stimme p { color: var(--text); font-size: 15px; margin-bottom: 18px; line-height: 1.6; }
+        .stimme-author { display: flex; gap: 12px; align-items: center; }
+        .stimme-ava { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-bg); color: var(--accent-dark); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+        .stimme-name { font-size: 14px; font-weight: 500; }
+        .stimme-role { font-size: 12px; color: var(--text-light); }
+        .reviews-aggregate { text-align: center; margin-top: 36px; font-size: 14px; color: var(--text-soft); }
+        .reviews-aggregate strong { color: var(--text); }
+
+        .karriere { background: var(--text); color: #fff; }
+        .karriere h2 { color: #fff; }
+        .karriere .section-head p { color: rgba(255,255,255,0.7); }
+        .karriere .section-head .eyebrow { color: var(--accent); }
+        .karriere-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+        .karriere-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); padding: 32px; }
+        .karriere-card .pos-tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; margin-bottom: 14px; letter-spacing: 0.06em; }
+        .karriere-card h3 { color: #fff; font-size: 20px; margin-bottom: 6px; }
+        .karriere-meta { color: rgba(255,255,255,0.55); font-size: 13px; margin-bottom: 14px; }
+        .karriere-card ul { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+        .karriere-card ul li { font-size: 13px; color: rgba(255,255,255,0.75); display: flex; gap: 8px; }
+        .karriere-card ul li::before { content: '·'; color: var(--accent); font-weight: 700; }
+        .karriere-card .salary { font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 18px; }
+        .karriere-card .salary small { font-size: 12px; color: rgba(255,255,255,0.55); font-weight: 400; }
+
+        .faq { background: var(--bg-soft); }
+        .faq-list { max-width: 760px; margin: 0 auto; }
+        .faq-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; font-weight: 500; font-size: 16px; gap: 16px; list-style: none; }
+        .faq-q::-webkit-details-marker { display: none; }
+        .faq-icon { width: 24px; height: 24px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s; font-size: 16px; line-height: 1; }
+        .faq-item.is-open .faq-icon { transform: rotate(45deg); }
+        .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.3s, padding 0.3s; color: var(--text-soft); font-size: 15px; }
+        .faq-item.is-open .faq-a { padding: 0 24px 20px; max-height: 360px; }
+
+        .kontakt { background: var(--bg-soft); }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        .kontakt-blocks { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+        .kontakt-block { display: flex; gap: 14px; align-items: flex-start; }
+        .kontakt-block-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .kontakt-block-icon svg { width: 18px; height: 18px; }
+        .kontakt-block h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .kontakt-block p, .kontakt-block a { color: var(--text-soft); font-size: 14px; }
+        .kontakt-block a:hover { color: var(--text); text-decoration: underline; }
+        .kontakt-form { background: var(--bg); padding: 32px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 14px; background: var(--bg); transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-checkbox { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); margin-bottom: 14px; }
+        .form-submit { width: 100%; justify-content: center; }
+        .map-mini { aspect-ratio: 16/9; background: var(--accent-bg); border-radius: var(--radius); margin-top: 18px; position: relative; overflow: hidden; }
+        .map-pin { position: absolute; top: 50%; left: 50%; width: 32px; height: 32px; background: var(--accent); border-radius: 50% 50% 50% 0; transform: translate(-50%, -50%) rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .map-pin::after { content: ''; width: 10px; height: 10px; background: #fff; border-radius: 50%; transform: rotate(45deg); }
+        .map-mini svg { width: 100%; height: 100%; }
+
+        footer { background: #0f0f0f; color: #aab1a8; padding: 56px 0 28px; font-size: 14px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px; margin-bottom: 40px; }
+        .footer-brand { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+        footer p { margin-bottom: 6px; }
+        footer h5 { color: #fff; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+        footer ul li { margin-bottom: 6px; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 22px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 12px; }
+        .karriaro-back { color: rgba(255,255,255,0.55); }
+        .karriaro-back:hover { color: #fff; }
+
+        .whatsapp-sticky { position: fixed; bottom: 24px; right: 24px; background: var(--whatsapp); color: #fff; width: 56px; height: 56px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(37,211,102,0.4); z-index: 90; transition: transform 0.2s; }
+        .whatsapp-sticky:hover { transform: scale(1.05); }
+        .whatsapp-sticky svg { width: 28px; height: 28px; fill: #fff; }
+
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+        .modal-bg.is-open { display: flex; }
+        .modal { background: #fff; border-radius: var(--radius-lg); max-width: 480px; width: 100%; padding: 36px; text-align: center; }
+        .modal-icon { width: 64px; height: 64px; background: var(--accent-bg); color: var(--accent-dark); border-radius: 50%; margin: 0 auto 18px; display: flex; align-items: center; justify-content: center; }
+        .modal h3 { font-size: 22px; margin-bottom: 12px; }
+        .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
+
+        @media (max-width: 920px) {
+            section { padding: 56px 0; }
+            .hero, .foto-anfrage, .konfig, .foerder, .wartung, .team, .karriere, .kontakt { padding: 56px 0; }
+            .hero-grid, .team-grid, .kontakt-grid, .foto-grid, .foerder-row, .wartung-grid { grid-template-columns: 1fr; gap: 32px; }
+            .leistungen-grid, .stimmen-grid, .galerie-grid, .karriere-grid { grid-template-columns: 1fr; }
+            .trust-strip-inner { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: inline-flex; }
+            .mobile-menu.is-open { display: flex; flex-direction: column; padding: 16px 24px 24px; gap: 14px; background: var(--bg); border-bottom: 1px solid var(--border); }
+            .mobile-menu a { padding: 8px 0; font-size: 16px; color: var(--text-soft); }
+            .notdienst-inner { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
 </head>
-<body class="font-sans text-slate-800 bg-white antialiased">
+<body>
+    <a class="skip-link" href="#main">Zum Inhalt</a>
+    <div class="topbar">⚡ <strong>Sturmnotdienst 24/7</strong> — Plane in zwei Stunden bei Ihnen. <a href="tel:+49711924788">0711 92 47 880</a></div>
 
-    <!-- TOP BAR (Notfall Kontakt) -->
-    <div class="bg-accent text-white py-2 px-4">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm font-bold">
-            <div class="flex items-center gap-2 mb-2 md:mb-0">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                <span>Sturmschaden? Wir sind erreichbar!</span>
-            </div>
-            <a href="tel:0123456789" class="flex items-center gap-2 hover:text-slate-200 transition">
-                <i class="fa-solid fa-phone"></i>
-                Notdienst: 0123 / 45 67 89
-            </a>
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="/portfolio/dachdecker-meisterbetrieb.html" class="brand"><span class="brand-mark">B</span> Dachdecker Berger</a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a href="#anfrage">Foto-Anfrage</a>
+                <a href="#leistungen">Leistungen</a>
+                <a href="#foerder">Förderung</a>
+                <a href="#referenzen">Referenzen</a>
+                <a href="#team">Team</a>
+                <a href="#karriere">Karriere</a>
+            </nav>
+            <a href="#anfrage" class="nav-cta">Foto senden</a>
+            <button class="mobile-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('is-open');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
         </div>
-    </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#anfrage">Foto-Anfrage</a><a href="#leistungen">Leistungen</a><a href="#foerder">Förderung</a><a href="#referenzen">Referenzen</a><a href="#team">Team</a><a href="#karriere">Karriere</a>
+        </div>
+    </header>
 
-    <!-- NAVIGATION -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50" x-data="{ open: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="#" class="flex items-center gap-3 group">
-                        <div class="w-12 h-12 bg-primary text-white flex items-center justify-center rounded-lg shadow-lg group-hover:bg-accent transition duration-300">
-                            <i class="fa-solid fa-house-chimney text-2xl"></i>
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div>
+                        <p class="hero-eyebrow">Dachdecker-Meister · Großraum Stuttgart</p>
+                        <h1>Ihr Dach. Dicht. In zwei Wochen.</h1>
+                        <p class="lead">Foto vom Schaden senden, Festpreis-Angebot in 48 Stunden — ohne Anfahrt-Pauschale. Sturmnotdienst 24/7. ZVDH-Innungsbetrieb seit 1989.</p>
+                        <div class="hero-ctas">
+                            <a href="#anfrage" class="btn btn-primary">Foto vom Dach senden →</a>
+                            <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" rel="noopener">WhatsApp</a>
+                            <a href="tel:+49711924788" class="btn btn-ghost">0711 92 47 880</a>
                         </div>
-                        <div class="flex flex-col">
-                            <span class="font-display font-bold text-2xl text-primary tracking-tight leading-none">Braun</span>
-                            <span class="text-xs font-bold uppercase tracking-widest text-slate-500">Meisterbetrieb</span>
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#leistungen" class="font-bold text-slate-600 hover:text-accent transition">Leistungen</a>
-                    <a href="#referenzen" class="font-bold text-slate-600 hover:text-accent transition">Projekte</a>
-                    <a href="#uber-uns" class="font-bold text-slate-600 hover:text-accent transition">Über Uns</a>
-                    <a href="#kontakt" class="bg-primary hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold transition shadow-lg transform hover:-translate-y-0.5">
-                        Angebot anfordern
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden">
-                    <button @click="open = !open" class="text-slate-600 hover:text-accent p-2" aria-label="Menü öffnen" :aria-expanded="open.toString()">
-                        <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
-                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div x-show="open" class="md:hidden bg-white border-t p-4 space-y-2 shadow-xl">
-            <a href="#leistungen" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Leistungen</a>
-            <a href="#referenzen" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Projekte</a>
-            <a href="#uber-uns" class="block px-4 py-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Über Uns</a>
-            <a href="#kontakt" class="block px-4 py-3 rounded-lg bg-accent text-white font-bold text-center mt-4">Jetzt anfragen</a>
-        </div>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <section class="relative pt-20 pb-32 md:pt-32 md:pb-48 bg-primary overflow-hidden">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1632759972826-67056bbd8d9e?q=80&w=1920&auto=format&fit=crop" alt="Dachdecker bei der Arbeit" class="w-full h-full object-cover opacity-20">
-            <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-transparent"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-3/5">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/20 border border-accent/40 text-red-200 text-sm font-bold mb-6">
-                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                    Meisterbetrieb seit 1995
-                </div>
-                <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
-                    Wir machen Ihr Dach <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400">wetterfest & sicher.</span>
-                </h1>
-                <p class="text-lg text-slate-300 mb-10 max-w-xl leading-relaxed">
-                    Ob Steildach, Flachdach oder energetische Sanierung – Dachdeckerei Braun ist Ihr zuverlässiger Partner in Stuttgart und Umgebung. Qualität, die Generationen hält.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="#kontakt" class="inline-flex justify-center items-center bg-accent hover:bg-red-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition shadow-[0_0_20px_rgba(220,38,38,0.4)]">
-                        Kostenlose Beratung
-                        <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </a>
-                    <a href="#referenzen" class="inline-flex justify-center items-center bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-lg font-bold text-lg transition backdrop-blur-sm">
-                        Unsere Projekte
-                    </a>
-                </div>
-
-                <!-- Trust Badges -->
-                <div class="mt-12 flex gap-8 border-t border-white/10 pt-8">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-award text-3xl text-accent"></i>
-                        <div>
-                            <div class="font-bold text-white">Meister</div>
-                            <div class="text-xs text-slate-400">Zertifizierter Betrieb</div>
+                        <div class="hero-trust">
+                            <span><span class="check">✓</span> Festpreis-Garantie</span>
+                            <span><span class="check">✓</span> ZVDH-Innung</span>
+                            <span><span class="check">✓</span> Versichert bis 5 Mio €</span>
+                            <span><span class="check">✓</span> BFSG-konform</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <i class="fa-brands fa-google text-3xl text-accent"></i>
-                        <div>
-                            <div class="font-bold text-white">4.9 Sterne</div>
-                            <div class="text-xs text-slate-400">Kundenzufriedenheit</div>
-                        </div>
+                    <div class="hero-img">
+                        <img src="https://images.unsplash.com/photo-1632935568302-1d40d9d70afe?q=80&w=900&auto=format&fit=crop" alt="Dachdeckermeister Thomas Berger mit Sicherheitsgeschirr auf einem Ziegeldach" loading="eager" width="900" height="1100">
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Floating Contact Card -->
-            <div class="hidden md:block md:w-2/5 relative">
-                <div class="absolute -inset-4 bg-accent/20 rounded-2xl blur-xl"></div>
-                <div class="bg-white p-8 rounded-2xl shadow-2xl relative transform rotate-2 hover:rotate-0 transition duration-500">
-                    <h3 class="text-xl font-bold text-primary mb-2">Schnell-Kontakt</h3>
-                    <p class="text-slate-500 mb-6 text-sm">Hinterlassen Sie uns Ihre Nummer, wir rufen binnen 60 Min zurück.</p>
-                    <form class="space-y-4">
-                        <input type="text" placeholder="Ihr Name" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-accent">
-                        <input type="tel" placeholder="Telefonnummer" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:border-accent">
-                        <button class="w-full bg-primary hover:bg-slate-800 text-white font-bold py-3 rounded-lg transition">Rückruf anfordern</button>
+        <div class="notdienst-banner">
+            <div class="notdienst-inner">
+                <div class="notdienst-text">
+                    <span class="notdienst-pulse" aria-hidden="true"></span>
+                    <div>
+                        <h3>Sturmnotdienst aktiv · Plane in 2 h</h3>
+                        <p>Sturmschaden, Hagel oder Leck? Wir kommen rund um die Uhr — auch am Wochenende.</p>
+                    </div>
+                </div>
+                <div class="notdienst-cta">
+                    <a href="tel:+49711924788" class="btn btn-primary">0711 92 47 880</a>
+                    <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" rel="noopener">WhatsApp Notdienst</a>
+                </div>
+            </div>
+        </div>
+
+        <section id="anfrage" class="foto-anfrage" aria-label="Foto-Anfrage">
+            <div class="container">
+                <div class="foto-card">
+                    <div class="foto-card-head">
+                        <h2>Foto vom Dach — Festpreis in 48 h</h2>
+                        <p>Spart Ihnen den Vor-Ort-Termin und uns die Anfahrt. Sie wissen übermorgen, was es kostet — schriftlich, verbindlich.</p>
+                    </div>
+                    <div class="foto-grid">
+                        <label class="foto-drop" for="foto-upload" id="dropzone">
+                            <input type="file" id="foto-upload" accept="image/*" multiple style="display: none;">
+                            <div class="foto-drop-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                            <h3>Bilder hierher ziehen oder klicken</h3>
+                            <p>Bis zu 5 Fotos · max. 10 MB pro Bild · JPG, PNG, HEIC</p>
+                            <p class="foto-drop-mobile">📱 Smartphone-Kamera funktioniert direkt</p>
+                        </label>
+                        <div class="foto-fields">
+                            <div><label for="fa-art">Was ist das Problem?</label>
+                                <select id="fa-art">
+                                    <option>Sturmschaden / lose Ziegel</option>
+                                    <option>Undichte Stelle / Wassereintritt</option>
+                                    <option>Komplette Dachsanierung</option>
+                                    <option>Dämmung nach GEG</option>
+                                    <option>Dachfenster Tausch / Einbau</option>
+                                    <option>PV-Vorbereitung (Indach)</option>
+                                    <option>Flachdach-Abdichtung</option>
+                                    <option>Sonstiges</option>
+                                </select>
+                            </div>
+                            <div><label for="fa-name">Ihr Name</label><input id="fa-name" type="text" placeholder="Vor- und Nachname"></div>
+                            <div><label for="fa-tel">Telefon (für Rückruf)</label><input id="fa-tel" type="tel" placeholder="0711 …"></div>
+                            <div><label for="fa-msg">Beschreibung (optional)</label><textarea id="fa-msg" placeholder="Wann ist es aufgefallen? Schon einmal ausgebessert?"></textarea></div>
+                        </div>
+                    </div>
+                    <div class="foto-cta-row">
+                        <p class="foto-promise">⏱ <strong>Festpreis-Angebot innerhalb 48 Stunden</strong> — schriftlich, ohne Anfahrt-Pauschale.</p>
+                        <button type="button" class="btn btn-primary" onclick="openModal('anfrage')">Anfrage senden →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="trust-strip">
+            <div class="trust-strip-inner">
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><div><strong>Festpreis-Garantie</strong><span>Schriftlich vor Auftrag</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><strong>Versichert bis 5 Mio €</strong><span>Allianz Bauwirtschaft</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><polyline points="9 22 9 14 15 14 15 22"/></svg></span><div><strong>ZVDH-Innung</strong><span>Mitglied seit 1989</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><div><strong>Gerüstbau-Schein</strong><span>Eigene Gerüstkolonne</span></div></div>
+            </div>
+        </div>
+
+        <section id="leistungen">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Leistungen</p>
+                    <h2>Steildach. Flachdach. Sanierung. Notdienst.</h2>
+                    <p>Vom losen Ziegel bis zur Komplettsanierung mit Dämmung — ein Meisterbetrieb, ein Festpreis, ein Ansprechpartner.</p>
+                </div>
+                <div class="leistungen-grid">
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg></div><h3>Steildach</h3><p>Ziegel-, Schiefer- und Biberschwanzdächer. Komplettneubau, Umdeckung oder lokale Reparatur — auch bei denkmalgeschützten Häusern.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="10" rx="1"/><line x1="3" y1="12" x2="21" y2="12"/></svg></div><h3>Flachdach</h3><p>Bitumen, EPDM oder Kunststoff. Wir prüfen Untergrund, Dampfsperre, Gefälle und Entwässerung — kein Pfusch unter der Folie.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z"/><path d="M9 3v18"/></svg></div><h3>Dachsanierung</h3><p>Inklusive Lattung, Unterspannbahn, Dämmung und ggf. neue Rinne. Festpreis nach Begehung, Bauzeit zwei bis vier Wochen.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.4 0 4.5.94 6.12 2.47"/><polyline points="21 3 21 9 15 9"/></svg></div><h3>Dämmung GEG-konform</h3><p>Aufsparrendämmung, Zwischensparrendämmung, Untersparrendämmung — je nach Substanz. Berechnung gegen den geforderten U-Wert.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="4" y1="12" x2="20" y2="12"/></svg></div><h3>Dachfenster</h3><p>Velux-Premium-Partner. Vom Einbau bis zum Eindeck-Rahmen. Bei Tausch passgenau in 1 bis 2 Tagen ohne Nässerisiko.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h3>Sturmnotdienst 24/7</h3><p>Plane, Notabdichtung, Schadensdokumentation für die Versicherung — Anrücken in 2 Stunden, auch nachts und am Wochenende.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="referenzen" class="galerie">
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Referenzen</p><h2>Vorher. Nachher.</h2><p>Drei Projekte aus 2025 — echte Dächer, echte Familien, echte Festpreise inklusive Förder-Abzug.</p></div>
+                <div class="galerie-grid">
+                    <div class="gal-project">
+                        <div class="gal-imgs">
+                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1632935568302-1d40d9d70afe?q=80&w=600&auto=format&fit=crop" alt="Altes Dach mit Moosbefall vor Sanierung" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1632935189784-5e4b8a3c8e95?q=80&w=600&auto=format&fit=crop" alt="Neues Ziegeldach nach Komplettsanierung" loading="lazy" width="600" height="400"></div>
+                        </div>
+                        <div class="gal-meta"><p class="gal-tag">Dachsanierung · 140 m² · 3 Wochen</p><h4>Familie Schmidt, Stuttgart-Degerloch</h4><p>34.200 € Festpreis · inkl. Aufsparrendämmung, neue Rinne, Schiefer-Klassik.</p></div>
+                    </div>
+                    <div class="gal-project">
+                        <div class="gal-imgs">
+                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1582550945154-66d0e6d10b4b?q=80&w=600&auto=format&fit=crop" alt="Sturmschaden mit losen Ziegeln" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=600&auto=format&fit=crop" alt="Saniertes Dach nach Sturmschaden" loading="lazy" width="600" height="400"></div>
+                        </div>
+                        <div class="gal-meta"><p class="gal-tag">Sturmnotdienst + Reparatur · 5 Tage</p><h4>Familie Hartmann, Stuttgart-Vaihingen</h4><p>7.800 € · Versicherungs-Abrechnung übernommen, Eigenanteil 250 €.</p></div>
+                    </div>
+                    <div class="gal-project">
+                        <div class="gal-imgs">
+                            <div data-label="Vorher"><img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=600&auto=format&fit=crop" alt="Dach vor PV-Vorbereitung" loading="lazy" width="600" height="400"></div>
+                            <div data-label="Nachher"><img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=600&auto=format&fit=crop" alt="Dach mit PV-Indach-System" loading="lazy" width="600" height="400"></div>
+                        </div>
+                        <div class="gal-meta"><p class="gal-tag">Indach-PV + Dämmung · 110 m² · 2 Wochen</p><h4>Familie Becker, Stuttgart-Möhringen</h4><p>42.500 € · BAFA 8.400 € · KfW 261 · Effektiv 32.700 €.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="foerder" class="foerder">
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Förderrechner</p><h2>Was bekommt der Staat dazu?</h2><p>Dachsanierung mit Dämmung wird seit 2024 doppelt gefördert: BAFA Einzelmaßnahme plus KfW-Tilgungszuschuss plus Stadt-Stuttgart-Topf.</p></div>
+                <div class="foerder-card">
+                    <div class="foerder-row">
+                        <div class="foerder-input"><label for="fr-typ">Maßnahme</label>
+                            <select id="fr-typ"><option>Dachsanierung mit Aufsparrendämmung</option><option>Zwischensparrendämmung nachträglich</option><option>Komplett-Neueindeckung</option><option>Indach-PV mit Sanierung</option></select>
+                        </div>
+                        <div class="foerder-input"><label for="fr-jahr">Baujahr Ihres Hauses</label>
+                            <select id="fr-jahr"><option>vor 1978</option><option>1978–1995</option><option>1995–2009</option><option>nach 2009</option></select>
+                        </div>
+                    </div>
+                    <div class="foerder-output">
+                        <div class="foerder-line"><span>Investitionskosten (geschätzt)</span><span>34.200 €</span></div>
+                        <div class="foerder-line"><span>BAFA Einzelmaßnahme Dach 15 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 5.130 €</span></div>
+                        <div class="foerder-line"><span>KfW 261 Effizienzhaus-Bonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 3.420 €</span></div>
+                        <div class="foerder-line"><span>Stadt Stuttgart Klimabonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.000 €</span></div>
+                        <div class="foerder-line total"><span>Ihr Eigenanteil</span><span>24.650 €</span></div>
+                        <p class="foerder-source">Stand 2026, je nach Einzelfall. Verbindliche Berechnung im Beratungsgespräch — kostenlos, wir übernehmen die Antragsstellung.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="margin-top: 18px; width: 100%; justify-content: center;" onclick="openModal('foerder')">Persönliche Förderberatung anfragen</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="wartung">
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Wartung</p><h2>Dach-Check einmal im Jahr.</h2><p>Verhindert Folgeschäden — gerissene Dachpfanne, lockere First, verstopfte Rinne. Wir kommen unaufgefordert, Sie ersparen sich den Anruf.</p></div>
+                <div class="wartung-grid">
+                    <div class="wartung-card">
+                        <h3>Dach-Check Standard</h3>
+                        <p class="wartung-price">189,–&nbsp;€ <small>pro Jahr</small></p>
+                        <p>Einmal jährlich Sichtprüfung von Dach, First, Rinne und Fallrohren.</p>
+                        <ul class="wartung-list">
+                            <li>Sichtprüfung Dach, First, Anschlüsse</li>
+                            <li>Rinne und Fallrohre reinigen</li>
+                            <li>Protokoll mit Foto-Dokumentation</li>
+                            <li>20 % Rabatt auf akute Reparaturen</li>
+                        </ul>
+                        <button type="button" class="btn btn-ghost" style="width: 100%; justify-content: center;" onclick="openModal('wartung')">Standard wählen</button>
+                    </div>
+                    <div class="wartung-card featured">
+                        <h3>Dach-Check Premium</h3>
+                        <p class="wartung-price">379,–&nbsp;€ <small>pro Jahr</small></p>
+                        <p>Zweimal jährlich Frühjahr/Herbst, plus Garantie-Zusage.</p>
+                        <ul class="wartung-list">
+                            <li>Zweimal jährlich, Frühjahr und Herbst</li>
+                            <li>Drohnen-Inspektion der Dachfläche</li>
+                            <li>Rinne, Anschlüsse, Schornsteinkopf</li>
+                            <li>Notdienst-Priorität (Anrücken in 1 h)</li>
+                            <li>30 % Rabatt auf akute Reparaturen</li>
+                        </ul>
+                        <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="openModal('wartung')">Premium wählen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="team">
+            <div class="container">
+                <div class="team-grid">
+                    <div class="team-img">
+                        <img src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=900&auto=format&fit=crop" alt="Thomas Berger, Dachdeckermeister und Inhaber" loading="lazy" width="900" height="900">
+                    </div>
+                    <div class="team-text">
+                        <p class="role">Inhaber &amp; Dachdeckermeister</p>
+                        <h2>Thomas Berger</h2>
+                        <p>Dachdeckermeister in dritter Generation. Den Betrieb hat mein Großvater 1962 gegründet, mein Vater hat ihn übernommen, ich seit 2008. Wir haben kein Bauschild auf jedem zweiten Dach in Stuttgart — wir machen die Dächer, die in 30 Jahren noch dicht sind.</p>
+                        <p>Bei uns kommt der Meister persönlich zur Begehung. Kein Verkäufer, kein Subunternehmer, kein "der Chef ruft Sie zurück". ZVDH-Mitglied, BAFA-Energie-Berater und seit 2019 zusätzlich Sachverständiger für Sturm- und Hagelschäden.</p>
+                        <div class="team-numbers">
+                            <div class="team-number"><div class="num">1.400+</div><div class="label">Dächer in 37 Jahren</div></div>
+                            <div class="team-number"><div class="num">14</div><div class="label">Festangestellte Gesellen</div></div>
+                            <div class="team-number"><div class="num">2 h</div><div class="label">Notdienst-Anrückzeit</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Kundenstimmen</p><h2>Was unsere Bauherren sagen.</h2></div>
+                <div class="stimmen-grid">
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Sturmschaden am Sonntag, Plane noch am Sonntag drauf, Montag Festpreis-Angebot in der E-Mail. Versicherung hat alles ohne Diskussion gezahlt — auch wegen der sauberen Foto-Dokumentation von Berger."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">FS</div>
+                            <div><div class="stimme-name">Familie Schmidt</div><div class="stimme-role">Degerloch · 2025</div></div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Dachsanierung inklusive Aufsparrendämmung. Drei Wochen Bauzeit, exakt im Festpreis. Die Förderanträge hat Herr Berger komplett gemacht — wir mussten nur unterschreiben. So muss Handwerk."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">JH</div>
+                            <div><div class="stimme-name">Jörg Hartmann</div><div class="stimme-role">Vaihingen · 2024</div></div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Premium-Wartung seit drei Jahren. Im Herbst-Termin fiel eine gerissene Dachpfanne auf, die wir nie bemerkt hätten — wäre der nächste Winter-Schaden geworden. 89 € statt 5.000 € Folgeschaden."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">UB</div>
+                            <div><div class="stimme-name">Ute Becker</div><div class="stimme-role">Möhringen · seit 2022</div></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="reviews-aggregate">★★★★★ <strong>4,9</strong> von 287 Google-Bewertungen · <strong>4,8</strong> auf MyHammer · <strong>ZVDH-zertifiziert</strong></p>
+            </div>
+        </section>
+
+        <section id="karriere" class="karriere">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Karriere</p>
+                    <h2>Drei Stellen offen. Direkt mit dem Chef sprechen.</h2>
+                    <p>Keine HR-Pipeline. Kein Bewerbungsportal. WhatsApp an den Meister, Probetag in der Folgewoche.</p>
+                </div>
+                <div class="karriere-grid">
+                    <div class="karriere-card">
+                        <span class="pos-tag">Lehrstelle</span>
+                        <h3>Auszubildende:r Dachdecker (m/w/d)</h3>
+                        <p class="karriere-meta">3,5 Jahre · Start August 2026 · Hauptschulabschluss reicht</p>
+                        <ul>
+                            <li>Praxisstart ab Woche eins, Berufsschule blockweise</li>
+                            <li>Eigenes Werkzeug ab dem zweiten Lehrjahr</li>
+                            <li>Übernahmegarantie bei guter Gesellenprüfung</li>
+                        </ul>
+                        <p class="salary">1. Jahr: 920 €<small> brutto · steigend bis 1.380 € im 4. Jahr</small></p>
+                        <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">WhatsApp an den Meister</a>
+                    </div>
+                    <div class="karriere-card">
+                        <span class="pos-tag">Geselle</span>
+                        <h3>Dachdeckergeselle (m/w/d)</h3>
+                        <p class="karriere-meta">Vollzeit · Festanstellung · ab sofort</p>
+                        <ul>
+                            <li>Steildach- und Flachdach-Erfahrung</li>
+                            <li>Eigene moderne Maschinen + Hub</li>
+                            <li>Kein Wochenende außer Notdienst-Rufbereitschaft</li>
+                        </ul>
+                        <p class="salary">ab 3.400 €<small> brutto · plus Auslöse und Bonus</small></p>
+                        <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" style="width: 100%; justify-content: center;">WhatsApp an den Meister</a>
+                    </div>
+                    <div class="karriere-card">
+                        <span class="pos-tag">Empfehlung</span>
+                        <h3>Empfehlungsprämie 1.000 €</h3>
+                        <p class="karriere-meta">Für jeden Geselle, der über Sie kommt und sechs Monate bleibt</p>
+                        <ul>
+                            <li>500 € sofort, 500 € nach Probezeit</li>
+                            <li>Auch von Bauherren und Kunden</li>
+                            <li>Steuerfrei wenn unter 600 €/Person/Jahr</li>
+                        </ul>
+                        <p class="salary">1.000 €<small> pro vermitteltem Gesellen</small></p>
+                        <a href="#kontakt" class="btn btn-ghost" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.05); color: #fff; border-color: rgba(255,255,255,0.2);">Empfehlung melden</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq">
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Häufige Fragen</p><h2>FAQ.</h2></div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie genau ist der Festpreis aus dem Foto-Angebot?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Bei klar erkennbaren Schäden (lose Ziegel, Sturmschaden, Reparatur) ist der Festpreis verbindlich nach Foto. Bei größeren Sanierungen folgt eine kostenlose Begehung — dann wird der Festpreis schriftlich fixiert, ohne Nachverhandlung. Wir kalkulieren keine "Überraschungen" mit Sicherheitsaufschlag, sondern sagen ehrlich, wenn etwas im Voraus unklar ist.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie lange dauert die Sanierung eines Einfamilienhaus-Dachs?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Eine reine Neueindeckung mit 120–150 m² Dachfläche dauert zwei bis drei Wochen — inklusive Gerüstaufbau und -abbau. Mit Aufsparrendämmung und neuer Rinne planen wir drei bis vier Wochen. Wetterbedingte Verzögerungen sind selten, weil wir mit Plane arbeiten und nur in trockenen Phasen die Dampfsperre öffnen.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Übernehmen Sie die Förder-Antragstellung?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ja, vollständig — wir stellen die Anträge bei BAFA (Einzelmaßnahme), KfW (261), und bei der Stadt Stuttgart (Klimabonus). Sie unterschreiben nur die Vollmacht. Wichtig: Anträge müssen vor Auftragsvergabe gestellt sein, deshalb planen wir mindestens vier Wochen Vorlauf zwischen Angebot und Baubeginn.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Was kostet der Sturmnotdienst?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Anrücken plus Plane plus Notabdichtung kostet pauschal 380 € (Werktags) oder 580 € (Wochenende/nachts) — die Versicherung übernimmt das in der Regel vollständig, bei intakter Wohngebäudeversicherung. Mit Premium-Wartungsvertrag sind Anrücken und Plane kostenfrei.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Welche Versicherungen haben Sie?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Betriebshaftpflicht Allianz Bauwirtschaft bis 5 Mio €, Bauleistungs- und Montageversicherung pro Auftrag separat, Berufsunfallversicherung für alle Gesellen und Lehrlinge. Den Versicherungsnachweis erhalten Sie auf Wunsch vor Vertragsabschluss.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Arbeiten Sie auch an denkmalgeschützten Häusern?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ja, ungefähr 20 % unserer Aufträge sind denkmalrelevant. Wir stimmen mit der Unteren Denkmalbehörde Stuttgart ab, verwenden originaltreue Materialien (Biberschwanz, Naturschiefer) und dokumentieren den Bestand vor jedem Eingriff. Förderfähig oft bis 60 % über Denkmalschutz-Töpfe.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt" class="kontakt">
+            <div class="container">
+                <div class="kontakt-grid">
+                    <div>
+                        <p class="eyebrow" style="color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;">Kontakt</p>
+                        <h2>Schreiben oder anrufen.</h2>
+                        <p style="color: var(--text-soft); font-size: 17px; margin-bottom: 28px;">Anfrage, Festpreis oder Notdienst — wir antworten innerhalb von zwei Stunden an Werktagen, beim Notdienst sofort.</p>
+                        <div class="kontakt-blocks">
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                                <div><h4>Adresse</h4><p>Heumadener Straße 47, 70329 Stuttgart-Hedelfingen</p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+                                <div><h4>Telefon &amp; WhatsApp</h4><p><a href="tel:+49711924788">0711 92 47 880</a> · <a href="https://wa.me/4971192478800">WhatsApp Notdienst</a></p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                                <div><h4>E-Mail</h4><p><a href="mailto:meister@dachdecker-berger.de">meister@dachdecker-berger.de</a></p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                                <div><h4>Öffnungszeiten</h4><p>Mo–Fr 7:00–17:00 · Sa 8:00–12:00 · Notdienst 24/7</p></div>
+                            </div>
+                        </div>
+                        <div class="map-mini">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="800" height="450" fill="#f4f5f0"/>
+                                <path d="M 0 200 L 800 240" stroke="#d2d6c8" stroke-width="2" fill="none"/>
+                                <path d="M 200 0 L 240 450" stroke="#d2d6c8" stroke-width="2" fill="none"/>
+                                <path d="M 0 320 L 800 280" stroke="#e8eae2" stroke-width="1.5" fill="none"/>
+                                <path d="M 500 0 L 530 450" stroke="#e8eae2" stroke-width="1.5" fill="none"/>
+                                <text x="60" y="180" font-family="Inter, sans-serif" font-size="11" fill="#8b8e85">Heumadener Straße</text>
+                                <text x="60" y="350" font-family="Inter, sans-serif" font-size="11" fill="#abada3">Stuttgart-Hedelfingen</text>
+                            </svg>
+                            <div class="map-pin"></div>
+                        </div>
+                    </div>
+                    <form class="kontakt-form" onsubmit="event.preventDefault(); openModal('kontakt');">
+                        <div class="form-row">
+                            <div class="form-group"><label for="kf-name">Vor- und Nachname</label><input id="kf-name" type="text" required></div>
+                            <div class="form-group"><label for="kf-email">E-Mail</label><input id="kf-email" type="email" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="kf-tel">Telefon</label><input id="kf-tel" type="tel" required></div>
+                            <div class="form-group"><label for="kf-anliegen">Anliegen</label>
+                                <select id="kf-anliegen" required>
+                                    <option value="festpreis">Festpreis-Anfrage</option>
+                                    <option value="notdienst">Sturmnotdienst</option>
+                                    <option value="foerder">Förderberatung</option>
+                                    <option value="wartung">Dach-Check Wartung</option>
+                                    <option value="karriere">Karriere / Stelle</option>
+                                    <option value="andere">Sonstiges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label for="kf-msg">Nachricht</label><textarea id="kf-msg" rows="4" required></textarea></div>
+                        <label class="form-checkbox">
+                            <input type="checkbox" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß <a href="#" style="color: var(--accent-dark); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
+                        </label>
+                        <button type="submit" class="btn btn-primary form-submit">Nachricht senden →</button>
                     </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- SERVICES -->
-    <section id="leistungen" class="py-24 bg-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-accent font-bold uppercase tracking-widest text-sm mb-2">Unsere Expertise</h2>
-                <h3 class="font-display text-4xl font-bold text-primary">Alles rund ums Dach</h3>
-            </div>
+    <a href="https://wa.me/4971192478800" class="whatsapp-sticky" aria-label="WhatsApp-Notdienst" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.6 6.32A8 8 0 003.55 14.7l-1.21 4.42 4.53-1.19a8 8 0 0010.73-11.6zM12 19.05a7 7 0 01-3.57-.98l-.26-.15-2.69.7.72-2.62-.17-.27a7 7 0 1110.97 3.32 7 7 0 01-5 0zm3.85-5.25c-.21-.1-1.25-.62-1.45-.69-.19-.07-.34-.1-.48.1-.14.21-.55.69-.67.83-.12.14-.25.16-.46.05-.21-.1-.89-.33-1.69-1.05-.62-.55-1.04-1.24-1.17-1.45-.12-.21-.01-.32.09-.43.09-.09.21-.25.31-.37.1-.12.14-.21.21-.35.07-.14.04-.26-.02-.37-.06-.1-.48-1.15-.65-1.58-.17-.41-.35-.36-.48-.36-.12 0-.27-.02-.41-.02-.14 0-.37.05-.57.26-.2.21-.76.74-.76 1.8s.78 2.09.89 2.23c.1.14 1.53 2.34 3.71 3.28 2.18.93 2.18.62 2.57.58.4-.04 1.25-.51 1.43-1 .18-.5.18-.92.12-1-.05-.08-.19-.13-.4-.23z"/></svg>
+    </a>
 
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
-                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
-                        <i class="fa-solid fa-house"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-primary mb-3">Steildach & Ziegel</h4>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        Neueindeckung oder Reparatur. Wir arbeiten mit hochwertigen Tonziegeln und Betondachsteinen für Langlebigkeit.
-                    </p>
-                    <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Sturmschaden-Reparatur</li>
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dachfenster-Einbau</li>
-                    </ul>
-                </div>
-
-                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
-                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
-                        <i class="fa-solid fa-layer-group"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-primary mb-3">Flachdach-Abdichtung</h4>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        Spezialisten für Bitumen- und Folienabdichtung. Ideal für Garagen, Gewerbehallen und moderne Wohnbauten.
-                    </p>
-                    <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dichtigkeitsprüfung</li>
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Gründach-Vorbereitung</li>
-                    </ul>
-                </div>
-
-                <div class="group bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-accent/30 hover:shadow-xl transition duration-300">
-                    <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-accent text-2xl group-hover:bg-accent group-hover:text-white transition">
-                        <i class="fa-solid fa-sheet-plastic"></i>
-                    </div>
-                    <h4 class="text-xl font-bold text-primary mb-3">Flaschnerei & Blech</h4>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        Maßgefertigte Kaminverkleidungen, Dachrinnen und Gaubenverkleidungen aus Kupfer, Zink oder Alu.
-                    </p>
-                    <ul class="text-sm text-slate-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Dachrinnen-Reinigung</li>
-                        <li><i class="fa-solid fa-check text-accent mr-2"></i> Kaminhauben</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW: GALLERY / REFERENZEN SECTION -->
-    <section id="referenzen" class="py-24 bg-slate-50 border-t border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
                 <div>
-                    <h2 class="text-accent font-bold uppercase tracking-widest text-sm mb-2">Aus der Praxis</h2>
-                    <h3 class="font-display text-4xl font-bold text-primary">Unsere aktuellen Projekte</h3>
+                    <div class="footer-brand">B Dachdecker Berger</div>
+                    <p>Dachdecker-Meisterbetrieb in dritter Generation. Großraum Stuttgart und 60 km Umkreis seit 1962.</p>
+                    <p style="margin-top: 16px;">Heumadener Straße 47<br>70329 Stuttgart</p>
                 </div>
-                <div class="flex gap-2">
-                    <span class="px-4 py-2 bg-primary text-white rounded-full text-sm font-bold shadow-md cursor-default">Alle</span>
-                    <span class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-100 transition cursor-pointer">Steildach</span>
-                    <span class="px-4 py-2 bg-white text-slate-600 border border-slate-200 rounded-full text-sm font-medium hover:bg-slate-100 transition cursor-pointer hidden sm:inline-block">Sanierung</span>
-                </div>
+                <div><h5>Service</h5><ul><li><a href="#anfrage">Foto-Anfrage</a></li><li><a href="#leistungen">Leistungen</a></li><li><a href="#foerder">Förderung</a></li><li><a href="#wartung">Wartung</a></li></ul></div>
+                <div><h5>Über uns</h5><ul><li><a href="#team">Meister</a></li><li><a href="#karriere">Karriere</a></li><li><a href="#referenzen">Referenzen</a></li></ul></div>
+                <div><h5>Rechtliches</h5><ul><li><a href="#">Impressum</a></li><li><a href="#">Datenschutz</a></li><li><a href="#">Barrierefreiheits-Erklärung</a></li></ul></div>
             </div>
-
-            <!-- Grid Layout -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <!-- Project 1: Villa / Steildach (NEU) -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop" alt="Sanierung Villa" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
-                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">Degerloch</span>
-                        <h4 class="text-white text-xl font-bold mb-1">Villa Dachsanierung</h4>
-                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Komplette Neueindeckung mit Biberschwanz-Ziegeln.</p>
-                    </div>
-                </div>
-
-                <!-- Project 2: Flachdach Modern (NEU) -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <img src="https://images.unsplash.com/photo-1520699697819-577813647460?q=80&w=800&auto=format&fit=crop" alt="Flachdach Gewerbe" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
-                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">Degerloch</span>
-                        <h4 class="text-white text-xl font-bold mb-1">Flachdach Abdichtung</h4>
-                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Bitumen-Schweißbahn mit 20 Jahren Garantie.</p>
-                    </div>
-                </div>
-
-                <!-- Project 3: Neubau / Ziegel Nahaufnahme (NEU) -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <img src="https://images.unsplash.com/photo-1599619351208-3e6c839d6828?q=80&w=800&auto=format&fit=crop" alt="Neubau Eindeckung" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
-                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">Degerloch</span>
-                        <h4 class="text-white text-xl font-bold mb-1">Neubau Eindeckung</h4>
-                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Moderne Flachziegel in Anthrazit.</p>
-                    </div>
-                </div>
-
-                <!-- Project 4: Dachstuhl Holz (NEU) -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <img src="https://images.unsplash.com/photo-1533758488827-16215319c3c5?q=80&w=800&auto=format&fit=crop" alt="Dachstuhl Arbeiten" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
-                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">Degerloch</span>
-                        <h4 class="text-white text-xl font-bold mb-1">Dachstuhl Reparatur</h4>
-                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Austausch morscher Balken und Neu-Dämmung.</p>
-                    </div>
-                </div>
-
-                <!-- Project 5: Solar -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=800&auto=format&fit=crop" alt="Solaranlage" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition duration-300">
-                        <span class="text-accent text-xs font-bold uppercase tracking-wider mb-1 block">Degerloch</span>
-                        <h4 class="text-white text-xl font-bold mb-1">Solar-Vorbereitung</h4>
-                        <p class="text-slate-300 text-sm opacity-0 group-hover:opacity-100 transition delay-100">Integration von PV-Anlagen in die Dachhaut.</p>
-                    </div>
-                </div>
-
-                <!-- Project 6: Call to Action -->
-                <div class="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer h-80">
-                    <div class="absolute inset-0 bg-primary flex flex-col items-center justify-center p-8 text-center group-hover:bg-slate-800 transition duration-300">
-                        <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-4">
-                            <i class="fa-solid fa-camera text-2xl text-white"></i>
-                        </div>
-                        <h4 class="text-white text-xl font-bold mb-2">Mehr sehen?</h4>
-                        <p class="text-slate-400 text-sm mb-6">Wir haben über 500 Dächer in der Region realisiert. Fragen Sie nach Referenzen in Ihrer Nähe.</p>
-                        <a href="#kontakt" class="px-6 py-2 bg-accent text-white rounded-lg font-bold text-sm hover:bg-red-700 transition">Kontakt aufnehmen</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- CALL TO ACTION STRIP -->
-    <section class="bg-primary py-16 border-y-4 border-accent">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-            <div>
-                <h2 class="text-3xl font-display font-bold text-white mb-2">Dach undicht? Warten Sie nicht.</h2>
-                <p class="text-slate-400">Wir sind schnell vor Ort in Stuttgart und Umgebung. Keine versteckten Anfahrtskosten.</p>
-            </div>
-            <div class="flex gap-4">
-                <a href="tel:0123456789" class="bg-white text-primary px-8 py-4 rounded-lg font-bold hover:bg-slate-200 transition flex items-center gap-3">
-                    <i class="fa-solid fa-phone"></i> 0123 / 45 67 89
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-slate-900 text-slate-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
-            <div class="grid md:grid-cols-3 gap-12 mb-12">
-                <div>
-                    <h4 class="text-white font-bold text-lg mb-4">Dachdeckerei Braun</h4>
-                    <p class="text-sm leading-relaxed">
-                        Ihr Meisterbetrieb in Stuttgart. <br>
-                        Qualität, Tradition und modernste Technik.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-lg mb-4">Kontakt</h4>
-                    <p class="text-sm">Musterstraße 1<br>12345 Musterstadt</p>
-                    <p class="text-sm mt-2">Tel: 0123 / 45 67 89<br>Mail: info@muster-dach.de</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-lg mb-4">Rechtliches</h4>
-                    <ul class="text-sm space-y-2">
-                        <li><a href="#" class="hover:text-white">Impressum</a></li>
-                        <li><a href="#" class="hover:text-white">Datenschutz</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-slate-800 pt-8 text-xs text-center">
-                &copy; 2026 Dachdeckerei Braun. Alle Rechte vorbehalten. Design by Karriaro.
+            <div class="footer-bottom">
+                <span>© 2026 Dachdecker Berger Meisterbetrieb · Alle Rechte vorbehalten.</span>
+                <a href="https://karriaro-webdesign.de/" class="karriaro-back">Made by Karriaro · Webdesign-Manufaktur ↗</a>
             </div>
         </div>
     </footer>
 
+    <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this) closeModal();">
+        <div class="modal">
+            <div class="modal-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <h3 id="modal-title">Demo-Modus</h3>
+            <p id="modal-text">In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.</p>
+            <button type="button" class="btn btn-primary" onclick="closeModal()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.mobile-menu a').forEach(function (a) {
+            a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
+
+        // Konfig-Tabs (cosmetic — single tab active)
+        document.querySelectorAll('.konfig-tab').forEach(function (t) {
+            t.addEventListener('click', function () {
+                document.querySelectorAll('.konfig-tab').forEach(function (x) { x.classList.remove('is-active'); });
+                t.classList.add('is-active');
+            });
+        });
+        ['konfig-size', 'konfig-ausst', 'konfig-zeit'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.querySelectorAll('.konfig-option').forEach(function (o) {
+                o.addEventListener('click', function () {
+                    el.querySelectorAll('.konfig-option').forEach(function (x) { x.classList.remove('is-active'); });
+                    o.classList.add('is-active');
+                });
+            });
+        });
+
+        // Foto-Dropzone visual feedback
+        (function () {
+            var dz = document.getElementById('dropzone');
+            if (!dz) return;
+            ['dragover', 'dragenter'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('is-active'); }); });
+            ['dragleave', 'drop'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('is-active'); }); });
+        })();
+
+        // FAQ
+        document.querySelectorAll('.faq-item').forEach(function (item) {
+            item.addEventListener('toggle', function () {
+                if (item.open) item.classList.add('is-open'); else item.classList.remove('is-open');
+            });
+        });
+
+        // Modal
+        var MODAL_TEXTS = {
+            anfrage: ['Demo-Anfrage gesendet', 'In der echten Anwendung erhalten Sie binnen 48 h ein verbindliches Festpreis-Angebot per E-Mail — schriftlich, ohne Anfahrt-Pauschale.'],
+            foerder: ['Demo-Förderberatung', 'In der echten Anwendung kontaktiert Sie ein Förder-Berater binnen 24 h für ein kostenloses Beratungsgespräch.'],
+            wartung: ['Demo-Wartungsvertrag', 'In der echten Anwendung erhalten Sie den Wartungsvertrag per E-Mail mit allen Konditionen und der ersten Termin-Erinnerung.'],
+            kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von zwei Stunden beantwortet.']
+        };
+        function openModal(kind) {
+            var modal = document.getElementById('modal');
+            var t = document.getElementById('modal-title');
+            var p = document.getElementById('modal-text');
+            var pair = MODAL_TEXTS[kind] || ['Demo-Modus', 'In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.'];
+            t.textContent = pair[0];
+            p.textContent = pair[1] + ' Diese Seite ist ein Karriaro-Designbeispiel.';
+            modal.classList.add('is-open');
+        }
+        function closeModal() { document.getElementById('modal').classList.remove('is-open'); }
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+    </script>
 </body>
 </html>

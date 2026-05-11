@@ -1,377 +1,702 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Immobilien Hanseat | Exklusive Immobilien in Hamburg</title>
-    <meta name="description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien. Diskret, kompetent und persönlich. Jetzt kostenlose Wertermittlung starten.">
+    <title>Stadtmakler Stuttgart · Immobilienmakler — Wertermittlung in 60 Sekunden, diskret begleitet</title>
+    <meta name="description" content="Immobilienmakler Stadtmakler Stuttgart. Wertermittlung in 60 Sekunden, Off-Market-Vermittlung, IVD-Mitglied. 24 Jahre lokale Marktkenntnis. HypZert-Sachverständiger.">
     <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/immobilien-makler.html">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://karriaro-webdesign.de/portfolio/immobilien-makler.html">
-    <meta property="og:title" content="Immobilien Hanseat | Exklusive Immobilien in Hamburg">
-    <meta property="og:description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien. Diskret, kompetent und persönlich.">
+    <meta property="og:title" content="Stadtmakler Stuttgart — Immobilienmakler Stadtgebiet">
+    <meta property="og:description" content="Wertermittlung in 60 Sekunden. Diskret begleitet. IVD-Mitglied seit 24 Jahren.">
     <meta property="og:locale" content="de_DE">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Immobilien Hanseat | Exklusive Immobilien in Hamburg">
-    <meta name="twitter:description" content="Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien in Hamburg.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Schema.org LocalBusiness -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "RealEstateAgent",
-        "name": "Immobilien Hanseat",
-        "description": "Ihr Experte für den Verkauf und die Bewertung von Wohnimmobilien in Hamburg.",
+        "name": "Stadtmakler Stuttgart",
+        "description": "Immobilienmakler im Stuttgarter Stadtgebiet mit Wertermittlung, Verkauf, Vermietung und Off-Market-Vermittlung. IVD-Mitglied, HypZert-Sachverständiger.",
         "url": "https://karriaro-webdesign.de/portfolio/immobilien-makler.html",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Marktplatz 1",
-            "addressLocality": "Hamburg",
-            "addressCountry": "DE"
-        },
-        "areaServed": "Hamburg"
+        "address": {"@type": "PostalAddress", "streetAddress": "Königstraße 38", "postalCode": "70173", "addressLocality": "Stuttgart", "addressCountry": "DE"},
+        "telephone": "+49 711 22 19 770",
+        "openingHours": ["Mo-Fr 09:00-18:00", "Sa 10:00-14:00"],
+        "priceRange": "€€€",
+        "areaServed": "Stuttgart Stadtgebiet",
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "412"}
     }
     </script>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
-
-    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0f172a',   // Slate 900 (Deep Navy)
-                        accent: '#c2410c',    // Burnt Orange / Copper (Premium Akzent)
-                        light: '#f8fafc',     // Slate 50
-                        surface: '#ffffff',
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-                    }
-                }
-            }
+    <style>
+        :root {
+            --accent: #2c4a5e;
+            --accent-dark: #1d3548;
+            --accent-strong: #122436;
+            --accent-bg: #eef2f6;
+            --bg: #ffffff;
+            --bg-soft: #f9fafb;
+            --text: #16202b;
+            --text-soft: #4a5563;
+            --text-light: #8590a0;
+            --border: #e3e8ee;
+            --border-strong: #cbd3dd;
+            --gold: #8a7b5c;
+            --radius: 8px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 8px 24px rgba(20,40,60,0.07);
+            --shadow-lg: 0 24px 60px rgba(20,40,60,0.11);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --max: 1240px;
         }
-    </script>
-    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; height: auto; }
+        button, input, textarea, select { font-family: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        ul { list-style: none; }
+        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
+        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h2 { font-size: clamp(30px, 3.8vw, 44px); }
+        h3 { font-size: 20px; }
+        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 8px 8px; z-index: 200; font-size: 14px; }
+        .skip-link:focus { top: 0; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        section { padding: 96px 0; }
+        .section-head { text-align: center; max-width: 660px; margin: 0 auto 48px; }
+        .section-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
+        .section-head h2 { margin-bottom: 14px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+
+        .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 9px 24px; text-align: center; letter-spacing: 0.01em; }
+        .topbar strong { color: var(--gold); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+        .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--accent); color: #fff; border-radius: 4px; font-weight: 700; font-size: 17px; font-family: 'Georgia', serif; }
+        .nav-links { display: flex; gap: 28px; font-size: 15px; color: var(--text-soft); }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 4px; font-size: 14px; font-weight: 600; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--accent-dark); }
+        .mobile-toggle { display: none; padding: 8px; }
+        .mobile-toggle svg { width: 24px; height: 24px; }
+        .mobile-menu { display: none; }
+
+        .hero { padding: 72px 0 96px; background: linear-gradient(180deg, var(--accent-bg) 0%, var(--bg) 100%); }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+        .hero h1 { margin-bottom: 22px; }
+        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 560px; margin-bottom: 32px; }
+        .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 4px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-gold { background: var(--gold); color: #fff; }
+        .btn-gold:hover { background: #6e6347; }
+        .hero-trust { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .check { color: var(--gold); font-weight: 700; }
+        .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+        .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Wertermittlung-Widget */
+        .bewertung { background: var(--bg-soft); padding: 96px 0; }
+        .bewertung-card { background: var(--bg); border-radius: var(--radius-lg); padding: 48px; max-width: 920px; margin: 0 auto; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+        .bewertung-card-head { margin-bottom: 28px; }
+        .bewertung-card-head h2 { font-size: 28px; margin-bottom: 6px; }
+        .bewertung-card-head p { color: var(--text-soft); font-size: 15px; }
+        .konfig-tabs { display: flex; gap: 8px; margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; }
+        .konfig-tab { padding: 10px 20px; border-radius: 4px; font-size: 14px; color: var(--text-soft); transition: all 0.2s; border: 1px solid transparent; }
+        .konfig-tab.is-active { background: var(--accent); color: #fff; }
+        .konfig-tab:not(.is-active):hover { background: var(--bg-soft); border-color: var(--border-strong); color: var(--text); }
+        .konfig-step { margin-bottom: 22px; }
+        .konfig-step h4 { font-size: 13px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+        .konfig-options { display: flex; gap: 8px; flex-wrap: wrap; }
+        .konfig-option { padding: 10px 16px; border: 1px solid var(--border-strong); border-radius: 4px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: var(--bg); }
+        .konfig-option:hover, .konfig-option.is-active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+        .bewertung-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+        .bewertung-inputs label { font-size: 13px; font-weight: 500; margin-bottom: 4px; display: block; color: var(--text); }
+        .bewertung-inputs input { width: 100%; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 4px; font-size: 14px; background: var(--bg); transition: border-color 0.2s; }
+        .bewertung-inputs input:focus { outline: none; border-color: var(--accent); }
+        .bewertung-result { margin-top: 28px; padding: 28px; background: var(--accent-bg); border-radius: var(--radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .bewertung-range { font-size: 30px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; }
+        .bewertung-range small { display: block; font-size: 12px; color: var(--text-soft); font-weight: 400; margin-top: 4px; }
+
+        .trust-strip { background: var(--bg); padding: 36px 0; border-bottom: 1px solid var(--border); }
+        .trust-strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .trust-badge { display: flex; align-items: flex-start; gap: 12px; }
+        .trust-badge-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .trust-badge-icon svg { width: 18px; height: 18px; }
+        .trust-badge strong { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+        .trust-badge span { font-size: 12px; color: var(--text-soft); }
+
+        .leistungen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .leistung { padding: 30px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); transition: all 0.3s; }
+        .leistung:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+        .leistung-icon { width: 44px; height: 44px; background: var(--accent-bg); color: var(--accent); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+        .leistung-icon svg { width: 22px; height: 22px; }
+        .leistung h3 { margin-bottom: 8px; }
+        .leistung p { color: var(--text-soft); font-size: 14px; }
+
+        /* Off-Market-Galerie */
+        .portfolio-section { background: var(--bg); }
+        .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .portfolio-card { background: var(--bg-soft); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); transition: all 0.3s; }
+        .portfolio-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+        .portfolio-img { aspect-ratio: 16/10; overflow: hidden; position: relative; }
+        .portfolio-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .portfolio-card:hover .portfolio-img img { transform: scale(1.04); }
+        .portfolio-tag { position: absolute; top: 14px; left: 14px; background: var(--gold); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+        .portfolio-body { padding: 22px 24px; }
+        .portfolio-loc { font-size: 12px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+        .portfolio-body h4 { font-size: 17px; margin-bottom: 8px; }
+        .portfolio-specs { display: flex; gap: 16px; font-size: 13px; color: var(--text-soft); padding-top: 12px; border-top: 1px solid var(--border); }
+        .portfolio-specs strong { color: var(--text); font-weight: 600; }
+        .portfolio-price { margin-top: 12px; font-size: 18px; font-weight: 600; color: var(--accent); }
+
+        /* Marktbarometer */
+        .markt { background: var(--accent-bg); }
+        .markt-card { background: var(--bg); border-radius: var(--radius-lg); padding: 36px; max-width: 980px; margin: 0 auto; box-shadow: var(--shadow); }
+        .markt-table { width: 100%; border-collapse: collapse; }
+        .markt-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+        .markt-table td { padding: 14px; font-size: 15px; border-bottom: 1px solid var(--border); }
+        .markt-table tr:last-child td { border-bottom: none; }
+        .markt-table td strong { color: var(--text); font-weight: 600; }
+        .markt-table .trend-up { color: var(--accent); font-weight: 600; }
+        .markt-table .trend-flat { color: var(--text-soft); }
+        .markt-source { font-size: 12px; color: var(--text-soft); margin-top: 18px; text-align: center; }
+
+        .team { background: var(--bg-soft); }
+        .team-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+        .team-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        .team-text .role { color: var(--accent); font-size: 14px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .team-text h2 { margin-bottom: 18px; }
+        .team-text p { color: var(--text-soft); margin-bottom: 14px; font-size: 16px; }
+        .team-numbers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .team-number .num { font-size: 28px; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+        .team-number .label { font-size: 13px; color: var(--text-soft); }
+
+        .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        .stimme { padding: 30px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+        .stimme-stars { color: var(--gold); margin-bottom: 14px; font-size: 14px; letter-spacing: 2px; }
+        .stimme p { color: var(--text); font-size: 15px; margin-bottom: 18px; line-height: 1.6; }
+        .stimme-author { display: flex; gap: 12px; align-items: center; }
+        .stimme-ava { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-bg); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+        .stimme-name { font-size: 14px; font-weight: 500; }
+        .stimme-role { font-size: 12px; color: var(--text-light); }
+        .reviews-aggregate { text-align: center; margin-top: 32px; font-size: 14px; color: var(--text-soft); }
+        .reviews-aggregate strong { color: var(--text); }
+
+        .faq { background: var(--bg-soft); }
+        .faq-list { max-width: 760px; margin: 0 auto; }
+        .faq-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; font-weight: 500; font-size: 16px; gap: 16px; list-style: none; }
+        .faq-q::-webkit-details-marker { display: none; }
+        .faq-icon { width: 24px; height: 24px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s; font-size: 16px; line-height: 1; }
+        .faq-item.is-open .faq-icon { transform: rotate(45deg); }
+        .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.3s, padding 0.3s; color: var(--text-soft); font-size: 15px; }
+        .faq-item.is-open .faq-a { padding: 0 24px 20px; max-height: 360px; }
+
+        .kontakt { background: var(--bg); }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+        .kontakt-blocks { display: flex; flex-direction: column; gap: 18px; margin-bottom: 28px; }
+        .kontakt-block { display: flex; gap: 14px; align-items: flex-start; }
+        .kontakt-block-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .kontakt-block-icon svg { width: 18px; height: 18px; }
+        .kontakt-block h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .kontakt-block p, .kontakt-block a { color: var(--text-soft); font-size: 14px; }
+        .kontakt-block a:hover { color: var(--text); text-decoration: underline; }
+        .kontakt-form { background: var(--bg-soft); padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 4px; font-size: 14px; background: var(--bg); transition: border-color 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-checkbox { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); margin-bottom: 14px; }
+        .form-submit { width: 100%; justify-content: center; }
+        .map-mini { aspect-ratio: 16/9; background: var(--accent-bg); border-radius: var(--radius); margin-top: 18px; position: relative; overflow: hidden; }
+        .map-pin { position: absolute; top: 50%; left: 50%; width: 32px; height: 32px; background: var(--accent); border-radius: 50% 50% 50% 0; transform: translate(-50%, -50%) rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .map-pin::after { content: ''; width: 10px; height: 10px; background: #fff; border-radius: 50%; transform: rotate(45deg); }
+        .map-mini svg { width: 100%; height: 100%; }
+
+        footer { background: var(--text); color: #95a0b0; padding: 64px 0 32px; font-size: 14px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+        .footer-brand { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 14px; font-family: 'Georgia', serif; letter-spacing: -0.01em; }
+        footer p { margin-bottom: 8px; }
+        footer h5 { color: #fff; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+        footer ul li { margin-bottom: 8px; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 12px; }
+        .karriaro-back { color: rgba(255,255,255,0.55); }
+        .karriaro-back:hover { color: #fff; }
+
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+        .modal-bg.is-open { display: flex; }
+        .modal { background: #fff; border-radius: var(--radius-lg); max-width: 480px; width: 100%; padding: 36px; text-align: center; }
+        .modal-icon { width: 64px; height: 64px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+        .modal h3 { font-size: 22px; margin-bottom: 12px; }
+        .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
+
+        @media (max-width: 920px) {
+            section { padding: 64px 0; }
+            .hero, .bewertung, .team, .kontakt { padding: 56px 0; }
+            .hero-grid, .team-grid, .kontakt-grid { grid-template-columns: 1fr; gap: 32px; }
+            .leistungen-grid, .stimmen-grid, .portfolio-grid { grid-template-columns: 1fr; }
+            .trust-strip-inner { grid-template-columns: 1fr 1fr; }
+            .bewertung-inputs { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .nav-links { display: none; }
+            .mobile-toggle { display: inline-flex; }
+            .mobile-menu.is-open { display: flex; flex-direction: column; padding: 16px 24px 24px; gap: 14px; background: var(--bg); border-bottom: 1px solid var(--border); }
+            .mobile-menu a { padding: 8px 0; font-size: 16px; color: var(--text-soft); }
+            .bewertung-card { padding: 28px; }
+            .markt-card { padding: 22px; overflow-x: auto; }
+        }
+    </style>
 </head>
-<body class="font-sans text-slate-600 bg-light antialiased">
+<body>
+    <a class="skip-link" href="#main">Zum Inhalt</a>
+    <div class="topbar"><strong>Stadtmakler Stuttgart</strong> · IVD-Mitglied · 24 Jahre lokale Marktkenntnis · <a href="tel:+49711221977">0711 22 19 770</a></div>
 
-    <!-- TOP BAR -->
-    <div class="bg-primary text-slate-300 py-2 px-4 text-xs font-medium tracking-wide hidden md:block border-b border-white/5">
-        <div class="max-w-7xl mx-auto flex justify-between">
-            <div class="flex gap-6">
-                <span><i class="fa-solid fa-location-dot text-accent mr-2"></i>Marktplatz 1, Hamburg</span>
-                <span><i class="fa-solid fa-envelope text-accent mr-2"></i>info@immobilien-hanseat.de</span>
-            </div>
-            <div class="flex gap-4">
-                <a href="#" class="hover:text-white transition">Kaufen</a>
-                <a href="#" class="hover:text-white transition">Verkaufen</a>
-                <a href="#" class="hover:text-white transition">Mieten</a>
-            </div>
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="/portfolio/immobilien-makler.html" class="brand"><span class="brand-mark">S</span> Stadtmakler Stuttgart</a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a href="#bewertung">Wertermittlung</a>
+                <a href="#leistungen">Leistungen</a>
+                <a href="#portfolio">Objekte</a>
+                <a href="#markt">Marktbarometer</a>
+                <a href="#team">Team</a>
+                <a href="#kontakt">Kontakt</a>
+            </nav>
+            <a href="#bewertung" class="nav-cta">Wert ermitteln</a>
+            <button class="mobile-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('is-open');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
         </div>
-    </div>
-
-    <!-- NAVIGATION -->
-    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm border-b border-slate-100" x-data="{ open: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-24 items-center">
-                <!-- Logo -->
-                <a href="#" class="flex flex-col group">
-                    <span class="font-serif text-2xl font-bold text-primary tracking-tight group-hover:text-accent transition duration-300">Immobilien Hanseat</span>
-                    <span class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-bold">Immobilien</span>
-                </a>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-10">
-                    <a href="#angebote" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Immobilien</a>
-                    <a href="#service" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Verkauf</a>
-                    <a href="#uber-uns" class="text-sm font-bold uppercase tracking-wider hover:text-accent transition">Über Uns</a>
-                    <a href="#bewertung" class="bg-primary hover:bg-accent text-white px-6 py-3 text-sm font-bold uppercase tracking-widest transition duration-300 shadow-lg">
-                        Wertermittlung
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="flex items-center md:hidden">
-                    <button @click="open = !open" class="text-primary hover:text-accent p-2" aria-label="Menü öffnen" :aria-expanded="open.toString()">
-                        <i class="fa-solid fa-bars text-2xl" x-show="!open"></i>
-                        <i class="fa-solid fa-xmark text-2xl" x-show="open" x-cloak></i>
-                    </button>
-                </div>
-            </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#bewertung">Wertermittlung</a><a href="#leistungen">Leistungen</a><a href="#portfolio">Objekte</a><a href="#markt">Marktbarometer</a><a href="#team">Team</a><a href="#kontakt">Kontakt</a>
         </div>
+    </header>
 
-        <!-- Mobile Menu -->
-        <div x-show="open" class="md:hidden bg-white border-t p-6 space-y-4 shadow-xl absolute w-full">
-            <a href="#angebote" class="block font-bold text-slate-800 text-lg">Immobilien</a>
-            <a href="#service" class="block font-bold text-slate-800 text-lg">Verkauf</a>
-            <a href="#bewertung" class="block bg-accent text-white px-4 py-3 text-center font-bold uppercase tracking-widest mt-4">Kostenlose Bewertung</a>
-        </div>
-    </nav>
-
-    <!-- HERO SECTION -->
-    <section class="relative h-[80vh] min-h-[600px] flex items-center">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1600596542815-2a4d9fbea40d?q=80&w=1920&auto=format&fit=crop" alt="Luxus Villa Interior" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent"></div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div class="max-w-2xl">
-                <span class="inline-block py-1 px-3 border border-white/30 rounded-full text-white/80 text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
-                    Seit 25 Jahren in Hamburg
-                </span>
-                <h1 class="font-serif text-5xl md:text-7xl font-bold text-white leading-tight mb-8">
-                    Wir finden den <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-200 to-accent">perfekten Käufer.</span>
-                </h1>
-                <p class="text-lg text-slate-300 mb-10 leading-relaxed max-w-lg">
-                    Immobilienverkauf ist Vertrauenssache. Wir bewerten, präsentieren und vermitteln Ihre Immobilie zum Bestpreis. Diskret und professionell.
-                </p>
-
-                <!-- Quick Search Box -->
-                <div class="bg-white p-2 rounded-lg shadow-2xl flex flex-col md:flex-row gap-2 max-w-xl">
-                    <select class="p-3 bg-slate-50 rounded-md text-sm font-bold text-slate-600 focus:outline-none w-full md:w-auto">
-                        <option>Kaufen</option>
-                        <option>Mieten</option>
-                    </select>
-                    <select class="p-3 bg-slate-50 rounded-md text-sm font-bold text-slate-600 focus:outline-none w-full">
-                        <option>Alle Immobilientypen</option>
-                        <option>Haus</option>
-                        <option>Wohnung</option>
-                        <option>Grundstück</option>
-                    </select>
-                    <button class="bg-accent hover:bg-orange-700 text-white px-8 py-3 rounded-md font-bold transition w-full md:w-auto">
-                        Suchen
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- LEAD MAGNET: WERTERMITTLUNG -->
-    <section id="bewertung" class="relative -mt-20 z-20 px-4">
-        <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col md:flex-row">
-            <div class="p-10 md:w-1/2 flex flex-col justify-center">
-                <span class="text-accent font-bold uppercase tracking-widest text-xs mb-2">Kostenlose Analyse</span>
-                <h2 class="font-serif text-3xl font-bold text-primary mb-4">Was ist Ihre Immobilie wert?</h2>
-                <p class="text-slate-500 mb-8 leading-relaxed">
-                    Der Immobilienmarkt in Hamburg ändert sich ständig. Nutzen Sie unsere Marktkenntnis für eine realistische Einschätzung – unverbindlich und kostenfrei.
-                </p>
-                <div class="flex gap-4">
-                    <input type="text" placeholder="Ihre Adresse / PLZ" class="flex-1 bg-slate-50 border border-slate-200 px-4 py-3 rounded-lg focus:outline-none focus:border-accent transition">
-                    <button class="bg-primary hover:bg-slate-800 text-white px-6 py-3 rounded-lg font-bold transition">
-                        Starten
-                    </button>
-                </div>
-            </div>
-            <div class="bg-primary md:w-1/2 relative min-h-[300px]">
-                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=800&auto=format&fit=crop" alt="Makler Gespräch" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay">
-                <div class="absolute inset-0 flex items-center justify-center p-10">
-                    <div class="text-center">
-                        <div class="text-4xl font-serif font-bold text-white mb-2">450+</div>
-                        <div class="text-white/70 text-sm uppercase tracking-widest font-bold">Erfolgreiche Verkäufe</div>
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div>
+                        <p class="hero-eyebrow">Immobilien · Stuttgart Stadtgebiet</p>
+                        <h1>Ihr Verkauf. Korrekt bewertet. Diskret begleitet.</h1>
+                        <p class="lead">Wertermittlung in 60 Sekunden, vor-Ort-Termin verfeinert. Off-Market-Vermittlung an unser Käufer-Register. IVD-Mitglied, HypZert-Sachverständiger, 24 Jahre lokal.</p>
+                        <div class="hero-ctas">
+                            <a href="#bewertung" class="btn btn-primary">Wertermittlung starten →</a>
+                            <a href="#kontakt" class="btn btn-ghost">Erstgespräch vereinbaren</a>
+                        </div>
+                        <div class="hero-trust">
+                            <span><span class="check">✓</span> IVD-Mitglied</span>
+                            <span><span class="check">✓</span> HypZert-Sachverständiger</span>
+                            <span><span class="check">✓</span> BFSG-konform</span>
+                            <span><span class="check">✓</span> 24 Jahre Stuttgart</span>
+                        </div>
+                    </div>
+                    <div class="hero-img">
+                        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=900&auto=format&fit=crop" alt="Stuttgarter Altbau-Fassade aus dem Portfolio Stadtmakler Stuttgart" loading="eager" width="900" height="1100">
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- IMMOBILIEN ANGEBOTE -->
-    <section id="angebote" class="py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-12">
+        <section id="bewertung" class="bewertung" aria-label="Online-Wertermittlung">
+            <div class="container">
+                <div class="bewertung-card">
+                    <div class="bewertung-card-head">
+                        <h2>Online-Wertermittlung in 60 Sekunden</h2>
+                        <p>Datenbasiert über Vergleichswerte, Stadtteil-Index und Bauzustand. Verbindlicher Wert erst nach Vor-Ort-Termin — diese Schätzung ist die belastbare Vorab-Orientierung.</p>
+                    </div>
+                    <div class="konfig-tabs">
+                        <button type="button" class="konfig-tab is-active" data-konfig="haus">Haus</button>
+                        <button type="button" class="konfig-tab" data-konfig="etw">Eigentumswohnung</button>
+                        <button type="button" class="konfig-tab" data-konfig="grund">Grundstück</button>
+                    </div>
+                    <div class="bewertung-inputs">
+                        <div><label for="bw-plz">PLZ</label><input id="bw-plz" type="text" placeholder="70173"></div>
+                        <div><label for="bw-flaeche">Wohnfläche (m²)</label><input id="bw-flaeche" type="number" placeholder="142"></div>
+                        <div><label for="bw-baujahr">Baujahr</label><input id="bw-baujahr" type="number" placeholder="1986"></div>
+                    </div>
+                    <div class="konfig-step">
+                        <h4>Zustand</h4>
+                        <div class="konfig-options" id="bw-zustand">
+                            <button type="button" class="konfig-option">Sanierungsbedürftig</button>
+                            <button type="button" class="konfig-option">Gepflegt</button>
+                            <button type="button" class="konfig-option is-active">Renoviert</button>
+                            <button type="button" class="konfig-option">Neuwertig</button>
+                        </div>
+                    </div>
+                    <div class="bewertung-result">
+                        <div>
+                            <p class="bewertung-range" id="bw-range">685.000 – 745.000 €</p>
+                            <p style="font-size: 12px; color: var(--text-soft); margin-top: 4px;">Spanne basiert auf 18 Vergleichsobjekten im PLZ-Bereich, Stand Q1/2026.</p>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="openModal('bewertung')">Vor-Ort-Termin vereinbaren →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="trust-strip">
+            <div class="trust-strip-inner">
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><div><strong>IVD-Mitglied</strong><span>Bundesverband seit 2002</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><div><strong>HypZert-Sachverständiger</strong><span>Reg.-Nr. SV-4711</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><div><strong>Vermögensschaden-Haftpflicht</strong><span>2,5 Mio € pro Fall</span></div></div>
+                <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><polyline points="9 22 9 14 15 14 15 22"/></svg></span><div><strong>BFSG-konform</strong><span>seit Juni 2025 Pflicht</span></div></div>
+            </div>
+        </div>
+
+        <section id="leistungen">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Leistungen</p>
+                    <h2>Verkauf. Vermietung. Bewertung. Diskret.</h2>
+                    <p>Vom Erstgespräch bis zur Schlüsselübergabe — ein Ansprechpartner, eine Honorarstaffel, keine Subunternehmer.</p>
+                </div>
+                <div class="leistungen-grid">
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><h3>Verkaufsbegleitung</h3><p>Wertermittlung, Exposé, Vermarktung auf ImmoScout/Immowelt, Besichtigungs-Management, Notar-Koordination. Provision §656c BGB-konform geteilt.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20a15 15 0 010-20"/></svg></div><h3>Vermietung</h3><p>Mieter-Screening mit SCHUFA, Mietverträge nach VPB-Muster, Übergabeprotokoll digital. Kein 3-Monatsmiete-Modell — feste Honorarstaffel.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><h3>Wertermittlung</h3><p>Verkehrswert-Gutachten nach ImmoWertV. HypZert-zertifiziert, gerichtsfest. Für Erbauseinandersetzung, Scheidung, Bank-Beleihung.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><h3>Energieausweis-Service</h3><p>Bedarfs- oder Verbrauchsausweis, fristgerecht zum Inserat. Wir prüfen Pflichtangaben — Sie zahlen keine Bußgelder.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>Off-Market-Vermittlung</h3><p>Ihr Objekt erscheint nicht online — nur in unserem Käufer-Register von 1.400 vorqualifizierten Suchprofilen. Diskret, schnell, marktüblich bepreist.</p></div>
+                    <div class="leistung"><div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div><h3>Erbengemeinschaft-Lösungen</h3><p>Vermittlung zwischen Miterben, Teilungsversteigerung als Ultima Ratio. Wir bringen 24 Jahre Erfahrung mit komplexen Konstellationen mit.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="portfolio-section">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Aktuelle Objekte</p>
+                    <h2>Diskret im Markt.</h2>
+                    <p>Drei aktuelle Objekte aus unserem Stadtgebiet-Portfolio. Detaillierte Exposés nur nach kurzem Erstgespräch — wir respektieren die Privatsphäre unserer Verkäufer.</p>
+                </div>
+                <div class="portfolio-grid">
+                    <div class="portfolio-card">
+                        <div class="portfolio-img">
+                            <img src="https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=600&auto=format&fit=crop" alt="Stuttgarter Altbau-Etagenwohnung Halbhöhenlage" loading="lazy" width="600" height="375">
+                            <span class="portfolio-tag">Off-Market</span>
+                        </div>
+                        <div class="portfolio-body">
+                            <p class="portfolio-loc">Stuttgart-West · Halbhöhenlage</p>
+                            <h4>Altbau-Etage mit Stuckdecken</h4>
+                            <div class="portfolio-specs">
+                                <span><strong>4,5</strong> Zimmer</span>
+                                <span><strong>148</strong> m²</span>
+                                <span><strong>1908</strong> Baujahr</span>
+                            </div>
+                            <p class="portfolio-price">VB 985.000 €</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-card">
+                        <div class="portfolio-img">
+                            <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=600&auto=format&fit=crop" alt="Einfamilienhaus Degerloch mit Garten" loading="lazy" width="600" height="375">
+                            <span class="portfolio-tag">Vermarktung</span>
+                        </div>
+                        <div class="portfolio-body">
+                            <p class="portfolio-loc">Stuttgart-Degerloch · Süd</p>
+                            <h4>Einfamilienhaus mit Garten</h4>
+                            <div class="portfolio-specs">
+                                <span><strong>6</strong> Zimmer</span>
+                                <span><strong>185</strong> m²</span>
+                                <span><strong>1972/2018</strong> saniert</span>
+                            </div>
+                            <p class="portfolio-price">1.245.000 €</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-card">
+                        <div class="portfolio-img">
+                            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=600&auto=format&fit=crop" alt="Penthouse Stuttgart-Mitte mit Skylineblick" loading="lazy" width="600" height="375">
+                            <span class="portfolio-tag">Off-Market</span>
+                        </div>
+                        <div class="portfolio-body">
+                            <p class="portfolio-loc">Stuttgart-Mitte · Bohnenviertel</p>
+                            <h4>Penthouse mit Skylineblick</h4>
+                            <div class="portfolio-specs">
+                                <span><strong>3</strong> Zimmer</span>
+                                <span><strong>118</strong> m²</span>
+                                <span><strong>2019</strong> Erstbezug</span>
+                            </div>
+                            <p class="portfolio-price">VB 1.180.000 €</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="markt" class="markt">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Marktbarometer</p>
+                    <h2>Stuttgart Stadtteil-Preise Q1/2026.</h2>
+                    <p>Durchschnittliche Kaufpreise pro Quadratmeter im Bestand. Quelle: Gutachterausschuss Stuttgart, eigene Auswertung 187 Transaktionen.</p>
+                </div>
+                <div class="markt-card">
+                    <table class="markt-table">
+                        <thead>
+                            <tr>
+                                <th>Stadtteil</th>
+                                <th>ETW Bestand</th>
+                                <th>EFH Bestand</th>
+                                <th>Trend YoY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>Stuttgart-Mitte</strong></td><td>6.850 €/m²</td><td>—</td><td class="trend-up">+2,8 %</td></tr>
+                            <tr><td><strong>Stuttgart-West</strong></td><td>6.200 €/m²</td><td>5.480 €/m²</td><td class="trend-up">+1,9 %</td></tr>
+                            <tr><td><strong>Stuttgart-Süd</strong></td><td>5.480 €/m²</td><td>5.120 €/m²</td><td class="trend-flat">+0,4 %</td></tr>
+                            <tr><td><strong>Stuttgart-Nord</strong></td><td>5.200 €/m²</td><td>4.890 €/m²</td><td class="trend-flat">+0,1 %</td></tr>
+                            <tr><td><strong>Stuttgart-Ost</strong></td><td>4.940 €/m²</td><td>4.620 €/m²</td><td class="trend-flat">–0,3 %</td></tr>
+                            <tr><td><strong>Degerloch</strong></td><td>5.840 €/m²</td><td>5.560 €/m²</td><td class="trend-up">+2,1 %</td></tr>
+                            <tr><td><strong>Vaihingen</strong></td><td>4.680 €/m²</td><td>4.380 €/m²</td><td class="trend-up">+1,2 %</td></tr>
+                            <tr><td><strong>Bad Cannstatt</strong></td><td>4.520 €/m²</td><td>4.240 €/m²</td><td class="trend-flat">–0,5 %</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="markt-source">Quelle: Gutachterausschuss Stuttgart (GAA), Stichtag 31.03.2026. Eigene Auswertung aus 187 dokumentierten Transaktionen im laufenden Quartal. Spannen pro Stadtteil je nach Lage, Ausstattung und Bauzustand.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="team">
+            <div class="container">
+                <div class="team-grid">
+                    <div class="team-img">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=900&auto=format&fit=crop" alt="Andreas Hofmann, Inhaber Stadtmakler Stuttgart" loading="lazy" width="900" height="900">
+                    </div>
+                    <div class="team-text">
+                        <p class="role">Inhaber &amp; Geschäftsführer</p>
+                        <h2>Andreas Hofmann</h2>
+                        <p>24 Jahre Stuttgarter Immobilienmarkt, davon zehn Jahre als HypZert-Sachverständiger für Verkehrswerte. Studium der Immobilienwirtschaft an der ADI, vorher zehn Jahre bei einer der großen Privatbanken in der Immobilien-Beleihung.</p>
+                        <p>Wir nehmen nicht jedes Objekt — und nicht jeden Käufer. Bei uns gibt es keine "Provisions-Vermarktung" auf Vorrat. Wenn wir Ihr Haus übernehmen, dann mit ehrlicher Wertermittlung und dem Versprechen: kein Vermarkten gegen den Markt.</p>
+                        <div class="team-numbers">
+                            <div class="team-number"><div class="num">820+</div><div class="label">Vermittlungen seit 2002</div></div>
+                            <div class="team-number"><div class="num">1.400</div><div class="label">aktive Käufer-Profile</div></div>
+                            <div class="team-number"><div class="num">94 %</div><div class="label">Vermarktung unter 90 Tagen</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Verkäuferstimmen</p><h2>Was unsere Mandanten sagen.</h2></div>
+                <div class="stimmen-grid">
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Wir wollten unser Elternhaus nicht öffentlich inserieren — Herr Hofmann hat über sein Käuferregister in elf Tagen den passenden Interessenten gefunden. Verkauf zum geschätzten Wert, ohne Besichtigungs-Marathon."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">SK</div>
+                            <div><div class="stimme-name">Sigrid K.</div><div class="stimme-role">Verkauf Degerloch · 2025</div></div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Erbauseinandersetzung mit drei Geschwistern — fast eskaliert. Stadtmakler hat als neutraler Sachverständiger den Verkehrswert ermittelt, der für alle akzeptabel war. Vermittlung lief dann zügig ohne Streit."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">MB</div>
+                            <div><div class="stimme-name">Markus B.</div><div class="stimme-role">Erbengemeinschaft · 2024</div></div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Vor dem Verkauf zwei Online-Wertermittlungen großer Portale gemacht — eine bei 720 k, die andere bei 920 k. Hofmann hat vor Ort den realistischen Wert ermittelt: 815 k. Verkauft zu 825 k. Marktnähe statt Phantasie."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">UR</div>
+                            <div><div class="stimme-name">Ute R.</div><div class="stimme-role">Verkauf Stuttgart-West · 2025</div></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="reviews-aggregate">★★★★★ <strong>4,9</strong> von 412 Google-Bewertungen · <strong>4,8</strong> auf ImmobilienScout24 · <strong>ImmoScout-Premium-Partner</strong> seit 2018</p>
+            </div>
+        </section>
+
+        <section class="faq">
+            <div class="container">
+                <div class="section-head"><p class="eyebrow">Häufige Fragen</p><h2>FAQ.</h2></div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie hoch ist die Provision beim Verkauf?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Seit dem Bestellerprinzip §656c BGB (Dezember 2020) wird die Provision in Baden-Württemberg geteilt: 3,57 % inkl. MwSt. zahlt der Käufer, 3,57 % zahlt der Verkäufer. Wir berechnen unsere Leistung transparent — keine versteckten Erfolgshonorare, keine Auslagenpauschalen. Schriftlicher Maklervertrag vor Vermarktungsbeginn.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie funktioniert die Off-Market-Vermarktung?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ihr Objekt wird nicht auf ImmoScout, Immowelt oder Social Media inseriert. Stattdessen prüfen wir es gegen unser Käufer-Register mit 1.400 vorqualifizierten Suchprofilen — jedes Profil mit Finanzierungsnachweis und konkretem Suchbild. Erst nach Annahmegespräch und NDA bekommt der Interessent das Exposé. Geeignet für Premium-Lagen, prominente Verkäufer oder bei Scheidung/Trennung.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wann ist ein Energieausweis Pflicht?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Bei jedem Verkauf und jeder Vermietung (Neuvermietung) müssen Energiekennwerte schon im Inserat erscheinen — sonst drohen Bußgelder bis 15.000 €. Wir prüfen Ihren bestehenden Ausweis auf Gültigkeit (10 Jahre) und erstellen bei Bedarf einen neuen über unseren Energieberater. Bedarfsausweis bei Häusern bis Baujahr 1977 ohne Modernisierung Pflicht.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie genau ist die Online-Wertermittlung?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Die Online-Spanne basiert auf Vergleichswerten der letzten 24 Monate im PLZ-Bereich plus Bodenrichtwert-Index plus Zustands-Faktor. Streuung typisch ±8 %. Verbindlich wird der Wert erst nach Vor-Ort-Termin mit Sichtung von Substanz, Lagedetails (Hanglage, Verkehr, Aussicht), Sanierungsstand und versteckten Mängeln. Das HypZert-Gutachten ist gerichtsfest.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie lange dauert eine Vermarktung im Schnitt?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">94 % unserer Vermittlungen schließen wir unter 90 Tagen ab Vertragsunterzeichnung ab. Bei Off-Market-Objekten oft schneller (Schnitt 42 Tage). Wenn die Vermarktung länger dauert, prüfen wir nach 60 Tagen Preisanpassung oder strategischen Wechsel — kein endloses Ausstellen.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Was ist bei Erbengemeinschaften zu beachten?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Alle Miterben müssen dem Verkauf zustimmen und den Maklervertrag unterzeichnen — wir vermitteln zwischen den Parteien, wenn es Differenzen gibt. Bei festgefahrener Lage ist Teilungsversteigerung möglich, sollte aber Ultima Ratio sein (Versteigerungs-Erlös typisch 15–25 % unter Marktwert). Unsere HypZert-Wertermittlung ist eine belastbare Verhandlungsbasis für alle Miterben.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt" class="kontakt">
+            <div class="container">
+                <div class="kontakt-grid">
+                    <div>
+                        <p class="eyebrow" style="color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px;">Kontakt</p>
+                        <h2>Erstgespräch vereinbaren.</h2>
+                        <p style="color: var(--text-soft); font-size: 17px; margin-bottom: 28px;">Unverbindliches Beratungsgespräch — telefonisch, in unserem Büro Königstraße oder bei Ihnen vor Ort. Wir antworten innerhalb von 24 Stunden an Werktagen.</p>
+                        <div class="kontakt-blocks">
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                                <div><h4>Büro</h4><p>Königstraße 38, 70173 Stuttgart-Mitte</p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+                                <div><h4>Telefon</h4><p><a href="tel:+49711221977">0711 22 19 770</a> · Mo–Fr 9:00–18:00</p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                                <div><h4>E-Mail</h4><p><a href="mailto:office@stadtmakler-stuttgart.de">office@stadtmakler-stuttgart.de</a></p></div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                                <div><h4>Öffnungszeiten</h4><p>Mo–Fr 9:00–18:00 · Sa 10:00–14:00 nach Vereinbarung</p></div>
+                            </div>
+                        </div>
+                        <div class="map-mini">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="800" height="450" fill="#eef2f6"/>
+                                <path d="M 0 200 L 800 240" stroke="#cbd3dd" stroke-width="2" fill="none"/>
+                                <path d="M 200 0 L 240 450" stroke="#cbd3dd" stroke-width="2" fill="none"/>
+                                <path d="M 0 320 L 800 280" stroke="#e3e8ee" stroke-width="1.5" fill="none"/>
+                                <path d="M 500 0 L 530 450" stroke="#e3e8ee" stroke-width="1.5" fill="none"/>
+                                <text x="60" y="180" font-family="Inter, sans-serif" font-size="11" fill="#8590a0">Königstraße</text>
+                                <text x="60" y="350" font-family="Inter, sans-serif" font-size="11" fill="#aab1bc">Stuttgart-Mitte</text>
+                            </svg>
+                            <div class="map-pin"></div>
+                        </div>
+                    </div>
+                    <form class="kontakt-form" onsubmit="event.preventDefault(); openModal('kontakt');">
+                        <div class="form-row">
+                            <div class="form-group"><label for="kf-name">Vor- und Nachname</label><input id="kf-name" type="text" required></div>
+                            <div class="form-group"><label for="kf-email">E-Mail</label><input id="kf-email" type="email" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="kf-tel">Telefon (für Rückruf)</label><input id="kf-tel" type="tel"></div>
+                            <div class="form-group"><label for="kf-anliegen">Anliegen</label>
+                                <select id="kf-anliegen" required>
+                                    <option value="bewertung">Unverbindliche Wertermittlung</option>
+                                    <option value="verkauf">Verkaufsbegleitung</option>
+                                    <option value="vermietung">Vermietung</option>
+                                    <option value="gutachten">Gutachten (Erbe, Scheidung)</option>
+                                    <option value="kauf">Suche / Käufer-Profil</option>
+                                    <option value="andere">Sonstiges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group"><label for="kf-msg">Ihre Nachricht</label><textarea id="kf-msg" rows="4" required placeholder="Kurz zum Objekt oder Anliegen"></textarea></div>
+                        <label class="form-checkbox">
+                            <input type="checkbox" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß <a href="#" style="color: var(--accent); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
+                        </label>
+                        <button type="submit" class="btn btn-primary form-submit">Erstgespräch anfragen →</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
                 <div>
-                    <h2 class="font-serif text-4xl text-primary font-bold mb-4">Aktuelle Angebote</h2>
-                    <p class="text-slate-500 max-w-xl">Entdecken Sie ausgewählte Objekte in Bestlagen.</p>
+                    <div class="footer-brand">Stadtmakler Stuttgart</div>
+                    <p>Immobilienmakler im Stuttgarter Stadtgebiet. IVD-Mitglied, HypZert-Sachverständiger. 24 Jahre lokale Marktkenntnis.</p>
+                    <p style="margin-top: 16px;">Königstraße 38<br>70173 Stuttgart</p>
                 </div>
-                <a href="#" class="hidden md:flex items-center gap-2 text-accent font-bold hover:text-primary transition group">
-                    Alle Immobilien <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition"></i>
-                </a>
+                <div><h5>Service</h5><ul><li><a href="#bewertung">Wertermittlung</a></li><li><a href="#leistungen">Verkauf</a></li><li><a href="#leistungen">Vermietung</a></li><li><a href="#leistungen">Gutachten</a></li></ul></div>
+                <div><h5>Markt</h5><ul><li><a href="#portfolio">Aktuelle Objekte</a></li><li><a href="#markt">Marktbarometer</a></li><li><a href="#team">Über uns</a></li></ul></div>
+                <div><h5>Rechtliches</h5><ul><li><a href="#">Impressum</a></li><li><a href="#">Datenschutz</a></li><li><a href="#">Widerrufsbelehrung</a></li><li><a href="#">Barrierefreiheits-Erklärung</a></li></ul></div>
             </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Property Card 1 -->
-                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
-                    <div class="relative h-64 overflow-hidden">
-                        <span class="absolute top-4 left-4 bg-primary text-white text-xs font-bold px-3 py-1 rounded z-10">NEU</span>
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop" alt="Haus 1" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
-                            <span class="text-white font-bold text-xl">890.000 €</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Moderne Stadtvilla</h3>
-                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> Eppendorf, Premium Lage</p>
-                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
-                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 180 m²</span>
-                            <span><i class="fa-solid fa-bed mr-1"></i> 5 Zi.</span>
-                            <span><i class="fa-solid fa-bath mr-1"></i> 2 Bad</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Property Card 2 -->
-                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800&auto=format&fit=crop" alt="Haus 2" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
-                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
-                            <span class="text-white font-bold text-xl">450.000 €</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Eigentumswohnung mit Blick</h3>
-                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> Eppendorf, Zentrum</p>
-                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
-                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 95 m²</span>
-                            <span><i class="fa-solid fa-bed mr-1"></i> 3 Zi.</span>
-                            <span><i class="fa-solid fa-layer-group mr-1"></i> 2. OG</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Property Card 3 -->
-                <div class="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition duration-500 border border-slate-100">
-                    <div class="relative h-64 overflow-hidden">
-                        <span class="absolute top-4 left-4 bg-accent text-white text-xs font-bold px-3 py-1 rounded z-10">RESERVIERT</span>
-                        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800&auto=format&fit=crop" alt="Haus 3" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700 grayscale">
-                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4">
-                            <span class="text-white font-bold text-xl">1.250.000 €</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="font-serif text-xl font-bold text-primary mb-2 group-hover:text-accent transition">Architektenhaus</h3>
-                        <p class="text-slate-500 text-sm mb-4"><i class="fa-solid fa-location-dot mr-1"></i> Blankenese, Ruhige Lage</p>
-                        <div class="flex justify-between border-t border-slate-100 pt-4 text-sm text-slate-600 font-medium">
-                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 220 m²</span>
-                            <span><i class="fa-solid fa-tree mr-1"></i> 800 m² Grd.</span>
-                            <span><i class="fa-solid fa-car mr-1"></i> Garage</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 text-center md:hidden">
-                <a href="#" class="inline-block border border-primary text-primary px-8 py-3 rounded-lg font-bold hover:bg-primary hover:text-white transition">Alle Angebote</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVICE / USP -->
-    <section id="service" class="py-24 bg-primary text-white relative overflow-hidden">
-        <!-- Pattern Overlay -->
-        <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#c2410c 1px, transparent 1px); background-size: 30px 30px;"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <span class="text-accent font-bold uppercase tracking-widest text-xs">Unser Versprechen</span>
-                <h2 class="font-serif text-4xl md:text-5xl mt-2 mb-6">Warum Immobilien Hanseat?</h2>
-                <div class="w-20 h-1 bg-accent mx-auto"></div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-12 text-center">
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
-                        <i class="fa-solid fa-chart-line"></i>
-                    </div>
-                    <h3 class="font-serif text-xl font-bold mb-4">Marktkenntnis</h3>
-                    <p class="text-slate-400 leading-relaxed">Wir kennen den lokalen Markt in Hamburg seit über 20 Jahren und ermitteln den realistischen Bestpreis für Ihre Immobilie.</p>
-                </div>
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
-                        <i class="fa-solid fa-camera"></i>
-                    </div>
-                    <h3 class="font-serif text-xl font-bold mb-4">Premium Exposé</h3>
-                    <p class="text-slate-400 leading-relaxed">Professionelle Fotografie, 360°-Rundgänge und Drohnenaufnahmen rücken Ihr Objekt ins perfekte Licht.</p>
-                </div>
-                <div class="p-6">
-                    <div class="w-16 h-16 mx-auto bg-white/10 rounded-full flex items-center justify-center text-accent text-2xl mb-6">
-                        <i class="fa-solid fa-handshake"></i>
-                    </div>
-                    <h3 class="font-serif text-xl font-bold mb-4">Rundum-Sorglos</h3>
-                    <p class="text-slate-400 leading-relaxed">Vom ersten Gespräch über Besichtigungen bis zum Notartermin. Wir übernehmen die komplette Abwicklung.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TESTIMONIALS -->
-    <section class="py-24 bg-light">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto">
-                <i class="fa-solid fa-quote-left text-4xl text-accent/20 mb-6"></i>
-                <h3 class="font-serif text-2xl md:text-3xl font-bold text-primary mb-8 leading-snug">
-                    "Herr Hansen hat unser Elternhaus innerhalb von 4 Wochen zu unserem Wunschpreis verkauft. Die Abwicklung war absolut professionell und stressfrei."
-                </h3>
-                <div class="flex flex-col items-center">
-                    <div class="flex text-accent text-sm mb-2">
-                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                    </div>
-                    <span class="font-bold text-primary">Familie Schneider</span>
-                    <span class="text-slate-500 text-sm">Verkauf Einfamilienhaus in Eppendorf</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-2">
-                    <a href="#" class="font-serif text-2xl font-bold text-primary mb-4 block">Immobilien Hanseat</a>
-                    <p class="text-slate-500 leading-relaxed max-w-sm">
-                        Ihr Partner für exklusive Immobilien. Wir verbinden Menschen mit Räumen, in denen sie glücklich werden.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-primary mb-4 uppercase text-sm tracking-widest">Kontakt</h4>
-                    <ul class="space-y-2 text-slate-500">
-                        <li>Marktplatz 1</li>
-                        <li>20251 Hamburg</li>
-                        <li class="pt-2"><a href="tel:0123456789" class="hover:text-accent">0123 / 45 67 89</a></li>
-                        <li><a href="mailto:info@makler.de" class="hover:text-accent">info@makler.de</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-primary mb-4 uppercase text-sm tracking-widest">Rechtliches</h4>
-                    <ul class="space-y-2 text-slate-500">
-                        <li><a href="#" class="hover:text-primary">Impressum</a></li>
-                        <li><a href="#" class="hover:text-primary">Datenschutz</a></li>
-                        <li><a href="#" class="hover:text-primary">AGB</a></li>
-                        <li><a href="#" class="hover:text-primary">Widerrufsbelehrung</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400">
-                <p>&copy; 2026 Immobilien Hanseat. Alle Rechte vorbehalten.</p>
-                <p>Designed by Karriaro.</p>
+            <div class="footer-bottom">
+                <span>© 2026 Stadtmakler Stuttgart GmbH · Alle Rechte vorbehalten.</span>
+                <a href="https://karriaro-webdesign.de/" class="karriaro-back">Made by Karriaro · Webdesign-Manufaktur ↗</a>
             </div>
         </div>
     </footer>
 
+    <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this) closeModal();">
+        <div class="modal">
+            <div class="modal-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <h3 id="modal-title">Demo-Modus</h3>
+            <p id="modal-text">In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.</p>
+            <button type="button" class="btn btn-primary" onclick="closeModal()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.mobile-menu a').forEach(function (a) {
+            a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
+
+        // Konfig-Tabs + Zustand-Toggle
+        document.querySelectorAll('.konfig-tab').forEach(function (t) {
+            t.addEventListener('click', function () {
+                document.querySelectorAll('.konfig-tab').forEach(function (x) { x.classList.remove('is-active'); });
+                t.classList.add('is-active');
+            });
+        });
+        (function () {
+            var el = document.getElementById('bw-zustand');
+            if (!el) return;
+            el.querySelectorAll('.konfig-option').forEach(function (o) {
+                o.addEventListener('click', function () {
+                    el.querySelectorAll('.konfig-option').forEach(function (x) { x.classList.remove('is-active'); });
+                    o.classList.add('is-active');
+                });
+            });
+        })();
+
+        // FAQ
+        document.querySelectorAll('.faq-item').forEach(function (item) {
+            item.addEventListener('toggle', function () {
+                if (item.open) item.classList.add('is-open'); else item.classList.remove('is-open');
+            });
+        });
+
+        // Modal
+        var MODAL_TEXTS = {
+            bewertung: ['Demo-Termin angefragt', 'In der echten Anwendung erhalten Sie binnen 24 h einen Terminvorschlag für die Vor-Ort-Begehung — danach folgt ein verbindliches Wertgutachten.'],
+            kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet.']
+        };
+        function openModal(kind) {
+            var modal = document.getElementById('modal');
+            var t = document.getElementById('modal-title');
+            var p = document.getElementById('modal-text');
+            var pair = MODAL_TEXTS[kind] || ['Demo-Modus', 'In der echten Anwendung würde Ihre Anfrage jetzt verschickt.'];
+            t.textContent = pair[0];
+            p.textContent = pair[1] + ' Diese Seite ist ein Karriaro-Designbeispiel.';
+            modal.classList.add('is-open');
+        }
+        function closeModal() { document.getElementById('modal').classList.remove('is-open'); }
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+    </script>
 </body>
 </html>
