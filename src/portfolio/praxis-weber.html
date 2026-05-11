@@ -50,6 +50,8 @@
         body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
         img { display: block; max-width: 100%; height: auto; }
+        .img-pending { background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%); position: relative; min-height: 200px; }
+        .img-pending::after { content: "Bild folgt"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-dark); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
         button { font-family: inherit; cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
         h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
@@ -370,7 +372,7 @@
                         </div>
                     </div>
                     <div class="hero-img">
-                        <img src="https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?q=80&w=1200&auto=format&fit=crop" alt="Dr. Sarah Weber in ihrer Hausarztpraxis in München-Schwabing" loading="eager" width="800" height="1000">
+                        <img src="/images/praxis/sarah-hero.jpg" alt="Dr. Sarah Weber in ihrer Hausarztpraxis in München-Schwabing" loading="eager" width="800" height="1000" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                 </div>
             </div>
@@ -595,7 +597,7 @@
             <div class="container">
                 <div class="team-grid">
                     <div class="team-img">
-                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=900&auto=format&fit=crop" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" loading="lazy" width="900" height="900">
+                        <img src="/images/praxis/sarah-team.jpg" alt="Dr. med. Sarah Weber, Fachärztin für Allgemeinmedizin" loading="lazy" width="900" height="900" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                     </div>
                     <div class="team-text">
                         <p class="role">Praxisinhaberin</p>
@@ -623,11 +625,11 @@
                     <p>Moderne Räume in einem Schwabinger Altbau — Aufzug, Wartezimmer mit Tageslicht, separater Eingang für Infektpatienten.</p>
                 </div>
                 <div class="galerie-grid">
-                    <div><img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?q=80&w=1200&auto=format&fit=crop" alt="Heller Empfangsbereich der Praxis Dr. Weber" loading="lazy" width="800" height="1000"></div>
-                    <div><img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=900&auto=format&fit=crop" alt="Wartezimmer mit Tageslicht" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1666214280391-8ff5bd3c0bf0?q=80&w=900&auto=format&fit=crop" alt="Behandlungszimmer" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=900&auto=format&fit=crop" alt="EKG-Raum mit moderner Diagnostik" loading="lazy" width="600" height="500"></div>
-                    <div><img src="https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?q=80&w=900&auto=format&fit=crop" alt="Labor-Ausstattung" loading="lazy" width="600" height="500"></div>
+                    <div><img src="/images/praxis/empfang.jpg" alt="Heller Empfangsbereich der Praxis Dr. Weber" loading="lazy" width="800" height="1000" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/praxis/wartezimmer.jpg" alt="Wartezimmer mit Tageslicht" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/praxis/behandlungszimmer.jpg" alt="Behandlungszimmer" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/praxis/ekg-raum.jpg" alt="EKG-Raum mit moderner Diagnostik" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div><img src="/images/praxis/labor.jpg" alt="Labor-Ausstattung" loading="lazy" width="600" height="500" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                 </div>
             </div>
         </section>
@@ -776,7 +778,7 @@
                 </div>
                 <div class="news-grid">
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1584118624012-df056829fbd0?q=80&w=900&auto=format&fit=crop" alt="Grippeimpfung Saison 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/praxis/news-grippe.jpg" alt="Grippeimpfung Saison 2026" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Impfkampagne</p>
                             <h3>Grippeimpfung — Termine ab Oktober</h3>
@@ -784,7 +786,7 @@
                         </div>
                     </a>
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=900&auto=format&fit=crop" alt="Erkältungswelle München" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/praxis/news-erkaeltung.jpg" alt="Erkältungswelle München" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Hinweis</p>
                             <h3>Erkältungswelle: Akut-Sprechstunde verlängert</h3>
@@ -792,7 +794,7 @@
                         </div>
                     </a>
                     <a href="#" class="news-card">
-                        <div class="news-img"><img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=900&auto=format&fit=crop" alt="Reisemedizin-Beratung" loading="lazy" width="600" height="375"></div>
+                        <div class="news-img"><img src="/images/praxis/news-reisemedizin.jpg" alt="Reisemedizin-Beratung" loading="lazy" width="600" height="375" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="news-body">
                             <p class="news-tag">Neu im Programm</p>
                             <h3>Reisemedizin — Beratung &amp; Tropenimpfung</h3>

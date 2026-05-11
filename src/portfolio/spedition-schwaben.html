@@ -55,6 +55,8 @@
         body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
         a { color: inherit; text-decoration: none; }
         img { display: block; max-width: 100%; height: auto; }
+        .img-pending { background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-soft) 60%, var(--accent-soft) 100%); position: relative; min-height: 200px; }
+        .img-pending::after { content: "Bild folgt"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-dark); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
@@ -691,7 +693,7 @@
                 </div>
                 <div class="fleet-grid">
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=600&q=80" alt="40-Tonner Sattelzug" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-sattelzug.jpg" alt="40-Tonner Sattelzug" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>40-t Sattelzug</h4>
                             <div class="meta">100 m³ · Mega-Trailer · EUR 6</div>
@@ -699,7 +701,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?auto=format&fit=crop&w=600&q=80" alt="Wechselbrücke" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-wechselbruecke.jpg" alt="Wechselbrücke" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>Wechselbrücke 7,5 t</h4>
                             <div class="meta">38 m³ · City-fähig · EUR 6</div>
@@ -707,7 +709,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=600&q=80" alt="Kühl-LKW" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-kuehl.jpg" alt="Kühl-LKW" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>Kühl-LKW GDP</h4>
                             <div class="meta">+2 °C bis +25 °C · Datenlogger</div>
@@ -715,7 +717,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1592838064575-70ed626d3a0e?auto=format&fit=crop&w=600&q=80" alt="Express-Sprinter" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-sprinter.jpg" alt="Express-Sprinter" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>Express-Sprinter</h4>
                             <div class="meta">3,5 t · Direkt-Express · 2 Fahrer</div>
@@ -723,7 +725,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=600&q=80" alt="Hänger-Zug" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-haenger.jpg" alt="Hänger-Zug" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>Hänger-Zug 40 t</h4>
                             <div class="meta">120 m³ Volumen · 2 Wechselbrücken</div>
@@ -731,7 +733,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1601584115257-9a7cf60c1f00?auto=format&fit=crop&w=600&q=80" alt="Container-Chassis" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-container.jpg" alt="Container-Chassis" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>Container-Chassis</h4>
                             <div class="meta">20'/40' · Hafen-Verkehre</div>
@@ -739,7 +741,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1568642316782-9d4dcdf91be1?auto=format&fit=crop&w=600&q=80" alt="ADR-Tankwagen" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-adr.jpg" alt="ADR-Tankwagen" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>ADR-Tankwagen</h4>
                             <div class="meta">Gefahrgut · Klassen 2–9</div>
@@ -747,7 +749,7 @@
                         </div>
                     </div>
                     <div class="fleet-card">
-                        <div class="fleet-img"><img src="https://images.unsplash.com/photo-1559762689-d7a07bff37a8?auto=format&fit=crop&w=600&q=80" alt="E-Lkw" loading="lazy"></div>
+                        <div class="fleet-img"><img src="/images/spedition/flotte-elkw.jpg" alt="E-Lkw" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         <div class="fleet-body">
                             <h4>E-LKW · Pilotflotte</h4>
                             <div class="meta">Vollelektrisch · City-Verkehr</div>

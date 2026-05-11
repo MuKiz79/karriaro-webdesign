@@ -59,6 +59,8 @@
         body { font-family: var(--sans); color: var(--text); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; font-feature-settings: 'kern' 1; }
         a { color: inherit; text-decoration: none; }
         img { display: block; max-width: 100%; height: auto; }
+        .img-pending { background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-soft) 60%, var(--accent-soft) 100%); position: relative; min-height: 200px; }
+        .img-pending::after { content: "Bild folgt"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-dark); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
@@ -408,7 +410,7 @@
     <main id="main">
         <section class="hero">
             <div class="hero-bg">
-                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2400&q=80" alt="Restaurant Goldener Hirsch — Innenansicht" loading="eager">
+                <img src="/images/restaurant/hirsch-hero.jpg" alt="Restaurant Goldener Hirsch — Innenansicht" loading="eager" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
             </div>
             <div class="hero-inner">
                 <div class="hero-content">
@@ -543,7 +545,7 @@
                         </div>
                         <div class="menu-grid">
                             <article class="menu-item" data-tags="veggie">
-                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" alt="Bunte Bete-Carpaccio" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-carpaccio.jpg" alt="Bunte Bete-Carpaccio" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Bunte Bete · Burrata · Pistazie</h4>
                                     <p>Geröstete Rote Bete vom Stockerhof, Apfel-Senf-Vinaigrette, Pistazien-Crunch</p>
@@ -555,7 +557,7 @@
                                 <div class="menu-item-price">16 €</div>
                             </article>
                             <article class="menu-item" data-tags="signature">
-                                <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=80" alt="Rindertatar" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-tatar.jpg" alt="Rindertatar" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Rindertatar vom Simmentaler</h4>
                                     <p>Handgeschnitten, Eigelb, Kapern, Schalotte, geröstetes Sauerteigbrot</p>
@@ -567,7 +569,7 @@
                                 <div class="menu-item-price">22 €</div>
                             </article>
                             <article class="menu-item" data-tags="vegan glutenfree">
-                                <img src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?auto=format&fit=crop&w=400&q=80" alt="Suppe" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-suppe.jpg" alt="Suppe" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Wildkräuter-Süppchen</h4>
                                     <p>Bärlauch, Sauerampfer, junger Spinat aus dem Englischen Garten, Pflanzenöl</p>
@@ -580,7 +582,7 @@
                                 <div class="menu-item-price">12 €</div>
                             </article>
                             <article class="menu-item" data-tags="glutenfree">
-                                <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=400&q=80" alt="Lachs" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-lachs.jpg" alt="Lachs" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Hausgebeizter Saibling</h4>
                                     <p>Saibling vom Tegernsee, Wacholder, Dille, Roggenbrot-Crouton, saure Sahne</p>
@@ -601,7 +603,7 @@
                         </div>
                         <div class="menu-grid">
                             <article class="menu-item" data-tags="signature">
-                                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" alt="Schmorbraten" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-schmorbraten.jpg" alt="Schmorbraten" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Bayerischer Sauerbraten</h4>
                                     <p>Vier Tage in Rotwein gebeizt, Lebkuchen-Sauce, Kartoffelknödel, Apfel-Rotkohl</p>
@@ -613,7 +615,7 @@
                                 <div class="menu-item-price">32 €</div>
                             </article>
                             <article class="menu-item" data-tags="">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" alt="Wiener Schnitzel" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-schnitzel.jpg" alt="Wiener Schnitzel" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Wiener Schnitzel vom Kalb</h4>
                                     <p>240 g Kalbsrücken, Butterschmalz, Preiselbeere, lauwarmer Kartoffel-Gurken-Salat</p>
@@ -623,7 +625,7 @@
                                 <div class="menu-item-price">34 €</div>
                             </article>
                             <article class="menu-item" data-tags="veggie">
-                                <img src="https://images.unsplash.com/photo-1606756790138-261d2b21cd75?auto=format&fit=crop&w=400&q=80" alt="Risotto" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-risotto.jpg" alt="Risotto" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Frühlings-Risotto</h4>
                                     <p>Spargel, junge Erbsen, Zitronenmelisse, gehobelter Bergkäse, Olivenöl Toskana</p>
@@ -635,7 +637,7 @@
                                 <div class="menu-item-price">26 €</div>
                             </article>
                             <article class="menu-item" data-tags="glutenfree">
-                                <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=400&q=80" alt="Fisch" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-fisch.jpg" alt="Fisch" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Saibling aus dem Ofen</h4>
                                     <p>Ganzer Saibling vom Tegernsee, Zitronen-Thymian, Kartoffel-Schnittlauch-Stampf</p>
@@ -647,7 +649,7 @@
                                 <div class="menu-item-price">30 €</div>
                             </article>
                             <article class="menu-item" data-tags="vegan">
-                                <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80" alt="Gnocchi" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-gnocchi.jpg" alt="Gnocchi" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Kürbiskern-Gnocchi</h4>
                                     <p>Hausgemacht, geröstete Walnüsse, Salbei-Olivenöl, gebackener Hokkaido</p>
@@ -659,7 +661,7 @@
                                 <div class="menu-item-price">22 €</div>
                             </article>
                             <article class="menu-item" data-tags="">
-                                <img src="https://images.unsplash.com/photo-1432139509613-5c4255815697?auto=format&fit=crop&w=400&q=80" alt="Ente" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-ente.jpg" alt="Ente" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Knusprige Bauernente · für 2 Personen</h4>
                                     <p>Halbe Ente, Rotweinjus, Semmelknödel, geschmorte Apfel-Rosenkohl-Beilage</p>
@@ -680,7 +682,7 @@
                         </div>
                         <div class="menu-grid">
                             <article class="menu-item" data-tags="veggie signature">
-                                <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80" alt="Kaiserschmarrn" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-kaiserschmarrn.jpg" alt="Kaiserschmarrn" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Kaiserschmarrn</h4>
                                     <p>Hausgemacht, eingelegte Zwetschgen, Vanille-Eis, Puderzucker</p>
@@ -693,7 +695,7 @@
                                 <div class="menu-item-price">14 €</div>
                             </article>
                             <article class="menu-item" data-tags="vegan glutenfree">
-                                <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=400&q=80" alt="Sorbet" class="menu-item-img" loading="lazy">
+                                <img src="/images/restaurant/menu-sorbet.jpg" alt="Sorbet" class="menu-item-img" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                                 <div class="menu-item-body">
                                     <h4>Trio von Sorbets</h4>
                                     <p>Rhabarber, Holunder, Birne — alles aus eigener Herstellung</p>
@@ -723,7 +725,7 @@
             <div class="container">
                 <div class="story-grid">
                     <div class="story-img">
-                        <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=900&q=80" alt="Küchenchef Andreas Bauer">
+                        <img src="/images/restaurant/chef-andreas.jpg" alt="Küchenchef Andreas Bauer" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
                         <div class="story-img-caption">
                             <div class="who">Andreas Bauer</div>
                             <div class="role">Küchenchef · seit 2003 im Goldener Hirsch</div>
@@ -762,12 +764,12 @@
                     <p>Hauptraum mit Kachelofen, Kaminzimmer für 12 Personen, Sonnenterrasse Richtung Englischer Garten.</p>
                 </div>
                 <div class="gallery-grid">
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80" alt="Restaurant Hauptraum" loading="lazy"></div>
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1592861956120-e524fc739696?auto=format&fit=crop&w=600&q=80" alt="Tischdetail" loading="lazy"></div>
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?auto=format&fit=crop&w=600&q=80" alt="Weinkarte" loading="lazy"></div>
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=600&q=80" alt="Küche" loading="lazy"></div>
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=600&q=80" alt="Terrasse" loading="lazy"></div>
-                    <div class="gallery-item"><img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&w=900&q=80" alt="Detail" loading="lazy"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-hauptraum.jpg" alt="Restaurant Hauptraum" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-tisch.jpg" alt="Tischdetail" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-weinkarte.jpg" alt="Weinkarte" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-kueche.jpg" alt="Küche" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-terrasse.jpg" alt="Terrasse" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="gallery-item"><img src="/images/restaurant/galerie-detail.jpg" alt="Detail" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                 </div>
             </div>
         </section>
