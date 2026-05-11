@@ -1,359 +1,1034 @@
 <!DOCTYPE html>
-<html lang="de" class="scroll-smooth">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salon Elegance | Ihr Friseur & Beauty Experte in Düsseldorf</title>
-    <meta name="description" content="Exklusives Haarstyling, Coloration und Wellness. Entspannen Sie in unserem modernen Salon. Jetzt Termin vereinbaren.">
+    <title>Salon Müller · Friseur Düsseldorf-Carlstadt — Online-Termin, Coloration, Brautstyling</title>
+    <meta name="description" content="Friseur-Salon Müller in Düsseldorf-Carlstadt. Online-Termin in zwei Klicks, Wunsch-Stylist wählbar. Aveda Concept Salon. Late-Night bis 21 Uhr.">
     <meta name="robots" content="index, follow">
-
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/friseur-salon.html">
-
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://karriaro-webdesign.de/portfolio/friseur-salon.html">
-    <meta property="og:title" content="Salon Elegance | Ihr Friseur & Beauty Experte in Düsseldorf">
-    <meta property="og:description" content="Exklusives Haarstyling, Coloration und Wellness. Entspannen Sie in unserem modernen Salon.">
+    <meta property="og:title" content="Salon Müller — Friseur Düsseldorf-Carlstadt">
+    <meta property="og:description" content="Online-Termin in zwei Klicks. Wunsch-Stylist wählbar. Aveda Concept Salon.">
     <meta property="og:locale" content="de_DE">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Salon Elegance | Ihr Friseur & Beauty Experte in Düsseldorf">
-    <meta name="twitter:description" content="Exklusives Haarstyling, Coloration und Wellness in Düsseldorf.">
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop">
-
-    <!-- Schema.org HairSalon -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "HairSalon",
-        "name": "Salon Elegance",
-        "description": "Exklusives Haarstyling, Coloration und Wellness. Entspannen Sie in unserem modernen Salon.",
+        "name": "Salon Müller",
+        "description": "Friseur-Salon in Düsseldorf-Carlstadt mit Online-Terminbuchung, Coloration, Balayage und Brautstyling. Aveda Concept Salon.",
         "url": "https://karriaro-webdesign.de/portfolio/friseur-salon.html",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Düsseldorf",
-            "addressCountry": "DE"
-        },
-        "priceRange": "€€"
+        "address": {"@type": "PostalAddress", "streetAddress": "Hohe Straße 18", "postalCode": "40213", "addressLocality": "Düsseldorf", "addressCountry": "DE"},
+        "telephone": "+49 211 86 32 119",
+        "openingHours": ["Di-Fr 09:00-21:00", "Sa 09:00-17:00"],
+        "priceRange": "€€",
+        "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "318"}
     }
     </script>
-
-    <!-- System Fonts (DSGVO-konform, keine externen Anfragen) -->
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1c1917',   // Stone 900 (Text Dunkel)
-                        accent: '#bfa094',    // Muted Rose/Beige (Elegant)
-                        bg: '#fafaf9',        // Stone 50 (Hintergrund warmes Weiß)
-                        soft: '#e7e5e4',      // Stone 200 (Elemente)
-                    },
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
-                    }
-                }
-            }
+    <style>
+        :root {
+            --accent: #bfa094;
+            --accent-dark: #9d7e6e;
+            --accent-strong: #7a5e50;
+            --accent-bg: #faf5f2;
+            --bg: #ffffff;
+            --bg-soft: #fbfaf8;
+            --text: #1d1a18;
+            --text-soft: #5a534e;
+            --text-light: #908882;
+            --border: #ebe4df;
+            --border-strong: #d8cdc4;
+            --danger: #c0392b;
+            --radius: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 8px 24px rgba(55,40,30,0.06);
+            --shadow-lg: 0 24px 60px rgba(55,40,30,0.10);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --max: 1240px;
         }
-    </script>
-    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+        a { color: inherit; text-decoration: none; }
+        img { display: block; max-width: 100%; height: auto; }
+        button { font-family: inherit; cursor: pointer; border: none; background: none; }
+        ul { list-style: none; }
+        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
+        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h2 { font-size: clamp(30px, 3.8vw, 44px); }
+        h3 { font-size: 20px; }
+
+        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 var(--radius) var(--radius); z-index: 200; font-size: 14px; font-weight: 500; }
+        .skip-link:focus { top: 0; }
+
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        section { padding: 96px 0; }
+        .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+        .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .section-head h2 { margin-bottom: 16px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+
+        .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 8px 24px; text-align: center; letter-spacing: 0.01em; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+
+        .nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 8px; font-weight: 700; font-size: 16px; }
+        .nav-links { display: flex; gap: 30px; font-size: 15px; color: var(--text-soft); }
+        .nav-links a:hover { color: var(--text); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: background 0.2s; }
+        .nav-cta:hover { background: var(--accent-dark); }
+        .mobile-toggle { display: none; padding: 8px; }
+        .mobile-toggle svg { width: 24px; height: 24px; }
+        .mobile-menu { display: none; }
+
+        .hero { padding: 80px 0 96px; background: linear-gradient(180deg, var(--accent-bg) 0%, var(--bg) 100%); }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 18px; }
+        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero h1 { margin-bottom: 24px; }
+        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 36px; }
+        .hero-ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 32px; }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; transition: all 0.2s; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-dark); }
+        .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
+        .btn-ghost:hover { border-color: var(--text); }
+        .hero-trust { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .dot { color: var(--accent); }
+        .trust-live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--accent-bg); border-radius: 999px; color: var(--accent-strong); font-weight: 500; }
+        .trust-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent-dark); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+        .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .termin-widget { background: var(--bg-soft); padding: 96px 0; }
+        .termin-card { background: var(--bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); padding: 48px; max-width: 920px; margin: 0 auto; border: 1px solid var(--border); }
+        .termin-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+        .termin-card-head h2 { font-size: 28px; margin-bottom: 4px; }
+        .termin-card-head p { color: var(--text-soft); font-size: 15px; }
+        .termin-badge { background: var(--accent-bg); color: var(--accent-strong); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px; letter-spacing: 0.04em; }
+        .termin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .termin-section h3 { font-size: 13px; font-weight: 600; color: var(--text-soft); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em; }
+        .termin-doctors { display: flex; gap: 10px; flex-wrap: wrap; }
+        .termin-doctor { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; transition: all 0.2s; font-size: 14px; }
+        .termin-doctor:hover, .termin-doctor.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .termin-doctor .ava { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .termin-reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .termin-reason { padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+        .termin-reason:hover, .termin-reason.is-active { border-color: var(--accent); background: var(--accent-bg); }
+        .termin-reason svg { width: 18px; height: 18px; color: var(--accent-dark); flex-shrink: 0; }
+        .termin-calendar { background: var(--bg-soft); border-radius: var(--radius); padding: 20px; }
+        .termin-cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .termin-cal-head .month { font-weight: 600; font-size: 15px; }
+        .termin-cal-nav { display: flex; gap: 4px; }
+        .termin-cal-nav button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; }
+        .termin-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .termin-cal-day-label { text-align: center; font-size: 11px; color: var(--text-light); padding: 6px 0; }
+        .termin-cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; border-radius: 50%; cursor: pointer; transition: all 0.2s; }
+        .termin-cal-day:hover { background: var(--bg); }
+        .termin-cal-day.is-selected { background: var(--accent); color: #fff; }
+        .termin-cal-day.is-today { font-weight: 600; outline: 1px solid var(--accent); }
+        .termin-cal-day.is-disabled { color: var(--text-light); cursor: not-allowed; }
+        .termin-cal-day.is-empty { cursor: default; }
+        .termin-slots { margin-top: 18px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .termin-slot { padding: 8px 6px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 13px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .termin-slot:hover, .termin-slot.is-selected { border-color: var(--accent); background: var(--accent); color: #fff; }
+        .termin-slot.is-booked { color: var(--text-light); cursor: not-allowed; text-decoration: line-through; opacity: 0.5; }
+        .termin-cta-row { margin-top: 28px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .termin-summary { font-size: 14px; color: var(--text-soft); }
+        .termin-summary strong { color: var(--text); }
+
+        .trust-strip { background: var(--bg); padding: 28px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .trust-strip-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .trust-strip-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-soft); }
+        .trust-strip-item svg { width: 16px; height: 16px; color: var(--accent-dark); flex-shrink: 0; }
+        .trust-strip-divider { width: 1px; height: 18px; background: var(--border-strong); }
+
+        .leistungen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .leistung { padding: 32px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); transition: all 0.3s; }
+        .leistung:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+        .leistung-icon { width: 44px; height: 44px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+        .leistung-icon svg { width: 22px; height: 22px; }
+        .leistung h3 { margin-bottom: 8px; }
+        .leistung p { color: var(--text-soft); font-size: 15px; }
+
+        .online-services { background: var(--accent-bg); }
+        .online-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .online-card { background: var(--bg); padding: 32px; border-radius: var(--radius-lg); transition: all 0.3s; cursor: pointer; }
+        .online-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .online-card-tag { display: inline-block; background: var(--accent); color: #fff; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em; margin-bottom: 16px; }
+        .online-card h3 { margin-bottom: 8px; }
+        .online-card p { color: var(--text-soft); font-size: 14px; margin-bottom: 18px; }
+        .online-card-link { color: var(--accent-dark); font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 4px; }
+        .online-card-link:hover { color: var(--text); }
+
+        .preis-section { background: var(--bg); }
+        .preis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 1100px; margin: 0 auto; }
+        .preis-card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-soft); transition: all 0.3s; }
+        .preis-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .preis-card h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .preis-desc { color: var(--text-soft); font-size: 14px; margin-bottom: 16px; }
+        .preis-price { font-size: 22px; font-weight: 600; color: var(--accent-strong); }
+        .preis-note { text-align: center; margin-top: 32px; font-size: 13px; color: var(--text-soft); max-width: 640px; margin-left: auto; margin-right: auto; }
+
+        .reviews-strip { background: var(--bg-soft); padding: 36px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .reviews-strip-inner { display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; max-width: 980px; margin: 0 auto; padding: 0 24px; }
+        .reviews-source { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-soft); }
+        .reviews-source-stars { color: var(--accent); font-size: 16px; letter-spacing: 1px; }
+        .reviews-source strong { color: var(--text); font-weight: 600; }
+        .reviews-divider { width: 1px; height: 24px; background: var(--border-strong); }
+
+        .team-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: center; }
+        .team-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; }
+        .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        .team-text .role { color: var(--accent-dark); font-size: 14px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .team-text h2 { margin-bottom: 18px; }
+        .team-text p { color: var(--text-soft); margin-bottom: 16px; font-size: 16px; }
+        .team-quals { margin-top: 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .qual-pill { padding: 6px 14px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 12px; color: var(--text-soft); }
+
+        .galerie { background: var(--bg-soft); }
+        .galerie-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 16px; height: 500px; }
+        .galerie-grid > div { border-radius: var(--radius); overflow: hidden; background: var(--accent-bg); }
+        .galerie-grid > div:nth-child(1) { grid-row: span 2; }
+        .galerie-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .galerie-grid > div:hover img { transform: scale(1.04); }
+
+        .sprech-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: start; }
+        .sprech-table { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .sprech-row { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 16px 24px; border-bottom: 1px solid var(--border); font-size: 15px; align-items: center; }
+        .sprech-row:last-child { border-bottom: none; }
+        .sprech-row.is-head { background: var(--bg-soft); font-size: 12px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 24px; }
+        .sprech-day { font-weight: 500; }
+        .sprech-row.is-closed { color: var(--text-light); }
+        .sprech-row.is-today { background: var(--accent-bg); }
+        .sprech-aside .info-card { padding: 24px; border-radius: var(--radius-lg); margin-bottom: 14px; }
+        .sprech-aside .info-card.notdienst { background: linear-gradient(135deg, #fef4f3, #fbeae8); border: 1px solid #f4c5bf; }
+        .sprech-aside .info-card.hausbesuch { background: var(--accent-bg); border: 1px solid var(--border-strong); }
+        .info-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .info-card p { font-size: 14px; color: var(--text-soft); margin-bottom: 8px; }
+        .info-card .num { font-size: 22px; font-weight: 600; color: var(--text); margin-top: 6px; }
+
+        .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .stimme { padding: 32px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+        .stimme-stars { color: var(--accent); margin-bottom: 14px; font-size: 14px; letter-spacing: 2px; }
+        .stimme p { color: var(--text); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+        .stimme-author { display: flex; gap: 12px; align-items: center; }
+        .stimme-ava { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-bg); color: var(--accent-strong); display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; }
+        .stimme-name { font-size: 14px; font-weight: 500; }
+        .stimme-role { font-size: 12px; color: var(--text-light); }
+
+        .faq { background: var(--bg-soft); }
+        .faq-list { max-width: 760px; margin: 0 auto; }
+        .faq-item { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; font-weight: 500; font-size: 16px; gap: 16px; list-style: none; }
+        .faq-q::-webkit-details-marker { display: none; }
+        .faq-icon { width: 24px; height: 24px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.3s; font-size: 16px; line-height: 1; }
+        .faq-item.is-open .faq-icon { transform: rotate(45deg); }
+        .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height 0.3s, padding 0.3s; color: var(--text-soft); font-size: 15px; }
+        .faq-item.is-open .faq-a { padding: 0 24px 20px; max-height: 320px; }
+
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .news-card { display: block; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: all 0.3s; }
+        .news-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .news-img { aspect-ratio: 16/10; background: var(--accent-bg); overflow: hidden; }
+        .news-img img { width: 100%; height: 100%; object-fit: cover; }
+        .news-body { padding: 24px; }
+        .news-tag { font-size: 11px; color: var(--accent-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+        .news-card h3 { font-size: 18px; margin-bottom: 8px; }
+        .news-date { font-size: 13px; color: var(--text-light); }
+
+        .kontakt { background: var(--bg-soft); }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+        .kontakt-info h2 { margin-bottom: 24px; }
+        .kontakt-info p.lead { color: var(--text-soft); font-size: 17px; margin-bottom: 32px; }
+        .kontakt-blocks { display: flex; flex-direction: column; gap: 18px; margin-bottom: 32px; }
+        .kontakt-block { display: flex; gap: 14px; align-items: flex-start; }
+        .kontakt-block-icon { width: 36px; height: 36px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .kontakt-block-icon svg { width: 18px; height: 18px; }
+        .kontakt-block h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .kontakt-block p, .kontakt-block a { color: var(--text-soft); font-size: 14px; }
+        .kontakt-block a:hover { color: var(--text); text-decoration: underline; }
+        .kontakt-form { background: var(--bg); padding: 36px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; transition: border-color 0.2s; background: var(--bg); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+        .form-group textarea { resize: vertical; min-height: 96px; }
+        .form-checkbox { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); margin-bottom: 16px; }
+        .form-checkbox input { margin-top: 3px; }
+        .form-submit { width: 100%; }
+
+        .map-mini { aspect-ratio: 16/9; background: var(--accent-bg); border-radius: var(--radius); margin-top: 20px; position: relative; overflow: hidden; }
+        .map-mini svg { width: 100%; height: 100%; }
+        .map-pin { position: absolute; top: 50%; left: 50%; width: 36px; height: 36px; background: var(--accent); border-radius: 50% 50% 50% 0; transform-origin: bottom; transform: translate(-50%, -50%) rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .map-pin::after { content: ''; width: 12px; height: 12px; background: #fff; border-radius: 50%; transform: rotate(45deg); }
+
+        footer { background: var(--text); color: #b1a89e; padding: 64px 0 32px; font-size: 14px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+        .footer-brand { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+        footer p { margin-bottom: 8px; }
+        footer h5 { color: #fff; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+        footer ul li { margin-bottom: 8px; }
+        footer a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-size: 12px; }
+        .karriaro-back { color: rgba(255,255,255,0.55); }
+        .karriaro-back:hover { color: #fff; }
+
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(4px); }
+        .modal-bg.is-open { display: flex; }
+        .modal { background: #fff; border-radius: var(--radius-lg); max-width: 480px; width: 100%; padding: 36px; text-align: center; }
+        .modal-icon { width: 64px; height: 64px; background: var(--accent-bg); color: var(--accent-strong); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+        .modal h3 { font-size: 22px; margin-bottom: 12px; }
+        .modal p { color: var(--text-soft); margin-bottom: 24px; font-size: 15px; }
+
+        @media (max-width: 920px) {
+            section { padding: 64px 0; }
+            .hero { padding: 48px 0 64px; }
+            .hero-grid, .team-grid, .kontakt-grid, .sprech-grid { grid-template-columns: 1fr; gap: 40px; }
+            .leistungen-grid, .online-grid, .stimmen-grid, .news-grid, .preis-grid { grid-template-columns: 1fr; }
+            .termin-grid { grid-template-columns: 1fr; gap: 20px; }
+            .termin-card { padding: 28px; }
+            .galerie-grid { grid-template-columns: 1fr 1fr; height: auto; }
+            .galerie-grid > div:nth-child(1) { grid-row: auto; aspect-ratio: 4/3; }
+            .galerie-grid > div { aspect-ratio: 4/3; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .nav-cta { padding: 9px 18px; font-size: 13px; }
+            .mobile-toggle { display: inline-flex; }
+            .mobile-menu.is-open { display: flex; flex-direction: column; padding: 16px 24px 24px; gap: 14px; background: var(--bg); border-bottom: 1px solid var(--border); }
+            .mobile-menu a { padding: 8px 0; font-size: 16px; color: var(--text-soft); }
+        }
+    </style>
 </head>
-<body class="font-sans text-primary bg-bg antialiased selection:bg-accent selection:text-white">
+<body>
+    <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 bg-bg/80 backdrop-blur-md border-b border-stone-200 transition-all duration-300" x-data="{ open: false }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
-                <a href="#" class="flex flex-col items-center group">
-                    <span class="font-serif text-2xl tracking-widest group-hover:text-accent transition">ELEGANCE</span>
-                    <span class="text-[10px] uppercase tracking-[0.3em] text-stone-500">Hair & Beauty</span>
-                </a>
+    <div class="topbar">Di–Fr 9–21 Uhr · Sa 9–17 Uhr · <a href="tel:+4921186321119">0211 86 32 119</a> · Late-Night: donnerstags bis 21 Uhr</div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-12">
-                    <a href="#philosophie" class="text-xs uppercase tracking-widest hover:text-accent transition">Philosophie</a>
-                    <a href="#leistungen" class="text-xs uppercase tracking-widest hover:text-accent transition">Leistungen</a>
-                    <a href="#galerie" class="text-xs uppercase tracking-widest hover:text-accent transition">Galerie</a>
-                    <a href="#preise" class="text-xs uppercase tracking-widest hover:text-accent transition">Preise</a>
-                    <a href="#termin" class="px-6 py-2 bg-primary text-white hover:bg-accent transition text-xs uppercase tracking-widest">
-                        Termin buchen
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button @click="open = !open" class="md:hidden text-primary p-2 focus:outline-none" aria-label="Menü öffnen" :aria-expanded="open.toString()">
-                    <i class="fa-solid fa-bars-staggered text-xl" x-show="!open"></i>
-                    <i class="fa-solid fa-xmark text-xl" x-show="open" x-cloak></i>
-                </button>
-            </div>
+    <header class="nav">
+        <div class="nav-inner">
+            <a href="/portfolio/friseur-salon.html" class="brand">
+                <span class="brand-mark">M</span>
+                Salon Müller
+            </a>
+            <nav class="nav-links" aria-label="Hauptnavigation">
+                <a href="#leistungen">Leistungen</a>
+                <a href="#preise">Preise</a>
+                <a href="#team">Team</a>
+                <a href="#galerie">Galerie</a>
+                <a href="#kontakt">Kontakt</a>
+            </nav>
+            <a href="#termin" class="nav-cta">Termin buchen</a>
+            <button class="mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('is-open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
         </div>
-
-        <!-- Mobile Dropdown -->
-        <div x-show="open" class="md:hidden bg-bg border-t border-stone-100 absolute w-full h-screen">
-            <div class="flex flex-col p-8 space-y-6 text-center text-xl font-serif">
-                <a href="#philosophie" @click="open = false" class="hover:text-accent">Philosophie</a>
-                <a href="#leistungen" @click="open = false" class="hover:text-accent">Leistungen</a>
-                <a href="#galerie" @click="open = false" class="hover:text-accent">Galerie</a>
-                <a href="#preise" @click="open = false" class="hover:text-accent">Preise</a>
-                <a href="#termin" @click="open = false" class="mt-8 px-8 py-4 bg-primary text-white">Termin buchen</a>
-            </div>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="#leistungen">Leistungen</a>
+            <a href="#preise">Preise</a>
+            <a href="#team">Team</a>
+            <a href="#galerie">Galerie</a>
+            <a href="#kontakt">Kontakt</a>
         </div>
-    </nav>
+    </header>
 
-    <!-- HERO SECTION -->
-    <section class="relative h-[90vh] overflow-hidden">
-        <!-- Split Layout: Bild Rechts, Text Links -->
-        <div class="absolute inset-0 z-0 flex">
-            <div class="w-full lg:w-1/2 bg-bg hidden lg:block"></div>
-            <div class="w-full lg:w-1/2 relative">
-                <img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=1920&auto=format&fit=crop" alt="Haarstyling Model" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/20 lg:bg-transparent"></div>
-            </div>
-        </div>
-
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-            <div class="lg:w-1/2 pr-0 lg:pr-20 pt-20">
-                <span class="text-accent uppercase tracking-[0.3em] text-xs font-bold mb-6 block">Est. 2018 in Düsseldorf</span>
-                <h1 class="font-serif text-5xl md:text-7xl leading-tight mb-8 text-primary mix-blend-multiply lg:mix-blend-normal">
-                    Schönheit <br>ist <span class="italic text-accent">Charakter.</span>
-                </h1>
-                <p class="text-lg text-stone-600 mb-12 font-light leading-relaxed max-w-md bg-bg/80 lg:bg-transparent p-4 lg:p-0 backdrop-blur-sm lg:backdrop-blur-none rounded-lg">
-                    Entdecken Sie Ihren individuellen Look. Wir verbinden handwerkliche Perfektion mit hochwertigen Pflegeprodukten für Ihr Wohlbefinden.
-                </p>
-                <div class="flex gap-6">
-                    <a href="#termin" class="px-8 py-4 bg-primary text-white text-xs uppercase tracking-widest hover:bg-accent transition shadow-lg shadow-stone-300">
-                        Termin vereinbaren
-                    </a>
-                    <a href="#leistungen" class="px-8 py-4 border border-primary text-primary text-xs uppercase tracking-widest hover:bg-white transition flex items-center gap-2 bg-white/80 backdrop-blur-sm lg:bg-transparent">
-                        <i class="fa-solid fa-play text-[8px]"></i> Unser Angebot
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PHILOSOPHIE / ABOUT -->
-    <section id="philosophie" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div class="order-2 md:order-1 relative">
-                    <div class="absolute -top-4 -left-4 w-2/3 h-2/3 border border-accent z-0"></div>
-                    <img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=800&auto=format&fit=crop" alt="Salon Interior" class="relative z-10 w-full shadow-xl">
-                    <div class="absolute -bottom-6 -right-6 bg-bg p-6 shadow-lg z-20 max-w-xs hidden md:block">
-                        <p class="font-serif text-xl italic text-primary">"Wir nehmen uns Zeit für Sie. Das ist der wahre Luxus."</p>
-                        <p class="text-xs uppercase tracking-widest text-accent mt-2">- Laura Weber</p>
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div>
+                        <p class="hero-eyebrow">Friseur-Salon · Düsseldorf-Carlstadt</p>
+                        <h1>Ihr Look. Mit Ruhe. Mit Handwerk.</h1>
+                        <p class="lead">Termin online in zwei Klicks, Wunsch-Stylist wählbar. Aveda Concept Salon im Herzen der Carlstadt — seit 18 Jahren.</p>
+                        <div class="hero-ctas">
+                            <a href="#termin" class="btn btn-primary">Online-Termin buchen
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </a>
+                            <a href="tel:+4921186321119" class="btn btn-ghost">0211 86 32 119</a>
+                        </div>
+                        <div class="hero-trust">
+                            <span class="trust-live"><span class="trust-dot"></span> Heute 14:30 noch frei · Laura</span>
+                            <span><span class="dot">●</span> Aveda Concept Salon</span>
+                            <span><span class="dot">●</span> Late-Night bis 21 Uhr</span>
+                        </div>
+                    </div>
+                    <div class="hero-img">
+                        <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1200&auto=format&fit=crop" alt="Laura Müller, Friseurmeisterin im Salon Müller Düsseldorf" loading="eager" width="800" height="1000">
                     </div>
                 </div>
-                <div class="order-1 md:order-2">
-                    <span class="text-accent uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Über Uns</span>
-                    <h2 class="font-serif text-4xl mb-6">Mehr als nur ein Haarschnitt.</h2>
-                    <p class="text-stone-600 font-light leading-relaxed mb-6">
-                        In unserem Salon im Herzen von Düsseldorf schaffen wir eine Oase der Ruhe. Wir arbeiten ausschließlich mit nachhaltigen Produkten von Aveda und legen größten Wert auf eine typgerechte Beratung.
-                    </p>
-                    <ul class="space-y-4 font-light text-stone-700">
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-leaf"></i></span>
-                            100% Vegane Produkte
-                        </li>
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-certificate"></i></span>
-                            Meisterbetrieb
-                        </li>
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-soft flex items-center justify-center text-accent"><i class="fa-solid fa-clock"></i></span>
-                            Late-Night Termine
-                        </li>
+            </div>
+        </section>
+
+        <section id="termin" class="termin-widget" aria-label="Online-Termin buchen">
+            <div class="container">
+                <div class="termin-card">
+                    <div class="termin-card-head">
+                        <div>
+                            <h2>Termin online buchen</h2>
+                            <p>Wunsch-Stylist, Service und Datum — in zwei Klicks reserviert.</p>
+                        </div>
+                        <span class="termin-badge">24/7 verfügbar</span>
+                    </div>
+                    <div class="termin-grid">
+                        <div>
+                            <div class="termin-section">
+                                <h3>1. Stylist wählen</h3>
+                                <div class="termin-doctors" id="stylists">
+                                    <button type="button" class="termin-doctor is-active" data-doc="laura"><span class="ava">LM</span> Laura</button>
+                                    <button type="button" class="termin-doctor" data-doc="mara"><span class="ava">MR</span> Mara</button>
+                                    <button type="button" class="termin-doctor" data-doc="tim"><span class="ava">TS</span> Tim</button>
+                                </div>
+                            </div>
+                            <div class="termin-section" style="margin-top: 28px;">
+                                <h3>2. Service</h3>
+                                <div class="termin-reasons" id="services">
+                                    <button type="button" class="termin-reason is-active" data-reason="schnitt">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                                        Schnitt
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="coloration">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z"/></svg>
+                                        Coloration
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="straehnen">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="4" y2="20"/><line x1="10" y1="4" x2="10" y2="20"/><line x1="16" y1="4" x2="16" y2="20"/></svg>
+                                        Strähnen
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="braut">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                        Brautstyling
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="beratung">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                                        Beratung
+                                    </button>
+                                    <button type="button" class="termin-reason" data-reason="kopfhaut">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        Kopfhautanalyse
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="termin-section">
+                                <h3>3. Datum &amp; Uhrzeit</h3>
+                                <div class="termin-calendar">
+                                    <div class="termin-cal-head">
+                                        <span class="month">Mai 2026</span>
+                                        <div class="termin-cal-nav">
+                                            <button type="button" aria-label="Vorheriger Monat">‹</button>
+                                            <button type="button" aria-label="Nächster Monat">›</button>
+                                        </div>
+                                    </div>
+                                    <div class="termin-cal-grid" id="calendar"></div>
+                                </div>
+                                <div class="termin-slots" id="slots">
+                                    <button type="button" class="termin-slot">10:00</button>
+                                    <button type="button" class="termin-slot is-booked">11:00</button>
+                                    <button type="button" class="termin-slot">12:30</button>
+                                    <button type="button" class="termin-slot is-selected">14:30</button>
+                                    <button type="button" class="termin-slot is-booked">15:30</button>
+                                    <button type="button" class="termin-slot">17:00</button>
+                                    <button type="button" class="termin-slot">18:30</button>
+                                    <button type="button" class="termin-slot">20:00</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="termin-cta-row">
+                        <p class="termin-summary"><strong>Laura · Schnitt</strong> · Montag, 11. Mai · <strong>14:30</strong></p>
+                        <button type="button" class="btn btn-primary" onclick="openModal('termin')">Termin bestätigen
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="trust-strip">
+            <div class="trust-strip-inner">
+                <div class="trust-strip-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Innungs-Friseur HWK Düsseldorf</div>
+                <div class="trust-strip-divider" aria-hidden="true"></div>
+                <div class="trust-strip-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aveda Concept Salon</div>
+                <div class="trust-strip-divider" aria-hidden="true"></div>
+                <div class="trust-strip-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> BFSG-konform (seit Juni 2025 Pflicht)</div>
+                <div class="trust-strip-divider" aria-hidden="true"></div>
+                <div class="trust-strip-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Late-Night Do bis 21 Uhr</div>
+            </div>
+        </div>
+
+        <section id="leistungen">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Leistungen</p>
+                    <h2>Handwerk in jeder Strähne.</h2>
+                    <p>Vom Klassik-Schnitt bis zur freien Coloration — sechs Disziplinen, eine Haltung: präzise, ehrlich, mit Ruhe.</p>
+                </div>
+                <div class="leistungen-grid">
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/></svg></div>
+                        <h3>Damenschnitt</h3>
+                        <p>Klassisch, Bob, Layered oder Pixie. Inklusive Aveda-Wäsche, Föhnen und Stylingberatung — typgerecht und alltagstauglich.</p>
+                    </div>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div>
+                        <h3>Herrenschnitt</h3>
+                        <p>Klassiker, Fade, Crop oder Long Hair. Bartkontur inklusive. Walk-in donnerstags bis 21 Uhr für Berufstätige.</p>
+                    </div>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z"/></svg></div>
+                        <h3>Coloration &amp; Balayage</h3>
+                        <p>Vollcoloration, Ansatz, Balayage oder Foilayage. Aveda Full-Spectrum — 96 % pflanzlich, ohne Ammoniak.</p>
+                    </div>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="4" y2="20"/><line x1="10" y1="4" x2="10" y2="20"/><line x1="16" y1="4" x2="16" y2="20"/></svg></div>
+                        <h3>Strähnen-Techniken</h3>
+                        <p>Klassische Folie, Babylights, Money-Piece, Face-Frame. Wir analysieren Haarstruktur und Gesichtsform — keine Schablonen.</p>
+                    </div>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+                        <h3>Hochzeits- &amp; Eventstyling</h3>
+                        <p>Probetermin sechs Wochen vorher, am Hochzeitstag im Salon oder vor Ort. Inklusive Veil-Anbringung und Touch-Up-Kit.</p>
+                    </div>
+                    <div class="leistung">
+                        <div class="leistung-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+                        <h3>Kopfhautanalyse</h3>
+                        <p>Mikroskopische Untersuchung von Kopfhaut und Haarschaft. Pflegeplan und Aveda-Therapie individuell zusammengestellt.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="online-services" class="online-services">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Digital</p>
+                    <h2>Weniger Telefonschleife. Mehr Stuhl.</h2>
+                    <p>Was früher Anrufzeit war, machen Sie heute online — von der Buchung bis zur Stilberatung im Vorab.</p>
+                </div>
+                <div class="online-grid">
+                    <a href="#termin" class="online-card">
+                        <span class="online-card-tag">Online-Termin</span>
+                        <h3>Wunsch-Stylist wählbar</h3>
+                        <p>Laura, Mara oder Tim — Sie sehen die Verfügbarkeit aller drei und buchen direkt. Keine Ping-Pong-Anrufe.</p>
+                        <span class="online-card-link">Termin buchen →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">WhatsApp</span>
+                        <h3>Schnelle Rückfrage</h3>
+                        <p>Foto vom Wunschlook, Frage zum Pflegeprodukt, Termin verschieben? WhatsApp-Antwort innerhalb von zwei Stunden.</p>
+                        <span class="online-card-link">Nachricht senden →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Stilberatung vorab</span>
+                        <h3>Wunschlook hochladen</h3>
+                        <p>Drei Inspirationsbilder vorab — wir prüfen Machbarkeit und melden uns vor dem Termin mit ehrlichem Feedback.</p>
+                        <span class="online-card-link">Beratung anfragen →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">SMS-Erinnerung</span>
+                        <h3>24 h vor Termin</h3>
+                        <p>SMS oder E-Mail-Erinnerung mit Datum, Uhrzeit und Stylist. Verlegen ohne Anruf direkt aus dem Link.</p>
+                        <span class="online-card-link">Aktivieren →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Allergie-Test</span>
+                        <h3>48 h vor Coloration</h3>
+                        <p>Erstbesuch mit Coloration? Sensitivitätstest verpflichtend — Sie kommen vorbei oder erhalten das Testkit per Post.</p>
+                        <span class="online-card-link">Test anfordern →</span>
+                    </a>
+                    <a href="#kontakt" class="online-card">
+                        <span class="online-card-tag">Gutscheine</span>
+                        <h3>Per E-Mail in 2 Minuten</h3>
+                        <p>Geburtstag, Hochzeit, Muttertag — Gutschein digital, ausdruckbar oder per Post. Beträge ab 50 €.</p>
+                        <span class="online-card-link">Gutschein bestellen →</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="preise" class="preis-section">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Preisliste</p>
+                    <h2>Was kostet was?</h2>
+                    <p>Preise nach Haarlänge gestaffelt. Schriftliches Angebot vor jedem Service — ohne Überraschungen am Tresen.</p>
+                </div>
+                <div class="preis-grid">
+                    <div class="preis-card">
+                        <h4>Damenschnitt</h4>
+                        <p class="preis-desc">Wäsche mit Aveda, Schnitt, Föhnen, Stylingberatung. Nach Haarlänge.</p>
+                        <p class="preis-price">ab 58,–&nbsp;€</p>
+                    </div>
+                    <div class="preis-card">
+                        <h4>Herrenschnitt</h4>
+                        <p class="preis-desc">Klassisch, Fade oder Long Hair. Bartkontur inklusive.</p>
+                        <p class="preis-price">ab 42,–&nbsp;€</p>
+                    </div>
+                    <div class="preis-card">
+                        <h4>Coloration Ansatz</h4>
+                        <p class="preis-desc">Nachfärben Ansatz mit Aveda Full-Spectrum. Bis 3 cm.</p>
+                        <p class="preis-price">ab 89,–&nbsp;€</p>
+                    </div>
+                    <div class="preis-card">
+                        <h4>Balayage</h4>
+                        <p class="preis-desc">Freihand-Technik mit drei bis fünf Tonstufen. Naturwuchs-Look.</p>
+                        <p class="preis-price">ab 165,–&nbsp;€</p>
+                    </div>
+                    <div class="preis-card">
+                        <h4>Strähnen Folie</h4>
+                        <p class="preis-desc">Halbkopf, Vollkopf oder Face-Frame. Inklusive Tonung.</p>
+                        <p class="preis-price">ab 128,–&nbsp;€</p>
+                    </div>
+                    <div class="preis-card">
+                        <h4>Brautstyling-Paket</h4>
+                        <p class="preis-desc">Probetermin plus Hochzeitstag. Inklusive Make-up-Co-Working.</p>
+                        <p class="preis-price">280,–&nbsp;€</p>
+                    </div>
+                </div>
+                <p class="preis-note">Preise nach Haarlänge und Aufwand. Bei längerem oder dichterem Haar Aufschlag pro Strähnen-Sektion. Sie erhalten immer einen schriftlichen Kostenvoranschlag vor Beginn.</p>
+            </div>
+        </section>
+
+        <section id="team">
+            <div class="container">
+                <div class="team-grid">
+                    <div class="team-img">
+                        <img src="https://images.unsplash.com/photo-1614204424926-196a80bf0be8?q=80&w=900&auto=format&fit=crop" alt="Laura Müller, Friseurmeisterin und Inhaberin Salon Müller" loading="lazy" width="900" height="900">
+                    </div>
+                    <div class="team-text">
+                        <p class="role">Inhaberin &amp; Friseurmeisterin</p>
+                        <h2>Laura Müller</h2>
+                        <p>Seit 18 Jahren in der Carlstadt — angefangen als Auszubildende bei einem Düsseldorfer Klassiker, später Stylistin bei Sassoon London, Meisterprüfung 2014. Den Salon Müller habe ich 2016 eröffnet, weil ich glaube: Friseurhandwerk braucht Zeit, Ruhe und eine ehrliche Haltung zum Haar.</p>
+                        <p>Kein Akkord, keine Massenabfertigung. Bei mir bekommen Sie 75 Minuten Stuhl-Zeit für einen Schnitt — und vorher zehn Minuten Beratung, die wirklich zählt. Aveda-zertifiziert, weil mir Inhaltsstoffe wichtig sind.</p>
+                        <div class="team-quals">
+                            <span class="qual-pill">Friseurmeisterin HWK</span>
+                            <span class="qual-pill">Aveda Concept Salon</span>
+                            <span class="qual-pill">Brautstyling-Spezialistin</span>
+                            <span class="qual-pill">Sassoon-Schule London</span>
+                            <span class="qual-pill">Sprachen: DE · EN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="galerie" class="galerie">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Salon</p>
+                    <h2>Hell. Ruhig. Düsseldorfer Altbau.</h2>
+                    <p>Drei Stuhl-Plätze, viel Tageslicht, eigene Wasch-Lounge. Kein Hektik-Großsalon — sondern eine kleine Manufaktur in der Hohen Straße.</p>
+                </div>
+                <div class="galerie-grid">
+                    <div><img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1200&auto=format&fit=crop" alt="Salon-Empfang Salon Müller mit Aveda-Wand" loading="lazy" width="800" height="1000"></div>
+                    <div><img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=900&auto=format&fit=crop" alt="Stuhl-Platz mit Tageslicht" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1562322140-8baeececf3df?q=80&w=900&auto=format&fit=crop" alt="Wasch-Lounge mit Massagestuhl" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=900&auto=format&fit=crop" alt="Coloration-Anwendung" loading="lazy" width="600" height="500"></div>
+                    <div><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=900&auto=format&fit=crop" alt="Brautstyling im Salon" loading="lazy" width="600" height="500"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="oeffnungszeiten">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Öffnungszeiten</p>
+                    <h2>Wann wir für Sie da sind.</h2>
+                    <p>Walk-in donnerstags von 18 bis 21 Uhr — ohne Termin für Schnitt &amp; Föhnen. Sonst per Online-Buchung.</p>
+                </div>
+                <div class="sprech-grid">
+                    <div class="sprech-table">
+                        <div class="sprech-row is-head"><span>Tag</span><span>Vormittag</span><span>Nachmittag</span></div>
+                        <div class="sprech-row is-closed"><span class="sprech-day">Montag</span><span style="grid-column: span 2;">Ruhetag</span></div>
+                        <div class="sprech-row is-today"><span class="sprech-day">Dienstag</span><span>09:00 – 13:00</span><span>14:00 – 19:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Mittwoch</span><span>09:00 – 13:00</span><span>14:00 – 19:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Donnerstag</span><span>09:00 – 13:00</span><span>14:00 – 21:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Freitag</span><span>09:00 – 13:00</span><span>14:00 – 19:00</span></div>
+                        <div class="sprech-row"><span class="sprech-day">Samstag</span><span>09:00 – 17:00</span><span>durchgehend</span></div>
+                        <div class="sprech-row is-closed"><span class="sprech-day">Sonntag</span><span style="grid-column: span 2;">Ruhetag</span></div>
+                    </div>
+                    <aside class="sprech-aside">
+                        <div class="info-card notdienst">
+                            <h4>✂ Walk-in Late-Night</h4>
+                            <p>Donnerstags 18–21 Uhr ohne Termin — Schnitt und Föhnen für Berufstätige. Wartezeit aktuell unter 20 Min.</p>
+                            <span class="num">21:00 Stopp</span>
+                        </div>
+                        <div class="info-card hausbesuch">
+                            <h4>Hochzeit vor Ort</h4>
+                            <p>Brautstyling am Hochzeitsmorgen bei Ihnen zuhause oder im Hotel — innerhalb Düsseldorf.</p>
+                            <a href="#kontakt" class="online-card-link">Termin anfragen →</a>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="online-services" style="background:var(--bg-soft);">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Kundenstimmen</p>
+                    <h2>Was unsere Gäste sagen.</h2>
+                </div>
+                <div class="stimmen-grid">
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Endlich eine Friseurin, die wirklich zuhört. Laura hat mir nach 15 Jahren Bob einen Long Pixie verpasst — und mich vorher zehn Minuten beraten, was zu meinem Gesicht passt. Großer Unterschied."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">SK</div>
+                            <div>
+                                <div class="stimme-name">Sandra K.</div>
+                                <div class="stimme-role">Kundin seit 2020</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Balayage im April, im Juli noch wie frisch gemacht. Mara hat eine ruhige Hand und vor allem Geduld bei Korrekturen. Aveda-Produkte tun meinem Haar sichtbar gut."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">JB</div>
+                            <div>
+                                <div class="stimme-name">Julia B.</div>
+                                <div class="stimme-role">Kundin seit 2022</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stimme">
+                        <div class="stimme-stars">★★★★★</div>
+                        <p>"Late-Night-Termin nach Feierabend, ohne Wartezeit. Tim macht den besten Fade in der Carlstadt. Schnell, präzise, fair bepreist — und unkompliziert per WhatsApp buchbar."</p>
+                        <div class="stimme-author">
+                            <div class="stimme-ava">MA</div>
+                            <div>
+                                <div class="stimme-name">Markus A.</div>
+                                <div class="stimme-role">Kunde seit 2023</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="reviews-strip">
+            <div class="reviews-strip-inner">
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>4,9</strong> von 318 Google-Bewertungen</span>
+                </div>
+                <div class="reviews-divider" aria-hidden="true"></div>
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>4,8</strong> auf Treatwell · 204 Bewertungen</span>
+                </div>
+                <div class="reviews-divider" aria-hidden="true"></div>
+                <div class="reviews-source">
+                    <span class="reviews-source-stars">★★★★★</span>
+                    <span><strong>Aveda</strong> Concept Salon seit 2019</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="faq">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Häufige Fragen</p>
+                    <h2>FAQ.</h2>
+                </div>
+                <div class="faq-list">
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie lange dauert ein Schnitt-Termin?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Damen-Schnitt 60–75 Minuten inklusive Wäsche und Föhnen, Herren-Schnitt 30–45 Minuten. Bei Brautstyling oder komplexen Balayagen planen wir 2,5 bis 4 Stunden — Sie erhalten beim Buchen die genaue Schätzung.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Brauche ich vor einer Coloration einen Allergie-Test?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Bei Erstkundinnen ist ein Sensitivitätstest 48 Stunden vor dem Coloration-Termin verpflichtend — entweder kurz im Salon oder per Testkit nach Hause. Bei Stammkundinnen mit dokumentierter Verträglichkeit entfällt der Test.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Kann ich Walk-in ohne Termin vorbeikommen?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Donnerstags von 18 bis 21 Uhr ist Late-Night-Walk-in für Schnitt &amp; Föhnen. An anderen Tagen empfehlen wir die Online-Buchung — wir wollen Ihnen unsere volle Aufmerksamkeit geben, und das geht nur mit reservierter Stuhl-Zeit.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Wie kann ich bezahlen?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Bargeld, EC- und Kreditkarte (Visa, Mastercard, Amex), Apple Pay, Google Pay sowie SumUp-Link nach dem Termin. Gutscheine kombinierbar.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Gibt es Parkplätze in der Nähe?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Tiefgarage Carlstadt direkt in der Hohen Straße (2 Min. Fußweg) — wir validieren Ihren Parkschein bei Aufenthalten über 60 Min. ÖPNV: U70/U74/U77 Station Steinstraße, drei Min. zu Fuß.</div>
+                    </details>
+                    <details class="faq-item">
+                        <summary class="faq-q">Bieten Sie Hochzeits-Styling vor Ort an?<span class="faq-icon">+</span></summary>
+                        <div class="faq-a">Ja, innerhalb Düsseldorfs kommen wir am Hochzeitsmorgen zu Ihnen nachhause oder ins Hotel — inklusive Probetermin im Salon sechs Wochen vorher und Touch-Up-Kit für unterwegs.</div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Aktuelles</p>
+                    <h2>News aus dem Salon.</h2>
+                </div>
+                <div class="news-grid">
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?q=80&w=900&auto=format&fit=crop" alt="Sommer-Trendlooks 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Trend-Lookbook</p>
+                            <h3>Sommer 2026: Warme Naturtöne &amp; Money-Piece</h3>
+                            <p class="news-date">Veröffentlicht 8. Mai 2026</p>
+                        </div>
+                    </a>
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?q=80&w=900&auto=format&fit=crop" alt="Aveda Full-Spectrum-Coloration" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Neu im Programm</p>
+                            <h3>Aveda Full-Spectrum: 96 % pflanzlich, ohne Ammoniak</h3>
+                            <p class="news-date">Veröffentlicht 2. Mai 2026</p>
+                        </div>
+                    </a>
+                    <a href="#" class="news-card">
+                        <div class="news-img"><img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?q=80&w=900&auto=format&fit=crop" alt="Brautstyling-Saison 2026" loading="lazy" width="600" height="375"></div>
+                        <div class="news-body">
+                            <p class="news-tag">Brautstyling</p>
+                            <h3>Brautsaison 2026 — Probetermine ab Juni buchbar</h3>
+                            <p class="news-date">Veröffentlicht 28. April 2026</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt" class="kontakt">
+            <div class="container">
+                <div class="kontakt-grid">
+                    <div class="kontakt-info">
+                        <p class="eyebrow" style="color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;">Kontakt</p>
+                        <h2>Schreiben Sie uns.</h2>
+                        <p class="lead">Terminanfrage, Stilberatung vorab oder Brautstyling — wir antworten innerhalb von 24 Stunden, oft schon binnen zwei.</p>
+                        <div class="kontakt-blocks">
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                                <div>
+                                    <h4>Adresse</h4>
+                                    <p>Hohe Straße 18, 40213 Düsseldorf-Carlstadt</p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+                                <div>
+                                    <h4>Telefon &amp; WhatsApp</h4>
+                                    <p><a href="tel:+4921186321119">0211 86 32 119</a> · <a href="https://wa.me/4921186321119">WhatsApp</a></p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+                                <div>
+                                    <h4>E-Mail</h4>
+                                    <p><a href="mailto:hallo@salon-mueller-duesseldorf.de">hallo@salon-mueller-duesseldorf.de</a></p>
+                                </div>
+                            </div>
+                            <div class="kontakt-block">
+                                <div class="kontakt-block-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                                <div>
+                                    <h4>Anfahrt</h4>
+                                    <p>U70/U74/U77 Steinstraße · Tiefgarage Carlstadt</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-mini">
+                            <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                                <rect width="800" height="450" fill="#faf5f2"/>
+                                <path d="M 0 200 L 800 240" stroke="#d8cdc4" stroke-width="2" fill="none"/>
+                                <path d="M 200 0 L 240 450" stroke="#d8cdc4" stroke-width="2" fill="none"/>
+                                <path d="M 0 320 L 800 280" stroke="#ebe4df" stroke-width="1.5" fill="none"/>
+                                <path d="M 500 0 L 530 450" stroke="#ebe4df" stroke-width="1.5" fill="none"/>
+                                <text x="60" y="180" font-family="Inter, sans-serif" font-size="11" fill="#908882">Hohe Straße</text>
+                                <text x="60" y="350" font-family="Inter, sans-serif" font-size="11" fill="#b1a89e">Carlsplatz</text>
+                            </svg>
+                            <div class="map-pin"></div>
+                        </div>
+                    </div>
+                    <form class="kontakt-form" onsubmit="event.preventDefault(); openModal('kontakt');">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kf-name">Vor- und Nachname</label>
+                                <input id="kf-name" type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kf-email">E-Mail</label>
+                                <input id="kf-email" type="email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kf-tel">Telefon (optional)</label>
+                                <input id="kf-tel" type="tel">
+                            </div>
+                            <div class="form-group">
+                                <label for="kf-anliegen">Anliegen</label>
+                                <select id="kf-anliegen" required>
+                                    <option value="termin">Terminanfrage</option>
+                                    <option value="beratung">Stilberatung vorab</option>
+                                    <option value="braut">Brautstyling</option>
+                                    <option value="gutschein">Gutschein</option>
+                                    <option value="andere">Sonstiges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="kf-msg">Nachricht</label>
+                            <textarea id="kf-msg" rows="4" required></textarea>
+                        </div>
+                        <label class="form-checkbox">
+                            <input type="checkbox" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß <a href="#" style="color: var(--accent-dark); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
+                        </label>
+                        <button type="submit" class="btn btn-primary form-submit">Nachricht senden
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">M Salon Müller</div>
+                    <p>Friseur-Manufaktur in Düsseldorf-Carlstadt seit 2008. Aveda Concept Salon. Drei Stylisten, viel Zeit, ehrliches Handwerk.</p>
+                    <p style="margin-top: 16px;">Hohe Straße 18<br>40213 Düsseldorf</p>
+                </div>
+                <div>
+                    <h5>Salon</h5>
+                    <ul>
+                        <li><a href="#leistungen">Leistungen</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#galerie">Galerie</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Online</h5>
+                    <ul>
+                        <li><a href="#termin">Termin buchen</a></li>
+                        <li><a href="#online-services">Stilberatung</a></li>
+                        <li><a href="#online-services">Gutscheine</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Rechtliches</h5>
+                    <ul>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">Barrierefreiheits-Erklärung</a></li>
                     </ul>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- LEISTUNGEN -->
-    <section id="leistungen" class="py-24 bg-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="font-serif text-4xl mb-4">Unser Service</h2>
-                <div class="w-12 h-0.5 bg-accent mx-auto"></div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100">
-                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
-                        <i class="fa-solid fa-scissors text-2xl text-primary group-hover:text-white transition"></i>
-                    </div>
-                    <h3 class="font-serif text-xl mb-4">Cut & Style</h3>
-                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
-                        Präzise Haarschnitte, die zu Ihrer Gesichtsform und Ihrem Lebensstil passen. Inklusive Kopfmassage.
-                    </p>
-                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 45€</span>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100 transform md:-translate-y-4">
-                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
-                        <i class="fa-solid fa-wand-magic-sparkles text-2xl text-primary group-hover:text-white transition"></i>
-                    </div>
-                    <h3 class="font-serif text-xl mb-4">Coloration</h3>
-                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
-                        Balayage, Babylights oder Glossing. Wir finden den perfekten Farbton für Ihren Teint.
-                    </p>
-                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 85€</span>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="bg-white p-10 shadow-sm hover:shadow-xl transition duration-500 group text-center border border-stone-100">
-                    <div class="mb-6 inline-block p-4 rounded-full bg-bg group-hover:bg-accent transition duration-500">
-                        <i class="fa-solid fa-spa text-2xl text-primary group-hover:text-white transition"></i>
-                    </div>
-                    <h3 class="font-serif text-xl mb-4">Care & Repair</h3>
-                    <p class="text-stone-500 font-light text-sm leading-relaxed mb-6">
-                        Intensive Pflegekuren für strapaziertes Haar. Olaplex-Behandlungen für maximalen Aufbau.
-                    </p>
-                    <span class="text-xs uppercase tracking-widest border-b border-accent pb-1">Ab 30€</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- GALERIE (Instagram Style) -->
-    <section id="galerie" class="py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-12">
-                <h2 class="font-serif text-3xl">Looks & Inspiration</h2>
-                <a href="#" class="text-xs uppercase tracking-widest hover:text-accent transition"><i class="fa-brands fa-instagram mr-2"></i>Folgen Sie uns</a>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="aspect-square overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 1">
-                </div>
-                <div class="aspect-square overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1560869713-7d0a29430803?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 2">
-                </div>
-                <div class="aspect-square overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 3">
-                </div>
-                <div class="aspect-square overflow-hidden group">
-                    <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Look 4">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PREISE -->
-    <section id="preise" class="py-24 bg-bg">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="font-serif text-4xl mb-4">Preisliste</h2>
-                <p class="text-stone-500 font-light">Transparent und fair.</p>
-            </div>
-
-            <div class="space-y-6">
-                <!-- Item -->
-                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
-                    <div>
-                        <h4 class="font-serif text-lg">Damen Haarschnitt</h4>
-                        <span class="text-xs text-stone-500 uppercase tracking-wide">Waschen, Schneiden, Föhnen</span>
-                    </div>
-                    <span class="font-bold">ab 55 €</span>
-                </div>
-                <!-- Item -->
-                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
-                    <div>
-                        <h4 class="font-serif text-lg">Herren Haarschnitt</h4>
-                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Kopfmassage</span>
-                    </div>
-                    <span class="font-bold">ab 35 €</span>
-                </div>
-                <!-- Item -->
-                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
-                    <div>
-                        <h4 class="font-serif text-lg">Balayage Komplett</h4>
-                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Glossing & Pflege</span>
-                    </div>
-                    <span class="font-bold">ab 140 €</span>
-                </div>
-                <!-- Item -->
-                <div class="flex justify-between items-baseline border-b border-stone-200 pb-4">
-                    <div>
-                        <h4 class="font-serif text-lg">Brautstyling</h4>
-                        <span class="text-xs text-stone-500 uppercase tracking-wide">inkl. Probetermin</span>
-                    </div>
-                    <span class="font-bold">ab 250 €</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TERMIN / KONTAKT -->
-    <section id="termin" class="py-24 bg-primary text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-20">
-            <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover grayscale" alt="Background">
-        </div>
-
-        <div class="max-w-4xl mx-auto px-4 relative z-10 text-center">
-            <h2 class="font-serif text-4xl md:text-5xl mb-8">Bereit für eine Veränderung?</h2>
-            <p class="text-stone-300 mb-10 font-light max-w-lg mx-auto">
-                Buchen Sie Ihren Termin ganz einfach online oder rufen Sie uns an. Wir freuen uns auf Sie.
-            </p>
-
-            <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                <a href="#" class="px-10 py-5 bg-accent hover:bg-white hover:text-primary transition text-sm font-bold uppercase tracking-widest">
-                    Online Buchen
-                </a>
-                <a href="tel:0123456789" class="px-10 py-5 border border-white hover:bg-white hover:text-primary transition text-sm font-bold uppercase tracking-widest">
-                    0123 / 45 67 89
-                </a>
-            </div>
-
-            <div class="mt-16 grid md:grid-cols-3 gap-8 text-sm font-light text-stone-300">
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Adresse</h4>
-                    <p>Salon Straße 12</p>
-                    <p>12345 Stadt</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Öffnungszeiten</h4>
-                    <p>Mo: Geschlossen</p>
-                    <p>Di - Fr: 09:00 - 19:00</p>
-                    <p>Sa: 09:00 - 16:00</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest mb-2">Parken</h4>
-                    <p>Kundenparkplätze</p>
-                    <p>im Hof verfügbar</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-bg py-8 border-t border-stone-200 text-center text-xs text-stone-500">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="mb-4">&copy; 2026 Salon Elegance. Alle Rechte vorbehalten.</p>
-            <div class="space-x-4">
-                <a href="#" class="hover:text-primary transition">Impressum</a>
-                <a href="#" class="hover:text-primary transition">Datenschutz</a>
+            <div class="footer-bottom">
+                <span>© 2026 Salon Müller · Alle Rechte vorbehalten.</span>
+                <a href="https://karriaro-webdesign.de/" class="karriaro-back">Made by Karriaro · Webdesign-Manufaktur ↗</a>
             </div>
         </div>
     </footer>
 
+    <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="if(event.target===this) closeModal();">
+        <div class="modal">
+            <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h3 id="modal-title">Demo-Modus</h3>
+            <p id="modal-text">In der echten Anwendung würde Ihre Anfrage jetzt verschickt. Diese Seite ist ein Karriaro-Designbeispiel.</p>
+            <button type="button" class="btn btn-primary" onclick="closeModal()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.mobile-menu a').forEach(function (a) {
+            a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
+
+        function makeToggle(group) {
+            document.querySelectorAll('#' + group + ' button').forEach(function (b) {
+                b.addEventListener('click', function () {
+                    document.querySelectorAll('#' + group + ' button').forEach(function (x) { x.classList.remove('is-active'); });
+                    b.classList.add('is-active');
+                });
+            });
+        }
+        makeToggle('stylists'); makeToggle('services');
+
+        document.querySelectorAll('#slots .termin-slot:not(.is-booked)').forEach(function (s) {
+            s.addEventListener('click', function () {
+                document.querySelectorAll('#slots .termin-slot').forEach(function (x) { x.classList.remove('is-selected'); });
+                s.classList.add('is-selected');
+            });
+        });
+
+        (function () {
+            var cal = document.getElementById('calendar');
+            if (!cal) return;
+            ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach(function (l) {
+                var el = document.createElement('div');
+                el.className = 'termin-cal-day-label';
+                el.textContent = l;
+                cal.appendChild(el);
+            });
+            for (var i = 0; i < 4; i++) {
+                var e = document.createElement('div');
+                e.className = 'termin-cal-day is-empty';
+                cal.appendChild(e);
+            }
+            for (var d = 1; d <= 31; d++) {
+                var day = document.createElement('button');
+                day.type = 'button';
+                day.className = 'termin-cal-day';
+                day.textContent = d;
+                if (d === 11) day.classList.add('is-selected');
+                if (d === 8) day.classList.add('is-today');
+                if (d < 8) day.classList.add('is-disabled');
+                var dow = (4 + d - 1) % 7;
+                if (dow === 0 || dow === 6) day.classList.add('is-disabled');
+                if (!day.classList.contains('is-disabled')) {
+                    (function (b) {
+                        b.addEventListener('click', function () {
+                            cal.querySelectorAll('.termin-cal-day').forEach(function (x) { x.classList.remove('is-selected'); });
+                            b.classList.add('is-selected');
+                        });
+                    })(day);
+                }
+                cal.appendChild(day);
+            }
+        })();
+
+        document.querySelectorAll('.faq-item').forEach(function (item) {
+            item.addEventListener('toggle', function () {
+                if (item.open) item.classList.add('is-open'); else item.classList.remove('is-open');
+            });
+        });
+
+        function openModal(kind) {
+            var modal = document.getElementById('modal');
+            var t = document.getElementById('modal-title');
+            var p = document.getElementById('modal-text');
+            if (kind === 'termin') {
+                t.textContent = 'Demo-Termin gebucht';
+                p.textContent = 'In der echten Anwendung wäre Ihr Termin am Montag, 11. Mai um 14:30 Uhr bei Laura bestätigt. Diese Seite ist ein Karriaro-Designbeispiel.';
+            } else if (kind === 'kontakt') {
+                t.textContent = 'Demo-Nachricht gesendet';
+                p.textContent = 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet. Diese Seite ist ein Karriaro-Designbeispiel.';
+            }
+            modal.classList.add('is-open');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.remove('is-open');
+        }
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+    </script>
 </body>
 </html>
