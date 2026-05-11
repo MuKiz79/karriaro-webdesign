@@ -243,11 +243,116 @@
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
 
+        /* KI-Chat-Widget (Sticky, Premium deep-navy) */
+        .chat-trigger { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 12px 22px; border-radius: 999px; box-shadow: 0 12px 32px rgba(20,40,60,0.3); z-index: 90; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+        .chat-trigger:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 16px 36px rgba(20,40,60,0.36); }
+        .chat-trigger svg { width: 18px; height: 18px; }
+        .chat-trigger .chat-label { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+        .chat-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; max-width: calc(100vw - 32px); background: var(--bg); border-radius: var(--radius-lg); box-shadow: 0 24px 60px rgba(20,40,60,0.22); z-index: 100; display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--border); }
+        .chat-panel.is-open { display: flex; }
+        .chat-head { background: var(--accent); color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-head h4 { font-size: 15px; font-weight: 600; margin: 0; }
+        .chat-head p { font-size: 12px; opacity: 0.85; margin: 2px 0 0; }
+        .chat-close { color: #fff; opacity: 0.8; font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
+        .chat-close:hover { opacity: 1; }
+        .chat-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 60vh; overflow-y: auto; }
+        .chat-msg { background: var(--bg-soft); padding: 12px 14px; border-radius: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
+        .chat-msg.is-user { background: var(--accent-bg); align-self: flex-end; max-width: 80%; }
+        .chat-form { padding: 12px 16px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+        .chat-form label { font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; }
+        .chat-form select, .chat-form input, .chat-form textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--bg-soft); }
+        .chat-form button { background: var(--accent); color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .chat-form button:hover { background: var(--accent-dark); }
+
+        /* Interessent-Matching-Block */
+        .matching { background: var(--accent-bg); padding: 80px 0; }
+        .matching-head { text-align: center; max-width: 720px; margin: 0 auto 36px; }
+        .matching-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
+        .matching-head h2 { margin-bottom: 14px; }
+        .matching-head p { color: var(--text-soft); font-size: 17px; }
+        .matching-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 1100px; margin: 0 auto; }
+        .match-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: all 0.3s; position: relative; overflow: hidden; }
+        .match-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); }
+        .match-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--gold); }
+        .match-id { font-size: 11px; color: var(--accent); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+        .match-card h4 { font-size: 17px; margin-bottom: 10px; }
+        .match-attr { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px dashed var(--border); }
+        .match-attr:last-of-type { border-bottom: none; }
+        .match-attr .key { color: var(--text-soft); }
+        .match-attr .val { color: var(--text); font-weight: 500; }
+        .match-active { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--accent-bg); color: var(--accent); border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 12px; }
+        .match-active::before { content: ''; width: 6px; height: 6px; background: #2c8a4b; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .matching-cta { text-align: center; margin-top: 36px; }
+        .matching-note { font-size: 13px; color: var(--text-soft); margin-bottom: 18px; }
+
+        /* Portfolio-Card Erweiterungen: 360° + Energie-Bar + Markt-Pill */
+        .portfolio-card { position: relative; }
+        .portfolio-360 { position: absolute; top: 14px; right: 14px; z-index: 2; background: rgba(20,40,60,0.85); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; backdrop-filter: blur(4px); }
+        .portfolio-360:hover { background: var(--accent-dark); }
+        .portfolio-energie { display: flex; align-items: center; gap: 8px; margin: 12px 0; padding-top: 12px; border-top: 1px solid var(--border); }
+        .energy-bar { display: flex; gap: 2px; flex: 1; }
+        .energy-step { flex: 1; height: 14px; border-radius: 2px; opacity: 0.32; transition: opacity 0.2s; }
+        .energy-step.is-active { opacity: 1; box-shadow: 0 0 0 1.5px rgba(0,0,0,0.05); }
+        .energy-step.a { background: #1e9b3e; }
+        .energy-step.b { background: #4cb04d; }
+        .energy-step.c { background: #b3c92a; }
+        .energy-step.d { background: #f2e500; }
+        .energy-step.e { background: #f7b733; }
+        .energy-step.f { background: #e88532; }
+        .energy-step.g { background: #de4d2e; }
+        .energy-step.h { background: #b53026; }
+        .energy-label { font-size: 11px; font-weight: 700; color: var(--text); }
+        .markt-pill { display: inline-block; padding: 4px 10px; background: var(--accent-bg); color: var(--accent); border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 6px; }
+        .markt-pill.below { color: #2c8a4b; background: rgba(44,138,75,0.08); }
+        .markt-pill.above { color: var(--gold); background: rgba(138,123,92,0.12); }
+
+        /* Käufer-Newsletter */
+        .newsletter { padding: 80px 0; background: var(--bg-soft); }
+        .newsletter-card { background: var(--bg); max-width: 920px; margin: 0 auto; padding: 44px 48px; border-radius: var(--radius-lg); border: 1px solid var(--border); display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+        .newsletter-text h3 { font-size: 24px; margin-bottom: 10px; }
+        .newsletter-text p { color: var(--text-soft); font-size: 15px; margin-bottom: 14px; line-height: 1.55; }
+        .newsletter-text .meta { font-size: 12px; color: var(--text-light); }
+        .newsletter-form { display: flex; flex-direction: column; gap: 12px; }
+        .newsletter-form input { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: 4px; font-size: 14px; background: var(--bg-soft); }
+        .newsletter-form input:focus { outline: none; border-color: var(--accent); background: var(--bg); }
+        .newsletter-form .segments { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+        .newsletter-form .segments label { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .newsletter-form .segments input { width: auto; padding: 0; }
+        .newsletter-form .segments label:has(input:checked) { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .newsletter-form .consent { font-size: 12px; color: var(--text-soft); display: flex; gap: 8px; align-items: flex-start; }
+        .newsletter-form .consent input { width: auto; padding: 0; margin-top: 3px; }
+        .newsletter-form button { background: var(--accent); color: #fff; padding: 12px; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .newsletter-form button:hover { background: var(--accent-dark); }
+
+        /* Video-Case-Study (analog stimme aber mit Video-Slot) */
+        .video-stimme { padding: 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+        .video-stimme-media { aspect-ratio: 16/10; background: var(--accent-bg); position: relative; overflow: hidden; }
+        .video-stimme-media video { width: 100%; height: 100%; object-fit: cover; }
+        .video-stimme-media .video-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(20,40,60,0.18); cursor: pointer; }
+        .video-stimme-media .video-play-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.96); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .video-stimme-media .video-play-icon svg { width: 22px; height: 22px; color: var(--accent); margin-left: 3px; }
+        .video-stimme-body { padding: 22px 24px; }
+        .video-stimme-quote { color: var(--text); font-size: 14px; line-height: 1.55; margin-bottom: 14px; font-style: italic; }
+        .video-stimme-author { display: flex; gap: 10px; align-items: center; }
+
+        /* Tour-Modal */
+        .modal-wide { max-width: 600px; text-align: left; }
+        .modal-wide h3 { text-align: center; margin-bottom: 8px; }
+        .modal-wide > p { text-align: center; margin-bottom: 20px; }
+        .tour-preview { aspect-ratio: 16/9; background: linear-gradient(135deg, var(--accent-bg), #e7ecf1); border-radius: var(--radius); position: relative; display: flex; align-items: center; justify-content: center; margin: 20px 0; overflow: hidden; }
+        .tour-preview-inner { text-align: center; color: var(--accent); }
+        .tour-preview-inner .icon-360 { font-size: 36px; font-weight: 700; letter-spacing: -0.04em; margin-bottom: 8px; }
+        .tour-preview-inner p { font-size: 13px; color: var(--text-soft); margin: 0; }
+
         @media (max-width: 920px) {
             section { padding: 64px 0; }
             .hero, .bewertung, .team, .kontakt { padding: 56px 0; }
             .hero-grid, .team-grid, .kontakt-grid { grid-template-columns: 1fr; gap: 32px; }
             .leistungen-grid, .stimmen-grid, .portfolio-grid { grid-template-columns: 1fr; }
+            .matching-grid { grid-template-columns: 1fr; }
+            .newsletter-card { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
+            .chat-panel { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
             .trust-strip-inner { grid-template-columns: 1fr 1fr; }
             .bewertung-inputs { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
@@ -349,6 +454,53 @@
             </div>
         </section>
 
+        <!-- 4a. Interessent-Matching-Block -->
+        <section class="matching" aria-label="Interessent-Matching">
+            <div class="container">
+                <div class="matching-head">
+                    <p class="eyebrow">Käufer-Register · Aktiv suchend</p>
+                    <h2>1.400 Käufer-Profile warten — vielleicht auf Ihr Objekt.</h2>
+                    <p>Anonymisierter Auszug aus unserem Register. Verkäufer:innen sehen vor der Vermarktung, ob es konkrete Suchprofile gibt, die zur Lage und Substanz passen.</p>
+                </div>
+                <div class="matching-grid">
+                    <div class="match-card">
+                        <div class="match-id">Profil 0847 · West / Mitte</div>
+                        <h4>Architekt-Familie</h4>
+                        <div class="match-attr"><span class="key">Budget</span><span class="val">1,2 – 1,5 Mio €</span></div>
+                        <div class="match-attr"><span class="key">Wunsch-Lage</span><span class="val">West, Mitte, Süd</span></div>
+                        <div class="match-attr"><span class="key">Objekttyp</span><span class="val">Altbau-ETW, 4+ Zimmer</span></div>
+                        <div class="match-attr"><span class="key">Finanzierung</span><span class="val">Bestätigt, 60 % EK</span></div>
+                        <div class="match-attr"><span class="key">Zeithorizont</span><span class="val">Q3 2026</span></div>
+                        <span class="match-active">Seit 4 Wochen aktiv suchend</span>
+                    </div>
+                    <div class="match-card">
+                        <div class="match-id">Profil 1203 · Degerloch / Süd</div>
+                        <h4>Empty-Nester · Down-Sizing</h4>
+                        <div class="match-attr"><span class="key">Budget</span><span class="val">800k – 1,1 Mio €</span></div>
+                        <div class="match-attr"><span class="key">Wunsch-Lage</span><span class="val">Degerloch, Möhringen</span></div>
+                        <div class="match-attr"><span class="key">Objekttyp</span><span class="val">Penthouse, Bungalow, Garten-ETW</span></div>
+                        <div class="match-attr"><span class="key">Finanzierung</span><span class="val">Bar-Käufer (Hausverkauf)</span></div>
+                        <div class="match-attr"><span class="key">Zeithorizont</span><span class="val">Sofort verfügbar</span></div>
+                        <span class="match-active">Seit 2 Wochen aktiv suchend</span>
+                    </div>
+                    <div class="match-card">
+                        <div class="match-id">Profil 1561 · Off-Market</div>
+                        <h4>Family-Office · Diskret</h4>
+                        <div class="match-attr"><span class="key">Budget</span><span class="val">2,0 – 3,5 Mio €</span></div>
+                        <div class="match-attr"><span class="key">Wunsch-Lage</span><span class="val">Killesberg, Halbhöhe, Bohnenviertel</span></div>
+                        <div class="match-attr"><span class="key">Objekttyp</span><span class="val">Premium-Altbau, Villa, Penthouse</span></div>
+                        <div class="match-attr"><span class="key">Finanzierung</span><span class="val">Bestätigt, Bar oder via Bank</span></div>
+                        <div class="match-attr"><span class="key">Zeithorizont</span><span class="val">Flexibel — auch 12+ Monate</span></div>
+                        <span class="match-active">Seit 6 Wochen aktiv suchend</span>
+                    </div>
+                </div>
+                <div class="matching-cta">
+                    <p class="matching-note">Nach Vor-Ort-Termin matchen wir Ihr Objekt gegen alle 1.400 Profile — Sie erhalten innerhalb von 24 Stunden eine Shortlist mit drei bis sieben passenden Interessent:innen.</p>
+                    <button type="button" class="btn btn-primary" onclick="openModal('matching')">Anonymisiertes Matching anfordern →</button>
+                </div>
+            </div>
+        </section>
+
         <div class="trust-strip">
             <div class="trust-strip-inner">
                 <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></span><div><strong>IVD-Mitglied</strong><span>Bundesverband seit 2002</span></div></div>
@@ -388,6 +540,7 @@
                         <div class="portfolio-img">
                             <img src="/images/immobilien/altbau-west.jpg" alt="Stuttgarter Altbau-Etagenwohnung Halbhöhenlage" loading="lazy" width="1200" height="750">
                             <span class="portfolio-tag">Off-Market</span>
+                            <button type="button" class="portfolio-360" onclick="openTour('altbau-west')" aria-label="360°-Tour öffnen">360° Tour</button>
                         </div>
                         <div class="portfolio-body">
                             <p class="portfolio-loc">Stuttgart-West · Halbhöhenlage</p>
@@ -397,13 +550,28 @@
                                 <span><strong>148</strong> m²</span>
                                 <span><strong>1908</strong> Baujahr</span>
                             </div>
+                            <div class="portfolio-energie">
+                                <div class="energy-bar" aria-label="Energieeffizienz-Klasse E">
+                                    <div class="energy-step a"></div>
+                                    <div class="energy-step b"></div>
+                                    <div class="energy-step c"></div>
+                                    <div class="energy-step d"></div>
+                                    <div class="energy-step e is-active"></div>
+                                    <div class="energy-step f"></div>
+                                    <div class="energy-step g"></div>
+                                    <div class="energy-step h"></div>
+                                </div>
+                                <span class="energy-label">E · 142 kWh/m²a</span>
+                            </div>
                             <p class="portfolio-price">VB 985.000 €</p>
+                            <span class="markt-pill above">+ 7 % über Stuttgart-West Q1/2026</span>
                         </div>
                     </div>
                     <div class="portfolio-card">
                         <div class="portfolio-img">
                             <img src="/images/immobilien/efh-degerloch.jpg" alt="Einfamilienhaus Degerloch mit Garten" loading="lazy" width="1200" height="750">
                             <span class="portfolio-tag">Vermarktung</span>
+                            <button type="button" class="portfolio-360" onclick="openTour('efh-degerloch')" aria-label="360°-Tour öffnen">360° Tour</button>
                         </div>
                         <div class="portfolio-body">
                             <p class="portfolio-loc">Stuttgart-Degerloch · Süd</p>
@@ -413,13 +581,28 @@
                                 <span><strong>185</strong> m²</span>
                                 <span><strong>1972/2018</strong> saniert</span>
                             </div>
+                            <div class="portfolio-energie">
+                                <div class="energy-bar" aria-label="Energieeffizienz-Klasse B">
+                                    <div class="energy-step a"></div>
+                                    <div class="energy-step b is-active"></div>
+                                    <div class="energy-step c"></div>
+                                    <div class="energy-step d"></div>
+                                    <div class="energy-step e"></div>
+                                    <div class="energy-step f"></div>
+                                    <div class="energy-step g"></div>
+                                    <div class="energy-step h"></div>
+                                </div>
+                                <span class="energy-label">B · 58 kWh/m²a</span>
+                            </div>
                             <p class="portfolio-price">1.245.000 €</p>
+                            <span class="markt-pill below">− 4 % unter Degerloch Q1/2026</span>
                         </div>
                     </div>
                     <div class="portfolio-card">
                         <div class="portfolio-img">
                             <img src="/images/immobilien/penthouse-mitte.jpg" alt="Penthouse Stuttgart-Mitte mit Skylineblick" loading="lazy" width="1200" height="750">
                             <span class="portfolio-tag">Off-Market</span>
+                            <button type="button" class="portfolio-360" onclick="openTour('penthouse-mitte')" aria-label="360°-Tour öffnen">360° Tour</button>
                         </div>
                         <div class="portfolio-body">
                             <p class="portfolio-loc">Stuttgart-Mitte · Bohnenviertel</p>
@@ -429,7 +612,21 @@
                                 <span><strong>118</strong> m²</span>
                                 <span><strong>2019</strong> Erstbezug</span>
                             </div>
+                            <div class="portfolio-energie">
+                                <div class="energy-bar" aria-label="Energieeffizienz-Klasse A">
+                                    <div class="energy-step a is-active"></div>
+                                    <div class="energy-step b"></div>
+                                    <div class="energy-step c"></div>
+                                    <div class="energy-step d"></div>
+                                    <div class="energy-step e"></div>
+                                    <div class="energy-step f"></div>
+                                    <div class="energy-step g"></div>
+                                    <div class="energy-step h"></div>
+                                </div>
+                                <span class="energy-label">A · 38 kWh/m²a</span>
+                            </div>
                             <p class="portfolio-price">VB 1.180.000 €</p>
+                            <span class="markt-pill">Im Schnitt Stuttgart-Mitte Q1/2026</span>
                         </div>
                     </div>
                 </div>
@@ -469,6 +666,50 @@
             </div>
         </section>
 
+        <!-- 8a. Käufer-Newsletter -->
+        <section class="newsletter" id="newsletter" aria-label="Markt-Updates">
+            <div class="container">
+                <div class="newsletter-card">
+                    <div class="newsletter-text">
+                        <p style="font-size: 12px; color: var(--accent); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px;">Markt-Updates · Diskret</p>
+                        <h3>Bleiben Sie auf Marktniveau.</h3>
+                        <p>Monatliche Stadtteil-Auswertung der GAA-Daten, kurze Kommentare zu Zins-Bewegungen, anonymisierte Off-Market-Hinweise. Segmentiert nach Ihrer Interessens-Lage, abbestellbar mit einem Klick.</p>
+                        <p class="meta">187 Verkäufer:innen und 1.400 Käufer-Profile lesen mit. Versand: jeden ersten Donnerstag.</p>
+                    </div>
+                    <form class="newsletter-form" onsubmit="event.preventDefault(); openModal('newsletter');">
+                        <div>
+                            <label for="nl-email" style="font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; display: block;">E-Mail</label>
+                            <input id="nl-email" type="email" placeholder="ihre.adresse@example.de" required>
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; display: block;">Interessens-Lagen</label>
+                            <div class="segments">
+                                <label><input type="checkbox" name="lage" value="west" checked> Stuttgart-West</label>
+                                <label><input type="checkbox" name="lage" value="mitte" checked> Stuttgart-Mitte</label>
+                                <label><input type="checkbox" name="lage" value="sued"> Stuttgart-Süd</label>
+                                <label><input type="checkbox" name="lage" value="degerloch"> Degerloch</label>
+                                <label><input type="checkbox" name="lage" value="vaihingen"> Vaihingen</label>
+                                <label><input type="checkbox" name="lage" value="cannstatt"> Bad Cannstatt</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; display: block;">Objekttyp</label>
+                            <div class="segments">
+                                <label><input type="checkbox" name="typ" value="etw" checked> Eigentumswohnung</label>
+                                <label><input type="checkbox" name="typ" value="efh"> Einfamilienhaus</label>
+                                <label><input type="checkbox" name="typ" value="penthouse"> Penthouse / Maisonette</label>
+                            </div>
+                        </div>
+                        <label class="consent">
+                            <input type="checkbox" required>
+                            <span>Ich stimme der Verarbeitung meiner Daten gemäß <a href="#" style="color: var(--accent); text-decoration: underline;">Datenschutzerklärung</a> zu. Abbestellen jederzeit per Link.</span>
+                        </label>
+                        <button type="submit">Markt-Updates abonnieren →</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
         <section id="team" class="team">
             <div class="container">
                 <div class="team-grid">
@@ -492,7 +733,63 @@
 
         <section>
             <div class="container">
-                <div class="section-head"><p class="eyebrow">Verkäuferstimmen</p><h2>Was unsere Mandanten sagen.</h2></div>
+                <div class="section-head"><p class="eyebrow">Verkäuferstimmen</p><h2>Was unsere Mandanten sagen.</h2><p>Drei Erfolgs-Geschichten als Video — plus drei schriftliche Erfahrungsberichte aus dem laufenden Jahr.</p></div>
+
+                <!-- Video-Case-Studies -->
+                <div class="stimmen-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 28px;">
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/immobilien/video-poster-1.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/immobilien/video-case-1.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Ute Rs Erfahrungsbericht abspielen (75 Sek).');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Marktnähe statt Phantasie. 720 k bis 920 k bei Online-Portalen — bei uns realistisch verkauft."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">UR</div>
+                                <div><div class="stimme-name">Ute R.</div><div class="stimme-role">Verkauf Stuttgart-West · 75 Sek</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/immobilien/video-poster-2.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/immobilien/video-case-2.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Sigrid Ks Off-Market-Erfahrung abspielen (60 Sek).');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Elternhaus diskret — in elf Tagen ohne ein einziges Online-Inserat verkauft."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">SK</div>
+                                <div><div class="stimme-name">Sigrid K.</div><div class="stimme-role">Off-Market Degerloch · 60 Sek</div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-stimme">
+                        <div class="video-stimme-media">
+                            <video poster="/images/immobilien/video-poster-3.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                <source src="/images/immobilien/video-case-3.mp4" type="video/mp4">
+                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Markus Bs Erben-Auseinandersetzung abspielen (90 Sek).');">
+                                <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+                            </div>
+                        </div>
+                        <div class="video-stimme-body">
+                            <p class="video-stimme-quote">"Drei Geschwister, fast eskaliert — neutrale Wertermittlung hat alle in eine Spur gebracht."</p>
+                            <div class="video-stimme-author">
+                                <div class="stimme-ava">MB</div>
+                                <div><div class="stimme-name">Markus B.</div><div class="stimme-role">Erbengemeinschaft · 90 Sek</div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="stimmen-grid">
                     <div class="stimme">
                         <div class="stimme-stars">★★★★★</div>
@@ -651,6 +948,76 @@
         </div>
     </div>
 
+    <!-- 360°-Tour-Modal -->
+    <div class="modal-bg" id="tour-modal" role="dialog" aria-modal="true" aria-labelledby="tour-title" onclick="if(event.target===this) closeTour();">
+        <div class="modal modal-wide">
+            <div class="modal-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20a15 15 0 010-20"/></svg></div>
+            <h3 id="tour-title">Virtuelle 360°-Tour</h3>
+            <p id="tour-subtitle">Premium-Vermarktung inklusive: drei bis fünf 360°-Aufnahmen pro Objekt, jede Tour bleibt 12 Monate online verfügbar.</p>
+            <div class="tour-preview">
+                <div class="tour-preview-inner">
+                    <div class="icon-360">360°</div>
+                    <p>Tour wird in der echten Anwendung hier geladen.<br>Premium-Service inklusive bei jeder Vermarktung.</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 6px;">
+                <button type="button" class="btn btn-primary" onclick="closeTour(); setTimeout(function(){openModal('tour-anfrage');}, 200);">Tour für eigenes Objekt anfragen</button>
+                <button type="button" class="btn btn-ghost" onclick="closeTour()">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- KI-Chat-Widget (Sticky) -->
+    <button type="button" class="chat-trigger" id="chat-trigger" onclick="toggleChat()" aria-label="Premium-Chat öffnen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="chat-label">Diskret beraten</span>
+    </button>
+
+    <div class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title">
+        <div class="chat-head">
+            <div>
+                <h4 id="chat-title">Stadtmakler · Erst-Kontakt</h4>
+                <p>Antwort von Andreas Hofmann persönlich, binnen 24 h</p>
+            </div>
+            <span class="chat-close" onclick="toggleChat()" role="button" aria-label="Schließen">×</span>
+        </div>
+        <div class="chat-body">
+            <div class="chat-msg">Guten Tag. Drei kurze Fragen — ich melde mich persönlich mit einer passenden Vorgehensweise zurück.</div>
+            <div class="chat-msg">Welche Lage und welches Anliegen liegt vor?</div>
+        </div>
+        <form class="chat-form" onsubmit="event.preventDefault(); toggleChat(); openModal('chat');">
+            <div>
+                <label for="chat-lage">Lage / Interesse</label>
+                <select id="chat-lage" required>
+                    <option value="">Auswählen …</option>
+                    <option>Stuttgart-West (Verkauf)</option>
+                    <option>Stuttgart-Mitte (Verkauf)</option>
+                    <option>Stuttgart-Süd / Degerloch (Verkauf)</option>
+                    <option>Käufer-Suche eintragen</option>
+                    <option>Wertermittlung / Gutachten</option>
+                    <option>Off-Market / Diskret</option>
+                </select>
+            </div>
+            <div>
+                <label for="chat-budget">Budget / Wert-Spanne</label>
+                <select id="chat-budget" required>
+                    <option value="">Auswählen …</option>
+                    <option>unter 700.000 €</option>
+                    <option>700k – 1,0 Mio €</option>
+                    <option>1,0 – 1,5 Mio €</option>
+                    <option>1,5 – 2,5 Mio €</option>
+                    <option>über 2,5 Mio €</option>
+                </select>
+            </div>
+            <div>
+                <label for="chat-note">Kurz zur Sache (optional)</label>
+                <textarea id="chat-note" rows="2" placeholder="z. B. Zeithorizont, besondere Umstände …"></textarea>
+            </div>
+            <button type="submit">Diskret anfragen →</button>
+            <p style="font-size: 11px; color: var(--text-light); text-align: center; margin: 4px 0 0;">BFSG-konform. Antwort persönlich, nicht automatisiert.</p>
+        </form>
+    </div>
+
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
@@ -684,7 +1051,11 @@
         // Modal
         var MODAL_TEXTS = {
             bewertung: ['Demo-Termin angefragt', 'In der echten Anwendung erhalten Sie binnen 24 h einen Terminvorschlag für die Vor-Ort-Begehung — danach folgt ein verbindliches Wertgutachten.'],
-            kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet.']
+            kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet.'],
+            matching: ['Demo-Matching angefordert', 'In der echten Anwendung erhalten Sie binnen 24 h eine Shortlist mit drei bis sieben anonymisierten Käufer-Profilen, die zu Ihrem Objekt passen — inklusive Bonitäts-Indikator.'],
+            newsletter: ['Demo-Anmeldung gespeichert', 'In der echten Anwendung erhalten Sie sofort eine Bestätigungs-Mail mit Doppel-Opt-in. Erste Markt-Update kommt am nächsten ersten Donnerstag.'],
+            chat: ['Demo-Chat-Anfrage gespeichert', 'In der echten Anwendung meldet sich Herr Hofmann persönlich binnen 24 Stunden — nicht automatisiert, nicht über Bot.'],
+            'tour-anfrage': ['Demo-Tour-Anfrage', 'In der echten Anwendung vereinbaren wir einen 90-Minuten-Termin für die 360°-Aufnahme. Tour ist Premium-Service inklusive bei jeder Vermarktung.']
         };
         function openModal(kind) {
             var modal = document.getElementById('modal');
@@ -696,7 +1067,28 @@
             modal.classList.add('is-open');
         }
         function closeModal() { document.getElementById('modal').classList.remove('is-open'); }
-        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+        function openTour(slug) {
+            var titles = {
+                'altbau-west': 'Altbau-Etage Stuttgart-West · 360° Tour',
+                'efh-degerloch': 'Einfamilienhaus Degerloch · 360° Tour',
+                'penthouse-mitte': 'Penthouse Stuttgart-Mitte · 360° Tour'
+            };
+            document.getElementById('tour-title').textContent = titles[slug] || 'Virtuelle 360°-Tour';
+            document.getElementById('tour-modal').classList.add('is-open');
+        }
+        function closeTour() { document.getElementById('tour-modal').classList.remove('is-open'); }
+        function toggleChat() {
+            var panel = document.getElementById('chat-panel');
+            var trigger = document.getElementById('chat-trigger');
+            var isOpen = panel.classList.toggle('is-open');
+            trigger.style.display = isOpen ? 'none' : 'inline-flex';
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeModal(); closeTour();
+                if (document.getElementById('chat-panel').classList.contains('is-open')) toggleChat();
+            }
+        });
     </script>
 </body>
 </html>
