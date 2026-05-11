@@ -375,6 +375,81 @@
         .video-stimme-quote { color: var(--text); font-size: 14px; line-height: 1.55; margin-bottom: 14px; font-style: italic; }
         .video-stimme-author { display: flex; gap: 10px; align-items: center; }
 
+        /* KI-Schaden-Klassifikator */
+        .ai-trigger { margin-top: 16px; background: var(--accent-bg); border: 1px dashed var(--accent); border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
+        .ai-trigger:hover { background: rgba(122, 139, 107, 0.18); }
+        .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
+        .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
+        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
+        .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); display: none; }
+        .ai-result.is-loading { display: block; }
+        .ai-result.is-done { display: block; border-color: var(--accent); }
+        .ai-result-loading { display: flex; flex-direction: column; gap: 10px; }
+        .ai-result-loading .label { font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+        .ai-progress { width: 100%; height: 6px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; }
+        .ai-progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 1.8s ease-out; }
+        .ai-result.is-done .ai-result-loading { display: none; }
+        .ai-result.is-done .ai-result-body { display: block; }
+        .ai-result-body { display: none; }
+        .ai-result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+        .ai-damage-class { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+        .ai-damage-class.is-critical { background: rgba(192, 57, 43, 0.12); color: #b54040; }
+        .ai-damage-class.is-medium { background: rgba(212, 165, 81, 0.18); color: #a5762e; }
+        .ai-damage-class.is-low { background: rgba(122, 139, 107, 0.18); color: var(--accent-strong); }
+        .ai-result-header h4 { font-size: 16px; margin: 0; }
+        .ai-result-diagnose { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .ai-result-diagnose li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--text-soft); }
+        .ai-result-diagnose li::before { content: '•'; color: var(--accent-dark); font-weight: 700; }
+        .ai-result-cost { padding: 12px 14px; background: var(--accent-bg); border-radius: 6px; font-size: 14px; }
+        .ai-result-cost strong { display: block; font-size: 18px; color: var(--accent-strong); margin-top: 4px; }
+        .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+
+        /* Hagel-Karte */
+        .hagel { background: var(--bg); padding: 64px 0; border-top: 1px solid var(--border); }
+        .hagel-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; max-width: 1100px; margin: 0 auto; }
+        .hagel-content .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .hagel-content h2 { font-size: 30px; margin-bottom: 12px; }
+        .hagel-content p { color: var(--text-soft); font-size: 15px; margin-bottom: 14px; line-height: 1.55; }
+        .hagel-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+        .hagel-stat { padding: 14px 16px; background: var(--bg-soft); border-radius: var(--radius); border-left: 3px solid var(--accent); }
+        .hagel-stat .num { font-size: 24px; font-weight: 600; color: var(--accent-strong); line-height: 1; }
+        .hagel-stat .label { font-size: 12px; color: var(--text-soft); margin-top: 4px; }
+        .hagel-source { font-size: 11px; color: var(--text-light); margin-top: 12px; }
+        .hagel-map { aspect-ratio: 4/3; background: linear-gradient(135deg, var(--bg-soft), var(--accent-bg)); border-radius: var(--radius-lg); position: relative; overflow: hidden; padding: 18px; box-shadow: var(--shadow); }
+        .hagel-map svg { width: 100%; height: 100%; }
+        .hagel-hotspot { animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%, 100% { opacity: 0.85; r: 6; } 50% { opacity: 1; r: 9; } }
+
+        /* Online-Vor-Ort-Termin-Buchung */
+        .booking-onsite { background: var(--bg-soft); padding: 64px 0; }
+        .booking-card { max-width: 760px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); padding: 36px 40px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .booking-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 20px; }
+        .booking-head h3 { font-size: 22px; margin-bottom: 6px; }
+        .booking-head p { font-size: 14px; color: var(--text-soft); }
+        .booking-badge { background: var(--accent-bg); color: var(--accent-strong); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
+        .booking-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: end; }
+        .booking-grid label { font-size: 12px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; display: block; }
+        .booking-grid select, .booking-grid input { width: 100%; padding: 11px 14px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 14px; background: var(--bg-soft); font-family: inherit; }
+        .booking-slots { display: flex; gap: 8px; flex-wrap: wrap; }
+        .booking-slot { padding: 10px 16px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--bg-soft); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+        .booking-slot:hover, .booking-slot.is-selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .booking-info { margin-top: 18px; padding: 14px 16px; background: var(--accent-bg); border-radius: 6px; font-size: 13px; color: var(--text-soft); display: flex; align-items: flex-start; gap: 10px; }
+        .booking-info svg { width: 18px; height: 18px; color: var(--accent-dark); flex-shrink: 0; margin-top: 1px; }
+
+        /* CO2-Impact-Rechner */
+        .co2-card { background: linear-gradient(135deg, #f3f8ef 0%, #ecf3e6 100%); border: 1px solid #d4e0c8; border-radius: var(--radius-lg); padding: 28px; }
+        .co2-card .co2-badge { display: inline-block; background: #6b9061; color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; margin-bottom: 12px; }
+        .co2-card h4 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+        .co2-card > p { color: var(--text-soft); font-size: 13px; margin-bottom: 18px; }
+        .co2-inputs { display: grid; gap: 14px; margin-bottom: 18px; }
+        .co2-input label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+        .co2-input label span { color: var(--accent-strong); font-weight: 700; }
+        .co2-input input[type="range"] { width: 100%; accent-color: #6b9061; }
+        .co2-output { background: var(--bg); border-radius: var(--radius); padding: 16px 18px; }
+        .co2-output-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 14px; }
+        .co2-output-row.total { border-top: 1px solid #d4e0c8; margin-top: 8px; padding-top: 12px; font-size: 16px; font-weight: 600; color: #4a7340; }
+        .co2-output-equiv { margin-top: 14px; padding: 12px 14px; background: #ecf3e6; border-radius: 6px; font-size: 13px; color: var(--text-soft); }
+
         .img-pending {
             background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
             position: relative;
@@ -394,8 +469,9 @@
             .hero, .foto-anfrage, .konfig, .foerder, .wartung, .team, .karriere, .kontakt { padding: 56px 0; }
             .hero-grid, .team-grid, .kontakt-grid, .foto-grid, .foerder-row, .wartung-grid { grid-template-columns: 1fr; gap: 32px; }
             .leistungen-grid, .stimmen-grid, .galerie-grid, .karriere-grid { grid-template-columns: 1fr; }
-            .drohne-grid, .status-grid, .foerder-row-extended { grid-template-columns: 1fr; gap: 24px; }
+            .drohne-grid, .status-grid, .foerder-row-extended, .hagel-grid, .booking-grid { grid-template-columns: 1fr; gap: 24px; }
             .hersteller-logos { gap: 28px; }
+            .hagel-stats { grid-template-columns: 1fr; }
             .trust-strip-inner { grid-template-columns: 1fr 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -539,6 +615,37 @@
                             <div><label for="fa-msg">Beschreibung (optional)</label><textarea id="fa-msg" placeholder="Wann ist es aufgefallen? Schon einmal ausgebessert?"></textarea></div>
                         </div>
                     </div>
+                    <!-- D8. KI-Schaden-Klassifikator -->
+                    <div class="ai-trigger" onclick="runAiAnalysis()" role="button">
+                        <span class="ai-icon">KI</span>
+                        <div class="ai-text">
+                            <strong>Sofort-Einschätzung per KI vor dem Versand</strong>
+                            <span>Click hier — unser Modell klassifiziert die Bilder in ca. 3 Sekunden (Demo).</span>
+                        </div>
+                    </div>
+                    <div class="ai-result" id="ai-result">
+                        <div class="ai-result-loading">
+                            <span class="label">KI-Analyse läuft …</span>
+                            <div class="ai-progress"><div class="ai-progress-bar" id="ai-progress-bar"></div></div>
+                        </div>
+                        <div class="ai-result-body">
+                            <div class="ai-result-header">
+                                <span class="ai-damage-class is-medium">⚠ Mittelschwer</span>
+                                <h4>Sturmschaden mit Sekundär-Verschleiß</h4>
+                            </div>
+                            <ul class="ai-result-diagnose">
+                                <li>Lose und teilweise gebrochene Ziegel im First-Bereich erkannt</li>
+                                <li>Mooswachstum und Material-Alterung deutet auf Sanierungs-Reife in 2–4 Jahren</li>
+                                <li>Rinne und Anschlüsse benötigen voraussichtlich Wartung</li>
+                            </ul>
+                            <div class="ai-result-cost">
+                                Geschätzte Reparatur-Kostenrange
+                                <strong>4.800 – 8.500 € (ohne Förderung)</strong>
+                            </div>
+                            <p class="ai-result-disclaimer">Verbindlicher Festpreis erst nach Drohnen-Begehung und Begutachtung vor Ort. KI-Schätzung dient nur der Vorab-Orientierung — keine rechtliche Grundlage.</p>
+                        </div>
+                    </div>
+
                     <div class="foto-cta-row">
                         <p class="foto-promise">⏱ <strong>Festpreis-Angebot innerhalb 48 Stunden</strong> — schriftlich, ohne Anfahrt-Pauschale.</p>
                         <button type="button" class="btn btn-primary" onclick="openModal('anfrage')">Anfrage senden →</button>
@@ -555,6 +662,62 @@
                 <div class="trust-badge"><span class="trust-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><div><strong>Gerüstbau-Schein</strong><span>Eigene Gerüstkolonne</span></div></div>
             </div>
         </div>
+
+        <!-- D9. Hagel-Karte -->
+        <section class="hagel" aria-label="Hagel-Statistik">
+            <div class="container">
+                <div class="hagel-grid">
+                    <div class="hagel-content">
+                        <p class="eyebrow">Lokales Hagel-Monitoring</p>
+                        <h2>Hagel-Hotspot Süddeutschland.</h2>
+                        <p>Stuttgart liegt im Hagel-Korridor zwischen Schwarzwald und Schwäbischer Alb — überdurchschnittlich oft betroffen. Wir tracken Schadensereignisse in unserer PLZ-Region kontinuierlich.</p>
+                        <div class="hagel-stats">
+                            <div class="hagel-stat">
+                                <div class="num">2</div>
+                                <div class="label">Hagel-Ereignisse letzte 30 Tage in Ihrer PLZ (70329)</div>
+                            </div>
+                            <div class="hagel-stat">
+                                <div class="num">4,2</div>
+                                <div class="label">Durchschnittliche Ereignisse pro Jahr — Deutschland-Schnitt: 2,8</div>
+                            </div>
+                            <div class="hagel-stat">
+                                <div class="num">18 %</div>
+                                <div class="label">Durchschnittliche Schadensquote Dächer bei Korn-Hagel ≥ 2 cm</div>
+                            </div>
+                            <div class="hagel-stat">
+                                <div class="num">147</div>
+                                <div class="label">Dokumentierte Sturmnotdienste 2025 in unserem Einsatz-Radius</div>
+                            </div>
+                        </div>
+                        <p class="hagel-source">Quellen: Deutscher Wetterdienst (DWD), European Severe Storms Lab (ESSL), eigene Schadens-Statistik 2024–2026.</p>
+                    </div>
+                    <div class="hagel-map">
+                        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Simplified Süddeutschland-Outline -->
+                            <path d="M 80 50 Q 120 30, 170 40 Q 240 35, 290 55 Q 340 80, 350 130 Q 360 180, 330 230 Q 280 270, 220 260 Q 150 270, 110 240 Q 60 200, 70 140 Q 65 90, 80 50 Z"
+                                  fill="rgba(122,139,107,0.12)" stroke="rgba(122,139,107,0.5)" stroke-width="1.5"/>
+                            <!-- Hagel-Hotspots -->
+                            <circle class="hagel-hotspot" cx="200" cy="160" r="9" fill="#b54040" opacity="0.85"/>
+                            <text x="200" y="148" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#b54040" text-anchor="middle">Stuttgart</text>
+                            <text x="200" y="180" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)" text-anchor="middle">PLZ 70329</text>
+                            <circle class="hagel-hotspot" cx="160" cy="200" r="6" fill="#d4a551" opacity="0.7" style="animation-delay: 0.5s;"/>
+                            <text x="160" y="222" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)" text-anchor="middle">Reutlingen</text>
+                            <circle class="hagel-hotspot" cx="250" cy="120" r="6" fill="#d4a551" opacity="0.7" style="animation-delay: 1s;"/>
+                            <text x="252" y="108" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)" text-anchor="middle">Heilbronn</text>
+                            <circle class="hagel-hotspot" cx="125" cy="125" r="5" fill="#d4a551" opacity="0.6" style="animation-delay: 1.5s;"/>
+                            <text x="115" y="115" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)" text-anchor="middle">Karlsruhe</text>
+                            <circle class="hagel-hotspot" cx="280" cy="210" r="5" fill="#d4a551" opacity="0.6" style="animation-delay: 2s;"/>
+                            <text x="290" y="226" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)" text-anchor="middle">Ulm</text>
+                            <!-- Legend -->
+                            <g transform="translate(20, 260)">
+                                <circle cx="0" cy="0" r="5" fill="#b54040" opacity="0.85"/>
+                                <text x="10" y="3" font-family="Inter, sans-serif" font-size="9" fill="var(--text-soft)">Hagel ≥ 3 Ereignisse 2025</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section id="leistungen">
             <div class="container">
@@ -592,6 +755,47 @@
                 </div>
             </div>
         </div>
+
+        <!-- D10. Online-Vor-Ort-Termin-Buchung -->
+        <section class="booking-onsite" aria-label="Vor-Ort-Termin online buchen">
+            <div class="container">
+                <div class="booking-card">
+                    <div class="booking-head">
+                        <div>
+                            <h3>Vor-Ort-Begehung direkt buchen.</h3>
+                            <p>Statt anrufen: Termin in 30 Sekunden reservieren. Wir synchronisieren mit unserem Kalender, Sie erhalten Bestätigung per E-Mail + SMS-Erinnerung 24 h vorher.</p>
+                        </div>
+                        <span class="booking-badge">~ 45 Min vor Ort</span>
+                    </div>
+                    <div class="booking-grid">
+                        <div>
+                            <label for="bk-tag">Wunsch-Tag</label>
+                            <select id="bk-tag">
+                                <option>Donnerstag · 15. Mai</option>
+                                <option>Freitag · 16. Mai</option>
+                                <option>Montag · 19. Mai</option>
+                                <option>Dienstag · 20. Mai</option>
+                                <option>Mittwoch · 21. Mai</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Freie Zeitslots</label>
+                            <div class="booking-slots" id="booking-slots">
+                                <button type="button" class="booking-slot">08:00</button>
+                                <button type="button" class="booking-slot is-selected">10:30</button>
+                                <button type="button" class="booking-slot">13:00</button>
+                                <button type="button" class="booking-slot">15:30</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="booking-info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span><strong>Was wir mitbringen:</strong> Drohne, Wärmebild-Kamera, Messstab. Begehung dauert ca. 45 Min. Sie erhalten die Foto-Doku direkt auf E-Mail, das Festpreis-Angebot folgt binnen 48 h.</span>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 18px;" onclick="openModal('booking-onsite')">Termin reservieren →</button>
+                </div>
+            </div>
+        </section>
 
         <section id="referenzen" class="galerie">
             <div class="container">
@@ -657,12 +861,41 @@
                     </div>
 
                     <!-- iSFP-Bonus-Box -->
-                    <div class="isfp-card">
-                        <span class="isfp-badge">+ 5 % BAFA-Bonus</span>
-                        <h4>iSFP — Individueller Sanierungsfahrplan</h4>
-                        <p class="isfp-amount">+ bis 7.500 €</p>
-                        <p>Mit iSFP-Bonus steigt die BAFA-Förderung von 15 auf 20 %. Der Sanierungsfahrplan wird durch einen BAFA-zertifizierten Energieberater erstellt — wir vermitteln drei lokale Berater aus Stuttgart-Mitte.</p>
-                        <button type="button" class="btn" onclick="openModal('isfp')">Energieberater vermitteln →</button>
+                    <div>
+                        <div class="isfp-card" style="margin-bottom: 20px;">
+                            <span class="isfp-badge">+ 5 % BAFA-Bonus</span>
+                            <h4>iSFP — Individueller Sanierungsfahrplan</h4>
+                            <p class="isfp-amount">+ bis 7.500 €</p>
+                            <p>Mit iSFP-Bonus steigt die BAFA-Förderung von 15 auf 20 %. Der Sanierungsfahrplan wird durch einen BAFA-zertifizierten Energieberater erstellt — wir vermitteln drei lokale Berater aus Stuttgart-Mitte.</p>
+                            <button type="button" class="btn" onclick="openModal('isfp')">Energieberater vermitteln →</button>
+                        </div>
+
+                        <!-- D11. CO2-Impact-Rechner -->
+                        <div class="co2-card">
+                            <span class="co2-badge">🌿 CO2-Impact</span>
+                            <h4>Was sparen Sie der Atmosphäre?</h4>
+                            <p>Dachsanierung mit Dämmung und PV reduziert den CO2-Ausstoß Ihres Hauses massiv. Schätzung über die Lebensdauer der Maßnahme (20 Jahre).</p>
+                            <div class="co2-inputs">
+                                <div class="co2-input">
+                                    <label>Dachfläche <span id="co2-dach-val">140 m²</span></label>
+                                    <input type="range" id="co2-dach" min="60" max="300" step="10" value="140" oninput="updateCo2()">
+                                </div>
+                                <div class="co2-input">
+                                    <label>Solar-Anlage <span id="co2-solar-val">8 kWp</span></label>
+                                    <input type="range" id="co2-solar" min="0" max="20" step="1" value="8" oninput="updateCo2()">
+                                </div>
+                                <div class="co2-input">
+                                    <label>Dämmung <span id="co2-daemm-val">22 cm</span></label>
+                                    <input type="range" id="co2-daemm" min="0" max="40" step="2" value="22" oninput="updateCo2()">
+                                </div>
+                            </div>
+                            <div class="co2-output">
+                                <div class="co2-output-row"><span>Dämmung-Effekt (Heiz-Einsparung)</span><span id="co2-daemm-eff">1,8 t/Jahr</span></div>
+                                <div class="co2-output-row"><span>Solar-Stromertrag (CO2-frei)</span><span id="co2-solar-eff">2,4 t/Jahr</span></div>
+                                <div class="co2-output-row total"><span>Gesamt CO2-Einsparung</span><span id="co2-total">4,2 t/Jahr · 84 t Lifetime</span></div>
+                                <div class="co2-output-equiv" id="co2-equiv">🌳 Entspricht 1.680 gepflanzten Bäumen über 20 Jahre</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1077,8 +1310,55 @@
             foerder: ['Demo-Förderberatung', 'In der echten Anwendung kontaktiert Sie ein Förder-Berater binnen 24 h für ein kostenloses Beratungsgespräch.'],
             isfp: ['Demo-Energieberater-Vermittlung', 'In der echten Anwendung erhalten Sie drei BAFA-zertifizierte Energieberater aus Stuttgart-Mitte mit Verfügbarkeits-Slots und Erst-Honorar-Schätzung.'],
             wartung: ['Demo-Wartungsvertrag', 'In der echten Anwendung erhalten Sie den Wartungsvertrag per E-Mail mit allen Konditionen und der ersten Termin-Erinnerung.'],
+            'booking-onsite': ['Demo-Termin reserviert', 'In der echten Anwendung wäre Ihr Vor-Ort-Termin gebucht — Bestätigung per E-Mail + SMS-Erinnerung 24 h vorher, Kalender-Eintrag (.ics) als Download.'],
             kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von zwei Stunden beantwortet.']
         };
+
+        // KI-Schaden-Klassifikator (Demo-Animation)
+        function runAiAnalysis() {
+            var result = document.getElementById('ai-result');
+            var bar = document.getElementById('ai-progress-bar');
+            if (!result || !bar) return;
+            result.classList.remove('is-done');
+            result.classList.add('is-loading');
+            bar.style.width = '0%';
+            setTimeout(function () { bar.style.width = '95%'; }, 50);
+            setTimeout(function () {
+                result.classList.remove('is-loading');
+                result.classList.add('is-done');
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1900);
+        }
+
+        // Booking-Slot Toggle
+        document.querySelectorAll('#booking-slots .booking-slot').forEach(function (s) {
+            s.addEventListener('click', function () {
+                document.querySelectorAll('#booking-slots .booking-slot').forEach(function (x) { x.classList.remove('is-selected'); });
+                s.classList.add('is-selected');
+            });
+        });
+
+        // CO2-Rechner (Vanilla-Berechnung)
+        function updateCo2() {
+            var dach = +document.getElementById('co2-dach').value;
+            var solar = +document.getElementById('co2-solar').value;
+            var daemm = +document.getElementById('co2-daemm').value;
+            document.getElementById('co2-dach-val').textContent = dach + ' m²';
+            document.getElementById('co2-solar-val').textContent = solar + ' kWp';
+            document.getElementById('co2-daemm-val').textContent = daemm + ' cm';
+            // Vereinfachte Formeln (CO2 in t/Jahr):
+            // Dämmung: ~0,06 t pro m² Dach × Dämmungs-Faktor (cm/30)
+            var daemmEff = +(dach * 0.06 * (daemm / 30)).toFixed(1);
+            // Solar: ~0,3 t pro kWp/Jahr (Süddeutschland)
+            var solarEff = +(solar * 0.30).toFixed(1);
+            var total = +(daemmEff + solarEff).toFixed(1);
+            var lifetime = Math.round(total * 20);
+            var baeume = Math.round(lifetime * 20); // 1 Baum bindet ~50 kg CO2 in 20 Jahren, also 1 t = 20 Bäume
+            document.getElementById('co2-daemm-eff').textContent = daemmEff + ' t/Jahr';
+            document.getElementById('co2-solar-eff').textContent = solarEff + ' t/Jahr';
+            document.getElementById('co2-total').textContent = total + ' t/Jahr · ' + lifetime + ' t Lifetime';
+            document.getElementById('co2-equiv').innerHTML = '🌳 Entspricht ' + baeume.toLocaleString('de-DE') + ' gepflanzten Bäumen über 20 Jahre';
+        }
         function openModal(kind) {
             var modal = document.getElementById('modal');
             var t = document.getElementById('modal-title');
