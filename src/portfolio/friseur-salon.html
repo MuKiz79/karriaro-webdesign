@@ -348,6 +348,72 @@
         .modal-form-checkboxes label { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-soft); margin: 0; }
         .modal-form select, .modal-form input[type="file"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; background: var(--bg-soft); font-family: inherit; }
 
+        /* Verfügbarkeits-Grid */
+        .availability { background: var(--bg-soft); padding: 64px 0; border-bottom: 1px solid var(--border); }
+        .availability-head { text-align: center; max-width: 640px; margin: 0 auto 32px; }
+        .availability-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+        .availability-head h3 { font-size: 24px; margin-bottom: 8px; }
+        .availability-head p { color: var(--text-soft); font-size: 15px; }
+        .availability-table { max-width: 760px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+        .avail-header { display: grid; grid-template-columns: 120px repeat(6, 1fr); background: var(--bg-soft); padding: 14px 18px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; align-items: center; }
+        .avail-row { display: grid; grid-template-columns: 120px repeat(6, 1fr); padding: 12px 18px; border-bottom: 1px solid var(--border); align-items: center; }
+        .avail-row:last-child { border-bottom: none; }
+        .avail-stylist { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+        .avail-stylist .ava { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+        .avail-cell { text-align: center; padding: 6px; cursor: pointer; border-radius: 6px; transition: all 0.2s; font-size: 12px; }
+        .avail-cell.is-free { background: rgba(120, 168, 110, 0.12); color: #4a7340; font-weight: 600; }
+        .avail-cell.is-free:hover { background: rgba(120, 168, 110, 0.22); }
+        .avail-cell.is-partial { background: rgba(200, 160, 120, 0.18); color: #8b6a45; font-weight: 600; }
+        .avail-cell.is-partial:hover { background: rgba(200, 160, 120, 0.28); }
+        .avail-cell.is-booked { color: var(--text-light); opacity: 0.5; cursor: not-allowed; }
+        .availability-legend { display: flex; gap: 18px; justify-content: center; margin-top: 18px; flex-wrap: wrap; font-size: 12px; color: var(--text-soft); }
+        .avail-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+        .avail-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        /* Behandlungs-Konto */
+        .profile { background: var(--bg); }
+        .profile-head { text-align: center; max-width: 660px; margin: 0 auto 40px; }
+        .profile-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .profile-head h2 { margin-bottom: 14px; }
+        .profile-head p { color: var(--text-soft); font-size: 17px; }
+        .profile-card { max-width: 920px; margin: 0 auto; background: var(--bg-soft); border-radius: var(--radius-lg); padding: 36px 40px; border: 1px solid var(--border); }
+        .profile-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 14px; }
+        .profile-greeting { display: flex; align-items: center; gap: 14px; }
+        .profile-greeting .ava { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; }
+        .profile-greeting h3 { font-size: 18px; margin: 0; }
+        .profile-greeting p { font-size: 13px; color: var(--text-soft); margin: 2px 0 0; }
+        .profile-history { display: flex; flex-direction: column; gap: 16px; }
+        .profile-history-item { display: grid; grid-template-columns: 100px 1fr 180px 130px; gap: 16px; padding: 16px; background: var(--bg); border-radius: var(--radius); align-items: center; border: 1px solid var(--border); }
+        .profile-history-date { text-align: center; }
+        .profile-history-date .day { font-size: 22px; font-weight: 600; color: var(--accent-strong); line-height: 1; }
+        .profile-history-date .month { font-size: 11px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; display: block; }
+        .profile-history-body h4 { font-size: 15px; margin-bottom: 4px; }
+        .profile-history-body p { font-size: 13px; color: var(--text-soft); margin: 0; }
+        .profile-history-photos { display: flex; gap: 8px; }
+        .profile-history-photo { flex: 1; aspect-ratio: 1; background: var(--accent-bg); border-radius: 6px; overflow: hidden; position: relative; }
+        .profile-history-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-history-photo .label { position: absolute; top: 4px; left: 4px; background: rgba(0,0,0,0.6); color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+        .profile-history-action { text-align: right; }
+        .profile-history-action .btn { padding: 9px 14px; font-size: 12px; }
+        .profile-locked { text-align: center; padding: 24px 18px; }
+        .profile-locked p { color: var(--text-soft); font-size: 14px; margin-bottom: 14px; }
+
+        /* Green-Salon-Badge */
+        .green-badge { background: linear-gradient(135deg, #f3f8ef 0%, #ecf3e6 100%); padding: 64px 0; }
+        .green-card { max-width: 980px; margin: 0 auto; background: var(--bg); border-radius: var(--radius-lg); padding: 36px 40px; border: 1px solid #d4e0c8; display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: center; }
+        .green-seal { text-align: center; padding: 18px; }
+        .green-seal-circle { width: 92px; height: 92px; margin: 0 auto 12px; background: linear-gradient(135deg, #6b9061, #4a7340); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700; box-shadow: 0 8px 24px rgba(74,115,64,0.25); }
+        .green-seal-circle::after { content: '🌿'; font-size: 30px; }
+        .green-seal h4 { font-size: 14px; font-weight: 600; color: #4a7340; text-transform: uppercase; letter-spacing: 0.12em; margin: 4px 0; }
+        .green-seal p { font-size: 12px; color: var(--text-soft); margin: 0; }
+        .green-content h3 { font-size: 22px; margin-bottom: 8px; }
+        .green-content > p { color: var(--text-soft); font-size: 14px; margin-bottom: 18px; }
+        .green-claims { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .green-claim { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--bg-soft); border-radius: 8px; }
+        .green-claim svg { width: 18px; height: 18px; color: #4a7340; flex-shrink: 0; margin-top: 1px; }
+        .green-claim strong { display: block; font-size: 14px; color: var(--text); margin-bottom: 2px; }
+        .green-claim span { font-size: 12px; color: var(--text-soft); }
+
         .img-pending {
             background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-soft) 60%, var(--accent-bg) 100%);
             position: relative;
@@ -370,6 +436,12 @@
             .referral-card { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
             .live-slots-inner { flex-direction: column; gap: 12px; }
             .modal-form-row { grid-template-columns: 1fr; }
+            .avail-header, .avail-row { grid-template-columns: 80px repeat(6, 1fr); padding: 10px 12px; font-size: 11px; }
+            .avail-cell { padding: 4px; }
+            .profile-history-item { grid-template-columns: 1fr; gap: 12px; text-align: left; }
+            .profile-history-action { text-align: left; }
+            .green-card { grid-template-columns: 1fr; gap: 24px; padding: 28px; }
+            .green-claims { grid-template-columns: 1fr; }
             .termin-grid { grid-template-columns: 1fr; gap: 20px; }
             .termin-card { padding: 28px; }
             .galerie-grid { grid-template-columns: 1fr 1fr; height: auto; }
@@ -544,6 +616,55 @@
                 <a href="#termin" class="live-slots-cta">Alle Slots ansehen →</a>
             </div>
         </div>
+
+        <!-- F7. Verfügbarkeits-Grid -->
+        <section class="availability" aria-label="Verfügbarkeits-Übersicht">
+            <div class="container">
+                <div class="availability-head">
+                    <p class="eyebrow">Verfügbarkeit · Diese Woche</p>
+                    <h3>Wer hat wann frei?</h3>
+                    <p>Übersicht über alle drei Stylistinnen — Click auf eine freie Zelle springt direkt ins Termin-Widget mit vorausgewähltem Stylist.</p>
+                </div>
+                <div class="availability-table">
+                    <div class="avail-header">
+                        <span>Stylist</span>
+                        <span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span>
+                    </div>
+                    <div class="avail-row">
+                        <div class="avail-stylist"><span class="ava">LM</span> Laura</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('laura')">2 frei</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('laura')">1 frei</div>
+                        <div class="avail-cell is-booked">voll</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('laura')">3 frei</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('laura')">2 frei</div>
+                        <div class="avail-cell is-booked">voll</div>
+                    </div>
+                    <div class="avail-row">
+                        <div class="avail-stylist"><span class="ava">MR</span> Mara</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('mara')">3 frei</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('mara')">4 frei</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('mara')">1 frei</div>
+                        <div class="avail-cell is-booked">voll</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('mara')">2 frei</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('mara')">5 frei</div>
+                    </div>
+                    <div class="avail-row">
+                        <div class="avail-stylist"><span class="ava">TS</span> Tim</div>
+                        <div class="avail-cell is-booked">voll</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('tim')">2 frei</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('tim')">4 frei</div>
+                        <div class="avail-cell is-free" onclick="selectStylist('tim')">3 frei</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('tim')">1 frei</div>
+                        <div class="avail-cell is-partial" onclick="selectStylist('tim')">2 frei</div>
+                    </div>
+                </div>
+                <div class="availability-legend">
+                    <span class="avail-legend-item"><span class="avail-legend-dot" style="background: rgba(120,168,110,0.4);"></span> 3+ Slots</span>
+                    <span class="avail-legend-item"><span class="avail-legend-dot" style="background: rgba(200,160,120,0.5);"></span> 1–2 Slots</span>
+                    <span class="avail-legend-item"><span class="avail-legend-dot" style="background: rgba(180,180,180,0.3);"></span> ausgebucht</span>
+                </div>
+            </div>
+        </section>
 
         <div class="trust-strip">
             <div class="trust-strip-inner">
@@ -750,6 +871,42 @@
             </div>
         </section>
 
+        <!-- F8. Green-Salon-Badge -->
+        <section class="green-badge" aria-label="Nachhaltigkeit">
+            <div class="container">
+                <div class="green-card">
+                    <div class="green-seal">
+                        <div class="green-seal-circle"></div>
+                        <h4>Green Salon Collective</h4>
+                        <p>Zertifiziert seit 2025</p>
+                    </div>
+                    <div class="green-content">
+                        <h3>Nachhaltigkeit, messbar in Zahlen.</h3>
+                        <p>Nicht "wir denken grün", sondern: was haben wir 2025 konkret eingespart? Vier dokumentierte Werte aus der Salon-Bilanz — externe Zertifizierung durch Green Salon Collective UK.</p>
+                        <div class="green-claims">
+                            <div class="green-claim">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div><strong>100 % Bio-Coloration</strong><span>Aveda Full-Spectrum, 96 % pflanzlich, ohne Ammoniak</span></div>
+                            </div>
+                            <div class="green-claim">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div><strong>−50 % Wasserverbrauch</strong><span>Eco-Heads-Düsen seit 2023, 7 Liter statt 14 pro Wäsche</span></div>
+                            </div>
+                            <div class="green-claim">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div><strong>238 kg recycelt 2025</strong><span>Haar, Folie, Coloration-Tuben, Plastik — Green-Salon-Boxen</span></div>
+                            </div>
+                            <div class="green-claim">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                <div><strong>Ökostrom seit 2022</strong><span>100 % Wasserkraft, Stadtwerke Düsseldorf Klima-Tarif</span></div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-ghost" style="margin-top: 18px;" onclick="openModal('green-cert')">Green Salon Zertifikat ansehen</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="oeffnungszeiten">
             <div class="container">
                 <div class="section-head">
@@ -892,6 +1049,91 @@
                 </div>
             </div>
         </div>
+
+        <!-- F6. Behandlungs-Konto -->
+        <section class="profile" aria-label="Behandlungs-Historie">
+            <div class="container">
+                <div class="profile-head">
+                    <p class="eyebrow">Mein Profil · Stammkundinnen-Bereich</p>
+                    <h2>Ihre Behandlungs-Historie. Auf einen Blick.</h2>
+                    <p>Damit Laura, Mara und Tim Sie kennen, bevor sie Sie sehen: Service, Produkte, Vorher-Nachher-Foto und Pflege-Empfehlung — alles dokumentiert.</p>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-top">
+                        <div class="profile-greeting">
+                            <span class="ava">SK</span>
+                            <div>
+                                <h3>Guten Tag, Sandra.</h3>
+                                <p>Letzter Besuch vor 7 Wochen · 12 Termine insgesamt seit 2020</p>
+                            </div>
+                        </div>
+                        <button type="button" class="termin-secondary-cta" onclick="openModal('login')">Aus-/Anmelden</button>
+                    </div>
+                    <div class="profile-history">
+                        <div class="profile-history-item">
+                            <div class="profile-history-date"><span class="day">22</span><span class="month">Mär 26</span></div>
+                            <div class="profile-history-body">
+                                <h4>Balayage + Schnitt (Long Pixie)</h4>
+                                <p>Stylist: Laura · Aveda Full-Spectrum 7N + Toner 8/81 · Pflege: Damage Remedy</p>
+                            </div>
+                            <div class="profile-history-photos">
+                                <div class="profile-history-photo">
+                                    <span class="label">Vorher</span>
+                                    <img src="/images/friseur/profile-sk-1-vorher.jpg" alt="Behandlung 22. März 2026 — Vorher" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                                <div class="profile-history-photo">
+                                    <span class="label">Nachher</span>
+                                    <img src="/images/friseur/profile-sk-1-nachher.jpg" alt="Behandlung 22. März 2026 — Nachher" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                            </div>
+                            <div class="profile-history-action">
+                                <button type="button" class="btn btn-primary" onclick="selectStylist('laura'); setTimeout(function(){document.querySelector('#termin').scrollIntoView({behavior:'smooth'});}, 100);">Auffrischen →</button>
+                            </div>
+                        </div>
+                        <div class="profile-history-item">
+                            <div class="profile-history-date"><span class="day">04</span><span class="month">Jan 26</span></div>
+                            <div class="profile-history-body">
+                                <h4>Kopfhautanalyse + Aveda-Pflege-Plan</h4>
+                                <p>Stylist: Laura · Mikroskopische Analyse · Pflege-Empfehlung: Scalp Solutions</p>
+                            </div>
+                            <div class="profile-history-photos">
+                                <div class="profile-history-photo">
+                                    <span class="label">Analyse</span>
+                                    <img src="/images/friseur/profile-sk-2-analyse.jpg" alt="Kopfhautanalyse 4. Januar 2026" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                                <div class="profile-history-photo">
+                                    <span class="label">Nach 8 Wo.</span>
+                                    <img src="/images/friseur/profile-sk-2-nachher.jpg" alt="Kontrolle nach 8 Wochen" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                            </div>
+                            <div class="profile-history-action">
+                                <button type="button" class="btn btn-ghost" onclick="openModal('login')">Pflege-Plan ansehen</button>
+                            </div>
+                        </div>
+                        <div class="profile-history-item">
+                            <div class="profile-history-date"><span class="day">09</span><span class="month">Nov 25</span></div>
+                            <div class="profile-history-body">
+                                <h4>Damenschnitt + Föhnen</h4>
+                                <p>Stylist: Mara · Bob-Update auf Long Bob · keine Coloration</p>
+                            </div>
+                            <div class="profile-history-photos">
+                                <div class="profile-history-photo">
+                                    <span class="label">Vorher</span>
+                                    <img src="/images/friseur/profile-sk-3-vorher.jpg" alt="Schnitt 9. November 2025 — Vorher" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                                <div class="profile-history-photo">
+                                    <span class="label">Nachher</span>
+                                    <img src="/images/friseur/profile-sk-3-nachher.jpg" alt="Schnitt 9. November 2025 — Nachher" loading="lazy" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                                </div>
+                            </div>
+                            <div class="profile-history-action">
+                                <button type="button" class="btn btn-ghost" onclick="openModal('login')">Wieder buchen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Empfehlungs-Bonus -->
         <section class="referral" aria-label="Freundin empfehlen">
@@ -1261,8 +1503,19 @@
             'kontakt': ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von 24 h beantwortet.'],
             'gutschein': ['Demo-Gutschein erzeugt', 'In der echten Anwendung erhalten die Beschenkte das PDF binnen Sekunden per E-Mail. Sie bekommen eine Bestätigung mit Beleg.'],
             'empfehlung': ['Demo-Empfehlung verschickt', 'In der echten Anwendung würde Ihre Freundin jetzt eine persönliche Einladung erhalten. Beim ersten Termin gilt der 15-€-Gutschrift automatisch.'],
-            'vorberatung-saved': ['Vorberatung gespeichert', 'Laura sieht Ihre Antworten vor dem Termin. Beim nächsten Klick auf "Termin bestätigen" wird die Vorberatung mit Ihrer Buchung verknüpft.']
+            'vorberatung-saved': ['Vorberatung gespeichert', 'Laura sieht Ihre Antworten vor dem Termin. Beim nächsten Klick auf "Termin bestätigen" wird die Vorberatung mit Ihrer Buchung verknüpft.'],
+            'login': ['Demo-Login', 'In der echten Anwendung würden Sie sich mit E-Mail + Passwort oder Magic-Link anmelden — danach öffnet sich Ihr persönliches Behandlungs-Tagebuch mit allen 12 Terminen seit 2020.'],
+            'green-cert': ['Demo-Zertifikat', 'In der echten Anwendung öffnet sich das Green-Salon-Collective-Zertifikat als PDF mit allen Audit-Details und Erneuerungsdatum 2026.']
         };
+
+        function selectStylist(name) {
+            var stylistMap = { laura: 0, mara: 1, tim: 2 };
+            var idx = stylistMap[name];
+            if (idx === undefined) return;
+            var btns = document.querySelectorAll('#stylists .termin-doctor');
+            btns.forEach(function (b, i) { b.classList.toggle('is-active', i === idx); });
+            document.querySelector('#termin').scrollIntoView({ behavior: 'smooth' });
+        }
 
         function openModal(kind) {
             var modal = document.getElementById('modal');
