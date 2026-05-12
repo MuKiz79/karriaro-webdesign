@@ -71,6 +71,61 @@
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }
+        /* Bento + Sprint 6 Killer */
+        .bento-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(180px, auto); gap: 16px; max-width: 1200px; margin: 0 auto; }
+        .bento-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; position: relative; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .bento-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+        .bento-card.size-2x2 { grid-column: span 4; grid-row: span 2; }
+        .bento-card.size-2x1 { grid-column: span 4; grid-row: span 1; }
+        .bento-card.size-1x2 { grid-column: span 2; grid-row: span 2; }
+        .bento-card.size-1x1 { grid-column: span 2; grid-row: span 1; }
+        .bento-card.is-feature { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .bento-card.is-feature .bento-card-body { color: rgba(255,255,255,0.85); }
+        .bento-card.is-feature .bento-card-big-num { color: var(--gold); }
+        .bento-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.7; margin-bottom: 14px; }
+        .bento-card-headline { font-family: var(--serif); font-size: clamp(22px, 2.2vw, 32px); font-weight: 400; margin-bottom: 14px; line-height: 1.15; letter-spacing: -0.01em; color: inherit; }
+        .bento-card-body { font-size: 15px; color: var(--text-soft); line-height: 1.55; }
+        .bento-card-big-num { font-family: var(--serif); font-size: clamp(56px, 6vw, 88px); font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-style: italic; color: var(--accent); }
+        @media (max-width: 920px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .bento-card.size-2x2, .bento-card.size-2x1, .bento-card.size-1x2 { grid-column: span 2; grid-row: span 1; } }
+        /* I1 Verkäufer-Dashboard */
+        .seller-dashboard { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .seller-dashboard-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .dashboard-mock { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-lg); margin-top: 48px; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .dashboard-header-title { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--accent); }
+        .dashboard-header-meta { font-size: 12px; color: var(--text-light); letter-spacing: 0.12em; text-transform: uppercase; }
+        .dashboard-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; }
+        .heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; padding: 16px 0; }
+        .heatmap-day { aspect-ratio: 1; border-radius: 3px; background: var(--accent-bg); position: relative; }
+        .heatmap-day[data-level="1"] { background: rgba(26,46,64,0.18); }
+        .heatmap-day[data-level="2"] { background: rgba(26,46,64,0.36); }
+        .heatmap-day[data-level="3"] { background: rgba(26,46,64,0.58); }
+        .heatmap-day[data-level="4"] { background: var(--accent); }
+        .heatmap-day[data-level="5"] { background: var(--gold); }
+        .heatmap-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-light); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 8px; }
+        .dashboard-stats { display: flex; flex-direction: column; gap: 14px; }
+        .dashboard-stat { padding: 16px 20px; background: var(--bg-soft); border-radius: var(--radius); border-left: 2px solid var(--gold); }
+        .dashboard-stat-val { font-family: var(--serif); font-style: italic; font-size: 28px; color: var(--accent); font-weight: 500; line-height: 1; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+        .dashboard-stat-label { font-size: 12px; color: var(--text-light); letter-spacing: 0.08em; text-transform: uppercase; }
+        .dashboard-activity { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .activity-item { display: flex; gap: 12px; padding: 10px 0; font-size: 13px; color: var(--text-soft); border-bottom: 1px solid var(--border); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 6px; flex-shrink: 0; }
+        @media (max-width: 920px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        /* I2 Matterport 3D + Virtual-Staging */
+        .virtual-stage { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
+        .virtual-stage-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .virtual-stage-canvas { aspect-ratio: 16/10; background: var(--bg-soft); border-radius: var(--radius-lg); margin: 40px auto 24px; max-width: 980px; position: relative; overflow: hidden; transition: background 0.4s ease; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; font-size: clamp(28px, 4vw, 56px); color: var(--accent); }
+        .virtual-stage-canvas[data-stage="bohemian"] { background: linear-gradient(135deg, #D4A574, #8B5E3C); color: #FBF8F2; }
+        .virtual-stage-canvas[data-stage="scandi"] { background: linear-gradient(135deg, #E8E2D6, #B8A88E); color: #2A2620; }
+        .virtual-stage-canvas[data-stage="classic"] { background: linear-gradient(135deg, #4A3A2E, #2A1F18); color: #C9A06B; }
+        .stage-toggles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 980px; margin: 0 auto; }
+        .stage-btn { padding: 18px 16px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; }
+        .stage-btn:hover { border-color: var(--accent); }
+        .stage-btn.is-active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .stage-btn-name { font-family: var(--serif); font-style: italic; font-size: 20px; margin-bottom: 4px; }
+        .stage-btn-spec { font-size: 11px; opacity: 0.7; letter-spacing: 0.06em; text-transform: uppercase; }
+        @media (max-width: 720px) { .stage-toggles { grid-template-columns: 1fr; } }
         .section-head { text-align: center; max-width: 660px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -504,6 +559,94 @@
                             <span class="mockup-story">Off-Market-Portfolio mit 6 Toplagen im Halbhöhenring.</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- I1 · Verkäufer-Dashboard -->
+        <section class="seller-dashboard" id="seller-dashboard" aria-label="Verkäufer-Dashboard">
+            <div class="seller-dashboard-inner">
+                <div class="section-head" style="text-align:left; max-width:720px; margin:0;">
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Premium-Service · Für Eigentümer</p>
+                    <h2>Sie sehen jeden Tag, was passiert.</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Wer schaut sich Ihr Objekt an, wann, woher — und welche Käufer-Profile haben gematcht. Kein „Ich melde mich, wenn etwas passiert."</p>
+                </div>
+                <div class="dashboard-mock" role="img" aria-label="Beispiel-Dashboard Ihres Verkaufs">
+                    <div class="dashboard-header">
+                        <div class="dashboard-header-title">Mein Verkauf · Penthouse Stuttgart-Mitte</div>
+                        <div class="dashboard-header-meta">Live · Aktualisiert vor 4 Min</div>
+                    </div>
+                    <div class="dashboard-grid">
+                        <div>
+                            <div class="bento-eyebrow" style="color:var(--text-light); opacity:1;">Käufer-Heatmap · 14 Tage</div>
+                            <div class="heatmap">
+                                <div class="heatmap-day" data-level="1"></div>
+                                <div class="heatmap-day" data-level="2"></div>
+                                <div class="heatmap-day" data-level="3"></div>
+                                <div class="heatmap-day" data-level="4"></div>
+                                <div class="heatmap-day" data-level="3"></div>
+                                <div class="heatmap-day" data-level="2"></div>
+                                <div class="heatmap-day" data-level="2"></div>
+                                <div class="heatmap-day" data-level="3"></div>
+                                <div class="heatmap-day" data-level="4"></div>
+                                <div class="heatmap-day" data-level="5"></div>
+                                <div class="heatmap-day" data-level="4"></div>
+                                <div class="heatmap-day" data-level="3"></div>
+                                <div class="heatmap-day" data-level="4"></div>
+                                <div class="heatmap-day" data-level="5"></div>
+                            </div>
+                            <div class="heatmap-labels"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div>
+                            <div class="dashboard-activity">
+                                <div class="activity-item"><span class="activity-dot"></span><div><strong style="color:var(--text);">Besichtigung Mittwoch 14 Uhr</strong> bestätigt — Käufer mit IHK-Bonität A+</div></div>
+                                <div class="activity-item"><span class="activity-dot"></span><div><strong style="color:var(--text);">7 neue Anfragen heute</strong> aus dem Off-Market-Register, davon 3 mit Finanzierung</div></div>
+                                <div class="activity-item"><span class="activity-dot"></span><div><strong style="color:var(--text);">Profitypisierung gestern abgeschlossen:</strong> 47 % Erstkäufer mit Eigenkapital ≥30 %</div></div>
+                            </div>
+                        </div>
+                        <div class="dashboard-stats">
+                            <div class="dashboard-stat">
+                                <div class="dashboard-stat-val">47</div>
+                                <div class="dashboard-stat-label">Käufer-Profile gematcht</div>
+                            </div>
+                            <div class="dashboard-stat">
+                                <div class="dashboard-stat-val">3</div>
+                                <div class="dashboard-stat-label">Besichtigungen geplant</div>
+                            </div>
+                            <div class="dashboard-stat">
+                                <div class="dashboard-stat-val">14 Tage</div>
+                                <div class="dashboard-stat-label">Ø Vermittlungsdauer Q1</div>
+                            </div>
+                            <div class="dashboard-stat">
+                                <div class="dashboard-stat-val">+12&nbsp;%</div>
+                                <div class="dashboard-stat-label">Über AVM-Spanne erzielt</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- I2 · Matterport 3D + Virtual-Staging -->
+        <section class="virtual-stage" id="virtual-stage" aria-label="3D-Begehung mit Virtual-Staging">
+            <div class="virtual-stage-inner">
+                <div class="section-head" style="text-align:left; max-width:720px; margin:0;">
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">3D-Begehung · Mit AI-Staging</p>
+                    <h2>Begehen Sie das Objekt — <em>vor dem Vor-Ort-Termin.</em></h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Matterport-3D-Dollhouse mit drei AI-gestützten Einrichtungs-Stilen. Käufer mit Lifestyle-Vorstellung kaufen 12–18 % über AVM-Spanne.</p>
+                </div>
+                <div class="virtual-stage-canvas" id="stage-canvas" data-stage="bohemian">Bohemian — Penthouse Stuttgart-Mitte</div>
+                <div class="stage-toggles" id="stage-toggles">
+                    <button type="button" class="stage-btn is-active" data-stage="bohemian" data-label="Bohemian — Penthouse Stuttgart-Mitte">
+                        <div class="stage-btn-name">Bohemian</div>
+                        <div class="stage-btn-spec">Warm · Textil · Holz</div>
+                    </button>
+                    <button type="button" class="stage-btn" data-stage="scandi" data-label="Skandinavisch — Penthouse Stuttgart-Mitte">
+                        <div class="stage-btn-name">Skandinavisch</div>
+                        <div class="stage-btn-spec">Hell · Eiche · Leinen</div>
+                    </button>
+                    <button type="button" class="stage-btn" data-stage="classic" data-label="Klassisch — Penthouse Stuttgart-Mitte">
+                        <div class="stage-btn-name">Klassisch</div>
+                        <div class="stage-btn-spec">Walnuss · Samt · Gold</div>
+                    </button>
                 </div>
             </div>
         </section>
@@ -1315,6 +1458,20 @@
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
+
+        // I2 Virtual-Staging-Toggle
+        var stageBtns = document.querySelectorAll('#stage-toggles .stage-btn');
+        var stageCanvas = document.getElementById('stage-canvas');
+        stageBtns.forEach(function (b) {
+            b.addEventListener('click', function () {
+                stageBtns.forEach(function (x) { x.classList.remove('is-active'); });
+                b.classList.add('is-active');
+                if (stageCanvas) {
+                    stageCanvas.setAttribute('data-stage', b.getAttribute('data-stage'));
+                    stageCanvas.textContent = b.getAttribute('data-label');
+                }
+            });
         });
 
         // Konfig-Tabs + Zustand-Toggle
