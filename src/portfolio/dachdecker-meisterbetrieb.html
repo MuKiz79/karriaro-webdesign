@@ -101,6 +101,18 @@
         .hero-trust .check { color: var(--accent); font-weight: 700; }
         .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
         .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-mockup { display: block; text-decoration: none; color: inherit; width: 100%; transition: transform 0.3s ease; }
+        .hero-mockup:hover { transform: translateY(-3px); }
+        .browser-frame-large { background: #fff; border-radius: 12px; overflow: hidden; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04); transition: box-shadow 0.3s ease; }
+        .hero-mockup:hover .browser-frame-large { box-shadow: 0 30px 70px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.05); }
+        .browser-chrome { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.04); }
+        .browser-chrome .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .browser-chrome .dot-r { background: #ff5f57; } .browser-chrome .dot-y { background: #febc2e; } .browser-chrome .dot-g { background: #28c840; }
+        .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
+        .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
+        .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
+        .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
+        .mockup-story { font-size: 16px; color: #1d1d1f; line-height: 1.4; }
 
         .notdienst-banner { background: var(--text); color: #fff; padding: 28px 0; }
         .notdienst-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
@@ -528,8 +540,18 @@
                             <span><span class="check">✓</span> BFSG-konform</span>
                         </div>
                     </div>
-                    <div class="hero-img">
-                        <img src="/images/dachdecker/thomas-hero.jpg" alt="Dachdeckermeister Thomas Berger mit Sicherheitsgeschirr auf einem Ziegeldach" loading="eager" width="900" height="1125" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                    <div class="hero-mockup">
+                        <div class="browser-frame browser-frame-large">
+                            <div class="browser-chrome">
+                                <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+                                <span class="browser-url">meisterbetrieb-berger.de</span>
+                            </div>
+                            <img class="browser-screen-large" src="/images/dachdecker-meister-mockup.jpg" alt="Website-Mockup Meisterbetrieb Berger" loading="eager" width="1586" height="992">
+                        </div>
+                        <div class="mockup-caption">
+                            <span class="mockup-label">Meisterbetrieb Berger · Dachdecker Stuttgart</span>
+                            <span class="mockup-story">Sturmschäden werden binnen 4 Stunden gesichert.</span>
+                        </div>
                     </div>
                 </div>
             </div>
