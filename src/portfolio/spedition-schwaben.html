@@ -7,6 +7,9 @@
     <meta name="description" content="Spedition Schwaben aus Stuttgart. Sammelgut, Teilladung, Vollladung, Express 24h DACH, Lagerlogistik, Pharma-Spezial. ISO 9001 · 142 Fahrzeuge · Eigene Flotte.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/spedition-schwaben.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Spedition Schwaben — Logistik Stuttgart">
     <meta property="og:description" content="Sammelgut, Teilladung, Express 24h DACH. ISO 9001. Eigene Flotte 142 Fahrzeuge.">
@@ -26,27 +29,28 @@
     </script>
     <style>
         :root {
-            --accent: #2E4A6B;
-            --accent-dark: #1f3651;
-            --accent-soft: #eef2f7;
-            --accent-mid: #4a6889;
-            --signal: #d97706;
-            --signal-soft: #fef3e2;
-            --success: #2d8052;
-            --bg: #ffffff;
-            --bg-soft: #f7f8fa;
-            --bg-dark: #14222e;
-            --text: #14222e;
-            --text-soft: #525d6b;
-            --text-light: #8c95a3;
-            --border: #e4e7ec;
-            --border-strong: #cbd1da;
-            --radius: 4px;
-            --radius-lg: 10px;
-            --shadow-sm: 0 1px 2px rgba(20,34,46,0.04);
-            --shadow: 0 6px 18px rgba(20,34,46,0.06);
-            --shadow-lg: 0 18px 48px rgba(20,34,46,0.12);
+            --accent: #0E1F33;
+            --accent-dark: #061320;
+            --accent-soft: #E8EDF3;
+            --accent-mid: #3A4C66;
+            --signal: #E8C72E;
+            --signal-soft: #F8F0CC;
+            --success: #2D8052;
+            --bg: #FAFAFA;
+            --bg-soft: #F0F1F4;
+            --bg-dark: #0A1422;
+            --text: #0A1422;
+            --text-soft: #424A58;
+            --text-light: #8089A0;
+            --border: #E4E7ED;
+            --border-strong: #C0C5D1;
+            --radius: 2px;
+            --radius-lg: 4px;
+            --shadow-sm: 0 1px 3px rgba(10,20,34,0.04);
+            --shadow: 0 8px 32px rgba(10,20,34,0.06);
+            --shadow-lg: 0 32px 72px rgba(10,20,34,0.12);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-tight: 'Inter Tight', 'Inter', -apple-system, sans-serif;
             --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
             --max: 1280px;
         }
@@ -78,14 +82,15 @@
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
-        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
-        h1 { font-size: clamp(40px, 5.4vw, 60px); }
+        h1 { font-family: var(--font-tight); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; font-size: clamp(56px, 7.4vw, 104px); font-variant-numeric: tabular-nums; }
+        h2 { font-family: var(--font-tight); font-weight: 700; line-height: 1.06; letter-spacing: -0.025em; font-size: clamp(34px, 4.4vw, 60px); }
+        h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 600; }
         h2 { font-size: clamp(30px, 3.6vw, 42px); }
         h3 { font-size: 20px; }
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 4px 4px; z-index: 200; font-size: 14px; }
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-        section { padding: 88px 0; }
+        section { padding: clamp(80px, 12vh, 140px) 0; }
         .eyebrow { display: inline-block; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head { max-width: 720px; margin: 0 auto 56px; text-align: center; }
         .section-head h2 { margin-bottom: 14px; }
@@ -422,7 +427,7 @@
             <div class="hero-inner">
                 <div class="hero-content">
                     <div class="eyebrow">Spedition · Logistik · Stuttgart</div>
-                    <h1>Eigene Flotte.<br><span class="hl">Eigene Verantwortung.</span><br>Seit 1972.</h1>
+                    <h1>240+&nbsp;Kunden.<br><span class="hl">Eine Disposition.</span></h1>
                     <p class="lead">142 Fahrzeuge, 18.000 m² Lager, 320 Mitarbeiter — und ein einziges Versprechen: Ihre Sendung kommt an. Pünktlich, dokumentiert, klimakompensiert. Frachtanfrage in 3 Klicks, Live-Tracking inklusive.</p>
                     <div class="hero-stats">
                         <div class="hero-stat">
