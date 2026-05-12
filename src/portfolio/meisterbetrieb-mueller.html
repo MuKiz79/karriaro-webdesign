@@ -7,6 +7,9 @@
     <meta name="description" content="Meisterbetrieb Müller in Stuttgart. Bad, Heizung, Solar. Festpreis-Garantie, Notdienst 24/7, Foto-Anfrage in 24h. Versicherter Innungsbetrieb.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@600;700&display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Meisterbetrieb Müller — Sanitär &amp; Heizung Stuttgart">
     <meta property="og:description" content="Festpreis. Notdienst 24/7. Versicherter Innungsbetrieb seit 1995.">
@@ -27,25 +30,26 @@
     </script>
     <style>
         :root {
-            --accent: #C97A4A;
-            --accent-dark: #a86238;
-            --accent-bg: #faf2ec;
-            --accent-strong: #8b4d2a;
-            --bg: #ffffff;
-            --bg-soft: #fafaf8;
-            --text: #1a1a1a;
-            --text-soft: #555350;
-            --text-light: #8c8a86;
-            --border: #ebe9e5;
-            --border-strong: #d4d1cc;
+            --accent: #B47045;
+            --accent-dark: #8C5530;
+            --accent-bg: #F3EBE2;
+            --accent-strong: #6B3D1F;
+            --bg: #FBFAF7;
+            --bg-soft: #F3EBE2;
+            --text: #1F2933;
+            --text-soft: #4A5360;
+            --text-light: #888F98;
+            --border: #E5DED4;
+            --border-strong: #C5B9A8;
             --whatsapp: #25D366;
-            --radius: 10px;
-            --radius-lg: 18px;
+            --radius: 2px;
+            --radius-lg: 4px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow: 0 8px 24px rgba(60,40,20,0.08);
-            --shadow-lg: 0 24px 60px rgba(60,40,20,0.12);
+            --shadow: 0 8px 32px rgba(30,35,45,0.06);
+            --shadow-lg: 0 32px 72px rgba(30,35,45,0.10);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --max: 1240px;
+            --font-tight: 'Inter Tight', 'Inter', -apple-system, sans-serif;
+            --max: 1200px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -57,14 +61,15 @@
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
-        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
-        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h1 { font-family: var(--font-tight); font-weight: 700; line-height: 1.02; letter-spacing: -0.03em; font-size: clamp(56px, 7.2vw, 96px); }
+        h2 { font-family: var(--font-tight); font-weight: 700; line-height: 1.06; letter-spacing: -0.025em; font-size: clamp(36px, 4.6vw, 60px); }
+        h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 600; }
         h2 { font-size: clamp(30px, 3.8vw, 44px); }
         h3 { font-size: 20px; }
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 10px 10px; z-index: 200; font-size: 14px; }
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-        section { padding: 88px 0; }
+        section { padding: clamp(80px, 12vh, 140px) 0; }
         .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -87,8 +92,8 @@
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
         .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-        .hero h1 { margin-bottom: 22px; }
-        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 32px; }
+        .hero h1 { margin-bottom: 32px; }
+        .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 540px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
         .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
         .btn-primary { background: var(--accent); color: #fff; }
@@ -332,8 +337,8 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Meisterbetrieb · Stuttgart &amp; Umkreis 50 km</p>
-                        <h1>Sanitär. Heizung. Bei Ihnen morgen.</h1>
+                        <p class="hero-eyebrow">Meisterbetrieb Müller · Sanitär &amp; Heizung Stuttgart</p>
+                        <h1>Komplettbad in 14 Tagen. Mit 5 Jahren Garantie.</h1>
                         <p class="lead">Foto vom Schaden hochladen, Festpreis-Angebot in 24 Stunden. Notdienst 24/7. Versicherter Innungsbetrieb seit 1995.</p>
                         <div class="hero-ctas">
                             <a href="#anfrage" class="btn btn-primary">Foto-Anfrage senden →</a>
