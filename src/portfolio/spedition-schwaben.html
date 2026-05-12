@@ -57,6 +57,24 @@
         img { display: block; max-width: 100%; height: auto; }
         .img-pending { background: linear-gradient(135deg, var(--accent-soft) 0%, var(--bg-soft) 60%, var(--accent-soft) 100%); position: relative; min-height: 200px; }
         .img-pending::after { content: "Bild folgt"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--accent-dark); font-size: 13px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.4; }
+        .hero-mockup-section { padding: 88px 0; background: var(--bg-soft); border-top: 1px solid var(--border); }
+        .hero-mockup-section-inner { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        .hero-mockup-section-text .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; }
+        .hero-mockup-section-text h2 { margin-bottom: 18px; font-size: clamp(28px, 3.4vw, 38px); }
+        .hero-mockup-section-text p { color: var(--text-soft); font-size: 17px; line-height: 1.6; max-width: 460px; }
+        .hero-mockup { display: block; text-decoration: none; color: inherit; width: 100%; transition: transform 0.3s ease; }
+        .hero-mockup:hover { transform: translateY(-3px); }
+        .browser-frame-large { background: #fff; border-radius: 12px; overflow: hidden; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04); transition: box-shadow 0.3s ease; }
+        .hero-mockup:hover .browser-frame-large { box-shadow: 0 30px 70px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.05); }
+        .browser-chrome { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: #f5f5f7; border-bottom: 1px solid rgba(0,0,0,0.04); }
+        .browser-chrome .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .browser-chrome .dot-r { background: #ff5f57; } .browser-chrome .dot-y { background: #febc2e; } .browser-chrome .dot-g { background: #28c840; }
+        .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
+        .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
+        .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
+        .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
+        .mockup-story { font-size: 16px; color: var(--text); line-height: 1.4; }
+        @media (max-width: 920px) { .hero-mockup-section-inner { grid-template-columns: 1fr; gap: 32px; } }
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
@@ -554,6 +572,29 @@
                 </div>
             </div>
         </div>
+
+        <section class="hero-mockup-section">
+            <div class="hero-mockup-section-inner">
+                <div class="hero-mockup-section-text">
+                    <div class="eyebrow">Live im Netz</div>
+                    <h2>So sieht die Spedition-Schwaben-Website aus.</h2>
+                    <p>Vom Sammelgut-Tarif bis zur Live-Sendungsverfolgung — alles auf einer Seite, sofort findbar.</p>
+                </div>
+                <div class="hero-mockup">
+                    <div class="browser-frame browser-frame-large">
+                        <div class="browser-chrome">
+                            <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+                            <span class="browser-url">spedition-schwaben.de</span>
+                        </div>
+                        <img class="browser-screen-large" src="/images/logistik-schwaben-mockup.jpg" alt="Website-Mockup Spedition Schwaben" loading="lazy" width="1586" height="992">
+                    </div>
+                    <div class="mockup-caption">
+                        <span class="mockup-label">Spedition Schwaben · DACH-Logistik</span>
+                        <span class="mockup-story">Live-Tracking und Vollladung-Anfrage direkt aus dem Hero.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section class="clients">
             <div class="container">
