@@ -7,6 +7,9 @@
     <meta name="description" content="Dachdecker-Meisterbetrieb Berger in Stuttgart. Foto vom Dach senden, Festpreis-Angebot in 48 Stunden. Steildach, Flachdach, Sanierung, BAFA-Förderung. ZVDH-Innung.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@600;700;800&display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Dachdecker Berger — Meisterbetrieb Stuttgart">
     <meta property="og:description" content="Festpreis in 48 h. Sturmnotdienst 24/7. ZVDH-Innung, versichert 5 Mio €.">
@@ -28,25 +31,26 @@
     </script>
     <style>
         :root {
-            --accent: #7a8b6b;
-            --accent-dark: #5d6b50;
-            --accent-strong: #475438;
-            --accent-bg: #f4f5f0;
-            --bg: #ffffff;
-            --bg-soft: #fafaf8;
-            --text: #1a1d18;
-            --text-soft: #4f534a;
-            --text-light: #8b8e85;
-            --border: #e8eae2;
-            --border-strong: #d2d6c8;
+            --accent: #4A5D4F;
+            --accent-dark: #34433B;
+            --accent-strong: #1F2A23;
+            --accent-bg: #EDEFEA;
+            --bg: #FAFAF8;
+            --bg-soft: #F2F2EE;
+            --text: #0A0A0A;
+            --text-soft: #3A3A38;
+            --text-light: #7A7A75;
+            --border: #E5E5E0;
+            --border-strong: #C8C8C0;
             --whatsapp: #25D366;
-            --radius: 10px;
-            --radius-lg: 18px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow: 0 8px 24px rgba(40,55,30,0.07);
-            --shadow-lg: 0 24px 60px rgba(40,55,30,0.11);
+            --radius: 2px;
+            --radius-lg: 4px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.03);
+            --shadow: 0 8px 32px rgba(10,10,10,0.05);
+            --shadow-lg: 0 32px 72px rgba(10,10,10,0.10);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --max: 1240px;
+            --font-tight: 'Inter Tight', 'Inter', -apple-system, sans-serif;
+            --max: 1200px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -56,14 +60,15 @@
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
-        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
-        h1 { font-size: clamp(40px, 5.6vw, 64px); }
+        h1 { font-family: var(--font-tight); font-weight: 800; line-height: 1.0; letter-spacing: -0.035em; font-size: clamp(56px, 7.4vw, 104px); font-variant-numeric: tabular-nums; }
+        h2 { font-family: var(--font-tight); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; font-size: clamp(36px, 4.6vw, 64px); }
+        h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 600; }
         h2 { font-size: clamp(30px, 3.8vw, 44px); }
         h3 { font-size: 20px; }
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 10px 10px; z-index: 200; font-size: 14px; }
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-        section { padding: 88px 0; }
+        section { padding: clamp(80px, 12vh, 140px) 0; }
         .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -87,8 +92,12 @@
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 16px; }
         .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-        .hero h1 { margin-bottom: 22px; }
-        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 32px; }
+        .hero h1 { margin-bottom: 32px; }
+        .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 540px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
+        .hero-bignums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); }
+        .hero-bignum-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(36px, 4vw, 56px); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; margin-bottom: 8px; }
+        .hero-bignum-label { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.18em; font-weight: 500; }
+        @media (max-width: 720px) { .hero-bignums { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
         .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
         .btn-primary { background: var(--accent); color: #fff; }
@@ -525,19 +534,12 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Dachdecker-Meister · Großraum Stuttgart</p>
-                        <h1>Ihr Dach. Dicht. In zwei Wochen.</h1>
-                        <p class="lead">Foto vom Schaden senden, Festpreis-Angebot in 48 Stunden — ohne Anfahrt-Pauschale. Sturmnotdienst 24/7. ZVDH-Innungsbetrieb seit 1989.</p>
+                        <p class="hero-eyebrow">Meisterbetrieb Berger · Stuttgart</p>
+                        <h1>37 Jahre.<br>4.200 Dächer.</h1>
+                        <p class="lead">PREFA-Falzdach, BRAAS-Pfanne, Velux-Fenster — handwerklich gesetzt, mit 25 Jahren Garantieurkunde digital im Kundenkonto. Foto senden, Festpreis-Angebot in 48 Stunden.</p>
                         <div class="hero-ctas">
                             <a href="#anfrage" class="btn btn-primary">Foto vom Dach senden →</a>
-                            <a href="https://wa.me/4971192478800" class="btn btn-whatsapp" rel="noopener">WhatsApp</a>
                             <a href="tel:+49711924788" class="btn btn-ghost">0711 92 47 880</a>
-                        </div>
-                        <div class="hero-trust">
-                            <span><span class="check">✓</span> Festpreis-Garantie</span>
-                            <span><span class="check">✓</span> ZVDH-Innung</span>
-                            <span><span class="check">✓</span> Versichert bis 5 Mio €</span>
-                            <span><span class="check">✓</span> BFSG-konform</span>
                         </div>
                     </div>
                     <div class="hero-mockup">
@@ -552,6 +554,24 @@
                             <span class="mockup-label">Meisterbetrieb Berger · Dachdecker Stuttgart</span>
                             <span class="mockup-story">Sturmschäden werden binnen 4 Stunden gesichert.</span>
                         </div>
+                    </div>
+                </div>
+                <div class="hero-bignums">
+                    <div>
+                        <div class="hero-bignum-val">37</div>
+                        <div class="hero-bignum-label">Jahre Meisterbetrieb</div>
+                    </div>
+                    <div>
+                        <div class="hero-bignum-val">4.200</div>
+                        <div class="hero-bignum-label">Dächer in DACH-Region</div>
+                    </div>
+                    <div>
+                        <div class="hero-bignum-val">25</div>
+                        <div class="hero-bignum-label">Jahre Garantieurkunde</div>
+                    </div>
+                    <div>
+                        <div class="hero-bignum-val">4&nbsp;h</div>
+                        <div class="hero-bignum-label">Sturmnotdienst-Reaktion</div>
                     </div>
                 </div>
             </div>
