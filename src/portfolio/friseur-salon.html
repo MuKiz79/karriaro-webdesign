@@ -234,6 +234,56 @@
 
         .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
         .pull-quote-sequence { display: flex; flex-direction: column; gap: 80px; max-width: 880px; margin: 0 auto; }
+        /* Bento + Sprint 6 Killer */
+        .bento-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(180px, auto); gap: 16px; max-width: 1200px; margin: 0 auto; }
+        .bento-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; position: relative; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .bento-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+        .bento-card.size-2x2 { grid-column: span 4; grid-row: span 2; }
+        .bento-card.size-2x1 { grid-column: span 4; grid-row: span 1; }
+        .bento-card.size-1x2 { grid-column: span 2; grid-row: span 2; }
+        .bento-card.size-1x1 { grid-column: span 2; grid-row: span 1; }
+        .bento-card.is-feature { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .bento-card.is-feature:hover { background: var(--accent-dark); }
+        .bento-card.is-feature .bento-card-body { color: rgba(255,255,255,0.85); }
+        .bento-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.7; margin-bottom: 14px; }
+        .bento-card-headline { font-family: var(--serif); font-size: clamp(22px, 2.2vw, 32px); font-weight: 400; margin-bottom: 14px; line-height: 1.15; letter-spacing: -0.01em; }
+        .bento-card-body { font-size: 15px; color: var(--text-soft); line-height: 1.55; }
+        .bento-card-big-num { font-family: var(--serif); font-size: clamp(56px, 6vw, 88px); font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-style: italic; }
+        @media (max-width: 920px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .bento-card.size-2x2, .bento-card.size-2x1, .bento-card.size-1x2 { grid-column: span 2; grid-row: span 1; } }
+        /* F1 AR Virtual Try-On */
+        .ar-tryon { background: var(--accent-bg); padding: clamp(80px, 12vh, 140px) 0; }
+        .ar-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; }
+        .ar-upload-card { background: var(--bg); border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 48px 36px; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .ar-upload-card:hover { border-color: var(--accent); background: var(--bg-soft); }
+        .ar-upload-icon { width: 56px; height: 56px; margin: 0 auto 18px; color: var(--accent-dark); }
+        .ar-styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; opacity: 0; max-height: 0; overflow: hidden; transition: all 0.5s ease; }
+        .ar-styles-grid.is-revealed { opacity: 1; max-height: 600px; }
+        .ar-style-tile { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: all 0.2s; }
+        .ar-style-tile:hover { border-color: var(--accent); }
+        .ar-style-tile-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; color: var(--accent-dark); font-size: 13px; }
+        .ar-style-tile-name { font-size: 13px; font-weight: 500; color: var(--text); }
+        .ar-style-tile-stylist { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+        @media (max-width: 920px) { .ar-inner { grid-template-columns: 1fr; gap: 32px; } .ar-styles-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* F2 Visual Match — Style-Galerie */
+        .style-gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 1200px; margin: 0 auto; }
+        .style-card { cursor: pointer; transition: all 0.3s; }
+        .style-card:hover { transform: translateY(-4px); }
+        .style-card-img { aspect-ratio: 3/4; background: var(--accent-bg); border-radius: var(--radius-lg); margin-bottom: 14px; overflow: hidden; position: relative; }
+        .style-card-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%); opacity: 0; transition: opacity 0.3s; }
+        .style-card:hover .style-card-img::after { opacity: 1; }
+        .style-card-name { font-family: var(--serif); font-size: 22px; font-style: italic; font-weight: 400; color: var(--text); margin-bottom: 4px; }
+        .style-card-meta { font-size: 12px; color: var(--text-light); letter-spacing: 0.06em; text-transform: uppercase; }
+        @media (max-width: 920px) { .style-gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* F3 Video-Beratung */
+        .video-consult { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .video-consult-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; text-align: center; }
+        .video-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 40px; }
+        .video-slot { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 12px; text-align: center; cursor: pointer; transition: all 0.2s; font-family: var(--font); }
+        .video-slot:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .video-slot.is-active { background: var(--text); color: var(--bg); border-color: var(--text); }
+        .video-slot-time { font-size: 16px; font-weight: 500; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+        .video-slot-stylist { font-size: 12px; opacity: 0.7; letter-spacing: 0.04em; }
+        @media (max-width: 920px) { .video-slots { grid-template-columns: repeat(2, 1fr); } }
         .pull-quote { padding-left: 32px; border-left: 1px solid var(--accent); }
         .pull-quote-body { font-family: var(--serif); font-style: italic; font-size: clamp(28px, 3vw, 38px); line-height: 1.3; color: var(--text); margin-bottom: 24px; font-weight: 400; letter-spacing: -0.01em; }
         .pull-quote-author { display: flex; align-items: center; gap: 14px; }
@@ -550,6 +600,137 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- F1 · AR Virtual Try-On -->
+        <section class="ar-tryon" id="ar-tryon" aria-label="AR-Try-On">
+            <div class="ar-inner">
+                <div>
+                    <p class="hero-eyebrow" style="margin-bottom:24px;">Vor dem Termin · Ihr Look in 2 Sekunden</p>
+                    <h2>Probieren Sie Ihren Look. <em>Vor dem Schnitt.</em></h2>
+                    <p class="lead" style="margin-top:20px; max-width:480px;">Foto hochladen, sechs Empfehlungen unserer Stylistinnen vergleichen — und mit einem Klick den passenden Stylist buchen.</p>
+                </div>
+                <div>
+                    <div class="ar-upload-card" id="ar-upload-trigger" tabindex="0" role="button" aria-label="Foto hochladen für Style-Vorschau">
+                        <svg class="ar-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4m4-4l4 4M4 20h16"/></svg>
+                        <div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px;">Selfie hochladen</div>
+                        <div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">JPG/PNG · max 8 MB · privat verarbeitet</div>
+                    </div>
+                    <div class="ar-styles-grid" id="ar-styles-grid">
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">Long Pixie</div>
+                            <div class="ar-style-tile-name">Long Pixie</div>
+                            <div class="ar-style-tile-stylist">Laura · ab 89&nbsp;€</div>
+                        </div>
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">French Bob</div>
+                            <div class="ar-style-tile-name">French Bob</div>
+                            <div class="ar-style-tile-stylist">Mara · ab 79&nbsp;€</div>
+                        </div>
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">Balayage</div>
+                            <div class="ar-style-tile-name">Honey Balayage</div>
+                            <div class="ar-style-tile-stylist">Mara · ab 189&nbsp;€</div>
+                        </div>
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">Shag Cut</div>
+                            <div class="ar-style-tile-name">Modern Shag</div>
+                            <div class="ar-style-tile-stylist">Laura · ab 89&nbsp;€</div>
+                        </div>
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">Curtain Bangs</div>
+                            <div class="ar-style-tile-name">Curtain Bangs</div>
+                            <div class="ar-style-tile-stylist">Laura · ab 99&nbsp;€</div>
+                        </div>
+                        <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                            <div class="ar-style-tile-img">Bridal Updo</div>
+                            <div class="ar-style-tile-name">Bridal Updo</div>
+                            <div class="ar-style-tile-stylist">Mara · ab 249&nbsp;€</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- F2 · Visual-Match Style-Galerie -->
+        <section class="style-gallery" id="style-gallery" aria-label="Style-Galerie">
+            <div class="container">
+                <div class="section-head">
+                    <p class="eyebrow">Inspiration · Trend Frühling/Sommer 2026</p>
+                    <h2>Den Look finden. <em>Direkt buchen.</em></h2>
+                    <p>Aus aktuellen Arbeiten unserer drei Stylistinnen — jeder Look ist mit Stylist, Dauer und Preis hinterlegt.</p>
+                </div>
+                <div class="style-gallery-grid">
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Long Pixie</div>
+                        <div class="style-card-meta">Laura · 75 Min · ab 89 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Honey Balayage</div>
+                        <div class="style-card-meta">Mara · 4 Std · ab 189 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">French Bob</div>
+                        <div class="style-card-meta">Mara · 60 Min · ab 79 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Bridal Updo</div>
+                        <div class="style-card-meta">Mara · 2 Std · ab 249 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Modern Shag</div>
+                        <div class="style-card-meta">Laura · 80 Min · ab 89 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Curtain Bangs</div>
+                        <div class="style-card-meta">Laura · 50 Min · ab 99 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Caramel Highlights</div>
+                        <div class="style-card-meta">Mara · 3 Std · ab 169 €</div>
+                    </div>
+                    <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
+                        <div class="style-card-img"></div>
+                        <div class="style-card-name">Fade Cut</div>
+                        <div class="style-card-meta">Tim · 45 Min · ab 49 €</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- F3 · 15-Min Video-Erstberatung -->
+        <section class="video-consult" id="video-consult" aria-label="Video-Erstberatung">
+            <div class="video-consult-inner">
+                <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Neu · Vor dem Schnitt sprechen</p>
+                <h2>15 Minuten Video. <em>Und Sie wissen, ob es passt.</em></h2>
+                <p style="font-size:18px; color:var(--text-soft); max-width:620px; margin:20px auto 0; font-weight:300; line-height:1.55;">Wir besprechen Ihren Wunsch, Ihre Haarstruktur und Erwartungen — bevor Sie überhaupt einen Termin festlegen. Kostenlos, ohne Verpflichtung.</p>
+                <div class="video-slots">
+                    <button type="button" class="video-slot" onclick="this.parentElement.querySelectorAll('.video-slot').forEach(s=>s.classList.remove('is-active'));this.classList.add('is-active');">
+                        <div class="video-slot-time">Heute · 16:00</div>
+                        <div class="video-slot-stylist">Laura · 15 Min</div>
+                    </button>
+                    <button type="button" class="video-slot" onclick="this.parentElement.querySelectorAll('.video-slot').forEach(s=>s.classList.remove('is-active'));this.classList.add('is-active');">
+                        <div class="video-slot-time">Heute · 18:30</div>
+                        <div class="video-slot-stylist">Mara · 15 Min</div>
+                    </button>
+                    <button type="button" class="video-slot" onclick="this.parentElement.querySelectorAll('.video-slot').forEach(s=>s.classList.remove('is-active'));this.classList.add('is-active');">
+                        <div class="video-slot-time">Morgen · 09:00</div>
+                        <div class="video-slot-stylist">Laura · 15 Min</div>
+                    </button>
+                    <button type="button" class="video-slot" onclick="this.parentElement.querySelectorAll('.video-slot').forEach(s=>s.classList.remove('is-active'));this.classList.add('is-active');">
+                        <div class="video-slot-time">Morgen · 14:00</div>
+                        <div class="video-slot-stylist">Tim · 15 Min</div>
+                    </button>
+                </div>
+                <a href="#kontakt" class="btn btn-primary" style="margin-top:32px;">Video-Termin reservieren</a>
             </div>
         </section>
 
@@ -1472,6 +1653,19 @@
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
         });
+
+        // F1 AR-Try-On: Demo-Trigger zeigt Style-Grid nach 1.6s "Analyse"
+        var arTrigger = document.getElementById('ar-upload-trigger');
+        var arStylesGrid = document.getElementById('ar-styles-grid');
+        if (arTrigger && arStylesGrid) {
+            arTrigger.addEventListener('click', function () {
+                arTrigger.innerHTML = '<div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px;">KI analysiert Ihr Haar…</div><div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">Gesichtsform · Haarstruktur · Stil-Match</div>';
+                setTimeout(function () {
+                    arTrigger.innerHTML = '<div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px; color:var(--accent-dark);">6 Looks für Sie</div><div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">Klicken Sie einen Look → Termin</div>';
+                    arStylesGrid.classList.add('is-revealed');
+                }, 1600);
+            });
+        }
 
         function makeToggle(group) {
             document.querySelectorAll('#' + group + ' button').forEach(function (b) {
