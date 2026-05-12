@@ -7,6 +7,9 @@
     <meta name="description" content="Friseur-Salon Müller in Düsseldorf-Carlstadt. Online-Termin in zwei Klicks, Wunsch-Stylist wählbar. Aveda Concept Salon. Late-Night bis 21 Uhr.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/friseur-salon.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Salon Müller — Friseur Düsseldorf-Carlstadt">
     <meta property="og:description" content="Online-Termin in zwei Klicks. Wunsch-Stylist wählbar. Aveda Concept Salon.">
@@ -27,25 +30,26 @@
     </script>
     <style>
         :root {
-            --accent: #bfa094;
-            --accent-dark: #9d7e6e;
-            --accent-strong: #7a5e50;
-            --accent-bg: #faf5f2;
-            --bg: #ffffff;
-            --bg-soft: #fbfaf8;
-            --text: #1d1a18;
-            --text-soft: #5a534e;
-            --text-light: #908882;
-            --border: #ebe4df;
-            --border-strong: #d8cdc4;
-            --danger: #c0392b;
-            --radius: 12px;
-            --radius-lg: 20px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow: 0 8px 24px rgba(55,40,30,0.06);
-            --shadow-lg: 0 24px 60px rgba(55,40,30,0.10);
+            --accent: #B07B5E;
+            --accent-dark: #8A5B41;
+            --accent-strong: #6E4530;
+            --accent-bg: #F4ECE3;
+            --bg: #FBF8F2;
+            --bg-soft: #F4ECE3;
+            --text: #1A1814;
+            --text-soft: #5A534E;
+            --text-light: #948A82;
+            --border: #E8DDD0;
+            --border-strong: #D2C2B0;
+            --danger: #C0392B;
+            --radius: 4px;
+            --radius-lg: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.03);
+            --shadow: 0 8px 28px rgba(40,28,18,0.06);
+            --shadow-lg: 0 32px 72px rgba(40,28,18,0.10);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --max: 1240px;
+            --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+            --max: 1200px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -54,20 +58,23 @@
         img { display: block; max-width: 100%; height: auto; }
         button { font-family: inherit; cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
-        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
-        h1 { font-size: clamp(40px, 5.6vw, 64px); }
-        h2 { font-size: clamp(30px, 3.8vw, 44px); }
-        h3 { font-size: 20px; }
+        h1, h2 { font-family: var(--serif); font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; }
+        h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 500; }
+        h1 { font-size: clamp(54px, 7.2vw, 96px); }
+        h1 em { font-style: italic; color: var(--accent); }
+        h2 { font-size: clamp(36px, 4.6vw, 60px); }
+        h2 em { font-style: italic; color: var(--accent); }
+        h3 { font-size: 22px; font-family: var(--font); }
 
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 var(--radius) var(--radius); z-index: 200; font-size: 14px; font-weight: 500; }
         .skip-link:focus { top: 0; }
 
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-        section { padding: 96px 0; }
-        .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
-        .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
-        .section-head h2 { margin-bottom: 16px; }
-        .section-head p { color: var(--text-soft); font-size: 17px; }
+        section { padding: clamp(80px, 12vh, 140px) 0; }
+        .section-head { text-align: center; max-width: 720px; margin: 0 auto 72px; }
+        .section-head .eyebrow { color: var(--accent-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 20px; }
+        .section-head h2 { margin-bottom: 20px; }
+        .section-head p { color: var(--text-soft); font-size: 18px; line-height: 1.55; font-weight: 300; }
 
         .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 8px 24px; text-align: center; letter-spacing: 0.01em; }
         .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
@@ -84,15 +91,16 @@
         .mobile-toggle svg { width: 24px; height: 24px; }
         .mobile-menu { display: none; }
 
-        .hero { padding: 80px 0 96px; background: linear-gradient(180deg, var(--accent-bg) 0%, var(--bg) 100%); }
+        .hero { padding: clamp(64px, 8vh, 96px) 0 clamp(80px, 12vh, 140px); background: var(--bg); }
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
-        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent-dark); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 18px; }
-        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 12px; color: var(--accent-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 32px; }
+        .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
         .hero h1 { margin-bottom: 24px; }
-        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 540px; margin-bottom: 36px; }
+        .hero h1 { margin-bottom: 36px; }
+        .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 520px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
         .hero-ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 32px; }
-        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; transition: all 0.2s; }
-        .btn-primary { background: var(--accent); color: #fff; }
+        .btn { display: inline-flex; align-items: center; gap: 10px; padding: 18px 36px; border-radius: 2px; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.25s ease; }
+        .btn-primary { background: var(--text); color: var(--bg); }
         .btn-primary:hover { background: var(--accent-dark); }
         .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
         .btn-ghost:hover { border-color: var(--text); }
@@ -225,6 +233,13 @@
         .info-card .num { font-size: 22px; font-weight: 600; color: var(--text); margin-top: 6px; }
 
         .stimmen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .pull-quote-sequence { display: flex; flex-direction: column; gap: 80px; max-width: 880px; margin: 0 auto; }
+        .pull-quote { padding-left: 32px; border-left: 1px solid var(--accent); }
+        .pull-quote-body { font-family: var(--serif); font-style: italic; font-size: clamp(28px, 3vw, 38px); line-height: 1.3; color: var(--text); margin-bottom: 24px; font-weight: 400; letter-spacing: -0.01em; }
+        .pull-quote-author { display: flex; align-items: center; gap: 14px; }
+        .pull-quote-ava { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-bg); color: var(--accent-dark); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; }
+        .pull-quote-name { font-size: 15px; font-weight: 500; color: var(--text); }
+        .pull-quote-role { font-size: 12px; color: var(--text-light); letter-spacing: 0.04em; text-transform: uppercase; margin-top: 2px; }
         .stimme { padding: 32px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
         .stimme-stars { color: var(--accent); margin-bottom: 14px; font-size: 14px; letter-spacing: 2px; }
         .stimme p { color: var(--text); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
@@ -506,9 +521,9 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Friseur-Salon · Düsseldorf-Carlstadt</p>
-                        <h1>Ihr Look. Mit Ruhe. Mit Handwerk.</h1>
-                        <p class="lead">Termin online in zwei Klicks, Wunsch-Stylist wählbar. Aveda Concept Salon im Herzen der Carlstadt — seit 18 Jahren.</p>
+                        <p class="hero-eyebrow">Aveda Concept Salon · Düsseldorf-Carlstadt</p>
+                        <h1>Ein Schnitt, der zurückbleibt.<br><em>Ein Salon, der bleibt.</em></h1>
+                        <p class="lead">Seit 18 Jahren begleiten wir Düsseldorferinnen durch jede Haar-Phase — von der ersten Coloration bis zur Hochzeit. Termin in zwei Klicks, Wunsch-Stylist immer wählbar.</p>
                         <div class="hero-ctas">
                             <a href="#termin" class="btn btn-primary">Online-Termin buchen
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1015,40 +1030,37 @@
                     </div>
                 </div>
 
-                <div class="stimmen-grid">
-                    <div class="stimme">
-                        <div class="stimme-stars">★★★★★</div>
-                        <p>"Endlich eine Friseurin, die wirklich zuhört. Laura hat mir nach 15 Jahren Bob einen Long Pixie verpasst — und mich vorher zehn Minuten beraten, was zu meinem Gesicht passt. Großer Unterschied."</p>
-                        <div class="stimme-author">
-                            <div class="stimme-ava">SK</div>
+                <div class="pull-quote-sequence">
+                    <figure class="pull-quote">
+                        <blockquote class="pull-quote-body">"Endlich eine Friseurin, die wirklich zuhört. Nach 15 Jahren Bob — ein Long Pixie, den ich mir nie zugetraut hätte."</blockquote>
+                        <figcaption class="pull-quote-author">
+                            <div class="pull-quote-ava">SK</div>
                             <div>
-                                <div class="stimme-name">Sandra K.</div>
-                                <div class="stimme-role">Kundin seit 2020</div>
+                                <div class="pull-quote-name">Sandra Kirchner</div>
+                                <div class="pull-quote-role">Kundin seit 2020</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="stimme">
-                        <div class="stimme-stars">★★★★★</div>
-                        <p>"Balayage im April, im Juli noch wie frisch gemacht. Mara hat eine ruhige Hand und vor allem Geduld bei Korrekturen. Aveda-Produkte tun meinem Haar sichtbar gut."</p>
-                        <div class="stimme-author">
-                            <div class="stimme-ava">JB</div>
+                        </figcaption>
+                    </figure>
+                    <figure class="pull-quote">
+                        <blockquote class="pull-quote-body">"Balayage im April. Im Juli noch wie frisch gemacht. Eine ruhige Hand, viel Geduld — und Aveda-Produkte, die mein Haar sichtbar dankbar nehmen."</blockquote>
+                        <figcaption class="pull-quote-author">
+                            <div class="pull-quote-ava">JB</div>
                             <div>
-                                <div class="stimme-name">Julia B.</div>
-                                <div class="stimme-role">Kundin seit 2022</div>
+                                <div class="pull-quote-name">Julia Bauer</div>
+                                <div class="pull-quote-role">Kundin seit 2022</div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="stimme">
-                        <div class="stimme-stars">★★★★★</div>
-                        <p>"Late-Night-Termin nach Feierabend, ohne Wartezeit. Tim macht den besten Fade in der Carlstadt. Schnell, präzise, fair bepreist — und unkompliziert per WhatsApp buchbar."</p>
-                        <div class="stimme-author">
-                            <div class="stimme-ava">MA</div>
+                        </figcaption>
+                    </figure>
+                    <figure class="pull-quote">
+                        <blockquote class="pull-quote-body">"Late-Night-Termin nach Feierabend, ohne Wartezeit. Der beste Fade in der Carlstadt — und unkompliziert per WhatsApp buchbar."</blockquote>
+                        <figcaption class="pull-quote-author">
+                            <div class="pull-quote-ava">MA</div>
                             <div>
-                                <div class="stimme-name">Markus A.</div>
-                                <div class="stimme-role">Kunde seit 2023</div>
+                                <div class="pull-quote-name">Markus Adler</div>
+                                <div class="pull-quote-role">Kunde seit 2023</div>
                             </div>
-                        </div>
-                    </div>
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
