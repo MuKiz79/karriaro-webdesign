@@ -69,6 +69,59 @@
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }
+        /* Bento + Sprint 6 Killer */
+        .bento-grid { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(180px, auto); gap: 16px; max-width: 1200px; margin: 0 auto; }
+        .bento-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; position: relative; overflow: hidden; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; }
+        .bento-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+        .bento-card.size-2x2 { grid-column: span 4; grid-row: span 2; }
+        .bento-card.size-2x1 { grid-column: span 4; grid-row: span 1; }
+        .bento-card.size-1x2 { grid-column: span 2; grid-row: span 2; }
+        .bento-card.size-1x1 { grid-column: span 2; grid-row: span 1; }
+        .bento-card.is-feature { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .bento-card.is-feature .bento-card-body { color: rgba(255,255,255,0.85); }
+        .bento-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.7; margin-bottom: 14px; }
+        .bento-card-headline { font-family: var(--font-tight); font-size: clamp(22px, 2.2vw, 32px); font-weight: 700; margin-bottom: 14px; line-height: 1.15; letter-spacing: -0.015em; }
+        .bento-card-body { font-size: 15px; color: var(--text-soft); line-height: 1.55; }
+        .bento-card-big-num { font-family: var(--font-tight); font-size: clamp(56px, 6vw, 88px); font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; color: var(--accent); }
+        @media (max-width: 920px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .bento-card.size-2x2, .bento-card.size-2x1, .bento-card.size-1x2 { grid-column: span 2; grid-row: span 1; } }
+        /* D1 Adress-zu-Dach-Report */
+        .roof-report { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .roof-report-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+        .roof-report-form { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; }
+        .roof-report-form .label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+        .roof-report-form input { width: 100%; padding: 14px 16px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 16px; font-family: inherit; background: var(--bg-soft); margin-bottom: 20px; }
+        .roof-report-form input:focus { outline: none; border-color: var(--accent); }
+        .roof-report-promise { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+        .roof-report-promise-item { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text-soft); }
+        .roof-report-promise-item::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+        @media (max-width: 920px) { .roof-report-inner { grid-template-columns: 1fr; gap: 32px; } }
+        /* D2 AR-Material-Visualizer */
+        .material-viz { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
+        .material-viz-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .material-viz-canvas { aspect-ratio: 16/10; background: var(--bg-soft); border-radius: var(--radius-lg); margin: 40px auto 24px; max-width: 980px; display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: clamp(40px, 5vw, 72px); color: var(--accent); letter-spacing: -0.02em; transition: background 0.4s ease, color 0.4s ease; position: relative; overflow: hidden; border: 1px solid var(--border); }
+        .material-viz-canvas::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent 0 24px, rgba(0,0,0,0.04) 24px 25px); }
+        .material-viz-canvas[data-material="prefa"] { background: #4A5060; color: #E8DDC8; }
+        .material-viz-canvas[data-material="braas"] { background: #6B3528; color: #F4E6D2; }
+        .material-viz-canvas[data-material="eternit"] { background: #2C2E30; color: #D0D2D5; }
+        .material-viz-canvas[data-material="zinco"] { background: #3F5B43; color: #E0E8D8; }
+        .material-toggles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 980px; margin: 0 auto; }
+        .material-btn { padding: 18px 16px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; }
+        .material-btn:hover { border-color: var(--accent); }
+        .material-btn.is-active { background: var(--text); color: var(--bg); border-color: var(--text); }
+        .material-btn-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+        .material-btn-spec { font-size: 11px; opacity: 0.7; letter-spacing: 0.04em; text-transform: uppercase; }
+        @media (max-width: 720px) { .material-toggles { grid-template-columns: repeat(2, 1fr); } }
+        /* D3 Versicherungs-Akte */
+        .insurance-claim { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .insurance-claim-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .claim-form-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; }
+        .claim-form-card label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+        .claim-form-card input, .claim-form-card select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--bg-soft); margin-bottom: 18px; }
+        .claim-output-card { background: var(--accent); color: var(--bg); border-radius: var(--radius-lg); padding: 36px; }
+        .claim-output-card .gdv-num { font-family: var(--font-tight); font-size: clamp(56px, 6vw, 88px); font-weight: 800; line-height: 1; color: var(--bg); margin: 12px 0; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; }
+        .claim-output-list { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+        .claim-output-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.18); }
+        @media (max-width: 920px) { .insurance-claim-inner { grid-template-columns: 1fr; } }
         .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -572,6 +625,94 @@
                     <div>
                         <div class="hero-bignum-val">4&nbsp;h</div>
                         <div class="hero-bignum-label">Sturmnotdienst-Reaktion</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- D1 · Adress-zu-Dach-Report in 24h -->
+        <section class="roof-report" id="roof-report" aria-label="Dach-Report ohne Termin">
+            <div class="roof-report-inner">
+                <div>
+                    <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:24px;">Neu · Ohne Vor-Ort-Termin</p>
+                    <h2>Dach-Report in 24 Stunden.</h2>
+                    <p class="lead" style="margin-top:20px; max-width:440px;">Adresse senden, KI-Analyse via Satellit + Drohnen-Datenbank — Sie bekommen einen Dach-Zustands-Report als PDF, noch bevor wir aufs Dach steigen.</p>
+                    <div class="roof-report-promise">
+                        <div class="roof-report-promise-item">98,77 % Maßgenauigkeit (EagleView-Methodik, Feb 2026)</div>
+                        <div class="roof-report-promise-item">Lieferung binnen 24 Stunden, garantiert</div>
+                        <div class="roof-report-promise-item">Kostenlos im Erstangebots-Prozess</div>
+                    </div>
+                </div>
+                <form class="roof-report-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Report wird erstellt — wir melden uns in 24 h.'; this.querySelector('button').disabled=true;">
+                    <label class="label" for="report-addr">Straße &amp; Hausnummer</label>
+                    <input id="report-addr" type="text" placeholder="Heumadener Straße 27" required>
+                    <label class="label" for="report-plz">PLZ &amp; Ort</label>
+                    <input id="report-plz" type="text" placeholder="70329 Stuttgart" required>
+                    <label class="label" for="report-mail">E-Mail für Lieferung</label>
+                    <input id="report-mail" type="email" placeholder="ihre.adresse@beispiel.de" required>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">PDF-Report binnen 24 h anfordern</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- D2 · AR-Material-Visualizer -->
+        <section class="material-viz" id="material-viz" aria-label="Material-Visualizer">
+            <div class="material-viz-inner">
+                <div class="section-head" style="text-align:left; max-width:700px; margin:0 0 16px;">
+                    <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Visualisierung · Vor Auftragsvergabe</p>
+                    <h2>Wie sieht Ihr Dach mit neuem Material aus?</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Tippen Sie ein Material — die Vorschau wechselt sofort. Bei realer Beratung ersetzen wir die Beispiel-Visualisierung durch Ihr Drohnen-Foto.</p>
+                </div>
+                <div class="material-viz-canvas" id="material-canvas" data-material="prefa">PREFA Falzdach Anthrazit</div>
+                <div class="material-toggles" id="material-toggles">
+                    <button type="button" class="material-btn is-active" data-mat="prefa" data-label="PREFA Falzdach Anthrazit">
+                        <div class="material-btn-name">PREFA Falzdach</div>
+                        <div class="material-btn-spec">Aluminium · 40 J Garantie</div>
+                    </button>
+                    <button type="button" class="material-btn" data-mat="braas" data-label="BRAAS Tegalit Rotbraun">
+                        <div class="material-btn-name">BRAAS Tegalit</div>
+                        <div class="material-btn-spec">Beton · 30 J Frostsicher</div>
+                    </button>
+                    <button type="button" class="material-btn" data-mat="eternit" data-label="Eternit Schiefer Tiefschwarz">
+                        <div class="material-btn-name">Eternit Schiefer</div>
+                        <div class="material-btn-spec">Faserzement · 50 J</div>
+                    </button>
+                    <button type="button" class="material-btn" data-mat="zinco" data-label="ZinCo Gründach Sedum">
+                        <div class="material-btn-name">ZinCo Gründach</div>
+                        <div class="material-btn-spec">Extensiv · 12 cm Aufbau</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- D3 · Versicherungs-Schadens-Akte -->
+        <section class="insurance-claim" id="insurance-claim" aria-label="Versicherungs-Akte">
+            <div class="insurance-claim-inner">
+                <div>
+                    <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Sturmschaden · GDV-konform</p>
+                    <h2 style="margin-bottom:24px;">Wir machen die Akte. Sie geben sie weiter.</h2>
+                    <p class="lead" style="margin-bottom:32px;">Drohnen-Foto, Hagel-Datum, Versicherungsnummer — wir liefern den GDV-konformen Schadens-Bericht im PDF-Format, akzeptiert von Allianz, AXA, HUK-Coburg, Provinzial, Württembergische.</p>
+                    <form class="claim-form-card" onsubmit="event.preventDefault(); document.getElementById('claim-result').style.display='block'; this.querySelector('button').textContent='Akte wird vorbereitet…'; this.querySelector('button').disabled=true;">
+                        <label for="claim-date">Schadensdatum</label>
+                        <input id="claim-date" type="date" required>
+                        <label for="claim-insurer">Ihre Versicherung</label>
+                        <select id="claim-insurer">
+                            <option>Allianz</option><option>AXA</option><option>HUK-Coburg</option><option>Provinzial</option><option>Württembergische</option><option>Andere</option>
+                        </select>
+                        <label for="claim-policy">Versicherungs-Nr.</label>
+                        <input id="claim-policy" type="text" placeholder="z.B. WV-2025-…" required>
+                        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Akte vorbereiten</button>
+                    </form>
+                </div>
+                <div class="claim-output-card" id="claim-result" style="display:none;">
+                    <div style="font-size:11px; letter-spacing:0.24em; text-transform:uppercase; opacity:0.75;">Geschätzter Erstattungsanspruch</div>
+                    <div class="gdv-num">14.800&nbsp;€</div>
+                    <div style="font-size:13px; opacity:0.85;">GDV-konform · Akte fertig in 2 h</div>
+                    <div class="claim-output-list">
+                        <div class="claim-output-item"><span>Drohnen-Foto-Doku</span><span>200+ Aufnahmen</span></div>
+                        <div class="claim-output-item"><span>Hagelkorn-Größen-Analyse</span><span>4,2 cm Ø</span></div>
+                        <div class="claim-output-item"><span>Geo-Markierung pro Foto</span><span>GPS + Zeit</span></div>
+                        <div class="claim-output-item"><span>PDF-Bericht</span><span>versicherungsfest</span></div>
                     </div>
                 </div>
             </div>
@@ -1311,6 +1452,20 @@
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
+        });
+
+        // D2 Material-Visualizer: Buttons wechseln Canvas-Material
+        var matBtns = document.querySelectorAll('#material-toggles .material-btn');
+        var matCanvas = document.getElementById('material-canvas');
+        matBtns.forEach(function (b) {
+            b.addEventListener('click', function () {
+                matBtns.forEach(function (x) { x.classList.remove('is-active'); });
+                b.classList.add('is-active');
+                if (matCanvas) {
+                    matCanvas.setAttribute('data-material', b.getAttribute('data-mat'));
+                    matCanvas.textContent = b.getAttribute('data-label');
+                }
+            });
         });
 
         // Konfig-Tabs (cosmetic — single tab active)
