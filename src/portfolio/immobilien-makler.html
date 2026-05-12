@@ -7,6 +7,9 @@
     <meta name="description" content="Immobilienmakler Stadtmakler Stuttgart. Wertermittlung in 60 Sekunden, Off-Market-Vermittlung, IVD-Mitglied. 24 Jahre lokale Marktkenntnis. HypZert-Sachverständiger.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/immobilien-makler.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Stadtmakler Stuttgart — Immobilienmakler Stadtgebiet">
     <meta property="og:description" content="Wertermittlung in 60 Sekunden. Diskret begleitet. IVD-Mitglied seit 24 Jahren.">
@@ -28,25 +31,26 @@
     </script>
     <style>
         :root {
-            --accent: #2c4a5e;
-            --accent-dark: #1d3548;
-            --accent-strong: #122436;
-            --accent-bg: #eef2f6;
-            --bg: #ffffff;
-            --bg-soft: #f9fafb;
-            --text: #16202b;
-            --text-soft: #4a5563;
-            --text-light: #8590a0;
-            --border: #e3e8ee;
-            --border-strong: #cbd3dd;
-            --gold: #8a7b5c;
-            --radius: 8px;
-            --radius-lg: 16px;
+            --accent: #1A2E40;
+            --accent-dark: #0F1F2E;
+            --accent-strong: #061320;
+            --accent-bg: #F0EAE0;
+            --bg: #F8F4ED;
+            --bg-soft: #F0EAE0;
+            --text: #14202B;
+            --text-soft: #525E6B;
+            --text-light: #8A8278;
+            --border: #DDD3C3;
+            --border-strong: #B8AC97;
+            --gold: #8A7B5C;
+            --radius: 2px;
+            --radius-lg: 4px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow: 0 8px 24px rgba(20,40,60,0.07);
-            --shadow-lg: 0 24px 60px rgba(20,40,60,0.11);
+            --shadow: 0 8px 32px rgba(20,30,40,0.06);
+            --shadow-lg: 0 32px 72px rgba(20,30,40,0.10);
             --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --max: 1240px;
+            --serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+            --max: 1200px;
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -56,14 +60,17 @@
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
-        h1, h2, h3, h4 { line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }
-        h1 { font-size: clamp(40px, 5.6vw, 64px); }
-        h2 { font-size: clamp(30px, 3.8vw, 44px); }
-        h3 { font-size: 20px; }
+        h1, h2 { font-family: var(--serif); font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; color: var(--accent); }
+        h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 500; }
+        h1 { font-size: clamp(56px, 7.2vw, 96px); }
+        h1 em { font-style: italic; color: var(--gold); }
+        h2 { font-size: clamp(36px, 4.6vw, 60px); }
+        h2 em { font-style: italic; color: var(--gold); }
+        h3 { font-size: 22px; font-family: var(--font); color: var(--text); }
         .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 8px 8px; z-index: 200; font-size: 14px; }
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-        section { padding: 96px 0; }
+        section { padding: clamp(80px, 12vh, 140px) 0; }
         .section-head { text-align: center; max-width: 660px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 14px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -88,8 +95,8 @@
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
         .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
-        .hero h1 { margin-bottom: 22px; }
-        .hero p.lead { font-size: 19px; color: var(--text-soft); max-width: 560px; margin-bottom: 32px; }
+        .hero h1 { margin-bottom: 36px; color: var(--accent); }
+        .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 520px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
         .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 4px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
         .btn-primary { background: var(--accent); color: #fff; }
@@ -370,11 +377,11 @@
         .fin-input label .val { color: var(--accent); font-weight: 700; font-size: 16px; font-variant-numeric: tabular-nums; }
         .fin-input input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
         .fin-input .meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-light); margin-top: 4px; }
-        .financing-output { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: #fff; border-radius: var(--radius-lg); padding: 28px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
-        .financing-output::before { content: '€'; position: absolute; top: -20px; right: -10px; font-size: 200px; font-family: Georgia, serif; opacity: 0.06; line-height: 1; }
-        .fin-result-label { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
-        .fin-result-main { font-size: 42px; font-weight: 700; line-height: 1; margin: 8px 0 4px; font-variant-numeric: tabular-nums; }
-        .fin-result-sub { font-size: 13px; opacity: 0.85; }
+        .financing-output { background: var(--accent); color: var(--bg); border-radius: var(--radius-lg); padding: 48px 40px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .financing-output::before { content: '€'; position: absolute; top: -40px; right: -20px; font-size: 320px; font-family: var(--serif); font-style: italic; opacity: 0.07; line-height: 1; color: var(--gold); }
+        .fin-result-label { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.24em; font-weight: 500; margin-bottom: 16px; }
+        .fin-result-main { font-family: var(--serif); font-size: clamp(64px, 8vw, 104px); font-weight: 400; line-height: 1; margin: 0 0 12px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+        .fin-result-sub { font-size: 14px; opacity: 0.75; }
         .fin-result-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.18); position: relative; z-index: 1; }
         .fin-result-row { display: flex; justify-content: space-between; font-size: 13px; }
         .fin-result-row strong { font-variant-numeric: tabular-nums; }
@@ -470,9 +477,9 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Immobilien · Stuttgart Stadtgebiet</p>
-                        <h1>Ihr Verkauf. Korrekt bewertet. Diskret begleitet.</h1>
-                        <p class="lead">Wertermittlung in 60 Sekunden, vor-Ort-Termin verfeinert. Off-Market-Vermittlung an unser Käufer-Register. IVD-Mitglied, HypZert-Sachverständiger, 24 Jahre lokal.</p>
+                        <p class="hero-eyebrow">Stadtmakler Stuttgart · Premium-Immobilien</p>
+                        <h1>Premium-Immobilien Stuttgart.<br><em>Diskret vermittelt.</em></h1>
+                        <p class="lead">47 Objekte in unserem Off-Market-Register, vertrauensvoll an geprüfte Käufer vermittelt. IVD-Mitglied, HypZert-Sachverständiger, seit 24 Jahren in Stuttgart verwurzelt.</p>
                         <div class="hero-ctas">
                             <a href="#bewertung" class="btn btn-primary">Wertermittlung starten →</a>
                             <a href="#kontakt" class="btn btn-ghost">Erstgespräch vereinbaren</a>
