@@ -141,8 +141,52 @@
         .muted { color: #6e6e73; }
         .blue { color: #0071e3; }
 
+        /* Sprint 7f M4 — Sticky-Topbar mit Telefonnummer */
+        .kr-topbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+            background: #0a0a0a; color: #fff;
+            height: 36px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px;
+            font-size: 12px; letter-spacing: 0.01em;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .kr-topbar-brand {
+            font-weight: 500; opacity: 0.78;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .kr-topbar-brand::before {
+            content: ''; width: 14px; height: 1px; background: #4ea3ff; flex-shrink: 0;
+        }
+        .kr-topbar-actions {
+            display: flex; align-items: center; gap: 18px;
+        }
+        .kr-topbar-phone {
+            color: #fff; font-weight: 500;
+            display: inline-flex; align-items: center; gap: 8px;
+            transition: opacity 0.2s ease;
+        }
+        .kr-topbar-phone:hover { opacity: 0.78; }
+        .kr-topbar-phone-icon {
+            width: 12px; height: 12px; flex-shrink: 0; opacity: 0.7;
+        }
+        .kr-topbar-hours { opacity: 0.55; font-weight: 400; }
+        .kr-topbar-cta {
+            background: #0071e3; color: #fff;
+            padding: 5px 14px; border-radius: 999px;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+        .kr-topbar-cta:hover { background: #1a8ff5; }
+        @media (max-width: 640px) {
+            .kr-topbar { padding: 0 16px; }
+            .kr-topbar-brand { display: none; }
+            .kr-topbar-hours { display: none; }
+            .kr-topbar-actions { gap: 12px; }
+            .kr-topbar-cta { font-size: 11px; padding: 4px 12px; }
+        }
         nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            position: fixed; top: 36px; left: 0; right: 0; z-index: 50;
             background: rgba(251,251,253,0.92);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -164,7 +208,7 @@
         nav .cta:hover { background: #005bb5; }
         nav .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
         nav .menu-toggle span { display: block; width: 18px; height: 2px; background: #1d1d1f; margin: 4px 0; transition: all 0.3s; }
-        .mobile-menu { display: none; position: fixed; top: 48px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
+        .mobile-menu { display: none; position: fixed; top: 84px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
         .mobile-menu.open { display: flex; flex-direction: column; gap: 20px; }
         .mobile-menu a { font-size: 17px; color: #1d1d1f; font-weight: 500; }
         @media (max-width: 640px) { nav .links { display: none; } nav .menu-toggle { display: block; } }
@@ -529,6 +573,30 @@
         .mockup-meta::before {
             content: ''; width: 14px; height: 1px; background: #0071e3; flex-shrink: 0;
         }
+        /* Sprint 7f H5 — BFSG-Tooltip */
+        .kr-abbr {
+            text-decoration: underline dotted rgba(0,0,0,0.32);
+            text-underline-offset: 3px;
+            cursor: help;
+            font-style: inherit;
+            font-weight: inherit;
+        }
+        .kr-abbr:hover { text-decoration-color: rgba(0,113,227,0.7); }
+        /* Sprint 7f H3 — Lieferzeit pro Pricing-Karte */
+        .price-deliver {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 11px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase;
+            color: #0071e3; margin-top: 6px;
+        }
+        .price-deliver::before {
+            content: ''; width: 12px; height: 1px; background: #0071e3; flex-shrink: 0;
+        }
+        .price-card-premium .price-deliver {
+            color: #4ea3ff;
+        }
+        .price-card-premium .price-deliver::before {
+            background: #4ea3ff;
+        }
         .branche-switcher-wrap { margin-top: 20px; }
         .branche-switcher-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #86868b; margin-bottom: 10px; }
         .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: #0071e3; }
@@ -853,6 +921,19 @@
 </head>
 <body>
 
+    <!-- Sprint 7f M4 — Sticky-Topbar -->
+    <div class="kr-topbar" role="complementary" aria-label="Direkter Kontakt">
+        <span class="kr-topbar-brand">Karriaro · persönlich erreichbar</span>
+        <div class="kr-topbar-actions">
+            <a href="tel:+491742796784" class="kr-topbar-phone">
+                <svg class="kr-topbar-phone-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.65 1.41a1 1 0 0 1 1.4-.07l1.83 1.66a1 1 0 0 1 .08 1.4L5.7 5.8a8.5 8.5 0 0 0 4.5 4.5l1.4-1.26a1 1 0 0 1 1.4.08l1.66 1.83a1 1 0 0 1-.07 1.4l-1.04 1a2.5 2.5 0 0 1-2.7.55C7.93 12.4 3.6 8.07 2.1 3.15a2.5 2.5 0 0 1 .55-2.7l1-.04Z"/></svg>
+                +49 174 2796784
+                <span class="kr-topbar-hours">· Mo-Fr 9-18 Uhr</span>
+            </a>
+            <a href="#kontakt" class="kr-topbar-cta">Erstgespräch →</a>
+        </div>
+    </div>
+
     <nav>
         <div class="inner">
             <a href="/" style="font-weight: 600; font-size: 14px; opacity: 1;">Karriaro<span style="opacity: 0.55; font-weight: 400; margin-left: 6px;">· Webdesign</span></a>
@@ -885,7 +966,7 @@
                 <p class="hero-eyebrow">Webdesign-Manufaktur</p>
                 <h1>Ihre Website.<br>Handgemacht.</h1>
                 <p class="subhead">
-                    Der Quellcode gehört Ihnen. BFSG-konform, ohne Abo.<br>
+                    Der Quellcode gehört Ihnen. <abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform, ohne Abo.<br>
                     Ab 990&nbsp;€ einmalig, online in drei Wochen.
                 </p>
                 <div class="hero-cta-row">
@@ -923,6 +1004,7 @@
                     <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false">Friseur</button>
                     <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
                     <button type="button" class="branche-tab" data-branche="immobilien" role="tab" aria-selected="false">Immobilien</button>
+                    <button type="button" class="branche-tab" data-branche="coaching" role="tab" aria-selected="false">Coaching</button>
                 </div>
                 </div>
             </div>
@@ -1005,7 +1087,7 @@
                     <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 18px; letter-spacing: -0.01em;">Sicher</h3>
                     <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #424245; line-height: 1.55;">
                         <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Keine Plugin-Updates, keine Sicherheitslücken</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>BFSG-konform inklusive (Pflicht seit Juni 2025)</span></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform inklusive (Pflicht seit Juni 2025)</span></li>
                         <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Quellcode gehört Ihnen — kein Vendor Lock-In</span></li>
                     </ul>
                 </div>
@@ -1108,7 +1190,7 @@
                     <p class="contribute-label">Wir übernehmen</p>
                     <ul class="contribute-list">
                         <li><span class="contribute-tick">✓</span><span><strong>Konzept &amp; Struktur</strong> — Hierarchie, Navigation, SEO-Architektur.</span></li>
-                        <li><span class="contribute-tick">✓</span><span><strong>Design &amp; Typografie</strong> — handgemacht, branchen-spezifisch, BFSG-konform.</span></li>
+                        <li><span class="contribute-tick">✓</span><span><strong>Design &amp; Typografie</strong> — handgemacht, branchen-spezifisch, <abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform.</span></li>
                         <li><span class="contribute-tick">✓</span><span><strong>Programmierung &amp; Schema.org</strong> — HTML/CSS, lokale SEO ab Business-Paket.</span></li>
                         <li><span class="contribute-tick">✓</span><span><strong>Hosting-Einrichtung</strong> — bei uns oder bei Ihrem Anbieter. Sie behalten den Quellcode.</span></li>
                         <li><span class="contribute-tick">✓</span><span><strong>Texte feinschleifen</strong> — wir formulieren wo Sie hängenbleiben, behalten aber Ihre Stimme.</span></li>
@@ -1134,10 +1216,11 @@
                 <div class="price-card" style="padding: 36px 32px; border-radius: 20px; display: flex; flex-direction: column;">
                     <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px;">Starter</p>
                     <div style="font-size: 44px; font-weight: 600; letter-spacing: -0.03em;">990 €</div>
+                    <span class="price-deliver">In ca. 14 Tagen online</span>
                     <p class="muted" style="font-size: 14px; margin: 8px 0 28px;">Für Einzelkämpfer und kleine Teams</p>
                     <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 14px;">
                         <li>Eine Seite, die alles zeigt</li>
-                        <li>BFSG-konform (seit Juni 2025 Pflicht)</li>
+                        <li><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform (seit Juni 2025 Pflicht)</li>
                         <li>Kontaktformular inklusive</li>
                         <li>Der Quellcode gehört Ihnen</li>
                     </ul>
@@ -1148,6 +1231,7 @@
                 <div class="price-card-active" style="padding: 36px 32px; border-radius: 20px; background: #f5f5f7; display: flex; flex-direction: column;">
                     <p class="blue" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500;">Empfohlen</p>
                     <div style="font-size: 44px; font-weight: 600; letter-spacing: -0.03em;">1.990 €</div>
+                    <span class="price-deliver">In ca. 21 Tagen online</span>
                     <p class="muted" style="font-size: 14px; margin: 8px 0 28px;">Für Unternehmen, die wachsen wollen</p>
                     <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 14px;">
                         <li>Bis zu 5 Unterseiten</li>
@@ -1163,6 +1247,7 @@
                     <span style="position: absolute; top: 20px; right: 20px; padding: 4px 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 999px;">Nach Maß</span>
                     <p style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; color: #4ea3ff; font-weight: 500;">Premium</p>
                     <div style="font-size: 44px; font-weight: 600; letter-spacing: -0.03em; color: #fff;">ab 3.500 €</div>
+                    <span class="price-deliver">Lieferzeit nach Absprache</span>
                     <p style="font-size: 14px; margin: 8px 0 28px; color: rgba(255,255,255,0.6);">Für Premium-Marken &amp; B2B-Enterprise</p>
                     <ul style="list-style: none; padding: 0; font-size: 15px; color: #fff; display: flex; flex-direction: column; gap: 14px;">
                         <li>Unbegrenzte Unterseiten + Editorial-Layout</li>
@@ -1242,9 +1327,13 @@
             <div class="footer-kontakt-row">
                 <div class="footer-kontakt-brand">
                     <p class="footer-kontakt-eyebrow">Karriaro · Webdesign-Manufaktur</p>
-                    <p class="footer-kontakt-tagline">Handcodierte Websites für lokale Unternehmen.<br>BFSG-konform, ohne Abo, der Quellcode gehört Ihnen.</p>
+                    <p class="footer-kontakt-tagline">Handcodierte Websites für lokale Unternehmen.<br><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform, ohne Abo, der Quellcode gehört Ihnen.</p>
                 </div>
                 <div class="footer-kontakt-list">
+                    <a href="tel:+491742796784" class="footer-kontakt-link">
+                        <span class="footer-kontakt-icon">☎</span>
+                        <span><span class="footer-kontakt-label">Telefon</span><span class="footer-kontakt-val">+49 174 2796784</span></span>
+                    </a>
                     <a href="mailto:kontakt@karriaro.de" class="footer-kontakt-link">
                         <span class="footer-kontakt-icon">@</span>
                         <span><span class="footer-kontakt-label">E-Mail</span><span class="footer-kontakt-val">kontakt@karriaro.de</span></span>
@@ -1817,6 +1906,15 @@
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
                     meta: 'Diese Site · Lieferzeit 32 Tage · Premium-Paket',
                     href: '/portfolio/immobilien-makler.html'
+                },
+                coaching: {
+                    src: '/images/coaching-lehmann-mockup.jpg',
+                    alt: 'Website-Mockup für Business-Coach Sarah Lehmann — Coaching & Beratung',
+                    url: 'coach-lehmann.de',
+                    label: 'Coach Lehmann · Business-Beratung',
+                    story: 'Klarheit in 90 Tagen — Erstgespräch direkt buchbar.',
+                    meta: 'Diese Site · Lieferzeit 24 Tage · Business-Paket',
+                    href: '#preis'
                 }
             };
 
