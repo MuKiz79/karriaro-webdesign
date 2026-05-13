@@ -555,10 +555,41 @@
             .mobile-menu a { padding: 8px 0; font-size: 16px; color: var(--text-soft); }
             .notdienst-inner { flex-direction: column; align-items: flex-start; }
         }
+        /* Karriaro Demo-Brand-Strip + Footer-Card (Sprint 7a) */
+        .kr-strip { background: #0a0a0a; color: #fff; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 13px; }
+        .kr-strip a { color: inherit; text-decoration: none; }
+        .kr-strip-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .kr-strip-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; background: #0071e3; color: #fff; font-weight: 700; font-size: 13px; }
+        .kr-strip-name { font-weight: 500; letter-spacing: 0.01em; }
+        .kr-strip-tag { color: rgba(255,255,255,0.72); font-size: 12px; text-align: center; flex: 1; min-width: 0; }
+        .kr-strip-cta { background: #0071e3; color: #fff; padding: 6px 14px; border-radius: 4px; font-weight: 500; flex-shrink: 0; transition: background 0.2s; }
+        .kr-strip-cta:hover { background: #0058b8; }
+        @media (max-width: 720px) { .kr-strip-tag { display: none; } .kr-strip { padding: 8px 16px; } .kr-strip-name { display: none; } }
+        .kr-footer-card { background: #0a0a0a; color: #fff; padding: clamp(64px, 10vh, 100px) 24px; font-family: 'Inter', -apple-system, system-ui, sans-serif; }
+        .kr-footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+        .kr-footer-eyebrow { color: #4ea3ff; font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; margin: 0 0 18px; }
+        .kr-footer-headline { font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: clamp(28px, 3.4vw, 44px); font-weight: 400; line-height: 1.15; letter-spacing: -0.015em; color: #fff; margin: 0 0 16px; }
+        .kr-footer-headline em { font-style: italic; color: #4ea3ff; }
+        .kr-footer-body { color: rgba(255,255,255,0.72); font-size: 16px; line-height: 1.55; font-weight: 300; margin: 0; }
+        .kr-footer-ctas { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+        .kr-footer-cta-primary { display: inline-flex; align-items: center; gap: 8px; background: #0071e3; color: #fff; padding: 16px 28px; border-radius: 4px; font-weight: 500; text-decoration: none; font-size: 15px; transition: background 0.2s; }
+        .kr-footer-cta-primary:hover { background: #0058b8; }
+        .kr-footer-cta-secondary { color: rgba(255,255,255,0.72); font-size: 14px; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); padding: 8px 0; }
+        .kr-footer-cta-secondary:hover { color: #fff; text-decoration-color: #fff; }
+        @media (max-width: 720px) { .kr-footer-inner { grid-template-columns: 1fr; gap: 32px; } .kr-footer-ctas { align-items: stretch; } .kr-footer-cta-primary { justify-content: center; } }
     </style>
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>
+    <div class="kr-strip" role="complementary" aria-label="Karriaro Demo-Hinweis">
+        <a href="https://karriaro-webdesign.de" class="kr-strip-brand">
+            <span class="kr-strip-mark">K</span>
+            <span class="kr-strip-name">Karriaro · Webdesign-Manufaktur</span>
+        </a>
+        <span class="kr-strip-tag">Diese Demo-Seite hat Karriaro gebaut · Ihre eigene ab 1.990 €</span>
+        <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
+    </div>
+
     <div class="topbar">⚡ <strong>Sturmnotdienst 24/7</strong> — Plane in zwei Stunden bei Ihnen. <a href="tel:+49711924788">0711 92 47 880</a></div>
 
     <header class="nav">
@@ -1393,6 +1424,20 @@
             </div>
         </section>
     </main>
+
+    <section class="kr-footer-card" aria-label="Karriaro Webdesign — Bestellung">
+        <div class="kr-footer-inner">
+            <div>
+                <p class="kr-footer-eyebrow">Karriaro · Webdesign-Manufaktur</p>
+                <h2 class="kr-footer-headline">Diese Demo hat Karriaro gebaut. <em>Ihre kann genauso aussehen.</em></h2>
+                <p class="kr-footer-body">Handcodiert. BFSG-konform. Quellcode gehört Ihnen — kein Abo, kein Vendor-Lock-In. Eine Dachdecker-Seite wie diese: ab 1.990 € einmalig, Lieferzeit 3-4 Wochen.</p>
+            </div>
+            <div class="kr-footer-ctas">
+                <a href="https://karriaro-webdesign.de/#kontakt" class="kr-footer-cta-primary">Erstgespräch buchen →</a>
+                <a href="https://karriaro-webdesign.de" class="kr-footer-cta-secondary">Mehr Branchen-Demos ansehen</a>
+            </div>
+        </div>
+    </section>
 
     <a href="https://wa.me/4971192478800" class="whatsapp-sticky" aria-label="WhatsApp-Notdienst" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M17.6 6.32A8 8 0 003.55 14.7l-1.21 4.42 4.53-1.19a8 8 0 0010.73-11.6zM12 19.05a7 7 0 01-3.57-.98l-.26-.15-2.69.7.72-2.62-.17-.27a7 7 0 1110.97 3.32 7 7 0 01-5 0zm3.85-5.25c-.21-.1-1.25-.62-1.45-.69-.19-.07-.34-.1-.48.1-.14.21-.55.69-.67.83-.12.14-.25.16-.46.05-.21-.1-.89-.33-1.69-1.05-.62-.55-1.04-1.24-1.17-1.45-.12-.21-.01-.32.09-.43.09-.09.21-.25.31-.37.1-.12.14-.21.21-.35.07-.14.04-.26-.02-.37-.06-.1-.48-1.15-.65-1.58-.17-.41-.35-.36-.48-.36-.12 0-.27-.02-.41-.02-.14 0-.37.05-.57.26-.2.21-.76.74-.76 1.8s.78 2.09.89 2.23c.1.14 1.53 2.34 3.71 3.28 2.18.93 2.18.62 2.57.58.4-.04 1.25-.51 1.43-1 .18-.5.18-.92.12-1-.05-.08-.19-.13-.4-.23z"/></svg>

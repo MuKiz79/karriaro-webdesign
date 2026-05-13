@@ -380,11 +380,42 @@
             .story-stats { grid-template-columns: 1fr; }
             .topbar .lang { display: none; }
         }
+        /* Karriaro Demo-Brand-Strip + Footer-Card (Sprint 7a) */
+        .kr-strip { background: #0a0a0a; color: #fff; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 13px; }
+        .kr-strip a { color: inherit; text-decoration: none; }
+        .kr-strip-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .kr-strip-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; background: #0071e3; color: #fff; font-weight: 700; font-size: 13px; }
+        .kr-strip-name { font-weight: 500; letter-spacing: 0.01em; }
+        .kr-strip-tag { color: rgba(255,255,255,0.72); font-size: 12px; text-align: center; flex: 1; min-width: 0; }
+        .kr-strip-cta { background: #0071e3; color: #fff; padding: 6px 14px; border-radius: 4px; font-weight: 500; flex-shrink: 0; transition: background 0.2s; }
+        .kr-strip-cta:hover { background: #0058b8; }
+        @media (max-width: 720px) { .kr-strip-tag { display: none; } .kr-strip { padding: 8px 16px; } .kr-strip-name { display: none; } }
+        .kr-footer-card { background: #0a0a0a; color: #fff; padding: clamp(64px, 10vh, 100px) 24px; font-family: 'Inter', -apple-system, system-ui, sans-serif; }
+        .kr-footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+        .kr-footer-eyebrow { color: #4ea3ff; font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; margin: 0 0 18px; }
+        .kr-footer-headline { font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: clamp(28px, 3.4vw, 44px); font-weight: 400; line-height: 1.15; letter-spacing: -0.015em; color: #fff; margin: 0 0 16px; }
+        .kr-footer-headline em { font-style: italic; color: #4ea3ff; }
+        .kr-footer-body { color: rgba(255,255,255,0.72); font-size: 16px; line-height: 1.55; font-weight: 300; margin: 0; }
+        .kr-footer-ctas { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+        .kr-footer-cta-primary { display: inline-flex; align-items: center; gap: 8px; background: #0071e3; color: #fff; padding: 16px 28px; border-radius: 4px; font-weight: 500; text-decoration: none; font-size: 15px; transition: background 0.2s; }
+        .kr-footer-cta-primary:hover { background: #0058b8; }
+        .kr-footer-cta-secondary { color: rgba(255,255,255,0.72); font-size: 14px; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3); padding: 8px 0; }
+        .kr-footer-cta-secondary:hover { color: #fff; text-decoration-color: #fff; }
+        @media (max-width: 720px) { .kr-footer-inner { grid-template-columns: 1fr; gap: 32px; } .kr-footer-ctas { align-items: stretch; } .kr-footer-cta-primary { justify-content: center; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+    <div class="kr-strip" role="complementary" aria-label="Karriaro Demo-Hinweis">
+        <a href="https://karriaro-webdesign.de" class="kr-strip-brand">
+            <span class="kr-strip-mark">K</span>
+            <span class="kr-strip-name">Karriaro · Webdesign-Manufaktur</span>
+        </a>
+        <span class="kr-strip-tag">Diese Demo-Seite hat Karriaro gebaut · Ihre eigene ab 1.990 €</span>
+        <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
+    </div>
 
     <div class="topbar">
         <strong>Heute geöffnet</strong> · 18:00 – 23:00 · Reservierung empfohlen ·
@@ -1115,6 +1146,20 @@
             </div>
         </section>
     </main>
+
+    <section class="kr-footer-card" aria-label="Karriaro Webdesign — Bestellung">
+        <div class="kr-footer-inner">
+            <div>
+                <p class="kr-footer-eyebrow">Karriaro · Webdesign-Manufaktur</p>
+                <h2 class="kr-footer-headline">Diese Demo hat Karriaro gebaut. <em>Ihre kann genauso aussehen.</em></h2>
+                <p class="kr-footer-body">Handcodiert. BFSG-konform. Quellcode gehört Ihnen — kein Abo, kein Vendor-Lock-In. Eine Restaurant-Seite wie diese: ab 1.990 € einmalig, Lieferzeit 3-4 Wochen.</p>
+            </div>
+            <div class="kr-footer-ctas">
+                <a href="https://karriaro-webdesign.de/#kontakt" class="kr-footer-cta-primary">Erstgespräch buchen →</a>
+                <a href="https://karriaro-webdesign.de" class="kr-footer-cta-secondary">Mehr Branchen-Demos ansehen</a>
+            </div>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="container">
