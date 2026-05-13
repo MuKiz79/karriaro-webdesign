@@ -521,6 +521,14 @@
             color: #1d1d1f;
             line-height: 1.4;
         }
+        .mockup-meta {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+            color: #0071e3; margin-top: 8px; padding: 4px 0;
+        }
+        .mockup-meta::before {
+            content: ''; width: 14px; height: 1px; background: #0071e3; flex-shrink: 0;
+        }
         .branche-switcher-wrap { margin-top: 20px; }
         .branche-switcher-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #86868b; margin-bottom: 10px; }
         .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: #0071e3; }
@@ -802,6 +810,31 @@
         .audit-pricing-exit-cta { background: #0071e3; color: #fff; padding: 14px 22px; border-radius: 999px; font-weight: 500; font-size: 14px; text-decoration: none; flex-shrink: 0; transition: background 0.2s ease; white-space: nowrap; }
         .audit-pricing-exit-cta:hover { background: #0058b8; }
         @media (max-width: 720px) { .audit-pricing-exit { flex-direction: column; align-items: stretch; padding: 20px; } .audit-pricing-exit-cta { text-align: center; } }
+        /* Footer-Kontakt-Block (Sprint 7e N1) */
+        .footer-kontakt-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid rgba(0,0,0,0.06); flex-wrap: wrap; }
+        .footer-kontakt-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; color: #1d1d1f; margin-bottom: 10px; }
+        .footer-kontakt-tagline { font-size: 14px; color: #6e6e73; line-height: 1.55; max-width: 420px; margin: 0; }
+        .footer-kontakt-list { display: flex; gap: 14px; flex-wrap: wrap; }
+        .footer-kontakt-link { display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; background: #f5f5f7; border-radius: 999px; text-decoration: none; color: #1d1d1f; transition: background 0.2s ease; }
+        .footer-kontakt-link:hover { background: #e8e8ed; }
+        .footer-kontakt-icon { width: 28px; height: 28px; border-radius: 50%; background: #0071e3; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0; font-size: 14px; }
+        .footer-kontakt-label { display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e73; line-height: 1.2; }
+        .footer-kontakt-val { display: block; font-size: 14px; font-weight: 500; color: #1d1d1f; line-height: 1.3; margin-top: 1px; }
+        @media (max-width: 640px) { .footer-kontakt-row { flex-direction: column; } .footer-kontakt-list { width: 100%; } .footer-kontakt-link { flex: 1; min-width: 240px; } }
+        /* "Was Sie beisteuern" 2-Spalten-Liste (Sprint 7e M2) */
+        .contribute-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 980px; margin: 0 auto; }
+        .contribute-label { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #6e6e73; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+        .contribute-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 18px; font-size: 15px; color: #424245; line-height: 1.55; }
+        .contribute-list li { display: flex; gap: 12px; align-items: flex-start; }
+        .contribute-list strong { color: #1d1d1f; font-weight: 600; }
+        .contribute-tick { color: #0071e3; font-weight: 700; flex-shrink: 0; font-size: 16px; line-height: 1.55; }
+        @media (max-width: 720px) { .contribute-grid { grid-template-columns: 1fr; gap: 40px; } }
+        /* Kontakt-Trust-Hook (Sprint 7e M1) */
+        .kr-trust-hook { display: inline-flex; align-items: center; gap: 14px; padding: 14px 20px; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; margin-bottom: 32px; text-align: left; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+        .kr-trust-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #1d1d1f); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0; }
+        .kr-trust-name { font-size: 14px; font-weight: 500; color: #1d1d1f; line-height: 1.3; }
+        .kr-trust-meta { font-size: 12px; color: #6e6e73; margin-top: 2px; line-height: 1.3; }
+        @media (max-width: 540px) { .kr-trust-hook { padding: 12px 14px; border-radius: 18px; gap: 12px; } .kr-trust-name, .kr-trust-meta { font-size: 12px; } }
         /* Pricing-4-Spalten-Grid (Sprint 7d Premium-Tier) */
         .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1240px; margin: 0 auto; text-align: left; align-items: stretch; }
         .price-card-premium { transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: 0 16px 48px rgba(10,10,10,0.18); }
@@ -877,6 +910,7 @@
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Praxis Dr. Weber · Hausarztpraxis</span>
                         <span class="mockup-story" id="hero-mockup-story">Online-Termine sind ab Woche zwei buchbar.</span>
+                        <span class="mockup-meta" id="hero-mockup-meta">Diese Site · Lieferzeit 21 Tage · Business-Paket</span>
                     </div>
                 </a>
                 <div class="branche-switcher-wrap">
@@ -984,6 +1018,7 @@
                     </ul>
                 </div>
             </div>
+            <p style="text-align: center; margin-top: 56px;"><a href="#arbeiten" class="link-arrow">Diese Substanz live sehen — Beispielseiten ansehen &rarr;</a></p>
         </div>
     </section>
 
@@ -1007,9 +1042,10 @@
                 <div>
                     <div style="font-size: 48px; font-weight: 600; color: #aeaeb2;">3</div>
                     <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Online</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Fertig in 14 Tagen. Sie zahlen erst bei Zufriedenheit.</p>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Online in drei Wochen. 50 % nach Entwurf, 50 % bei Fertigstellung.</p>
                 </div>
             </div>
+            <p style="text-align: center; margin-top: 56px;"><a href="#kontakt" class="link-arrow">Schritt 1 starten — Anfrage senden &rarr;</a></p>
         </div>
     </section>
 
@@ -1041,6 +1077,46 @@
 
             <p style="font-size: clamp(17px, 2vw, 21px); color: #1d1d1f; font-weight: 500; margin-top: 56px;">
                 Wenn Ihr Name draufsteht, steht unserer dahinter.
+            </p>
+            <p style="text-align: center; margin-top: 28px;"><a href="#preis" class="link-arrow">Pakete &amp; Preise ansehen &rarr;</a></p>
+        </div>
+    </section>
+
+
+    <!-- 6b · Was Sie beisteuern (Sprint 7e M2) -->
+    <section aria-label="Was Sie beisteuern" class="fade-in" style="background: #fbfbfd;">
+        <div class="wrap">
+            <div style="text-align: center; max-width: 640px; margin: 0 auto 56px;">
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">Erwartung klären</p>
+                <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px;">Was Sie beisteuern. <span style="color:#6e6e73; font-weight:500;">Was wir übernehmen.</span></h2>
+                <p class="subhead" style="max-width: 540px; margin: 0 auto;">
+                    Damit „in drei Wochen online" verlässlich klappt — hier die Aufgabenteilung.
+                </p>
+            </div>
+            <div class="contribute-grid">
+                <div class="contribute-col">
+                    <p class="contribute-label">Sie liefern</p>
+                    <ul class="contribute-list">
+                        <li><span class="contribute-tick" style="color:#0071e3;">›</span><span><strong>Texte zu Ihren Leistungen</strong> — wir geben Vorlagen; bei Bedarf schreiben wir um.</span></li>
+                        <li><span class="contribute-tick" style="color:#0071e3;">›</span><span><strong>3–6 Fotos vom Geschäft</strong> — Smartphone reicht. Bei fehlenden Bildern empfehlen wir Fotografen oder KI-Bilder.</span></li>
+                        <li><span class="contribute-tick" style="color:#0071e3;">›</span><span><strong>Logo &amp; Farben</strong>, falls vorhanden. Sonst entwickeln wir es im Entwurf mit.</span></li>
+                        <li><span class="contribute-tick" style="color:#0071e3;">›</span><span><strong>Ein 30-Min-Kickoff-Gespräch</strong> — Zoom oder vor Ort. Danach übernehmen wir.</span></li>
+                        <li><span class="contribute-tick" style="color:#0071e3;">›</span><span><strong>Eine Freigabe-Runde</strong> nach dem Entwurf. Zwei wäre teurer, wird selten nötig.</span></li>
+                    </ul>
+                </div>
+                <div class="contribute-col">
+                    <p class="contribute-label">Wir übernehmen</p>
+                    <ul class="contribute-list">
+                        <li><span class="contribute-tick">✓</span><span><strong>Konzept &amp; Struktur</strong> — Hierarchie, Navigation, SEO-Architektur.</span></li>
+                        <li><span class="contribute-tick">✓</span><span><strong>Design &amp; Typografie</strong> — handgemacht, branchen-spezifisch, BFSG-konform.</span></li>
+                        <li><span class="contribute-tick">✓</span><span><strong>Programmierung &amp; Schema.org</strong> — HTML/CSS, lokale SEO ab Business-Paket.</span></li>
+                        <li><span class="contribute-tick">✓</span><span><strong>Hosting-Einrichtung</strong> — bei uns oder bei Ihrem Anbieter. Sie behalten den Quellcode.</span></li>
+                        <li><span class="contribute-tick">✓</span><span><strong>Texte feinschleifen</strong> — wir formulieren wo Sie hängenbleiben, behalten aber Ihre Stimme.</span></li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 32px; font-size: 14px; color: #6e6e73;">
+                Insgesamt rechnen Sie mit ca. <strong style="color:#1d1d1f;">2–3 Stunden Eigenarbeit</strong> — verteilt auf drei Wochen.
             </p>
         </div>
     </section>
@@ -1126,9 +1202,17 @@
     <section id="kontakt" aria-label="Kontakt" class="fade-in" style="background: #f5f5f7;">
         <div class="wrap-xs" style="text-align: center;">
             <h2 style="font-size: clamp(32px, 5vw, 48px);">Lassen Sie uns<br>sprechen.</h2>
-            <p class="subhead" style="max-width: 420px; margin-bottom: 40px;">
+            <p class="subhead" style="max-width: 420px; margin-bottom: 32px;">
                 Erzählen Sie uns von Ihrem Projekt. Wir melden uns innerhalb von 24h mit ersten Ideen.
             </p>
+
+            <div class="kr-trust-hook">
+                <div class="kr-trust-avatar" aria-hidden="true">M</div>
+                <div class="kr-trust-body">
+                    <div class="kr-trust-name">Sie sprechen direkt mit Muammer Kızılaslan</div>
+                    <div class="kr-trust-meta">Gründer · keine Hotline · keine Vertriebsabteilung · Antwort binnen 24 h</div>
+                </div>
+            </div>
 
             <form id="kontakt-form" data-lead="kwd-kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="paket" id="paket-field" value="">
@@ -1155,6 +1239,22 @@
 
     <footer>
         <div class="wrap">
+            <div class="footer-kontakt-row">
+                <div class="footer-kontakt-brand">
+                    <p class="footer-kontakt-eyebrow">Karriaro · Webdesign-Manufaktur</p>
+                    <p class="footer-kontakt-tagline">Handcodierte Websites für lokale Unternehmen.<br>BFSG-konform, ohne Abo, der Quellcode gehört Ihnen.</p>
+                </div>
+                <div class="footer-kontakt-list">
+                    <a href="mailto:kontakt@karriaro.de" class="footer-kontakt-link">
+                        <span class="footer-kontakt-icon">@</span>
+                        <span><span class="footer-kontakt-label">E-Mail</span><span class="footer-kontakt-val">kontakt@karriaro.de</span></span>
+                    </a>
+                    <a href="#kontakt" class="footer-kontakt-link">
+                        <span class="footer-kontakt-icon">✎</span>
+                        <span><span class="footer-kontakt-label">Anfrage</span><span class="footer-kontakt-val">Erstgespräch buchen →</span></span>
+                    </a>
+                </div>
+            </div>
             <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,0.06);">
                 <p style="margin-bottom: 12px;">Webdesign in Ihrer Stadt</p>
                 <p style="line-height: 2;">
@@ -1421,8 +1521,11 @@
                 });
 
                 if (d.demo) {
+                    var DEMO_PORTFOLIO = { lawyer: null, doctor: '/portfolio/praxis-weber.html', restaurant: '/portfolio/restaurant-template.html', hair_salon: '/portfolio/friseur-salon.html' };
+                    var portfolioHref = DEMO_PORTFOLIO[d.demoKey] || null;
                     ctaEl.innerHTML =
                         '<button type="button" class="audit-cta-primary" id="audit-cta-own">Jetzt Ihre eigene Seite prüfen →</button>' +
+                        (portfolioHref ? '<a href="' + portfolioHref + '" class="audit-cta-secondary">Diese Branche live ansehen →</a>' : '') +
                         '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
                 } else {
                     ctaEl.innerHTML =
@@ -1628,6 +1731,7 @@
             function triggerDemo(branchKey) {
                 const data = DEMO_DATA[branchKey];
                 if (!data) return;
+                data.demoKey = branchKey;
                 showSkeleton();
                 statusEl.textContent = 'Beispiel wird geladen …';
                 setTimeout(function() {
@@ -1657,6 +1761,7 @@
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Hausarztpraxis',
                     story: 'Online-Termine sind ab Woche zwei buchbar.',
+                    meta: 'Diese Site · Lieferzeit 25 Tage · Business-Paket',
                     href: '/portfolio/praxis-weber.html'
                 },
                 handwerk: {
@@ -1665,6 +1770,7 @@
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerk',
                     story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
+                    meta: 'Diese Site · Lieferzeit 28 Tage · Premium-Paket',
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
                 gastro: {
@@ -1673,6 +1779,7 @@
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastronomie',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
+                    meta: 'Diese Site · Lieferzeit 26 Tage · Business-Paket',
                     href: '/portfolio/restaurant-template.html'
                 },
                 logistik: {
@@ -1681,6 +1788,7 @@
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition',
                     story: 'Disposition und Frachtanfrage in einem Formular.',
+                    meta: 'Diese Site · Lieferzeit 32 Tage · Premium-Paket',
                     href: '/portfolio/spedition-schwaben.html'
                 },
                 friseur: {
@@ -1689,6 +1797,7 @@
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur',
                     story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
+                    meta: 'Diese Site · Lieferzeit 30 Tage · Premium-Paket',
                     href: '/portfolio/friseur-salon.html'
                 },
                 dachdecker: {
@@ -1697,6 +1806,7 @@
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Meisterbetrieb',
                     story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
+                    meta: 'Diese Site · Lieferzeit 30 Tage · Premium-Paket',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
                 immobilien: {
@@ -1705,6 +1815,7 @@
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien',
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
+                    meta: 'Diese Site · Lieferzeit 32 Tage · Premium-Paket',
                     href: '/portfolio/immobilien-makler.html'
                 }
             };
@@ -1757,6 +1868,8 @@
                 url.textContent = d.url;
                 label.textContent = d.label;
                 story.textContent = d.story;
+                var metaEl = document.getElementById('hero-mockup-meta');
+                if (metaEl && d.meta) metaEl.textContent = d.meta;
                 link.href = d.href;
             }
 
