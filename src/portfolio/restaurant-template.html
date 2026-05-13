@@ -79,6 +79,55 @@
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
         section { padding: 100px 0; }
+        /* Sprint 7c Restaurant-Killer */
+        /* R1 AI-Sommelier */
+        .sommelier { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .som-inner { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+        .som-chat { background: var(--bg); border-radius: var(--radius-lg); padding: 32px; margin-top: 36px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .som-prompt-row { display: flex; gap: 10px; margin-bottom: 24px; }
+        .som-prompt { flex: 1; padding: 14px 18px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 15px; font-family: inherit; background: var(--bg-soft); }
+        .som-prompt:focus { outline: none; border-color: var(--accent); background: var(--bg); }
+        .som-ask-btn { padding: 14px 24px; background: var(--accent); color: var(--bg); border: none; border-radius: 999px; font-family: inherit; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .som-ask-btn:hover { background: var(--accent-dark); }
+        .som-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+        .som-chip { padding: 8px 14px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--text-soft); cursor: pointer; font-family: inherit; transition: all 0.2s; }
+        .som-chip:hover { border-color: var(--accent); color: var(--accent); }
+        .som-answer { background: var(--accent-soft); border-left: 3px solid var(--gold); padding: 24px 28px; border-radius: var(--radius); display: none; }
+        .som-answer.is-visible { display: block; }
+        .som-answer-eyebrow { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 600; }
+        .som-answer-wine { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 3vw, 36px); color: var(--text); margin-bottom: 12px; line-height: 1.2; }
+        .som-answer-body { font-size: 15px; color: var(--text-soft); line-height: 1.6; margin-bottom: 14px; }
+        .som-answer-meta { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--text); }
+        .som-answer-meta strong { color: var(--accent); font-family: var(--serif); font-style: italic; }
+        /* R2 Chef-Story + Pre-Order Tasting */
+        .chef-story { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
+        .chef-story-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+        .chef-video { aspect-ratio: 4/5; background: linear-gradient(135deg, var(--accent-soft), var(--gold-soft)); border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s; }
+        .chef-video:hover { transform: translateY(-3px); }
+        .chef-video-play { width: 84px; height: 84px; border-radius: 50%; background: rgba(255,255,255,0.92); display: flex; align-items: center; justify-content: center; box-shadow: 0 16px 40px rgba(0,0,0,0.18); z-index: 2; }
+        .chef-video-play svg { width: 30px; height: 30px; color: var(--accent); margin-left: 4px; }
+        .chef-video-label { position: absolute; bottom: 20px; left: 24px; right: 24px; color: var(--text); font-family: var(--serif); font-style: italic; font-size: 18px; z-index: 2; }
+        .tasting-card { background: var(--accent); color: var(--bg); padding: 36px; border-radius: var(--radius-lg); margin-top: 24px; }
+        .tasting-card-eyebrow { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.78; margin-bottom: 12px; color: var(--gold); }
+        .tasting-card-h { font-family: var(--serif); font-style: italic; font-size: clamp(26px, 3vw, 36px); margin-bottom: 12px; line-height: 1.15; }
+        .tasting-card-body { font-size: 15px; opacity: 0.9; line-height: 1.55; margin-bottom: 22px; }
+        .tasting-card-price { font-family: var(--serif); font-size: 56px; font-weight: 500; color: var(--gold); margin-bottom: 20px; line-height: 1; }
+        .tasting-form { display: flex; gap: 10px; }
+        .tasting-form input, .tasting-form select { flex: 1; padding: 12px 14px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: var(--bg); font-family: inherit; font-size: 14px; }
+        .tasting-form input::placeholder { color: rgba(255,255,255,0.6); }
+        .tasting-form button { padding: 12px 22px; background: var(--gold); color: var(--bg-dark); border: none; border-radius: var(--radius); font-family: inherit; font-weight: 600; cursor: pointer; }
+        @media (max-width: 920px) { .chef-story-inner { grid-template-columns: 1fr; } .tasting-form { flex-direction: column; } }
+        /* R3 Smart-Waitlist */
+        .smart-waitlist { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .wl-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; text-align: center; }
+        .wl-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; margin-top: 36px; text-align: left; box-shadow: var(--shadow); }
+        .wl-card label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+        .wl-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+        .wl-card input, .wl-card select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--bg-soft); }
+        .wl-success { display: none; padding: 24px; background: var(--accent); color: var(--bg); border-radius: var(--radius); margin-top: 18px; text-align: center; }
+        .wl-success.is-visible { display: block; }
+        .wl-success-h { font-family: var(--serif); font-style: italic; font-size: 22px; margin-bottom: 6px; }
+        @media (max-width: 720px) { .wl-grid { grid-template-columns: 1fr; } }
         .eyebrow { display: inline-block; color: var(--gold); font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 14px; }
         .section-head { text-align: center; max-width: 680px; margin: 0 auto 60px; }
         .section-head h2 { margin-bottom: 16px; }
@@ -523,6 +572,67 @@
             </div>
         </div>
 
+        <!-- R1 · AI-Sommelier -->
+        <section class="sommelier" id="sommelier" aria-label="AI-Sommelier">
+            <div class="som-inner">
+                <div class="section-head" style="text-align:center; max-width:680px; margin:0 auto 16px;">
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Vor der Reservierung · Wein-Beratung</p>
+                    <h2>Welcher Wein zu Ihrem Gericht?</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; font-weight:300; line-height:1.55;">Sommelier-Engpass macht echte Beratung selten. Wir bringen sie hier — auch wenn Sie noch nicht reserviert haben.</p>
+                </div>
+                <div class="som-chat">
+                    <div class="som-prompt-row">
+                        <input type="text" class="som-prompt" id="som-prompt" placeholder='z.B. "Was passt zu Schmorbraten?"' aria-label="Wein-Frage stellen">
+                        <button type="button" class="som-ask-btn" id="som-ask">Fragen</button>
+                    </div>
+                    <div class="som-chips" id="som-chips">
+                        <button type="button" class="som-chip" data-q="schmorbraten">Schmorbraten</button>
+                        <button type="button" class="som-chip" data-q="lachs">Lachs</button>
+                        <button type="button" class="som-chip" data-q="ente">Ente</button>
+                        <button type="button" class="som-chip" data-q="risotto">Risotto</button>
+                        <button type="button" class="som-chip" data-q="schnitzel">Wiener Schnitzel</button>
+                        <button type="button" class="som-chip" data-q="kaiserschmarrn">Kaiserschmarrn</button>
+                    </div>
+                    <div class="som-answer" id="som-answer">
+                        <div class="som-answer-eyebrow">Empfehlung unseres Sommeliers</div>
+                        <div class="som-answer-wine" id="som-wine">Spätburgunder Réserve · Weingut Becker 2021</div>
+                        <div class="som-answer-body" id="som-body">Tiefdunkler Burgunder mit Sauerkirsche, etwas Lederton und seidigem Tannin. Hält dem Schmoraroma stand, hebt die Sauce.</div>
+                        <div class="som-answer-meta">
+                            <span>Glas <strong id="som-glass">8,50 €</strong></span>
+                            <span>Flasche <strong id="som-bottle">42 €</strong></span>
+                            <span>Region <strong id="som-region">Pfalz</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- R2 · Chef-Story + Pre-Order Tasting -->
+        <section class="chef-story" id="chef-story" aria-label="Chef-Story und Pre-Order Tasting">
+            <div class="chef-story-inner">
+                <div class="chef-video" onclick="alert('Video-Demo — in der echten Anwendung würde hier die Andreas-Bauer-Saison-Reportage abspielen.')">
+                    <div class="chef-video-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+                    <div class="chef-video-label">Andreas Bauer · Saison Frühling/Sommer 2026 · 2:14 Min</div>
+                </div>
+                <div>
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Saison-Story · Im Video</p>
+                    <h2>Aus Andreas' Frühlingsküche.</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:520px; font-weight:300; line-height:1.55;">Spargel aus Schrobenhausen, Lamm vom Schäfer Marquardt, neue Kartoffeln aus Erding — alles persönlich ausgesucht. Die zweiminütige Saison-Reportage zeigt den Weg vom Erzeuger auf den Teller.</p>
+                    <div class="tasting-card">
+                        <div class="tasting-card-eyebrow">Pre-Order · Limitiert auf 12 Tische pro Abend</div>
+                        <div class="tasting-card-h">5-Gang Frühlings-Menü</div>
+                        <div class="tasting-card-body">Wildkräutersuppe · Spargel mit Sauce Hollandaise und Lachs · Lammrücken rosa mit Bärlauch-Risotto · Reife Ziegenkäse-Auswahl · Erdbeer-Holunder-Eis. Weinbegleitung optional.</div>
+                        <div class="tasting-card-price">89 €</div>
+                        <form class="tasting-form" onsubmit="event.preventDefault(); var btn=this.querySelector('button'); btn.disabled=true; btn.textContent='✓ vorbestellt';">
+                            <input type="date" name="date" required>
+                            <select name="guests" aria-label="Personen"><option>2 Personen</option><option>3 Personen</option><option>4 Personen</option><option>5 Personen</option><option>6+</option></select>
+                            <button type="submit">Tisch + Menü</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="reservation" id="reservation">
             <div class="container">
                 <div class="res-card">
@@ -578,6 +688,40 @@
                                 <button class="btn btn-primary" onclick="openDemo('reservation')">Reservierung bestätigen</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- R3 · Smart-Waitlist -->
+        <section class="smart-waitlist" id="smart-waitlist" aria-label="Smart-Waitlist">
+            <div class="wl-inner">
+                <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Wenn ausgebucht — Sie benachrichtigen wir</p>
+                <h2>Heute voll. <em>Auf die Smart-Waitlist?</em></h2>
+                <p style="font-size:18px; color:var(--text-soft); margin-top:16px; font-weight:300; line-height:1.55;">Wir senden Ihnen eine SMS, sobald ein Tisch frei wird — meistens innerhalb von 30 Minuten vor dem Wunsch-Zeitfenster. Reservierung wird automatisch für Sie reserviert (15 Min Annahmefrist).</p>
+                <div class="wl-card">
+                    <form onsubmit="event.preventDefault(); var s=document.getElementById('wl-success'); s.classList.add('is-visible'); this.querySelectorAll('input, select, button').forEach(function(el){el.disabled=true;});">
+                        <div class="wl-grid">
+                            <div>
+                                <label for="wl-date">Datum</label>
+                                <input id="wl-date" type="date" required>
+                            </div>
+                            <div>
+                                <label for="wl-time">Wunsch-Zeit</label>
+                                <select id="wl-time"><option>18:30</option><option selected>19:00</option><option>19:30</option><option>20:00</option><option>20:30</option><option>21:00</option></select>
+                            </div>
+                            <div>
+                                <label for="wl-guests">Personen</label>
+                                <select id="wl-guests"><option>2</option><option>3</option><option>4</option><option>5</option><option>6+</option></select>
+                            </div>
+                        </div>
+                        <label for="wl-phone">Mobilnummer für SMS</label>
+                        <input id="wl-phone" type="tel" placeholder="+49 1XX XXXXXXX" required>
+                        <button type="submit" class="btn btn-gold" style="margin-top:18px; width:100%; justify-content:center;">Auf die Waitlist setzen</button>
+                    </form>
+                    <div class="wl-success" id="wl-success">
+                        <div class="wl-success-h">Sie sind auf Platz 2 der Waitlist.</div>
+                        <div>Wir melden uns per SMS sobald ein Tisch frei wird — meistens 30 Min vor Ihrer Wunschzeit.</div>
                     </div>
                 </div>
             </div>
@@ -1212,6 +1356,42 @@
     </div>
 
     <script>
+        // R1 AI-Sommelier — Mock-Antworten pro Gericht
+        var SOMMELIER = {
+            schmorbraten: { wine: 'Spätburgunder Réserve · Weingut Becker 2021', body: 'Tiefdunkler Burgunder mit Sauerkirsche, etwas Lederton und seidigem Tannin. Hält dem Schmoraroma stand, hebt die Sauce.', glass: '8,50 €', bottle: '42 €', region: 'Pfalz' },
+            lachs: { wine: 'Riesling Trocken · Wittmann Westhofener 2022', body: 'Mineralische Säure, Aromen von Pfirsich und weißem Pfeffer — schneidet das Fett des Lachses, lässt den Eigengeschmack stehen.', glass: '7,50 €', bottle: '38 €', region: 'Rheinhessen' },
+            ente: { wine: 'Pinot Noir · Markus Molitor 2020', body: 'Eleganter Mosel-Pinot mit dunkler Frucht und sanftem Holz — Brücke zur dunklen Sauce, ohne zu erdrücken.', glass: '11 €', bottle: '52 €', region: 'Mosel' },
+            risotto: { wine: 'Vermentino · Argiolas Costamolino 2023', body: 'Sardinischer Weißer mit Zitronennote und mediterraner Kräuterwürze — passt zur Cremigkeit des Risottos.', glass: '6,50 €', bottle: '32 €', region: 'Sardinien' },
+            schnitzel: { wine: 'Grüner Veltliner Federspiel · Hirtzberger 2023', body: 'Klassische Begleitung: Knackige Säure, Pfeffernoten, federleichter Körper — der österreichische Reflex.', glass: '7 €', bottle: '36 €', region: 'Wachau' },
+            kaiserschmarrn: { wine: 'Beerenauslese · Kracher Auslese 2019', body: 'Süßer Begleiter mit Aprikose und Honig — hebt die Karamellnoten des Kaiserschmarrns, ohne zu schwer zu sein.', glass: '9 € (0,1l)', bottle: '48 € (0,375l)', region: 'Burgenland' }
+        };
+        function somAsk(key) {
+            var data = SOMMELIER[key];
+            if (!data) {
+                // Free-Text-Fallback: Standard-Antwort
+                data = SOMMELIER.schmorbraten;
+            }
+            document.getElementById('som-wine').textContent = data.wine;
+            document.getElementById('som-body').textContent = data.body;
+            document.getElementById('som-glass').textContent = data.glass;
+            document.getElementById('som-bottle').textContent = data.bottle;
+            document.getElementById('som-region').textContent = data.region;
+            document.getElementById('som-answer').classList.add('is-visible');
+        }
+        document.querySelectorAll('.som-chip').forEach(function (c) {
+            c.addEventListener('click', function () {
+                document.getElementById('som-prompt').value = c.textContent;
+                somAsk(c.getAttribute('data-q'));
+            });
+        });
+        var somAskBtn = document.getElementById('som-ask');
+        if (somAskBtn) somAskBtn.addEventListener('click', function () {
+            var v = document.getElementById('som-prompt').value.toLowerCase();
+            var key = null;
+            Object.keys(SOMMELIER).forEach(function (k) { if (v.indexOf(k) !== -1) key = k; });
+            somAsk(key);
+        });
+
         // Build date grid (next 7 days)
         const dateGrid = document.getElementById('dateGrid');
         const today = new Date();
