@@ -70,6 +70,61 @@
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }
+        /* Sprint 7c Sanitär-Killer */
+        /* S1 3D-Bad-Konfigurator */
+        .bad-config { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .bad-config-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .bad-config-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; margin-top: 48px; }
+        .bad-config-canvas { aspect-ratio: 4/3; background: var(--accent-bg); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: clamp(28px, 3vw, 44px); color: var(--accent-dark); letter-spacing: -0.02em; transition: background 0.4s ease, color 0.4s ease; position: relative; overflow: hidden; border: 1px solid var(--border); }
+        .bad-config-canvas[data-style="spa"] { background: linear-gradient(135deg, #DCD0C0, #A89880); color: #2A1F18; }
+        .bad-config-canvas[data-style="modern"] { background: linear-gradient(135deg, #2D3138, #1A1D22); color: #E8E2D8; }
+        .bad-config-canvas[data-style="klassisch"] { background: linear-gradient(135deg, #F4ECE0, #D6C8B0); color: #5C3A20; }
+        .bad-config-controls { display: flex; flex-direction: column; gap: 24px; }
+        .bad-style-toggles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .bad-style-btn { padding: 14px 12px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; text-align: center; font-family: inherit; }
+        .bad-style-btn:hover { border-color: var(--accent); }
+        .bad-style-btn.is-active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .bad-style-btn-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .bad-style-btn-sub { font-size: 11px; opacity: 0.65; letter-spacing: 0.04em; text-transform: uppercase; }
+        .bad-slider-row { display: flex; flex-direction: column; gap: 10px; padding: 18px 0; border-top: 1px solid var(--border); }
+        .bad-slider-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text); }
+        .bad-slider-label .val { color: var(--accent); font-variant-numeric: tabular-nums; }
+        .bad-slider-row input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .bad-config-output { background: var(--accent); color: var(--bg); padding: 24px 28px; border-radius: var(--radius-lg); margin-top: 8px; }
+        .bad-config-output-label { font-size: 11px; opacity: 0.75; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 8px; }
+        .bad-config-output-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(36px, 4.4vw, 56px); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; margin-bottom: 6px; }
+        .bad-config-output-sub { font-size: 13px; opacity: 0.85; }
+        @media (max-width: 920px) { .bad-config-grid { grid-template-columns: 1fr; } }
+        /* S2 Wärmepumpen-Konfigurator */
+        .wp-config { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
+        .wp-config-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+        .wp-form { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+        .wp-form label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+        .wp-form input, .wp-form select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--bg); margin-bottom: 18px; }
+        .wp-output { background: var(--accent); color: var(--bg); border-radius: var(--radius-lg); padding: 32px; }
+        .wp-output-label { font-size: 11px; color: rgba(255,255,255,0.7); letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 16px; }
+        .wp-output-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(48px, 6vw, 80px); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; margin-bottom: 12px; }
+        .wp-output-sub { font-size: 14px; opacity: 0.8; }
+        .wp-output-rows { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); }
+        .wp-output-row { display: flex; justify-content: space-between; font-size: 13px; }
+        .wp-output-row strong { font-variant-numeric: tabular-nums; }
+        @media (max-width: 920px) { .wp-config-inner { grid-template-columns: 1fr; } }
+        /* S3 GMG-2026-Pflichtberatung-Quiz */
+        .gmg-quiz { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        .gmg-quiz-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; text-align: center; }
+        .gmg-step { display: none; margin-top: 32px; padding: 32px 28px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+        .gmg-step.is-active { display: block; }
+        .gmg-step-q { font-family: var(--font-tight); font-weight: 700; font-size: clamp(20px, 2.4vw, 28px); color: var(--text); margin-bottom: 20px; }
+        .gmg-step-opts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .gmg-opt-btn { padding: 14px 18px; background: var(--bg-soft); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text); transition: all 0.2s; text-align: left; }
+        .gmg-opt-btn:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .gmg-result { display: none; }
+        .gmg-result.is-active { display: block; }
+        .gmg-result-card { padding: 36px; background: var(--accent); color: var(--bg); border-radius: var(--radius-lg); margin-top: 32px; text-align: left; }
+        .gmg-result-eyebrow { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.8; margin-bottom: 12px; }
+        .gmg-result-h { font-family: var(--font-tight); font-weight: 700; font-size: clamp(24px, 3vw, 36px); line-height: 1.2; margin-bottom: 14px; }
+        .gmg-result-body { font-size: 15px; opacity: 0.92; line-height: 1.55; margin-bottom: 24px; }
+        @media (max-width: 720px) { .gmg-step-opts { grid-template-columns: 1fr; } }
         .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
         .section-head .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head h2 { margin-bottom: 14px; }
@@ -410,6 +465,131 @@
             </div>
         </div>
 
+        <!-- S1 · 3D-Bad-Konfigurator -->
+        <section class="bad-config" id="bad-config" aria-label="Bad-Konfigurator">
+            <div class="bad-config-inner">
+                <div class="section-head" style="text-align:left; max-width:700px; margin:0 0 16px;">
+                    <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Neu · Vor dem Vor-Ort-Termin</p>
+                    <h2>Ihr neues Bad in 3 Klicks.</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Stil wählen, Größe und Budget anpassen — die Live-Vorschau zeigt die Richtung. Bei realer Beratung ersetzen wir die Visualisierung durch eine maßstäblich gerechte 3D-Skizze Ihres Bads.</p>
+                </div>
+                <div class="bad-config-grid">
+                    <div class="bad-config-canvas" id="bad-canvas" data-style="spa">Spa · 8 m² · ca. 18.500 €</div>
+                    <div class="bad-config-controls">
+                        <div class="bad-style-toggles" id="bad-style-toggles">
+                            <button type="button" class="bad-style-btn is-active" data-style="spa" data-label="Spa">
+                                <div class="bad-style-btn-name">Spa</div>
+                                <div class="bad-style-btn-sub">Natur · Holz · Stein</div>
+                            </button>
+                            <button type="button" class="bad-style-btn" data-style="modern" data-label="Modern">
+                                <div class="bad-style-btn-name">Modern</div>
+                                <div class="bad-style-btn-sub">Dunkel · Mikrozement</div>
+                            </button>
+                            <button type="button" class="bad-style-btn" data-style="klassisch" data-label="Klassisch">
+                                <div class="bad-style-btn-name">Klassisch</div>
+                                <div class="bad-style-btn-sub">Weiß · Marmor · Messing</div>
+                            </button>
+                        </div>
+                        <div class="bad-slider-row">
+                            <div class="bad-slider-label">Bad-Größe <span class="val"><span id="bad-size-val">8</span> m²</span></div>
+                            <input type="range" id="bad-size" min="4" max="15" value="8" step="1">
+                        </div>
+                        <div class="bad-slider-row">
+                            <div class="bad-slider-label">Budget-Klasse <span class="val" id="bad-budget-val">Mittel</span></div>
+                            <input type="range" id="bad-budget" min="1" max="3" value="2" step="1">
+                        </div>
+                        <div class="bad-config-output">
+                            <div class="bad-config-output-label">Richtwert Komplettsanierung</div>
+                            <div class="bad-config-output-val" id="bad-price">18.500&nbsp;€</div>
+                            <div class="bad-config-output-sub">inkl. Demontage, Installation, Fliesen, Sanitärobjekte, Endreinigung</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S2 · Wärmepumpen-Konfigurator mit KfW-Live-Preis -->
+        <section class="wp-config" id="wp-config" aria-label="Wärmepumpe-Konfigurator">
+            <div class="wp-config-inner">
+                <div>
+                    <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">KfW 458 · BAFA · Live-Förderung</p>
+                    <h2 style="margin-bottom:24px;">Förderung in Echtzeit.</h2>
+                    <p class="lead" style="margin-bottom:32px;">Wohnfläche, Baujahr, alte Heizung eingeben — wir rechnen KfW 458 (30-70 %, max 21.000 €) und BAFA-Heizungstausch sofort durch. Verbindliche Berechnung im Erstgespräch.</p>
+                    <form class="wp-form" onsubmit="event.preventDefault(); wpCalc();">
+                        <label for="wp-area">Wohnfläche</label>
+                        <input id="wp-area" type="number" min="60" max="400" value="140" required>
+                        <label for="wp-year">Baujahr des Hauses</label>
+                        <select id="wp-year"><option value="60">vor 1978</option><option value="55" selected>1978-1995</option><option value="35">1996-2010</option><option value="20">nach 2010</option></select>
+                        <label for="wp-old">Alte Heizung</label>
+                        <select id="wp-old"><option value="70">Ölkessel &gt; 20 Jahre</option><option value="60" selected>Gaskessel &gt; 20 Jahre</option><option value="35">Gas-Brennwert ≤ 20 J</option></select>
+                        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;">Förderung berechnen</button>
+                    </form>
+                </div>
+                <div class="wp-output" id="wp-result">
+                    <div class="wp-output-label">Maximale Förderung KfW + BAFA</div>
+                    <div class="wp-output-val" id="wp-total">17.850&nbsp;€</div>
+                    <div class="wp-output-sub">bei 28.000 € Brutto-Investition · 65 % gefördert</div>
+                    <div class="wp-output-rows">
+                        <div class="wp-output-row"><span>KfW 458 Grundförderung 30 %</span><strong id="wp-kfw-base">8.400&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Klimageschwindigkeits-Bonus 20 %</span><strong id="wp-kfw-speed">5.600&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Einkommens-Bonus 15 %</span><strong id="wp-kfw-income">3.850&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Eigenanteil Brutto</span><strong id="wp-own">10.150&nbsp;€</strong></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- S3 · GMG-2026-Pflichtberatungs-Quiz -->
+        <section class="gmg-quiz" id="gmg-quiz" aria-label="GMG 2026 Pflichtberatung">
+            <div class="gmg-quiz-inner">
+                <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Pflicht ab 1.7.2026 · Stadt Stuttgart</p>
+                <h2>GMG 2026 — sind Sie betroffen?</h2>
+                <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:560px; margin-left:auto; margin-right:auto; font-weight:300; line-height:1.55;">In drei Fragen klären wir, ob Sie zur Pflichtberatung nach §71 GEG verpflichtet sind. Die Beratung selbst ist kostenfrei.</p>
+
+                <div class="gmg-step is-active" data-step="1">
+                    <div class="gmg-step-q">Wie alt ist Ihre Heizung?</div>
+                    <div class="gmg-step-opts">
+                        <button type="button" class="gmg-opt-btn" data-next="2">Älter als 20 Jahre</button>
+                        <button type="button" class="gmg-opt-btn" data-next="2">10-20 Jahre</button>
+                        <button type="button" class="gmg-opt-btn" data-next="result-no">Jünger als 10 Jahre</button>
+                        <button type="button" class="gmg-opt-btn" data-next="2">Weiß nicht</button>
+                    </div>
+                </div>
+                <div class="gmg-step" data-step="2">
+                    <div class="gmg-step-q">Wann fand der letzte Tausch statt?</div>
+                    <div class="gmg-step-opts">
+                        <button type="button" class="gmg-opt-btn" data-next="3">Noch nie / vor 1995</button>
+                        <button type="button" class="gmg-opt-btn" data-next="3">Zwischen 1995 und 2010</button>
+                        <button type="button" class="gmg-opt-btn" data-next="result-yes">Nach 2010</button>
+                    </div>
+                </div>
+                <div class="gmg-step" data-step="3">
+                    <div class="gmg-step-q">Wohnfläche &gt; 100 m²?</div>
+                    <div class="gmg-step-opts">
+                        <button type="button" class="gmg-opt-btn" data-next="result-yes">Ja, &gt; 100 m²</button>
+                        <button type="button" class="gmg-opt-btn" data-next="result-yes">Ja, &gt; 200 m²</button>
+                        <button type="button" class="gmg-opt-btn" data-next="result-no">Nein, &lt; 100 m²</button>
+                    </div>
+                </div>
+                <div class="gmg-result" data-result="yes">
+                    <div class="gmg-result-card">
+                        <div class="gmg-result-eyebrow">Ergebnis · Pflichtberatung erforderlich</div>
+                        <div class="gmg-result-h">Sie sind nach §71 GEG beratungspflichtig.</div>
+                        <div class="gmg-result-body">Bis 30.6.2026 müssen Sie nachweislich eine Energieberatung in Anspruch genommen haben. Wir bieten die GMG-zertifizierte Pflichtberatung kostenlos an — Termin innerhalb von 7 Werktagen, vor Ort oder per Video.</div>
+                        <a href="#anfrage" class="btn btn-primary">Pflichtberatungs-Termin sichern →</a>
+                    </div>
+                </div>
+                <div class="gmg-result" data-result="no">
+                    <div class="gmg-result-card" style="background:var(--bg-soft); color:var(--text); border:1px solid var(--border);">
+                        <div class="gmg-result-eyebrow" style="color:var(--accent-dark);">Ergebnis · Keine Pflicht</div>
+                        <div class="gmg-result-h" style="color:var(--text);">Sie sind 2026 nicht beratungspflichtig.</div>
+                        <div class="gmg-result-body" style="color:var(--text-soft);">Eine freiwillige Energie-Beratung kann dennoch sinnvoll sein — z.B. zur BAFA/KfW-Optimierung. Wir beraten gerne unverbindlich.</div>
+                        <a href="#anfrage" class="btn btn-primary">Freiwillige Beratung anfragen →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="anfrage" class="foto-anfrage" aria-label="Foto-Anfrage">
             <div class="container">
                 <div class="foto-card">
@@ -739,6 +919,75 @@
 
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(a => a.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('is-open')));
+
+        // S1 Bad-Konfigurator: Stil + Größe + Budget
+        var badCanvas = document.getElementById('bad-canvas');
+        var badSize = document.getElementById('bad-size');
+        var badSizeVal = document.getElementById('bad-size-val');
+        var badBudget = document.getElementById('bad-budget');
+        var badBudgetVal = document.getElementById('bad-budget-val');
+        var badPrice = document.getElementById('bad-price');
+        var BUDGET_LABEL = { 1: 'Standard', 2: 'Mittel', 3: 'Premium' };
+        var BUDGET_FACTOR = { 1: 1500, 2: 2300, 3: 3400 };
+        var badStyle = 'spa';
+        function badRecalc() {
+            if (!badCanvas) return;
+            var size = +badSize.value;
+            var budget = +badBudget.value;
+            var price = size * BUDGET_FACTOR[budget];
+            badSizeVal.textContent = size;
+            badBudgetVal.textContent = BUDGET_LABEL[budget];
+            badPrice.textContent = price.toLocaleString('de-DE') + ' €';
+            var label = (badStyle.charAt(0).toUpperCase() + badStyle.slice(1)) + ' · ' + size + ' m² · ca. ' + price.toLocaleString('de-DE') + ' €';
+            badCanvas.textContent = label;
+        }
+        document.querySelectorAll('#bad-style-toggles .bad-style-btn').forEach(function (b) {
+            b.addEventListener('click', function () {
+                document.querySelectorAll('#bad-style-toggles .bad-style-btn').forEach(function (x) { x.classList.remove('is-active'); });
+                b.classList.add('is-active');
+                badStyle = b.getAttribute('data-style');
+                if (badCanvas) badCanvas.setAttribute('data-style', badStyle);
+                badRecalc();
+            });
+        });
+        if (badSize) badSize.addEventListener('input', badRecalc);
+        if (badBudget) badBudget.addEventListener('input', badRecalc);
+
+        // S2 Wärmepumpe + KfW
+        function wpCalc() {
+            var area = +document.getElementById('wp-area').value;
+            var yearFactor = +document.getElementById('wp-year').value;
+            var oldFactor = +document.getElementById('wp-old').value;
+            var invest = Math.round((area * 180 + yearFactor * 80 + oldFactor * 60) / 100) * 100;
+            var kfwBase = Math.round(invest * 0.30);
+            var kfwSpeed = oldFactor >= 60 ? Math.round(invest * 0.20) : 0;
+            var kfwIncome = Math.round(invest * 0.15);
+            var totalFunding = Math.min(21000, kfwBase + kfwSpeed + kfwIncome);
+            var own = invest - totalFunding;
+            var fmt = function (n) { return n.toLocaleString('de-DE') + ' €'; };
+            document.getElementById('wp-total').textContent = fmt(totalFunding).replace(' €', ' €');
+            document.getElementById('wp-kfw-base').textContent = fmt(kfwBase).replace(' €', ' €');
+            document.getElementById('wp-kfw-speed').textContent = fmt(kfwSpeed).replace(' €', ' €');
+            document.getElementById('wp-kfw-income').textContent = fmt(kfwIncome).replace(' €', ' €');
+            document.getElementById('wp-own').textContent = fmt(own).replace(' €', ' €');
+            var subEl = document.querySelector('#wp-result .wp-output-sub');
+            if (subEl) subEl.textContent = 'bei ' + fmt(invest) + ' Brutto-Investition · ' + Math.round(totalFunding / invest * 100) + ' % gefördert';
+        }
+
+        // S3 GMG-Quiz
+        document.querySelectorAll('.gmg-opt-btn').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var next = b.getAttribute('data-next');
+                document.querySelectorAll('.gmg-step').forEach(function (s) { s.classList.remove('is-active'); });
+                if (next === 'result-yes') {
+                    var r = document.querySelector('.gmg-result[data-result="yes"]'); if (r) r.classList.add('is-active');
+                } else if (next === 'result-no') {
+                    var r = document.querySelector('.gmg-result[data-result="no"]'); if (r) r.classList.add('is-active');
+                } else {
+                    var step = document.querySelector('.gmg-step[data-step="' + next + '"]'); if (step) step.classList.add('is-active');
+                }
+            });
+        });
         function makeOptionToggle(group) {
             document.querySelectorAll('#' + group + ' button').forEach(b => {
                 b.addEventListener('click', () => {
