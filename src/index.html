@@ -788,6 +788,20 @@
         }
         .hero-demo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* Hero-Audit-Brücke (Sprint 7b K4) */
+        .hero-audit-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; font-size: 14px; color: #6e6e73; text-decoration: none; padding: 6px 0; transition: color 0.2s ease; }
+        .hero-audit-link span { color: #0071e3; text-decoration: underline; text-decoration-color: rgba(0,113,227,0.3); text-underline-offset: 3px; transition: text-decoration-color 0.2s ease; }
+        .hero-audit-link:hover { color: #1d1d1f; }
+        .hero-audit-link:hover span { text-decoration-color: #0071e3; }
+        /* Audit-Pricing-Exit-Card (Sprint 7b K3) */
+        .audit-pricing-exit { margin-top: 32px; padding: 28px 32px; background: linear-gradient(135deg, #f0f5ff, #fff); border: 1px solid #d6e3ff; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .audit-pricing-exit.is-revealed { opacity: 1; transform: translateY(0); }
+        .audit-pricing-exit-text { flex: 1; min-width: 240px; text-align: left; }
+        .audit-pricing-exit-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: #0071e3; margin: 0 0 6px; }
+        .audit-pricing-exit-headline { font-size: 18px; font-weight: 500; color: #1d1d1f; margin: 0; line-height: 1.35; }
+        .audit-pricing-exit-cta { background: #0071e3; color: #fff; padding: 14px 22px; border-radius: 999px; font-weight: 500; font-size: 14px; text-decoration: none; flex-shrink: 0; transition: background 0.2s ease; white-space: nowrap; }
+        .audit-pricing-exit-cta:hover { background: #0058b8; }
+        @media (max-width: 720px) { .audit-pricing-exit { flex-direction: column; align-items: stretch; padding: 20px; } .audit-pricing-exit-cta { text-align: center; } }
         /* Sticky Erstgespräch-CTA (Sprint 7a M4) */
         .kr-cta-float { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0071e3; color: #fff; text-decoration: none; padding: 14px 20px; border-radius: 999px; font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px rgba(0,113,227,0.32), 0 4px 12px rgba(0,113,227,0.18); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease; opacity: 0; transform: translateY(20px); pointer-events: none; }
         .kr-cta-float.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
@@ -832,12 +846,15 @@
                 <p class="hero-eyebrow">Webdesign-Manufaktur</p>
                 <h1>Ihre Website.<br>Handgemacht.</h1>
                 <p class="subhead">
-                    990&nbsp;€ einmalig. In 14 Tagen online.<br>
-                    Keine Templates. BFSG-konform. Der Quellcode gehört Ihnen.
+                    Der Quellcode gehört Ihnen. BFSG-konform, ohne Abo.<br>
+                    Ab 990&nbsp;€ einmalig, online in drei Wochen.
                 </p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn">Projekt starten</a>
                 </div>
+                <a href="#audit" class="hero-audit-link" data-audit-bridge>
+                    Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
+                </a>
             </div>
 
             <div class="hero-mockup-block">
@@ -877,7 +894,7 @@
     <section id="audit" aria-label="Mini-Audit" class="fade-in" style="background: #fbfbfd; padding: 96px 0;">
         <div style="max-width: 720px; margin: 0 auto; padding: 0 24px; text-align: center;">
             <p style="font-size: 12px; font-weight: 600; color: #6e6e73; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase;">Werkzeug</p>
-            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Schon eine Website?<br>Wir prüfen sie in 5 Sekunden.</h2>
+            <h2 style="font-size: clamp(24px, 3vw, 32px); margin-bottom: 16px; font-weight: 500;">Schon eine Website? <span style="color: #6e6e73; font-weight: 400;">Wir prüfen sie in 5 Sekunden.</span></h2>
             <p class="subhead" style="margin-bottom: 36px;">
                 Geben Sie Ihre Adresse ein — oder probieren Sie ein Beispiel.
             </p>
@@ -917,6 +934,13 @@
                 <p id="audit-status" class="audit-status"></p>
                 <div id="audit-cards"></div>
                 <div id="audit-cta" class="audit-cta-row" style="display:none;"></div>
+                <div id="audit-pricing-exit" class="audit-pricing-exit" aria-hidden="true">
+                    <div class="audit-pricing-exit-text">
+                        <p class="audit-pricing-exit-eyebrow">Neu bauen statt flicken</p>
+                        <p class="audit-pricing-exit-headline">Eine neue Karriaro-Website ab 990 € einmalig. Online in drei Wochen.</p>
+                    </div>
+                    <a href="#preis" class="audit-pricing-exit-cta">Pakete ansehen →</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1391,6 +1415,11 @@
                 }
                 setTimeout(function() {
                     ctaEl.style.display = 'flex';
+                    var pricingExit = document.getElementById('audit-pricing-exit');
+                    if (pricingExit) {
+                        pricingExit.classList.add('is-revealed');
+                        pricingExit.setAttribute('aria-hidden', 'false');
+                    }
                     if (d.demo) {
                         const ownBtn = document.getElementById('audit-cta-own');
                         if (ownBtn) ownBtn.addEventListener('click', function() {
@@ -1398,6 +1427,7 @@
                             cardsEl.innerHTML = '';
                             ctaEl.style.display = 'none';
                             statusEl.textContent = '';
+                            if (pricingExit) { pricingExit.classList.remove('is-revealed'); pricingExit.setAttribute('aria-hidden', 'true'); }
                             urlInput.focus();
                             urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         });
