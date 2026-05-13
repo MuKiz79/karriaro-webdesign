@@ -521,20 +521,23 @@
             color: #1d1d1f;
             line-height: 1.4;
         }
+        .branche-switcher-wrap { margin-top: 20px; }
+        .branche-switcher-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #86868b; margin-bottom: 10px; }
+        .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: #0071e3; }
         .branche-switcher {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
             flex-wrap: wrap;
         }
         .branche-tab {
             position: relative;
-            background: transparent;
-            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.18);
             border-radius: 999px;
-            padding: 6px 14px;
+            padding: 8px 16px;
             font-size: 13px;
-            color: #6e6e73;
+            font-weight: 500;
+            color: #1d1d1f;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: inherit;
@@ -542,12 +545,17 @@
         .branche-tab:hover:not(:disabled) {
             border-color: #1d1d1f;
             color: #1d1d1f;
+            background: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
         .branche-tab.is-active {
             background: #1d1d1f;
             color: #fff;
             border-color: #1d1d1f;
+            transform: none;
         }
+        .branche-tab.is-active:hover { background: #1d1d1f; color: #fff; transform: none; box-shadow: none; }
         .branche-tab:disabled {
             opacity: 0.4;
             cursor: not-allowed;
@@ -780,6 +788,13 @@
         }
         .hero-demo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+        /* Sticky Erstgespräch-CTA (Sprint 7a M4) */
+        .kr-cta-float { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #0071e3; color: #fff; text-decoration: none; padding: 14px 20px; border-radius: 999px; font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 14px; font-weight: 500; box-shadow: 0 16px 40px rgba(0,113,227,0.32), 0 4px 12px rgba(0,113,227,0.18); display: inline-flex; align-items: center; gap: 10px; transition: transform 0.2s ease, box-shadow 0.2s ease; opacity: 0; transform: translateY(20px); pointer-events: none; }
+        .kr-cta-float.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        .kr-cta-float:hover { transform: translateY(-2px); box-shadow: 0 24px 50px rgba(0,113,227,0.42), 0 6px 16px rgba(0,113,227,0.22); }
+        .kr-cta-float-icon { width: 18px; height: 18px; }
+        .kr-cta-float-sub { font-size: 11px; opacity: 0.75; letter-spacing: 0.04em; margin-left: 6px; }
+        @media (max-width: 720px) { .kr-cta-float { bottom: 16px; right: 16px; padding: 12px 16px; font-size: 13px; } .kr-cta-float-sub { display: none; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
@@ -841,6 +856,8 @@
                         <span class="mockup-story" id="hero-mockup-story">Online-Termine sind ab Woche zwei buchbar.</span>
                     </div>
                 </a>
+                <div class="branche-switcher-wrap">
+                    <div class="branche-switcher-label">Branche wählen · Klick wechselt die Vorschau</div>
                 <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
                     <button type="button" class="branche-tab is-active" data-branche="praxis" role="tab" aria-selected="true">Praxis</button>
                     <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false">Handwerk</button>
@@ -849,6 +866,7 @@
                     <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false">Friseur</button>
                     <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
                     <button type="button" class="branche-tab" data-branche="immobilien" role="tab" aria-selected="false">Immobilien</button>
+                </div>
                 </div>
             </div>
         </div>
@@ -1795,6 +1813,25 @@
                     gotoBranche(tab.dataset.branche);
                 });
             });
+        })();
+    </script>
+
+    <a href="#kontakt" class="kr-cta-float" id="kr-cta-float" aria-label="Erstgespräch buchen">
+        <svg class="kr-cta-float-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        Erstgespräch buchen<span class="kr-cta-float-sub">· 30 Min · kostenlos</span>
+    </a>
+    <script>
+        (function () {
+            var floatCta = document.getElementById('kr-cta-float');
+            if (!floatCta) return;
+            function onScroll() {
+                if (window.scrollY > 480) floatCta.classList.add('is-visible');
+                else floatCta.classList.remove('is-visible');
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
         })();
     </script>
 
