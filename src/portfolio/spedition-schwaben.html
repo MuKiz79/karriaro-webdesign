@@ -91,6 +91,54 @@
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }
+        /* Sprint 7c Spedition-Killer */
+        /* L1 Instant-Quote-Calculator */
+        .quote-calc { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; border-top: 1px solid var(--border); }
+        .quote-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .quote-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: start; margin-top: 48px; }
+        .quote-form { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
+        .quote-form label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
+        .quote-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+        .quote-form input, .quote-form select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 14px; font-family: inherit; background: var(--bg-soft); }
+        .quote-results { display: grid; gap: 14px; }
+        .quote-result-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px 28px; transition: all 0.2s; }
+        .quote-result-card.is-recommended { border-color: var(--accent); border-width: 2px; box-shadow: var(--shadow); }
+        .quote-result-label { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--text-light); margin-bottom: 6px; font-weight: 500; }
+        .quote-result-name { font-family: var(--font-tight); font-weight: 700; font-size: 22px; color: var(--text); margin-bottom: 4px; letter-spacing: -0.01em; }
+        .quote-result-meta { font-size: 13px; color: var(--text-soft); margin-bottom: 14px; }
+        .quote-result-price { font-family: var(--font-tight); font-weight: 800; font-size: clamp(32px, 4vw, 44px); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; color: var(--accent); }
+        .quote-result-badge { display: inline-block; padding: 4px 10px; background: var(--signal-soft); color: var(--accent-dark); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 999px; margin-bottom: 12px; }
+        @media (max-width: 920px) { .quote-grid { grid-template-columns: 1fr; } .quote-form-row { grid-template-columns: 1fr; } }
+        /* L2 Capacity-Pulse */
+        .capacity-pulse { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; border-top: 1px solid var(--border); }
+        .cp-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .cp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+        .cp-card { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; position: relative; }
+        .cp-card-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); position: absolute; top: 20px; right: 20px; animation: cp-pulse 2s ease-in-out infinite; }
+        .cp-card-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(36px, 4.6vw, 56px); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -0.025em; margin-bottom: 6px; }
+        .cp-card-cat { font-family: var(--font-tight); font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+        .cp-card-meta { font-size: 12px; color: var(--text-light); letter-spacing: 0.04em; }
+        @keyframes cp-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.6); } }
+        @media (max-width: 920px) { .cp-grid { grid-template-columns: repeat(2, 1fr); } }
+        /* L3 Compliance-Drawer */
+        .compliance-trigger-section { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; border-top: 1px solid var(--border); }
+        .ct-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
+        .compliance-trigger-btn { display: inline-flex; align-items: center; gap: 10px; padding: 18px 28px; background: var(--accent); color: var(--bg); border: none; border-radius: var(--radius); font-family: inherit; font-weight: 600; font-size: 15px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+        .compliance-trigger-btn:hover { background: var(--accent-dark); }
+        .compliance-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 90vw); background: var(--bg); box-shadow: -16px 0 48px rgba(0,0,0,0.12); z-index: 1000; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; padding: 32px; font-family: var(--font); }
+        .compliance-drawer.is-open { transform: translateX(0); }
+        .compliance-drawer-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .compliance-drawer-h { font-family: var(--font-tight); font-weight: 700; font-size: 20px; color: var(--text); }
+        .compliance-drawer-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-soft); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); font-size: 18px; font-family: inherit; }
+        .compliance-drawer-list { display: flex; flex-direction: column; gap: 12px; }
+        .compliance-doc { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--text); transition: all 0.2s; }
+        .compliance-doc:hover { border-color: var(--accent); background: var(--bg); }
+        .compliance-doc-icon { width: 40px; height: 40px; flex-shrink: 0; background: var(--accent-soft); color: var(--accent); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: 11px; letter-spacing: 0.04em; }
+        .compliance-doc-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+        .compliance-doc-meta { font-size: 12px; color: var(--text-light); }
+        .compliance-drawer-overlay { position: fixed; inset: 0; background: rgba(10,20,34,0.4); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .compliance-drawer-overlay.is-open { opacity: 1; pointer-events: auto; }
+        @media (max-width: 920px) { .ct-inner { grid-template-columns: 1fr; } }
         .eyebrow { display: inline-block; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
         .section-head { max-width: 720px; margin: 0 auto 56px; text-align: center; }
         .section-head h2 { margin-bottom: 14px; }
@@ -631,6 +679,169 @@
                 </div>
             </div>
         </section>
+
+        <!-- L1 · Instant-Quote-Calculator -->
+        <section class="quote-calc" id="quote-calc" aria-label="Sofort-Tarif berechnen">
+            <div class="quote-inner">
+                <div class="section-head" style="text-align:left; max-width:780px; margin:0 0 16px;">
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Tarif in 10 Sekunden · Maersk-Spot-Style</p>
+                    <h2>Frachtkosten ohne Anfrage-Schleife.</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Von-PLZ, Nach-PLZ, Gewicht — drei Tarife stehen sofort vor Ihnen. Sammelgut, Express oder FTL. Verbindlich nach Bestätigung durch Disposition (max 30 Min).</p>
+                </div>
+                <div class="quote-grid">
+                    <form class="quote-form" onsubmit="event.preventDefault(); quoteCalc();">
+                        <div class="quote-form-row">
+                            <div>
+                                <label for="q-from">Von PLZ</label>
+                                <input id="q-from" type="text" placeholder="70329" value="70329" required>
+                            </div>
+                            <div>
+                                <label for="q-to">Nach PLZ</label>
+                                <input id="q-to" type="text" placeholder="80331" value="80331" required>
+                            </div>
+                        </div>
+                        <div class="quote-form-row">
+                            <div>
+                                <label for="q-weight">Gewicht (kg)</label>
+                                <input id="q-weight" type="number" min="1" max="40000" value="850" required>
+                            </div>
+                            <div>
+                                <label for="q-type">Sendungs-Typ</label>
+                                <select id="q-type"><option value="standard">Standard-Palette</option><option value="cooled">Kühl 2-8°C</option><option value="adr">ADR-Gefahrgut</option></select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Tarife berechnen</button>
+                    </form>
+                    <div class="quote-results" id="quote-results">
+                        <div class="quote-result-card">
+                            <div class="quote-result-label">Sammelgut · 48 h DACH</div>
+                            <div class="quote-result-name">Sammelgut Standard</div>
+                            <div class="quote-result-meta">Stuttgart → München · 850 kg · Standard-Palette</div>
+                            <div class="quote-result-price" id="q-price-sammelgut">187 €</div>
+                        </div>
+                        <div class="quote-result-card is-recommended">
+                            <span class="quote-result-badge">Empfohlen</span>
+                            <div class="quote-result-label">Express · 24 h DACH · Geld-zurück</div>
+                            <div class="quote-result-name">Express-Service</div>
+                            <div class="quote-result-meta">Stuttgart → München · 850 kg · Realtime-Tracking</div>
+                            <div class="quote-result-price" id="q-price-express">312 €</div>
+                        </div>
+                        <div class="quote-result-card">
+                            <div class="quote-result-label">FTL · Direkt · Eigener LKW</div>
+                            <div class="quote-result-name">Vollladung (FTL)</div>
+                            <div class="quote-result-meta">Stuttgart → München · ein LKW · keine Umladung</div>
+                            <div class="quote-result-price" id="q-price-ftl">684 €</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- L2 · Capacity-Pulse -->
+        <section class="capacity-pulse" id="capacity-pulse" aria-label="Aktuelle Flotte-Auslastung">
+            <div class="cp-inner">
+                <div class="section-head" style="text-align:left; max-width:780px; margin:0 0 16px;">
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Live · Aktualisiert vor 4 Min</p>
+                    <h2>Heute frei in der Flotte.</h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Wir zeigen, was wirklich verfügbar ist — bevor Sie anrufen. Disposition aktualisiert die Auslastung alle 15 Minuten direkt aus dem TMS.</p>
+                </div>
+                <div class="cp-grid">
+                    <div class="cp-card">
+                        <span class="cp-card-dot"></span>
+                        <div class="cp-card-val">12</div>
+                        <div class="cp-card-cat">LKW frei DACH</div>
+                        <div class="cp-card-meta">40-Tonner · Sammelgut + FTL</div>
+                    </div>
+                    <div class="cp-card">
+                        <span class="cp-card-dot"></span>
+                        <div class="cp-card-val">3</div>
+                        <div class="cp-card-cat">ADR-Tankwagen</div>
+                        <div class="cp-card-meta">Gefahrgut-zertifiziert · sofort</div>
+                    </div>
+                    <div class="cp-card">
+                        <span class="cp-card-dot"></span>
+                        <div class="cp-card-val">2</div>
+                        <div class="cp-card-cat">Express-Sprinter</div>
+                        <div class="cp-card-meta">Stuttgart · 24 h DACH</div>
+                    </div>
+                    <div class="cp-card">
+                        <span class="cp-card-dot"></span>
+                        <div class="cp-card-val">5</div>
+                        <div class="cp-card-cat">Kühl-LKW frei</div>
+                        <div class="cp-card-meta">Pharma · 2-8 °C · GDP</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- L3 · Compliance-Doc-Drawer-Trigger -->
+        <section class="compliance-trigger-section" id="compliance" aria-label="Compliance-Dokumente">
+            <div class="ct-inner">
+                <div>
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Procurement-Ready · Pharma + Automotive</p>
+                    <h2 style="margin-bottom:24px;">Alle Zertifikate. <em>Ein Klick.</em></h2>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:520px; font-weight:300; line-height:1.55;">SQAS, DSLV, GDP, ISO 9001, ADR-Schein, Versicherungs-Bestätigung — als gebündeltes Compliance-Paket direkt aus dem Doc-Center. Kein Anrufen, keine E-Mail-Schleifen mit der Procurement-Abteilung.</p>
+                </div>
+                <div>
+                    <button type="button" class="compliance-trigger-btn" id="compliance-open">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Compliance-Center öffnen
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <div class="compliance-drawer-overlay" id="compliance-overlay"></div>
+        <aside class="compliance-drawer" id="compliance-drawer" aria-label="Compliance-Doc-Center" aria-hidden="true">
+            <div class="compliance-drawer-head">
+                <div class="compliance-drawer-h">Compliance-Center</div>
+                <button type="button" class="compliance-drawer-close" id="compliance-close" aria-label="Schließen">×</button>
+            </div>
+            <div class="compliance-drawer-list">
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">SQAS</div>
+                    <div>
+                        <div class="compliance-doc-name">SQAS-Bewertung 2025</div>
+                        <div class="compliance-doc-meta">Cefic · 87 / 100 · gültig bis 12/2027</div>
+                    </div>
+                </a>
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">DSLV</div>
+                    <div>
+                        <div class="compliance-doc-name">DSLV-Mitgliedschaft</div>
+                        <div class="compliance-doc-meta">Speditions- &amp; Logistikverband · seit 1984</div>
+                    </div>
+                </a>
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">GDP</div>
+                    <div>
+                        <div class="compliance-doc-name">GDP-Pharma-Zertifikat</div>
+                        <div class="compliance-doc-meta">Good Distribution Practice · 2024</div>
+                    </div>
+                </a>
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">ISO</div>
+                    <div>
+                        <div class="compliance-doc-name">ISO 9001:2015</div>
+                        <div class="compliance-doc-meta">TÜV Süd · Re-Zertifizierung 03/2025</div>
+                    </div>
+                </a>
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">ADR</div>
+                    <div>
+                        <div class="compliance-doc-name">ADR-Bescheinigung</div>
+                        <div class="compliance-doc-meta">Gefahrgut · Klassen 3, 4, 6, 8, 9</div>
+                    </div>
+                </a>
+                <a href="#" class="compliance-doc" onclick="event.preventDefault();">
+                    <div class="compliance-doc-icon">VS</div>
+                    <div>
+                        <div class="compliance-doc-name">Verkehrshaftungs-Versicherung</div>
+                        <div class="compliance-doc-meta">8,33 € / kg gemäß §431 HGB · Allianz</div>
+                    </div>
+                </a>
+            </div>
+        </aside>
 
         <section class="clients">
             <div class="container">
@@ -1240,6 +1451,38 @@
     </div>
 
     <script>
+        // L1 Instant-Quote-Calculator
+        function quoteCalc() {
+            var w = +document.getElementById('q-weight').value;
+            var from = document.getElementById('q-from').value;
+            var to = document.getElementById('q-to').value;
+            var type = document.getElementById('q-type').value;
+            var distance = Math.abs((+from || 0) - (+to || 0)) / 1000 * 220 + 220;
+            var typeMul = { standard: 1, cooled: 1.35, adr: 1.55 }[type] || 1;
+            var weightFactor = Math.max(1, Math.log10(Math.max(50, w)) - 1.4);
+            var pSamm = Math.round(distance * 0.22 * weightFactor * typeMul);
+            var pExp = Math.round(distance * 0.36 * weightFactor * typeMul);
+            var pFtl = Math.round(distance * 0.78 * typeMul + 180);
+            document.getElementById('q-price-sammelgut').textContent = pSamm.toLocaleString('de-DE') + ' €';
+            document.getElementById('q-price-express').textContent = pExp.toLocaleString('de-DE') + ' €';
+            document.getElementById('q-price-ftl').textContent = pFtl.toLocaleString('de-DE') + ' €';
+            document.querySelectorAll('.quote-result-meta').forEach(function (m, i) {
+                if (i === 0) m.textContent = from + ' → ' + to + ' · ' + w + ' kg · ' + (type === 'cooled' ? 'Kühl 2-8°C' : type === 'adr' ? 'ADR-Gefahrgut' : 'Standard-Palette');
+                if (i === 1) m.textContent = from + ' → ' + to + ' · ' + w + ' kg · Realtime-Tracking';
+                if (i === 2) m.textContent = from + ' → ' + to + ' · ein LKW · keine Umladung';
+            });
+        }
+
+        // L3 Compliance-Drawer
+        var complianceDrawer = document.getElementById('compliance-drawer');
+        var complianceOverlay = document.getElementById('compliance-overlay');
+        function complianceOpen() { complianceDrawer.classList.add('is-open'); complianceOverlay.classList.add('is-open'); complianceDrawer.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+        function complianceClose() { complianceDrawer.classList.remove('is-open'); complianceOverlay.classList.remove('is-open'); complianceDrawer.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+        var coBtn = document.getElementById('compliance-open'); if (coBtn) coBtn.addEventListener('click', complianceOpen);
+        var ccBtn = document.getElementById('compliance-close'); if (ccBtn) ccBtn.addEventListener('click', complianceClose);
+        if (complianceOverlay) complianceOverlay.addEventListener('click', complianceClose);
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && complianceDrawer && complianceDrawer.classList.contains('is-open')) complianceClose(); });
+
         function switchTrack(tabBtn, key) {
             document.querySelectorAll('.track-tab').forEach(t => t.classList.remove('is-active'));
             tabBtn.classList.add('is-active');
