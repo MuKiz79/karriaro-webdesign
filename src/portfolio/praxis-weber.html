@@ -184,9 +184,8 @@
         .browser-chrome .dot-r { background: #ff5f57; } .browser-chrome .dot-y { background: #febc2e; } .browser-chrome .dot-g { background: #28c840; }
         .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
         .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
-        /* Sprint 15 — Hero-Branchen-Symbol (Heart-Pulse) statt Mockup */
-        .hero-avatar { aspect-ratio: 1; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0071e3, #1d1d1f); box-shadow: var(--shadow-lg); max-width: 480px; }
-        .hero-avatar .branche-icon { width: 42%; height: 42%; color: rgba(255,255,255,0.94); stroke-width: 1.2; }
+        /* Sprint 16 — Hero-Persona-Foto */
+        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; }
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #1d1d1f; line-height: 1.4; }
@@ -490,15 +489,9 @@
                         </div>
                     </div>
                     <div class="hero-mockup">
-                        <div class="hero-avatar" role="img" aria-label="Praxis Dr. Weber — Hausarztpraxis München">
-                            <svg class="branche-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M19 14c1.5-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.5 4.04 3 5.5l7 7Z"/>
-                                <polyline points="3 12 8 12 10 9 12 15 14 12 21 12"/>
-                            </svg>
-                        </div>
+                        <img class="hero-portrait-img" src="/images/praxis/persona.jpg" alt="Dr. Sarah Weber, Allgemeinmedizinerin Praxis Dr. Weber" loading="eager" width="800" height="1000">
                         <div class="mockup-caption">
                             <span class="mockup-label">Praxis Dr. Weber · Hausarztpraxis München</span>
-                            <span class="mockup-story">Allgemeinmedizin · Online-Terminbuchung · BFSG-konform</span>
                         </div>
                     </div>
                 </div>

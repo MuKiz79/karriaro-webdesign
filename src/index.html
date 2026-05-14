@@ -190,17 +190,16 @@
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid rgba(0,0,0,0.04);
         }
-        /* Sprint 14 — Nav-Container 1280px für mehr Atem auf großen Viewports + größere Logo-Höhe (48→60) */
+        /* Sprint 16 — Nav-Layout: Logo links, Links absolut mittig, CTA rechts (Apple-Pattern) */
         nav .inner {
             max-width: 1280px; margin: 0 auto; padding: 0 24px;
             display: flex; align-items: center; justify-content: space-between;
             height: 72px;
+            position: relative;
         }
         nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.3s; }
         nav a:hover { opacity: 1; }
-        /* Sprint 14 — Stripe-Pattern: Logo + Links als linker Block, CTA als rechter Block */
-        nav .nav-left { display: flex; align-items: center; gap: 36px; }
-        nav .links { display: flex; gap: 28px; }
+        nav .links { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 28px; }
         /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
             background: transparent; color: #0071e3; padding: 6px 16px;
@@ -563,10 +562,10 @@
             color: #1d1d1f;
             line-height: 1.4;
         }
-        /* Sprint 15 — 3 Feature-Bullets pro Branche unter Story-Caption */
+        /* Sprint 16 — 6 Feature-Bullets pro Branche, 2-Spalten-Grid */
         .mockup-features {
             list-style: none; padding: 0; margin: 12px 0 0;
-            display: flex; flex-wrap: wrap; gap: 8px 18px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
             font-size: 13px; color: #515154;
         }
         .mockup-features li {
@@ -575,6 +574,7 @@
         .mockup-features li::before {
             content: ''; width: 4px; height: 4px; border-radius: 50%; background: #0071e3; flex-shrink: 0;
         }
+        @media (max-width: 640px) { .mockup-features { grid-template-columns: 1fr; } }
         /* Sprint 11c M2 — Mockup-Meta als Pill rechts oben am Frame (statt 3. Caption-Layer) */
         .mockup-meta {
             position: absolute; top: 14px; right: 14px; z-index: 3;
@@ -1036,13 +1036,11 @@
 
     <nav>
         <div class="inner">
-            <div class="nav-left">
-                <a href="/" class="nav-logo" aria-label="Karriaro Webdesign-Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Webdesign-Manufaktur" width="412" height="60" style="display: block; height: 60px; width: auto;"></a>
-                <div class="links">
-                    <a href="#preis">Preis</a>
-                    <a href="/blog.html">Blog</a>
-                    <a href="/en/" style="font-weight: 500;">EN</a>
-                </div>
+            <a href="/" class="nav-logo" aria-label="Karriaro Webdesign-Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Webdesign-Manufaktur" width="412" height="60" style="display: block; height: 60px; width: auto;"></a>
+            <div class="links">
+                <a href="#preis">Preis</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/en/" style="font-weight: 500;">EN</a>
             </div>
             <a href="#kontakt" class="cta">Erstgespräch</a>
             <button class="menu-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
@@ -1091,11 +1089,13 @@
                     </div>
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien</span>
-                        <span class="mockup-story" id="hero-mockup-story">Wertermittlung in 60 Sekunden. Suche mit Live-Filter.</span>
                         <ul class="mockup-features" id="hero-mockup-features">
                             <li>Wertermittlung-Rechner</li>
                             <li>Live-Filter-Suche</li>
-                            <li>Termin-Buchung direkt</li>
+                            <li>Verkäufer-Dashboard</li>
+                            <li>Off-Market-Portfolio</li>
+                            <li>Marktbarometer</li>
+                            <li>IVD + HypZert</li>
                         </ul>
                         <span class="mockup-meta" id="hero-mockup-meta">Premium-Paket · ca. 14 Tage</span>
                     </div>
@@ -1956,7 +1956,7 @@
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Hausarztpraxis',
                     story: 'Online-Termine sind ab Woche zwei buchbar.',
-                    features: ['Online-Terminbuchung', 'Rezept-Anfrage digital', 'BFSG-konform'],
+                    features: ['Online-Terminbuchung', 'Rezept-Anfrage digital', 'Sprechzeiten transparent', 'Telemedizin-Link', 'Patienten-Aufnahme online', 'BFSG-konform'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '/portfolio/praxis-weber.html'
                 },
@@ -1966,7 +1966,7 @@
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerk',
                     story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
-                    features: ['Anfrage-Formular statt Telefon', 'Notdienst-Status sichtbar', 'Projekt-Galerie'],
+                    features: ['Anfrage-Formular statt Telefon', 'Notdienst-Status sichtbar', 'Projekt-Galerie', 'Festpreis-Rechner', 'Innungs-Mitgliedschaft', 'BFSG-konform'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
@@ -1976,7 +1976,7 @@
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastronomie',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
-                    features: ['Tisch-Reservierung online', 'Speisekarte mit Filter', 'Google-Bewertungen live'],
+                    features: ['Tisch-Reservierung online', 'Speisekarte mit Filter', 'AI-Sommelier', 'Google-Bewertungen live', 'Saisonkarte', 'Veranstaltungs-Anfragen'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '/portfolio/restaurant-template.html'
                 },
@@ -1986,7 +1986,7 @@
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition',
                     story: 'Disposition und Frachtanfrage in einem Formular.',
-                    features: ['Frachtanfrage-Formular', 'Disposition-Übersicht', 'Sendungs-Tracking'],
+                    features: ['Quote-Calc Tarif-Rechner', 'Frachtanfrage-Formular', 'Sendungs-Tracking', 'Compliance-Dokumente', 'Flotte-Auslastung', 'Damage-Reporting'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/spedition-schwaben.html'
                 },
@@ -1996,7 +1996,7 @@
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur',
                     story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
-                    features: ['Wunsch-Stylist wählbar', 'Online-Buchung 24/7', 'Late-Night-Slots Do/Fr'],
+                    features: ['Wunsch-Stylist wählbar', 'Online-Buchung 24/7', 'Late-Night-Slots Do/Fr', 'Live-Verfügbarkeit', 'Service-Galerie', 'Aveda Concept Salon'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/friseur-salon.html'
                 },
@@ -2006,7 +2006,7 @@
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Meisterbetrieb',
                     story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
-                    features: ['Foto-Upload zur Anfrage', 'Festpreis in 48 Stunden', 'Notdienst-Indikator'],
+                    features: ['Foto-Upload zur Anfrage', 'Festpreis in 48 Stunden', 'Sturm-Notdienst', 'Projekt-Galerie', 'Sanierungs-Konfigurator', 'Innungs-Zertifikat'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
@@ -2016,7 +2016,7 @@
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien',
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
-                    features: ['Wertermittlung-Rechner', 'Live-Filter-Suche', 'Termin-Buchung direkt'],
+                    features: ['Wertermittlung-Rechner', 'Live-Filter-Suche', 'Verkäufer-Dashboard', 'Off-Market-Portfolio', 'Marktbarometer', 'IVD + HypZert'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/immobilien-makler.html'
                 },
@@ -2026,7 +2026,7 @@
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Business-Beratung',
                     story: 'Klarheit in 90 Tagen — Erstgespräch direkt buchbar.',
-                    features: ['Calendly-Integration', 'Online-Erstgespräch', 'Newsletter-Magnet'],
+                    features: ['Calendly-Integration', 'Online-Erstgespräch', 'Methoden-Übersicht', 'Newsletter-Magnet', 'Referenzen-Galerie', 'Blog & Insights'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '#preis'
                 }
@@ -2040,10 +2040,9 @@
             var img = document.getElementById('hero-mockup-img');
             var url = document.getElementById('hero-mockup-url');
             var label = document.getElementById('hero-mockup-label');
-            var story = document.getElementById('hero-mockup-story');
             var link = document.getElementById('hero-mockup-link');
             var allTabs = Array.prototype.slice.call(document.querySelectorAll('.branche-tab'));
-            if (!switcher || !mockupBlock || !img || !url || !label || !story || !link || allTabs.length === 0) return;
+            if (!switcher || !mockupBlock || !img || !url || !label || !link || allTabs.length === 0) return;
 
             // Sprint 11c M3 — "+ N weitere"-Toggle für versteckte Tabs (Desktop)
             var moreBtn = document.getElementById('branche-more-btn');
@@ -2090,7 +2089,6 @@
                 img.alt = d.alt;
                 url.textContent = d.url;
                 label.textContent = d.label;
-                story.textContent = d.story;
                 var metaEl = document.getElementById('hero-mockup-meta');
                 if (metaEl && d.meta) metaEl.textContent = d.meta;
                 var featuresEl = document.getElementById('hero-mockup-features');
