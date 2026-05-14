@@ -206,12 +206,14 @@
         nav a { font-size: 12px; color: #1d1d1f; opacity: 0.8; transition: opacity 0.3s; }
         nav a:hover { opacity: 1; }
         nav .links { display: flex; gap: 28px; }
+        /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
-            background: #0071e3; color: #fff; padding: 6px 16px;
-            border-radius: 20px; font-size: 12px; font-weight: 500;
+            background: transparent; color: #0071e3; padding: 6px 16px;
+            border: 1.5px solid #0071e3; border-radius: 20px;
+            font-size: 12px; font-weight: 500;
             opacity: 1; transition: all 0.35s;
         }
-        nav .cta:hover { background: #005bb5; }
+        nav .cta:hover { background: #0071e3; color: #fff; }
         nav .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
         nav .menu-toggle span { display: block; width: 18px; height: 2px; background: #1d1d1f; margin: 4px 0; transition: all 0.3s; }
         .mobile-menu { display: none; position: fixed; top: 84px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
@@ -464,27 +466,7 @@
             padding: 100px 0 64px;
             overflow: hidden;
         }
-        /* Sprint 10 — Atelier-Foto hinter Text-Spalte, Treatment gelockert damit Bild sichtbar bleibt */
-        .hero-with-photo::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; bottom: 0;
-            width: 75%;
-            background-image:
-                linear-gradient(to right,
-                    rgba(255,255,255,0.30) 0%,
-                    rgba(255,255,255,0.55) 60%,
-                    rgba(255,255,255,0.95) 100%),
-                url('images/hero-atelier.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            filter: saturate(0.95) blur(1px);
-            transform: scale(1.04);
-            transform-origin: left center;
-            pointer-events: none;
-            z-index: 0;
-        }
+        /* Sprint 13 — Background-Bild entfernt, Hero ist Flat-White (Apple-Pure-Linie) */
         .hero-with-photo .hero-inner {
             width: 100%;
             max-width: 1440px;
@@ -1044,7 +1026,6 @@
                     +49 174 2796784
                     <span class="kr-topbar-hours">· Mo-Fr 9-18 Uhr</span>
                 </a>
-                <a href="#kontakt" class="kr-topbar-cta">Erstgespräch →</a>
             </div>
         </div>
     </div>
@@ -1078,11 +1059,10 @@
     <section aria-label="Einleitung" class="hero-with-photo">
         <div class="hero-inner">
             <div class="hero-text-block">
-                <p class="hero-eyebrow">Webdesign-Manufaktur</p>
                 <h1>Ihre Website.<br>Handgemacht.</h1>
                 <p class="subhead">
                     Kein Template, kein Baukasten — pro Auftrag neu entworfen.<br>
-                    Erster Entwurf in 24 Stunden. Ab 990&nbsp;€ einmalig, ohne Abo.
+                    Erster Entwurf in 24 Stunden, fertige Site in 14–30 Tagen je nach Paket. Ab 990&nbsp;€ einmalig, ohne Abo.
                 </p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn">Projekt starten</a>
@@ -1093,33 +1073,33 @@
             </div>
 
             <div class="hero-mockup-block">
-                <a href="/portfolio/friseur-salon.html" class="hero-mockup" id="hero-mockup-link">
+                <a href="/portfolio/immobilien-makler.html" class="hero-mockup" id="hero-mockup-link">
                     <div class="browser-frame browser-frame-large">
                         <div class="browser-chrome">
                             <span class="dot dot-r"></span>
                             <span class="dot dot-y"></span>
                             <span class="dot dot-g"></span>
-                            <span class="browser-url" id="hero-mockup-url">salon-mueller.de</span>
+                            <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
-                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/friseur-mueller-mockup.jpg" alt="Vorschau-Bild für Salon Müller — Friseur mit Online-Terminbuchung" loading="eager" width="1586" height="992">
+                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup.jpg" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1586" height="992">
                     </div>
                     <div class="mockup-caption">
-                        <span class="mockup-label" id="hero-mockup-label">Salon Müller · Friseur</span>
-                        <span class="mockup-story" id="hero-mockup-story">Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.</span>
-                        <span class="mockup-meta" id="hero-mockup-meta">Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket</span>
+                        <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien</span>
+                        <span class="mockup-story" id="hero-mockup-story">Wertermittlung in 60 Sekunden. Suche mit Live-Filter.</span>
+                        <span class="mockup-meta" id="hero-mockup-meta">Premium-Paket · ca. 32 Tage</span>
                     </div>
                 </a>
                 <div id="arbeiten" class="branche-switcher-wrap">
-                    <div class="branche-switcher-label">Branche wählen · Klick wechselt die Vorschau</div>
+                    <div class="branche-switcher-label">Branche wählen</div>
                 <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
-                    <button type="button" class="branche-tab is-active" data-branche="friseur" role="tab" aria-selected="true">Friseur</button>
-                    <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
-                    <button type="button" class="branche-tab" data-branche="immobilien" role="tab" aria-selected="false">Immobilien</button>
+                    <button type="button" class="branche-tab is-active" data-branche="immobilien" role="tab" aria-selected="true">Immobilien</button>
+                    <button type="button" class="branche-tab" data-branche="coaching" role="tab" aria-selected="false">Coaching</button>
                     <button type="button" class="branche-tab" data-branche="praxis" role="tab" aria-selected="false">Praxis</button>
-                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false">Gastronomie</button>
+                    <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false">Friseur</button>
+                    <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
+                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false" data-extra>Gastronomie</button>
                     <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false" data-extra>Logistik</button>
                     <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false" data-extra>Handwerk</button>
-                    <button type="button" class="branche-tab" data-branche="coaching" role="tab" aria-selected="false" data-extra>Coaching</button>
                     <button type="button" class="branche-more-btn" id="branche-more-btn" aria-label="Weitere Branchen anzeigen">+ 3 weitere</button>
                 </div>
                 </div>
@@ -1964,7 +1944,7 @@
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Hausarztpraxis',
                     story: 'Online-Termine sind ab Woche zwei buchbar.',
-                    meta: 'Diese Vorschau · ca. 25 Tage Lieferzeit · Business-Paket',
+                    meta: 'Business-Paket · ca. 25 Tage',
                     href: '/portfolio/praxis-weber.html'
                 },
                 handwerk: {
@@ -1973,7 +1953,7 @@
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerk',
                     story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
-                    meta: 'Diese Vorschau · ca. 28 Tage Lieferzeit · Premium-Paket',
+                    meta: 'Premium-Paket · ca. 28 Tage',
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
                 gastro: {
@@ -1982,7 +1962,7 @@
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastronomie',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
-                    meta: 'Diese Vorschau · ca. 26 Tage Lieferzeit · Business-Paket',
+                    meta: 'Business-Paket · ca. 26 Tage',
                     href: '/portfolio/restaurant-template.html'
                 },
                 logistik: {
@@ -1991,7 +1971,7 @@
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition',
                     story: 'Disposition und Frachtanfrage in einem Formular.',
-                    meta: 'Diese Vorschau · ca. 32 Tage Lieferzeit · Premium-Paket',
+                    meta: 'Premium-Paket · ca. 32 Tage',
                     href: '/portfolio/spedition-schwaben.html'
                 },
                 friseur: {
@@ -2000,7 +1980,7 @@
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur',
                     story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
-                    meta: 'Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket',
+                    meta: 'Premium-Paket · ca. 30 Tage',
                     href: '/portfolio/friseur-salon.html'
                 },
                 dachdecker: {
@@ -2009,7 +1989,7 @@
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Meisterbetrieb',
                     story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
-                    meta: 'Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket',
+                    meta: 'Premium-Paket · ca. 30 Tage',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
                 immobilien: {
@@ -2018,7 +1998,7 @@
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien',
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
-                    meta: 'Diese Vorschau · ca. 32 Tage Lieferzeit · Premium-Paket',
+                    meta: 'Premium-Paket · ca. 32 Tage',
                     href: '/portfolio/immobilien-makler.html'
                 },
                 coaching: {
@@ -2027,7 +2007,7 @@
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Business-Beratung',
                     story: 'Klarheit in 90 Tagen — Erstgespräch direkt buchbar.',
-                    meta: 'Diese Vorschau · ca. 24 Tage Lieferzeit · Business-Paket',
+                    meta: 'Business-Paket · ca. 24 Tage',
                     href: '#preis'
                 }
             };
