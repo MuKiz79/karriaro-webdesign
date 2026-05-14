@@ -278,6 +278,10 @@
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
         @media (max-width: 640px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 32px; } }
 
+        /* Sprint 9d — Pricing-Card Base-Styles (vorher als Inline-style + !important-Mobile-Override) */
+        .price-card, .price-card-active { padding: 36px 32px; border-radius: 20px; display: flex; flex-direction: column; }
+        .price-card-active { background: #f5f5f7; }
+        .price-card-premium { background: #0a0a0a; color: #fff; border: 1px solid #0a0a0a; position: relative; overflow: hidden; }
         .price-card { transition: background 0.4s ease; }
         .price-card:hover { background: #f5f5f7; }
         .price-card-active { transition: background 0.4s ease; }
@@ -303,7 +307,7 @@
             .subhead { margin-top: 20px; }
             .preview-card-content { padding: 16px; }
             .preview-card-title { font-size: 17px; }
-            .price-card, .price-card-active { padding: 28px !important; border-radius: 16px !important; }
+            .price-card, .price-card-active { padding: 28px; border-radius: 16px; }
             footer .wrap > div:first-child p { font-size: 11px; line-height: 1.8; }
         }
 
@@ -316,7 +320,7 @@
             .submit-btn { font-size: 16px; }
             input[type="text"], input[type="email"], textarea { font-size: 16px; padding: 14px 16px; }
             .grid-3 { gap: 24px; }
-            .price-card, .price-card-active { padding: 24px !important; }
+            .price-card, .price-card-active { padding: 24px; }
             .preview-card { border-radius: 12px; }
         }
 
@@ -371,9 +375,10 @@
             transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
         }
         .audit-card.is-revealed { opacity: 1; transform: translateY(0); }
-        .audit-card.severity-high { border-left: 3px solid #ff453a; }
-        .audit-card.severity-mid  { border-left: 3px solid #ff9f0a; }
-        .audit-card.severity-low  { border-left: 3px solid #30d158; }
+        /* Sprint 9d — Severity-Farben aus iOS-Defaults auf Karriaro-Brand-Tones gehoben */
+        .audit-card.severity-high { border-left: 3px solid #b8392f; background: rgba(184,57,47,0.025); }
+        .audit-card.severity-mid  { border-left: 3px solid #c2a570; background: rgba(194,165,112,0.04); }
+        .audit-card.severity-low  { border-left: 3px solid #3a8062; background: rgba(58,128,98,0.025); }
         .audit-card-label {
             font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
             color: #6e6e73; font-weight: 500; margin-bottom: 6px;
@@ -931,7 +936,11 @@
         @media (max-width: 720px) { .contribute-grid { grid-template-columns: 1fr; gap: 40px; } }
         /* Kontakt-Trust-Hook (Sprint 7e M1) */
         .kr-trust-hook { display: inline-flex; align-items: center; gap: 14px; padding: 14px 20px; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; margin-bottom: 32px; text-align: left; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
-        .kr-trust-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0071e3, #1d1d1f); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0; }
+        /* Sprint 9d — Avatar mit Brand-Mark statt generischem Gradient */
+        .kr-trust-avatar { position: relative; width: 44px; height: 44px; border-radius: 50%; background: #fbfbfd; color: #0a0a0a; display: flex; align-items: center; justify-content: center; font-family: 'Inter Tight', 'Inter', sans-serif; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; flex-shrink: 0; border: 1.5px solid #0a0a0a; box-shadow: inset 0 0 0 3px #fbfbfd, 0 0 0 1px rgba(0,113,227,0.18); }
+        .kr-trust-avatar::before, .kr-trust-avatar::after { content: ''; position: absolute; top: 50%; width: 6px; height: 1px; background: #0071e3; }
+        .kr-trust-avatar::before { left: -10px; }
+        .kr-trust-avatar::after { right: -10px; }
         .kr-trust-name { font-size: 14px; font-weight: 500; color: #1d1d1f; line-height: 1.3; }
         .kr-trust-meta { font-size: 12px; color: #6e6e73; margin-top: 2px; line-height: 1.3; }
         @media (max-width: 540px) { .kr-trust-hook { padding: 12px 14px; border-radius: 18px; gap: 12px; } .kr-trust-name, .kr-trust-meta { font-size: 12px; } }
@@ -1247,7 +1256,7 @@
             </p>
 
             <div class="pricing-grid">
-                <div class="price-card" style="padding: 36px 32px; border-radius: 20px; display: flex; flex-direction: column;">
+                <div class="price-card">
                     <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px;">Starter</p>
                     <div class="kr-price-num">990 €</div>
                     <span class="price-deliver">In ca. 14 Tagen online</span>
@@ -1262,7 +1271,7 @@
                         <a href="#kontakt" class="link-arrow" data-paket="Starter (990 €)">Starter wählen &rarr;</a>
                     </div>
                 </div>
-                <div class="price-card-active" style="padding: 36px 32px; border-radius: 20px; background: #f5f5f7; display: flex; flex-direction: column;">
+                <div class="price-card-active">
                     <p class="blue" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500;">Empfohlen</p>
                     <div class="kr-price-num">1.990 €</div>
                     <span class="price-deliver">In ca. 21 Tagen online</span>
@@ -1277,7 +1286,7 @@
                         <a href="#kontakt" class="btn" style="font-size: 14px; padding: 10px 24px;" data-paket="Business (1.990 €)">Business wählen</a>
                     </div>
                 </div>
-                <div class="price-card price-card-premium" style="padding: 36px 32px; border-radius: 20px; display: flex; flex-direction: column; background: #0a0a0a; color: #fff; border: 1px solid #0a0a0a; position: relative; overflow: hidden;">
+                <div class="price-card price-card-premium">
                     <span style="position: absolute; top: 20px; right: 20px; padding: 4px 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 999px;">Nach Maß</span>
                     <p style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; color: #4ea3ff; font-weight: 500;">Premium</p>
                     <div style="font-size: 44px; font-weight: 600; letter-spacing: -0.03em; color: #fff;">ab 3.500 €</div>
@@ -1293,7 +1302,7 @@
                         <a href="#kontakt" class="btn" style="font-size: 14px; padding: 10px 24px; background: #0071e3; color: #fff; border: 1px solid #0071e3;" data-paket="Premium (ab 3.500 €)">Premium anfragen</a>
                     </div>
                 </div>
-                <div class="price-card" style="padding: 36px 32px; border-radius: 20px; display: flex; flex-direction: column;">
+                <div class="price-card">
                     <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px;">Wartung &amp; Hosting</p>
                     <div class="kr-price-num">99 € <span class="muted" style="font-size: 17px; font-weight: 400;">/ Monat</span></div>
                     <p class="muted" style="font-size: 14px; margin: 8px 0 28px;">Optional — auch ohne Website-Paket buchbar</p>

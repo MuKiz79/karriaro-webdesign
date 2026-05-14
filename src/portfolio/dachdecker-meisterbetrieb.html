@@ -99,12 +99,14 @@
         /* D2 AR-Material-Visualizer */
         .material-viz { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
         .material-viz-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-        .material-viz-canvas { aspect-ratio: 16/10; background: var(--bg-soft); border-radius: var(--radius-lg); margin: 40px auto 24px; max-width: 980px; display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: clamp(40px, 5vw, 72px); color: var(--accent); letter-spacing: -0.02em; transition: background 0.4s ease, color 0.4s ease; position: relative; overflow: hidden; border: 1px solid var(--border); }
-        .material-viz-canvas::before { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(45deg, transparent 0 24px, rgba(0,0,0,0.04) 24px 25px); }
-        .material-viz-canvas[data-material="prefa"] { background: #4A5060; color: #E8DDC8; }
-        .material-viz-canvas[data-material="braas"] { background: #6B3528; color: #F4E6D2; }
-        .material-viz-canvas[data-material="eternit"] { background: #2C2E30; color: #D0D2D5; }
-        .material-viz-canvas[data-material="zinco"] { background: #3F5B43; color: #E0E8D8; }
+        /* Sprint 9d — Material-Visualizer mit echten Dach-Renders aus Sprint 8 statt Farb-Swatches */
+        .material-viz-canvas { aspect-ratio: 16/10; background-color: var(--bg-soft); background-size: cover; background-position: center; border-radius: var(--radius-lg); margin: 40px auto 24px; max-width: 980px; display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: clamp(40px, 5vw, 72px); color: #fff; letter-spacing: -0.02em; transition: background-image 0.4s ease; position: relative; overflow: hidden; border: 1px solid var(--border); text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+        .material-viz-canvas::before { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.35) 100%); z-index: 1; }
+        .material-viz-canvas > * { position: relative; z-index: 2; }
+        .material-viz-canvas[data-material="prefa"] { background-image: url('/images/dachdecker/nachher-3-pv-indach.jpg'); }
+        .material-viz-canvas[data-material="braas"] { background-image: url('/images/dachdecker/nachher-1-neueindeckung.jpg'); }
+        .material-viz-canvas[data-material="eternit"] { background-image: url('/images/dachdecker/vorher-1-moos.jpg'); }
+        .material-viz-canvas[data-material="zinco"] { background-image: url('/images/dachdecker/vorher-3-pv-leer.jpg'); }
         .material-toggles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 980px; margin: 0 auto; }
         .material-btn { padding: 18px 16px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; }
         .material-btn:hover { border-color: var(--accent); }
