@@ -80,6 +80,25 @@
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: var(--text); line-height: 1.4; }
         @media (max-width: 920px) { .hero-mockup-section-inner { grid-template-columns: 1fr; gap: 32px; } }
+
+        .gf-statement { padding: 80px 0; background: var(--bg); border-top: 1px solid var(--border); }
+        .gf-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 360px 1fr; gap: 64px; align-items: start; }
+        .gf-portrait img { width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: block; }
+        .gf-portrait .gf-caption { font-size: 11px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 14px; padding-left: 2px; }
+        .gf-content .eyebrow { color: var(--accent-dark); font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+        .gf-content h2 { font-size: clamp(28px, 3.4vw, 38px); letter-spacing: -0.02em; margin-bottom: 20px; }
+        .gf-quote { font-size: 19px; line-height: 1.55; color: var(--text); margin-bottom: 32px; font-weight: 300; max-width: 640px; }
+        .gf-quote strong { font-weight: 600; color: var(--accent); }
+        .gf-stats { display: grid; grid-template-columns: repeat(3, auto); gap: 40px; padding: 20px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 24px; max-width: 480px; }
+        .gf-stat .num { font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; }
+        .gf-stat .label { font-size: 11px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+        .gf-bio { font-size: 15px; color: var(--text-soft); line-height: 1.65; max-width: 640px; }
+        @media (max-width: 920px) {
+            .gf-inner { grid-template-columns: 1fr; gap: 32px; }
+            .gf-portrait { max-width: 320px; }
+            .gf-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        }
+
         button, input, textarea, select { font-family: inherit; }
         button { cursor: pointer; border: none; background: none; }
         ul { list-style: none; }
@@ -657,6 +676,37 @@
                 </div>
             </div>
         </div>
+
+        <section class="gf-statement" id="gf">
+            <div class="gf-inner">
+                <div class="gf-portrait">
+                    <img src="/images/spedition/persona.jpg" alt="Robert Schwaben, Geschäftsführer Spedition Schwaben Stuttgart" loading="eager" width="800" height="1000">
+                    <div class="gf-caption">Robert Schwaben · Stuttgart-Vaihingen</div>
+                </div>
+                <div class="gf-content">
+                    <p class="eyebrow">Geschäftsführer · 3. Generation</p>
+                    <h2>Robert Schwaben</h2>
+                    <p class="gf-quote">„Mein Großvater fuhr 1972 mit einem 7,5-Tonner los. Heute disponieren wir 142 Fahrzeuge. Was gleich geblieben ist: <strong>Wir nehmen jede Sendung persönlich.</strong> Wenn Sie mich anrufen, gehe ich ran. So einfach ist das."</p>
+                    <div class="gf-stats">
+                        <div class="gf-stat">
+                            <div class="num">1972</div>
+                            <div class="label">Gegründet</div>
+                        </div>
+                        <div class="gf-stat">
+                            <div class="num">3.</div>
+                            <div class="label">Generation</div>
+                        </div>
+                        <div class="gf-stat">
+                            <div class="num">320</div>
+                            <div class="label">Mitarbeiter</div>
+                        </div>
+                    </div>
+                    <div class="gf-bio">
+                        <p>Robert Schwaben übernahm 2008 die Geschäftsführung von seinem Vater. Studium der Logistik in Stuttgart, drei Jahre Disposition bei einem internationalen Logistikkonzern, dann zurück in den Familienbetrieb. Seit 2017 Vorsitzender des regionalen Speditionsverbandes Baden-Württemberg.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section class="hero-mockup-section">
             <div class="hero-mockup-section-inner">
