@@ -563,6 +563,18 @@
             color: #1d1d1f;
             line-height: 1.4;
         }
+        /* Sprint 15 — 3 Feature-Bullets pro Branche unter Story-Caption */
+        .mockup-features {
+            list-style: none; padding: 0; margin: 12px 0 0;
+            display: flex; flex-wrap: wrap; gap: 8px 18px;
+            font-size: 13px; color: #515154;
+        }
+        .mockup-features li {
+            display: inline-flex; align-items: center; gap: 7px;
+        }
+        .mockup-features li::before {
+            content: ''; width: 4px; height: 4px; border-radius: 50%; background: #0071e3; flex-shrink: 0;
+        }
         /* Sprint 11c M2 — Mockup-Meta als Pill rechts oben am Frame (statt 3. Caption-Layer) */
         .mockup-meta {
             position: absolute; top: 14px; right: 14px; z-index: 3;
@@ -641,6 +653,15 @@
         }
         .branche-more-btn:hover { border-color: #1d1d1f; color: #1d1d1f; border-style: solid; }
         .branche-more-btn.is-hidden { display: none; }
+        /* Sprint 15 — „Andere Branche" Auffang-Link für nicht-gelistete Branchen */
+        .branche-andere {
+            display: inline-flex; align-items: center;
+            padding: 8px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500;
+            color: #0071e3; text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .branche-andere:hover { color: #fff; background: #0071e3; }
         .branche-tab {
             position: relative;
             background: rgba(0,0,0,0.03);
@@ -1071,6 +1092,11 @@
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien</span>
                         <span class="mockup-story" id="hero-mockup-story">Wertermittlung in 60 Sekunden. Suche mit Live-Filter.</span>
+                        <ul class="mockup-features" id="hero-mockup-features">
+                            <li>Wertermittlung-Rechner</li>
+                            <li>Live-Filter-Suche</li>
+                            <li>Termin-Buchung direkt</li>
+                        </ul>
                         <span class="mockup-meta" id="hero-mockup-meta">Premium-Paket · ca. 14 Tage</span>
                     </div>
                 </a>
@@ -1086,6 +1112,7 @@
                     <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false" data-extra>Logistik</button>
                     <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false" data-extra>Handwerk</button>
                     <button type="button" class="branche-more-btn" id="branche-more-btn" aria-label="Weitere Branchen anzeigen">+ 3 weitere</button>
+                    <a href="#kontakt" class="branche-andere" data-paket="Andere Branche — Beratung gewünscht">Andere Branche →</a>
                 </div>
                 </div>
             </div>
@@ -1929,6 +1956,7 @@
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Hausarztpraxis',
                     story: 'Online-Termine sind ab Woche zwei buchbar.',
+                    features: ['Online-Terminbuchung', 'Rezept-Anfrage digital', 'BFSG-konform'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '/portfolio/praxis-weber.html'
                 },
@@ -1938,6 +1966,7 @@
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerk',
                     story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
+                    features: ['Anfrage-Formular statt Telefon', 'Notdienst-Status sichtbar', 'Projekt-Galerie'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
@@ -1947,6 +1976,7 @@
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastronomie',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
+                    features: ['Tisch-Reservierung online', 'Speisekarte mit Filter', 'Google-Bewertungen live'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '/portfolio/restaurant-template.html'
                 },
@@ -1956,6 +1986,7 @@
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition',
                     story: 'Disposition und Frachtanfrage in einem Formular.',
+                    features: ['Frachtanfrage-Formular', 'Disposition-Übersicht', 'Sendungs-Tracking'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/spedition-schwaben.html'
                 },
@@ -1965,6 +1996,7 @@
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur',
                     story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
+                    features: ['Wunsch-Stylist wählbar', 'Online-Buchung 24/7', 'Late-Night-Slots Do/Fr'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/friseur-salon.html'
                 },
@@ -1974,6 +2006,7 @@
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Meisterbetrieb',
                     story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
+                    features: ['Foto-Upload zur Anfrage', 'Festpreis in 48 Stunden', 'Notdienst-Indikator'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
@@ -1983,6 +2016,7 @@
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien',
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
+                    features: ['Wertermittlung-Rechner', 'Live-Filter-Suche', 'Termin-Buchung direkt'],
                     meta: 'Premium-Paket · ca. 14 Tage',
                     href: '/portfolio/immobilien-makler.html'
                 },
@@ -1992,6 +2026,7 @@
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Business-Beratung',
                     story: 'Klarheit in 90 Tagen — Erstgespräch direkt buchbar.',
+                    features: ['Calendly-Integration', 'Online-Erstgespräch', 'Newsletter-Magnet'],
                     meta: 'Business-Paket · ca. 10 Tage',
                     href: '#preis'
                 }
@@ -2058,6 +2093,10 @@
                 story.textContent = d.story;
                 var metaEl = document.getElementById('hero-mockup-meta');
                 if (metaEl && d.meta) metaEl.textContent = d.meta;
+                var featuresEl = document.getElementById('hero-mockup-features');
+                if (featuresEl && d.features) {
+                    featuresEl.innerHTML = d.features.map(function (f) { return '<li>' + f + '</li>'; }).join('');
+                }
                 link.href = d.href;
             }
 

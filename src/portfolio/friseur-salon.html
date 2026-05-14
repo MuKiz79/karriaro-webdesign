@@ -121,6 +121,9 @@
         .browser-chrome .dot-r { background: #ff5f57; } .browser-chrome .dot-y { background: #febc2e; } .browser-chrome .dot-g { background: #28c840; }
         .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
         .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
+        /* Sprint 15 — Hero-Branchen-Symbol (Schere) statt Mockup */
+        .hero-avatar { aspect-ratio: 1; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #5a2845, #d4a5a5); box-shadow: var(--shadow-lg); max-width: 480px; }
+        .hero-avatar .branche-icon { width: 42%; height: 42%; color: rgba(255,255,255,0.94); stroke-width: 1.2; }
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #1d1d1f; line-height: 1.4; }
@@ -622,16 +625,18 @@
                         </div>
                     </div>
                     <div class="hero-mockup">
-                        <div class="browser-frame browser-frame-large">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-                                <span class="browser-url">salon-mueller.de</span>
-                            </div>
-                            <img class="browser-screen-large" src="/images/friseur-mueller-mockup.jpg" alt="Website-Mockup Salon Müller" loading="eager" width="1586" height="992">
+                        <div class="hero-avatar" role="img" aria-label="Salon Müller — Friseur">
+                            <svg class="branche-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="6" cy="6" r="3"/>
+                                <circle cx="6" cy="18" r="3"/>
+                                <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+                                <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+                                <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+                            </svg>
                         </div>
                         <div class="mockup-caption">
                             <span class="mockup-label">Salon Müller · Friseur Düsseldorf</span>
-                            <span class="mockup-story">Stammkunden buchen ihren Stylist in Sekunden.</span>
+                            <span class="mockup-story">Aveda Concept Salon · Late-Night bis 21 Uhr</span>
                         </div>
                     </div>
                 </div>

@@ -175,6 +175,9 @@
         .browser-chrome .dot-r { background: #ff5f57; } .browser-chrome .dot-y { background: #febc2e; } .browser-chrome .dot-g { background: #28c840; }
         .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
         .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
+        /* Sprint 15 — Hero-Branchen-Symbol (Dach) statt Mockup */
+        .hero-avatar { aspect-ratio: 1; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1d1d1f, #c2a570); box-shadow: var(--shadow-lg); max-width: 480px; }
+        .hero-avatar .branche-icon { width: 42%; height: 42%; color: rgba(255,255,255,0.94); stroke-width: 1.2; }
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #1d1d1f; line-height: 1.4; }
@@ -633,16 +636,18 @@
                         </div>
                     </div>
                     <div class="hero-mockup">
-                        <div class="browser-frame browser-frame-large">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-                                <span class="browser-url">meisterbetrieb-berger.de</span>
-                            </div>
-                            <img class="browser-screen-large" src="/images/dachdecker-meister-mockup.jpg" alt="Website-Mockup Meisterbetrieb Berger" loading="eager" width="1586" height="992">
+                        <div class="hero-avatar" role="img" aria-label="Meisterbetrieb Berger — Dachdecker Stuttgart">
+                            <svg class="branche-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 11.5L12 3l10 8.5"/>
+                                <path d="M5 10v11h14V10"/>
+                                <line x1="9" y1="14" x2="9" y2="16"/>
+                                <line x1="13" y1="14" x2="13" y2="16"/>
+                                <line x1="17" y1="14" x2="17" y2="16"/>
+                            </svg>
                         </div>
                         <div class="mockup-caption">
                             <span class="mockup-label">Meisterbetrieb Berger · Dachdecker Stuttgart</span>
-                            <span class="mockup-story">Sturmschäden werden binnen 4 Stunden gesichert.</span>
+                            <span class="mockup-story">37 Jahre Erfahrung · Sturm-Notdienst · Festpreis-Garantie</span>
                         </div>
                     </div>
                 </div>

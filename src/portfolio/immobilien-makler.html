@@ -189,6 +189,9 @@
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #1d1d1f; line-height: 1.4; }
+        /* Sprint 15 — Hero-Branchen-Symbol statt Mockup */
+        .hero-avatar { aspect-ratio: 1; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0a1929, #c2a570); box-shadow: var(--shadow-lg); max-width: 480px; }
+        .hero-avatar .branche-icon { width: 42%; height: 42%; color: rgba(255,255,255,0.94); stroke-width: 1.2; }
 
         /* Wertermittlung-Widget */
         .bewertung { background: var(--bg-soft); padding: 96px 0; }
@@ -591,16 +594,16 @@
                         </div>
                     </div>
                     <div class="hero-mockup">
-                        <div class="browser-frame browser-frame-large">
-                            <div class="browser-chrome">
-                                <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-                                <span class="browser-url">stadtmakler-stuttgart.de</span>
-                            </div>
-                            <img class="browser-screen-large" src="/images/immobilien-stadtmakler-mockup.jpg" alt="Website-Mockup Stadtmakler Stuttgart" loading="eager" width="1586" height="992">
+                        <div class="hero-avatar" role="img" aria-label="Premium-Immobilien Stuttgart">
+                            <svg class="branche-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 10.5L12 3l9 7.5"/>
+                                <path d="M5 9.5V21h14V9.5"/>
+                                <path d="M10 21v-6h4v6"/>
+                            </svg>
                         </div>
                         <div class="mockup-caption">
                             <span class="mockup-label">Stadtmakler Stuttgart · Premium-Immobilien</span>
-                            <span class="mockup-story">Off-Market-Portfolio mit 6 Toplagen im Halbhöhenring.</span>
+                            <span class="mockup-story">IVD-Mitglied · HypZert-Sachverständiger · seit 24 Jahren</span>
                         </div>
                     </div>
                 </div>
