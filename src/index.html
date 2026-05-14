@@ -201,10 +201,15 @@
         }
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: background 0.3s, backdrop-filter 0.3s, border-bottom-color 0.3s;
+        }
+        nav.is-scrolled {
             background: rgba(251,251,253,0.92);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+            border-bottom-color: rgba(0,0,0,0.04);
         }
         /* Sprint 16 — Nav-Layout: Logo links, Links absolut mittig, CTA rechts (Apple-Pattern) */
         nav .inner {
@@ -1685,6 +1690,15 @@
 
 
     <script>
+        // Sprint 27 — Nav transparent above hero, solid bei Scroll (Apple-Style)
+        (function () {
+            var hpNav = document.querySelector('nav');
+            if (!hpNav) return;
+            window.addEventListener('scroll', function () {
+                hpNav.classList.toggle('is-scrolled', window.scrollY > 20);
+            }, { passive: true });
+        })();
+
         // Form submit via AJAX + redirect to success.html
         document.getElementById('kontakt-form').addEventListener('submit', function(e) {
             e.preventDefault();
