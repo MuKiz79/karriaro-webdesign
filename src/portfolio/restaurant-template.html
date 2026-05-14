@@ -268,6 +268,9 @@
         .story-content p strong { color: var(--text); font-weight: 600; }
         .story-img { aspect-ratio: 4/5; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); position: relative; }
         .story-img img { width: 100%; height: 100%; object-fit: cover; }
+        /* Sprint 8 Phase A — Initial-Avatar statt Chef-Foto */
+        .story-img-avatar { background: linear-gradient(135deg, #3a2820, #c2a570); display: flex; align-items: center; justify-content: center; }
+        .story-img-avatar .portrait-initial { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-size: clamp(140px, 22vw, 280px); color: rgba(255,255,255,0.94); font-weight: 400; font-style: italic; line-height: 1; letter-spacing: -0.02em; }
         .story-img-caption { position: absolute; bottom: 24px; left: 24px; right: 24px; background: rgba(254,252,248,0.94); backdrop-filter: blur(8px); padding: 14px 18px; border-radius: var(--radius); font-family: var(--sans); }
         .story-img-caption .who { font-size: 13px; font-weight: 600; color: var(--accent); }
         .story-img-caption .role { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
@@ -930,8 +933,8 @@
         <section class="story" id="story">
             <div class="container">
                 <div class="story-grid">
-                    <div class="story-img">
-                        <img src="/images/restaurant/chef-andreas.jpg" alt="Küchenchef Andreas Bauer" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
+                    <div class="story-img story-img-avatar" role="img" aria-label="Küchenchef Andreas Bauer">
+                        <span class="portrait-initial" aria-hidden="true">A</span>
                         <div class="story-img-caption">
                             <div class="who">Andreas Bauer</div>
                             <div class="role">Küchenchef · seit 2003 im Goldener Hirsch</div>

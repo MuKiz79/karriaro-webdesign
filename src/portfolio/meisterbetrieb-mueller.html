@@ -276,6 +276,9 @@
         .team-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
         .team-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; }
         .team-img img { width: 100%; height: 100%; object-fit: cover; }
+        /* Sprint 8 Phase A — Initial-Avatar statt Person-Foto */
+        .team-img-avatar { background: linear-gradient(135deg, #1e4d5c, #0071e3); display: flex; align-items: center; justify-content: center; }
+        .team-img-avatar .portrait-initial { font-family: 'Inter Tight', 'Inter', system-ui, sans-serif; font-size: clamp(140px, 22vw, 280px); color: rgba(255,255,255,0.94); font-weight: 500; line-height: 1; letter-spacing: -0.04em; }
         .team-text .role { color: var(--accent-dark); font-size: 14px; font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.06em; }
         .team-text h2 { margin-bottom: 16px; }
         .team-text p { color: var(--text-soft); margin-bottom: 14px; font-size: 16px; }
@@ -774,7 +777,7 @@
         <section id="team" class="team">
             <div class="container">
                 <div class="team-grid">
-                    <div class="team-img"><img src="/images/sanitaer/stefan-team.jpg" alt="Stefan Müller, Sanitär-Meister" loading="lazy" width="900" height="900" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                    <div class="team-img team-img-avatar" role="img" aria-label="Stefan Müller, Sanitär-Meister"><span class="portrait-initial" aria-hidden="true">S</span></div>
                     <div>
                         <p class="role">Meisterbetrieb seit 1995</p>
                         <h2>Stefan Müller. Drittes Glied einer Handwerker-Familie.</h2>
