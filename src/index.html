@@ -88,6 +88,22 @@
                     "@type": "Answer",
                     "text": "Ja. Jede Website wird mit Schema.org-Strukturdaten, semantischem HTML und optimierter Ladezeit gebaut — so dass Google, ChatGPT und Sprachassistenten Ihre Inhalte bevorzugt anzeigen."
                 }
+            },
+            {
+                "@type": "Question",
+                "name": "Bekomme ich branchenspezifische Werkzeuge auf meiner Website?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ja. Ab Business-Paket ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, AR-Try-On für Friseure, KI-Symptom-Checker für Praxen, AI-Sommelier für Restaurants, Capacity-Pulse für Speditionen — je nach Branche."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Wie sind die Zahlungsbedingungen?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "50 % nach dem Entwurf, 50 % bei Fertigstellung. Sie zahlen erst, wenn Sie mit dem ersten Entwurf zufrieden sind — kein Risiko vorab."
+                }
             }
         ]
     }
@@ -1061,6 +1077,7 @@
         <div class="inner">
             <a href="/" class="nav-logo" aria-label="Karriaro Webdesign-Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Webdesign-Manufaktur" width="316" height="46" style="display: block; height: 46px; width: auto;"></a>
             <div class="links">
+                <a href="#faq">FAQ</a>
                 <a href="#preis">Preis</a>
                 <a href="/blog.html">Blog</a>
                 <a href="/en/" style="font-weight: 500;">EN</a>
@@ -1073,6 +1090,7 @@
     </nav>
 
     <div id="mobile-menu" class="mobile-menu">
+        <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
         <a href="#preis" onclick="this.parentElement.classList.remove('open')">Preis</a>
         <a href="/blog.html">Blog</a>
         <a href="/en/">EN</a>
@@ -1423,6 +1441,72 @@
             </div>
             <p style="text-align: center; margin-top: 32px; font-size: 14px; color: #6e6e73;">
                 Insgesamt rechnen Sie mit ca. <strong style="color:#1d1d1f;">2–3 Stunden Eigenarbeit</strong> — verteilt auf die Projektlaufzeit.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- 6c · FAQ — sichtbare Sektion (Schema existiert bereits in <head>) -->
+    <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: #ffffff;">
+        <div class="wrap" style="max-width: 760px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">Häufige Fragen</p>
+                <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px;">Was Sie wissen möchten.</h2>
+                <p class="subhead" style="max-width: 540px; margin: 0 auto;">Sechs Antworten, die im Erstgespräch ohnehin kommen.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Was kostet eine Website bei Karriaro?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Eine One-Page-Website kostet einmalig 990 €. Eine Website mit bis zu 5 Unterseiten und lokaler SEO-Optimierung kostet 1.990 €. Eine maßgeschneiderte Premium-Website mit Branchen-Werkzeugen (Rechner, KI-Komponenten, Live-Status) startet bei 3.500 €. Optionales Hosting und Wartung gibt es für 99 €/Monat.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Wie lange dauert es, bis meine Website fertig ist?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Sie erhalten einen ersten Entwurf innerhalb von 24 Stunden. Die fertige Website ist in 7 bis 14 Tagen online — je nach Paket. Sie zahlen erst bei Zufriedenheit.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Bekomme ich branchenspezifische Werkzeuge auf meiner Website?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Ja. Ab Business-Paket ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, AR-Try-On für Friseure, KI-Symptom-Checker für Praxen, AI-Sommelier für Restaurants, Capacity-Pulse für Speditionen — je nach Branche.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Warum handcodierte Websites statt WordPress?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren, der Quellcode gehört Ihnen.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Ist meine Website für Google und KI-Suche optimiert?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Ja. Jede Website wird mit Schema.org-Strukturdaten, semantischem HTML und optimierter Ladezeit gebaut — so dass Google, ChatGPT und Sprachassistenten Ihre Inhalte bevorzugt anzeigen.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Wie sind die Zahlungsbedingungen?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400; transition: transform 0.2s;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">50 % nach dem Entwurf, 50 % bei Fertigstellung. Sie zahlen erst, wenn Sie mit dem ersten Entwurf zufrieden sind — kein Risiko vorab.</p>
+                </details>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px; font-size: 14px; color: #6e6e73;">
+                Noch eine Frage? <a href="#kontakt" style="color: #0071e3; text-decoration: underline;">Direkt fragen — Antwort innerhalb 24 Stunden.</a>
             </p>
         </div>
     </section>

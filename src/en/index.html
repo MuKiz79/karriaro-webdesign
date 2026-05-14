@@ -63,7 +63,7 @@
                 "name": "How much does a website from Karriaro cost?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "A one-page website costs €990 one-time. A website with up to 5 pages and local SEO costs €1,990. Optional hosting and maintenance is available for €99/month."
+                    "text": "A one-page website costs €990 one-time. A website with up to 5 pages and local SEO costs €1,990. A custom Premium website with industry tools (calculators, AI components, live status) starts at €3,500. Optional hosting and maintenance is available for €99/month."
                 }
             },
             {
@@ -71,7 +71,7 @@
                 "name": "How long does it take to build my website?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "You receive a draft within 48 hours. The finished website goes live in 1–2 weeks. You only pay when you're satisfied."
+                    "text": "You receive a draft within 24 hours. The finished website goes live in 7–14 days, depending on package. You only pay when you're satisfied."
                 }
             },
             {
@@ -88,6 +88,14 @@
                 "acceptedAnswer": {
                     "@type": "Answer",
                     "text": "Yes. Every website is built with Schema.org structured data, semantic HTML and optimised load times — so Google, ChatGPT and voice assistants display your content first."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Do I get industry-specific tools on my website?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. From the Business tier we include one industry tool light (e.g. booking widget or price calculator). The Premium tier includes the full set: BAFA grant calculator for roofing, mortgage calculator with amortisation plan for real estate, AR try-on for hair salons, AI symptom checker for medical practices, AI sommelier for restaurants, capacity pulse for logistics — depending on industry."
                 }
             }
         ]
@@ -111,13 +119,13 @@
                 "@type": "HowToStep",
                 "position": 2,
                 "name": "Call & Draft",
-                "text": "Quick call, then you receive your draft within 48 hours."
+                "text": "Quick call, then you receive your draft within 24 hours."
             },
             {
                 "@type": "HowToStep",
                 "position": 3,
                 "name": "Go live",
-                "text": "Ready in 1–2 weeks. You only pay when you're satisfied."
+                "text": "Ready in 7–14 days, depending on package. You only pay when you're satisfied."
             }
         ]
     }
@@ -203,6 +211,13 @@
         footer a:hover { color: #1d1d1f; }
         .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+        /* Tool-Info-Button + Tooltip (klick-basiert, mobile-safe) — analog DE */
+        .tool-info { margin-left: 6px; width: 14px; height: 14px; min-width: 14px; border-radius: 50%; border: 1px solid #d2d2d7; background: transparent; color: #86868b; font-size: 10px; font-weight: 600; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; transition: border-color 0.18s, color 0.18s, background 0.18s; vertical-align: middle; align-self: center; flex-shrink: 0; opacity: 0.7; }
+        .tool-info:hover, .tool-info:focus { border-color: #0071e3; color: #0071e3; opacity: 1; outline: none; }
+        .tool-info[aria-expanded="true"] { border-color: #0071e3; background: #0071e3; color: #fff; opacity: 1; }
+        .tool-tooltip { position: absolute; z-index: 1000; max-width: 280px; background: #1d1d1f; color: #f5f5f7; padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5; box-shadow: 0 8px 28px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
+        .tool-tooltip.visible { opacity: 1; pointer-events: auto; }
+        .tool-tooltip::before { content: ''; position: absolute; top: -5px; left: 16px; width: 10px; height: 10px; background: #1d1d1f; transform: rotate(45deg); }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
@@ -213,6 +228,7 @@
             <a href="/en/" style="font-weight: 600; font-size: 14px; opacity: 1;">Karriaro</a>
             <div class="links">
                 <a href="#work">Work</a>
+                <a href="#faq">FAQ</a>
                 <a href="#pricing">Pricing</a>
                 <a href="/blog.html">Blog</a>
                 <a href="/" style="font-weight: 500;">DE</a>
@@ -226,6 +242,7 @@
 
     <div id="mobile-menu" class="mobile-menu">
         <a href="#work" onclick="this.parentElement.classList.remove('open')">Work</a>
+        <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
         <a href="#pricing" onclick="this.parentElement.classList.remove('open')">Pricing</a>
         <a href="/blog.html">Blog</a>
         <a href="/">DE</a>
@@ -325,12 +342,12 @@
                 <div>
                     <div style="font-size: 48px; font-weight: 600; color: #aeaeb2;">2</div>
                     <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Call & Draft</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Quick call, then you receive your draft within 48 hours.</p>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Quick call, then you receive your draft within 24 hours.</p>
                 </div>
                 <div>
                     <div style="font-size: 48px; font-weight: 600; color: #aeaeb2;">3</div>
                     <div style="font-size: 17px; font-weight: 600; margin: 12px 0 6px;">Go live</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Ready in 1–2 weeks. You only pay when you're satisfied.</p>
+                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Ready in 7–14 days, depending on package. You only pay when you're satisfied.</p>
                 </div>
             </div>
         </div>
@@ -339,15 +356,186 @@
     <!-- 6 · Manufaktur -->
     <section aria-label="About us" class="fade-in" style="background: #f5f5f7;">
         <div class="wrap" style="text-align: center;">
-            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 32px;">Handmade, not mass-produced.</h2>
-            <p class="muted" style="font-size: clamp(15px, 1.8vw, 17px); line-height: 1.7; max-width: 520px; margin: 0 auto;">
-                Karriaro is not a production line. Every website is personally reviewed, every line of code deliberately written. No templates, no page builders, no delegation.
-            </p>
+            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Manufaktur, not agency.</h2>
+            <p class="muted" style="font-size: 15px; margin-bottom: 48px;">Here is what that actually means:</p>
+
+            <ul style="list-style: none; padding: 0; max-width: 720px; margin: 0 auto; text-align: left; display: flex; flex-direction: column; gap: 20px; font-size: 16px; color: #1d1d1f; line-height: 1.55;">
+                <li style="display: flex; gap: 14px;">
+                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                    <span><strong>One concept sketch per project.</strong> No template recycling, no drag-and-drop clicks — we design for your industry, your competition, your language.</span>
+                </li>
+                <li style="display: flex; gap: 14px;">
+                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                    <span><strong>Hand-coded HTML and CSS.</strong> No WordPress, no page builder, no plugin stack — and therefore no update hell and no third-party security holes.</span>
+                </li>
+                <li style="display: flex; gap: 14px;">
+                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                    <span><strong>Schema.org tailored per industry.</strong> Structured data hand-cut to your sector — so Google, ChatGPT and voice search understand what you actually do.</span>
+                </li>
+                <li style="display: flex; gap: 14px;">
+                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                    <span><strong>One person per project.</strong> You have one point of contact — no ticket system, no three-level escalation, no delegation to outside subs.</span>
+                </li>
+                <li style="display: flex; gap: 14px;">
+                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                    <span><strong>Industry tools included from Business tier.</strong> 5–12 interactive functions per demo (calculators, AI components, live status) — the proof that this is not a template.</span>
+                </li>
+            </ul>
+
             <p style="font-size: clamp(17px, 2vw, 21px); color: #1d1d1f; font-weight: 500; margin-top: 48px;">
                 When your name is on it, ours is behind it.
             </p>
+            <p style="text-align: center; margin-top: 28px;"><a href="#pricing" class="link-arrow">View packages &amp; pricing &rarr;</a></p>
         </div>
     </section>
+
+
+    <!-- 6c · Industry Tools — second differentiator next to Manufaktur -->
+    <section aria-label="Industry tools" class="fade-in" style="background: #ffffff;">
+        <div class="wrap" style="text-align: center;">
+            <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e73; margin-bottom: 14px;">Substance</p>
+            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Industry-specific tools per sector.</h2>
+            <p class="subhead" style="max-width: 620px; margin: 0 auto 56px;">
+                50+ interactive functions across seven demo websites — hand-written for the industry, not pulled from a plugin store.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; text-align: left;">
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Roofing</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>BAFA + KfW grant calculator</span><button type="button" class="tool-info" aria-label="More info: BAFA + KfW grant calculator" aria-expanded="false" data-tool-info="Property owner calculates the maximum federal grant (BAFA + KfW) live, with solar toggle, iSFP bonus and regional climate bonus. Grant range visible instantly instead of a 30-minute consultation call.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Address-to-roof report in 24 h</span><button type="button" class="tool-info" aria-label="More info: Address-to-roof report" aria-expanded="false" data-tool-info="Customer enters just the address. Demo generates a PDF with roof geometry, current material condition and fixed-price range within 24 hours — no on-site visit and no phone-call measurements.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Storm emergency pulse</span><button type="button" class="tool-info" aria-label="More info: Storm emergency pulse" aria-expanded="false" data-tool-info="Live status on the site: current availability and arrival time per region. Replaces the static '24/7 available' claim with a real live-availability indicator.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/dachdecker-meisterbetrieb.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Hair salon</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>AR try-on before the cut</span><button type="button" class="tool-info" aria-label="More info: AR try-on" aria-expanded="false" data-tool-info="Customer uploads a photo, six style tiles appear with the matching stylist, price and booking slot. Reassurance before the appointment — lowers no-show rate.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Live slot indicator</span><button type="button" class="tool-info" aria-label="More info: Live slot indicator" aria-expanded="false" data-tool-info="Banner shows in real time: '2 slots left today, 14 this week.' Replaces static 'call for appointment' with one-click booking.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Availability grid</span><button type="button" class="tool-info" aria-label="More info: Availability grid" aria-expanded="false" data-tool-info="Overview of all open slots for the next 14 days as a grid. Client sees in three seconds when her stylist has time — no phone callback, no email ping-pong.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/friseur-salon.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Real estate</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Valuation in 60 sec.</span><button type="button" class="tool-info" aria-label="More info: Valuation in 60 sec." aria-expanded="false" data-tool-info="Seller enters property type, postcode, m² and year of construction. Demo shows a live range (e.g. €685,000–745,000). Instant answer, lead capture in the background — no „we'll get back to you" modal.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Mortgage calculator with amortization</span><button type="button" class="tool-info" aria-label="More info: Mortgage calculator" aria-expanded="false" data-tool-info="Four sliders — price, equity, rate, repayment. Output: monthly payment, remaining debt after 10 years, expandable amortization plan. Buyer stays on your site instead of jumping to Check24.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>3D virtual staging</span><button type="button" class="tool-info" aria-label="More info: 3D virtual staging" aria-expanded="false" data-tool-info="Seller dashboard shows the property furnished in three styles (Bohemian, Scandinavian, Classic). Buyer sees it furnished, not empty — higher asking-to-sales ratio on average.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/immobilien-makler.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Plumbing</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Emergency live status</span><button type="button" class="tool-info" aria-label="More info: Emergency live status" aria-expanded="false" data-tool-info="Real-time availability and arrival time per region. Instead of '24/7 available' (often a voicemail), the pulse shows: 'Available in 45 min, region 70xxx'.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>3D bathroom configurator</span><button type="button" class="tool-info" aria-label="More info: 3D bathroom configurator" aria-expanded="false" data-tool-info="Customer configures their dream bathroom live (tiles, fixtures, layout). Demo delivers a price range and appointment suggestion — visualises the result before the on-site visit.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Photo damage to fixed price in 24 h</span><button type="button" class="tool-info" aria-label="More info: Photo damage to fixed price" aria-expanded="false" data-tool-info="Customer photographs the damage with their phone and writes one sentence. Plumbing owner replies with a fixed-price PDF. 80 % of jobs without an on-site visit — high margin.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/meisterbetrieb-mueller.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Medical practice</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>AI symptom checker</span><button type="button" class="tool-info" aria-label="More info: AI symptom checker" aria-expanded="false" data-tool-info="Patient enters three complaints and two pre-existing conditions. System suggests a treatment type and appointment slot. Not a medical diagnosis (liability), but a structured pre-anamnesis — saves MFA time.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>E-prescription in 30 sec.</span><button type="button" class="tool-info" aria-label="More info: E-prescription" aria-expanded="false" data-tool-info="Logged-in regular patients click „repeat prescription". System checks DMP status and sends the request to the MFA. Four clicks instead of a four-day callback loop.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Video consultation under 2 h</span><button type="button" class="tool-info" aria-label="More info: Video consultation" aria-expanded="false" data-tool-info="Logged-in patients book a slot with confirmation in 30 minutes, video starts automatically. Private patients pay readily for instant availability.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/praxis-weber.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Restaurant</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>AI sommelier</span><button type="button" class="tool-info" aria-label="More info: AI sommelier" aria-expanded="false" data-tool-info="Guest picks a main course. AI recommends three wines from the list with reasoning. Wine revenue up 14 % on DACH average — on your own site, not in a Vinario.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Smart waitlist</span><button type="button" class="tool-info" aria-label="More info: Smart waitlist" aria-expanded="false" data-tool-info="„Fully booked today" becomes a waitlist sign-up with push notification. 18 % of waitlist guests are seated the same evening — previously they went to the competition.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>4-step reservation</span><button type="button" class="tool-info" aria-label="More info: 4-step reservation" aria-expanded="false" data-tool-info="Date → party size → seating preference (inside, terrace, bar) → time slots with live availability. No OpenTable surcharge, no third-party data leak.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/restaurant-template.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+
+                <div style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 16px; padding: 28px;">
+                    <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 16px; letter-spacing: -0.01em;">Logistics</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 15px; color: #424245; line-height: 1.55;">
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Instant quote calculator</span><button type="button" class="tool-info" aria-label="More info: Instant quote calculator" aria-expanded="false" data-tool-info="Shipper fills four fields (pickup postcode, destination postcode, shipment type, weight). Demo immediately shows freight cost, ETA and vehicle class. „24h DACH or money back" guarantee as trust anchor.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Capacity pulse — live load</span><button type="button" class="tool-info" aria-label="More info: Capacity pulse" aria-expanded="false" data-tool-info="Real-time fleet display: 'Free today: 12 swap bodies, 4 sprinters, 1 refrigerated truck.' Customer sees the capacity directly — dispatcher does not need to dive into the ERP.">i</button></li>
+                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Compliance doc drawer</span><button type="button" class="tool-info" aria-label="More info: Compliance doc drawer" aria-expanded="false" data-tool-info="All certificates (GDP, ADR, IFS, ISO, SQAS) in one click panel. No mail-attachment ping-pong — B2B buyers verify themselves and close faster.">i</button></li>
+                    </ul>
+                    <p style="margin-top: 18px;"><a href="/portfolio/spedition-schwaben.html" class="link-arrow" style="font-size: 14px;">View demo &rarr;</a></p>
+                </div>
+            </div>
+
+            <p style="margin-top: 40px; font-size: 13px; color: #6e6e73;">
+                10,538 lines of hand-written code · zero templates · every function purpose-built.
+            </p>
+            <p style="margin-top: 24px;"><a href="#work" class="link-arrow">Browse all demos &rarr;</a></p>
+        </div>
+    </section>
+
+
+    <!-- 6d · FAQ — visible section (Schema already in <head>) -->
+    <section id="faq" aria-label="FAQ" class="fade-in" style="background: #ffffff;">
+        <div class="wrap" style="max-width: 760px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e73; margin-bottom: 14px;">Frequently asked</p>
+                <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px;">Things you'd ask anyway.</h2>
+                <p class="subhead" style="max-width: 540px; margin: 0 auto;">Five answers we usually give in the first call.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        How much does a website from Karriaro cost?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">A one-page website costs €990 one-time. A website with up to 5 pages and local SEO costs €1,990. A custom Premium website with industry tools (calculators, AI components, live status) starts at €3,500. Optional hosting and maintenance is available for €99/month.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        How long does it take to build my website?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">You receive a draft within 24 hours. The finished website goes live in 7–14 days, depending on package. You only pay when you're satisfied.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Do I get industry-specific tools on my website?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Yes. From the Business tier we include one industry tool light (e.g. booking widget or price calculator). The Premium tier includes the full set: BAFA grant calculator for roofing, mortgage calculator with amortisation plan for real estate, AR try-on for hair salons, AI symptom checker for medical practices, AI sommelier for restaurants, capacity pulse for logistics — depending on industry.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Why hand-coded websites instead of WordPress?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Hand-coded websites load in under 0.5 seconds, are more secure, GDPR-compliant and preferred by Google and AI assistants. No plugin risks, no subscriptions, the source code is yours.</p>
+                </details>
+
+                <details style="background: #fbfbfd; border: 1px solid #e5e5e7; border-radius: 12px; padding: 20px 24px;">
+                    <summary style="font-size: 17px; font-weight: 500; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                        Is my website optimised for Google and AI search?
+                        <span style="color: #0071e3; font-size: 20px; font-weight: 400;">+</span>
+                    </summary>
+                    <p style="margin-top: 16px; font-size: 15px; line-height: 1.6; color: #424245;">Yes. Every website is built with Schema.org structured data, semantic HTML and optimised load times — so Google, ChatGPT and voice assistants display your content first.</p>
+                </details>
+            </div>
+
+            <p style="text-align: center; margin-top: 40px; font-size: 14px; color: #6e6e73;">
+                Another question? <a href="#contact" style="color: #0071e3; text-decoration: underline;">Just ask — reply within 24 hours.</a>
+            </p>
+        </div>
+    </section>
+
 
     <!-- 7 · Pricing -->
     <section id="pricing" aria-label="Pricing" class="fade-in">
@@ -358,8 +546,9 @@
                 <div class="price-card" style="padding: 40px; border-radius: 20px; display: flex; flex-direction: column;">
                     <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px;">Starter</p>
                     <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em;">€990</div>
-                    <p class="muted" style="font-size: 14px; margin: 8px 0 32px;">For freelancers and small teams</p>
-                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 16px;">
+                    <span style="font-size: 13px; color: #6e6e73; margin: 4px 0 0; display: block;">Online in ~7 days</span>
+                    <p class="muted" style="font-size: 14px; margin: 8px 0 28px;">For freelancers and small teams</p>
+                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 14px;">
                         <li>One page that says it all</li>
                         <li>GDPR & accessibility compliant</li>
                         <li>Contact form included</li>
@@ -370,12 +559,14 @@
                     </div>
                 </div>
                 <div class="price-card-active" style="padding: 40px; border-radius: 20px; background: #f5f5f7; display: flex; flex-direction: column;">
-                    <p class="blue" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500;">Recommended</p>
+                    <p class="blue" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500;">Business</p>
                     <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em;">€1,990</div>
-                    <p class="muted" style="font-size: 14px; margin: 8px 0 32px;">For businesses ready to grow</p>
-                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 16px;">
+                    <span style="font-size: 13px; color: #6e6e73; margin: 4px 0 0; display: block;">Online in ~14 days</span>
+                    <p class="muted" style="font-size: 14px; margin: 8px 0 28px;">For businesses ready to grow</p>
+                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 14px;">
                         <li>Up to 5 pages</li>
                         <li>SEO for local visibility</li>
+                        <li>One industry tool light (e.g. booking widget or price calculator — depending on industry)</li>
                         <li>Google Maps integration</li>
                         <li>Everything from Starter included</li>
                     </ul>
@@ -383,26 +574,39 @@
                         <a href="#contact" class="btn" style="font-size: 14px; padding: 10px 24px;" data-paket="Business (€1,990)">Choose Business</a>
                     </div>
                 </div>
-                <div class="price-card" style="padding: 40px; border-radius: 20px; display: flex; flex-direction: column;">
-                    <p class="muted" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px;">Maintenance & Hosting</p>
-                    <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em;">€99 <span class="muted" style="font-size: 17px; font-weight: 400;">/ month</span></div>
-                    <p class="muted" style="font-size: 14px; margin: 8px 0 32px;">Optional — also available standalone</p>
-                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #1d1d1f; display: flex; flex-direction: column; gap: 16px;">
-                        <li>Hosting included</li>
-                        <li>Monthly backups</li>
-                        <li>Text & image updates</li>
-                        <li>Personal point of contact</li>
+                <div class="price-card" style="padding: 40px; border-radius: 20px; background: #0a0a0a; color: #fff; border: 1px solid #0a0a0a; display: flex; flex-direction: column; position: relative; overflow: hidden;">
+                    <span style="position: absolute; top: 20px; right: 20px; padding: 4px 10px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; border-radius: 999px;">Custom</span>
+                    <p style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; color: #4ea3ff; font-weight: 500;">Premium</p>
+                    <div style="font-size: 48px; font-weight: 600; letter-spacing: -0.03em; color: #fff;">from €3,500</div>
+                    <span style="font-size: 13px; color: rgba(255,255,255,0.6); margin: 4px 0 0; display: block;">Delivery on request</span>
+                    <p style="font-size: 14px; margin: 8px 0 28px; color: rgba(255,255,255,0.6);">For premium brands and B2B enterprise</p>
+                    <ul style="list-style: none; padding: 0; font-size: 15px; color: #fff; display: flex; flex-direction: column; gap: 14px;">
+                        <li>Unlimited sub-pages + editorial layout</li>
+                        <li>Industry AI &amp; calculators: BAFA grant calculator, mortgage calculator, AR try-on, AI symptom checker, damage classifier, AI sommelier — depending on industry</li>
+                        <li>Custom typography &amp; brand palette</li>
+                        <li>Personal guidance — no hotline</li>
                     </ul>
                     <div style="margin-top: auto; padding-top: 32px;">
-                        <a href="#contact" class="link-arrow" data-paket="Maintenance & Hosting (€99/month)">Request maintenance &rarr;</a>
+                        <a href="#contact" class="btn" style="font-size: 14px; padding: 10px 24px; background: #0071e3; color: #fff; border: 1px solid #0071e3;" data-paket="Premium (from €3,500)">Request Premium</a>
                     </div>
                 </div>
             </div>
-            <p style="margin-top: 24px; font-size: 14px; text-align: center;">
-                <a href="#contact" class="link-arrow">More than 5 pages? Get a custom quote &rarr;</a>
-            </p>
+
+            <!-- Maintenance as separate footnote block (analogous to DE .pricing-wartung) -->
+            <div style="max-width: 980px; margin: 48px auto 0; padding: 28px 36px; background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;">
+                <div style="flex: 1; text-align: left; min-width: 280px;">
+                    <p style="font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6e6e73; margin-bottom: 6px;">Optional</p>
+                    <p style="font-size: 17px; font-weight: 500; color: #1d1d1f; margin-bottom: 4px;"><strong>Maintenance &amp; Hosting</strong> · €99 / month</p>
+                    <p style="font-size: 14px; color: #6e6e73; line-height: 1.5; margin: 0;">Hosting · Monthly backups · Text &amp; image updates · Personal point of contact — also available standalone.</p>
+                </div>
+                <a href="#contact" class="btn" style="font-size: 14px; padding: 12px 24px; background: #1d1d1f; color: #fff; border: 1px solid #1d1d1f; flex-shrink: 0;" data-paket="Maintenance &amp; Hosting (€99/month)">Request maintenance &rarr;</a>
+            </div>
+
             <p class="muted" style="margin-top: 32px; font-size: 14px; text-align: center;">
                 50% after the draft, 50% on completion.
+            </p>
+            <p style="margin-top: 16px; font-size: 14px; text-align: center;">
+                <a href="#work" class="link-arrow">View seven industry demos — grant calculator, mortgage, try-on &amp; more, live &rarr;</a>
             </p>
         </div>
     </section>
@@ -520,6 +724,55 @@
             });
         }, { threshold: 0.15 });
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+    <!-- Tool-Info-Tooltip (klick-basiert, mobile-safe) — analog DE -->
+    <script>
+        (function () {
+            var tooltip = document.createElement('div');
+            tooltip.className = 'tool-tooltip';
+            tooltip.setAttribute('role', 'tooltip');
+            document.body.appendChild(tooltip);
+            var activeBtn = null;
+
+            function showTooltip(btn) {
+                var text = btn.getAttribute('data-tool-info');
+                if (!text) return;
+                tooltip.textContent = text;
+                var rect = btn.getBoundingClientRect();
+                var scrollX = window.scrollX || window.pageXOffset;
+                var scrollY = window.scrollY || window.pageYOffset;
+                var viewportWidth = document.documentElement.clientWidth;
+                var maxW = 280;
+                var left = rect.left + scrollX - 8;
+                if (left + maxW + 16 > viewportWidth + scrollX) left = viewportWidth + scrollX - maxW - 16;
+                if (left < 12) left = 12;
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = (rect.bottom + scrollY + 10) + 'px';
+                tooltip.classList.add('visible');
+                btn.setAttribute('aria-expanded', 'true');
+                activeBtn = btn;
+            }
+            function hideTooltip() {
+                tooltip.classList.remove('visible');
+                if (activeBtn) { activeBtn.setAttribute('aria-expanded', 'false'); activeBtn = null; }
+            }
+            document.addEventListener('click', function (e) {
+                var btn = e.target.closest && e.target.closest('.tool-info');
+                if (btn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (activeBtn === btn) hideTooltip();
+                    else { if (activeBtn) hideTooltip(); showTooltip(btn); }
+                } else if (!e.target.closest || !e.target.closest('.tool-tooltip')) {
+                    hideTooltip();
+                }
+            });
+            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTooltip(); });
+            window.addEventListener('scroll', function () { if (activeBtn) hideTooltip(); }, { passive: true });
+            window.addEventListener('resize', hideTooltip);
+            document.addEventListener('karriaro:rerender', hideTooltip);
+        })();
     </script>
 
 </body>
