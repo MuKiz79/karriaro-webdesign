@@ -563,6 +563,7 @@
             line-height: 1.4;
         }
         /* Sprint 16 — 6 Feature-Bullets pro Branche, 2-Spalten-Grid */
+        /* Sprint 17 — Stagger-Reveal beim Switcher-Wechsel + Hover-Glow auf Bullet-Punkt */
         .mockup-features {
             list-style: none; padding: 0; margin: 12px 0 0;
             display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
@@ -570,9 +571,23 @@
         }
         .mockup-features li {
             display: inline-flex; align-items: center; gap: 7px;
+            animation: bullet-reveal 0.4s ease both;
         }
         .mockup-features li::before {
             content: ''; width: 4px; height: 4px; border-radius: 50%; background: #0071e3; flex-shrink: 0;
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+        .mockup-features li:hover::before {
+            box-shadow: 0 0 8px rgba(0,113,227,0.55);
+            transform: scale(1.4);
+        }
+        @keyframes bullet-reveal {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mockup-features li { animation: none; }
+            .mockup-features li:hover::before { transform: none; }
         }
         @media (max-width: 640px) { .mockup-features { grid-template-columns: 1fr; } }
         /* Sprint 11c M2 — Mockup-Meta als Pill rechts oben am Frame (statt 3. Caption-Layer) */
@@ -1090,12 +1105,12 @@
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien</span>
                         <ul class="mockup-features" id="hero-mockup-features">
-                            <li>Wertermittlung-Rechner</li>
-                            <li>Live-Filter-Suche</li>
-                            <li>Verkäufer-Dashboard</li>
-                            <li>Off-Market-Portfolio</li>
-                            <li>Marktbarometer</li>
-                            <li>IVD + HypZert</li>
+                            <li style="animation-delay:0ms">Wertermittlung-Rechner</li>
+                            <li style="animation-delay:80ms">Live-Filter-Suche</li>
+                            <li style="animation-delay:160ms">Verkäufer-Dashboard</li>
+                            <li style="animation-delay:240ms">Off-Market-Portfolio</li>
+                            <li style="animation-delay:320ms">Marktbarometer</li>
+                            <li style="animation-delay:400ms">IVD + HypZert</li>
                         </ul>
                         <span class="mockup-meta" id="hero-mockup-meta">Premium-Paket · ca. 14 Tage</span>
                     </div>
@@ -2093,7 +2108,9 @@
                 if (metaEl && d.meta) metaEl.textContent = d.meta;
                 var featuresEl = document.getElementById('hero-mockup-features');
                 if (featuresEl && d.features) {
-                    featuresEl.innerHTML = d.features.map(function (f) { return '<li>' + f + '</li>'; }).join('');
+                    featuresEl.innerHTML = d.features.map(function (f, i) {
+                        return '<li style="animation-delay:' + (i * 80) + 'ms">' + f + '</li>';
+                    }).join('');
                 }
                 link.href = d.href;
             }
