@@ -141,52 +141,57 @@
         .muted { color: #6e6e73; }
         .blue { color: #0071e3; }
 
-        /* Sprint 7f M4 — Sticky-Topbar mit Telefonnummer */
+        /* Sprint 7f M4 + 9a Fix #4 — Sticky-Topbar harmonisiert mit Nav (Glassmorphism, kein Schwarz-Bruch) */
         .kr-topbar {
             position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-            background: #0a0a0a; color: #fff;
-            height: 36px;
-            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(251,251,253,0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            color: #1d1d1f;
+            height: 32px;
+            display: flex; align-items: center; justify-content: center;
             padding: 0 24px;
             font-size: 12px; letter-spacing: 0.01em;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .kr-topbar-inner {
+            max-width: 980px; width: 100%;
+            display: flex; align-items: center; justify-content: space-between;
         }
         .kr-topbar-brand {
-            font-weight: 500; opacity: 0.78;
+            font-weight: 500; color: #6e6e73;
             display: inline-flex; align-items: center; gap: 8px;
         }
         .kr-topbar-brand::before {
-            content: ''; width: 14px; height: 1px; background: #4ea3ff; flex-shrink: 0;
+            content: ''; width: 14px; height: 1px; background: #0071e3; flex-shrink: 0;
         }
         .kr-topbar-actions {
-            display: flex; align-items: center; gap: 18px;
+            display: flex; align-items: center; gap: 20px;
         }
         .kr-topbar-phone {
-            color: #fff; font-weight: 500;
+            color: #1d1d1f; font-weight: 500;
             display: inline-flex; align-items: center; gap: 8px;
+            transition: color 0.2s ease;
+        }
+        .kr-topbar-phone:hover { color: #0071e3; }
+        .kr-topbar-phone-icon {
+            width: 12px; height: 12px; flex-shrink: 0; color: #0071e3;
+        }
+        .kr-topbar-hours { color: #86868b; font-weight: 400; }
+        .kr-topbar-cta {
+            color: #0071e3; font-weight: 500;
             transition: opacity 0.2s ease;
         }
-        .kr-topbar-phone:hover { opacity: 0.78; }
-        .kr-topbar-phone-icon {
-            width: 12px; height: 12px; flex-shrink: 0; opacity: 0.7;
-        }
-        .kr-topbar-hours { opacity: 0.55; font-weight: 400; }
-        .kr-topbar-cta {
-            background: #0071e3; color: #fff;
-            padding: 5px 14px; border-radius: 999px;
-            font-weight: 500;
-            transition: background 0.2s ease;
-        }
-        .kr-topbar-cta:hover { background: #1a8ff5; }
+        .kr-topbar-cta:hover { opacity: 0.7; }
         @media (max-width: 640px) {
             .kr-topbar { padding: 0 16px; }
             .kr-topbar-brand { display: none; }
             .kr-topbar-hours { display: none; }
-            .kr-topbar-actions { gap: 12px; }
-            .kr-topbar-cta { font-size: 11px; padding: 4px 12px; }
+            .kr-topbar-actions { gap: 14px; }
+            .kr-topbar-cta { font-size: 11px; }
         }
         nav {
-            position: fixed; top: 36px; left: 0; right: 0; z-index: 50;
+            position: fixed; top: 32px; left: 0; right: 0; z-index: 50;
             background: rgba(251,251,253,0.92);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -208,7 +213,7 @@
         nav .cta:hover { background: #005bb5; }
         nav .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
         nav .menu-toggle span { display: block; width: 18px; height: 2px; background: #1d1d1f; margin: 4px 0; transition: all 0.3s; }
-        .mobile-menu { display: none; position: fixed; top: 84px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
+        .mobile-menu { display: none; position: fixed; top: 80px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
         .mobile-menu.open { display: flex; flex-direction: column; gap: 20px; }
         .mobile-menu a { font-size: 17px; color: #1d1d1f; font-weight: 500; }
         @media (max-width: 640px) { nav .links { display: none; } nav .menu-toggle { display: block; } }
@@ -605,6 +610,20 @@
             gap: 8px;
             flex-wrap: wrap;
         }
+        /* Sprint 9a Fix #3 — Mobile: horizontaler Scroll statt 3-Zeilen-Umbruch */
+        @media (max-width: 640px) {
+            .branche-switcher {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                margin-right: -24px;
+                padding-right: 24px;
+            }
+            .branche-switcher::-webkit-scrollbar { display: none; }
+            .branche-tab { flex-shrink: 0; }
+        }
         .branche-tab {
             position: relative;
             background: rgba(0,0,0,0.03);
@@ -921,16 +940,18 @@
 </head>
 <body>
 
-    <!-- Sprint 7f M4 — Sticky-Topbar -->
+    <!-- Sprint 7f M4 + 9a Fix #4 — Sticky-Topbar (Glassmorphism, harmonisiert mit Nav) -->
     <div class="kr-topbar" role="complementary" aria-label="Direkter Kontakt">
-        <span class="kr-topbar-brand">Karriaro · persönlich erreichbar</span>
-        <div class="kr-topbar-actions">
-            <a href="tel:+491742796784" class="kr-topbar-phone">
-                <svg class="kr-topbar-phone-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.65 1.41a1 1 0 0 1 1.4-.07l1.83 1.66a1 1 0 0 1 .08 1.4L5.7 5.8a8.5 8.5 0 0 0 4.5 4.5l1.4-1.26a1 1 0 0 1 1.4.08l1.66 1.83a1 1 0 0 1-.07 1.4l-1.04 1a2.5 2.5 0 0 1-2.7.55C7.93 12.4 3.6 8.07 2.1 3.15a2.5 2.5 0 0 1 .55-2.7l1-.04Z"/></svg>
-                +49 174 2796784
-                <span class="kr-topbar-hours">· Mo-Fr 9-18 Uhr</span>
-            </a>
-            <a href="#kontakt" class="kr-topbar-cta">Erstgespräch →</a>
+        <div class="kr-topbar-inner">
+            <span class="kr-topbar-brand">Karriaro · persönlich erreichbar</span>
+            <div class="kr-topbar-actions">
+                <a href="tel:+491742796784" class="kr-topbar-phone">
+                    <svg class="kr-topbar-phone-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.65 1.41a1 1 0 0 1 1.4-.07l1.83 1.66a1 1 0 0 1 .08 1.4L5.7 5.8a8.5 8.5 0 0 0 4.5 4.5l1.4-1.26a1 1 0 0 1 1.4.08l1.66 1.83a1 1 0 0 1-.07 1.4l-1.04 1a2.5 2.5 0 0 1-2.7.55C7.93 12.4 3.6 8.07 2.1 3.15a2.5 2.5 0 0 1 .55-2.7l1-.04Z"/></svg>
+                    +49 174 2796784
+                    <span class="kr-topbar-hours">· Mo-Fr 9-18 Uhr</span>
+                </a>
+                <a href="#kontakt" class="kr-topbar-cta">Erstgespräch →</a>
+            </div>
         </div>
     </div>
 
@@ -994,7 +1015,7 @@
                         <span class="mockup-meta" id="hero-mockup-meta">Diese Site · Lieferzeit 21 Tage · Business-Paket</span>
                     </div>
                 </a>
-                <div class="branche-switcher-wrap">
+                <div id="arbeiten" class="branche-switcher-wrap">
                     <div class="branche-switcher-label">Branche wählen · Klick wechselt die Vorschau</div>
                 <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
                     <button type="button" class="branche-tab is-active" data-branche="praxis" role="tab" aria-selected="true">Praxis</button>
