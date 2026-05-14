@@ -149,8 +149,9 @@
         .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
         .nav { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--border); }
         .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-        .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
-        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--accent); color: #fff; border-radius: 4px; font-weight: 700; font-size: 17px; font-family: 'Georgia', serif; }
+        .brand { display: flex; align-items: center; gap: 14px; font-family: var(--serif); font-size: 22px; font-weight: 500; letter-spacing: 0; color: var(--accent); }
+        .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--accent); color: #fff; border-radius: 4px; font-weight: 700; font-size: 19px; font-family: 'Georgia', serif; }
+        .brand-divider { display: inline-block; width: 1px; height: 28px; background: var(--border-strong); }
         .nav-links { display: flex; gap: 28px; font-size: 15px; color: var(--text-soft); }
         .nav-links a:hover { color: var(--text); }
         .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: 4px; font-size: 14px; font-weight: 600; transition: background 0.2s; }
@@ -169,8 +170,7 @@
             .hero-portrait { aspect-ratio: 4/3; }
         }
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
-        .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
-        .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
+        .hero-eyebrow { display: block; color: var(--text); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 28px; }
         .hero h1 { margin-bottom: 28px; color: var(--accent); font-family: var(--font); font-weight: 700; font-size: clamp(36px, 3.6vw, 52px); letter-spacing: -0.025em; line-height: 1.1; }
         .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 520px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
         .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
@@ -550,18 +550,10 @@
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>
-    <div class="kr-strip" role="complementary" aria-label="Karriaro Demo-Hinweis">
-        <a href="https://karriaro-webdesign.de" class="kr-strip-brand">
-            <span class="kr-strip-mark">K</span>
-            <span class="kr-strip-name">Karriaro · Webdesign-Manufaktur</span>
-        </a>
-        <span class="kr-strip-tag">Diese Demo-Seite hat Karriaro gebaut · Ihre eigene ab 1.990 €</span>
-        <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
-    </div>
 
     <header class="nav">
         <div class="nav-inner">
-            <a href="/portfolio/immobilien-makler.html" class="brand"><span class="brand-mark">S</span> Stadtmakler Stuttgart</a>
+            <a href="/portfolio/immobilien-makler.html" class="brand"><span class="brand-mark">S</span><span class="brand-divider" aria-hidden="true"></span><span class="brand-name">Stadtmakler Stuttgart</span></a>
             <nav class="nav-links" aria-label="Hauptnavigation">
                 <a href="#portfolio">Kaufen</a>
                 <a href="#bewertung">Verkaufen</a>
