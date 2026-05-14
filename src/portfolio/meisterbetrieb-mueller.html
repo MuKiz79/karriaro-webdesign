@@ -158,7 +158,8 @@
         .btn-ghost:hover { border-color: var(--text); }
         .btn-whatsapp { background: var(--whatsapp); color: #fff; }
         .btn-whatsapp:hover { background: #1ebe57; }
-        .hero-trust { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); align-items: center; }
+        .hero-trust .sep { color: var(--border-strong, #d1d5db); }
         .hero-trust .check { color: var(--accent); font-weight: 700; }
         .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
         .hero-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -401,7 +402,7 @@
         <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
     </div>
 
-    <div class="topbar">⚡ <strong>Notdienst 24/7</strong> — auch nachts &amp; am Wochenende. <a href="tel:+497112345678">0711 234 567</a></div>
+    <div class="topbar"><strong>Meisterbetrieb Müller</strong> · Sanitär &amp; Heizung Stuttgart · Notdienst 24/7 · <a href="tel:+497112345678">0711 234 567</a></div>
 
     <header class="nav">
         <div class="nav-inner">
@@ -409,18 +410,16 @@
             <nav class="nav-links" aria-label="Hauptnavigation">
                 <a href="#anfrage">Anfrage</a>
                 <a href="#leistungen">Leistungen</a>
-                <a href="#konfig">Preisrechner</a>
-                <a href="#foerder">Förderung</a>
-                <a href="#team">Team</a>
-                <a href="#karriere">Karriere</a>
+                <a href="tel:+497112345678">Notfall</a>
+                <a href="#team">Meister</a>
             </nav>
-            <a href="#anfrage" class="nav-cta">Foto-Anfrage</a>
+            <a href="#anfrage" class="nav-cta">Foto-Anfrage senden</a>
             <button class="mobile-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('is-open');">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
         <div class="mobile-menu" id="mobile-menu">
-            <a href="#anfrage">Anfrage</a><a href="#leistungen">Leistungen</a><a href="#konfig">Preisrechner</a><a href="#foerder">Förderung</a><a href="#team">Team</a><a href="#karriere">Karriere</a>
+            <a href="#anfrage">Anfrage</a><a href="#leistungen">Leistungen</a><a href="tel:+497112345678">Notfall</a><a href="#team">Meister</a>
         </div>
     </header>
 
@@ -429,19 +428,19 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Meisterbetrieb Müller · Sanitär &amp; Heizung Stuttgart</p>
-                        <h1>Komplettbad in 14 Tagen. Mit 5 Jahren Garantie.</h1>
-                        <p class="lead">Foto vom Schaden hochladen, Festpreis-Angebot in 24 Stunden. Notdienst 24/7. Versicherter Innungsbetrieb seit 1995.</p>
+                        <p class="hero-eyebrow">Sanitär &amp; Heizung · Stuttgart</p>
+                        <h1>Ihr Komplettbad. In 14 Tagen.<br><em>Mit 5 Jahren Garantie.</em></h1>
+                        <p class="lead">Foto vom Schaden senden — Festpreis-Angebot in 24 Stunden. Innungsmitglied SHK, Energie-Berater, versichert bis 5 Mio €.</p>
                         <div class="hero-ctas">
-                            <a href="#anfrage" class="btn btn-primary">Foto-Anfrage senden →</a>
-                            <a href="https://wa.me/497112345678" class="btn btn-whatsapp" rel="noopener">WhatsApp</a>
-                            <a href="tel:+497112345678" class="btn btn-ghost">0711 234 567</a>
+                            <a href="#anfrage" class="btn btn-primary">Foto-Anfrage senden</a>
+                            <a href="tel:+497112345678" class="btn btn-ghost">Notfall-Hotline</a>
                         </div>
                         <div class="hero-trust">
-                            <span><span class="check">✓</span> Festpreis-Garantie</span>
-                            <span><span class="check">✓</span> Innungsmitglied SHK</span>
-                            <span><span class="check">✓</span> Versichert bis 5 Mio €</span>
-                            <span><span class="check">✓</span> Energie-Berater (Reg. EE-9123)</span>
+                            <span>Festpreis-Garantie</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>SHK-Innungsmitglied</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>Versichert 5 Mio €</span>
                         </div>
                     </div>
                     <div class="hero-mockup">

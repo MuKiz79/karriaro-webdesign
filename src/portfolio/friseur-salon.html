@@ -105,7 +105,8 @@
         .btn-primary:hover { background: var(--accent-dark); }
         .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
         .btn-ghost:hover { border-color: var(--text); }
-        .hero-trust { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .sep { color: var(--border-strong, #d1d5db); }
         .hero-trust .dot { color: var(--accent); }
         .trust-live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--accent-bg); border-radius: 999px; color: var(--accent-strong); font-weight: 500; }
         .trust-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent-dark); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
@@ -574,7 +575,7 @@
         <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
     </div>
 
-    <div class="topbar">Di–Fr 9–21 Uhr · Sa 9–17 Uhr · <a href="tel:+4921186321119">0211 86 32 119</a> · Late-Night: donnerstags bis 21 Uhr</div>
+    <div class="topbar"><strong>Salon Müller</strong> · Aveda Concept Salon · Düsseldorf-Carlstadt · <a href="tel:+4921186321119">0211 86 32 119</a></div>
 
     <header class="nav">
         <div class="nav-inner">
@@ -583,23 +584,21 @@
                 Salon Müller
             </a>
             <nav class="nav-links" aria-label="Hauptnavigation">
+                <a href="#termin">Termin</a>
                 <a href="#leistungen">Leistungen</a>
-                <a href="#preise">Preise</a>
+                <a href="#galerie">Atelier</a>
                 <a href="#team">Team</a>
-                <a href="#galerie">Galerie</a>
-                <a href="#kontakt">Kontakt</a>
             </nav>
-            <a href="#termin" class="nav-cta">Termin buchen</a>
+            <a href="#termin" class="nav-cta">Termin online buchen</a>
             <button class="mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('is-open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
         <div class="mobile-menu" id="mobile-menu">
+            <a href="#termin">Termin</a>
             <a href="#leistungen">Leistungen</a>
-            <a href="#preise">Preise</a>
+            <a href="#galerie">Atelier</a>
             <a href="#team">Team</a>
-            <a href="#galerie">Galerie</a>
-            <a href="#kontakt">Kontakt</a>
         </div>
     </header>
 
@@ -608,19 +607,19 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Aveda Concept Salon · Düsseldorf-Carlstadt</p>
-                        <h1>Ein Schnitt, der zurückbleibt.<br><em>Ein Salon, der bleibt.</em></h1>
-                        <p class="lead">Seit 18 Jahren begleiten wir Düsseldorferinnen durch jede Haar-Phase — von der ersten Coloration bis zur Hochzeit. Termin in zwei Klicks, Wunsch-Stylist immer wählbar.</p>
+                        <p class="hero-eyebrow">Friseur · Düsseldorf-Carlstadt</p>
+                        <h1>Ihr Schnitt. Mit Plan.<br><em>Mit Beratung.</em></h1>
+                        <p class="lead">Online-Termin in 60 Sekunden buchen — heute oder morgen. 18 Jahre Atelier-Erfahrung, kein Massenbetrieb.</p>
                         <div class="hero-ctas">
-                            <a href="#termin" class="btn btn-primary">Online-Termin buchen
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                            </a>
-                            <a href="tel:+4921186321119" class="btn btn-ghost">0211 86 32 119</a>
+                            <a href="#termin" class="btn btn-primary">Termin online buchen</a>
+                            <a href="#kontakt" class="btn btn-ghost">Beratung anfragen</a>
                         </div>
                         <div class="hero-trust">
-                            <span class="trust-live"><span class="trust-dot"></span> Heute 14:30 noch frei · Laura</span>
-                            <span><span class="dot">●</span> Aveda Concept Salon</span>
-                            <span><span class="dot">●</span> Late-Night bis 21 Uhr</span>
+                            <span>Atelier-Salon</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>Stoff- &amp; Farb-Beratung</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>18 Jahre Düsseldorf</span>
                         </div>
                     </div>
                     <div class="hero-mockup">

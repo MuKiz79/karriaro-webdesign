@@ -168,7 +168,8 @@
         .btn-primary:hover { background: var(--accent-dark); }
         .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-strong); }
         .btn-ghost:hover { border-color: var(--text); }
-        .hero-trust { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust .sep { color: var(--border-strong, #d1d5db); }
         .hero-trust .dot { color: var(--accent); }
         .trust-live { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--accent-bg); border-radius: 999px; color: var(--accent-dark); font-weight: 500; }
         .trust-dot { display: inline-block; width: 8px; height: 8px; background: var(--accent-dark); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
@@ -438,7 +439,7 @@
         <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
     </div>
 
-    <div class="topbar">Sprechzeiten Mo–Fr 8–12, Mo/Di/Do 14–18 · Notdienst <a href="tel:116117">116 117</a> · <a href="tel:+498912345678">089 234 567</a></div>
+    <div class="topbar"><strong>Praxis Dr. Sarah Weber</strong> · Hausarztpraxis München-Schwabing · 22 Jahre · <a href="tel:+498912345678">089 234 567</a></div>
 
     <header class="nav">
         <div class="nav-inner">
@@ -447,23 +448,21 @@
                 Praxis Dr. Weber
             </a>
             <nav class="nav-links" aria-label="Hauptnavigation">
-                <a href="#leistungen">Leistungen</a>
-                <a href="#online-services">Online-Services</a>
+                <a href="#termin">Termin</a>
+                <a href="#sprechzeiten">Sprechstunde</a>
+                <a href="#leistungen">Praxis</a>
                 <a href="#team">Team</a>
-                <a href="#sprechzeiten">Sprechzeiten</a>
-                <a href="#kontakt">Kontakt</a>
             </nav>
-            <a href="#termin" class="nav-cta">Termin buchen</a>
+            <a href="#termin" class="nav-cta">Termin online buchen</a>
             <button class="mobile-toggle" aria-label="Menü öffnen" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('is-open'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
         <div class="mobile-menu" id="mobile-menu">
-            <a href="#leistungen">Leistungen</a>
-            <a href="#online-services">Online-Services</a>
+            <a href="#termin">Termin</a>
+            <a href="#sprechzeiten">Sprechstunde</a>
+            <a href="#leistungen">Praxis</a>
             <a href="#team">Team</a>
-            <a href="#sprechzeiten">Sprechzeiten</a>
-            <a href="#kontakt">Kontakt</a>
         </div>
     </header>
 
@@ -473,19 +472,19 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Praxis Dr. Sarah Weber · Hausarztpraxis München</p>
-                        <h1>Hausarztpraxis München. <em>Termin in 24 Stunden.</em></h1>
-                        <p class="lead">Termine online buchen, Folgerezepte digital anfragen, eAU per Klick. Persönliche Medizin mit kurzen Wartezeiten — seit 15 Jahren in Schwabing.</p>
+                        <p class="hero-eyebrow">Hausarztpraxis · München-Schwabing</p>
+                        <h1>Ihr Termin. In 24 Stunden.<br><em>Online buchbar.</em></h1>
+                        <p class="lead">Online-Terminbuchung, digitales Folgerezept, Hausbesuch nach Vereinbarung — Hausarztversorgung wie früher, organisiert wie heute.</p>
                         <div class="hero-ctas">
-                            <a href="#termin" class="btn btn-primary">Online-Termin buchen
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                            </a>
-                            <a href="tel:+498912345678" class="btn btn-ghost">089 234 567</a>
+                            <a href="#termin" class="btn btn-primary">Termin online buchen</a>
+                            <a href="#sprechzeiten" class="btn btn-ghost">Akutsprechstunde</a>
                         </div>
                         <div class="hero-trust">
-                            <span class="trust-live"><span class="trust-dot"></span> Heute pünktlich · Wartezimmer ~5 Min</span>
-                            <span><span class="dot">●</span> Online-Termine 24/7</span>
-                            <span><span class="dot">●</span> eAU + Rezept digital</span>
+                            <span>KV-Vertragsärztin</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>Hausärztliche Versorgung</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>22 Jahre München</span>
                         </div>
                     </div>
                     <div class="hero-mockup">

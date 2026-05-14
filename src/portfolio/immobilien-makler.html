@@ -173,7 +173,8 @@
         .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
         .btn-gold { background: var(--gold); color: #fff; }
         .btn-gold:hover { background: #6e6347; }
-        .hero-trust { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); }
+        .hero-trust { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--text-soft); align-items: center; }
+        .hero-trust .sep { color: var(--border-strong); }
         .hero-trust .check { color: var(--gold); font-weight: 700; }
         .hero-img { aspect-ratio: 4/5; background: var(--accent-bg); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
         .hero-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -556,20 +557,18 @@
         <div class="nav-inner">
             <a href="/portfolio/immobilien-makler.html" class="brand"><span class="brand-mark">S</span> Stadtmakler Stuttgart</a>
             <nav class="nav-links" aria-label="Hauptnavigation">
-                <a href="#bewertung">Wertermittlung</a>
-                <a href="#leistungen">Leistungen</a>
-                <a href="#portfolio">Objekte</a>
-                <a href="#markt">Marktbarometer</a>
-                <a href="#team">Team</a>
-                <a href="#kontakt">Kontakt</a>
+                <a href="#portfolio">Kaufen</a>
+                <a href="#bewertung">Verkaufen</a>
+                <a href="#team">Referenzen</a>
+                <a href="#leistungen">Über uns</a>
             </nav>
-            <a href="#bewertung" class="nav-cta">Wert ermitteln</a>
+            <a href="#bewertung" class="nav-cta">Wertermittlung starten</a>
             <button class="mobile-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('is-open');">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
         </div>
         <div class="mobile-menu" id="mobile-menu">
-            <a href="#bewertung">Wertermittlung</a><a href="#leistungen">Leistungen</a><a href="#portfolio">Objekte</a><a href="#markt">Marktbarometer</a><a href="#team">Team</a><a href="#kontakt">Kontakt</a>
+            <a href="#portfolio">Kaufen</a><a href="#bewertung">Verkaufen</a><a href="#team">Referenzen</a><a href="#leistungen">Über uns</a>
         </div>
     </header>
 
@@ -578,18 +577,19 @@
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Stadtmakler Stuttgart · Premium-Immobilien</p>
-                        <h1>Premium-Immobilien Stuttgart.<br><em>Diskret vermittelt.</em></h1>
-                        <p class="lead">47 Objekte in unserem Off-Market-Register, vertrauensvoll an geprüfte Käufer vermittelt. IVD-Mitglied, HypZert-Sachverständiger, seit 24 Jahren in Stuttgart verwurzelt.</p>
+                        <p class="hero-eyebrow">Immobilien · Stuttgart Stadtgebiet</p>
+                        <h1>Ihr Verkauf. Korrekt bewertet.<br><em>Diskret begleitet.</em></h1>
+                        <p class="lead">Erhalten Sie in 60 Sekunden eine fundierte Ersteinschätzung zum Marktwert Ihrer Immobilie – unverbindlich und sicher.</p>
                         <div class="hero-ctas">
-                            <a href="#bewertung" class="btn btn-primary">Wertermittlung starten →</a>
+                            <a href="#bewertung" class="btn btn-primary">Wertermittlung starten</a>
                             <a href="#kontakt" class="btn btn-ghost">Erstgespräch vereinbaren</a>
                         </div>
                         <div class="hero-trust">
-                            <span><span class="check">✓</span> IVD-Mitglied</span>
-                            <span><span class="check">✓</span> HypZert-Sachverständiger</span>
-                            <span><span class="check">✓</span> BFSG-konform</span>
-                            <span><span class="check">✓</span> 24 Jahre Stuttgart</span>
+                            <span>IVD-Mitglied</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>HypZert-Sachverständiger</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>24 Jahre lokal</span>
                         </div>
                     </div>
                     <div class="hero-mockup">

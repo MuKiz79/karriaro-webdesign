@@ -68,6 +68,9 @@
         .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; display: inline-flex; align-items: center; gap: 10px; }
         .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
 
+        .topbar { background: var(--accent-dark); color: rgba(255,255,255,0.92); font-size: 13px; padding: 9px 24px; text-align: center; letter-spacing: 0.01em; }
+        .topbar strong { color: var(--gold); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
         header.site { background: rgba(251,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         header .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 76px; padding: 0 24px; max-width: var(--max); margin: 0 auto; }
         .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 500; }
@@ -91,8 +94,9 @@
         .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
         .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border-strong); }
         .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-        .hero-trust { display: flex; gap: 24px; margin-top: 32px; flex-wrap: wrap; }
-        .hero-trust span { font-size: 13px; color: var(--text-light); display: inline-flex; align-items: center; gap: 8px; }
+        .hero-trust { display: flex; gap: 14px; margin-top: 32px; flex-wrap: wrap; align-items: center; }
+        .hero-trust span { font-size: 13px; color: var(--text-light); display: inline-flex; align-items: center; }
+        .hero-trust .sep { color: var(--border-strong); }
         .hero-trust .check { color: var(--accent); font-weight: 600; }
         .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; margin-left: auto; }
 
@@ -229,6 +233,8 @@
 <body>
     <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
 
+    <div class="topbar"><strong>Sarah Lehmann</strong> · Business-Coach Frankfurt-Bockenheim · 15 Jahre · <a href="tel:+496995201240">069 9520 1240</a></div>
+
     <header class="site">
         <div class="nav-inner">
             <a href="/portfolio/coaching-lehmann.html" class="nav-brand">
@@ -236,11 +242,10 @@
                 <span class="brand-name">Coach Lehmann</span>
             </a>
             <nav class="primary" aria-label="Hauptnavigation">
+                <a href="#calendly">Erstgespräch</a>
                 <a href="#methoden">Methoden</a>
-                <a href="#calendly">Termine</a>
                 <a href="#referenzen">Referenzen</a>
                 <a href="#ueber">Über</a>
-                <a href="#kontakt">Kontakt</a>
             </nav>
             <a href="#calendly" class="nav-cta">Erstgespräch buchen</a>
         </div>
@@ -252,18 +257,19 @@
             <div class="container">
                 <div class="hero-grid">
                     <div class="hero-content">
-                        <p class="eyebrow">Sarah Lehmann · Business-Coach Frankfurt</p>
-                        <h1>Klarheit in 90 Tagen. <em>Ohne Detour.</em></h1>
-                        <p class="lead">Business-Coaching für C-Level, Geschäftsführer und Top-Führungskräfte. Persönliches Sparring, klare Schritte, kein Methoden-Theater. Im Premium-Office Bockenheim oder remote.</p>
+                        <p class="eyebrow">Business-Coaching · Frankfurt-Bockenheim</p>
+                        <h1>Ihre Klarheit. In 90 Tagen. <em>Ohne Detour.</em></h1>
+                        <p class="lead">Persönliches Sparring für C-Level und Geschäftsführer — kein Methoden-Theater, klare Schritte. Premium-Office Bockenheim oder remote.</p>
                         <div class="hero-ctas">
-                            <a href="#calendly" class="btn-primary">Erstgespräch buchen →</a>
+                            <a href="#calendly" class="btn-primary">Erstgespräch buchen</a>
                             <a href="tel:+496995201240" class="btn-ghost">069 9520 1240</a>
                         </div>
                         <div class="hero-trust">
-                            <span><span class="check">✓</span> 15 Jahre Beratungserfahrung</span>
-                            <span><span class="check">✓</span> Frankfurt-Bockenheim</span>
-                            <span><span class="check">✓</span> Erstgespräch kostenfrei</span>
-                            <span><span class="check">✓</span> Auch remote</span>
+                            <span>15 Jahre Beratung</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>C-Level-Klientel</span>
+                            <span class="sep" aria-hidden="true">·</span>
+                            <span>Erstgespräch kostenfrei</span>
                         </div>
                     </div>
                     <div>
