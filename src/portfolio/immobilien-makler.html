@@ -147,8 +147,7 @@
         .topbar { background: var(--text); color: #fff; font-size: 13px; padding: 9px 24px; text-align: center; letter-spacing: 0.01em; }
         .topbar strong { color: var(--gold); font-weight: 600; }
         .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
-        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: transparent; border-bottom: 1px solid transparent; transition: background 0.3s, backdrop-filter 0.3s, border-color 0.3s; }
-        .nav.is-scrolled { background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom-color: var(--border); }
+        .nav { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid var(--border); }
         .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
         .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
         .brand-mark { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: var(--accent); color: #fff; border-radius: 4px; font-weight: 700; font-size: 17px; font-family: 'Georgia', serif; }
@@ -161,18 +160,18 @@
         .mobile-menu { display: none; }
 
         .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: clamp(560px, 70vh, 760px); align-items: center; background: var(--bg); }
-        .hero-content { padding-top: 120px; padding-bottom: 80px; padding-left: max(24px, calc((100vw - var(--max)) / 2 + 24px)); padding-right: 56px; }
+        .hero-content { padding-top: 64px; padding-bottom: 64px; padding-left: max(24px, calc((100vw - var(--max)) / 2 + 24px)); padding-right: 56px; }
         .hero-portrait { align-self: stretch; height: 100%; overflow: hidden; }
         .hero-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
         @media (max-width: 920px) {
             .hero { grid-template-columns: 1fr; min-height: auto; }
-            .hero-content { padding: 96px 24px 40px; }
+            .hero-content { padding: 48px 24px 32px; }
             .hero-portrait { aspect-ratio: 4/3; }
         }
         .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; }
         .hero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--gold); }
-        .hero h1 { margin-bottom: 36px; color: var(--accent); font-family: var(--font); font-weight: 700; font-size: clamp(40px, 5.2vw, 68px); letter-spacing: -0.025em; line-height: 1.1; }
+        .hero h1 { margin-bottom: 28px; color: var(--accent); font-family: var(--font); font-weight: 700; font-size: clamp(36px, 3.6vw, 52px); letter-spacing: -0.025em; line-height: 1.1; }
         .hero p.lead { font-size: 20px; color: var(--text-soft); max-width: 520px; margin-bottom: 48px; font-weight: 300; line-height: 1.55; }
         .hero-ctas { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 28px; }
         .btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 4px; font-size: 15px; font-weight: 600; transition: all 0.2s; }
@@ -1509,12 +1508,6 @@
     </div>
 
     <script>
-        // Nav-Scroll-Detection: transparent über Hero, solid bei Scroll
-        var navEl = document.querySelector('.nav');
-        window.addEventListener('scroll', function () {
-            navEl.classList.toggle('is-scrolled', window.scrollY > 20);
-        }, { passive: true });
-
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
         });
