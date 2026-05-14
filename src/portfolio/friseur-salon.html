@@ -276,6 +276,8 @@
         .style-card { cursor: pointer; transition: all 0.3s; }
         .style-card:hover { transform: translateY(-4px); }
         .style-card-img { aspect-ratio: 3/4; background: var(--accent-bg); border-radius: var(--radius-lg); margin-bottom: 14px; overflow: hidden; position: relative; }
+        .style-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+        .style-card:hover .style-card-img img { transform: scale(1.03); }
         .style-card-img::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%); opacity: 0; transition: opacity 0.3s; }
         .style-card:hover .style-card-img::after { opacity: 1; }
         .style-card-name { font-family: var(--serif); font-size: 22px; font-style: italic; font-weight: 400; color: var(--text); margin-bottom: 4px; }
@@ -692,42 +694,42 @@
                 </div>
                 <div class="style-gallery-grid">
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/long-pixie.jpg" alt="Long Pixie Frisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Long Pixie</div>
                         <div class="style-card-meta">Laura · 75 Min · ab 89 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/honey-balayage.jpg" alt="Honey Balayage Coloration — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Honey Balayage</div>
                         <div class="style-card-meta">Mara · 4 Std · ab 189 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/french-bob.jpg" alt="French Bob Frisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">French Bob</div>
                         <div class="style-card-meta">Mara · 60 Min · ab 79 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/bridal-updo.jpg" alt="Bridal Updo Brautfrisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Bridal Updo</div>
                         <div class="style-card-meta">Mara · 2 Std · ab 249 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/modern-shag.jpg" alt="Modern Shag Frisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Modern Shag</div>
                         <div class="style-card-meta">Laura · 80 Min · ab 89 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/curtain-bangs.jpg" alt="Curtain Bangs Frisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Curtain Bangs</div>
                         <div class="style-card-meta">Laura · 50 Min · ab 99 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/caramel-highlights.jpg" alt="Caramel Highlights Coloration — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Caramel Highlights</div>
                         <div class="style-card-meta">Mara · 3 Std · ab 169 €</div>
                     </div>
                     <div class="style-card" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
-                        <div class="style-card-img"></div>
+                        <div class="style-card-img"><img src="/images/friseur/fade-cut.jpg" alt="Fade Cut Herren-Frisur — Atelier Salon Müller Düsseldorf-Carlstadt" loading="lazy" width="600" height="800"></div>
                         <div class="style-card-name">Fade Cut</div>
                         <div class="style-card-meta">Tim · 45 Min · ab 49 €</div>
                     </div>
@@ -1081,9 +1083,7 @@
         <section id="team">
             <div class="container">
                 <div class="team-grid">
-                    <div class="team-img team-img-avatar" role="img" aria-label="Laura Müller, Friseurmeisterin und Inhaberin Salon Müller">
-                        <span class="portrait-initial" aria-hidden="true">L</span>
-                    </div>
+                    <div class="team-img"><img src="/images/friseur/persona.jpg" alt="Laura Müller, Friseurmeisterin und Inhaberin Salon Müller" loading="lazy" width="800" height="1000"></div>
                     <div class="team-text">
                         <p class="role">Inhaberin &amp; Friseurmeisterin</p>
                         <h2>Laura Müller</h2>
