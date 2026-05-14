@@ -28,6 +28,7 @@
         "priceRange": "€€"
     }
     </script>
+    <link rel="stylesheet" href="/css/tokens.css">
     <style>
         :root {
             --accent: #B47045;
@@ -42,8 +43,8 @@
             --border: #E5DED4;
             --border-strong: #C5B9A8;
             --whatsapp: #25D366;
-            --radius: 2px;
-            --radius-lg: 4px;
+            --radius: 6px;
+            --radius-lg: 12px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
             --shadow: 0 8px 32px rgba(30,35,45,0.06);
             --shadow-lg: 0 32px 72px rgba(30,35,45,0.10);
@@ -66,7 +67,7 @@
         h3, h4 { line-height: 1.2; letter-spacing: -0.01em; font-weight: 600; }
         h2 { font-size: clamp(30px, 3.8vw, 44px); }
         h3 { font-size: 20px; }
-        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 10px 10px; z-index: 200; font-size: 14px; }
+        .skip-link { position: absolute; top: -100%; left: 16px; background: var(--accent); color: #fff; padding: 12px 20px; border-radius: 0 0 var(--radius) var(--radius); z-index: 200; font-size: 14px; }
         .skip-link:focus { top: 0; }
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }

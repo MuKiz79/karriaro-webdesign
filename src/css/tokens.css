@@ -1,0 +1,81 @@
+/*
+ * Karriaro Design-Tokens — Sprint 9b
+ *
+ * Single-Source-of-Truth fuer Spacing, Radius, Shadow, Type-Scale.
+ * Wird in jede HTML-Seite per <link rel="stylesheet" href="/css/tokens.css">
+ * eingebunden, BEVOR das seiteneigene <style>-Block geladen wird, damit
+ * branchen-spezifische Overrides moeglich bleiben.
+ *
+ * Was bewusst NICHT hier ist:
+ * - Branchen-Farben (--accent, --gold, etc.) bleiben per Sub-Page
+ * - Branchen-Fonts (--font-serif, --font-tight) bleiben per Sub-Page
+ * - Container-Breite (--max) bleibt per Sub-Page (1200 - 1280px erlaubt)
+ */
+
+:root {
+  /* Radius — sechs konsistente Stufen */
+  --radius-xs: 4px;
+  --radius: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Spacing-Skala (8px-Base, Refactoring-UI-Pattern) */
+  --gap-xs: 8px;
+  --gap-sm: 16px;
+  --gap-md: 24px;
+  --gap-lg: 32px;
+  --gap-xl: 48px;
+  --gap-2xl: 64px;
+  --gap-3xl: 96px;
+
+  /* Shadow — neutral, ueber Brand-Farben legbar */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 24px 48px rgba(0,0,0,0.10);
+  --shadow-xl: 0 32px 72px rgba(0,0,0,0.12);
+
+  /* Type-Scale (clamp-Wertepaare, branchen-spezifische Fonts setzen Family) */
+  --type-display-min: 56px;
+  --type-display-max: 88px;
+  --type-h1-min: 40px;
+  --type-h1-max: 64px;
+  --type-h2-min: 28px;
+  --type-h2-max: 44px;
+  --type-h3-min: 20px;
+  --type-h3-max: 28px;
+  --type-body: 16px;
+  --type-small: 14px;
+  --type-eyebrow: 11px;
+
+  /* Letter-Spacing (Display-Type) */
+  --tracking-tight: -0.025em;
+  --tracking-snug: -0.015em;
+  --tracking-eyebrow: 0.18em;
+
+  /* Button-Padding-Tokens */
+  --btn-pad-sm: 8px 16px;
+  --btn-pad: 14px 28px;
+  --btn-pad-lg: 18px 36px;
+
+  /* Karriaro-Brand-Tokens (Hauptmarke — Sub-Pages koennen ueberschreiben) */
+  --kr-ink: #0a0a0a;
+  --kr-blue: #0071e3;
+  --kr-blue-light: #4ea3ff;
+  --kr-grey: #6e6e73;
+  --kr-grey-soft: #86868b;
+  --kr-bg: #fbfbfd;
+  --kr-bg-soft: #f5f5f7;
+  --kr-border: rgba(0,0,0,0.06);
+}
+
+/* Reduced-Motion respektieren (Refactoring-UI-Standard) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

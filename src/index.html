@@ -122,6 +122,7 @@
     }
     </script>
 
+    <link rel="stylesheet" href="/css/tokens.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -897,6 +898,10 @@
         .audit-pricing-exit-cta { background: #0071e3; color: #fff; padding: 14px 22px; border-radius: 999px; font-weight: 500; font-size: 14px; text-decoration: none; flex-shrink: 0; transition: background 0.2s ease; white-space: nowrap; }
         .audit-pricing-exit-cta:hover { background: #0058b8; }
         @media (max-width: 720px) { .audit-pricing-exit { flex-direction: column; align-items: stretch; padding: 20px; } .audit-pricing-exit-cta { text-align: center; } }
+        /* Sprint 9b — wiederkehrende Inline-Style-Patterns als Klassen */
+        .kr-check-item { display: flex; gap: 10px; }
+        .kr-check-mark { color: #0071e3; font-weight: 600; flex-shrink: 0; }
+        .kr-check-mark-top { color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
         /* Footer-Kontakt-Block (Sprint 7e N1) */
         .footer-kontakt-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid rgba(0,0,0,0.06); flex-wrap: wrap; }
         .footer-kontakt-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; color: #1d1d1f; margin-bottom: 10px; }
@@ -1099,25 +1104,25 @@
                 <div>
                     <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 18px; letter-spacing: -0.01em;">Schnell</h3>
                     <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #424245; line-height: 1.55;">
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Ladezeit-Ziel: unter 0,5 Sekunden</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Pagespeed-Ziel: 95+</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Statisch — keine Datenbank, keine Render-Zeit</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Ladezeit-Ziel: unter 0,5 Sekunden</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Pagespeed-Ziel: 95+</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Statisch — keine Datenbank, keine Render-Zeit</span></li>
                     </ul>
                 </div>
                 <div>
                     <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 18px; letter-spacing: -0.01em;">Sicher</h3>
                     <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #424245; line-height: 1.55;">
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Keine Plugin-Updates, keine Sicherheitslücken</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform inklusive (Pflicht seit Juni 2025)</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Quellcode gehört Ihnen — kein Vendor Lock-In</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Keine Plugin-Updates, keine Sicherheitslücken</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform inklusive (Pflicht seit Juni 2025)</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Quellcode gehört Ihnen — kein Vendor Lock-In</span></li>
                     </ul>
                 </div>
                 <div>
                     <h3 style="font-size: 21px; font-weight: 600; margin-bottom: 18px; letter-spacing: -0.01em;">Auffindbar</h3>
                     <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: #424245; line-height: 1.55;">
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Schema.org-Strukturdaten für Google und KI-Antworten</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Semantisches HTML, Mobile-first</span></li>
-                        <li style="display: flex; gap: 10px;"><span style="color: #0071e3; font-weight: 600; flex-shrink: 0;">✓</span><span>Lokale SEO ab Business-Paket</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Schema.org-Strukturdaten für Google und KI-Antworten</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Semantisches HTML, Mobile-first</span></li>
+                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Lokale SEO ab Business-Paket</span></li>
                     </ul>
                 </div>
             </div>
@@ -1160,20 +1165,20 @@
             <p class="muted" style="font-size: 15px; margin-bottom: 48px;">Was das konkret heißt:</p>
 
             <ul style="list-style: none; padding: 0; max-width: 720px; margin: 0 auto; text-align: left; display: flex; flex-direction: column; gap: 20px; font-size: 16px; color: #1d1d1f; line-height: 1.55;">
-                <li style="display: flex; gap: 14px;">
-                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                <li class="kr-check-item" style="gap: 14px;">
+                    <span class="kr-check-mark-top">✓</span>
                     <span><strong>Eine Konzept-Skizze pro Auftrag.</strong> Kein Template-Recycling, kein Baukasten-Klick — wir entwerfen für Ihre Branche, Ihren Wettbewerb, Ihre Sprache.</span>
                 </li>
-                <li style="display: flex; gap: 14px;">
-                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                <li class="kr-check-item" style="gap: 14px;">
+                    <span class="kr-check-mark-top">✓</span>
                     <span><strong>Handcodiertes HTML und CSS.</strong> Kein WordPress, kein Page-Builder, kein Plugin-Stack — daher keine Update-Hölle und keine Sicherheitslücken durch Drittanbieter.</span>
                 </li>
-                <li style="display: flex; gap: 14px;">
-                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                <li class="kr-check-item" style="gap: 14px;">
+                    <span class="kr-check-mark-top">✓</span>
                     <span><strong>Schema.org pro Branche maßgeschneidert.</strong> Strukturierte Daten manuell auf Ihre Branche zugeschnitten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte verstehen.</span>
                 </li>
-                <li style="display: flex; gap: 14px;">
-                    <span style="color: #0071e3; font-weight: 600; flex-shrink: 0; margin-top: 2px;">✓</span>
+                <li class="kr-check-item" style="gap: 14px;">
+                    <span class="kr-check-mark-top">✓</span>
                     <span><strong>Eine Person pro Auftrag.</strong> Sie haben einen Ansprechpartner — kein Ticket-System, keine Drei-Level-Eskalation, keine Delegation an externe Subs.</span>
                 </li>
             </ul>
