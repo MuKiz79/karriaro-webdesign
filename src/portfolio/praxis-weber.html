@@ -73,8 +73,13 @@
         .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
         section { padding: clamp(80px, 12vh, 140px) 0; }
         /* Sprint 7c Praxis-Killer */
-        /* P1 Symptom-Checker */
-        .symptom-checker { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        /* P1 Symptom-Checker — Sprint 9c: dezente Background-Image als Editorial-Anker */
+        .symptom-checker {
+            background:
+                linear-gradient(180deg, rgba(242,239,232,0.88) 0%, rgba(242,239,232,0.96) 50%, rgba(242,239,232,1) 100%),
+                url('/images/praxis/behandlungszimmer.jpg') center top / cover no-repeat;
+            padding: clamp(80px, 12vh, 140px) 0;
+        }
         .sc-inner { max-width: 760px; margin: 0 auto; padding: 0 24px; text-align: center; }
         .sc-step { display: none; margin-top: 32px; padding: 32px 28px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg); text-align: left; }
         .sc-step.is-active { display: block; }
@@ -96,8 +101,13 @@
         .sc-result-body { font-size: 15px; opacity: 0.92; line-height: 1.55; margin-bottom: 24px; }
         .sc-disclaimer { font-size: 11px; opacity: 0.65; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.18); }
         @media (max-width: 720px) { .sc-opts { grid-template-columns: 1fr; } }
-        /* P2 E-Rezept */
-        .erezept { background: var(--bg); padding: clamp(80px, 12vh, 140px) 0; }
+        /* P2 E-Rezept — Sprint 9c: dezente Background-Image als Editorial-Anker */
+        .erezept {
+            background:
+                linear-gradient(180deg, rgba(251,249,245,0.90) 0%, rgba(251,249,245,0.96) 60%, rgba(251,249,245,1) 100%),
+                url('/images/praxis/labor.jpg') right top / 60% auto no-repeat;
+            padding: clamp(80px, 12vh, 140px) 0;
+        }
         .erezept-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
         .erezept-form { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; }
         .erezept-form label { display: block; font-size: 12px; color: var(--text-light); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; }
@@ -107,8 +117,13 @@
         .erezept-success-h { font-family: var(--serif); font-style: italic; font-size: 20px; margin-bottom: 6px; }
         .erezept-success-body { font-size: 13px; opacity: 0.9; }
         @media (max-width: 920px) { .erezept-inner { grid-template-columns: 1fr; } }
-        /* P3 Express-Video */
-        .express-video { background: var(--bg-soft); padding: clamp(80px, 12vh, 140px) 0; }
+        /* P3 Express-Video — Sprint 9c: dezente Background-Image als Editorial-Anker */
+        .express-video {
+            background:
+                linear-gradient(180deg, rgba(242,239,232,0.92) 0%, rgba(242,239,232,0.96) 55%, rgba(242,239,232,1) 100%),
+                url('/images/praxis/ekg-raum.jpg') center bottom / cover no-repeat;
+            padding: clamp(80px, 12vh, 140px) 0;
+        }
         .ev-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; text-align: center; }
         .ev-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 40px; }
         .ev-slot { padding: 18px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer; font-family: inherit; transition: all 0.2s; }
