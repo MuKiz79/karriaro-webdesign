@@ -454,22 +454,22 @@
             padding: 100px 0 64px;
             overflow: hidden;
         }
-        /* Atelier-Foto hinter Text-Spalte, faded zur Karten-Spalte hin */
+        /* Sprint 10 — Atelier-Foto hinter Text-Spalte, Treatment gelockert damit Bild sichtbar bleibt */
         .hero-with-photo::before {
             content: '';
             position: absolute;
             top: 0; left: 0; bottom: 0;
-            width: 70%;
+            width: 75%;
             background-image:
                 linear-gradient(to right,
-                    rgba(255,255,255,0.55) 0%,
-                    rgba(255,255,255,0.65) 60%,
-                    rgba(255,255,255,1) 100%),
+                    rgba(255,255,255,0.30) 0%,
+                    rgba(255,255,255,0.55) 60%,
+                    rgba(255,255,255,0.95) 100%),
                 url('images/hero-atelier.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            filter: saturate(0.85) blur(4px);
+            filter: saturate(0.95) blur(1px);
             transform: scale(1.04);
             transform-origin: left center;
             pointer-events: none;
@@ -1009,8 +1009,8 @@
                 <p class="hero-eyebrow">Webdesign-Manufaktur</p>
                 <h1>Ihre Website.<br>Handgemacht.</h1>
                 <p class="subhead">
-                    Der Quellcode gehört Ihnen. <abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform, ohne Abo.<br>
-                    Ab 990&nbsp;€ einmalig, online in drei Wochen.
+                    Kein Template, kein Baukasten — pro Auftrag neu entworfen.<br>
+                    Erster Entwurf in 24 Stunden. Ab 990&nbsp;€ einmalig, ohne Abo.
                 </p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn">Projekt starten</a>
@@ -1021,32 +1021,32 @@
             </div>
 
             <div class="hero-mockup-block">
-                <a href="/portfolio/praxis-weber.html" class="hero-mockup" id="hero-mockup-link">
+                <a href="/portfolio/friseur-salon.html" class="hero-mockup" id="hero-mockup-link">
                     <div class="browser-frame browser-frame-large">
                         <div class="browser-chrome">
                             <span class="dot dot-r"></span>
                             <span class="dot dot-y"></span>
                             <span class="dot dot-g"></span>
-                            <span class="browser-url" id="hero-mockup-url">praxis-dr-weber.de</span>
+                            <span class="browser-url" id="hero-mockup-url">salon-mueller.de</span>
                         </div>
-                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/praxis-weber-mockup.jpg" alt="Website-Mockup für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung" loading="eager" width="1586" height="992">
+                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/friseur-mueller-mockup.jpg" alt="Vorschau-Bild für Salon Müller — Friseur mit Online-Terminbuchung" loading="eager" width="1586" height="992">
                     </div>
                     <div class="mockup-caption">
-                        <span class="mockup-label" id="hero-mockup-label">Praxis Dr. Weber · Hausarztpraxis</span>
-                        <span class="mockup-story" id="hero-mockup-story">Online-Termine sind ab Woche zwei buchbar.</span>
-                        <span class="mockup-meta" id="hero-mockup-meta">Diese Site · Lieferzeit 21 Tage · Business-Paket</span>
+                        <span class="mockup-label" id="hero-mockup-label">Salon Müller · Friseur</span>
+                        <span class="mockup-story" id="hero-mockup-story">Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.</span>
+                        <span class="mockup-meta" id="hero-mockup-meta">Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket</span>
                     </div>
                 </a>
                 <div id="arbeiten" class="branche-switcher-wrap">
                     <div class="branche-switcher-label">Branche wählen · Klick wechselt die Vorschau</div>
                 <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
-                    <button type="button" class="branche-tab is-active" data-branche="praxis" role="tab" aria-selected="true">Praxis</button>
-                    <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false">Handwerk</button>
-                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false">Gastronomie</button>
-                    <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false">Logistik</button>
-                    <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false">Friseur</button>
+                    <button type="button" class="branche-tab is-active" data-branche="friseur" role="tab" aria-selected="true">Friseur</button>
                     <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false">Dachdecker</button>
                     <button type="button" class="branche-tab" data-branche="immobilien" role="tab" aria-selected="false">Immobilien</button>
+                    <button type="button" class="branche-tab" data-branche="praxis" role="tab" aria-selected="false">Praxis</button>
+                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false">Gastronomie</button>
+                    <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false">Logistik</button>
+                    <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false">Handwerk</button>
                     <button type="button" class="branche-tab" data-branche="coaching" role="tab" aria-selected="false">Coaching</button>
                 </div>
                 </div>
@@ -1143,7 +1143,7 @@
                     </ul>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 56px;"><a href="#arbeiten" class="link-arrow">Diese Substanz live sehen — Beispielseiten ansehen &rarr;</a></p>
+            <p style="text-align: center; margin-top: 56px;"><a href="/portfolio/friseur-salon.html" class="link-arrow">Eine fertige Beispielseite ansehen &rarr;</a></p>
         </div>
     </section>
 
@@ -1337,8 +1337,8 @@
             <div class="kr-trust-hook">
                 <div class="kr-trust-avatar" aria-hidden="true">M</div>
                 <div class="kr-trust-body">
-                    <div class="kr-trust-name">Sie sprechen direkt mit Muammer Kızılaslan</div>
-                    <div class="kr-trust-meta">Gründer · keine Hotline · keine Vertriebsabteilung · Antwort binnen 24 h</div>
+                    <div class="kr-trust-name">Antwort binnen 24 Stunden — direkt von Muammer Kızılaslan</div>
+                    <div class="kr-trust-meta">Gründer · keine Hotline · keine Vertriebsabteilung</div>
                 </div>
             </div>
 
@@ -1889,74 +1889,74 @@
             var data = {
                 praxis: {
                     src: '/images/praxis-weber-mockup.jpg',
-                    alt: 'Website-Mockup für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung',
+                    alt: 'Vorschau-Bild für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung',
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Hausarztpraxis',
                     story: 'Online-Termine sind ab Woche zwei buchbar.',
-                    meta: 'Diese Site · Lieferzeit 25 Tage · Business-Paket',
+                    meta: 'Diese Vorschau · ca. 25 Tage Lieferzeit · Business-Paket',
                     href: '/portfolio/praxis-weber.html'
                 },
                 handwerk: {
                     src: '/images/handwerk-mueller-mockup.jpg',
-                    alt: 'Website-Mockup für Meisterbetrieb Müller — Sanitär & Heizung',
+                    alt: 'Vorschau-Bild für Meisterbetrieb Müller — Sanitär & Heizung',
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerk',
                     story: 'Anfragen kommen seit Launch übers Formular, nicht übers Telefon.',
-                    meta: 'Diese Site · Lieferzeit 28 Tage · Premium-Paket',
+                    meta: 'Diese Vorschau · ca. 28 Tage Lieferzeit · Premium-Paket',
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
                 gastro: {
                     src: '/images/gastro-hirsch-mockup.jpg',
-                    alt: 'Website-Mockup für Goldener Hirsch — Restaurant',
+                    alt: 'Vorschau-Bild für Goldener Hirsch — Restaurant',
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastronomie',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
-                    meta: 'Diese Site · Lieferzeit 26 Tage · Business-Paket',
+                    meta: 'Diese Vorschau · ca. 26 Tage Lieferzeit · Business-Paket',
                     href: '/portfolio/restaurant-template.html'
                 },
                 logistik: {
                     src: '/images/logistik-schwaben-mockup.jpg',
-                    alt: 'Website-Mockup für Schwaben Logistik — Spedition',
+                    alt: 'Vorschau-Bild für Schwaben Logistik — Spedition',
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition',
                     story: 'Disposition und Frachtanfrage in einem Formular.',
-                    meta: 'Diese Site · Lieferzeit 32 Tage · Premium-Paket',
+                    meta: 'Diese Vorschau · ca. 32 Tage Lieferzeit · Premium-Paket',
                     href: '/portfolio/spedition-schwaben.html'
                 },
                 friseur: {
                     src: '/images/friseur-mueller-mockup.jpg',
-                    alt: 'Website-Mockup für Salon Müller — Friseur',
+                    alt: 'Vorschau-Bild für Salon Müller — Friseur',
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur',
                     story: 'Online-Termin in zwei Klicks. Wunsch-Stylist wählbar.',
-                    meta: 'Diese Site · Lieferzeit 30 Tage · Premium-Paket',
+                    meta: 'Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket',
                     href: '/portfolio/friseur-salon.html'
                 },
                 dachdecker: {
                     src: '/images/dachdecker-meister-mockup.jpg',
-                    alt: 'Website-Mockup für Dachdecker-Meister Berger',
+                    alt: 'Vorschau-Bild für Dachdecker-Meister Berger',
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Meisterbetrieb',
                     story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
-                    meta: 'Diese Site · Lieferzeit 30 Tage · Premium-Paket',
+                    meta: 'Diese Vorschau · ca. 30 Tage Lieferzeit · Premium-Paket',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
                 immobilien: {
                     src: '/images/immobilien-stadtmakler-mockup.jpg',
-                    alt: 'Website-Mockup für Stadtmakler Stuttgart — Immobilien',
+                    alt: 'Vorschau-Bild für Stadtmakler Stuttgart — Immobilien',
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien',
                     story: 'Wertermittlung in 60 Sekunden. Suche mit Live-Filter.',
-                    meta: 'Diese Site · Lieferzeit 32 Tage · Premium-Paket',
+                    meta: 'Diese Vorschau · ca. 32 Tage Lieferzeit · Premium-Paket',
                     href: '/portfolio/immobilien-makler.html'
                 },
                 coaching: {
                     src: '/images/coaching-lehmann-mockup.jpg',
-                    alt: 'Website-Mockup für Business-Coach Sarah Lehmann — Coaching & Beratung',
+                    alt: 'Vorschau-Bild für Business-Coach Sarah Lehmann — Coaching & Beratung',
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Business-Beratung',
                     story: 'Klarheit in 90 Tagen — Erstgespräch direkt buchbar.',
-                    meta: 'Diese Site · Lieferzeit 24 Tage · Business-Paket',
+                    meta: 'Diese Vorschau · ca. 24 Tage Lieferzeit · Business-Paket',
                     href: '#preis'
                 }
             };
