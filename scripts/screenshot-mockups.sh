@@ -39,6 +39,7 @@ PAGES=(
   "restaurant-template|gastro-hirsch-mockup.jpg"
   "meisterbetrieb-mueller|handwerk-mueller-mockup.jpg"
   "spedition-schwaben|logistik-schwaben-mockup.jpg"
+  "coaching-lehmann|coaching-lehmann-mockup.jpg"
 )
 
 for spec in "${PAGES[@]}"; do
