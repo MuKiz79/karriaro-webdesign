@@ -72,7 +72,8 @@ for spec in "${PAGES[@]}"; do
 from PIL import Image, ImageDraw
 img = Image.open('$OUT_DIR/$out').convert('RGB')
 draw = ImageDraw.Draw(img)
-draw.rectangle([(750, 215), (1536, 285)], fill='white')
+# Hero-Background #F5F5F7 (Apple-Style Light-Gray)
+draw.rectangle([(750, 215), (1536, 285)], fill=(245, 245, 247))
 img.save('$OUT_DIR/$out', 'JPEG', quality=88)
 " && echo "  [paint] Doppel-Nav-Phantom übermalt"
   fi
