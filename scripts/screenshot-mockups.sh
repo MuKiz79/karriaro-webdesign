@@ -62,6 +62,21 @@ for spec in "${PAGES[@]}"; do
   fi
 
   sips -s format jpeg -s formatOptions 85 "$TMP/s.png" --out "$OUT_DIR/$out" >/dev/null 2>&1
+
+  # Sprint 32 — Permanent-Fix Doppel-Nav-Phantom auf immobilien-stadtmakler-mockup
+  # Headless-Chrome rendert eine zweite Nav-Bar bei Y=215-285 (DOM hat nur 1 nav,
+  # vermutlich Render-Anomalie mit position:sticky + Hero-Layout-Shift).
+  # PIL-Paint übermalt die Bug-Region rechts mit Weiß.
+  if [ "$out" = "immobilien-stadtmakler-mockup.jpg" ]; then
+    python3 -c "
+from PIL import Image, ImageDraw
+img = Image.open('$OUT_DIR/$out').convert('RGB')
+draw = ImageDraw.Draw(img)
+draw.rectangle([(750, 215), (1536, 285)], fill='white')
+img.save('$OUT_DIR/$out', 'JPEG', quality=88)
+" && echo "  [paint] Doppel-Nav-Phantom übermalt"
+  fi
+
   size=$(stat -f %z "$OUT_DIR/$out" 2>/dev/null || stat -c %s "$OUT_DIR/$out")
   echo "[done] $page → $out ($size bytes)"
   rm -rf "$TMP"
