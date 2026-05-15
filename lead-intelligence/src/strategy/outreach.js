@@ -24,7 +24,9 @@ const TIERS = {
         priceRaw: 1290,
         care: '99 €/Monat',
         deliverable: 'in ca. 7 Tagen online',
-        reveal: 'Komplett bei 1.290 € einmalig, danach 99 €/Mt Care optional (Hosting + Backups + Quartals-Update).'
+        reveal: 'Komplett bei 1.290 € einmalig, danach 99 €/Mt Care optional (Hosting + Backups + Quartals-Update).',
+        // Sprint 50 — Tier-spezifische Subject-Line für Touch 1 (Erstkontakt)
+        subjectLine: 'Website für {branche} ab 1.290 € — handcodiert, EAA-konform'
     },
     professional: {
         name: 'Professional',
@@ -33,7 +35,8 @@ const TIERS = {
         priceRaw: 1990,
         care: '99 €/Monat',
         deliverable: 'in ca. 14 Tagen online',
-        reveal: '1.990 € einmalig, danach 99 €/Mt Care optional. Inkl. ein Branchen-Werkzeug-Light (Termin-Widget oder Preis-Rechner) und lokale SEO.'
+        reveal: '1.990 € einmalig, danach 99 €/Mt Care optional. Inkl. ein Branchen-Werkzeug-Light (Termin-Widget oder Preis-Rechner) und lokale SEO.',
+        subjectLine: 'Branchen-Werkzeug + Website für {branche} — 1.990 € einmalig'
     },
     premium: {
         name: 'Premium',
@@ -42,7 +45,8 @@ const TIERS = {
         priceRaw: 2990,
         care: '199 €/Monat Care+',
         deliverable: 'in ca. 21 Tagen online',
-        reveal: '2.990 € einmalig — entspricht ~0,3 % einer Maklerprovision / einem Privatpatienten-Paket / einem Beratungsmandat. Care+ 199 €/Mt mit SEO-Report und 24h-SLA.'
+        reveal: '2.990 € einmalig — entspricht ~0,3 % einer Maklerprovision / einem Privatpatienten-Paket / einem Beratungsmandat. Care+ 199 €/Mt mit SEO-Report und 24h-SLA.',
+        subjectLine: 'Premium-Webdesign + Branchen-KI für {branche} — 2.990 €'
     },
     'premium-plus': {
         name: 'Premium+',
@@ -51,9 +55,83 @@ const TIERS = {
         priceRaw: 3990,
         care: '199 €/Monat Care+',
         deliverable: 'in ca. 28 Tagen online',
-        reveal: '3.990 € einmalig inkl. Mandantenportal mit verschlüsseltem Upload und DSGVO-Compliance-Pflege quartalsweise. Ein Mandat refinanziert die Website.'
+        reveal: '3.990 € einmalig inkl. Mandantenportal mit verschlüsseltem Upload und DSGVO-Compliance-Pflege quartalsweise. Ein Mandat refinanziert die Website.',
+        subjectLine: 'Anwalt-Pilot: DSGVO-Compliance + Webdesign — 3.990 € (limitierter Slot)'
     }
 };
+
+/**
+ * Branchen-Label für {branche}-Platzhalter in subjectLine.
+ * Resolution: data.place.types[] → spezifisches Label, sonst tier.default.
+ */
+const TIER_BRANCHE_LABEL = {
+    essential: {
+        default: 'Ihren Betrieb',
+        byType: {
+            hair_salon: 'Ihren Salon', friseur: 'Ihren Salon',
+            beauty_salon: 'Ihr Studio', beauty: 'Ihr Studio', nail_salon: 'Ihr Studio',
+            cafe: 'Ihr Café', cafe_baeckerei: 'Ihre Bäckerei', bakery: 'Ihre Bäckerei',
+            florist: 'Ihre Floristik', florist_de: 'Ihre Floristik',
+            gym: 'Ihr Studio', fitness: 'Ihr Studio', spa: 'Ihr Spa',
+            restaurant: 'Ihr Restaurant'
+        }
+    },
+    professional: {
+        default: 'Ihren Betrieb',
+        byType: {
+            roofing_contractor: 'Ihren Dachdecker-Betrieb', dachdecker: 'Ihren Dachdecker-Betrieb',
+            plumber: 'Ihren Sanitär-Betrieb', klempner: 'Ihren Sanitär-Betrieb',
+            electrician: 'Ihren Elektro-Betrieb', elektriker: 'Ihren Elektro-Betrieb',
+            moving_company: 'Ihre Spedition', spedition: 'Ihre Spedition', storage: 'Ihre Spedition',
+            physiotherapist: 'Ihre Praxis', physio: 'Ihre Praxis',
+            veterinary_care: 'Ihre Tierarzt-Praxis', tierarzt: 'Ihre Tierarzt-Praxis',
+            lodging: 'Ihr Hotel', hotel: 'Ihr Hotel',
+            car_dealer: 'Ihr Autohaus', autohaus: 'Ihr Autohaus',
+            car_repair: 'Ihre Werkstatt'
+        }
+    },
+    premium: {
+        default: 'Ihre Praxis',
+        byType: {
+            dentist: 'Ihre Zahnarzt-Praxis', zahnarzt: 'Ihre Zahnarzt-Praxis',
+            doctor: 'Ihre Praxis', arzt: 'Ihre Praxis',
+            real_estate_agency: 'Ihr Maklerbüro', immobilien: 'Ihr Maklerbüro',
+            lawyer: 'Ihre Kanzlei', anwalt: 'Ihre Kanzlei'
+        }
+    },
+    'premium-plus': {
+        default: 'Ihre Kanzlei',
+        // Premium+ ist Anwalt-Pilot; Subject hat keinen {branche}-Platzhalter,
+        // aber Tabelle bleibt der Konsistenz halber.
+        byType: { lawyer: 'Ihre Kanzlei', anwalt: 'Ihre Kanzlei' }
+    }
+};
+
+/**
+ * Branchen-Label aus data + tierKey ableiten.
+ */
+function brancheLabel(tierKey, data) {
+    const map = TIER_BRANCHE_LABEL[tierKey];
+    if (!map) return 'Ihren Betrieb';
+    const types = data?.place?.types || [];
+    for (const t of types) {
+        if (map.byType[t]) return map.byType[t];
+    }
+    const deepCat = (data?.deepAssessment?.category || data?.deepResearch?.assessment?.category || '').toLowerCase();
+    if (deepCat && map.byType[deepCat]) return map.byType[deepCat];
+    return map.default;
+}
+
+/**
+ * Subject-Line für Touch 1 aus Tier-Template aufbauen.
+ * Fällt auf null zurück, wenn kein Tier auflösbar — Caller nutzt dann
+ * primaryArg.subjectAlt (bisheriges Verhalten).
+ */
+function tierSubject(tierKey, data) {
+    const tier = TIERS[tierKey];
+    if (!tier || !tier.subjectLine) return null;
+    return tier.subjectLine.replace('{branche}', brancheLabel(tierKey, data));
+}
 
 /**
  * Google-Maps-Typen + Karriaro-Branchen → Tier-Key.
@@ -334,13 +412,18 @@ ${touchNumber >= 3 ? `<p style="background:#F8F4ED;border-left:3px solid #8A7B5C
 <p>${escapeHtmlSafe(closing)}<br>${escapeHtmlSafe(senderName)}<br>${escapeHtmlSafe(senderCompany)}${profile.location ? '<br>' + escapeHtmlSafe(profile.location) : ''}<br><a href="https://${escapeHtmlSafe(portfolio)}" style="color:#1A2E40">${escapeHtmlSafe(portfolio)}</a></p>
 </div>`;
 
+    // Sprint 50 — Touch 1 nutzt Tier-spezifische Subject-Line (höchster Open-Rate-Hebel),
+    // Touch 2+ behält dynamische Argument-Subject aus primaryArg.subjectAlt.
+    const tierSubj = touchNumber === 1 ? tierSubject(tierKey, data) : null;
+    const subject = tierSubj || primaryArg.subjectAlt;
+
     return {
         tone,
-        subject: primaryArg.subjectAlt,
+        subject,
         body,
         bodyHtml,
         hasVisualMockup: !!visualMockup?.svgDataUrl,
-        copyText: `Betreff: ${primaryArg.subjectAlt}\n\n${body}`,
+        copyText: `Betreff: ${subject}\n\n${body}`,
         wordCount: body.split(/\s+/).length
     };
 }
