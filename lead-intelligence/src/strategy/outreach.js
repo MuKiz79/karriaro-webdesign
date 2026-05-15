@@ -12,6 +12,102 @@ import { config } from '../config.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 
 /**
+ * Sprint 46 — 4-Tier-Pricing-Architektur (siehe Memory project_karriaro_webdesign_pricing).
+ * Branchen-spezifischer Pricing-Reveal in Mail-3 statt generischem "ab 1.290€".
+ * Tier-Mapping basiert auf Marketing-Plan ICP-Zuordnung.
+ */
+const TIERS = {
+    essential: {
+        name: 'Essential',
+        price: '1.290 €',
+        priceRange: 'ab 1.290 €',
+        priceRaw: 1290,
+        care: '99 €/Monat',
+        deliverable: 'in ca. 7 Tagen online',
+        reveal: 'Komplett bei 1.290 € einmalig, danach 99 €/Mt Care optional (Hosting + Backups + Quartals-Update).'
+    },
+    professional: {
+        name: 'Professional',
+        price: '1.990 €',
+        priceRange: 'ab 1.990 €',
+        priceRaw: 1990,
+        care: '99 €/Monat',
+        deliverable: 'in ca. 14 Tagen online',
+        reveal: '1.990 € einmalig, danach 99 €/Mt Care optional. Inkl. ein Branchen-Werkzeug-Light (Termin-Widget oder Preis-Rechner) und lokale SEO.'
+    },
+    premium: {
+        name: 'Premium',
+        price: '2.990 €',
+        priceRange: 'ab 2.990 €',
+        priceRaw: 2990,
+        care: '199 €/Monat Care+',
+        deliverable: 'in ca. 21 Tagen online',
+        reveal: '2.990 € einmalig — entspricht ~0,3 % einer Maklerprovision / einem Privatpatienten-Paket / einem Beratungsmandat. Care+ 199 €/Mt mit SEO-Report und 24h-SLA.'
+    },
+    'premium-plus': {
+        name: 'Premium+',
+        price: '3.990 €',
+        priceRange: 'ab 3.990 €',
+        priceRaw: 3990,
+        care: '199 €/Monat Care+',
+        deliverable: 'in ca. 28 Tagen online',
+        reveal: '3.990 € einmalig inkl. Mandantenportal mit verschlüsseltem Upload und DSGVO-Compliance-Pflege quartalsweise. Ein Mandat refinanziert die Website.'
+    }
+};
+
+/**
+ * Google-Maps-Typen + Karriaro-Branchen → Tier-Key.
+ * Wird durch inferTier() konsumiert.
+ */
+const CATEGORY_TO_TIER = {
+    // Essential (Handwerk, Beauty, Café, Gym)
+    'hair_salon': 'essential', 'beauty_salon': 'essential', 'cafe': 'essential',
+    'bakery': 'essential', 'florist': 'essential', 'gym': 'essential',
+    'spa': 'essential', 'nail_salon': 'essential',
+    'friseur': 'essential', 'beauty': 'essential', 'cafe_baeckerei': 'essential',
+    'florist_de': 'essential', 'fitness': 'essential',
+    // Professional (Bauhandwerk, Logistik, ambulante Heilberufe, Hotel)
+    'roofing_contractor': 'professional', 'plumber': 'professional',
+    'electrician': 'professional', 'moving_company': 'professional',
+    'storage': 'professional', 'physiotherapist': 'professional',
+    'veterinary_care': 'professional', 'lodging': 'professional',
+    'car_dealer': 'professional', 'car_repair': 'professional',
+    'dachdecker': 'professional', 'spedition': 'professional',
+    'klempner': 'professional', 'elektriker': 'professional',
+    'physio': 'professional', 'tierarzt': 'professional',
+    'hotel': 'professional', 'autohaus': 'professional',
+    'restaurant': 'essential', // Memory: Restaurant ist Essential (raus aus ICP, aber Page bleibt Essential-Niveau)
+    // Premium (Premium-Heilberufe, Premium-B2B)
+    'dentist': 'premium', 'doctor': 'premium', 'real_estate_agency': 'premium',
+    'lawyer': 'premium',
+    'zahnarzt': 'premium', 'arzt': 'premium', 'immobilien': 'premium',
+    'anwalt': 'premium'
+};
+
+/**
+ * Tier aus Daten ableiten. Reihenfolge:
+ *   1. profile.forceTier (explizit gesetzt für A/B-Tests)
+ *   2. data.tier (explizit im Lead-Record)
+ *   3. data.place.types[] match gegen CATEGORY_TO_TIER
+ *   4. data.deepAssessment.category match
+ *   5. Fallback: 'essential'
+ *
+ * Pilot-Modus: Anwalt-Leads mit UTM-Variante "premium-plus" bekommen
+ * Premium+ 3.990 € statt Premium 2.990 € (siehe Marketing-Plan Hamburg-Anwalt).
+ */
+function inferTier(data, profile) {
+    if (profile?.forceTier && TIERS[profile.forceTier]) return profile.forceTier;
+    if (data?.tier && TIERS[data.tier]) return data.tier;
+    const types = data?.place?.types || [];
+    for (const t of types) {
+        if (CATEGORY_TO_TIER[t]) return CATEGORY_TO_TIER[t];
+    }
+    const deepCat = data?.deepAssessment?.category || data?.deepResearch?.assessment?.category;
+    if (deepCat && CATEGORY_TO_TIER[deepCat.toLowerCase()]) return CATEGORY_TO_TIER[deepCat.toLowerCase()];
+    return 'essential';
+}
+
+/**
  * Höchste Pitch-Schmerzen sortiert. Nicht jeder Eintrag ist immer
  * verfügbar — die Reihenfolge hier ist nach empirischer Pitch-Stärke
  * (B2B Cold Outreach Daten + Karriaro-Erfahrung), nicht nach Severity.
@@ -178,15 +274,19 @@ function buildPainArguments(data, techAge) {
 /**
  * Drei E-Mail-Tonalitäten — A/B-tauglich.
  */
-function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'professionell') {
+function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'professionell', touchNumber = 1) {
     const domain = new URL(data.url).hostname.replace('www.', '');
     const recipientName = data.contactData?.owner || data.place?.displayName?.text || domain;
     const firstName = recipientName.split(' ')[0];
 
     const senderName = profile.name || 'Muammer Kizilaslan';
     const senderCompany = profile.company || 'Karriaro Webdesign';
-    const priceRange = profile.priceRange || 'ab 1.290€';
-    const usp = profile.usp || 'in 1–2 Wochen fertig';
+
+    // Sprint 46 — Tier-basierter Pricing-Reveal statt generischem priceRange.
+    const tierKey = inferTier(data, profile);
+    const tier = TIERS[tierKey];
+    const priceRange = profile.priceRange || tier.priceRange;
+    const usp = profile.usp || tier.deliverable;
     const portfolio = profile.portfolio || 'karriaro-webdesign.de';
 
     let greeting, closing;
@@ -198,12 +298,18 @@ function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'pro
         ? `Auch aufgefallen: ${supportingArgs.slice(0, 2).map(a => a.text).join(' ')}`
         : '';
 
+    // Sprint 46 — Mail-3 (touchNumber=3) bekommt einen tier-spezifischen Pricing-Reveal
+    // statt nur generic priceRange. Mail 1 + 2 bleiben preisfrei.
+    const pricingReveal = touchNumber >= 3
+        ? `\nPreislich konkret für Ihre Branche: ${tier.reveal} Quellcode gehört Ihnen — kein Abo, kein Vendor-Lock-In.\n`
+        : '';
+
     const body = `${greeting}
 
 ${primaryArg.text}
 
 ${supporting}
-
+${pricingReveal}
 Ich baue moderne Websites — handcodiert, ${priceRange}, ${usp}.
 
 Darf ich Ihnen in 15 Minuten zeigen, wie Ihre neue Seite aussehen könnte? Keine Verpflichtung.
@@ -218,13 +324,14 @@ ${profile.location ? profile.location + '\n' : ''}${portfolio}`.trim();
     // ueber dem Text.
     const visualMockup = data.mockup;
     const mockupHtml = visualMockup?.htmlSnippet || '';
-    const bodyHtml = `<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.55;color:#1d1d1f">
+    const bodyHtml = `<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;line-height:1.55;color:#14202B">
 ${mockupHtml ? mockupHtml + '<div style="height:16px"></div>' : ''}<p>${escapeHtmlSafe(greeting)}</p>
 <p>${escapeHtmlSafe(primaryArg.text)}</p>
 ${supporting ? `<p style="color:#6e6e73">${escapeHtmlSafe(supporting)}</p>` : ''}
+${touchNumber >= 3 ? `<p style="background:#F8F4ED;border-left:3px solid #8A7B5C;padding:12px 16px;border-radius:6px"><strong>Preislich konkret für Ihre Branche:</strong> ${escapeHtmlSafe(tier.reveal)} Quellcode gehört Ihnen — kein Abo, kein Vendor-Lock-In.</p>` : ''}
 <p>Ich baue moderne Websites — handcodiert, ${escapeHtmlSafe(priceRange)}, ${escapeHtmlSafe(usp)}.</p>
 <p>Darf ich Ihnen in 15 Minuten zeigen, wie Ihre neue Seite aussehen könnte? Keine Verpflichtung.</p>
-<p>${escapeHtmlSafe(closing)}<br>${escapeHtmlSafe(senderName)}<br>${escapeHtmlSafe(senderCompany)}${profile.location ? '<br>' + escapeHtmlSafe(profile.location) : ''}<br><a href="https://${escapeHtmlSafe(portfolio)}" style="color:#0071e3">${escapeHtmlSafe(portfolio)}</a></p>
+<p>${escapeHtmlSafe(closing)}<br>${escapeHtmlSafe(senderName)}<br>${escapeHtmlSafe(senderCompany)}${profile.location ? '<br>' + escapeHtmlSafe(profile.location) : ''}<br><a href="https://${escapeHtmlSafe(portfolio)}" style="color:#1A2E40">${escapeHtmlSafe(portfolio)}</a></p>
 </div>`;
 
     return {
@@ -261,8 +368,11 @@ export function buildOutreachPack(data) {
     const primaryArg = args[0];
     const supportingArgs = args.slice(1);
 
+    // Sprint 46 — touchNumber aus data.touchNumber (1-4 für 4-Touch-Sequenz). Default 1 (Mail 1).
+    // Mail 3 (touchNumber=3) bekommt einen tier-spezifischen Pricing-Reveal.
+    const touchNumber = data?.touchNumber || 1;
     const variants = ['professionell', 'freundlich', 'direkt']
-        .map(tone => buildEmail(data, args, primaryArg, supportingArgs, profile, tone));
+        .map(tone => buildEmail(data, args, primaryArg, supportingArgs, profile, tone, touchNumber));
 
     const domain = new URL(data.url).hostname.replace('www.', '');
     // Konkurrenz-Spiegel: nur Branchen-Konkurrenten anzeigen (primaryType muss matchen).
