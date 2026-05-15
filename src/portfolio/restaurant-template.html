@@ -34,6 +34,7 @@
     }
     </script>
     <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/hero-polish.css">
     <style>
         :root {
             --accent: #5C1F1F;
@@ -516,12 +517,23 @@
     </nav>
 
     <main id="main">
-        <section class="hero">
+        <section class="hero" style="position: relative;">
             <div class="hero-inner">
                 <div class="hero-grid">
                     <div class="hero-content">
-                        <div class="hero-eyebrow">Restaurant · München-Schwabing</div>
-                        <h1>Ihr Tisch. Saisonale Küche.<br><em>Mit Tradition.</em></h1>
+                        <p class="hero-folio-eyebrow">
+                            <span>№&nbsp;08</span>
+                            <span class="dot">·</span>
+                            <span>Karriaro</span>
+                            <span class="dot">·</span>
+                            <span>Gastronomie · Saison</span>
+                            <span class="dot">·</span>
+                            <span>2026</span>
+                        </p>
+                        <h1 class="hero-headline">
+                            <span class="hero-h1-line"><span class="hero-dropcap">I</span>hr Tisch. Saisonale Küche.</span>
+                            <span class="hero-h1-line"><em>Mit Tradition.</em></span>
+                        </h1>
                         <p class="lead">Online-Tisch reservieren in 30 Sekunden, Speisekarte tagesaktuell, Bio-zertifiziert. Schwabinger Traditionshaus seit 1987.</p>
                         <div class="hero-ctas">
                             <a href="#reservation" class="btn btn-gold">Tisch reservieren</a>
@@ -542,6 +554,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="hero-folio-marker" aria-hidden="true">
+                <span class="folio-page">S. 08</span>
+                <span class="folio-section">Gastronomie</span>
             </div>
         </section>
 
@@ -575,6 +591,63 @@
                 </div>
             </div>
         </div>
+
+        <!-- Sprint 57 — Editorial-Sektion „Tagebuch der Karte" (Pull-Quote-Hero + Sommelier-Triade) -->
+        <section class="karten-tagebuch" aria-label="Tagebuch der Karte" style="padding: clamp(80px, 12vh, 140px) 0; background: #FBFAF7;">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+                <div style="text-align: center; margin-bottom: clamp(48px, 8vh, 80px);">
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #8A7B5C; margin-bottom: 14px;">Tagebuch der Karte · Frühjahr 2026</p>
+                </div>
+
+                <!-- Pull-Quote-Hero (60vh) -->
+                <div style="min-height: 50vh; display: flex; align-items: center; justify-content: center; padding: clamp(40px, 8vh, 80px) clamp(24px, 6vw, 88px); position: relative;">
+                    <blockquote style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: clamp(36px, 6vw, 88px); line-height: 1.05; letter-spacing: -0.022em; color: #061320; max-width: 1080px; text-align: left; padding: 0 24px 0 1.2em; position: relative; margin: 0; text-wrap: balance;">
+                        <span aria-hidden="true" style="position: absolute; top: -0.18em; left: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: clamp(120px, 14vw, 220px); color: #8A7B5C; line-height: 1; pointer-events: none; user-select: none;">"</span>
+                        <p style="margin: 0;">Eine Speisekarte ist nichts anderes als ein Versprechen — und Versprechen schreibt man in Italic.</p>
+                        <cite style="display: block; margin-top: 32px; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #525E6B; letter-spacing: 0.22em; text-transform: uppercase;">— Aus dem Keller-Buch, Eintrag März 2026</cite>
+                    </blockquote>
+                </div>
+
+                <!-- 3 Sommelier-Statements als Triade -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 48px); margin-top: clamp(40px, 6vh, 64px);">
+                    <figure style="margin: 0; padding: 28px 24px; background: #fff; border: 1px solid #DDD3C3; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,30,40,0.04); position: relative;">
+                        <span aria-hidden="true" style="position: absolute; top: -8px; left: 16px; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 64px; color: #8A7B5C; line-height: 1;">"</span>
+                        <blockquote style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.45; color: #061320; margin: 16px 0 20px;">
+                            Ein Riesling von der Mosel verträgt Schärfe besser als ein Sancerre. Punkt.
+                        </blockquote>
+                        <figcaption style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #525E6B;">A. Heller · Sommelière</figcaption>
+                    </figure>
+                    <figure style="margin: 0; padding: 28px 24px; background: #fff; border: 1px solid #DDD3C3; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,30,40,0.04); position: relative;">
+                        <span aria-hidden="true" style="position: absolute; top: -8px; left: 16px; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 64px; color: #8A7B5C; line-height: 1;">"</span>
+                        <blockquote style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.45; color: #061320; margin: 16px 0 20px;">
+                            Burgunder mit Forelle ist gewagt. Trauen Sie sich.
+                        </blockquote>
+                        <figcaption style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #525E6B;">M. Lehmann · Chef Sommelier</figcaption>
+                    </figure>
+                    <figure style="margin: 0; padding: 28px 24px; background: #fff; border: 1px solid #DDD3C3; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,30,40,0.04); position: relative;">
+                        <span aria-hidden="true" style="position: absolute; top: -8px; left: 16px; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 64px; color: #8A7B5C; line-height: 1;">"</span>
+                        <blockquote style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.45; color: #061320; margin: 16px 0 20px;">
+                            Die einzige Sünde ist, einen guten Wein zu kalt zu servieren.
+                        </blockquote>
+                        <figcaption style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #525E6B;">Notiz aus dem Keller-Buch</figcaption>
+                    </figure>
+                </div>
+
+                <!-- TODO Sprint 58 — Foodfotografie als asymmetrisches Bild-Grid zwischen den Pull-Quotes -->
+
+                <p style="margin-top: clamp(40px, 6vh, 56px); text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #525E6B;">
+                    Saisonkarte · Eintrag 12 · Frühjahr 2026
+                </p>
+            </div>
+
+            <style>
+                @media (max-width: 760px) {
+                    .karten-tagebuch > div > div:nth-child(3) {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            </style>
+        </section>
 
         <!-- R1 · AI-Sommelier -->
         <section class="sommelier" id="sommelier" aria-label="AI-Sommelier">

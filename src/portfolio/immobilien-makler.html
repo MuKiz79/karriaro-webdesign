@@ -30,6 +30,7 @@
     }
     </script>
     <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/hero-polish.css">
     <style>
         :root {
             --accent: #1A2E40;
@@ -566,10 +567,21 @@
     </header>
 
     <main id="main">
-        <section class="hero">
+        <section class="hero" style="position: relative;">
             <div class="hero-content">
-                <p class="hero-eyebrow">Immobilien · Stuttgart Stadtgebiet</p>
-                <h1>Ihr Verkauf. Korrekt bewertet.<br>Diskret begleitet.</h1>
+                <p class="hero-folio-eyebrow">
+                    <span>№&nbsp;05</span>
+                    <span class="dot">·</span>
+                    <span>Karriaro</span>
+                    <span class="dot">·</span>
+                    <span>Immobilien · Vermittlung</span>
+                    <span class="dot">·</span>
+                    <span>2026</span>
+                </p>
+                <h1 class="hero-headline">
+                    <span class="hero-h1-line"><span class="hero-dropcap">I</span>hr Verkauf. Korrekt bewertet.</span>
+                    <span class="hero-h1-line">Diskret begleitet.</span>
+                </h1>
                 <p class="lead">Erhalten Sie in 60 Sekunden eine fundierte Ersteinschätzung zum Marktwert Ihrer Immobilie – unverbindlich und sicher.</p>
                 <div class="hero-ctas">
                     <a href="#bewertung" class="btn btn-primary">Wertermittlung starten</a>
@@ -585,6 +597,10 @@
             </div>
             <div class="hero-portrait">
                 <img src="/images/immobilien/andreas-team.jpg" alt="Andreas Müller, Geschäftsführer Stadtmakler Stuttgart" loading="eager" width="800" height="1000">
+            </div>
+            <div class="hero-folio-marker" aria-hidden="true">
+                <span class="folio-page">S. 05</span>
+                <span class="folio-section">Immobilien</span>
             </div>
         </section>
 
@@ -890,6 +906,86 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <!-- Sprint 57 — Editorial-Sektion „Markt Stuttgart 2026" (asymmetrisch mit sticky Marginalia) -->
+        <section class="markt-editorial" aria-label="Marktbericht Stuttgart 2026" style="padding: clamp(80px, 12vh, 140px) 0; background: linear-gradient(180deg, #FBFAF7 0%, #F8F4ED 100%);">
+            <div style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+                <div style="text-align: center; margin-bottom: clamp(40px, 6vh, 64px);">
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #8A7B5C; margin-bottom: 14px;">Marktbericht · Stuttgart · Q2 2026</p>
+                    <h2 style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(32px, 4.5vw, 56px); letter-spacing: -0.025em; color: #061320; max-width: 880px; margin: 0 auto;">Was Makler wissen. Was Verkäufer wissen sollten.</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 280px; gap: clamp(40px, 5vw, 72px); align-items: start;">
+                    <!-- Linke Spalte: Editorial-Text in 3 Absätzen -->
+                    <div style="max-width: 760px; font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 24px;">
+                            Stuttgart hat keinen einheitlichen Markt. Killesberg, Bad Cannstatt und Vaihingen liegen luftlinie zwischen 4 und 9 Kilometern auseinander — preislich trennen sie <strong style="color: #061320;">bis zu 3.800 €/m²</strong>. Wer einen Quadratmeterpreis aus dem Stadtdurchschnitt nimmt, unterschätzt Killesberg um 18 % oder überschätzt Untertürkheim um 22 %.
+                        </p>
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 24px;">
+                            <strong style="color: #061320;">Die Zinswende</strong> hat den Markt 2024 reset — und seit Anfang 2026 sehen wir die Rückkehr der Käufer. Aber selektiv: B-Lagen mit Sanierungsstau (Cannstatt-Ost, Wangen, Münster) verlieren weiter 4–6 % pro Jahr, während A-Lagen mit Energieklasse A/B (Killesberg, Lehenviertel, Heumaden) bereits wieder +3–5 % zulegen. Die Spreizung hat sich verdoppelt.
+                        </p>
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 36px;">
+                            <strong style="color: #061320;">Sanierungspflicht-Welle 2026:</strong> wer eine vor 1980 gebaute Immobilie mit Energieklasse F oder schlechter erbt und nicht innerhalb von zwei Jahren saniert, verliert die Vermietungserlaubnis. Das treibt seit Q1 ein Welle an Notverkäufen — und ist der Hauptgrund, warum Off-Market-Vermittlungen 2026 wieder lohnen.
+                        </p>
+
+                        <!-- Pull-Quote -->
+                        <blockquote style="margin: 36px 0; padding: 28px 32px; background: #fff; border-left: 4px solid #8A7B5C; border-radius: 0 14px 14px 0; box-shadow: 0 4px 16px rgba(20,30,40,0.04);">
+                            <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: clamp(20px, 2.4vw, 26px); line-height: 1.45; color: #061320; margin: 0;">
+                                „Stuttgart hat 14 Mikro-Märkte, nicht einen. Wer den falschen Quadratmeterpreis nimmt, verliert 8–12 % beim Verkauf."
+                            </p>
+                            <cite style="display: block; margin-top: 16px; font-family: 'JetBrains Mono', monospace; font-style: normal; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #525E6B;">
+                                — Andreas Müller, IVD + HypZert-Sachverständiger
+                            </cite>
+                        </blockquote>
+
+                        <p style="margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #525E6B;">
+                            Marktbericht · Eintrag 07 · Frühjahr 2026
+                        </p>
+                    </div>
+
+                    <!-- Rechte Spalte: sticky Marginalia mit konkreten Zahlen + Gold-Pfeilen -->
+                    <aside style="position: sticky; top: 100px; padding: 24px; background: #fff; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,30,40,0.06); font-family: 'Inter', sans-serif;">
+                        <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #8A7B5C; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #DDD3C3;">Stadtteil-Notiz</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 18px;">
+                            <div>
+                                <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #061320; margin: 0 0 4px;">Killesberg</p>
+                                <p style="font-size: 14px; color: #525E6B; margin: 0;">7.800 €/m² · A-Lage · +5 % YoY</p>
+                            </div>
+                            <div>
+                                <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #061320; margin: 0 0 4px;">Bad Cannstatt</p>
+                                <p style="font-size: 14px; color: #525E6B; margin: 0;">4.900 €/m² · B-Lage · ±0 % YoY</p>
+                            </div>
+                            <div>
+                                <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #061320; margin: 0 0 4px;">Vaihingen</p>
+                                <p style="font-size: 14px; color: #525E6B; margin: 0;">5.600 €/m² · A/B-Mix · +2 % YoY</p>
+                            </div>
+                            <div>
+                                <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 20px; color: #061320; margin: 0 0 4px;">Wangen</p>
+                                <p style="font-size: 14px; color: #525E6B; margin: 0;">4.000 €/m² · C-Lage · −6 % YoY</p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 18px; padding-top: 14px; border-top: 1px solid #DDD3C3; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 13px; color: #525E6B; line-height: 1.4;">
+                            Quelle: Gutachterausschuss + eigene Auswertung 187 Transaktionen.
+                        </p>
+                    </aside>
+                </div>
+
+                <!-- TODO Sprint 58 — Interior-Shots oder Aerial-Stuttgart als Background-Layer -->
+            </div>
+
+            <style>
+                @media (max-width: 880px) {
+                    .markt-editorial > div > div:nth-child(2) {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .markt-editorial aside {
+                        position: static !important;
+                    }
+                }
+            </style>
         </section>
 
         <section id="markt" class="markt">

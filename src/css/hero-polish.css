@@ -1,0 +1,84 @@
+/* Sprint 57 — Hero-Award-Polish (shared zwischen DE-Hauptseite + 8 Sub-Pages)
+ *
+ * Editorial-Eyebrow + Folio + H1 Drop-Cap mit Variable-Font opsz-Reveal.
+ * Setzt Sprint-39-Brand-Tokens voraus (--font-mono, --font-pull-quote,
+ * --color-gold, --color-line-strong, --color-graphite-soft).
+ *
+ * Wird auf Sub-Pages via <link rel="stylesheet" href="/css/hero-polish.css">
+ * eingehängt. Auf DE-Hauptseite (Sprint 54) sind die Klassen inline definiert.
+ */
+
+.hero-folio-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    margin-bottom: clamp(24px, 4vh, 40px);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.hero-folio-eyebrow .dot {
+    color: var(--color-line-strong);
+    opacity: 0.6;
+    font-weight: 400;
+}
+
+.hero-folio-marker {
+    position: absolute;
+    bottom: clamp(24px, 4vh, 40px);
+    left: clamp(24px, 4vw, 60px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-graphite-soft);
+    pointer-events: none;
+    z-index: 3;
+}
+.hero-folio-marker .folio-page {
+    font-family: var(--font-pull-quote);
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--color-gold);
+    line-height: 1;
+}
+@media (max-width: 760px) {
+    .hero-folio-marker { display: none; }
+}
+
+.hero-headline {
+    font-variation-settings: "opsz" 9;
+    animation: hero-opsz-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+    text-wrap: balance;
+}
+@keyframes hero-opsz-reveal {
+    0%   { font-variation-settings: "opsz" 9;   opacity: 0.42; letter-spacing: -0.012em; }
+    100% { font-variation-settings: "opsz" 144; opacity: 1;    letter-spacing: -0.03em; }
+}
+.hero-h1-line { display: block; }
+.hero-dropcap {
+    font-family: var(--font-pull-quote);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-gold);
+    font-size: 1.18em;
+    line-height: 0.86;
+    padding-right: 0.04em;
+    margin-left: -0.04em;
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-headline {
+        animation: none;
+        font-variation-settings: "opsz" 144;
+        opacity: 1;
+        letter-spacing: -0.03em;
+    }
+}

@@ -30,6 +30,7 @@
     }
     </script>
     <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/hero-polish.css">
     <style>
         :root {
             --accent: #4A5D4F;
@@ -622,12 +623,23 @@
     </header>
 
     <main id="main">
-        <section class="hero">
+        <section class="hero" style="position: relative;">
             <div class="container">
                 <div class="hero-grid">
                     <div>
-                        <p class="hero-eyebrow">Dachdeckerei · Stuttgart</p>
-                        <h1>Ihr Dach. Generationen-fest.<br><em>Termingerecht.</em></h1>
+                        <p class="hero-folio-eyebrow">
+                            <span>№&nbsp;03</span>
+                            <span class="dot">·</span>
+                            <span>Karriaro</span>
+                            <span class="dot">·</span>
+                            <span>Handwerk · Dachdecker</span>
+                            <span class="dot">·</span>
+                            <span>2026</span>
+                        </p>
+                        <h1 class="hero-headline">
+                            <span class="hero-h1-line"><span class="hero-dropcap">I</span>hr Dach. Generationen-fest.</span>
+                            <span class="hero-h1-line"><em>Termingerecht.</em></span>
+                        </h1>
                         <p class="lead">Foto vom Dachschaden senden — Festpreis-Angebot in 24 Stunden. Familienbetrieb in 3. Generation seit 1987, mit 25 Jahren Garantieurkunde digital im Kundenkonto.</p>
                         <div class="hero-ctas">
                             <a href="#anfrage" class="btn btn-primary">Festpreis anfragen</a>
@@ -649,6 +661,99 @@
                     </div>
                 </div>
             </div>
+            <div class="hero-folio-marker" aria-hidden="true">
+                <span class="folio-page">S. 03</span>
+                <span class="folio-section">Handwerk</span>
+            </div>
+        </section>
+
+        <!-- Sprint 57 — Editorial-Sektion „BAFA 2026" (Werkstatt-Wissen, asymmetrisch 40/60-Split) -->
+        <section class="bafa-editorial" aria-label="Werkstatt-Wissen BAFA 2026" style="padding: clamp(80px, 12vh, 140px) 0; background: var(--color-cream, #F8F4ED);">
+            <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 24px;">
+                <div style="text-align: center; margin-bottom: clamp(40px, 6vh, 64px);">
+                    <p style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #8A7B5C; margin-bottom: 14px;">Werkstatt-Wissen · BAFA 2026</p>
+                    <h2 style="font-family: 'Fraunces', Georgia, serif; font-weight: 500; font-size: clamp(32px, 4.5vw, 56px); letter-spacing: -0.025em; color: #061320; max-width: 880px; margin: 0 auto;">Wann sich Sanierung jetzt lohnt — und wann nicht.</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 40% 60%; gap: clamp(40px, 6vw, 88px); align-items: start;">
+                    <!-- Linke Spalte: handgezeichnete Dachschräge mit Material-Schichten -->
+                    <figure style="margin: 0; position: sticky; top: 80px; background: #fff; padding: 24px; border-radius: 14px; box-shadow: 0 4px 16px rgba(20,30,40,0.06);">
+                        <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Handgezeichneter Dachquerschnitt mit 5 Material-Schichten">
+                            <g fill="none" stroke="#061320" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                <!-- Dachschräge (45°) -->
+                                <path d="M30,240 L180,80 L300,200 L300,260 L30,260 Z"/>
+                                <!-- Schichten parallel zur Dachschräge -->
+                                <path d="M70,210 L180,108"/>
+                                <path d="M90,222 L195,118"/>
+                                <path d="M110,234 L210,128"/>
+                                <path d="M130,246 L225,138"/>
+                                <!-- Sparren (vertikal angedeutet) -->
+                                <path d="M180,80 L180,260" stroke-dasharray="3 4"/>
+                                <!-- Dachziegel-Andeutung (5 kleine Linien) -->
+                                <path d="M180,80 L200,95"/>
+                                <path d="M195,68 L215,83"/>
+                                <path d="M210,56 L230,71"/>
+                                <!-- Bodenlinie -->
+                                <line x1="0" y1="260" x2="320" y2="260"/>
+                                <!-- Annotations-Pfeile in Gold -->
+                                <g stroke="#8A7B5C" stroke-width="1.2">
+                                    <path d="M310,140 Q340,140 318,158" fill="none"/>
+                                    <path d="M316,156 L324,156 L320,162 Z" fill="#8A7B5C" stroke="none"/>
+                                    <path d="M16,150 Q-6,162 8,172" fill="none"/>
+                                    <path d="M6,170 L14,170 L10,174 Z" fill="#8A7B5C" stroke="none"/>
+                                    <path d="M180,40 L180,72" fill="none"/>
+                                    <path d="M176,70 L184,70 L180,76 Z" fill="#8A7B5C" stroke="none"/>
+                                </g>
+                            </g>
+                            <!-- Handschriftliche Annotationen -->
+                            <text x="324" y="148" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="#8A7B5C">Ziegel</text>
+                            <text x="-2" y="158" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="#8A7B5C" text-anchor="end">Dämmung</text>
+                            <text x="186" y="36" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="#8A7B5C">First</text>
+                        </svg>
+                        <figcaption style="margin-top: 14px; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 14px; color: #525E6B; text-align: center;">Dachquerschnitt · 5 Schichten · Skizze aus dem Werkstatt-Buch</figcaption>
+                    </figure>
+
+                    <!-- Rechte Spalte: 3 Absätze BAFA-Wissen + Pull-Quote -->
+                    <div style="max-width: 720px; font-family: 'Inter', sans-serif;">
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 24px;">
+                            Die BAFA-Förderung deckt seit 2026 bis zu <strong style="color: #061320;">25 % der Dämm-Kosten</strong>, mit iSFP-Bonus sogar bis 30 %. Voraussetzung: ein zertifizierter Energieberater erstellt vor Baubeginn einen Sanierungsfahrplan und die Maßnahme erreicht die geforderten U-Werte. Wer ohne iSFP saniert, lässt im Schnitt 3.000–5.000 € auf dem Tisch liegen.
+                        </p>
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 24px;">
+                            <strong style="color: #061320;">Solar-Kopplung</strong> ist der zweite Hebel. Wer Dachsanierung und PV-Modul im selben Auftrag plant, spart Gerüst-Kosten und qualifiziert sich für die KfW-261-Förderung — bis zu 150.000 € Kredit zu 0,01 % Effektivzins. Die Kombination ist nicht trivial: das Unterdach muss diffusionsoffen bleiben, die Sparren-Tragkraft wird neu berechnet, und die DC-Leitung läuft idealerweise unter den Ziegeln.
+                        </p>
+                        <p style="font-size: 17px; line-height: 1.75; color: #14202B; margin-bottom: 36px;">
+                            <strong style="color: #061320;">Wann es sich nicht lohnt:</strong> Bei Dächern jünger als 25 Jahre mit intakter Dampfsperre, bei Denkmalschutz-Auflagen ohne Solar-Genehmigung, und bei Eigentümergemeinschaften ohne Beschluss. Eine ehrliche Beratung sagt das vor dem Angebot — nicht nach dem Kostenvoranschlag.
+                        </p>
+
+                        <!-- Pull-Quote -->
+                        <blockquote style="margin: 36px 0; padding: 28px 32px; background: #fff; border-left: 4px solid #8A7B5C; border-radius: 0 14px 14px 0; box-shadow: 0 4px 16px rgba(20,30,40,0.04);">
+                            <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: clamp(20px, 2.4vw, 26px); line-height: 1.45; color: #061320; margin: 0;">
+                                „Eine fachgerechte Dachsanierung amortisiert sich in 12–18 Jahren — vorausgesetzt, die Förderung wird sauber dokumentiert."
+                            </p>
+                            <cite style="display: block; margin-top: 16px; font-family: 'JetBrains Mono', monospace; font-style: normal; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #525E6B;">
+                                — Thomas Berger, Dachdeckermeister
+                            </cite>
+                        </blockquote>
+
+                        <p style="margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #525E6B;">
+                            Werkstatt-Logbuch · Eintrag 03 · Frühjahr 2026
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                @media (max-width: 880px) {
+                    .bafa-editorial > .container > div:last-child {
+                        grid-template-columns: 1fr !important;
+                    }
+                    .bafa-editorial figure {
+                        position: static !important;
+                        max-width: 480px;
+                        margin: 0 auto !important;
+                    }
+                }
+            </style>
         </section>
 
         <!-- D1 · Adress-zu-Dach-Report in 24h -->
