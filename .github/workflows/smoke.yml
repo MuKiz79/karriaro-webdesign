@@ -49,7 +49,7 @@ jobs:
           cache-dependency-path: lead-intelligence/package-lock.json
 
       - name: Install dependencies
-        run: cd lead-intelligence && npm ci
+        run: cd lead-intelligence && npm install --no-audit --no-fund
 
       - name: Run vitest
         run: cd lead-intelligence && npm test
