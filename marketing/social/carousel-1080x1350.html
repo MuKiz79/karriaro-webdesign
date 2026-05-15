@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Karriaro Carousel · 1080x1350 · 5 Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Karriaro-Webdesign Carousel-Template
+     Format: 1080x1350 (LinkedIn-optimaler 4:5)
+     Export: cmd+shift+4 + Leertaste auf jede .slide klicken (PNG-Desktop)
+            oder Playwright: ?slide=N&hook=...&branche=... + screenshot
+     Parametrisierbar via URL-Query (JS unten):
+       ?hook=...           → Headline Slide 1
+       ?branche=...        → Eyebrow Slide 1 (zB "Friseur · Stuttgart")
+       ?problem=...        → Slide 2 Headline
+       ?p1=...&p2=...&p3=  → Slide 3 Bulletpoints (3 Slots)
+       ?proof=...&proofSub → Slide 4 Zitat + Quelle
+       ?cta=...&url=...    → Slide 5 Call-to-Action
+     ============================================================ */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --kr-ink: #14202B;
+    --kr-blue: #1A2E40;
+    --kr-blue-light: #4A6B85;
+    --kr-gold: #8A7B5C;
+    --kr-grey: #525E6B;
+    --kr-grey-soft: #8A8278;
+    --kr-bg: #FBFAF7;
+    --kr-bg-soft: #F8F4ED;
+    --kr-border: rgba(20,30,40,0.10);
+  }
+
+  body {
+    background: #2A2A2A;
+    padding: 48px 32px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hint {
+    color: #C0C0C0;
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 1080px;
+    text-align: center;
+  }
+  .hint kbd { background: #1A1A1A; color: #FFFFFF; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; }
+  .hint strong { color: #FFFFFF; }
+
+  /* ====== SLIDE ====== */
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    overflow: hidden;
+    background: var(--kr-bg);
+    color: var(--kr-ink);
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 0 1px #444;
+    padding: 96px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* === Inverted Slide (Slide 4 Proof + Slide 5 CTA) === */
+  .slide.dark {
+    background: var(--kr-ink);
+    color: var(--kr-bg);
+  }
+  .slide.dark .footer-logo-name,
+  .slide.dark .footer-page { color: var(--kr-bg); }
+  .slide.dark .footer-logo-sub,
+  .slide.dark .footer-page-label { color: rgba(251,250,247,0.55); }
+  .slide.dark .footer-divider { background: rgba(251,250,247,0.18); }
+  .slide.dark .logo-mark::before,
+  .slide.dark .logo-mark::after { border-color: var(--kr-bg); }
+  .slide.dark .logo-letter { color: var(--kr-bg); }
+  .slide.dark .logo-divider { background: var(--kr-bg); }
+
+  /* ====== FOOTER (auf jeder Slide) ====== */
+  .footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding-top: 32px;
+    border-top: 0.75px solid var(--kr-border);
+  }
+  .slide.dark .footer { border-top-color: rgba(251,250,247,0.18); }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-mark {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-mark::before,
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    top: 8px; bottom: 8px;
+    width: 11px;
+    border: 1.6px solid var(--kr-ink);
+  }
+  .logo-mark::before { left: 0; border-right: none; }
+  .logo-mark::after { right: 0; border-left: none; }
+  .logo-letter {
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    position: relative;
+    top: -1px;
+    color: var(--kr-ink);
+  }
+  .logo-divider {
+    width: 0.75px;
+    background: var(--kr-ink);
+    align-self: stretch;
+  }
+  .footer-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 14px;
+  }
+  .footer-logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--kr-ink);
+  }
+  .footer-logo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+    line-height: 1;
+  }
+
+  .footer-page {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--kr-ink);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .footer-page-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+  }
+
+  /* ====== SLIDE 1 — HOOK ====== */
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-blue);
+    margin-bottom: 56px;
+  }
+  .eyebrow .dot { color: var(--kr-gold); margin: 0 8px; font-weight: 700; }
+  .hook {
+    font-family: 'Fraunces', 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 120px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--kr-ink);
+    margin-bottom: 56px;
+    max-width: 880px;
+  }
+  .hook .accent {
+    color: var(--kr-blue);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .hook-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    color: var(--kr-grey);
+    line-height: 1.5;
+    max-width: 720px;
+  }
+
+  /* ====== SLIDE 2 — PROBLEM ====== */
+  .slide-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--kr-grey);
+    letter-spacing: 0.1em;
+    margin-bottom: 48px;
+  }
+  .slide-num strong { color: var(--kr-blue); font-weight: 500; }
+  .section-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-gold);
+    margin-bottom: 40px;
+  }
+  .problem {
+    font-family: 'Fraunces', 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 88px;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    color: var(--kr-ink);
+    margin-bottom: 64px;
+    max-width: 880px;
+  }
+  .problem-detail {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    line-height: 1.6;
+    color: var(--kr-grey);
+    max-width: 800px;
+  }
+
+  /* ====== SLIDE 3 — SOLUTION (3 Bullets) ====== */
+  .solution-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .solution-item {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .solution-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    color: var(--kr-gold);
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+    flex-shrink: 0;
+    width: 40px;
+    padding-top: 14px;
+  }
+  .solution-text {
+    flex: 1;
+  }
+  .solution-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 1.15;
+    color: var(--kr-ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .solution-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--kr-grey);
+  }
+
+  /* ====== SLIDE 4 — PROOF (Quote + Source) ====== */
+  .proof-quote-mark {
+    font-family: 'Fraunces', serif;
+    font-size: 200px;
+    line-height: 0.8;
+    color: var(--kr-gold);
+    margin-bottom: 24px;
+  }
+  .proof-quote {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    color: var(--kr-bg);
+    margin-bottom: 56px;
+    max-width: 880px;
+  }
+  .proof-source {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: rgba(251,250,247,0.7);
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+  }
+  .proof-source strong {
+    color: var(--kr-bg);
+    font-weight: 500;
+    display: block;
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  /* ====== SLIDE 5 — CTA ====== */
+  .cta-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-gold);
+    margin-bottom: 56px;
+  }
+  .cta-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--kr-bg);
+    margin-bottom: 48px;
+    max-width: 880px;
+  }
+  .cta-head .accent {
+    color: var(--kr-gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .cta-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    line-height: 1.55;
+    color: rgba(251,250,247,0.78);
+    margin-bottom: 64px;
+    max-width: 820px;
+  }
+  .cta-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    color: var(--kr-bg);
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    font-weight: 500;
+  }
+  .cta-url::before {
+    content: '';
+    width: 40px;
+    height: 1.5px;
+    background: var(--kr-gold);
+  }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <strong>Carousel-Template 1080×1350 · 5 Slides · LinkedIn-Format</strong><br>
+  Export: <kbd>cmd + shift + 4</kbd> + <kbd>Leertaste</kbd> + Klick auf einzelne Slide → PNG auf Desktop.<br>
+  Parametrisierbar via URL-Query (siehe CSS-Kommentar). Slides 1+2+3 sind hell, 4+5 dunkel.<br>
+  <em>Beispiel-Inhalt unten = Friseur · Stuttgart (1. Slide-Reihenfolge). Ersetze Texte per Edit oder URL.</em>
+</div>
+
+<!-- ====== SLIDE 1 — HOOK ====== -->
+<div class="slide" id="slide-1">
+  <div class="eyebrow" data-slot="branche">Friseur<span class="dot">·</span>Stuttgart</div>
+  <h1 class="hook" data-slot="hook">Ihre Webseite verliert <span class="accent">drei Kunden pro Woche.</span></h1>
+  <div class="hook-meta" data-slot="hookMeta">Weil sie auf dem Handy 4,2 Sekunden zum Laden braucht. Wir bauen sie neu — in 14 Tagen.</div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page">
+      <span class="footer-page-label">Slide</span>01 / 05
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2 — PROBLEM ====== -->
+<div class="slide" id="slide-2">
+  <div class="slide-num"><strong>02</strong> · Problem</div>
+  <div class="section-label">Was heute schiefläuft</div>
+  <h2 class="problem" data-slot="problem">73 % der lokalen Webseiten laden langsamer als drei Sekunden.</h2>
+  <div class="problem-detail" data-slot="problemDetail">Google straft das mit weniger Reichweite. Kunden klicken zurück. Branchen-Konkurrenz gewinnt. Lokale Sichtbarkeit verschwindet.</div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page">
+      <span class="footer-page-label">Slide</span>02 / 05
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3 — SOLUTION (3 Bullets) ====== -->
+<div class="slide" id="slide-3">
+  <div class="slide-num"><strong>03</strong> · Lösung</div>
+  <div class="section-label">Wie wir es bauen</div>
+  <div class="solution-list">
+    <div class="solution-item">
+      <div class="solution-num">01</div>
+      <div class="solution-text">
+        <div class="solution-head" data-slot="p1Head">Manufaktur statt Baukasten.</div>
+        <div class="solution-sub" data-slot="p1Sub">Jede Seite handgeschrieben in HTML/CSS. Kein WordPress, kein Plugin-Wildwuchs, kein 80-MB-Theme.</div>
+      </div>
+    </div>
+    <div class="solution-item">
+      <div class="solution-num">02</div>
+      <div class="solution-text">
+        <div class="solution-head" data-slot="p2Head">Erster Entwurf in 14 Tagen.</div>
+        <div class="solution-sub" data-slot="p2Sub">Branchenspezifisches Demo statt Brief-Anfrage. Sie sehen es, bevor Sie entscheiden.</div>
+      </div>
+    </div>
+    <div class="solution-item">
+      <div class="solution-num">03</div>
+      <div class="solution-text">
+        <div class="solution-head" data-slot="p3Head">BFSG-konform ab Tag 1.</div>
+        <div class="solution-sub" data-slot="p3Sub">Barrierefrei ab Juni 2025 Pflicht für KMU. Wir liefern WCAG 2.2 AA mit Audit-Report.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page">
+      <span class="footer-page-label">Slide</span>03 / 05
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4 — PROOF (Quote) ====== -->
+<div class="slide dark" id="slide-4">
+  <div class="slide-num"><strong>04</strong> · Beleg</div>
+  <div class="proof-quote-mark">"</div>
+  <p class="proof-quote" data-slot="proof">Erster Entwurf nach 11 Tagen. Telefon klingelt heute zweimal so oft wie vorher.</p>
+  <div class="proof-source" data-slot="proofSource">
+    <strong data-slot="proofName">Andreas Müller</strong>
+    <span data-slot="proofRole">Dachdeckermeister · Stuttgart · Pilot-Kunde 2026</span>
+  </div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page">
+      <span class="footer-page-label">Slide</span>04 / 05
+    </div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5 — CTA ====== -->
+<div class="slide dark" id="slide-5">
+  <div class="cta-eyebrow">Jetzt prüfen</div>
+  <h2 class="cta-head" data-slot="cta">Kostenfreier <span class="accent">24-Stunden-Audit</span> Ihrer Webseite.</h2>
+  <div class="cta-sub" data-slot="ctaSub">Sie erhalten einen schriftlichen Report mit Tempo, BFSG-Risiko und drei konkreten Quick-Wins. Kein Pitch, kein Anruf.</div>
+  <div class="cta-url" data-slot="ctaUrl">karriaro-webdesign.de/website-check</div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page">
+      <span class="footer-page-label">Slide</span>05 / 05
+    </div>
+  </div>
+</div>
+
+<script>
+  // URL-Query-Param-Mapper: ?hook=...&branche=... etc. fuellt [data-slot]-Elemente.
+  // innerHTML statt textContent, damit accent-Spans aus der Config gerendert werden.
+  // Sicher genug fuer lokales Render-Tool (kein User-Input).
+  const params = new URLSearchParams(window.location.search);
+  params.forEach((value, key) => {
+    document.querySelectorAll('[data-slot="' + key + '"]').forEach(el => {
+      el.innerHTML = value;
+    });
+  });
+</script>
+
+</body>
+</html>

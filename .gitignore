@@ -24,3 +24,6 @@ test-results/
 .env
 .env.local
 .env.*.local
+
+# Social-Render-Output (generierte PNGs aus scripts/render-social.mjs)
+marketing/social/out/

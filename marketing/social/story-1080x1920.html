@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Karriaro Story · 1080x1920 · 3 Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Fraunces:wght@400;500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Karriaro-Webdesign Story-Template · 1080x1920
+     Format: 9:16 (IG-Story · WA-Status · LinkedIn-Story · TikTok)
+     3 Varianten in einer Datei: Headline / Quote / CTA
+     Export: cmd+shift+4 + Leertaste + Klick auf einzelne .story
+     Parametrisierbar via URL-Query (data-slot):
+       ?headline=...&meta=...     → Variant 1
+       ?quote=...&author=...      → Variant 2
+       ?cta=...&ctaSub=...&url=   → Variant 3
+     ============================================================ */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --kr-ink: #14202B;
+    --kr-blue: #1A2E40;
+    --kr-blue-light: #4A6B85;
+    --kr-gold: #8A7B5C;
+    --kr-grey: #525E6B;
+    --kr-grey-soft: #8A8278;
+    --kr-bg: #FBFAF7;
+    --kr-bg-soft: #F8F4ED;
+    --kr-border: rgba(20,30,40,0.10);
+  }
+
+  body {
+    background: #2A2A2A;
+    padding: 48px 32px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+  }
+
+  .hint {
+    color: #C0C0C0;
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 1080px;
+    text-align: center;
+    width: 100%;
+  }
+  .hint kbd { background: #1A1A1A; color: #FFFFFF; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; }
+  .hint strong { color: #FFFFFF; }
+
+  /* ====== STORY ====== */
+  .story {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    overflow: hidden;
+    background: var(--kr-bg);
+    color: var(--kr-ink);
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 0 1px #444;
+    padding: 120px 96px 140px;
+    display: flex;
+    flex-direction: column;
+  }
+  .story.dark {
+    background: var(--kr-ink);
+    color: var(--kr-bg);
+  }
+
+  /* ====== HEAD-LOGO (kompakt, oben) ====== */
+  .story-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: auto;
+  }
+  .logo-mark {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-mark::before,
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    top: 8px; bottom: 8px;
+    width: 10px;
+    border: 1.6px solid var(--kr-ink);
+  }
+  .logo-mark::before { left: 0; border-right: none; }
+  .logo-mark::after { right: 0; border-left: none; }
+  .story.dark .logo-mark::before,
+  .story.dark .logo-mark::after { border-color: var(--kr-bg); }
+
+  .logo-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    position: relative;
+    top: -1px;
+    color: var(--kr-ink);
+  }
+  .story.dark .logo-letter { color: var(--kr-bg); }
+
+  .logo-divider {
+    width: 0.75px;
+    background: var(--kr-ink);
+    align-self: stretch;
+  }
+  .story.dark .logo-divider { background: var(--kr-bg); }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 14px;
+  }
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--kr-ink);
+  }
+  .story.dark .logo-name { color: var(--kr-bg); }
+
+  .logo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 9.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+    line-height: 1;
+  }
+  .story.dark .logo-sub { color: rgba(251,250,247,0.6); }
+
+  /* ====== HEAD-EYEBROW ====== */
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-blue);
+    margin-bottom: 56px;
+  }
+  .story.dark .eyebrow { color: var(--kr-gold); }
+  .eyebrow .dot { color: var(--kr-gold); margin: 0 10px; font-weight: 700; }
+
+  /* ====== HEADLINE-VARIANTE ====== */
+  .headline {
+    font-family: 'Fraunces', 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 132px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--kr-ink);
+    margin-bottom: 56px;
+  }
+  .headline .accent {
+    color: var(--kr-blue);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    line-height: 1.5;
+    color: var(--kr-grey);
+    margin-bottom: 96px;
+  }
+
+  /* ====== QUOTE-VARIANTE ====== */
+  .quote-mark {
+    font-family: 'Fraunces', serif;
+    font-size: 220px;
+    line-height: 0.7;
+    color: var(--kr-gold);
+    margin-bottom: 32px;
+  }
+  .quote {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 80px;
+    line-height: 1.18;
+    letter-spacing: -0.015em;
+    color: var(--kr-bg);
+    margin-bottom: 96px;
+  }
+  .quote-author {
+    font-family: 'Inter', sans-serif;
+    color: rgba(251,250,247,0.78);
+    line-height: 1.5;
+  }
+  .quote-author strong {
+    display: block;
+    color: var(--kr-bg);
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .quote-author span {
+    font-size: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ====== CTA-VARIANTE ====== */
+  .cta-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 112px;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--kr-bg);
+    margin-bottom: 56px;
+  }
+  .cta-head .accent {
+    color: var(--kr-gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .cta-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    line-height: 1.55;
+    color: rgba(251,250,247,0.78);
+    margin-bottom: 80px;
+  }
+  .cta-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 30px;
+    color: var(--kr-bg);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .cta-url::before {
+    content: '';
+    width: 44px;
+    height: 1.5px;
+    background: var(--kr-gold);
+  }
+
+  /* ====== FOOT-URL (auf Variant 1 + 2) ====== */
+  .foot-url {
+    margin-top: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    color: var(--kr-ink);
+    letter-spacing: 0.04em;
+    font-weight: 500;
+  }
+  .story.dark .foot-url { color: var(--kr-bg); }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <strong>Story-Template 1080×1920 · 3 Varianten · IG/WA/LinkedIn-Story</strong><br>
+  Export pro Variante: <kbd>cmd + shift + 4</kbd> + <kbd>Leertaste</kbd> + Klick auf einzelne <em>.story</em>.<br>
+  Variant 1 = Headline · Variant 2 = Quote (dunkel) · Variant 3 = CTA (dunkel).
+</div>
+
+<!-- ====== VARIANT 1 — HEADLINE ====== -->
+<div class="story" id="story-headline">
+  <div class="story-logo">
+    <div class="logo-mark"><span class="logo-letter">K</span></div>
+    <div class="logo-divider"></div>
+    <div class="logo-text">
+      <div class="logo-name">Karriaro</div>
+      <div class="logo-sub">Webdesign · Manufaktur</div>
+    </div>
+  </div>
+  <div class="eyebrow" data-slot="branche">Friseur<span class="dot">·</span>Stuttgart</div>
+  <h1 class="headline" data-slot="headline">Webseite, die <span class="accent">verkauft.</span></h1>
+  <div class="meta" data-slot="meta">Handgemacht. 14 Tage. Ab 1.290 €.</div>
+  <div class="foot-url" data-slot="footUrl">karriaro-webdesign.de</div>
+</div>
+
+<!-- ====== VARIANT 2 — QUOTE (dark) ====== -->
+<div class="story dark" id="story-quote">
+  <div class="story-logo">
+    <div class="logo-mark"><span class="logo-letter">K</span></div>
+    <div class="logo-divider"></div>
+    <div class="logo-text">
+      <div class="logo-name">Karriaro</div>
+      <div class="logo-sub">Webdesign · Manufaktur</div>
+    </div>
+  </div>
+  <div class="eyebrow">Kundenstimme</div>
+  <div class="quote-mark">"</div>
+  <p class="quote" data-slot="quote">Erster Entwurf nach 11 Tagen. Telefon klingelt heute doppelt so oft.</p>
+  <div class="quote-author">
+    <strong data-slot="quoteAuthor">Andreas Müller</strong>
+    <span data-slot="quoteRole">Dachdeckermeister · Stuttgart</span>
+  </div>
+</div>
+
+<!-- ====== VARIANT 3 — CTA (dark) ====== -->
+<div class="story dark" id="story-cta">
+  <div class="story-logo">
+    <div class="logo-mark"><span class="logo-letter">K</span></div>
+    <div class="logo-divider"></div>
+    <div class="logo-text">
+      <div class="logo-name">Karriaro</div>
+      <div class="logo-sub">Webdesign · Manufaktur</div>
+    </div>
+  </div>
+  <div class="eyebrow">Jetzt prüfen</div>
+  <h2 class="cta-head" data-slot="cta">Kostenfreier <span class="accent">24-h-Audit.</span></h2>
+  <div class="cta-sub" data-slot="ctaSub">Schriftlicher Report. Tempo · BFSG-Risiko · 3 Quick-Wins. Kein Anruf.</div>
+  <div class="cta-url" data-slot="ctaUrl">karriaro-webdesign.de/website-check</div>
+</div>
+
+<script>
+  // innerHTML statt textContent, damit accent-Spans aus der Config gerendert werden.
+  const params = new URLSearchParams(window.location.search);
+  params.forEach((value, key) => {
+    document.querySelectorAll('[data-slot="' + key + '"]').forEach(el => {
+      el.innerHTML = value;
+    });
+  });
+</script>
+
+</body>
+</html>

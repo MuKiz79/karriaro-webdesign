@@ -9,7 +9,8 @@
     "preview": "npx serve dist",
     "clean": "rm -rf dist && mkdir -p dist",
     "smoke": "node scripts/smoke-playwright.mjs",
-    "smoke:quick": "node scripts/smoke-playwright.mjs --quick"
+    "smoke:quick": "node scripts/smoke-playwright.mjs --quick",
+    "render:social": "node scripts/render-social.mjs"
   },
   "keywords": [
     "webdesign",

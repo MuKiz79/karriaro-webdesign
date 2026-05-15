@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Karriaro-Webdesign · Square-Avatar 1080x1080
+  Use: LinkedIn-Firmenseite-Logo, IG-Avatar, WA-Business-Avatar
+  Hinweis: Schriften werden ueber Google-Fonts geladen, beim PNG-Export
+  via Browser (Playwright/screenshot-mockups.sh) korrekt gerendert.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" role="img" aria-label="Karriaro Webdesign Manufaktur">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=Inter:wght@500&amp;display=swap');
+      .name { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 112px; letter-spacing: 0.12em; fill: #14202B; text-transform: uppercase; }
+      .sub { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 28px; letter-spacing: 0.32em; fill: #525E6B; text-transform: uppercase; }
+      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 600; font-size: 280px; fill: #14202B; letter-spacing: -0.025em; }
+      .bracket { fill: none; stroke: #14202B; stroke-width: 12; stroke-linecap: square; }
+      .accent-dot { fill: #1A2E40; }
+    </style>
+  </defs>
+
+  <!-- Bone-Hintergrund (warmer Cream-Ton) -->
+  <rect width="1080" height="1080" fill="#FBFAF7"/>
+
+  <!-- Code-Siegel zentriert: K im Bracket -->
+  <!-- Linker Bracket -->
+  <path class="bracket" d="M 330 380 L 270 380 L 270 700 L 330 700"/>
+  <!-- Rechter Bracket -->
+  <path class="bracket" d="M 750 380 L 810 380 L 810 700 L 750 700"/>
+  <!-- K mittig -->
+  <text class="letter" x="540" y="640" text-anchor="middle">K</text>
+
+  <!-- Wortmarke unter Mark -->
+  <text class="name" x="540" y="830" text-anchor="middle">Karriaro</text>
+
+  <!-- Sublabel mit Indigo-Akzent-Punkt -->
+  <text class="sub" x="540" y="895" text-anchor="middle">
+    Webdesign<tspan class="accent-dot" dx="14" dy="0">·</tspan><tspan dx="14" dy="0">Manufaktur</tspan>
+  </text>
+</svg>

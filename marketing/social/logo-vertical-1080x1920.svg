@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Karriaro-Webdesign · Vertical-Story 1080x1920
+  Use: IG-Story-Cover, WA-Status-Cover, Pinterest-Pin
+  Komposition: Logo oben-zentriert, Manufaktur-Eyebrow Mitte, Tagline + URL unten.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="Karriaro Webdesign Manufaktur">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=Fraunces:wght@400;500;600&amp;family=Inter:wght@400;500;600&amp;display=swap');
+      .name { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 88px; letter-spacing: 0.12em; fill: #14202B; text-transform: uppercase; }
+      .sub { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 22px; letter-spacing: 0.32em; fill: #525E6B; text-transform: uppercase; }
+      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 600; font-size: 220px; fill: #14202B; letter-spacing: -0.025em; }
+      .bracket { fill: none; stroke: #14202B; stroke-width: 10; stroke-linecap: square; }
+      .accent-dot { fill: #1A2E40; }
+      .headline { font-family: 'Fraunces', 'Cormorant Garamond', serif; font-weight: 400; font-size: 96px; line-height: 1.05; fill: #14202B; letter-spacing: -0.015em; }
+      .tagline { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 28px; fill: #525E6B; letter-spacing: 0.005em; }
+      .url { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 24px; fill: #14202B; letter-spacing: 0.02em; }
+    </style>
+  </defs>
+
+  <!-- Bone-Hintergrund -->
+  <rect width="1080" height="1920" fill="#FBFAF7"/>
+
+  <!-- Logo-Mark oben -->
+  <path class="bracket" d="M 380 380 L 330 380 L 330 660 L 380 660"/>
+  <path class="bracket" d="M 700 380 L 750 380 L 750 660 L 700 660"/>
+  <text class="letter" x="540" y="590" text-anchor="middle">K</text>
+
+  <!-- Wortmarke -->
+  <text class="name" x="540" y="800" text-anchor="middle">Karriaro</text>
+  <text class="sub" x="540" y="850" text-anchor="middle">
+    Webdesign<tspan class="accent-dot" dx="12" dy="0">·</tspan><tspan dx="12" dy="0">Manufaktur</tspan>
+  </text>
+
+  <!-- Divider -->
+  <line x1="440" y1="1020" x2="640" y2="1020" stroke="#14202B" stroke-width="1.5"/>
+
+  <!-- Headline Mitte -->
+  <text class="headline" x="540" y="1230" text-anchor="middle">Handgemachte</text>
+  <text class="headline" x="540" y="1340" text-anchor="middle">Websites.</text>
+
+  <!-- Tagline -->
+  <text class="tagline" x="540" y="1480" text-anchor="middle">Fuer lokale Unternehmen. Ab 1.290 €.</text>
+
+  <!-- URL unten -->
+  <text class="url" x="540" y="1780" text-anchor="middle">karriaro-webdesign.de</text>
+</svg>

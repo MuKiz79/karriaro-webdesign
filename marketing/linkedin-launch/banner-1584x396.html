@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>LinkedIn-Banner Karriaro-Webdesign · 1584×396 · Aesop-pur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #2A2A2A; padding: 32px; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .hint { color: #C0C0C0; font-size: 13px; line-height: 1.6; max-width: 1584px; text-align: center; }
+  .hint kbd { background: #1A1A1A; color: #FFFFFF; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; }
+
+  /* ====== BANNER ====== */
+  .banner {
+    width: 1584px;
+    height: 396px;
+    background: #FFFFFF;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 0 1px #444;
+  }
+
+  /* ====== LOGO oben links ====== */
+  .banner-logo {
+    position: absolute;
+    top: 64px;
+    left: 96px;
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    color: #0A0A0A;
+  }
+  .logo-mark {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-mark::before,
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    top: 9px; bottom: 9px;
+    width: 10px;
+    border: 1.6px solid currentColor;
+  }
+  .logo-mark::before { left: 0; border-right: none; }
+  .logo-mark::after { right: 0; border-left: none; }
+  .logo-letter {
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    position: relative;
+    top: -1px;
+  }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 18px;
+    border-left: 0.75px solid currentColor;
+    align-self: stretch;
+    justify-content: center;
+  }
+  .logo-name {
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    font-weight: 500;
+    font-size: 25px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .logo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1;
+    color: #1F2937;
+  }
+  .logo-sub .dot { color: #0071E3; font-weight: 600; margin: 0 4px; }
+
+  /* ====== TEXT-BLOCK oben rechts ====== */
+  .banner-text {
+    position: absolute;
+    top: 80px;
+    right: 96px;
+    max-width: 920px;
+  }
+  .banner-headline {
+    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+    font-weight: 500;
+    font-size: 76px;
+    line-height: 1.04;
+    color: #0A0A0A;
+    letter-spacing: -0.012em;
+    margin-bottom: 32px;
+  }
+  .banner-subline {
+    font-family: 'Inter', sans-serif;
+    font-size: 21px;
+    font-weight: 400;
+    color: #1F2937;
+    line-height: 1.5;
+    margin-bottom: 30px;
+    max-width: 720px;
+  }
+  .banner-subline .accent {
+    color: #0071E3;
+    font-weight: 500;
+  }
+  .banner-url {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #0A0A0A;
+    letter-spacing: 0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .banner-url::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: #0A0A0A;
+  }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <strong>LinkedIn-Banner 1584×396 px · Aesop-pur · Iteration 2 (Logo oben links).</strong>
+  Screenshot mit <kbd>cmd + shift + 4</kbd>, dann <kbd>Leertaste</kbd>, dann auf das weiße Banner klicken — macOS rendert pixel-genau als PNG auf den Desktop.<br>
+  Logo links als Brand-Anker, Text-Block rechts als Botschaft, viel Weißraum dazwischen. Profilbild-Crop unten links bleibt frei.
+</div>
+
+<div class="banner">
+  <!-- Logo oben links -->
+  <div class="banner-logo">
+    <div class="logo-mark"><span class="logo-letter">K</span></div>
+    <div class="logo-text">
+      <div class="logo-name">Karriaro</div>
+      <div class="logo-sub">Webdesign<span class="dot">·</span>Manufaktur</div>
+    </div>
+  </div>
+
+  <!-- Text-Block oben rechts -->
+  <div class="banner-text">
+    <div class="banner-headline">Handgemachte Websites<br>für lokale Unternehmen.</div>
+    <div class="banner-subline"><span class="accent">Erster Entwurf in 14 Tagen.</span> Ab 1.290 € einmalig.</div>
+    <div class="banner-url">karriaro-webdesign.de</div>
+  </div>
+</div>
+
+<div class="hint" style="margin-top: 32px;">
+  <strong>Komposition:</strong> Logo (56px-Mark + Wortmarke) oben links — Text-Block (76px-Headline + Subline + URL) oben rechts — viel Weißraum dazwischen. Brand-Blau-Akzent nur auf zwei Stellen: dem Sublabel-Punkt im Logo und „Erster Entwurf in 24 Stunden" in der Subline. Maximale Reduktion bei klarer Markenpräsenz.
+</div>
+
+</body>
+</html>

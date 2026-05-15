@@ -1,0 +1,222 @@
+{
+  "_doc": "Karriaro-Webdesign Social-Render-Config. Quelle: marketing/social/copy-library.md. Render-Script: scripts/render-social.mjs.",
+  "branchen": {
+    "friseur": {
+      "label": "Friseur · Stuttgart",
+      "tier": "Essential 1.290 €",
+      "demoUrl": "karriaro-webdesign.de/friseur",
+      "carousel": {
+        "branche": "Friseur · Stuttgart",
+        "hook": "Ihr Salon kostet 8.400 €/Mt. Ihre Webseite zwei Minuten Aufmerksamkeit.",
+        "hookMeta": "73 % der Friseur-Kunden googeln nach 'Friseur + Stadtteil' vor der Buchung. Wir bauen in 14 Tagen neu — ab 1.290 €.",
+        "problem": "73 % der lokalen Webseiten laden langsamer als 3 Sekunden.",
+        "problemDetail": "Google straft das mit weniger Reichweite. Kunden klicken zurueck. Branchen-Konkurrenz gewinnt. Lokale Sichtbarkeit verschwindet.",
+        "p1Head": "Manufaktur statt Baukasten.",
+        "p1Sub": "Jede Seite handgeschrieben. Kein Theme, kein Plugin-Wildwuchs.",
+        "p2Head": "Erster Entwurf in 14 Tagen.",
+        "p2Sub": "Branchen-Demo bereit. Sie sehen es, bevor Sie entscheiden.",
+        "p3Head": "BFSG-konform ab Tag 1.",
+        "p3Sub": "WCAG 2.2 AA Pflicht ab Juni 2025. Wir liefern mit Audit-Report.",
+        "proof": "Erster Entwurf nach 11 Tagen. Online-Buchung verdoppelt die Termine.",
+        "proofName": "Anna Mueller-Beispiel",
+        "proofRole": "Salon-Inhaberin · Stuttgart-Mitte · Pilot-Kunde 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Salon-Webseite.",
+        "ctaSub": "Schriftlicher Report. Tempo · BFSG-Risiko · 3 Quick-Wins. Kein Pitch.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "Webseite, die <span class=\"accent\">verkauft.</span>",
+        "meta": "Friseur-Salon · Online-Buchung · 14 Tage · ab 1.290 €",
+        "quote": "Erster Entwurf nach 11 Tagen. Telefon klingelt heute doppelt so oft.",
+        "quoteAuthor": "Anna Mueller-Beispiel",
+        "quoteRole": "Salon-Inhaberin · Stuttgart"
+      }
+    },
+    "restaurant": {
+      "label": "Restaurant · Muenchen",
+      "tier": "Essential 1.290 €",
+      "demoUrl": "karriaro-webdesign.de/restaurant",
+      "carousel": {
+        "branche": "Restaurant · Muenchen",
+        "hook": "80 Plaetze. 4 Sek Ladezeit. 12 Tische leer.",
+        "hookMeta": "Reservierungen brechen ab, wenn die Karte 4 Sekunden braucht. Wir bauen leichte Restaurant-Seiten. Ab 1.290 €.",
+        "problem": "Mobile-Speisekarten brauchen heute durchschnittlich 4,8 Sekunden.",
+        "problemDetail": "Gaeste klicken zurueck und reservieren beim Nachbarn. Verlorene Reservierung = 80 € Umsatz weg pro Tisch.",
+        "p1Head": "Karte sofort sichtbar.",
+        "p1Sub": "Keine PDF, keine 12 Plugins. Speisekarte rendert in unter 1 Sekunde.",
+        "p2Head": "Reservierung in einem Klick.",
+        "p2Sub": "Resmio/Bookatable-Verknuepfung oder eigenes Modul. Bestaetigung in 30 Sek.",
+        "p3Head": "Allergen-Filter + Maps.",
+        "p3Sub": "DSGVO-stark, Mobile-First, integrierte Wegbeschreibung.",
+        "proof": "Erste Reservierungen aus Google-Suche am Tag 3 nach Launch.",
+        "proofName": "Elena Rossi",
+        "proofRole": "Restaurant-Inhaberin · Muenchen-Schwabing",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Speisekarte.",
+        "ctaSub": "Schriftlicher Report. Mobile-Tempo · Reservierungs-Pfad · 3 Quick-Wins.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "Karte <span class=\"accent\">in 1 Sekunde.</span>",
+        "meta": "Restaurant · Reservierung · 14 Tage · ab 1.290 €",
+        "quote": "Erste Reservierungen aus Google-Suche am Tag 3 nach Launch.",
+        "quoteAuthor": "Elena Rossi",
+        "quoteRole": "Restaurant-Inhaberin · Muenchen"
+      }
+    },
+    "dachdecker": {
+      "label": "Dachdecker · Hamburg",
+      "tier": "Professional 1.990 €",
+      "demoUrl": "karriaro-webdesign.de/dachdecker",
+      "carousel": {
+        "branche": "Dachdecker · Hamburg",
+        "hook": "Ihre Auftragsbuecher sind voll bis Maerz. Ihre Webseite zeigt 2018-Bilder.",
+        "hookMeta": "Bauleiter googelt — Ihre Seite sieht aus wie Vereinsblatt. Auftrag geht weiter. Wir bauen Handwerker-Seiten mit Foerderrechner. Ab 1.990 €.",
+        "problem": "Standard-Handwerks-Webseiten enthalten Stockfotos und 2018-CMS-Reste.",
+        "problemDetail": "Bauleiter und Eigentuemer entscheiden in 6 Sekunden. Stock-Bilder sind sofortiger Vertrauensverlust.",
+        "p1Head": "Foerderrechner live.",
+        "p1Sub": "BAFA-Foerderhoehe in 4 Eingaben. Kunde weiss vor dem Anruf, was der Staat zahlt.",
+        "p2Head": "Vorher-Nachher-Galerie.",
+        "p2Sub": "Eigene Projekte mit Slider-Vergleich. Beweise statt Behauptungen.",
+        "p3Head": "KI-Schadens-Check.",
+        "p3Sub": "Kunde laedt Foto, Claude klassifiziert in 8 Sek: Notfall / Inspektion / Bagatelle.",
+        "proof": "Telefon klingelt heute doppelt so oft wie vorher.",
+        "proofName": "Andreas Mueller",
+        "proofRole": "Dachdeckermeister · Stuttgart · Pilot-Kunde 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Handwerker-Seite.",
+        "ctaSub": "Tempo · BFSG-Risiko · 3 Quick-Wins. Schriftlich. Kein Anruf.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "Telefon klingelt <span class=\"accent\">doppelt so oft.</span>",
+        "meta": "Dachdecker · Foerderrechner · 14 Tage · ab 1.990 €",
+        "quote": "Erster Entwurf nach 11 Tagen. Telefon klingelt heute doppelt so oft.",
+        "quoteAuthor": "Andreas Mueller",
+        "quoteRole": "Dachdeckermeister · Stuttgart"
+      }
+    },
+    "sanitaer": {
+      "label": "Sanitaer · Koeln",
+      "tier": "Professional 1.990 €",
+      "demoUrl": "karriaro-webdesign.de/sanitaer",
+      "carousel": {
+        "branche": "Sanitaer · Koeln",
+        "hook": "Notfall um 22 Uhr. Ihre Webseite hat keine Nummer im Header.",
+        "hookMeta": "Sanitaer-Kunden suchen mit Schmerz. 3 Klicks bis Anruf — Kunde ist weg. Wir bauen Notfall-Seiten. Ab 1.990 €.",
+        "problem": "Sanitaer-Webseiten verstecken die Tel-Nummer im Footer.",
+        "problemDetail": "Wenn der Wasserrohrbruch um 22 Uhr passiert, will der Kunde 3 Sekunden bis Anruf — nicht 3 Klicks. Notruf-Header fehlt fast immer.",
+        "p1Head": "Klick-zu-Anruf-Header.",
+        "p1Sub": "Telefon-Button mobil-prominent, auch ueber jedem Fold. Immer einen Tap entfernt.",
+        "p2Head": "24/7-Bereich klar markiert.",
+        "p2Sub": "Eigene Notfall-Seite mit Bereitschaftsdienst, Stadtteilen, Pauschalen.",
+        "p3Head": "Foerderrechner Heizung.",
+        "p3Sub": "BAFA-Heizungstausch in 5 Feldern. Lead-Magnet ohne Anruf.",
+        "proof": "Conversion-Sprung 4 → 27 Anfragen im Monat seit Launch.",
+        "proofName": "Thomas Becker-Beispiel",
+        "proofRole": "Sanitaerbetrieb · Koeln · Pilot-Kunde 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Notfall-Seite.",
+        "ctaSub": "Tempo · Anruf-Pfad · BFSG · 3 Quick-Wins. Schriftlich.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "3 Sekunden <span class=\"accent\">bis Anruf.</span>",
+        "meta": "Sanitaer · Notfall-Header · 14 Tage · ab 1.990 €",
+        "quote": "Conversion-Sprung 4 zu 27 Anfragen im Monat seit Launch.",
+        "quoteAuthor": "Thomas Becker-Beispiel",
+        "quoteRole": "Sanitaerbetrieb · Koeln"
+      }
+    },
+    "spedition": {
+      "label": "Spedition · Frankfurt",
+      "tier": "Professional 1.990 €",
+      "demoUrl": "karriaro-webdesign.de/spedition",
+      "carousel": {
+        "branche": "Spedition · Frankfurt",
+        "hook": "24 Tonnen Fracht. 4,2 Sekunden Ladezeit. Disponent klickt zurueck.",
+        "hookMeta": "B2B-Disponenten warten nicht. Wenn der Tarifrechner nicht in 2 Sekunden steht, gewinnt der naechste Anbieter. Ab 1.990 €.",
+        "problem": "Logistik-Webseiten sind im Schnitt 4,8 Sekunden langsam.",
+        "problemDetail": "Disponenten haben 30 Anbieter offen. Wer den Tarifrechner schneller liefert, gewinnt den Auftrag — Inhalte sind sekundaer.",
+        "p1Head": "Tarifrechner in 3 Feldern.",
+        "p1Sub": "Strecke · Gewicht · Volumen → Preisspanne in unter 2 Sekunden.",
+        "p2Head": "Sendungsverfolgung embedded.",
+        "p2Sub": "Auftragsnummer in Header-Suchfeld. Kunden buchen wieder, weil sie sich sicher fuehlen.",
+        "p3Head": "Disponenten-Login.",
+        "p3Sub": "Geschuetzter Bereich mit Frachtpapieren, Rechnungs-Archiv, Stammdaten.",
+        "proof": "12 zusaetzliche qualifizierte B2B-Anfragen pro Woche seit Launch.",
+        "proofName": "Lukas Schwaben-Beispiel",
+        "proofRole": "Spedition Nord · Frankfurt · Pilot-Kunde 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Logistik-Seite.",
+        "ctaSub": "Tempo · Tarifrechner-Pfad · B2B-Conversion · 3 Quick-Wins.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "Tarif <span class=\"accent\">in 2 Sek.</span>",
+        "meta": "Spedition · Tarifrechner · 14 Tage · ab 1.990 €",
+        "quote": "12 zusaetzliche qualifizierte B2B-Anfragen pro Woche seit Launch.",
+        "quoteAuthor": "Lukas Schwaben-Beispiel",
+        "quoteRole": "Spedition Nord · Frankfurt"
+      }
+    },
+    "immobilien": {
+      "label": "Immobilienmakler · Berlin",
+      "tier": "Premium 2.990 €",
+      "demoUrl": "karriaro-webdesign.de/immobilien-makler",
+      "carousel": {
+        "branche": "Immobilienmakler · Berlin",
+        "hook": "Ihre Provision steht bei 18.000 €. Ihre Webseite zeigt Stockfotos.",
+        "hookMeta": "Eigentuemer vergeben den Auftrag im Erstkontakt. Aldi-Webdesign 2014 verliert gegen Konkurrenz mit Live-Wertermittlung. Ab 2.990 €.",
+        "problem": "Standard-Makler-Webseiten sind austauschbar.",
+        "problemDetail": "Stock-Fotos, Drei-Spalten-Layout, ImmoScout-Iframe. Der Eigentuemer sieht keinen Grund zu Ihnen statt zur Konkurrenz.",
+        "p1Head": "Live-Wertermittlung.",
+        "p1Sub": "Adresse + 5 Werte → Spanne in 12 Sek. Eigentuemer wird Lead, bucht direkt Vor-Ort-Termin.",
+        "p2Head": "Eigentuemer-Bewertungsportal.",
+        "p2Sub": "Standardisierte Reviews von Verkaeufer-Eigentuemern. Trust auf einen Blick.",
+        "p3Head": "Objekt-Module mit Schema.org.",
+        "p3Sub": "Listings als RealEstateListing markiert. Google-Reichweite ohne Portal-Provision.",
+        "proof": "7 zu 31 qualifizierte Leads pro Monat seit Launch.",
+        "proofName": "Sandra Berlin-Beispiel",
+        "proofRole": "Immobilienmaklerin · Berlin-Mitte · Pilot-Kundin 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Makler-Seite.",
+        "ctaSub": "Tempo · Wertermittlungs-Pfad · Schema.org · 3 Quick-Wins.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "7 → 31 <span class=\"accent\">Leads/Mt.</span>",
+        "meta": "Immobilienmakler · Wertermittlung · 14 Tage · ab 2.990 €",
+        "quote": "7 zu 31 qualifizierte Leads pro Monat seit Launch.",
+        "quoteAuthor": "Sandra Berlin-Beispiel",
+        "quoteRole": "Immobilienmaklerin · Berlin"
+      }
+    },
+    "praxis": {
+      "label": "Arztpraxis · Duesseldorf",
+      "tier": "Premium 2.990 €",
+      "demoUrl": "karriaro-webdesign.de/praxis",
+      "carousel": {
+        "branche": "Arztpraxis · Duesseldorf",
+        "hook": "Ihr Wartezimmer ist voll. Ihre Webseite ohne Online-Termin.",
+        "hookMeta": "41 % der Patienten unter 45 wechseln den Arzt, wenn keine Online-Buchung da ist. Wir bauen DSGVO-strenge Praxis-Seiten. Ab 2.990 €.",
+        "problem": "Praxis-Webseiten sind oft 2014-CMS mit PDF-Sprechzeiten.",
+        "problemDetail": "Patientinnen unter 45 wechseln. BFSG-Stichtag Juni 2025 trifft fast jede Praxis. Doctolib-Anbindung fehlt fast immer.",
+        "p1Head": "Doctolib-Embed.",
+        "p1Sub": "Online-Termin in 3 Klicks. SSO mit Praxisverwaltung optional.",
+        "p2Head": "Sprechzeiten-Karte.",
+        "p2Sub": "Heute geoeffnet · Live-Status · Notdienst-Hinweis. Mobile-First.",
+        "p3Head": "BFSG + DSGVO-streng.",
+        "p3Sub": "WCAG 2.2 AA mit Audit-Report. Patientenkommunikation auf europaeischen Servern.",
+        "proof": "Online-Buchungen verdoppelt, Telefon-Last halbiert in 30 Tagen.",
+        "proofName": "Dr. Anna Weber-Beispiel",
+        "proofRole": "Hausarztpraxis · Duesseldorf-Sued · Pilot-Kundin 2026",
+        "cta": "Kostenfreier 24-Stunden-Audit Ihrer Praxis-Seite.",
+        "ctaSub": "Tempo · BFSG-Risiko · Buchungs-Pfad · 3 Quick-Wins.",
+        "ctaUrl": "karriaro-webdesign.de/website-check"
+      },
+      "story": {
+        "headline": "Online-Termin <span class=\"accent\">in 3 Klicks.</span>",
+        "meta": "Praxis · Doctolib · 14 Tage · ab 2.990 €",
+        "quote": "Online-Buchungen verdoppelt, Telefon-Last halbiert in 30 Tagen.",
+        "quoteAuthor": "Dr. Anna Weber-Beispiel",
+        "quoteRole": "Hausarztpraxis · Duesseldorf"
+      }
+    }
+  }
+}
