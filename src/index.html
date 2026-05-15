@@ -1106,6 +1106,121 @@
             }
         }
 
+        /* Sprint 54 — Hero Award-Polish: Eyebrow/Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt + Marginalia */
+        .hero-folio-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: clamp(24px, 4vh, 40px);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .hero-folio-eyebrow .dot {
+            color: var(--color-line-strong);
+            opacity: 0.6;
+            font-weight: 400;
+        }
+        .hero-folio-marker {
+            position: absolute;
+            bottom: clamp(24px, 4vh, 40px);
+            left: clamp(24px, 4vw, 60px);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            pointer-events: none;
+            z-index: 3;
+        }
+        .hero-folio-marker .folio-page {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: 18px;
+            letter-spacing: 0.04em;
+            text-transform: none;
+            color: var(--color-gold);
+            line-height: 1;
+        }
+        @media (max-width: 760px) {
+            .hero-folio-marker { display: none; }
+        }
+
+        /* H1 Drop-Cap + opsz-Reveal */
+        .hero-headline {
+            font-variation-settings: "opsz" 9;
+            animation: hero-opsz-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+            text-wrap: balance;
+        }
+        @keyframes hero-opsz-reveal {
+            0%   { font-variation-settings: "opsz" 9;   opacity: 0.42; letter-spacing: -0.012em; }
+            100% { font-variation-settings: "opsz" 144; opacity: 1;    letter-spacing: -0.03em; }
+        }
+        .hero-h1-line { display: block; }
+        .hero-dropcap {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-weight: 500;
+            color: var(--color-gold);
+            font-size: 1.18em;
+            line-height: 0.86;
+            padding-right: 0.04em;
+            margin-left: -0.04em;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-headline {
+                animation: none;
+                font-variation-settings: "opsz" 144;
+                opacity: 1;
+                letter-spacing: -0.03em;
+            }
+        }
+
+        /* Mockup-Marginalia + 3D-Tilt */
+        .hero-mockup-block { position: relative; }
+        .hero-marginalia {
+            position: absolute;
+            top: -8px;
+            right: -88px;
+            width: 144px;
+            transform: rotate(4deg);
+            pointer-events: none;
+            z-index: 2;
+        }
+        .hero-marginalia svg { width: 88px; height: 44px; display: block; margin-left: auto; }
+        .hero-marginalia-note {
+            display: block;
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: 15px;
+            color: var(--color-graphite-soft);
+            margin-top: 2px;
+            text-align: right;
+            padding-right: 8px;
+            line-height: 1.3;
+        }
+        @media (max-width: 1200px) {
+            .hero-marginalia { right: -64px; width: 120px; }
+            .hero-marginalia svg { width: 72px; }
+            .hero-marginalia-note { font-size: 13px; }
+        }
+        @media (max-width: 980px) { .hero-marginalia { display: none; } }
+
+        .hero-mockup .browser-frame-large {
+            transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-mockup .browser-frame-large { transform: none !important; }
+        }
+
         /* Browser-Mockup-Cards */
         .browser-card {
             display: block;
@@ -2727,10 +2842,23 @@
     <main>
 
     <!-- 1 · Hero — Premium-Atelier-Stil B: 1 großes Mockup + Story-Caption -->
+    <!-- Sprint 54 — Editorial-Award-Polish: Eyebrow + Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt -->
     <section aria-label="Einleitung" class="hero-with-photo">
         <div class="hero-inner">
             <div class="hero-text-block">
-                <h1>Ihre Website.<br>Handgemacht.</h1>
+                <p class="hero-folio-eyebrow">
+                    <span>№&nbsp;01</span>
+                    <span class="dot">·</span>
+                    <span>Karriaro</span>
+                    <span class="dot">·</span>
+                    <span>Webdesign-Manufaktur</span>
+                    <span class="dot">·</span>
+                    <span>Frühjahr 2026</span>
+                </p>
+                <h1 class="hero-headline">
+                    <span class="hero-h1-line"><span class="hero-dropcap">I</span>hre Website.</span>
+                    <span class="hero-h1-line">Handgemacht.</span>
+                </h1>
                 <p class="subhead">
                     Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290&nbsp;€ einmalig, Wartung inklusive ab 99 €/Mt.
                 </p>
@@ -2766,6 +2894,13 @@
                         <span class="mockup-meta" id="hero-mockup-meta">Premium-Paket · ca. 14 Tage</span>
                     </div>
                 </a>
+                <aside class="hero-marginalia" aria-hidden="true">
+                    <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M110,8 Q70,14 38,38" stroke="var(--color-gold)" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-dasharray="3 2"/>
+                        <path d="M40,32 L36,42 L46,40 Z" fill="var(--color-gold)"/>
+                    </svg>
+                    <span class="hero-marginalia-note">live, kein Lead-Form</span>
+                </aside>
                 <div id="arbeiten" class="branche-switcher-wrap">
                     <div class="branche-switcher-label">Branche wählen</div>
                 <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
@@ -2782,6 +2917,10 @@
                 </div>
                 </div>
             </div>
+        </div>
+        <div class="hero-folio-marker" aria-hidden="true">
+            <span class="folio-page">S. 01</span>
+            <span class="folio-section">Manufaktur</span>
         </div>
     </section>
 
@@ -4929,6 +5068,25 @@
                     });
                     btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
                 });
+            }
+
+            // 9) Sprint 54 — Hero-Mockup 3D-Tilt (subtle max 4°, pointer:fine only, a11y-aware)
+            if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
+                var tiltFrame = document.querySelector('.hero-mockup .browser-frame-large');
+                var tiltHost = document.querySelector('.hero-mockup-block');
+                if (tiltFrame && tiltHost) {
+                    var tiltRect;
+                    tiltHost.addEventListener('mouseenter', function () { tiltRect = tiltHost.getBoundingClientRect(); });
+                    tiltHost.addEventListener('mousemove', function (e) {
+                        if (!tiltRect) tiltRect = tiltHost.getBoundingClientRect();
+                        var nx = (e.clientX - tiltRect.left) / tiltRect.width - 0.5;
+                        var ny = (e.clientY - tiltRect.top) / tiltRect.height - 0.5;
+                        var ry = (nx * 4).toFixed(2);
+                        var rx = (-ny * 4).toFixed(2);
+                        tiltFrame.style.transform = 'perspective(1200px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+                    });
+                    tiltHost.addEventListener('mouseleave', function () { tiltRect = null; tiltFrame.style.transform = ''; });
+                }
             }
         })();
     </script>
