@@ -86,7 +86,7 @@
         @media (max-width: 800px) { nav.primary { display: none; } header .nav-inner { height: 64px; } }
 
         .hero { padding: 80px 0 60px; background: var(--bg); }
-        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+        .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(40px, 5vw, 72px); align-items: start; }
         @media (max-width: 920px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
         .hero-content h1 { margin: 18px 0 24px; }
         .hero-content .lead { font-size: clamp(17px, 1.4vw, 19px); color: var(--text-soft); max-width: 540px; margin-bottom: 36px; }
@@ -100,7 +100,7 @@
         .hero-trust span { font-size: 13px; color: var(--text-light); display: inline-flex; align-items: center; }
         .hero-trust .sep { color: var(--border-strong); }
         .hero-trust .check { color: var(--accent); font-weight: 600; }
-        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; margin-left: auto; }
+        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 380px; border: 1px solid var(--color-gold); border-radius: 4px; object-fit: cover; box-shadow: 0 8px 24px rgba(20,20,20,0.08); display: block; margin-left: auto; }
 
         .methoden { background: var(--bg-soft); }
         .section-head { text-align: left; max-width: 720px; margin: 0 0 64px; }
@@ -256,9 +256,9 @@
 
     <main id="main">
 
-        <section class="hero hero-single-column" style="position: relative;">
+        <section class="hero" style="position: relative;">
             <div class="container">
-                <div class="hero-grid">
+                <div class="hero-grid hero-grid--editorial">
                     <div class="hero-content">
                         <p class="hero-folio-eyebrow">
                             <span>№&nbsp;02</span>
@@ -279,6 +279,12 @@
                             <a href="tel:+496995201240" class="btn-ghost">069 9520 1240</a>
                         </div>
                         <p class="hero-marginalia-anchor"><strong>15 Jahre Sparring mit C-Level.</strong> Keine Folie ohne Substanz.</p>
+                    </div>
+                    <div class="hero-mockup">
+                        <img class="hero-portrait-img hero-portrait-img--editorial" src="/images/coaching/persona.jpg" alt="Sarah Lehmann, Premium Business-Coach Frankfurt" loading="eager" width="800" height="1000">
+                        <div class="mockup-caption">
+                            <span class="hero-portrait-caption">Sarah Lehmann <span class="sep">·</span> Premium Business-Coach <span class="sep">·</span> Frankfurt</span>
+                        </div>
                     </div>
                 </div>
             </div>
