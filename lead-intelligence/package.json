@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",
     "build": "node esbuild.config.mjs",
-    "test": "node --test tests/**/*.test.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "preview": "npx serve dist"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0"
+    "esbuild": "^0.24.0",
+    "vitest": "^4.1.6"
   },
   "private": true
 }

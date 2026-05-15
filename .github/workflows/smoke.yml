@@ -1,4 +1,4 @@
-name: Smoke Test
+name: Tests
 
 on:
   push:
@@ -31,3 +31,25 @@ jobs:
 
       - name: Run smoke test
         run: npm run smoke
+
+  unit:
+    name: lead-intelligence Vitest (304 tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: lead-intelligence/package-lock.json
+
+      - name: Install dependencies
+        run: cd lead-intelligence && npm ci
+
+      - name: Run vitest
+        run: cd lead-intelligence && npm test
