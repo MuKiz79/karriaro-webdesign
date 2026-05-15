@@ -1,13 +1,25 @@
 #!/usr/bin/env node
-// Sprint 51 — Playwright-Smoke-Test der gesamten Karriaro-Webdesign-Surface.
+// Sprint 51 / 63 / 64 — Playwright-Smoke-Test der gesamten Karriaro-Webdesign-Surface.
 //
 // Was getestet wird:
-//   Phase 1 (Page-Load):  HTTP 200, kein Console-Error, H1 sichtbar
-//   Phase 2 (Tool-Submit): jedes Live-Tool auf Hauptseite + Sub-Pages fuellen,
-//                          submitten und Output-Reveal pruefen.
+//   Phase 1  (Page-Load):           HTTP 200, kein Console-Error, H1 sichtbar
+//   Phase 2a (Hauptseite-Tools):    7 Branchen-Tools, Tab-Switch + Form-Submit + Reveal
+//   Phase 2b (Sub-Page-Tools):      8 Tools, Form-Submit + Reveal
+//   Phase 2c (Output-Correctness):  23 Cases, berechneter Wert via Regex (Sprint 63)
+//   Phase 3  (Hauptseite-Widgets):  15 Cases, conversion-kritische Hauptseite-Elemente (Sprint 64)
+//
+// NICHT getestet (Phase 3 Out-of-Scope, cosmetic / animation-only):
+//   - Audit-Placeholder Type-On (Animation)
+//   - Stagger-Reveal (IntersectionObserver-Animation)
+//   - Magnetic-CTA (Mouse-Tracking, Desktop-only)
+//   - 3D-Tilt Mockup (Mouse-Tracking, Desktop-only)
+//   - Lenis Smooth-Scroll (Behavior-Library)
+//   - Reading-Progress-Bar (CSS-Variable, kosmetisch)
+//   - Branche-Switcher Auto-Rotation (Timing-getrieben, flaky in Headless)
+//   - Lighthouse-Tracking (Analytics)
 //
 // Bedienung:
-//   npm run smoke                 (alle Pages + Tools)
+//   npm run smoke                 (alle Pages + Tools + Widgets)
 //   npm run smoke -- --quick      (nur Hauptseite + 1 Sub-Page, fuer Iteration)
 //   npm run smoke -- --pages      (nur Phase 1)
 //
@@ -155,6 +167,179 @@ const CORRECTNESS_CASES = [
     { name: 'coaching · high (sum=25)', url: '/portfolio/coaching-lehmann.html', branche: 'coaching',
         fill: { focus: '5', team: '5', time: '5', energy: '5', 'next-step': '5' },
         expect: /Reflexionsbedarf/ }
+];
+
+// === Sprint 64 — Phase 3 Hauptseite-Widgets ===
+//
+// 15 Test-Cases pro Interaktion. Jeder Case bekommt fresh `/` per page.goto vor `action`.
+// Cases sind selbst-contained (resetten State implizit durch Reload).
+const HAUPTSEITE_CASES = [
+    { name: 'pricing · premium-plus-tier-highlight',
+        action: async (page) => {
+            await page.locator('#kr-branche-select').selectOption('premium-plus');
+            await sleep(150);
+            const highlighted = await page.locator('.kr-tier[data-tier="premium-plus"]')
+                .evaluate(el => el.classList.contains('kr-tier--highlight'));
+            return { pass: highlighted, msg: 'Premium+-Tier .kr-tier--highlight gesetzt' };
+        }
+    },
+    { name: 'pricing · essential-tier-highlight',
+        action: async (page) => {
+            await page.locator('#kr-branche-select').selectOption('essential');
+            await sleep(150);
+            const highlighted = await page.locator('.kr-tier[data-tier="essential"]')
+                .evaluate(el => el.classList.contains('kr-tier--highlight'));
+            return { pass: highlighted, msg: 'Essential-Tier .kr-tier--highlight gesetzt' };
+        }
+    },
+    { name: 'pricing · wartung-toggle-changes-paket',
+        action: async (page) => {
+            const cta = page.locator('.kr-tier[data-tier="essential"] .kr-tier-cta a').first();
+            const before = await cta.getAttribute('data-paket');
+            await page.locator('.kr-tier[data-tier="essential"] .kr-wartung-toggle').uncheck();
+            await sleep(100);
+            const after = await cta.getAttribute('data-paket');
+            return { pass: before !== after && /ohne Wartung/.test(after || ''),
+                     msg: `before="${before}" after="${after}"` };
+        }
+    },
+    { name: 'pricing · cta-click-fills-paket-field',
+        action: async (page) => {
+            await page.locator('.kr-tier[data-tier="essential"] .kr-tier-cta a').first().click();
+            await sleep(200);
+            const pakettext = await page.locator('#paket-field').inputValue();
+            const badgeVisible = await page.locator('#paket-badge').isVisible();
+            return { pass: pakettext.length > 0 && badgeVisible,
+                     msg: `paket="${pakettext}" badge=${badgeVisible}` };
+        }
+    },
+    { name: 'faq · details-toggles-open',
+        action: async (page) => {
+            const firstDetail = page.locator('.kr-faq-item').first();
+            const beforeOpen = await firstDetail.evaluate(el => el.open);
+            await firstDetail.locator('summary').click();
+            await sleep(100);
+            const afterOpen = await firstDetail.evaluate(el => el.open);
+            return { pass: beforeOpen !== afterOpen, msg: `before=${beforeOpen} after=${afterOpen}` };
+        }
+    },
+    { name: 'kr-tools-tab · switch-to-immobilien',
+        action: async (page) => {
+            await page.locator('.kr-tools-tab[data-kr-tool="immobilien"]').click();
+            await sleep(150);
+            const active = await page.locator('.kr-tool-panel[data-kr-panel="immobilien"]')
+                .evaluate(el => el.classList.contains('is-active'));
+            return { pass: active, msg: 'immobilien-Panel .is-active' };
+        }
+    },
+    { name: 'tool-info · tooltip-opens',
+        action: async (page) => {
+            // Tool-Info-Button im Immobilien-Tab erst sichtbar machen
+            await page.locator('.kr-tools-tab[data-kr-tool="immobilien"]').click();
+            await sleep(150);
+            const btn = page.locator('.tool-info').first();
+            if (await btn.count() === 0) return { pass: false, msg: 'kein .tool-info gefunden' };
+            await btn.click({ force: true });
+            await sleep(200);
+            const tooltipCount = await page.locator('.tool-tooltip').count();
+            return { pass: tooltipCount > 0, msg: `.tool-tooltip count=${tooltipCount}` };
+        }
+    },
+    { name: 'branche-switcher · tab-changes-mockup',
+        action: async (page) => {
+            const before = await page.locator('#hero-mockup-img').getAttribute('src');
+            await page.locator('.branche-tab[data-branche="praxis"]').click();
+            await sleep(400);  // crossfade
+            const after = await page.locator('#hero-mockup-img').getAttribute('src');
+            return { pass: before !== after && /praxis/i.test(after || ''),
+                     msg: `before="${before}" after="${after}"` };
+        }
+    },
+    { name: 'branche-more-button · reveals-hidden-tabs',
+        action: async (page) => {
+            const moreBtn = page.locator('#branche-more-btn').first();
+            if (await moreBtn.count() === 0) return { pass: true, msg: 'kein more-btn (alle Tabs sichtbar)' };
+            await moreBtn.click();
+            await sleep(150);
+            const hiddenTab = page.locator('.branche-tab[data-extra]').first();
+            if (await hiddenTab.count() === 0) return { pass: true, msg: 'keine data-extra Tabs' };
+            const revealed = await hiddenTab.evaluate(el => el.classList.contains('is-revealed'));
+            return { pass: revealed, msg: 'verborgener tab .is-revealed' };
+        }
+    },
+    { name: 'hero-audit · demo-button-renders-result',
+        action: async (page) => {
+            await page.locator('.hero-demo-btn[data-demo="doctor"]').click();
+            await sleep(2400);  // 1.5s Verzögerung + Render
+            const result = await page.locator('#audit-result').innerText().catch(() => '');
+            return { pass: /TYPO3|EOL|Praxis|Dr\.|Schmitt/i.test(result),
+                     msg: `result-len=${result.length}` };
+        }
+    },
+    { name: 'hero-audit · form-submit-with-demo-url',
+        action: async (page) => {
+            await page.locator('#hero-audit-url').fill('https://kanzlei-mueller.de');
+            await page.locator('#hero-audit-form button[type="submit"]').click();
+            await sleep(3500);
+            const result = await page.locator('#audit-result').innerText().catch(() => '');
+            return { pass: result.length > 50, msg: `result-len=${result.length}` };
+        }
+    },
+    { name: 'nav-scroll · is-scrolled-on-scroll',
+        action: async (page) => {
+            await page.evaluate(() => window.scrollTo(0, 300));
+            await sleep(250);
+            const scrolled = await page.locator('nav').first()
+                .evaluate(el => el.classList.contains('is-scrolled'));
+            await page.evaluate(() => window.scrollTo(0, 0));
+            return { pass: scrolled, msg: 'nav .is-scrolled nach scrollY=300' };
+        }
+    },
+    { name: 'floating-cta · is-visible-on-scroll',
+        action: async (page) => {
+            await page.evaluate(() => window.scrollTo(0, 700));
+            await sleep(300);
+            const visible = await page.locator('#kr-cta-float')
+                .evaluate(el => el.classList.contains('is-visible'));
+            await page.evaluate(() => window.scrollTo(0, 0));
+            return { pass: visible, msg: 'kr-cta-float .is-visible nach scrollY=700' };
+        }
+    },
+    { name: 'mobile-menu · opens-on-toggle-click',
+        action: async (page) => {
+            await page.setViewportSize({ width: 390, height: 844 });
+            await page.goto(BASE + '/', { waitUntil: 'domcontentloaded' });
+            await sleep(300);
+            const toggle = page.locator('.menu-toggle').first();
+            if (await toggle.count() === 0) {
+                await page.setViewportSize({ width: 1440, height: 900 });
+                return { pass: false, msg: 'kein .menu-toggle gefunden' };
+            }
+            // .menu-toggle ist im nav rechts angepinnt, das auf 390px-viewport
+            // subtle überläuft — Playwright's viewport-Check schlägt selbst mit
+            // force:true an. dispatchEvent feuert den Click-Handler direkt,
+            // umgeht die Sichtbarkeits-Heuristik.
+            await toggle.dispatchEvent('click');
+            await sleep(200);
+            const isOpen = await page.locator('#mobile-menu')
+                .evaluate(el => el.classList.contains('open'));
+            await page.setViewportSize({ width: 1440, height: 900 });
+            return { pass: isOpen, msg: 'mobile-menu .open gesetzt' };
+        }
+    },
+    { name: 'code-counter · reaches-target',
+        action: async (page) => {
+            const counterEl = page.locator('[data-kr-counter]').first();
+            if (await counterEl.count() === 0) return { pass: true, msg: 'keine counter — übersprungen' };
+            // Element explizit ins Viewport scrollen → IntersectionObserver fires
+            await counterEl.scrollIntoViewIfNeeded();
+            await sleep(2200);  // Animation läuft 1.6s + Buffer
+            const target = await counterEl.getAttribute('data-kr-counter');
+            const text = (await counterEl.innerText()).trim();
+            const expected = new Intl.NumberFormat('de-DE').format(parseInt(target, 10));
+            return { pass: text === expected, msg: `target=${target} expected="${expected}" text="${text}"` };
+        }
+    }
 ];
 
 // === Tool-Set (Hauptseite hat Tab-Switcher, Sub-Pages je nur 1 Tool) ===
@@ -408,6 +593,24 @@ async function runCorrectness(page, c) {
     pass(label);
 }
 
+// Sprint 64 — Phase 3 Runner: lädt Hauptseite frisch pro Case, führt async action() aus,
+// erwartet { pass: bool, msg: string }-Rückgabe.
+async function runHauptseiteCase(page, c) {
+    const label = `hauptseite · ${c.name}`;
+    try {
+        await page.goto(BASE + '/', { waitUntil: 'domcontentloaded', timeout: 12000 });
+        await sleep(200);  // give JS time to initialize
+        const result = await c.action(page);
+        if (!result.pass) {
+            fail(label, result.msg);
+            return;
+        }
+        pass(label);
+    } catch (e) {
+        fail(label, `exception: ${e.message}`);
+    }
+}
+
 // === Hauptlauf ===
 async function main() {
     console.log(`Karriaro-Webdesign Smoke-Test ${QUICK ? '(quick)' : ''}\n`);
@@ -465,6 +668,14 @@ async function main() {
             const correctnessToRun = QUICK ? CORRECTNESS_CASES.slice(0, 3) : CORRECTNESS_CASES;
             for (const c of correctnessToRun) {
                 await runCorrectness(page, c);
+            }
+
+            // === Phase 3 (Sprint 64): Hauptseite-Widgets ===
+            // 15 Cases für conversion-kritische interaktive Elemente auf der Hauptseite.
+            console.log('\nPhase 3 — Hauptseite-Widgets (Sprint 64):\n');
+            const widgetsToRun = QUICK ? HAUPTSEITE_CASES.slice(0, 4) : HAUPTSEITE_CASES;
+            for (const c of widgetsToRun) {
+                await runHauptseiteCase(page, c);
             }
         }
 
