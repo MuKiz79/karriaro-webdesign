@@ -463,7 +463,7 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 
         // ── Generierte E-Mail-Argumente (kopierbar) ──
         if (emailArgs.length > 0) {
-            text += `<br><br><div style="background:#1d1d1f;color:rgba(255,255,255,0.85);padding:16px 20px;border-radius:12px;margin-top:8px">`;
+            text += `<br><br><div style="background:#14202B;color:rgba(255,255,255,0.85);padding:16px 20px;border-radius:12px;margin-top:8px">`;
             text += `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.4);margin-bottom:8px">Argument für die Kontakt-E-Mail</div>`;
             text += `<div style="font-size:13px;line-height:1.7">Ich habe mir ${domain} angeschaut und ein paar Dinge fallen auf: ${emailArgs.join(', ')}. Das sind Punkte die Sie messbar Kunden kosten.</div>`;
             text += `</div>`;

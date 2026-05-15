@@ -6,10 +6,10 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --bg: #fbfbfd;
-    --text: #1d1d1f;
+    --bg: #FBFAF7;
+    --text: #14202B;
     --muted: #86868b;
-    --accent: #0071e3;
+    --accent: #1A2E40;
     --green: #30d158;
     --orange: #ff9f0a;
     --red: #ff453a;
@@ -169,7 +169,7 @@ a:hover { text-decoration: underline; }
 
 /* Pitch Box */
 .pitch-box {
-    background: #1d1d1f;
+    background: #14202B;
     color: #fff;
     border-radius: var(--radius);
     padding: var(--s6);
@@ -284,7 +284,7 @@ a:hover { text-decoration: underline; }
     bottom: 24px;
     right: 24px;
     padding: 12px 20px;
-    background: #1d1d1f;
+    background: #14202B;
     color: #fff;
     border-radius: 12px;
     font-size: 13px;
