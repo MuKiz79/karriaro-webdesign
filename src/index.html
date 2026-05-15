@@ -758,6 +758,83 @@
         .audit-skeleton-row.long  { width: 80%; }
         @keyframes audit-pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.4 } }
 
+        /* Sprint 65 — Karriaro-Score-Hero (composite 0-100) + Loss-Statement */
+        .audit-score-hero {
+            background: #fff; border: 1px solid var(--color-line); border-radius: 16px;
+            padding: 32px 28px; margin-bottom: 20px;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+            text-align: center;
+        }
+        .audit-score-hero.is-revealed { opacity: 1; transform: translateY(0); }
+        .audit-score-hero.severity-high { border-left: 4px solid #b8392f; background: linear-gradient(180deg, rgba(184,57,47,0.04), rgba(184,57,47,0.012)); }
+        .audit-score-hero.severity-mid  { border-left: 4px solid #c2a570; background: linear-gradient(180deg, rgba(194,165,112,0.06), rgba(194,165,112,0.015)); }
+        .audit-score-hero.severity-low  { border-left: 4px solid #3a8062; background: linear-gradient(180deg, rgba(58,128,98,0.04), rgba(58,128,98,0.012)); }
+        .audit-score-eyebrow {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em;
+            color: var(--color-gold); font-weight: 500; margin-bottom: 10px;
+        }
+        .audit-score-big {
+            font-family: var(--font-display, 'Fraunces', Georgia, serif);
+            font-size: clamp(64px, 8vw, 88px); font-weight: 500; color: var(--color-onyx);
+            line-height: 1; letter-spacing: -0.02em;
+        }
+        .audit-score-of { font-size: 0.42em; color: var(--color-graphite-soft); font-weight: 400; }
+        .audit-score-loss {
+            margin-top: 14px; font-size: 15px; line-height: 1.5;
+            color: var(--color-graphite-soft); max-width: 520px; margin-left: auto; margin-right: auto;
+        }
+        .audit-score-loss strong { color: var(--color-onyx); font-weight: 600; }
+        .audit-score-disclaimer {
+            margin-top: 8px; font-size: 11px; color: var(--color-graphite-soft); opacity: 0.7;
+        }
+
+        /* Sprint 65 — Next-Step-Block: prominenter CTA-Bereich nach den Cards */
+        .audit-next-step {
+            margin-top: 24px; padding: 28px 28px 24px;
+            background: var(--color-cream-soft); border: 1px solid var(--color-line);
+            border-radius: 16px;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .audit-next-step.is-revealed { opacity: 1; transform: translateY(0); }
+        .audit-next-step-headline {
+            font-family: var(--font-display, 'Fraunces', Georgia, serif);
+            font-size: 24px; font-weight: 500; color: var(--color-onyx);
+            margin-bottom: 18px; letter-spacing: -0.01em;
+        }
+        .audit-next-step-row {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+        }
+        @media (max-width: 640px) {
+            .audit-next-step-row { grid-template-columns: 1fr; }
+        }
+        .audit-next-step-card {
+            background: #fff; border: 1px solid var(--color-line);
+            border-radius: 12px; padding: 18px 18px 16px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .audit-next-step-card-eyebrow {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--color-gold); font-weight: 500;
+        }
+        .audit-next-step-card-body {
+            font-size: 14px; line-height: 1.5; color: #424245; flex: 1;
+        }
+        .audit-next-step-card a {
+            margin-top: 4px; padding: 11px 18px; border-radius: 10px; font-size: 14px;
+            font-weight: 500; text-decoration: none; text-align: center;
+        }
+        .audit-next-step-card a.btn-primary { background: var(--color-indigo); color: #fff; }
+        .audit-next-step-card a.btn-primary:hover { background: #0F1F2E; }
+        .audit-next-step-card a.btn-ghost { background: transparent; color: var(--color-onyx); border: 1px solid #d2d2d7; }
+        .audit-next-step-card a.btn-ghost:hover { background: rgba(0,0,0,0.02); }
+        .audit-next-step-note {
+            margin-top: 16px; font-size: 13px; color: var(--color-graphite-soft); text-align: center;
+        }
+        .audit-next-step-note a { color: var(--color-indigo); text-decoration: underline; text-decoration-color: rgba(26,46,64,0.3); text-underline-offset: 3px; }
+        .audit-next-step-note a:hover { text-decoration-color: var(--color-indigo); }
+
         @media (max-width: 540px) {
             .hero-audit-form { flex-direction: column; }
             .hero-audit-form button { width: 100%; }
@@ -1383,24 +1460,6 @@
         @media (max-width: 540px) {
             .arbeiten-gallery { grid-template-columns: 1fr; gap: 32px; }
         }
-
-        /* Hero-Demo-Buttons */
-        .hero-demo-row {
-            margin-top: 18px; max-width: 540px; margin-left: auto; margin-right: auto;
-            display: flex; flex-direction: column; gap: 10px; align-items: center;
-        }
-        .hero-demo-label { font-size: 13px; color: var(--color-graphite-soft); }
-        .hero-demo-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-        .hero-demo-btn {
-            background: #fff; color: var(--color-onyx);
-            border: 1px solid #d2d2d7; border-radius: 999px;
-            padding: 8px 16px; font-size: 14px; font-family: inherit; font-weight: 500;
-            cursor: pointer; transition: border-color 0.2s, background 0.2s;
-        }
-        .hero-demo-btn:hover:not(:disabled) {
-            border-color: var(--color-indigo); background: #f5f9ff;
-        }
-        .hero-demo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* Hero-Audit-Brücke (Sprint 7b K4) */
         .hero-audit-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 24px; font-size: 14px; color: var(--color-graphite-soft); text-decoration: none; padding: 6px 0; transition: color 0.2s ease; }
@@ -2955,16 +3014,6 @@
                 Wir analysieren Ihre öffentlich erreichbare Startseite. Ergebnis erscheint hier in wenigen Sekunden.
             </p>
 
-            <div class="hero-demo-row">
-                <span class="hero-demo-label">oder probieren Sie ein Beispiel:</span>
-                <div class="hero-demo-btns">
-                    <button type="button" class="hero-demo-btn" data-demo="lawyer">Anwalt</button>
-                    <button type="button" class="hero-demo-btn" data-demo="doctor">Praxis</button>
-                    <button type="button" class="hero-demo-btn" data-demo="restaurant">Restaurant</button>
-                    <button type="button" class="hero-demo-btn" data-demo="hair_salon">Friseur</button>
-                </div>
-            </div>
-
             <div id="audit-result" class="audit-result-wrap" aria-live="polite">
                 <p id="audit-status" class="audit-status"></p>
                 <div id="audit-cards"></div>
@@ -4102,6 +4151,41 @@
                 resultWrap.classList.add('is-active');
             }
 
+            // Sprint 65 — Composite-Score über alle 4 Sub-Metriken.
+            function computeKarriaroScore(d) {
+                var score = 100;
+                if (d.branch && d.branch.totalCount) {
+                    score -= (1 - d.branch.foundCount / d.branch.totalCount) * 30;
+                }
+                if (d.techAge) {
+                    if (d.techAge.severity >= 4) score -= 25;
+                    else if (d.techAge.severity >= 2) score -= 12;
+                }
+                if (d.bfsg && d.bfsg.complianceScore != null) {
+                    score -= (100 - d.bfsg.complianceScore) * 0.35;
+                }
+                if (d.performance && d.performance.score != null) {
+                    score -= (100 - d.performance.score) * 0.15;
+                }
+                return Math.max(0, Math.min(100, Math.round(score)));
+            }
+            function scoreSeverityClass(s) {
+                if (s < 50) return 'severity-high';
+                if (s < 80) return 'severity-mid';
+                return 'severity-low';
+            }
+            // Sprint 65 — Loss-Statement (Mittelstand-Konversions-Heuristik).
+            // Werte aus generischer KMU-Webseite-Conversion-Studie. Bewusst als „etwa ~" markiert.
+            function lossStatement(s) {
+                if (s < 50) {
+                    return '<strong>Etwa ~3.200 €/Monat</strong> entgangener Umsatz durch Ladezeit-Bounce + Conversion-Gap. BFSG-Bußgeldrisiko aktiv.';
+                }
+                if (s < 80) {
+                    return '<strong>Etwa ~1.400 €/Monat</strong> entgangener Umsatz durch verbesserbare Conversion-Pfade.';
+                }
+                return '<strong>Solide Basis.</strong> Optimierungspotenzial liegt im Detail — wir zeigen Ihnen, wo.';
+            }
+
             function branchSeverityClass(sev) {
                 if (sev >= 4) return 'severity-high';
                 if (sev >= 2) return 'severity-mid';
@@ -4131,12 +4215,24 @@
                     return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;' + style + '">' + icon + '<span>' + escape(it.label) + '</span></div>';
                 }).join('');
 
+                // Sprint 65 — Pride-preserving + Social-Proof Pitch.
+                // Override API-pitchArg, wenn Gap signifikant (>=50% Standards offen).
+                var gapRatio = 1 - (b.foundCount / b.totalCount);
+                var pitch;
+                if (gapRatio >= 0.5) {
+                    pitch = 'Sie sind nicht allein — rund 85 % der ' + escape(b.name || 'Branche') + '-Webseiten in Deutschland haben ähnliche Lücken. Die guten 12 % nutzen das als Vertrauens-Vorsprung. Wir zeigen Ihnen im Komplettaudit, wo Sie schnell aufholen.';
+                } else if (gapRatio >= 0.2) {
+                    pitch = 'Solide Basis — 2-3 fehlende Standards sind in einem Sprint behoben. Im Komplettaudit zeigen wir konkret, welche Branchen-Konkurrenten diese Punkte bereits umgesetzt haben.';
+                } else {
+                    pitch = b.pitchArg ? escape(b.pitchArg) : 'Sehr gute Branchen-Abdeckung. Optimierungspotenzial liegt im Detail — wir zeigen es im Komplettaudit.';
+                }
+
                 return '<div class="audit-card ' + sevCls + '">' +
                         '<div class="audit-card-label">' + labelText + '</div>' +
                         '<div class="audit-card-headline">' + headline + '</div>' +
                         '<div class="audit-card-meta">' + meta + '</div>' +
                         '<div style="margin-top:10px">' + itemRows + '</div>' +
-                        (b.pitchArg ? '<div class="audit-card-pitch">' + escape(b.pitchArg) + '</div>' : '') +
+                        '<div class="audit-card-pitch">' + pitch + '</div>' +
                     '</div>';
             }
 
@@ -4156,42 +4252,64 @@
                 const isLight = !!d.light;
                 const cards = [];
 
+                // Sprint 65 — Score-Hero ganz oben.
+                const krScore = computeKarriaroScore(d);
+                const krSevCls = scoreSeverityClass(krScore);
+                cards.push(
+                    '<div class="audit-score-hero ' + krSevCls + '">' +
+                        '<div class="audit-score-eyebrow">KARRIARO-SCORE</div>' +
+                        '<div class="audit-score-big">' + krScore + '<span class="audit-score-of">/100</span></div>' +
+                        '<div class="audit-score-loss">' + lossStatement(krScore) + '</div>' +
+                        '<div class="audit-score-disclaimer">Heuristik-Composite aus Branche, Tech-Stand, BFSG-Compliance und Performance. Schätzwerte aus KMU-Conversion-Studien.</div>' +
+                    '</div>'
+                );
+
                 if (branch) {
                     cards.push(renderBranchCard(branch));
                 }
 
-                const taSev = severityClass(ta.severity);
-                const taTitle = ta.cms
-                    ? escape(ta.cms) + (ta.majorVersion ? ' ' + escape(ta.majorVersion) + '.x' : '')
-                    : escape(ta.headline || 'Tech-Stand');
-                const taMeta = [];
-                if (ta.yearsSinceLastChange != null) {
-                    taMeta.push('<span><strong>vor ' + ta.yearsSinceLastChange.toFixed(1) + ' J.</strong> letzte Änderung</span>');
+                // Sprint 65 — Tech-Card nur, wenn echter Veränderungs-Bedarf (severity >= 2).
+                // Bei „aktuell" gibt's keinen Verkaufs-Hebel — Card weglassen statt grünes Pseudo-Lob.
+                if (ta && ta.severity != null && ta.severity >= 2) {
+                    const taSev = severityClass(ta.severity);
+                    const taTitle = ta.cms
+                        ? escape(ta.cms) + (ta.majorVersion ? ' ' + escape(ta.majorVersion) + '.x' : '')
+                        : escape(ta.headline || 'Tech-Stand');
+                    const taMeta = [];
+                    if (ta.yearsSinceLastChange != null) {
+                        taMeta.push('<span><strong>vor ' + ta.yearsSinceLastChange.toFixed(1) + ' J.</strong> letzte Änderung</span>');
+                    }
+                    cards.push(
+                        '<div class="audit-card ' + taSev + '">' +
+                            '<div class="audit-card-label">Tech-Stand & Alter</div>' +
+                            '<div class="audit-card-headline">' + taTitle + '</div>' +
+                            (taMeta.length ? '<div class="audit-card-meta">' + taMeta.join('') + '</div>' : '') +
+                            (ta.pitchArg ? '<div class="audit-card-pitch">' + escape(ta.pitchArg) + '</div>'
+                                : (ta.composite ? '<div class="audit-card-pitch">' + escape(ta.composite) + '</div>' : '')) +
+                        '</div>'
+                    );
                 }
-                cards.push(
-                    '<div class="audit-card ' + taSev + '">' +
-                        '<div class="audit-card-label">Tech-Stand & Alter</div>' +
-                        '<div class="audit-card-headline">' + taTitle + '</div>' +
-                        (taMeta.length ? '<div class="audit-card-meta">' + taMeta.join('') + '</div>' : '') +
-                        (ta.pitchArg ? '<div class="audit-card-pitch">' + escape(ta.pitchArg) + '</div>'
-                            : (ta.composite ? '<div class="audit-card-pitch">' + escape(ta.composite) + '</div>' : '')) +
-                    '</div>'
-                );
 
                 if (bf.complianceScore != null) {
                     const bfSev = bfsgSeverityClass(bf.risk);
                     const bfLabel = bf.method === 'wcag'
                         ? 'Barrierefreiheit (WCAG-Prüfung) — BFSG seit Juni 2025'
                         : 'Barrierefreiheit (Heuristik) — BFSG seit Juni 2025';
-                    const bfMeta = ['<span><strong>' + bf.complianceScore + '%</strong> Compliance</span>'];
+                    // Sprint 65 — Negative Framing: „16 % Verstöße" statt „84 % Compliance".
+                    const violationPct = 100 - bf.complianceScore;
+                    const bfMeta = ['<span><strong>' + violationPct + '%</strong> BFSG-Verstöße</span>'];
                     if (bf.risk) bfMeta.push('<span>Risiko: <strong>' + escape(bf.risk) + '</strong></span>');
-                    if (bf.fine) bfMeta.push('<span>Bußgeld bis <strong>' + escape(bf.fine) + '</strong></span>');
+                    if (bf.fine) bfMeta.push('<span>Bußgeld bis <strong>' + escape(bf.fine) + '</strong> pro Verstoß</span>');
+                    // Pride-preserving Pitch (Sprint 65): „nicht allein" statt „verbesserungswürdig".
+                    const bfPitchSprint65 = violationPct >= 30
+                        ? 'Sie sind nicht allein — ~80 % der KMU-Webseiten in Deutschland haben offene BFSG-Punkte. Wir prüfen die Verstöße WCAG-konform im Komplettaudit und liefern eine konkrete Fix-Liste.'
+                        : 'Die meisten Verstöße sind in 1-2 Tagen behoben. Wir prüfen im Komplettaudit konkret und liefern eine WCAG-konforme Fix-Liste.';
                     cards.push(
                         '<div class="audit-card ' + bfSev + '">' +
                             '<div class="audit-card-label">' + bfLabel + '</div>' +
                             '<div class="audit-card-headline">BFSG-Compliance</div>' +
                             '<div class="audit-card-meta">' + bfMeta.join('') + '</div>' +
-                            (bf.pitchArg ? '<div class="audit-card-pitch">' + escape(bf.pitchArg) + '</div>' : '') +
+                            '<div class="audit-card-pitch">' + bfPitchSprint65 + '</div>' +
                         '</div>'
                     );
                 }
@@ -4220,6 +4338,27 @@
                     );
                 }
 
+                // Sprint 65 — Next-Step-Block: Mittelstand-CEO-Bedürfnis adressieren
+                // (Was kostet's? Wie lange dauert's? Wer macht das?).
+                cards.push(
+                    '<div class="audit-next-step">' +
+                        '<div class="audit-next-step-headline">In 14 Tagen behoben.</div>' +
+                        '<div class="audit-next-step-row">' +
+                            '<div class="audit-next-step-card">' +
+                                '<div class="audit-next-step-card-eyebrow">Komplettaudit (PDF, 20 Seiten)</div>' +
+                                '<div class="audit-next-step-card-body">Konkrete Roadmap, Bußgeld-Risiko-Bewertung, Performance-Messung, WCAG-Fix-Liste. Kostenfrei. Lieferung in 24h.</div>' +
+                                '<a href="#kontakt" class="btn-primary" data-paket="Komplettaudit gewünscht">Komplettaudit anfordern →</a>' +
+                            '</div>' +
+                            '<div class="audit-next-step-card">' +
+                                '<div class="audit-next-step-card-eyebrow">Neue Website (handcodiert)</div>' +
+                                '<div class="audit-next-step-card-body">BFSG-konform, handcodiert, vier Pakete: Essential 1.290 €, Professional 1.990 €, Premium 2.990 €, Premium+ 3.990 €. Wartung optional 99–199 €/Mt.</div>' +
+                                '<a href="#preis" class="btn-ghost">Preise sehen →</a>' +
+                            '</div>' +
+                        '</div>' +
+                        '<p class="audit-next-step-note">Oder direkt sprechen: <a href="#kontakt">30-Min-Erstgespräch buchen</a>.</p>' +
+                    '</div>'
+                );
+
                 cardsEl.innerHTML = cards.join('');
                 let statusText;
                 if (d.demo) {
@@ -4231,43 +4370,39 @@
                 }
                 statusEl.textContent = statusText + '.';
 
-                const cardEls = cardsEl.querySelectorAll('.audit-card');
+                // Sprint 65 — Stagger-Reveal über alle reveal-baren Elemente
+                // (Score-Hero, Audit-Cards, Next-Step-Block).
+                const cardEls = cardsEl.querySelectorAll('.audit-card, .audit-score-hero, .audit-next-step');
                 cardEls.forEach(function(c, i) {
                     setTimeout(function() { c.classList.add('is-revealed'); }, 80 + i * 150);
                 });
 
-                if (d.demo) {
-                    var DEMO_PORTFOLIO = { lawyer: null, doctor: '/portfolio/praxis-weber.html', restaurant: '/portfolio/restaurant-template.html', hair_salon: '/portfolio/friseur-salon.html' };
-                    var portfolioHref = DEMO_PORTFOLIO[d.demoKey] || null;
-                    ctaEl.innerHTML =
-                        '<button type="button" class="audit-cta-primary" id="audit-cta-own">Jetzt Ihre eigene Seite prüfen →</button>' +
-                        (portfolioHref ? '<a href="' + portfolioHref + '" class="audit-cta-secondary">Diese Branche live ansehen →</a>' : '') +
-                        '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
-                } else {
-                    ctaEl.innerHTML =
-                        '<a href="/audit?url=' + encoded + '" class="audit-cta-primary">Vollständigen Audit per E-Mail erhalten</a>' +
-                        '<a href="#kontakt" class="audit-cta-secondary">Direkt sprechen</a>';
-                }
+                // Sprint 65 — Existing #audit-cta wird leergeräumt; Next-Step-Block
+                // im cards-Container hat jetzt alle CTAs.
+                ctaEl.innerHTML = '';
+                ctaEl.style.display = 'none';
                 setTimeout(function() {
-                    ctaEl.style.display = 'flex';
                     var pricingExit = document.getElementById('audit-pricing-exit');
                     if (pricingExit) {
                         pricingExit.classList.add('is-revealed');
                         pricingExit.setAttribute('aria-hidden', 'false');
                     }
-                    if (d.demo) {
-                        const ownBtn = document.getElementById('audit-cta-own');
-                        if (ownBtn) ownBtn.addEventListener('click', function() {
-                            resultWrap.classList.remove('is-active');
-                            cardsEl.innerHTML = '';
-                            ctaEl.style.display = 'none';
-                            statusEl.textContent = '';
-                            if (pricingExit) { pricingExit.classList.remove('is-revealed'); pricingExit.setAttribute('aria-hidden', 'true'); }
-                            urlInput.focus();
-                            urlInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        });
-                    }
                 }, 80 + cardEls.length * 150 + 200);
+
+                // Sprint 65 — Paket-CTAs (data-paket) im Next-Step-Block sollen #paket-field
+                // füllen + Badge zeigen. Re-attach Listener auf neu gerenderte Links.
+                cardsEl.querySelectorAll('.audit-next-step a[data-paket]').forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        var paket = link.getAttribute('data-paket');
+                        var pakField = document.getElementById('paket-field');
+                        var badge = document.getElementById('paket-badge');
+                        if (pakField) pakField.value = paket;
+                        if (badge) {
+                            badge.textContent = 'Gewähltes Paket: ' + paket;
+                            badge.style.display = 'block';
+                        }
+                    });
+                });
             }
 
             function showError(msg) {
@@ -4444,25 +4579,8 @@
                 }
             };
 
-            function triggerDemo(branchKey) {
-                const data = DEMO_DATA[branchKey];
-                if (!data) return;
-                data.demoKey = branchKey;
-                showSkeleton();
-                statusEl.textContent = 'Beispiel wird geladen …';
-                setTimeout(function() {
-                    resultWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 100);
-                setTimeout(function() {
-                    renderCards(data);
-                }, 1500);
-            }
-
-            document.querySelectorAll('.hero-demo-btn').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    triggerDemo(btn.getAttribute('data-demo'));
-                });
-            });
+            // Sprint 65 — triggerDemo() + .hero-demo-btn-Listener entfernt.
+            // DEMO_DATA bleibt als API-Fallback im Fehler-Pfad nutzbar.
         })();
 
         // Branche-Switcher im Hero — Auto-Rotation mit Hover-Pause + Crossfade

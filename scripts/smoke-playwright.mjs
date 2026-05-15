@@ -267,16 +267,12 @@ const HAUPTSEITE_CASES = [
             return { pass: revealed, msg: 'verborgener tab .is-revealed' };
         }
     },
-    { name: 'hero-audit · demo-button-renders-result',
-        action: async (page) => {
-            await page.locator('.hero-demo-btn[data-demo="doctor"]').click();
-            await sleep(2400);  // 1.5s Verzögerung + Render
-            const result = await page.locator('#audit-result').innerText().catch(() => '');
-            return { pass: /TYPO3|EOL|Praxis|Dr\.|Schmitt/i.test(result),
-                     msg: `result-len=${result.length}` };
-        }
-    },
-    { name: 'hero-audit · form-submit-with-demo-url',
+    // Sprint 65 — Demo-Buttons-Block entfernt; nur noch URL-Submit-Test.
+    // Test verifiziert nur, dass Form-Submit ein Result rendert.
+    // Score-Hero + Next-Step werden NUR bei realer API-Success-Response gerendert
+    // (kanzlei-mueller.de existiert nicht öffentlich → API liefert degraded → showError-Pfad).
+    // Echter Browser-Check zeigt Redesign-Features bei realen URLs.
+    { name: 'hero-audit · form-submit-renders-result',
         action: async (page) => {
             await page.locator('#hero-audit-url').fill('https://kanzlei-mueller.de');
             await page.locator('#hero-audit-form button[type="submit"]').click();
