@@ -1449,6 +1449,672 @@
         /* Pricing-4-Spalten-Grid (Sprint 7d Premium-Tier) */
         /* Sprint 11b H1 — Pricing 3 Karten + Wartung als Footnote-Card */
         .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; text-align: left; align-items: stretch; }
+        /* Sprint 41 — Kontakt als Stempel-Briefkarte + Footer-Colophon */
+        .kr-letter-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--color-cream-soft); }
+        .kr-letter-card {
+            position: relative;
+            background: var(--color-bone);
+            background-image: repeating-linear-gradient(180deg, transparent 0, transparent 31px, rgba(20,30,40,0.04) 32px);
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-lg);
+            padding: clamp(36px, 5vw, 64px) clamp(28px, 5vw, 72px);
+            box-shadow: 0 24px 64px rgba(20,30,40,0.08), 0 8px 16px rgba(20,30,40,0.04);
+            text-align: left;
+            overflow: hidden;
+        }
+        .kr-letter-stamp {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 88px;
+            height: 88px;
+            transform: rotate(-8deg);
+            opacity: 0.85;
+        }
+        @media (max-width: 540px) { .kr-letter-stamp { width: 60px; height: 60px; top: 16px; right: 16px; } }
+        .kr-letter-head { margin-bottom: 36px; }
+        .kr-letter-headline {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 4.5vw, 56px);
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            color: var(--color-indigo-strong);
+            margin-bottom: 8px;
+            font-variation-settings: "opsz" 96;
+            max-width: 80%;
+        }
+        .kr-letter-meta {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+        }
+        .kr-letter-body { margin-bottom: 40px; }
+        .kr-letter-greeting {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 26px);
+            color: var(--color-indigo-strong);
+            margin-bottom: 16px;
+        }
+        .kr-letter-body p {
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--color-graphite);
+            margin-bottom: 14px;
+        }
+        .kr-letter-body strong { color: var(--color-indigo-strong); font-weight: 600; }
+        .kr-letter-sig-line {
+            margin-top: 20px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+        }
+        .kr-letter-signature {
+            display: block;
+            width: 180px;
+            height: 56px;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+        .kr-letter-form {
+            border-top: 1px solid var(--color-line);
+            padding-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .kr-letter-paket-badge {
+            background: var(--color-cream);
+            border: 1px solid var(--color-gold);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-indigo-strong);
+        }
+        .kr-letter-wartung {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--color-cream);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--color-graphite);
+        }
+        .kr-letter-wartung input { width: 18px; height: 18px; accent-color: var(--color-indigo); }
+        .kr-letter-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 560px) { .kr-letter-form-grid { grid-template-columns: 1fr; } }
+        .kr-letter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .kr-letter-field--full { grid-column: 1 / -1; }
+        .kr-letter-field--gold span { color: var(--color-gold); }
+        .kr-letter-field--gold em { font-style: normal; color: var(--color-graphite-soft); font-weight: 400; }
+        .kr-letter-field > span {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            font-weight: 600;
+        }
+        .kr-letter-field input, .kr-letter-field textarea {
+            padding: 12px 14px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            color: var(--color-onyx);
+            background: var(--color-bone);
+            border: 1.5px solid var(--color-line-strong);
+            border-radius: var(--radius-md);
+        }
+        .kr-letter-field input:focus, .kr-letter-field textarea:focus {
+            outline: none;
+            border-color: var(--color-indigo);
+            box-shadow: 0 0 0 3px rgba(26,46,64,0.10);
+        }
+        .kr-letter-privacy {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-family: var(--font-body);
+            font-size: 12px;
+            color: var(--color-graphite-soft);
+            line-height: 1.5;
+        }
+        .kr-letter-privacy a { color: var(--color-indigo); text-decoration: underline; }
+        .kr-letter-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 32px;
+            background: var(--color-indigo);
+            color: var(--color-bone);
+            border: 0;
+            border-radius: var(--radius-pill);
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--duration-base), transform var(--duration-fast);
+            align-self: flex-start;
+        }
+        .kr-letter-submit:hover { background: var(--color-indigo-deep); }
+        .kr-letter-submit-stamp { color: var(--color-gold); display: inline-flex; }
+
+        /* Sprint 41 — Footer-Colophon */
+        .kr-colophon {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            padding: 40px 0 32px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            margin-top: 32px;
+        }
+        @media (max-width: 760px) { .kr-colophon { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .kr-colophon { grid-template-columns: 1fr; } }
+        .kr-colophon-block { font-family: var(--font-body); }
+        .kr-colophon-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-bottom: 10px;
+        }
+        .kr-colophon-body {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--color-graphite);
+        }
+        .kr-colophon-body strong { color: var(--color-indigo); font-weight: 600; font-variant-numeric: tabular-nums; }
+        .kr-colophon-type {
+            display: inline-block;
+            font-size: 13px;
+            color: var(--color-indigo-strong);
+            margin-right: 6px;
+        }
+        .kr-colophon-swatches { display: inline-flex; gap: 10px; }
+        .kr-colophon-swatch {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.08);
+            cursor: help;
+        }
+        .kr-footer-legal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-top: 16px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            color: var(--color-graphite-soft);
+        }
+        .kr-footer-legal-links { display: flex; gap: 20px; }
+        .kr-footer-legal-links a { color: var(--color-graphite); }
+        .kr-footer-legal-links a:hover { color: var(--color-indigo); }
+
+        /* Sprint 41 — Split-Manuskript: Hand vs Druck */
+        .kr-manuskript-section { padding: clamp(80px, 12vh, 140px) 0; }
+        .kr-manuskript-split {
+            display: grid;
+            grid-template-columns: 1fr 40px 1fr;
+            gap: 0;
+            align-items: stretch;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--color-cream);
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-xl);
+            padding: clamp(28px, 4vw, 56px);
+            box-shadow: var(--shadow-sm);
+        }
+        @media (max-width: 720px) {
+            .kr-manuskript-split { grid-template-columns: 1fr; padding: 24px; }
+        }
+        .kr-manuskript-hand, .kr-manuskript-druck { padding: 8px 24px; text-align: left; }
+        .kr-manuskript-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--color-line);
+        }
+        .kr-manuskript-label--hand { color: var(--color-gold); }
+        .kr-manuskript-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            counter-reset: ms-counter;
+        }
+        .kr-manuskript-list li {
+            counter-increment: ms-counter;
+            position: relative;
+            padding-left: 32px;
+        }
+        .kr-manuskript-list li::before {
+            content: counter(ms-counter, decimal-leading-zero);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            color: var(--color-graphite-soft);
+        }
+        /* Hand-Spalte: handschriftlich anmutender Stil (Cormorant Italic + leichte Rotation) */
+        .kr-manuskript-list--hand li {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: clamp(18px, 2.2vw, 22px);
+            line-height: 1.45;
+            color: var(--color-indigo-strong);
+            letter-spacing: 0.005em;
+        }
+        .kr-manuskript-list--hand li:nth-child(odd) { transform: rotate(-0.4deg); }
+        .kr-manuskript-list--hand li:nth-child(even) { transform: rotate(0.3deg); }
+        .kr-manuskript-list--hand li::before { color: var(--color-gold); font-style: normal; }
+        /* Druck-Spalte: sauberer Setzstil (Inter, regular) */
+        .kr-manuskript-list--druck li {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.65;
+            color: var(--color-graphite);
+        }
+        .kr-manuskript-list--druck li strong { color: var(--color-indigo-strong); font-weight: 600; }
+        /* Mittellinie / Übergabe-Marker */
+        .kr-manuskript-divider {
+            position: relative;
+            min-height: 320px;
+        }
+        @media (max-width: 720px) { .kr-manuskript-divider { display: none; } }
+        .kr-manuskript-divider svg {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 40px;
+        }
+        .kr-manuskript-divider-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 32px);
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            white-space: nowrap;
+        }
+
+        /* Sprint 41 — Performance-Layer: SVG-Bar-Chart vs DACH-Median + Lighthouse-Pitch */
+        .kr-perf-section { padding: clamp(80px, 12vh, 140px) 0; }
+        .kr-perf-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 880px;
+            margin: 0 auto 56px;
+        }
+        .kr-perf-bar {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+        @media (max-width: 720px) { .kr-perf-bar { grid-template-columns: 1fr; gap: 8px; } }
+        .kr-perf-bar-label { text-align: left; }
+        .kr-perf-bar-name {
+            display: block;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--color-indigo-strong);
+        }
+        .kr-perf-bar-meta {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-top: 2px;
+        }
+        .kr-perf-bar-track {
+            position: relative;
+            height: 36px;
+            background: var(--color-bone);
+            border: 1px solid var(--color-line);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .kr-perf-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, var(--color-gold) 0%, #b4a173 100%);
+            border-radius: var(--radius-md);
+            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .kr-perf-bar-fill--neutral {
+            background: linear-gradient(90deg, var(--color-graphite-light) 0%, var(--color-graphite-soft) 100%);
+            opacity: 0.55;
+        }
+        .kr-perf-bar-value {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 14px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-indigo-strong);
+            letter-spacing: 0.04em;
+            font-variant-numeric: tabular-nums;
+        }
+        .kr-perf-bar--karriaro .kr-perf-bar-value { color: var(--color-indigo-strong); }
+        .kr-perf-trust { text-align: center; }
+        .kr-perf-pills {
+            display: inline-flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .kr-perf-pill {
+            padding: 8px 16px;
+            background: var(--color-bone);
+            border: 1px solid var(--color-line-strong);
+            border-radius: var(--radius-pill);
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--color-graphite);
+        }
+        .kr-lighthouse-pitch {
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            max-width: 880px;
+            margin: 56px auto 0;
+            padding: 24px 28px;
+            background: var(--color-indigo-strong);
+            color: var(--color-bone);
+            border-radius: var(--radius-lg);
+        }
+        @media (max-width: 640px) { .kr-lighthouse-pitch { grid-template-columns: 1fr; text-align: center; gap: 14px; } }
+        .kr-lighthouse-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(248,244,237,0.08);
+            color: var(--color-gold);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: center;
+        }
+        .kr-lighthouse-body { text-align: left; }
+        @media (max-width: 640px) { .kr-lighthouse-body { text-align: center; } }
+        .kr-lighthouse-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: 6px;
+        }
+        .kr-lighthouse-title {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--color-bone);
+            margin-bottom: 6px;
+        }
+        .kr-lighthouse-title strong { color: var(--color-gold); font-weight: 600; }
+        .kr-lighthouse-body-text {
+            font-family: var(--font-body);
+            font-size: 13px;
+            line-height: 1.5;
+            color: rgba(248,244,237,0.78);
+        }
+        .kr-lighthouse-pitch .btn-outline {
+            color: var(--color-bone);
+            border-color: var(--color-bone);
+            white-space: nowrap;
+        }
+        .kr-lighthouse-pitch .btn-outline:hover { background: var(--color-bone); color: var(--color-indigo-strong); }
+
+        /* Sprint 41 — Werkstatt-Scrollytelling (5 Akte, vertikale Timeline) */
+        .kr-werkstatt-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--color-bone); }
+        .kr-werkstatt-timeline {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            max-width: 880px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .kr-werkstatt-timeline::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            bottom: 24px;
+            left: 84px;
+            width: 1.5px;
+            background: linear-gradient(180deg, var(--color-gold) 0%, var(--color-gold) 30%, var(--color-line-strong) 100%);
+        }
+        @media (max-width: 640px) { .kr-werkstatt-timeline::before { left: 36px; } }
+        .kr-werkstatt-akt {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 28px;
+            padding: 24px 0;
+            align-items: flex-start;
+        }
+        @media (max-width: 640px) { .kr-werkstatt-akt { grid-template-columns: 80px 1fr; gap: 16px; } }
+        .kr-werkstatt-marker {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+        }
+        .kr-werkstatt-tag {
+            flex: 1;
+            text-align: right;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            padding-right: 8px;
+        }
+        @media (max-width: 640px) { .kr-werkstatt-tag { display: none; } }
+        .kr-werkstatt-icon {
+            position: relative;
+            z-index: 1;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--color-cream);
+            border: 1.5px solid var(--color-gold);
+            color: var(--color-gold);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .kr-werkstatt-akt[data-kr-delay="5"] .kr-werkstatt-icon {
+            background: var(--color-indigo);
+            border-color: var(--color-indigo);
+            color: var(--color-bone);
+        }
+        .kr-werkstatt-body { padding-top: 8px; }
+        .kr-werkstatt-title {
+            font-family: var(--font-display);
+            font-size: clamp(22px, 2.6vw, 30px);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--color-indigo-strong);
+            margin-bottom: 8px;
+            font-variation-settings: "opsz" 96;
+        }
+        .kr-werkstatt-body p {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.65;
+            color: var(--color-graphite);
+        }
+        .kr-werkstatt-body strong { color: var(--color-indigo-strong); font-weight: 600; }
+        .kr-werkstatt-promise {
+            margin-top: 48px;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 28px 32px;
+            background: var(--color-cream);
+            border: 1px solid var(--color-line);
+            border-left: 4px solid var(--color-gold);
+            border-radius: var(--radius-lg);
+            text-align: left;
+        }
+        .kr-werkstatt-promise p {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-graphite);
+        }
+
+        /* Sprint 41 — Manufaktur Pull-Quote-Hero (60vh) + Founder-POV mit Skizzen-SVG */
+        .kr-manufaktur-section { padding: 0 0 clamp(80px, 12vh, 140px); overflow: hidden; }
+        .kr-quote-hero {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(64px, 10vh, 120px) clamp(24px, 6vw, 88px);
+            position: relative;
+        }
+        .kr-pull-quote--hero {
+            font-size: clamp(48px, 8.5vw, 132px) !important;
+            line-height: 0.98 !important;
+            letter-spacing: -0.028em !important;
+            max-width: 1280px !important;
+        }
+        .kr-pull-quote--hero::before {
+            font-size: clamp(180px, 22vw, 320px) !important;
+            top: -0.22em !important;
+        }
+        .kr-founder-pov { max-width: 1200px; padding: 0 24px; }
+        .kr-founder-pov-grid {
+            display: grid;
+            grid-template-columns: 40% 60%;
+            gap: clamp(40px, 6vw, 88px);
+            align-items: start;
+            padding-top: clamp(40px, 6vw, 80px);
+            border-top: 1px solid var(--color-line);
+        }
+        @media (max-width: 880px) {
+            .kr-founder-pov-grid { grid-template-columns: 1fr; gap: 40px; }
+        }
+        .kr-founder-sketch {
+            margin: 0;
+            position: sticky;
+            top: 80px;
+            background: var(--color-cream);
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        .kr-founder-sketch svg { width: 100%; height: auto; display: block; }
+        .kr-founder-sketch-caption {
+            margin-top: 14px;
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: 14px;
+            color: var(--color-graphite-soft);
+            text-align: center;
+        }
+        @media (max-width: 880px) { .kr-founder-sketch { position: static; max-width: 480px; margin: 0 auto; } }
+
+        .kr-founder-pov-body { max-width: 720px; }
+        .kr-founder-statement {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 28px);
+            line-height: 1.45;
+            color: var(--color-indigo-strong);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+        .kr-founder-sig {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+        }
+        .kr-prinzipien {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            counter-reset: prinzip-counter;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+        .kr-prinzipien li {
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 18px;
+            align-items: start;
+            padding-bottom: 22px;
+            border-bottom: 1px dashed var(--color-line);
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-graphite);
+        }
+        .kr-prinzipien li:last-child { border-bottom: 0; }
+        .kr-prinzipien-num {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-weight: 500;
+            font-size: 32px;
+            color: var(--color-gold);
+            line-height: 1;
+        }
+        .kr-prinzipien strong { color: var(--color-indigo-strong); font-weight: 600; }
+
         /* Sprint 40 — Branchen-Live-Tool-Bühne (Tab + Live-Tool + Proof-Counter) */
         .kr-tools-section { padding: clamp(80px, 12vh, 140px) 0; }
         .kr-tools-tablist {
@@ -2172,111 +2838,264 @@
         </div>
     </section>
 
-    <!-- 2 · Was Sie bekommen — Substanz statt Drama -->
-    <section aria-label="Was Sie bekommen" class="fade-in" style="background: var(--color-cream-soft);">
-        <div class="wrap" style="text-align: center;">
-            <h2 style="font-size: clamp(28px, 4vw, 48px);">Sicher gegen Abmahnung. Sichtbar in Google. Schneller als 95 % der DACH-Sites.</h2>
-            <p class="subhead" style="max-width: 620px; margin-bottom: 60px;">
-                Was bei einer handcodierten Karriaro-Website automatisch dabei ist — kein Aufpreis, kein Plugin, kein Vendor Lock-In.
-            </p>
-            <div class="grid-3" style="text-align: left; max-width: 980px; margin: 0 auto;">
-                <div>
-                    <h3 class="kr-pillar-title">Sicher</h3>
-                    <ul class="kr-list">
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Keine Plugin-Updates, keine Sicherheitslücken</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform inklusive (Pflicht seit Juni 2025)</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Quellcode gehört Ihnen — kein Vendor Lock-In</span></li>
-                    </ul>
+    <!-- Sprint 41 — Performance-Layer: SVG-Bar-Chart vs DACH-Median + Lighthouse-Pitch -->
+    <section aria-label="Performance-Beweis" class="fade-in kr-perf-section" style="background: var(--color-cream-soft);">
+        <div class="wrap" style="max-width: 1100px;">
+            <div style="text-align: center; margin-bottom: 56px;">
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">Self-demonstrating Performance</p>
+                <h2 style="font-size: clamp(28px, 4vw, 48px); max-width: 880px; margin-left: auto; margin-right: auto;">Diese Seite läuft schneller als 95 % der DACH-Sites. Beweisen wir live.</h2>
+                <p class="subhead">Largest-Contentful-Paint (LCP) — die wichtigste Performance-Metrik für Google-Ranking und Conversion.</p>
+            </div>
+
+            <!-- SVG-Bar-Chart: Karriaro · DACH-Median · WordPress · Wix -->
+            <div class="kr-perf-chart" data-kr-reveal>
+                <div class="kr-perf-bar kr-perf-bar--karriaro">
+                    <div class="kr-perf-bar-label">
+                        <span class="kr-perf-bar-name">Diese Karriaro-Seite</span>
+                        <span class="kr-perf-bar-meta">Karriaro · handcodiert</span>
+                    </div>
+                    <div class="kr-perf-bar-track">
+                        <div class="kr-perf-bar-fill" style="width: 6%;"></div>
+                        <span class="kr-perf-bar-value"><span data-kr-lcp>· · ·</span></span>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="kr-pillar-title">Auffindbar</h3>
-                    <ul class="kr-list">
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Schema.org-Strukturdaten für Google und KI-Antworten</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Semantisches HTML, Mobile-first</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Lokale SEO ab Business-Paket</span></li>
-                    </ul>
+                <div class="kr-perf-bar">
+                    <div class="kr-perf-bar-label">
+                        <span class="kr-perf-bar-name">DACH-Median 2025</span>
+                        <span class="kr-perf-bar-meta">Web Almanac · alle Sites</span>
+                    </div>
+                    <div class="kr-perf-bar-track">
+                        <div class="kr-perf-bar-fill kr-perf-bar-fill--neutral" style="width: 56%;"></div>
+                        <span class="kr-perf-bar-value">2,80 s</span>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="kr-pillar-title">Schnell</h3>
-                    <ul class="kr-list">
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Ladezeit-Ziel: unter 0,5 Sekunden</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Pagespeed-Ziel: 95+</span></li>
-                        <li class="kr-check-item"><span class="kr-check-mark">✓</span><span>Statisch — keine Datenbank, keine Render-Zeit</span></li>
-                    </ul>
+                <div class="kr-perf-bar">
+                    <div class="kr-perf-bar-label">
+                        <span class="kr-perf-bar-name">WordPress + Elementor</span>
+                        <span class="kr-perf-bar-meta">Page-Builder-Stack</span>
+                    </div>
+                    <div class="kr-perf-bar-track">
+                        <div class="kr-perf-bar-fill kr-perf-bar-fill--neutral" style="width: 84%;"></div>
+                        <span class="kr-perf-bar-value">4,20 s</span>
+                    </div>
+                </div>
+                <div class="kr-perf-bar">
+                    <div class="kr-perf-bar-label">
+                        <span class="kr-perf-bar-name">Wix Free Tier</span>
+                        <span class="kr-perf-bar-meta">DIY-Baukasten</span>
+                    </div>
+                    <div class="kr-perf-bar-track">
+                        <div class="kr-perf-bar-fill kr-perf-bar-fill--neutral" style="width: 100%;"></div>
+                        <span class="kr-perf-bar-value">5,10 s</span>
+                    </div>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 56px;"><a href="/portfolio/friseur-salon.html" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
-            <div style="text-align: center; margin-top: 32px;">
-                <span class="kr-lcp-display" title="Live Largest-Contentful-Paint dieser Karriaro-Seite gemessen mit der Browser-Performance-API">
-                    <span>Diese Seite lädt in</span>
-                    <span data-kr-lcp>· · ·</span>
-                </span>
+
+            <!-- Trust-Pills + Lighthouse-Pitch -->
+            <div class="kr-perf-trust">
+                <div class="kr-perf-pills">
+                    <span class="kr-perf-pill"><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform inklusive</span>
+                    <span class="kr-perf-pill">DSGVO &amp; Hosting in DE/EU</span>
+                    <span class="kr-perf-pill">Schema.org pro Branche</span>
+                    <span class="kr-perf-pill">Code gehört Ihnen</span>
+                </div>
+                <p style="margin-top: 28px;"><a href="/portfolio/friseur-salon.html" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
+            </div>
+
+            <!-- Lighthouse-Pitch (Tag-along Karriaro-Eigen-Tool) -->
+            <aside class="kr-lighthouse-pitch">
+                <div class="kr-lighthouse-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M9 6h6l-1 4h-4z"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M7 18h10"/><path d="M5 22h14"/><path d="M3 8l3 1"/><path d="M21 8l-3 1"/></svg>
+                </div>
+                <div class="kr-lighthouse-body">
+                    <p class="kr-lighthouse-eyebrow">Tool aus eigener Werkstatt</p>
+                    <p class="kr-lighthouse-title">Den LCP-Wert oben misst <strong>Lighthouse</strong> — unser eigenes Analytics-Tool, das auf jeder Karriaro-Seite mitläuft.</p>
+                    <p class="kr-lighthouse-body-text">Visitor-Tracking, Lead-Source-Reports, Performance-Live-Werte. Für Karriaro-Kunden 14 Tage kostenlos zum Testen — ab dann 15 €/Mt für die eigene Site.</p>
+                </div>
+                <a href="#kontakt" class="btn-outline" data-paket="Lighthouse Analytics Trial (14 Tage kostenlos)">Trial anfragen</a>
+            </aside>
+        </div>
+    </section>
+
+
+    <!-- Sprint 41 — Scrollytelling: Wie eine Karriaro-Manufaktur entsteht (5 Akte, vertikale Timeline) -->
+    <section aria-label="So funktioniert es" class="fade-in kr-werkstatt-section">
+        <div class="wrap" style="max-width: 1100px;">
+            <div style="text-align: center; margin-bottom: 64px;">
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">Werkstatt-Logbuch</p>
+                <h2 style="font-size: clamp(32px, 5vw, 56px); margin-bottom: 14px;">Wie eine Karriaro-Manufaktur entsteht.</h2>
+                <p class="subhead">Fünf Akte vom Anruf zum Live-Gang. Schriftlich zugesichert. 50/50-Zahlung.</p>
+            </div>
+
+            <ol class="kr-werkstatt-timeline">
+                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="1">
+                    <div class="kr-werkstatt-marker">
+                        <span class="kr-werkstatt-tag">Tag 0</span>
+                        <span class="kr-werkstatt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                        </span>
+                    </div>
+                    <div class="kr-werkstatt-body">
+                        <h3 class="kr-werkstatt-title">Brief</h3>
+                        <p>Sie erzählen, wir hören zu. 30-Minuten-Call, kein Discovery-Workshop-Theater. Sie sagen, was die Seite leisten muss — wir notieren, welche Branchen-Tools sich anbieten.</p>
+                    </div>
+                </li>
+                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="2">
+                    <div class="kr-werkstatt-marker">
+                        <span class="kr-werkstatt-tag">Tag 1</span>
+                        <span class="kr-werkstatt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                        </span>
+                    </div>
+                    <div class="kr-werkstatt-body">
+                        <h3 class="kr-werkstatt-title">Skizze</h3>
+                        <p>Erster Entwurf binnen 24 Stunden — handgezeichnet, dann digital. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe.</p>
+                    </div>
+                </li>
+                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="3">
+                    <div class="kr-werkstatt-marker">
+                        <span class="kr-werkstatt-tag">Tag 3–21</span>
+                        <span class="kr-werkstatt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        </span>
+                    </div>
+                    <div class="kr-werkstatt-body">
+                        <h3 class="kr-werkstatt-title">Code</h3>
+                        <p>Handcodiertes HTML &amp; CSS. Keine Templates, keine Plugins, keine Page-Builder. Schema.org branchen-spezifisch. <strong data-kr-counter-inline="10538">10.538</strong> Zeilen Beweis aus unseren bisherigen Demos — Ihre Seite kommt mit eigenem Code-Stand.</p>
+                    </div>
+                </li>
+                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="4">
+                    <div class="kr-werkstatt-marker">
+                        <span class="kr-werkstatt-tag">Tag vor Live</span>
+                        <span class="kr-werkstatt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
+                    </div>
+                    <div class="kr-werkstatt-body">
+                        <h3 class="kr-werkstatt-title">Audit</h3>
+                        <p>BFSG-Check. Performance &lt; 0,5 s LCP. Schema.org-Validator. Mobile-Lighthouse 95+. Wir liefern erst, wenn die Site die eigenen Maßstäbe besteht — kein „später korrigieren wir das".</p>
+                    </div>
+                </li>
+                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="5">
+                    <div class="kr-werkstatt-marker">
+                        <span class="kr-werkstatt-tag">Live</span>
+                        <span class="kr-werkstatt-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </span>
+                    </div>
+                    <div class="kr-werkstatt-body">
+                        <h3 class="kr-werkstatt-title">Online</h3>
+                        <p>Ihre Domain, Ihr Code, Ihre Marke. Hosting in DE/EU, BFSG-konform, kein Vendor-Lock-In. Optional Wartung 99–199 €/Mt für Backups, Änderungen, Quartals-SEO-Report.</p>
+                    </div>
+                </li>
+            </ol>
+
+            <div class="kr-werkstatt-promise">
+                <p><strong>Schriftlich zugesichert.</strong> 50 % nach Entwurf-Freigabe, 50 % bei Fertigstellung. Wenn Ihnen der erste Entwurf nicht gefällt, brechen Sie ab — ohne weitere Zahlung.</p>
+                <p style="margin-top: 12px;"><a href="#audit" class="link-arrow">Schritt 0: 5-Sekunden-Audit Ihrer aktuellen Site &rarr;</a></p>
             </div>
         </div>
     </section>
 
 
-    <!-- 5 · Prozess -->
-    <section aria-label="So funktioniert es" class="fade-in">
-        <div class="wrap" style="text-align: center;">
-            <h2 style="font-size: clamp(28px, 4vw, 40px);">Drei Schritte. Schriftlich zugesichert.</h2>
-            <p class="subhead" style="margin-bottom: 60px;">Vom Anruf zur fertigen Website — Sie zahlen erst, wenn Sie zufrieden sind.</p>
-            <div class="grid-3" style="max-width: 780px; margin: 0 auto;">
-                <div data-kr-reveal data-kr-delay="1">
-                    <div class="kr-step-num">01</div>
-                    <div class="kr-step-title">Anfrage senden</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Erzählen Sie uns von Ihrem Vorhaben. Wir melden uns innerhalb von 24 h.</p>
-                </div>
-                <div data-kr-reveal data-kr-delay="2">
-                    <div class="kr-step-num">02</div>
-                    <div class="kr-step-title">Gespräch &amp; Entwurf</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Kurzer Anruf, dann erster Entwurf in 24 Stunden.</p>
-                </div>
-                <div data-kr-reveal data-kr-delay="3">
-                    <div class="kr-step-num">03</div>
-                    <div class="kr-step-title">Online</div>
-                    <p class="muted" style="font-size: 14px; line-height: 1.6;">Lieferzeit pro Paket. Ihre Website, Ihr Quellcode — Sie sind nirgendwo eingesperrt.</p>
-                </div>
-            </div>
-            <p style="text-align: center; margin-top: 56px;"><a href="#kontakt" class="link-arrow">Schritt 1 starten — Anfrage senden &rarr;</a></p>
-        </div>
-    </section>
-
-
-    <!-- 6 · Manufaktur — Fakten statt Behauptung -->
-    <section aria-label="Über uns" class="fade-in" style="background: var(--color-cream-soft);">
-        <div class="wrap" style="text-align: center;">
-            <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 16px;">Manufaktur, nicht Agentur.</h2>
-            <p class="muted" style="font-size: 15px; margin-bottom: 48px;">Fünf Dinge, die wir anders machen:</p>
-
-            <ul style="list-style: none; padding: 0; max-width: 720px; margin: 0 auto; text-align: left; display: flex; flex-direction: column; gap: 20px; font-size: 16px; color: var(--color-onyx); line-height: 1.55;">
-                <li class="kr-check-item" style="gap: 14px;">
-                    <span class="kr-check-mark-top">✓</span>
-                    <span><strong>Eine Person pro Auftrag.</strong> Sie haben einen Ansprechpartner — kein Ticket-System, keine Drei-Level-Eskalation, keine Delegation an externe Subs.</span>
-                </li>
-                <li class="kr-check-item" style="gap: 14px;">
-                    <span class="kr-check-mark-top">✓</span>
-                    <span><strong>Eine Konzept-Skizze pro Auftrag.</strong> Kein Template-Recycling, kein Baukasten-Klick — wir entwerfen für Ihre Branche, Ihren Wettbewerb, Ihre Sprache.</span>
-                </li>
-                <li class="kr-check-item" style="gap: 14px;">
-                    <span class="kr-check-mark-top">✓</span>
-                    <span><strong>Individuell programmiertes HTML und CSS.</strong> Kein WordPress, kein Page-Builder, kein Plugin-Stack — daher keine Update-Hölle und keine Sicherheitslücken durch Drittanbieter.</span>
-                </li>
-                <li class="kr-check-item" style="gap: 14px;">
-                    <span class="kr-check-mark-top">✓</span>
-                    <span><strong>Schema.org pro Branche maßgeschneidert.</strong> Strukturierte Daten manuell auf Ihre Branche zugeschnitten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte verstehen.</span>
-                </li>
-                <li class="kr-check-item" style="gap: 14px;">
-                    <span class="kr-check-mark-top">✓</span>
-                    <span><strong>Branchen-Werkzeuge inklusive ab Business.</strong> Pro Demo 5–12 interaktive Funktionen (Rechner, KI-Komponenten, Live-Status) — der Beweis, dass es keine Vorlage ist.</span>
-                </li>
-            </ul>
-
-            <blockquote class="kr-pull-quote">
+    <!-- Sprint 41 — Manufaktur Pull-Quote-Hero (60vh) + Founder-POV (40/60-Split mit Skizzen-SVG) -->
+    <section aria-label="Über uns" class="fade-in kr-manufaktur-section" style="background: var(--color-cream-soft);">
+        <!-- 60vh Pull-Quote-Hero -->
+        <div class="kr-quote-hero">
+            <blockquote class="kr-pull-quote kr-pull-quote--hero">
                 <p>„Wenn Ihr Name draufsteht, steht unserer dahinter."</p>
                 <cite>— Karriaro-Versprechen</cite>
             </blockquote>
-            <p style="text-align: center; margin-top: 28px;"><a href="#preis" class="link-arrow">Pakete &amp; Preise ansehen &rarr;</a></p>
+        </div>
+
+        <!-- Founder-POV 40/60-Split mit Skizzen-SVG + 5 Prinzipien als Marginalia -->
+        <div class="wrap kr-founder-pov">
+            <div class="kr-founder-pov-grid">
+                <!-- Linke Spalte (40%): Skizzen-SVG (handgezeichneter Wireframe als Inline-SVG) -->
+                <figure class="kr-founder-sketch" aria-label="Handgezeichnete Konzept-Skizze einer Karriaro-Website">
+                    <svg viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" role="img">
+                        <!-- Skizzen-Stift-Look: warmer Ton, leicht unregelmäßige Linien -->
+                        <g fill="none" stroke="var(--color-indigo-strong)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                            <!-- Browser-Frame -->
+                            <path d="M20,32 L300,30 L302,372 L18,374 Z"/>
+                            <circle cx="36" cy="48" r="3.5"/><circle cx="50" cy="47" r="3.5"/><circle cx="64" cy="48" r="3.5"/>
+                            <path d="M84,46 L280,44" stroke-dasharray="3 2"/>
+                            <line x1="20" y1="64" x2="302" y2="62"/>
+
+                            <!-- Nav -->
+                            <rect x="36" y="80" width="48" height="6" rx="1"/>
+                            <rect x="200" y="80" width="32" height="6" rx="1"/>
+                            <rect x="240" y="80" width="44" height="6" rx="1"/>
+
+                            <!-- Hero-Headline (2 Zeilen) -->
+                            <rect x="36" y="110" width="180" height="18" rx="2"/>
+                            <rect x="36" y="134" width="140" height="18" rx="2"/>
+
+                            <!-- Subline -->
+                            <line x1="36" y1="170" x2="220" y2="170"/>
+                            <line x1="36" y1="180" x2="200" y2="180"/>
+
+                            <!-- CTA-Button -->
+                            <rect x="36" y="206" width="92" height="22" rx="11"/>
+
+                            <!-- Mockup-Bereich (rechts simuliert) -->
+                            <rect x="180" y="100" width="100" height="140" rx="4"/>
+                            <line x1="195" y1="120" x2="265" y2="120"/>
+                            <line x1="195" y1="132" x2="250" y2="132"/>
+                            <circle cx="200" cy="160" r="6"/>
+                            <line x1="215" y1="160" x2="265" y2="160"/>
+                            <line x1="195" y1="180" x2="265" y2="180"/>
+                            <line x1="195" y1="192" x2="245" y2="192"/>
+
+                            <!-- Trennlinie -->
+                            <line x1="20" y1="260" x2="302" y2="258"/>
+
+                            <!-- 3 Footer-Cards -->
+                            <rect x="36" y="280" width="72" height="60" rx="3"/>
+                            <rect x="124" y="280" width="72" height="60" rx="3"/>
+                            <rect x="212" y="280" width="72" height="60" rx="3"/>
+
+                            <!-- Handschriftliche Notizen mit Pfeilen (Sprint-39-Gold-Akzent) -->
+                            <g stroke="var(--color-gold)" stroke-width="1.2">
+                                <path d="M312,118 Q330,118 320,128" fill="none"/>
+                                <path d="M310,128 L318,128 L314,124 Z" fill="var(--color-gold)" stroke="none"/>
+                                <path d="M14,212 Q-2,222 8,234" fill="none"/>
+                                <path d="M6,232 L14,232 L10,236 Z" fill="var(--color-gold)" stroke="none"/>
+                                <path d="M150,254 L150,268" fill="none"/>
+                                <path d="M146,266 L154,266 L150,272 Z" fill="var(--color-gold)" stroke="none"/>
+                            </g>
+                        </g>
+                        <!-- Handschriftliche Annotation rechts oben -->
+                        <text x="316" y="116" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--color-gold)">H1</text>
+                        <text x="-4" y="218" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--color-gold)" text-anchor="end">CTA</text>
+                        <text x="158" y="252" font-family="Cormorant Garamond, serif" font-style="italic" font-size="13" fill="var(--color-gold)">Demos</text>
+                    </svg>
+                    <figcaption class="kr-founder-sketch-caption">Konzept-Skizze · Tag 1 · Bleistift &amp; Maßstab</figcaption>
+                </figure>
+
+                <!-- Rechte Spalte (60%): Founder-Statement + 5 Prinzipien -->
+                <div class="kr-founder-pov-body">
+                    <p class="hero-eyebrow" style="margin-bottom: 14px;">Founder-Statement</p>
+                    <p class="kr-founder-statement">
+                        Ich code jede Seite selbst. Ich antworte jede Mail selbst.
+                        Wenn etwas bricht, fixe ich es selbst — auch nachts um halb zwei,
+                        wenn der Sturmnotdienst-Pulse plötzlich keine Daten mehr liefert.
+                        Subunternehmer würden das nicht riskieren.
+                    </p>
+                    <p class="kr-founder-sig">— Muammer Kızılaslan, Karriaro-Gründer</p>
+
+                    <p class="hero-eyebrow" style="margin-top: 48px; margin-bottom: 20px;">Fünf Dinge, die wir anders machen</p>
+                    <ol class="kr-prinzipien">
+                        <li><span class="kr-prinzipien-num">01</span><div><strong>Eine Person pro Auftrag.</strong> Kein Ticket-System, keine Drei-Level-Eskalation, keine Delegation an externe Subs.</div></li>
+                        <li><span class="kr-prinzipien-num">02</span><div><strong>Eine Konzept-Skizze pro Auftrag.</strong> Kein Template-Recycling — wir entwerfen für Ihre Branche, Ihren Wettbewerb, Ihre Sprache.</div></li>
+                        <li><span class="kr-prinzipien-num">03</span><div><strong>HTML + CSS individuell programmiert.</strong> Kein WordPress, kein Page-Builder, kein Plugin-Stack — keine Update-Hölle.</div></li>
+                        <li><span class="kr-prinzipien-num">04</span><div><strong>Schema.org pro Branche maßgeschneidert.</strong> Strukturierte Daten manuell zugeschnitten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte verstehen.</div></li>
+                        <li><span class="kr-prinzipien-num">05</span><div><strong>Branchen-Werkzeuge inklusive ab Professional.</strong> Pro Demo 5–12 interaktive Funktionen — der Beweis, dass es keine Vorlage ist.</div></li>
+                    </ol>
+
+                    <p style="margin-top: 32px;"><a href="#preis" class="link-arrow">Pakete &amp; Preise ansehen &rarr;</a></p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -2509,40 +3328,55 @@
     </section>
 
 
-    <!-- 6b · Was Sie beisteuern (Sprint 7e M2) -->
-    <section aria-label="Was Sie beisteuern" class="fade-in" style="background: var(--color-bone);">
-        <div class="wrap">
-            <div style="text-align: center; max-width: 640px; margin: 0 auto 56px;">
+    <!-- Sprint 41 — Beitrag/Übernahme als Split-Manuskript (Hand vs Druck) -->
+    <section aria-label="Was Sie beisteuern" class="fade-in kr-manuskript-section" style="background: var(--color-bone);">
+        <div class="wrap" style="max-width: 1100px;">
+            <div style="text-align: center; max-width: 720px; margin: 0 auto 64px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">2–3 Stunden Eigenarbeit insgesamt</p>
-                <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px;">Was Sie beisteuern. <span style="color:var(--color-graphite-soft); font-weight:500;">Was wir übernehmen.</span></h2>
-                <p class="subhead" style="max-width: 540px; margin: 0 auto;">
-                    Damit Sie nicht raten, wo Ihre Verantwortung endet. Pünktlich-Live-Garantie.
-                </p>
+                <h2 style="font-size: clamp(28px, 4vw, 48px); margin-bottom: 14px;">Sie schreiben. Wir setzen es in Druck.</h2>
+                <p class="subhead">Aufgabenteilung wie in der echten Manufaktur: Sie liefern die Substanz, wir bringen sie in Form. Pünktlich-Live-Garantie.</p>
             </div>
-            <div class="contribute-grid">
-                <div class="contribute-col">
-                    <p class="contribute-label">Sie liefern</p>
-                    <ul class="contribute-list">
-                        <li><span class="contribute-tick" style="color:var(--color-indigo);">›</span><span><strong>Texte zu Ihren Leistungen</strong> — wir geben Vorlagen; bei Bedarf schreiben wir um.</span></li>
-                        <li><span class="contribute-tick" style="color:var(--color-indigo);">›</span><span><strong>3–6 Fotos vom Geschäft</strong> — Smartphone reicht. Bei fehlenden Bildern empfehlen wir Fotografen oder KI-Bilder.</span></li>
-                        <li><span class="contribute-tick" style="color:var(--color-indigo);">›</span><span><strong>Logo &amp; Farben</strong>, falls vorhanden. Sonst entwickeln wir es im Entwurf mit.</span></li>
-                        <li><span class="contribute-tick" style="color:var(--color-indigo);">›</span><span><strong>Ein 30-Min-Kickoff-Gespräch</strong> — Zoom oder vor Ort. Danach übernehmen wir.</span></li>
-                        <li><span class="contribute-tick" style="color:var(--color-indigo);">›</span><span><strong>Eine Freigabe-Runde</strong> nach dem Entwurf. Zwei wäre teurer, wird selten nötig.</span></li>
-                    </ul>
+
+            <div class="kr-manuskript-split">
+                <!-- Linke Spalte: Hand-Manuskript (Caveat-Font, leichte Rotation) -->
+                <div class="kr-manuskript-hand">
+                    <p class="kr-manuskript-label kr-manuskript-label--hand">Sie liefern · handschriftlich</p>
+                    <ol class="kr-manuskript-list kr-manuskript-list--hand">
+                        <li>Texte zu Ihren Leistungen</li>
+                        <li>3–6 Fotos vom Geschäft (Handy reicht)</li>
+                        <li>Logo &amp; Farben, falls vorhanden</li>
+                        <li>30 Min Kickoff-Gespräch</li>
+                        <li>Eine Freigabe-Runde nach Entwurf</li>
+                    </ol>
                 </div>
-                <div class="contribute-col">
-                    <p class="contribute-label">Wir übernehmen</p>
-                    <ul class="contribute-list">
-                        <li><span class="contribute-tick">✓</span><span><strong>Konzept &amp; Struktur</strong> — Hierarchie, Navigation, SEO-Architektur.</span></li>
-                        <li><span class="contribute-tick">✓</span><span><strong>Design &amp; Typografie</strong> — handgemacht, branchen-spezifisch, <abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr>-konform.</span></li>
-                        <li><span class="contribute-tick">✓</span><span><strong>Programmierung &amp; Schema.org</strong> — HTML/CSS, lokale SEO ab Business-Paket.</span></li>
-                        <li><span class="contribute-tick">✓</span><span><strong>Hosting-Einrichtung</strong> — bei uns oder bei Ihrem Anbieter. Sie behalten den Quellcode.</span></li>
-                        <li><span class="contribute-tick">✓</span><span><strong>Texte feinschleifen</strong> — wir formulieren wo Sie hängenbleiben, behalten aber Ihre Stimme.</span></li>
-                    </ul>
+
+                <!-- Trennlinie als animiertes SVG mit Übergabe-Marker -->
+                <div class="kr-manuskript-divider" aria-hidden="true">
+                    <svg viewBox="0 0 40 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="20" y1="20" x2="20" y2="580" stroke="var(--color-line-strong)" stroke-width="1.5" stroke-dasharray="4 6"/>
+                        <g transform="translate(20, 300)">
+                            <circle r="22" fill="var(--color-cream)" stroke="var(--color-gold)" stroke-width="1.5"/>
+                            <path d="M-7,-3 L0,4 L7,-3 M-7,3 L0,10 L7,3" fill="none" stroke="var(--color-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/>
+                        </g>
+                    </svg>
+                    <span class="kr-manuskript-divider-label">Übergabe</span>
+                </div>
+
+                <!-- Rechte Spalte: Druck-Setzkasten (Fraunces, gesetzt) -->
+                <div class="kr-manuskript-druck">
+                    <p class="kr-manuskript-label kr-manuskript-label--druck">Wir übernehmen · gesetzt</p>
+                    <ol class="kr-manuskript-list kr-manuskript-list--druck">
+                        <li><strong>Konzept &amp; Struktur</strong> — Hierarchie · Navigation · SEO-Architektur</li>
+                        <li><strong>Design &amp; Typografie</strong> — branchen-spezifisch · BFSG-konform</li>
+                        <li><strong>Programmierung &amp; Schema.org</strong> — HTML · CSS · Live-Tools</li>
+                        <li><strong>Hosting-Einrichtung</strong> — bei uns oder bei Ihrem Anbieter</li>
+                        <li><strong>Texte feinschleifen</strong> — Ihre Stimme bleibt, wir polieren</li>
+                    </ol>
                 </div>
             </div>
-            <p style="text-align: center; margin-top: 32px; font-size: 14px; color: var(--color-graphite-soft);">
-                Verteilt auf die Projektlaufzeit. Sie machen Pause, wir machen weiter.
+
+            <p style="text-align: center; margin-top: 56px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; color: var(--color-graphite-soft);">
+                Verteilt auf die Projektlaufzeit · Sie machen Pause · Wir machen weiter
             </p>
         </div>
     </section>
@@ -2806,44 +3640,87 @@
     </section>
 
 
-    <!-- 7 · Kontakt -->
-    <section id="kontakt" aria-label="Kontakt" class="fade-in" style="background: var(--color-cream-soft);">
-        <div class="wrap-xs" style="text-align: center;">
-            <h2 style="font-size: clamp(32px, 5vw, 48px);">Lassen Sie uns<br>sprechen.</h2>
-            <p class="subhead" style="max-width: 420px; margin-bottom: 32px;">
-                Erzählen Sie uns von Ihrem Projekt. Wir melden uns binnen 24 h mit konkreten Vorschlägen.
-            </p>
+    <!-- Sprint 41 — Kontakt als Stempel-Briefkarte + Founder-Letter -->
+    <section id="kontakt" aria-label="Kontakt" class="fade-in kr-letter-section">
+        <div class="wrap" style="max-width: 760px;">
+            <p class="hero-eyebrow" style="margin-bottom: 14px; text-align: center;">Anfrage · Antwort in 24 h</p>
 
-            <div class="kr-trust-hook">
-                <div class="kr-trust-avatar" aria-hidden="true">M</div>
-                <div class="kr-trust-body">
-                    <div class="kr-trust-name">Antwort binnen 24 Stunden — direkt von Muammer Kızılaslan</div>
-                    <div class="kr-trust-meta">Gründer · keine Hotline · keine Vertriebsabteilung</div>
+            <article class="kr-letter-card">
+                <!-- Stempel oben rechts -->
+                <div class="kr-letter-stamp" aria-hidden="true">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="44" fill="none" stroke="var(--color-gold)" stroke-width="1.5" stroke-dasharray="3 2"/>
+                        <circle cx="50" cy="50" r="32" fill="none" stroke="var(--color-gold)" stroke-width="1.5"/>
+                        <text x="50" y="46" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="18" fill="var(--color-gold)">Karriaro</text>
+                        <text x="50" y="62" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" letter-spacing="1" fill="var(--color-gold)">MANUFAKTUR · 2026</text>
+                    </svg>
                 </div>
-            </div>
 
-            <form id="kontakt-form" data-lead="kwd-kontakt-form" style="text-align: left; display: flex; flex-direction: column; gap: 16px;">
-                <input type="hidden" name="paket" id="paket-field" value="">
-                <div id="paket-badge" style="display: none; background: var(--color-cream-soft); border-radius: 12px; padding: 12px 16px; font-size: 15px; font-weight: 500; color: var(--color-onyx); text-align: center;"></div>
-                <label id="wartung-checkbox" style="display: none; font-size: 15px; color: var(--color-onyx); gap: 10px; align-items: center; background: var(--color-cream-soft); border-radius: 12px; padding: 12px 16px; cursor: pointer;">
-                    <input type="checkbox" name="wartung" value="Wartung & Hosting (99 €/Monat)" style="width: 18px; height: 18px; accent-color: var(--color-indigo);">
-                    Wartung & Hosting dazu — 99 €/Monat
-                </label>
-                <input type="text" name="name" required placeholder="Ihr Name">
-                <input type="email" name="email" required placeholder="E-Mail">
-                <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
-                <input type="text" name="empfehlung" placeholder="Wer hat uns empfohlen? — 200 € Cashback für Empfehler (optional)">
-                <textarea name="message" rows="3" placeholder="Was möchten Sie erreichen?"></textarea>
-                <div class="kontakt-honeypot" aria-hidden="true" style="position: absolute; left: -9999px;">
-                    <label for="kontakt-firma">Firma</label>
-                    <input type="text" id="kontakt-firma" name="firma" tabindex="-1" autocomplete="off">
+                <header class="kr-letter-head">
+                    <h2 class="kr-letter-headline">Lassen Sie uns sprechen.</h2>
+                    <p class="kr-letter-meta">Stuttgart · <span data-kr-date></span></p>
+                </header>
+
+                <div class="kr-letter-body">
+                    <p class="kr-letter-greeting">Liebe Geschäftsführerin, lieber Geschäftsführer,</p>
+                    <p>
+                        Ihre Anfrage landet direkt bei mir — nicht in einem Ticket-System, nicht bei einem Account-Manager-Karussell.
+                        Ich antworte binnen 24 Stunden mit <strong>konkreten Vorschlägen</strong> statt einer Discovery-Call-Einladung in drei Wochen.
+                    </p>
+                    <p>
+                        Wenn die Substanz passt, gehen wir in den 30-Minuten-Brief. Wenn nicht, sage ich es Ihnen sofort — Sie verlieren maximal eine halbe Stunde, nicht ein Quartal.
+                    </p>
+                    <p class="kr-letter-sig-line">— Muammer Kızılaslan, Karriaro-Gründer</p>
+                    <svg class="kr-letter-signature" viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M10,42 C18,18 32,18 38,40 C42,52 50,58 58,42 C64,30 72,30 80,48 M86,30 Q90,18 98,30 T112,38 M116,24 Q124,52 134,32 M142,18 L148,52 M158,30 Q166,22 174,38 C178,46 186,46 196,32 L210,28" fill="none" stroke="var(--color-indigo-strong)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </div>
-                <label style="font-size: 12px; color: var(--color-graphite-soft); display: flex; gap: 8px; align-items: flex-start; margin: 4px 0;">
-                    <input type="checkbox" name="privacy" required style="margin-top: 3px;">
-                    Ich stimme der <a href="/datenschutz.html" style="color: #424245; text-decoration: underline;">Datenschutzerklärung</a> zu.
-                </label>
-                <button type="submit" class="submit-btn">Slot anfragen — Antwort in 24 h</button>
-            </form>
+
+                <form id="kontakt-form" data-lead="kwd-kontakt-form" class="kr-letter-form">
+                    <input type="hidden" name="paket" id="paket-field" value="">
+                    <div id="paket-badge" class="kr-letter-paket-badge" style="display: none;"></div>
+                    <label id="wartung-checkbox" class="kr-letter-wartung" style="display: none;">
+                        <input type="checkbox" name="wartung" value="Wartung & Hosting (99 €/Monat)">
+                        <span>Wartung &amp; Hosting dazu — 99 €/Monat</span>
+                    </label>
+                    <div class="kr-letter-form-grid">
+                        <label class="kr-letter-field">
+                            <span>Ihr Name</span>
+                            <input type="text" name="name" required>
+                        </label>
+                        <label class="kr-letter-field">
+                            <span>E-Mail</span>
+                            <input type="email" name="email" required>
+                        </label>
+                        <label class="kr-letter-field kr-letter-field--full">
+                            <span>Ihre aktuelle Website (falls vorhanden)</span>
+                            <input type="text" name="website">
+                        </label>
+                        <label class="kr-letter-field kr-letter-field--full kr-letter-field--gold">
+                            <span>Wer hat uns empfohlen? <em>· 200 € Cashback für Empfehler (optional)</em></span>
+                            <input type="text" name="empfehlung" placeholder="z. B. Steuerberater Müller, Stuttgart">
+                        </label>
+                        <label class="kr-letter-field kr-letter-field--full">
+                            <span>Was möchten Sie erreichen?</span>
+                            <textarea name="message" rows="4"></textarea>
+                        </label>
+                    </div>
+                    <div class="kontakt-honeypot" aria-hidden="true" style="position: absolute; left: -9999px;">
+                        <label for="kontakt-firma">Firma</label>
+                        <input type="text" id="kontakt-firma" name="firma" tabindex="-1" autocomplete="off">
+                    </div>
+                    <label class="kr-letter-privacy">
+                        <input type="checkbox" name="privacy" required>
+                        <span>Ich stimme der <a href="/datenschutz.html">Datenschutzerklärung</a> zu.</span>
+                    </label>
+                    <button type="submit" class="submit-btn kr-letter-submit" data-kr-magnetic>
+                        <span>Slot anfragen — Antwort in 24 h</span>
+                        <span class="kr-letter-submit-stamp" aria-hidden="true">
+                            <svg viewBox="0 0 36 36" width="20" height="20"><circle cx="18" cy="18" r="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/><path d="M11,18 L16,23 L25,13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                    </button>
+                </form>
+            </article>
         </div>
     </section>
 
@@ -2932,9 +3809,39 @@
                     <a href="/webdesign-stuttgart.html">Stuttgart</a>
                 </div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <span>&copy; 2026 Karriaro Webdesign</span>
-                <div style="display: flex; gap: 20px;">
+            <!-- Sprint 41 — Manufaktur-Colophon: "This page made of" -->
+            <div class="kr-colophon">
+                <div class="kr-colophon-block">
+                    <p class="kr-colophon-eyebrow">Type-Stack</p>
+                    <p class="kr-colophon-body">
+                        <span class="kr-colophon-type" style="font-family: var(--font-display); font-style: normal;">Fraunces Variable</span> ·
+                        <span class="kr-colophon-type" style="font-family: var(--font-body);">Inter Variable</span> ·
+                        <span class="kr-colophon-type" style="font-family: var(--font-mono);">JetBrains Mono</span> ·
+                        <span class="kr-colophon-type" style="font-family: var(--font-pull-quote); font-style: italic;">Cormorant Garamond</span>
+                    </p>
+                </div>
+                <div class="kr-colophon-block">
+                    <p class="kr-colophon-eyebrow">Palette</p>
+                    <p class="kr-colophon-swatches">
+                        <span class="kr-colophon-swatch" style="background: var(--color-indigo);" title="Manufaktur-Indigo #1A2E40"></span>
+                        <span class="kr-colophon-swatch" style="background: var(--color-gold);" title="Werkstatt-Gold #8A7B5C"></span>
+                        <span class="kr-colophon-swatch" style="background: var(--color-cream);" title="Skizzen-Cream #F8F4ED"></span>
+                        <span class="kr-colophon-swatch" style="background: var(--color-onyx);" title="Onyx #14202B"></span>
+                    </p>
+                </div>
+                <div class="kr-colophon-block">
+                    <p class="kr-colophon-eyebrow">Live-Performance</p>
+                    <p class="kr-colophon-body">Diese Seite lädt in <strong data-kr-lcp>· · ·</strong> · LCP gemessen via PerformanceObserver</p>
+                </div>
+                <div class="kr-colophon-block">
+                    <p class="kr-colophon-eyebrow">Manufaktur-Stand</p>
+                    <p class="kr-colophon-body">10.538 Zeilen handcodierter Code · 0 Templates · 0 Subunternehmer · 0 externe Plugins</p>
+                </div>
+            </div>
+
+            <div class="kr-footer-legal">
+                <span>&copy; 2026 Karriaro Webdesign · Made in Stuttgart</span>
+                <div class="kr-footer-legal-links">
                     <a href="/impressum.html">Impressum</a>
                     <a href="/datenschutz.html">Datenschutz</a>
                     <a href="/agb.html">AGB</a>
@@ -4175,6 +5082,14 @@
                     '~' + km + ' km · ' + kg + ' kg. Echte Demo prüft Live-Flotten-Auslastung und schließt im Backend-CRM direkt ab.'
                 );
             });
+
+            // 7-quinquies) Sprint 41 — Build-Date im Letter (heute)
+            var dateEl = document.querySelector('[data-kr-date]');
+            if (dateEl) {
+                var months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+                var d = new Date();
+                dateEl.textContent = d.getDate() + '. ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            }
 
             // 8) Magnetic-CTA (Maus-Attraction für primary buttons im Hero + Pricing)
             if (!prefersReducedMotion && window.matchMedia('(pointer: fine)').matches) {
