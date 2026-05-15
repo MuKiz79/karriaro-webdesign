@@ -59,15 +59,18 @@
   --btn-pad: 14px 28px;
   --btn-pad-lg: 18px 36px;
 
-  /* Karriaro-Brand-Tokens (Hauptmarke — Sub-Pages koennen ueberschreiben) */
-  --kr-ink: #0a0a0a;
-  --kr-blue: #0071e3;
-  --kr-blue-light: #4ea3ff;
-  --kr-grey: #6e6e73;
-  --kr-grey-soft: #86868b;
-  --kr-bg: #fbfbfd;
-  --kr-bg-soft: #f5f5f7;
-  --kr-border: rgba(0,0,0,0.06);
+  /* Karriaro-Brand-Tokens (Hauptmarke — Sub-Pages koennen ueberschreiben)
+   * Sprint 42 — von Apple-Klon auf Manufaktur-Palette migriert (siehe Hauptseite Sprint 39).
+   * --kr-blue ist jetzt Manufaktur-Indigo; --kr-bg ist warmes Cream-Bone statt Apple-Grau. */
+  --kr-ink: #14202B;            /* Onyx — tiefes Dunkel */
+  --kr-blue: #1A2E40;            /* Manufaktur-Indigo (primärer Brand-Akzent) */
+  --kr-blue-light: #4A6B85;     /* Indigo-light — Hover / sekundär */
+  --kr-gold: #8A7B5C;            /* Werkstatt-Gold (sekundärer Akzent) */
+  --kr-grey: #525E6B;            /* Graphit-soft — sekundär-Text */
+  --kr-grey-soft: #8A8278;       /* Graphit-light — meta / tertiär */
+  --kr-bg: #FBFAF7;              /* Bone — fast-weiß, warm */
+  --kr-bg-soft: #F8F4ED;         /* Skizzen-Cream — wärmster Hellton */
+  --kr-border: rgba(20,30,40,0.08);
 }
 
 /* Reduced-Motion respektieren (Refactoring-UI-Standard) */
