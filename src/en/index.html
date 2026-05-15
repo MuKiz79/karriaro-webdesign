@@ -996,6 +996,82 @@
         }
         .kr-lcp-display span:first-child { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-graphite-soft); }
         .kr-lcp-display [data-kr-lcp] { font-weight: 600; color: var(--color-indigo); }
+
+        /* Sprint 56 — EN-Hero-Polish portiert aus DE-Sprint-54 (Eyebrow + Folio + Drop-Cap + opsz-Reveal) */
+        .hero-folio-eyebrow {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+            margin-bottom: clamp(24px, 4vh, 40px);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .hero-folio-eyebrow .dot {
+            color: var(--color-line-strong);
+            opacity: 0.6;
+            font-weight: 400;
+        }
+        .hero-folio-marker {
+            position: absolute;
+            bottom: clamp(24px, 4vh, 40px);
+            left: clamp(24px, 4vw, 60px);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            pointer-events: none;
+            z-index: 3;
+        }
+        .hero-folio-marker .folio-page {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-size: 18px;
+            letter-spacing: 0.04em;
+            text-transform: none;
+            color: var(--color-gold);
+            line-height: 1;
+        }
+        @media (max-width: 760px) {
+            .hero-folio-marker { display: none; }
+        }
+        .hero-headline {
+            font-family: var(--font-display);
+            font-variation-settings: "opsz" 9;
+            animation: hero-opsz-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+            text-wrap: balance;
+        }
+        @keyframes hero-opsz-reveal {
+            0%   { font-variation-settings: "opsz" 9;   opacity: 0.42; letter-spacing: -0.012em; }
+            100% { font-variation-settings: "opsz" 144; opacity: 1;    letter-spacing: -0.03em; }
+        }
+        .hero-h1-line { display: block; }
+        .hero-dropcap {
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-weight: 500;
+            color: var(--color-gold);
+            font-size: 1.12em;
+            line-height: 0.86;
+            padding-right: 0.04em;
+            margin-left: -0.04em;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-headline {
+                animation: none;
+                font-variation-settings: "opsz" 144;
+                opacity: 1;
+                letter-spacing: -0.03em;
+            }
+        }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
@@ -1029,14 +1105,30 @@
 
     <main>
 
-    <!-- 1 · Hero -->
-    <section aria-label="Introduction" style="min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
+    <!-- 1 · Hero — Sprint 56 EN-Hero-Polish: Eyebrow + Folio + Drop-Cap + opsz-Reveal -->
+    <section aria-label="Introduction" style="position: relative; min-height: 90vh; display: flex; align-items: center; padding-top: 48px; background: #fff;">
         <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
-            <h1>Every day you lose customers<br>without realising.</h1>
+            <p class="hero-folio-eyebrow">
+                <span>№&nbsp;01</span>
+                <span class="dot">·</span>
+                <span>Karriaro</span>
+                <span class="dot">·</span>
+                <span>Web Design Manufactory</span>
+                <span class="dot">·</span>
+                <span>Spring 2026</span>
+            </p>
+            <h1 class="hero-headline">
+                <span class="hero-h1-line"><span class="hero-dropcap">E</span>very day you lose customers</span>
+                <span class="hero-h1-line">without realising.</span>
+            </h1>
             <p class="subhead">Because your website is outdated.</p>
             <div style="margin-top: 40px;">
                 <a href="#contact" class="btn">Get a free consultation</a>
             </div>
+        </div>
+        <div class="hero-folio-marker" aria-hidden="true">
+            <span class="folio-page">p. 01</span>
+            <span class="folio-section">Manufactory</span>
         </div>
     </section>
 
