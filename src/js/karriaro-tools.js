@@ -32,14 +32,29 @@
         if (n) n.innerHTML = note;
     }
 
+    // Sprint 63 — Frühvalidierung gegen NaN / negative Eingaben (User mit Hand-typed
+    // Werten kann HTML min-Attribute umgehen).
+    function getPositiveNumber(form, name, min, max) {
+        var raw = parseFloat(form.querySelector('[name="' + name + '"]').value);
+        if (!isFinite(raw) || raw < min) return null;
+        if (max && raw > max) return null;
+        return raw;
+    }
+
     // === Dachdecker · BAFA-Förderrechner ===
+    /* DEMO-NOTE: Förder-Math (80 €/m² Basis + 15 % iSFP + 50 €/m² Solar)
+       sind Demo-Pauschalen. Reale Produktion: BAFA-XML-Tarif + iSFP-Aktor. */
     function attachDachdecker() {
         var f = document.querySelector('[data-kr-tool-form="dachdecker"]');
         if (!f) return;
         f.addEventListener('submit', function (e) {
             e.preventDefault();
             var fd = new FormData(f);
-            var flaeche = parseInt(fd.get('flaeche'), 10) || 0;
+            var flaeche = getPositiveNumber(f, 'flaeche', 20, 2000);
+            if (flaeche === null) {
+                showOutput('dachdecker', '—', 'Bitte gültige Fläche zwischen 20 und 2000 m² eingeben.');
+                return;
+            }
             var solar = fd.get('solar') === '1';
             var basis = flaeche * 80;
             var maxIsfp = basis * 1.15;
@@ -54,6 +69,8 @@
     }
 
     // === Immobilien · Wertermittlung ===
+    /* DEMO-NOTE: Nur 4 PLZ-Regionen-Tiers (Berlin/München, SW/HH, Ost-DE, Default).
+       Reale Produktion: BORIS-NRW + Boris-DE-PLZ-zu-Bodenrichtwert-Mapping. */
     function attachImmobilien() {
         var f = document.querySelector('[data-kr-tool-form="immobilien"]');
         if (!f) return;
@@ -61,8 +78,13 @@
             e.preventDefault();
             var fd = new FormData(f);
             var plz = (fd.get('plz') || '').toString();
-            var flaeche = parseInt(fd.get('flaeche'), 10) || 0;
-            var baujahr = parseInt(fd.get('baujahr'), 10) || 1990;
+            var flaeche = getPositiveNumber(f, 'flaeche', 20, 800);
+            if (flaeche === null) {
+                showOutput('immobilien', '—', 'Bitte gültige Fläche zwischen 20 und 800 m² eingeben.');
+                return;
+            }
+            var baujahr = getPositiveNumber(f, 'baujahr', 1850, 2026);
+            if (baujahr === null) baujahr = 1990;
             var firstTwo = plz.substring(0, 2);
             var basePerM2 = 3500;
             if (['10','11','12','13','80','81','82'].indexOf(firstTwo) >= 0) basePerM2 = 6800;
@@ -80,13 +102,25 @@
     }
 
     // === Praxis · KI-Symptom-Checker ===
+    /* DEMO-NOTE: Nur 7 hartcodierte Symptom-Kombinationen. Reale Produktion:
+       SNOMED-CT-basiertes Triage-Mapping mit echtem MFA-Slot-API. */
     function attachPraxis() {
         var f = document.querySelector('[data-kr-tool-form="praxis"]');
         if (!f) return;
+        // Sprint 63: Bei 3 ausgewählten werden weitere visuell disabled (statt nur silent ignored).
+        function updateCheckboxStates() {
+            var all = f.querySelectorAll('input[name="sym"]');
+            var checked = f.querySelectorAll('input[name="sym"]:checked');
+            all.forEach(function (cb) {
+                if (!cb.checked && checked.length >= 3) cb.disabled = true;
+                else cb.disabled = false;
+            });
+        }
         f.addEventListener('change', function (e) {
             if (e.target.name !== 'sym') return;
             var checked = f.querySelectorAll('input[name="sym"]:checked');
             if (checked.length > 3) e.target.checked = false;
+            updateCheckboxStates();
         });
         f.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -95,8 +129,9 @@
                 showOutput('praxis', '—', 'Bitte mindestens ein Symptom auswählen.');
                 return;
             }
+            // Sprint 63 — Mapping-Keys müssen alphabetisch sortiert sein (matched gegen syms.sort().join).
             var mapping = {
-                'kopfschmerz_fieber': { typ: 'Akutsprechstunde', slot: 'heute 14:30' },
+                'fieber_kopfschmerz': { typ: 'Akutsprechstunde', slot: 'heute 14:30' },
                 'fieber_husten': { typ: 'Akutsprechstunde + ggf. Atemwegs-Check', slot: 'heute 15:00' },
                 'rueckenschmerz_schwindel': { typ: 'Untersuchung HNO + Orthopädie', slot: 'morgen 09:45' },
                 'rueckenschmerz': { typ: 'Orthopädische Akut-Sprechstunde', slot: 'morgen 11:00' },
@@ -114,6 +149,8 @@
     }
 
     // === Friseur · Style-Empfehlung ===
+    /* DEMO-NOTE: Slot + Preis (Donnerstag 14:30 bei Sara M. · 65 €) sind
+       hartcodiert für die Demo. Reale Produktion: Treatwell/Shore-Slot-API. */
     function attachFriseur() {
         var f = document.querySelector('[data-kr-tool-form="friseur"]');
         if (!f) return;
@@ -145,6 +182,8 @@
     }
 
     // === Sanitär · Notdienst-Pulse ===
+    /* DEMO-NOTE: Nur 3 PLZ-Regionen-Tiers (SW, Berlin/HH, Default).
+       Reale Produktion: echtes Service-Area-Polygon + Live-Flotten-Status. */
     function attachSanitaer() {
         var f = document.querySelector('[data-kr-tool-form="sanitaer"]');
         if (!f) return;
@@ -182,6 +221,10 @@
                 'gefluegel': ['Burgunder weiß 2021 (cremig)', 'Grüner Veltliner Reserve 2020', 'Champagner Blanc de Blancs (festlich)']
             };
             var wines = pairings[gericht] || [];
+            if (!wines.length) {
+                showOutput('restaurant', '—', 'Für die Auswahl gibt es keine Empfehlung. Bitte ein anderes Gericht wählen.');
+                return;
+            }
             var html = '<ol style="text-align:left; padding-left: 20px; margin: 0;">' +
                 wines.map(function (w) { return '<li style="font-size: 15px; line-height: 1.5; margin-bottom: 4px;">' + w + '</li>'; }).join('') +
                 '</ol>';
@@ -192,6 +235,8 @@
     }
 
     // === Spedition · Quote ===
+    /* DEMO-NOTE: Distanz via |parseInt(von) - parseInt(bis)| / 5 ist absichtliche
+       Vereinfachung. Reale Produktion: Google-Distance-Matrix oder PTV-xRoute. */
     function attachSpedition() {
         var f = document.querySelector('[data-kr-tool-form="spedition"]');
         if (!f) return;
@@ -200,7 +245,11 @@
             var fd = new FormData(f);
             var von = (fd.get('von') || '').toString();
             var bis = (fd.get('bis') || '').toString();
-            var kg = parseInt(fd.get('gewicht'), 10) || 0;
+            var kg = getPositiveNumber(f, 'gewicht', 1, 24000);
+            if (kg === null) {
+                showOutput('spedition', '—', 'Bitte gültiges Gewicht zwischen 1 und 24000 kg eingeben.');
+                return;
+            }
             var distance = Math.abs(parseInt(von, 10) - parseInt(bis, 10));
             var km = Math.max(80, Math.round(distance / 5));
             var preis = km * 0.65 + kg * 0.18;

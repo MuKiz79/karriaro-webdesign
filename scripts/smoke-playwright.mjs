@@ -65,6 +65,98 @@ const PAGES = [
     { path: '/webdesign-stuttgart.html', name: 'City · Stuttgart' }
 ];
 
+// === Sprint 63 — Output-Correctness-Cases ===
+//
+// Bekannte Input → erwarteter Output, gegen Regex geprüft.
+// Math nachgerechnet in karriaro-tools.js. Bei Code-Änderung der Tool-Logik:
+// hier mit-aktualisieren.
+const CORRECTNESS_CASES = [
+    // Dachdecker — BAFA-Rechner (basis = flaeche*80, maxIsfp = basis*1.15, solar = flaeche*50)
+    { name: 'dachdecker · happy-no-solar', url: '/portfolio/dachdecker-meisterbetrieb.html', branche: 'dachdecker',
+        fill: { plz: '70173', flaeche: '140', solar: '0' },
+        expect: /11\.200\s*€[\s\S]*?12\.900\s*€/ },
+    { name: 'dachdecker · with-solar', url: '/portfolio/dachdecker-meisterbetrieb.html', branche: 'dachdecker',
+        fill: { plz: '70173', flaeche: '140', solar: '1' },
+        expect: /18\.200\s*€[\s\S]*?19\.900\s*€/ },
+    { name: 'dachdecker · max-flaeche+solar', url: '/portfolio/dachdecker-meisterbetrieb.html', branche: 'dachdecker',
+        fill: { plz: '70173', flaeche: '2000', solar: '1' },
+        expect: /260\.000\s*€[\s\S]*?284\.000\s*€/ },
+
+    // Immobilien — Wertermittlung (4 PLZ-Tiers × Baujahr-Modifier)
+    { name: 'immobilien · stuttgart-altbau', url: '/portfolio/immobilien-makler.html', branche: 'immobilien',
+        fill: { plz: '70173', flaeche: '110', baujahr: '1998' },
+        expect: /558\.000\s*€[\s\S]*?636\.000\s*€/ },
+    { name: 'immobilien · muenchen-neubau', url: '/portfolio/immobilien-makler.html', branche: 'immobilien',
+        fill: { plz: '80331', flaeche: '85', baujahr: '2020' },
+        expect: /598\.000\s*€[\s\S]*?680\.000\s*€/ },
+    { name: 'immobilien · ost-1989', url: '/portfolio/immobilien-makler.html', branche: 'immobilien',
+        fill: { plz: '04103', flaeche: '80', baujahr: '1989' },
+        expect: /166\.000\s*€[\s\S]*?189\.000\s*€/ },
+    { name: 'immobilien · default-region', url: '/portfolio/immobilien-makler.html', branche: 'immobilien',
+        fill: { plz: '33102', flaeche: '120', baujahr: '1995' },
+        expect: /395\.000\s*€[\s\S]*?449\.000\s*€/ },
+
+    // Praxis — Symptom-Checker (post Sprint-63 Bugfix: 'fieber_kopfschmerz' = sorted-key)
+    { name: 'praxis · fieber+kopfschmerz (sort-key bugfix)', url: '/portfolio/praxis-weber.html', branche: 'praxis',
+        checkChips: ['kopfschmerz', 'fieber'],
+        expect: /Akutsprechstunde/ },
+    { name: 'praxis · single muedigkeit', url: '/portfolio/praxis-weber.html', branche: 'praxis',
+        checkChips: ['muedigkeit'],
+        expect: /Routine-Check-Up/ },
+    { name: 'praxis · rueckenschmerz+schwindel', url: '/portfolio/praxis-weber.html', branche: 'praxis',
+        checkChips: ['rueckenschmerz', 'schwindel'],
+        expect: /HNO/ },
+
+    // Friseur — Style-Empfehlung (12 hartcodierte Mappings)
+    { name: 'friseur · oval+alltag', url: '/portfolio/friseur-salon.html', branche: 'friseur',
+        fill: { form: 'oval', anlass: 'alltag' },
+        expect: /Long-Bob/ },
+    { name: 'friseur · eckig+event', url: '/portfolio/friseur-salon.html', branche: 'friseur',
+        fill: { form: 'eckig', anlass: 'event' },
+        expect: /Weiche Updo/ },
+
+    // Sanitär — Notdienst (3 PLZ-Regionen × Notfall-Typ)
+    { name: 'sanitaer · sw-rohrbruch', url: '/portfolio/meisterbetrieb-mueller.html', branche: 'sanitaer',
+        fill: { plz: '70173', art: 'rohrbruch' },
+        expect: /25.{1,4}35\s*Min/ },
+    { name: 'sanitaer · berlin-heizung', url: '/portfolio/meisterbetrieb-mueller.html', branche: 'sanitaer',
+        fill: { plz: '10115', art: 'heizung' },
+        expect: /40.{1,4}55\s*Min/ },
+    { name: 'sanitaer · default-region', url: '/portfolio/meisterbetrieb-mueller.html', branche: 'sanitaer',
+        fill: { plz: '99999', art: 'abfluss' },
+        expect: /50.{1,4}75\s*Min/ },
+
+    // Restaurant — AI-Sommelier
+    { name: 'restaurant · fisch+30-60', url: '/portfolio/restaurant-template.html', branche: 'restaurant',
+        fill: { gericht: 'fisch', preis: '30-60' },
+        expect: /Riesling/ },
+    { name: 'restaurant · rind+60+', url: '/portfolio/restaurant-template.html', branche: 'restaurant',
+        fill: { gericht: 'rind', preis: '60+' },
+        expect: /Barolo/ },
+
+    // Spedition — Quote-Calc (PLZ-Distanz × Gewicht × Vehicle-Tier)
+    { name: 'spedition · stuttgart-muenchen', url: '/portfolio/spedition-schwaben.html', branche: 'spedition',
+        fill: { von: '70173', bis: '80331', gewicht: '500' },
+        expect: /1\.411\s*€[\s\S]*?Wechselbrücke/ },
+    { name: 'spedition · same-plz fallback', url: '/portfolio/spedition-schwaben.html', branche: 'spedition',
+        fill: { von: '70173', bis: '70173', gewicht: '500' },
+        expect: /142\s*€[\s\S]*?ETA\s*8\s*h/ },
+    { name: 'spedition · heavy-load (Sattelzug)', url: '/portfolio/spedition-schwaben.html', branche: 'spedition',
+        fill: { von: '10115', bis: '70173', gewicht: '10000' },
+        expect: /Sattelzug/ },
+
+    // Coaching — Klarheits-Score (sum 5-25 → 4 Brackets)
+    { name: 'coaching · mittel (sum=18)', url: '/portfolio/coaching-lehmann.html', branche: 'coaching',
+        fill: { focus: '4', team: '3', time: '4', energy: '3', 'next-step': '4' },
+        expect: /Konkretisierungsbedarf[\s\S]*?18\/25/ },
+    { name: 'coaching · low (sum=5)', url: '/portfolio/coaching-lehmann.html', branche: 'coaching',
+        fill: { focus: '1', team: '1', time: '1', energy: '1', 'next-step': '1' },
+        expect: /Hoher\s+Klärungsbedarf/ },
+    { name: 'coaching · high (sum=25)', url: '/portfolio/coaching-lehmann.html', branche: 'coaching',
+        fill: { focus: '5', team: '5', time: '5', energy: '5', 'next-step': '5' },
+        expect: /Reflexionsbedarf/ }
+];
+
 // === Tool-Set (Hauptseite hat Tab-Switcher, Sub-Pages je nur 1 Tool) ===
 //
 // `subPage` = die Sub-Page-URL, wo dasselbe Tool eingebettet ist.
@@ -260,6 +352,62 @@ async function fillAndSubmit(page, tool, scope = '') {
     pass(`${label} — Submit + Reveal`);
 }
 
+// Sprint 63 — Output-Correctness-Runner: lädt Page, füllt Form, klickt Submit,
+// liest gesamten Output-Text und prüft gegen Regex.
+async function runCorrectness(page, c) {
+    const label = `correctness · ${c.name}`;
+    const formSel = `[data-kr-tool-form="${c.branche}"]`;
+    const outputSel = `[data-kr-tool-output="${c.branche}"]`;
+
+    try {
+        await page.goto(BASE + c.url, { waitUntil: 'domcontentloaded', timeout: 12000 });
+    } catch (e) {
+        fail(label, `nav: ${e.message}`);
+        return;
+    }
+
+    const form = page.locator(formSel).first();
+    if (await form.count() === 0) { fail(label, `form ${formSel} nicht gefunden`); return; }
+
+    if (c.fill) {
+        for (const [name, val] of Object.entries(c.fill)) {
+            const field = form.locator(`[name="${name}"]`).first();
+            const tag = await field.evaluate(el => el.tagName).catch(() => null);
+            if (!tag) { fail(label, `[name="${name}"] fehlt`); return; }
+            if (tag === 'SELECT') await field.selectOption(val);
+            else await field.fill(val);
+        }
+    }
+    if (c.checkChips) {
+        for (const v of c.checkChips) {
+            await form.locator(`input[type="checkbox"][value="${v}"]`).first().check({ force: true });
+        }
+    }
+
+    await form.locator('button[type="submit"]').first().click();
+    try {
+        await page.waitForFunction(
+            (sel) => {
+                const el = document.querySelector(sel);
+                return el && el.classList.contains('is-revealed');
+            },
+            outputSel,
+            { timeout: 4000 }
+        );
+    } catch {
+        fail(label, '.is-revealed wurde nicht gesetzt');
+        return;
+    }
+
+    const text = await page.locator(outputSel).innerText().catch(() => '');
+    if (!c.expect.test(text)) {
+        const snippet = text.replace(/\s+/g, ' ').slice(0, 180);
+        fail(label, `got: "${snippet}" — expected match: ${c.expect}`);
+        return;
+    }
+    pass(label);
+}
+
 // === Hauptlauf ===
 async function main() {
     console.log(`Karriaro-Webdesign Smoke-Test ${QUICK ? '(quick)' : ''}\n`);
@@ -308,6 +456,15 @@ async function main() {
             for (const tool of subPagesToRun) {
                 await page.goto(BASE + tool.subPage, { waitUntil: 'domcontentloaded' });
                 await fillAndSubmit(page, tool, 'Sub-Page');
+            }
+
+            // === Phase 2c (Sprint 63): Output-Correctness ===
+            // Prüft nicht nur, ob Output sichtbar ist, sondern ob der berechnete
+            // Wert tatsächlich stimmt (Regex gegen erwartete Math-Outputs).
+            console.log('\nPhase 2c — Output-Correctness (Sprint 63):\n');
+            const correctnessToRun = QUICK ? CORRECTNESS_CASES.slice(0, 3) : CORRECTNESS_CASES;
+            for (const c of correctnessToRun) {
+                await runCorrectness(page, c);
             }
         }
 
