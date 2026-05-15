@@ -100,3 +100,42 @@
         max-width: 280px;
     }
 }
+
+/* Sprint 59 — Hero-Portrait-Editorial-Frame
+   Schmaleres, gold-gerahmtes Portrait + Cormorant-Italic-Caption.
+   Inline-CSS in den Sub-Pages wird per Page direkt angepasst (höhere Spezifität);
+   die Klassen hier sind die kanonische Regel-Quelle. */
+.hero-grid--editorial {
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(40px, 5vw, 72px);
+    align-items: start;
+}
+.hero-portrait-img--editorial {
+    max-width: 380px;
+    border: 1px solid var(--color-gold);
+    border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(20, 20, 20, 0.08);
+}
+.hero-portrait-caption {
+    display: block;
+    margin-top: clamp(12px, 1.5vh, 18px);
+    font-family: var(--font-pull-quote);
+    font-style: italic;
+    font-size: clamp(13px, 1vw, 15px);
+    line-height: 1.45;
+    letter-spacing: 0.005em;
+    color: var(--color-graphite-soft);
+    max-width: 380px;
+}
+.hero-portrait-caption .sep {
+    color: var(--color-gold);
+    margin: 0 0.5em;
+    opacity: 0.7;
+    font-style: normal;
+}
+
+@media (max-width: 760px) {
+    .hero-grid--editorial { grid-template-columns: 1fr; }
+    .hero-portrait-img--editorial { max-width: 100%; }
+    .hero-portrait-caption { max-width: 100%; }
+}

@@ -162,7 +162,7 @@
         /* Hero */
         .hero { padding: 64px 0 80px; background: linear-gradient(180deg, var(--accent-soft) 0%, var(--bg) 100%); }
         .hero-inner { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
-        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+        .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(40px, 5vw, 72px); align-items: start; }
         .hero-content { max-width: 560px; }
         .hero-eyebrow { color: var(--accent); font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 20px; }
         .hero h1 { color: var(--text); margin-bottom: 24px; font-weight: 400; }
@@ -191,7 +191,7 @@
         .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
         .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
         /* Sprint 16 — Hero-Persona-Foto */
-        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg, 16px); object-fit: cover; box-shadow: var(--shadow-lg, 0 20px 50px rgba(0,0,0,0.10)); display: block; }
+        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 380px; border: 1px solid var(--color-gold); border-radius: 4px; object-fit: cover; box-shadow: 0 8px 24px rgba(20,20,20,0.08); display: block; }
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: var(--text); line-height: 1.4; }
@@ -520,7 +520,7 @@
     <main id="main">
         <section class="hero" style="position: relative;">
             <div class="hero-inner">
-                <div class="hero-grid">
+                <div class="hero-grid hero-grid--editorial">
                     <div class="hero-content">
                         <p class="hero-folio-eyebrow">
                             <span>№&nbsp;08</span>
@@ -552,9 +552,9 @@
                         <p class="hero-marginalia-anchor"><strong>Slow Food seit 1987.</strong> Damals ohne Etikett, heute mit.</p>
                     </div>
                     <div class="hero-mockup">
-                        <img class="hero-portrait-img" src="/images/restaurant/persona.jpg" alt="Andreas Bauer, Küchenchef Goldener Hirsch" loading="eager" width="800" height="1000">
+                        <img class="hero-portrait-img hero-portrait-img--editorial" src="/images/restaurant/persona.jpg" alt="Andreas Bauer, Küchenchef Goldener Hirsch" loading="eager" width="800" height="1000">
                         <div class="mockup-caption">
-                            <span class="mockup-label">Goldener Hirsch · Restaurant München-Schwabing</span>
+                            <span class="hero-portrait-caption">Andreas Bauer <span class="sep">·</span> Küchenchef <span class="sep">·</span> Slow Food</span>
                         </div>
                     </div>
                 </div>

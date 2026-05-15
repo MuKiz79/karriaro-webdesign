@@ -95,7 +95,7 @@
         .mobile-menu { display: none; }
 
         .hero { padding: clamp(64px, 8vh, 96px) 0 clamp(80px, 12vh, 140px); background: var(--bg); }
-        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
+        .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: clamp(40px, 5vw, 72px); align-items: start; }
         .hero-eyebrow { display: inline-flex; align-items: center; gap: 12px; color: var(--accent-dark); font-size: 11px; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 32px; }
         .hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
         .hero h1 { margin-bottom: 24px; }
@@ -125,7 +125,7 @@
         .browser-url { margin-left: 10px; font-size: 12px; color: #6e6e73; }
         .browser-screen-large { aspect-ratio: 16/10; width: 100%; height: auto; object-fit: cover; display: block; }
         /* Sprint 16 — Hero-Persona-Foto */
-        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; }
+        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 380px; border: 1px solid var(--color-gold); border-radius: 4px; object-fit: cover; box-shadow: 0 8px 24px rgba(20,20,20,0.08); display: block; }
         .mockup-caption { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; padding-left: 4px; }
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #14202B; line-height: 1.4; }
@@ -610,7 +610,7 @@
     <main id="main">
         <section class="hero" style="position: relative;">
             <div class="container">
-                <div class="hero-grid">
+                <div class="hero-grid hero-grid--editorial">
                     <div>
                         <p class="hero-folio-eyebrow">
                             <span>№&nbsp;04</span>
@@ -643,9 +643,9 @@
                         <p class="hero-marginalia-anchor"><strong>Jeder Schnitt beginnt mit einem Gespräch.</strong> Auch der dreißigste.</p>
                     </div>
                     <div class="hero-mockup">
-                        <img class="hero-portrait-img" src="/images/friseur/persona.jpg" alt="Laura Müller, Friseurmeisterin Salon Müller" loading="eager" width="800" height="1000">
+                        <img class="hero-portrait-img hero-portrait-img--editorial" src="/images/friseur/persona.jpg" alt="Laura Müller, Friseurmeisterin Salon Müller" loading="eager" width="800" height="1000">
                         <div class="mockup-caption">
-                            <span class="mockup-label">Salon Müller · Friseur Düsseldorf</span>
+                            <span class="hero-portrait-caption">Laura Müller <span class="sep">·</span> Friseurmeisterin <span class="sep">·</span> Atelier-Salon</span>
                         </div>
                     </div>
                 </div>
