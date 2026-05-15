@@ -1,0 +1,102 @@
+/* Sprint 58 — Hero-Couture (shared zwischen den 8 Sub-Pages)
+ *
+ * Aufsatz auf hero-polish.css. Liefert:
+ *  - .hero-marginalia-anchor : editorial-math statement statt Trust-Strip
+ *  - .hero-single-column     : bildloser Hero (Coaching: Whitespace-Strategie)
+ *  - .hero-deco              : Branchen-SVG-Marginalia neben H1
+ *  - .hero-dropcap--digit    : Drop-Cap-Ziffer (Spedition: „3")
+ *
+ * Setzt Sprint-39-Brand-Tokens voraus.
+ */
+
+/* Marginalia-Anker — eine starke Aussage statt drei Bullet-Points */
+.hero-marginalia-anchor {
+    margin-top: clamp(28px, 5vh, 48px);
+    padding-left: 16px;
+    border-left: 1px solid var(--color-gold);
+    max-width: 480px;
+    font-family: var(--font-pull-quote);
+    font-style: italic;
+    font-size: clamp(15px, 1.6vw, 18px);
+    line-height: 1.4;
+    color: var(--color-graphite-soft);
+    letter-spacing: 0.005em;
+}
+.hero-marginalia-anchor strong {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--color-graphite, #14202B);
+}
+
+/* Single-Column-Hero — Coaching, Whitespace-Strategie */
+.hero-single-column .hero-grid,
+.hero-single-column .hero-inner {
+    grid-template-columns: 1fr !important;
+}
+.hero-single-column .hero-mockup,
+.hero-single-column .hero-portrait,
+.hero-single-column .hero-portrait-img {
+    display: none !important;
+}
+.hero-single-column .hero-content,
+.hero-single-column > .container > .hero-grid > div:first-child {
+    max-width: 760px;
+}
+.hero-single-column .hero-headline {
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 1.02;
+}
+
+/* Hero-Deco — Branchen-SVG-Marginalia neben H1 */
+.hero-deco {
+    display: block;
+    margin: 0 0 clamp(18px, 3vh, 28px) 0;
+    color: var(--color-gold);
+    opacity: 0.85;
+}
+.hero-deco svg {
+    display: block;
+    width: clamp(44px, 5vw, 60px);
+    height: auto;
+}
+.hero-deco--map svg {
+    width: clamp(220px, 28vw, 360px);
+}
+
+/* Drop-Cap-Ziffer Spedition „3" — Cormorant Old-Style Figure */
+.hero-dropcap--digit {
+    font-family: var(--font-pull-quote);
+    font-style: italic;
+    font-weight: 500;
+    color: var(--color-gold);
+    font-size: 1.32em;
+    line-height: 0.82;
+    padding-right: 0.06em;
+    margin-left: -0.02em;
+    font-feature-settings: "onum" 1, "lnum" 0;
+}
+
+/* Hero ohne em-italic-Zweitzeile sieht zu kahl aus — wir geben der Zweitzeile
+   einen subtilen Gold-Akzent über ::before, wenn sie die Klasse trägt */
+.hero-h1-line--accent::before {
+    content: "—";
+    color: var(--color-gold);
+    font-style: normal;
+    font-weight: 400;
+    margin-right: 0.4em;
+    opacity: 0.7;
+}
+
+@media (max-width: 760px) {
+    .hero-marginalia-anchor {
+        max-width: 100%;
+        font-size: 14px;
+    }
+    .hero-deco svg {
+        width: 36px;
+    }
+    .hero-deco--map svg {
+        width: 100%;
+        max-width: 280px;
+    }
+}
