@@ -7,7 +7,9 @@
     "build": "npx tailwindcss -i ./src/input.css -o ./dist/style.css --minify && npm run copy",
     "copy": "cp -r src/*.html dist/ && cp -r src/blog dist/ && cp -r src/portfolio dist/ && cp -r src/images dist/ && cp src/robots.txt dist/ && cp src/sitemap.xml dist/ && cp -r assets dist/ 2>/dev/null || true",
     "preview": "npx serve dist",
-    "clean": "rm -rf dist && mkdir -p dist"
+    "clean": "rm -rf dist && mkdir -p dist",
+    "smoke": "node scripts/smoke-playwright.mjs",
+    "smoke:quick": "node scripts/smoke-playwright.mjs --quick"
   },
   "keywords": [
     "webdesign",
@@ -18,8 +20,8 @@
   "license": "UNLICENSED",
   "private": true,
   "devDependencies": {
+    "playwright": "^1.60.0",
     "serve": "^14.2.0",
     "tailwindcss": "^3.4.0"
-  },
-  "dependencies": {}
+  }
 }
