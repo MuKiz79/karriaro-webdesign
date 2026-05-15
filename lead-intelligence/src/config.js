@@ -12,7 +12,7 @@ export const config = {
         company: '',
         role: '',           // z.B. "Gründer & Webdesigner"
         services: '',       // z.B. "Handcodierte Websites, SEO, BFSG-Compliance"
-        priceRange: '',     // z.B. "990-1.990€"
+        priceRange: '',     // z.B. "1.290-3.990€ branchen-getrennt (4-Tier seit Sprint 40)"
         targetGroup: '',    // z.B. "Lokale Unternehmen (Handwerk, Gastronomie, Ärzte)"
         usp: '',            // z.B. "Kein Baukasten, kein Abo. Handcodiert, in 2 Wochen fertig."
         location: '',       // z.B. "Schwarzwald / Ortenau"

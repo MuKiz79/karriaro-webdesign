@@ -72,7 +72,7 @@ ${bestArg.text}
 
 ${args.length > 1 ? `Darüber hinaus: ${args.slice(1, 3).map(a => a.text).join(' ')}` : ''}
 
-Ich baue moderne Websites — handcodiert, ${p.priceRange || 'ab 990€'}, ${p.usp || 'in 2 Wochen fertig'}.
+Ich baue moderne Websites — handcodiert, ${p.priceRange || 'ab 1.290€'}, ${p.usp || 'in 2 Wochen fertig'}.
 
 Darf ich Ihnen in einem kurzen 15-Minuten-Call zeigen, wie Ihre neue Website aussehen könnte? Keine Verpflichtung.
 

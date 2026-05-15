@@ -185,7 +185,7 @@ function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'pro
 
     const senderName = profile.name || 'Muammer Kizilaslan';
     const senderCompany = profile.company || 'Karriaro Webdesign';
-    const priceRange = profile.priceRange || 'ab 990€';
+    const priceRange = profile.priceRange || 'ab 1.290€';
     const usp = profile.usp || 'in 1–2 Wochen fertig';
     const portfolio = profile.portfolio || 'karriaro-webdesign.de';
 

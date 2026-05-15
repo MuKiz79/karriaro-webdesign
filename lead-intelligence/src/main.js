@@ -206,7 +206,7 @@ function toggleSettings() {
             ${field('cfg-company', 'Mein Unternehmen', p.company, 'Karriaro Webdesign')}
             ${field('cfg-role', 'Meine Rolle', p.role, 'Gründer & Webdesigner')}
             ${field('cfg-services', 'Meine Leistungen', p.services, 'Handcodierte Websites, SEO, BFSG-Compliance')}
-            ${field('cfg-price', 'Preisbereich', p.priceRange, '990-1.990€ einmalig, kein Abo')}
+            ${field('cfg-price', 'Preisbereich', p.priceRange, '1.290-3.990€ einmalig, kein Abo')}
             ${field('cfg-target', 'Meine Zielgruppe', p.targetGroup, 'Lokale Unternehmen (Handwerk, Gastronomie, Ärzte, Makler)')}
             ${field('cfg-usp', 'Mein USP', p.usp, 'Kein Baukasten, kein Template. Handcodiert, in 2 Wochen fertig.')}
             ${field('cfg-location', 'Mein Standort', p.location, 'Schwarzwald / Ortenau')}
