@@ -229,6 +229,7 @@
         @media (max-width: 640px) { footer .f-foot { flex-direction: column; gap: 12px; text-align: center; } }
         footer .karriaro-note { color: var(--gold); font-size: 12px; }
     </style>
+    <link rel="stylesheet" href="/css/karriaro-tools.css">
 </head>
 <body>
     <a href="#main" class="skip-link">Zum Hauptinhalt springen</a>
@@ -552,6 +553,59 @@
             </div>
         </section>
 
+
+    <!-- Sprint 48 — Coaching Live-Tool-Embed (Klarheits-Score, shared via /js/karriaro-tools.js) -->
+    <section class="kr-tool-embed" aria-label="Klarheits-Score ausprobieren">
+        <div class="kr-tool-embed-grid">
+            <div class="kr-tool-embed-meta">
+                <p class="kr-tool-embed-eyebrow">Live-Werkzeug · Coaching-Demo</p>
+                <h2 class="kr-tool-embed-title">Klarheits-Score in 90 Sekunden</h2>
+                <p class="kr-tool-embed-desc">Fünf Fragen zu Fokus, Team, Zeit, Energie und nächstem Karriereschritt. Der Score zeigt sofort, welches Coaching-Format zu Ihrer Situation passt — bevor Sie ein Erstgespräch buchen.</p>
+                <p><a href="/" class="kr-tool-embed-link">Mehr zur Karriaro-Webdesign-Manufaktur →</a></p>
+            </div>
+            <div class="kr-tool-live">
+                <form class="kr-tool-form" data-kr-tool-form="coaching" style="grid-template-columns: 1fr;">
+                    <label>Wie klar ist Ihr beruflicher Fokus aktuell?
+                        <select name="focus" required>
+                            <option value="">— wählen —</option>
+                            <option value="1">1 — sehr unklar</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — kristallklar</option>
+                        </select>
+                    </label>
+                    <label>Wie gut funktioniert Ihr Team-Setup?
+                        <select name="team" required>
+                            <option value="">— wählen —</option>
+                            <option value="1">1 — zerfällt</option><option value="2">2</option><option value="3">3 — geht so</option><option value="4">4</option><option value="5">5 — exzellent</option>
+                        </select>
+                    </label>
+                    <label>Wie gut managen Sie Ihre Zeit?
+                        <select name="time" required>
+                            <option value="">— wählen —</option>
+                            <option value="1">1 — komplett überrollt</option><option value="2">2</option><option value="3">3 — okay</option><option value="4">4</option><option value="5">5 — souverän</option>
+                        </select>
+                    </label>
+                    <label>Wie hoch ist Ihr Energie-Level?
+                        <select name="energy" required>
+                            <option value="">— wählen —</option>
+                            <option value="1">1 — ausgebrannt</option><option value="2">2</option><option value="3">3 — wechselhaft</option><option value="4">4</option><option value="5">5 — stabil hoch</option>
+                        </select>
+                    </label>
+                    <label>Wie klar ist Ihr nächster Karriereschritt?
+                        <select name="next-step" required>
+                            <option value="">— wählen —</option>
+                            <option value="1">1 — keine Idee</option><option value="2">2</option><option value="3">3 — vage</option><option value="4">4</option><option value="5">5 — definiert</option>
+                        </select>
+                    </label>
+                    <button type="submit">Score berechnen</button>
+                </form>
+                <output class="kr-tool-output" data-kr-tool-output="coaching">
+                    <p class="kr-tool-output-label">Ihr Klarheits-Score &amp; passendes Coaching-Format</p>
+                    <p class="kr-tool-output-value">—</p>
+                    <p class="kr-tool-output-note">Alle 5 Fragen beantworten für Empfehlung</p>
+                </output>
+            </div>
+        </div>
+    </section>
+
     </main>
 
     <footer class="site">
@@ -594,5 +648,6 @@
     </footer>
 
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-coaching-demo"></script>
+    <script src="/js/karriaro-tools.js"></script>
 </body>
 </html>

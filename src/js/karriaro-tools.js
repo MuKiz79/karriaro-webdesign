@@ -213,6 +213,43 @@
         });
     }
 
+    // === Coaching · Klarheits-Score (5 Fragen → Score + Empfehlung) ===
+    function attachCoaching() {
+        var f = document.querySelector('[data-kr-tool-form="coaching"]');
+        if (!f) return;
+        f.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var fd = new FormData(f);
+            // 5 Fragen, jede 1-5 — Score 5-25
+            var keys = ['focus', 'team', 'time', 'energy', 'next-step'];
+            var sum = 0;
+            for (var i = 0; i < keys.length; i++) {
+                var v = parseInt(fd.get(keys[i]), 10);
+                if (!v) { showOutput('coaching', '—', 'Bitte alle 5 Fragen beantworten.'); return; }
+                sum += v;
+            }
+            // 5 = sehr unklar, 25 = sehr klar
+            var rec, level;
+            if (sum <= 10) {
+                level = 'Hoher Klärungsbedarf';
+                rec = '6-Wochen-Intensiv-Coaching empfohlen. Erstgespräch mit Sarah Lehmann, wir definieren Top-3-Hebel und Roadmap.';
+            } else if (sum <= 17) {
+                level = 'Mittlerer Klärungsbedarf';
+                rec = '90-Tage-Programm mit zweiwöchentlichen Sessions. Fokus auf Energie-Management und nächsten Karriere-Schritt.';
+            } else if (sum <= 22) {
+                level = 'Konkretisierungsbedarf';
+                rec = 'Strategie-Sparring 4–6 Sessions. Sie wissen, wohin — wir helfen mit Geschwindigkeit und Stakeholder-Management.';
+            } else {
+                level = 'Reflexionsbedarf';
+                rec = 'Sounding-Board-Format. 90-Minuten-Reflexionsgespräche bei Bedarf statt fester Roadmap.';
+            }
+            showOutput('coaching',
+                level + ' <span style="color:var(--color-graphite-soft,#525E6B); font-weight:300;">· Score ' + sum + '/25</span>',
+                rec + ' Echte Demo aktiviert anschließend Calendly-Buchung für ein 30-Min-Erstgespräch.'
+            );
+        });
+    }
+
     // === Init ===
     function init() {
         attachDachdecker();
@@ -222,6 +259,7 @@
         attachSanitaer();
         attachRestaurant();
         attachSpedition();
+        attachCoaching();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
