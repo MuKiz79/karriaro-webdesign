@@ -1,0 +1,195 @@
+/*
+ * Karriaro Branchen-Tools — Shared CSS für Sub-Pages
+ *
+ * Liefert das Styling für die Live-Tool-Embeds (Form + Output) auf jeder
+ * Sub-Page (immobilien-makler.html, friseur-salon.html etc.).
+ *
+ * Variablen-Fallbacks: nutzt sub-page-eigene `--accent`/`--text` wenn vorhanden,
+ * sonst die Karriaro-Brand-Tokens aus /css/tokens.css.
+ */
+.kr-tool-embed {
+    margin: clamp(48px, 8vh, 96px) 0;
+    padding: clamp(28px, 4vw, 56px);
+    background: var(--kr-bg, #FBFAF7);
+    border: 1px solid var(--kr-border, rgba(20,30,40,0.08));
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(20,30,40,0.06);
+}
+.kr-tool-embed-grid {
+    display: grid;
+    grid-template-columns: 38% 62%;
+    gap: clamp(24px, 4vw, 48px);
+    align-items: start;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+@media (max-width: 760px) { .kr-tool-embed-grid { grid-template-columns: 1fr; } }
+
+.kr-tool-embed-meta { text-align: left; }
+.kr-tool-embed-eyebrow {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--kr-gold, #8A7B5C);
+    margin-bottom: 12px;
+}
+.kr-tool-embed-title {
+    font-family: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(22px, 2.8vw, 32px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--accent, var(--kr-blue, #1A2E40));
+    margin-bottom: 12px;
+}
+.kr-tool-embed-desc {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text, var(--kr-ink, #14202B));
+    margin-bottom: 14px;
+}
+.kr-tool-embed-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent, var(--kr-blue, #1A2E40));
+}
+
+.kr-tool-live {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+.kr-tool-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    text-align: left;
+}
+.kr-tool-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted, var(--kr-grey, #525E6B));
+}
+.kr-tool-form input,
+.kr-tool-form select {
+    padding: 11px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--kr-ink, #14202B);
+    background: #fff;
+    border: 1.5px solid var(--kr-border, rgba(20,30,40,0.12));
+    border-radius: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+.kr-tool-form input:focus,
+.kr-tool-form select:focus {
+    outline: none;
+    border-color: var(--accent, var(--kr-blue, #1A2E40));
+    box-shadow: 0 0 0 3px rgba(26,46,64,0.10);
+}
+.kr-tool-form button[type="submit"] {
+    grid-column: 1 / -1;
+    justify-self: start;
+    padding: 11px 26px;
+    background: var(--accent, var(--kr-blue, #1A2E40));
+    color: #fff;
+    border: 0;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+.kr-tool-form button[type="submit"]:hover { opacity: 0.88; }
+
+.kr-tool-form--chips { grid-template-columns: 1fr; }
+.kr-tool-form-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted, var(--kr-grey, #525E6B));
+    margin-bottom: -4px;
+}
+.kr-tool-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.kr-tool-chips label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.kr-tool-chips input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.kr-tool-chips span {
+    padding: 7px 14px;
+    background: #fff;
+    border: 1.5px solid var(--kr-border, rgba(20,30,40,0.12));
+    color: var(--text, var(--kr-ink, #14202B));
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 999px;
+    text-transform: none;
+    letter-spacing: normal;
+    transition: all 0.2s;
+}
+.kr-tool-chips input:checked + span {
+    background: var(--accent, var(--kr-blue, #1A2E40));
+    color: #fff;
+    border-color: var(--accent, var(--kr-blue, #1A2E40));
+}
+
+.kr-tool-output {
+    display: block;
+    padding: 22px;
+    background: #fff;
+    border: 1px dashed var(--kr-border, rgba(20,30,40,0.15));
+    border-radius: 12px;
+    text-align: left;
+    transition: border-color 0.3s, background 0.3s;
+}
+.kr-tool-output.is-revealed {
+    border-style: solid;
+    border-color: var(--kr-gold, #8A7B5C);
+}
+.kr-tool-output-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted, var(--kr-grey, #525E6B));
+    margin-bottom: 12px;
+}
+.kr-tool-output-value {
+    font-family: 'Fraunces', 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 2.4vw, 28px);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--accent, var(--kr-blue, #1A2E40));
+    margin-bottom: 10px;
+}
+.kr-tool-output-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted, var(--kr-grey, #525E6B));
+}

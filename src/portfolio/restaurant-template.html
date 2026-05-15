@@ -463,6 +463,7 @@
         @media (max-width: 720px) { .kr-footer-inner { grid-template-columns: 1fr; gap: 32px; } .kr-footer-ctas { align-items: stretch; } .kr-footer-cta-primary { justify-content: center; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <link rel="stylesheet" href="/css/karriaro-tools.css">
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
@@ -1292,6 +1293,35 @@
                 </div>
             </div>
         </section>
+    
+    <!-- Sprint 44 — Live-Tool-Embed (BAFA/Wertermittlung/Symptom-Check etc., shared via /js/karriaro-tools.js) -->
+    <section class="kr-tool-embed" aria-label="Live-Tool ausprobieren">
+        <div class="kr-tool-embed-grid">
+            <div class="kr-tool-embed-meta">
+                <p class="kr-tool-embed-eyebrow">Live-Werkzeug · auf jeder Karriaro-Site verbaubar</p>
+                <h2 class="kr-tool-embed-title">AI-Sommelier-Chat — probieren Sie es aus</h2>
+                <p class="kr-tool-embed-desc">Gast wählt das Hauptgericht, der Sommelier empfiehlt drei Weine aus der Karte mit Begründung. Wein-Umsatz im DACH-Schnitt +14 %.</p>
+                <p><a href="/" class="kr-tool-embed-link">Mehr zur Karriaro-Webdesign-Manufaktur →</a></p>
+            </div>
+            <div class="kr-tool-live">
+                <form class="kr-tool-form" data-kr-tool-form="restaurant">
+                            <label>Hauptgericht
+                                <select name="gericht"><option value="">— wählen —</option><option value="rind">Rind / Steak</option><option value="lamm">Lamm</option><option value="fisch">Fisch / Meeresfrüchte</option><option value="pasta">Pasta / Vegetarisch</option><option value="gefluegel">Geflügel</option></select>
+                            </label>
+                            <label>Preisrange (€/Flasche)
+                                <select name="preis"><option value="bis30">bis 30 €</option><option value="30-60">30–60 €</option><option value="60+">über 60 €</option></select>
+                            </label>
+                            <button type="submit">Wein-Empfehlungen anzeigen</button>
+                </form>
+                <output class="kr-tool-output" data-kr-tool-output="restaurant">
+                    <p class="kr-tool-output-label">Drei Wein-Empfehlungen mit Begründung</p>
+                    <p class="kr-tool-output-value">—</p>
+                    <p class="kr-tool-output-note">Daten eingeben für Live-Berechnung</p>
+                </output>
+            </div>
+        </div>
+    </section>
+
     </main>
 
     <section class="kr-footer-card" aria-label="Karriaro Webdesign — Bestellung">
@@ -1488,5 +1518,6 @@
         });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDemo(); });
     </script>
+    <script src="/js/karriaro-tools.js"></script>
 </body>
 </html>

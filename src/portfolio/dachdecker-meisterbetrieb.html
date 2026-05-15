@@ -587,6 +587,7 @@
         .kr-footer-cta-secondary:hover { color: #fff; text-decoration-color: #fff; }
         @media (max-width: 720px) { .kr-footer-inner { grid-template-columns: 1fr; gap: 32px; } .kr-footer-ctas { align-items: stretch; } .kr-footer-cta-primary { justify-content: center; } }
     </style>
+    <link rel="stylesheet" href="/css/karriaro-tools.css">
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>
@@ -1410,6 +1411,34 @@
                 </div>
             </div>
         </section>
+    
+    <!-- Sprint 44 — Live-Tool-Embed (BAFA/Wertermittlung/Symptom-Check etc., shared via /js/karriaro-tools.js) -->
+    <section class="kr-tool-embed" aria-label="Live-Tool ausprobieren">
+        <div class="kr-tool-embed-grid">
+            <div class="kr-tool-embed-meta">
+                <p class="kr-tool-embed-eyebrow">Live-Werkzeug · auf jeder Karriaro-Site verbaubar</p>
+                <h2 class="kr-tool-embed-title">BAFA-Förderrechner — probieren Sie es aus</h2>
+                <p class="kr-tool-embed-desc">Eigentümer berechnet sofort den maximalen Bundeszuschuss für die Dachsanierung. Kein 30-Min-Beratungstermin, keine Telefonschleife.</p>
+                <p><a href="/" class="kr-tool-embed-link">Mehr zur Karriaro-Webdesign-Manufaktur →</a></p>
+            </div>
+            <div class="kr-tool-live">
+                <form class="kr-tool-form" data-kr-tool-form="dachdecker">
+                            <label>Postleitzahl<input type="text" name="plz" placeholder="z. B. 70173" maxlength="5" required pattern="[0-9]{5}"></label>
+                            <label>Dachfläche (m²)<input type="number" name="flaeche" placeholder="z. B. 140" min="20" max="2000" required></label>
+                            <label>Solar mitfördern?
+                                <select name="solar"><option value="0">Nein</option><option value="1">Ja, PV-Modul</option></select>
+                            </label>
+                            <button type="submit">Förderung berechnen</button>
+                </form>
+                <output class="kr-tool-output" data-kr-tool-output="dachdecker">
+                    <p class="kr-tool-output-label">Ihre Förder-Spanne (BAFA + KfW + Klimabonus)</p>
+                    <p class="kr-tool-output-value">—</p>
+                    <p class="kr-tool-output-note">Daten eingeben für Live-Berechnung</p>
+                </output>
+            </div>
+        </div>
+    </section>
+
     </main>
 
     <section class="kr-footer-card" aria-label="Karriaro Webdesign — Bestellung">
@@ -1646,5 +1675,6 @@
             setInterval(update, 60 * 1000);
         })();
     </script>
+    <script src="/js/karriaro-tools.js"></script>
 </body>
 </html>

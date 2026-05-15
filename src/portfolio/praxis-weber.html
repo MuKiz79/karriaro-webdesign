@@ -426,6 +426,7 @@
         @media (max-width: 720px) { .kr-footer-inner { grid-template-columns: 1fr; gap: 32px; } .kr-footer-ctas { align-items: stretch; } .kr-footer-cta-primary { justify-content: center; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <link rel="stylesheet" href="/css/karriaro-tools.css">
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
@@ -1150,6 +1151,38 @@
                 </div>
             </div>
         </section>
+    
+    <!-- Sprint 44 — Live-Tool-Embed (BAFA/Wertermittlung/Symptom-Check etc., shared via /js/karriaro-tools.js) -->
+    <section class="kr-tool-embed" aria-label="Live-Tool ausprobieren">
+        <div class="kr-tool-embed-grid">
+            <div class="kr-tool-embed-meta">
+                <p class="kr-tool-embed-eyebrow">Live-Werkzeug · auf jeder Karriaro-Site verbaubar</p>
+                <h2 class="kr-tool-embed-title">KI-Symptom-Checker — probieren Sie es aus</h2>
+                <p class="kr-tool-embed-desc">Patient klickt 3 Symptome an, das System empfiehlt Behandlungstyp und Termin-Slot. Keine Diagnose (Haftung), aber strukturierte Vorab-Anamnese — spart MFA-Zeit.</p>
+                <p><a href="/" class="kr-tool-embed-link">Mehr zur Karriaro-Webdesign-Manufaktur →</a></p>
+            </div>
+            <div class="kr-tool-live">
+                <form class="kr-tool-form kr-tool-form--chips" data-kr-tool-form="praxis">
+                            <p class="kr-tool-form-label">Welche Symptome haben Sie? (max 3)</p>
+                            <div class="kr-tool-chips">
+                                <label><input type="checkbox" name="sym" value="kopfschmerz"><span>Kopfschmerzen</span></label>
+                                <label><input type="checkbox" name="sym" value="fieber"><span>Fieber</span></label>
+                                <label><input type="checkbox" name="sym" value="husten"><span>Husten</span></label>
+                                <label><input type="checkbox" name="sym" value="rueckenschmerz"><span>Rückenschmerzen</span></label>
+                                <label><input type="checkbox" name="sym" value="schwindel"><span>Schwindel</span></label>
+                                <label><input type="checkbox" name="sym" value="muedigkeit"><span>Müdigkeit</span></label>
+                            </div>
+                            <button type="submit">Empfehlung anzeigen</button>
+                </form>
+                <output class="kr-tool-output" data-kr-tool-output="praxis">
+                    <p class="kr-tool-output-label">Empfohlene Behandlung &amp; Termin-Slot</p>
+                    <p class="kr-tool-output-value">—</p>
+                    <p class="kr-tool-output-note">Daten eingeben für Live-Berechnung</p>
+                </output>
+            </div>
+        </div>
+    </section>
+
     </main>
 
     <section class="kr-footer-card" aria-label="Karriaro Webdesign — Bestellung">
@@ -1326,5 +1359,6 @@
         }
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
     </script>
+    <script src="/js/karriaro-tools.js"></script>
 </body>
 </html>
