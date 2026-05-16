@@ -162,12 +162,12 @@
         .mobile-toggle svg { width: 24px; height: 24px; }
         .mobile-menu { display: none; }
 
-        /* Sprint 85 — Andreas-Foto sichtbar groesser (max-width 380->500, Grid 1.15fr/0.85fr -> 1fr/0.95fr). */
+        /* Sprint 86 — Hero-Foto konsolidiert auf 540 px (8 Pages identisch), Grid 1fr/0.95fr. */
         .hero { display: grid; grid-template-columns: 1fr 0.95fr; gap: clamp(40px, 5vw, 72px); align-items: start; min-height: clamp(440px, 54vh, 580px); padding: 0 24px; max-width: var(--max); margin: 0 auto; background: transparent; }
         .hero-content { padding-top: 0; padding-bottom: 32px; padding-left: 0; padding-right: 0; }
         .hero-portrait { align-self: start; display: flex; flex-direction: column; padding-top: clamp(24px, 4vh, 56px); }
-        .hero-portrait img { width: 100%; max-width: 500px; aspect-ratio: 4/5; height: auto; object-fit: cover; object-position: center top; display: block; border: 1px solid var(--color-gold); border-radius: 4px; box-shadow: 0 8px 24px rgba(20,20,20,0.08); }
-        .hero-portrait .hero-portrait-caption { max-width: 500px; }
+        .hero-portrait img { width: 100%; max-width: 540px; aspect-ratio: 4/5; height: auto; object-fit: cover; object-position: center top; display: block; border: 1px solid var(--color-gold); border-radius: 4px; box-shadow: 0 8px 24px rgba(20,20,20,0.08); }
+        .hero-portrait .hero-portrait-caption { max-width: 540px; }
         @media (max-width: 920px) {
             .hero { grid-template-columns: 1fr; min-height: auto; }
             .hero-content { padding: 48px 0 32px; }
@@ -204,7 +204,7 @@
         .mockup-label { font-size: 11px; font-weight: 500; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.06em; }
         .mockup-story { font-size: 16px; color: #14202B; line-height: 1.4; }
         /* Sprint 16 — Hero-Persona-Foto statt Branchen-Symbol */
-        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 480px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; }
+        .hero-portrait-img { aspect-ratio: 4/5; width: 100%; max-width: 540px; border-radius: var(--radius-lg); object-fit: cover; box-shadow: var(--shadow-lg); display: block; }
 
         /* Wertermittlung-Widget */
         .bewertung { background: var(--bg-soft); padding: 96px 0; }
