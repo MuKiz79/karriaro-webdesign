@@ -205,6 +205,11 @@ function normalizePlacesType(t) {
     if (['nail_salon', 'spa', 'massage', 'day_spa'].includes(t)) return 'beauty_salon';
     // Legal
     if (['law_firm', 'attorney'].includes(t)) return 'lawyer';
+    // Sprint 76 — neue Branchen
+    if (['drug_store', 'medical_supply_store'].includes(t)) return 'pharmacy';
+    if (['veterinarian', 'animal_hospital'].includes(t)) return 'veterinary_care';
+    if (['tax_consultant', 'accountant', 'bookkeeper'].includes(t)) return 'accounting';
+    if (['architecture_firm', 'architectural_design'].includes(t)) return 'architect';
     return t;
 }
 
@@ -231,6 +236,10 @@ function guessBranchFromUrl(url) {
             { re: /(sanitaer|sanitär|installateur|heizung|klempner|gas[-_]?wasser)/i, type: 'plumber' },
             { re: /(elektro|elektriker|elektrotechnik|elektroinstall)/i, type: 'electrician' },
             { re: /(kfz|autowerk|werkstatt[-_]|reifenservice|tuev|tüv[-_])/i, type: 'auto_repair' },
+            { re: /(apotheke|pharma[-_])/i, type: 'pharmacy' },
+            { re: /(tierarzt|tieraerztin|tierärzt|tier[-_]?klinik|veterinaer|veterinär)/i, type: 'veterinary_care' },
+            { re: /(steuer|steuerboard|wirtschaftspruefer|wirtschaftsprüfer|buchhaltung|fibu)/i, type: 'accounting' },
+            { re: /(architekt|architektur|architects[-_]|baubuero|baubüro)/i, type: 'architect' },
             { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
         ];
         for (var i = 0; i < rules.length; i++) {
@@ -440,7 +449,8 @@ async function detectSeoGeo(html, baseUrl) {
     // Sprint 70 — Organization raus (zu generisch, hat fast jeder Site → False-Positive).
     // Ergaenzt um valide LocalBusiness-Subtypen laut schema.org: FoodEstablishment, DentalClinic,
     // MedicalClinic, Store, ProfessionalService.
-    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency'];
+    // Sprint 76 — neue Subtypen: Pharmacy, VeterinaryCare, AccountingService, Architect
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect'];
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical

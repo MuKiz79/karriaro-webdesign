@@ -114,6 +114,38 @@ const CROSS_SELL = {
         ],
         trend: 'Physio-Trend 2026: Behandlungs-Filter + Online-Slot — Patienten kommen mit Rezept und buchen direkt.'
     },
+    'pharmacy': {
+        tools: [
+            { id: 'notdienst-puls', aliasFor: 'notdienst', name: 'Notdienst-Apotheken-Puls (PLZ-Live)', demoUrl: '/portfolio/meisterbetrieb-mueller.html#notdienst' },
+            { id: 'rezept-upload', aliasFor: 'rezept-online', name: 'E-Rezept-Foto-Upload', demoUrl: '/portfolio/praxis-weber.html' },
+            { id: 'bestand-online', aliasFor: 'bestand-online', name: 'Medikamenten-Verfuegbarkeit live', demoUrl: '/portfolio/praxis-weber.html' }
+        ],
+        trend: 'Apotheke-Trend 2026: Patienten googeln Notdienst + e-Rezept-Foto-Upload — wer das nicht zeigt, verliert die naechste Generation.'
+    },
+    'veterinary_care': {
+        tools: [
+            { id: 'symptom-checker-tier', name: 'Tier-Symptom-Checker mit Notfall-Triage', demoUrl: '/portfolio/praxis-weber.html#symptom-checker' },
+            { id: 'termin-online', aliasFor: 'termin-online', name: 'Online-Terminbuchung 24/7', demoUrl: '/portfolio/praxis-weber.html' },
+            { id: 'notfall-puls', aliasFor: 'notfall', name: 'Notfall-Bereitschafts-Puls (Wer hat heute Dienst)', demoUrl: '/portfolio/meisterbetrieb-mueller.html#notdienst' }
+        ],
+        trend: 'Tierarzt-Trend 2026: Halter checken Notdienst-Bereitschaft online — wer nicht sichtbar ist, wird im Notfall nicht angerufen.'
+    },
+    'accounting': {
+        tools: [
+            { id: 'mandantenportal-online', aliasFor: 'mandantenportal', name: 'Mandantenportal (DATEV-aehnlich)', demoUrl: '/portfolio/coaching-lehmann.html' },
+            { id: 'belege-foto-upload', name: 'Foto-Beleg-Upload mit OCR-Vorverbuchung', demoUrl: '/portfolio/coaching-lehmann.html' },
+            { id: 'kosten-rechner-stbvv', aliasFor: 'kosten-rechner', name: 'Honorar-Rechner nach StBVV', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' }
+        ],
+        trend: 'Steuerberater-Trend 2026: Mandanten erwarten Foto-Beleg-Upload statt Pendelordner — wer fehlt, verliert die Naechste-Generation-Unternehmer.'
+    },
+    'architect': {
+        tools: [
+            { id: 'hoai-rechner', aliasFor: 'kosten-rechner', name: 'HOAI-Honorar-Schaetzer (Leistungsphasen 1-9)', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' },
+            { id: 'projekt-galerie-3d', aliasFor: 'portfolio', name: 'Interaktive Projekt-Galerie mit 360-Grad-Vorschau', demoUrl: '/portfolio/immobilien-makler.html' },
+            { id: 'bauherren-cockpit', name: 'Bauherren-Cockpit (Status + Termine + Dokumente)', demoUrl: '/portfolio/coaching-lehmann.html' }
+        ],
+        trend: 'Architektur-Trend 2026: Bauherren googeln Portfolio + HOAI-Beispiele vor dem Erstgespraech — wer beides nicht zeigt, ist nicht im Pool.'
+    },
     'hotel': {
         tools: [
             { id: 'direkt-buchen', name: 'Direkt-Buchen-Engine (umgehe Booking.com)', demoUrl: '/portfolio/restaurant-template.html' },

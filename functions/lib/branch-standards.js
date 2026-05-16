@@ -221,6 +221,67 @@ const BRANCH_STANDARDS = {
         pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, faellt aus dem Suchergebnis.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'
     },
+    'pharmacy': {
+        name: 'Apotheke',
+        mustHave: [
+            { id: 'notdienst', label: 'Notdienst-Hinweis (24h-Apotheke)', detect: { body: /notdienst|notfall|24[- ]?stund|nachtdienst|bereitschaft/i } },
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)/i } },
+            { id: 'kontakt-adresse', label: 'Kontakt mit Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } },
+            { id: 'leistungen', label: 'Beratungs-/Service-Leistungen', detect: { subPage: /leistung|service|beratung/i, body: /\b(beratung|impfberatung|medikament|rezept|hautanalyse|blutdruck.?mess)\b/i } }
+        ],
+        shouldHave: [
+            { id: 'rezept-online', label: 'E-Rezept- oder Online-Rezept-Service', detect: { body: /e[- ]?rezept|rezept.*online|rezept.*upload|rezept.*foto|gesund\.bund|kim[- ]?dienst/i } },
+            { id: 'bestand-online', label: 'Medikamenten-Verfuegbarkeit / Online-Bestellung', detect: { body: /verfuegbarkeit|verfügbarkeit|vorbestell|reservier|online[- ]?bestell|abhol/i } },
+            { id: 'team', label: 'Apotheker-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /\b(apotheker|pta|inhaber(in)?|unser team)\b/i } }
+        ],
+        pitchMissing: 'Patienten googeln "Notdienst Apotheke" + e-Rezept — wer Notdienst-Live + Foto-Rezept nicht zeigt, verliert sie an die naechste.',
+        pitchAllOk: 'Ihre Apotheke ist online auffindbar und entscheidbar.'
+    },
+    'veterinary_care': {
+        name: 'Tierarztpraxis',
+        mustHave: [
+            { id: 'leistungen', label: 'Behandlungen / Tierart-Spezialisierung', detect: { subPage: /leistung|behandl|therap|spezialis/i, body: /\b(hund|katze|nager|kaninchen|exoten|kleintier|großtier|grosstier|pferd|chirurgie|impfung|operation)\b/i } },
+            { id: 'team', label: 'Tieraerzte-/Team-Vorstellung', detect: { subPage: /team|tieraerzt|tierärzt|ueber[- ]?uns|über[- ]?uns/i, body: /tierärzt\w*|tieraerzt\w*|fachtierarzt\w*|praxisleitung|\binhaber(in)?\b/i } },
+            { id: 'sprechzeiten', label: 'Sprechzeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)/i } },
+            { id: 'notfall', label: 'Notdienst / 24h-Notfall', detect: { body: /notdienst|notfall|24[- ]?stund|bereitschaft|tier[- ]?notfall/i } }
+        ],
+        shouldHave: [
+            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|terminland|petsdeli|doctolib|samedi/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        pitchMissing: 'Halter rufen die Praxis an, die Sprechzeiten + Notdienst online zeigt — wer das nicht hat, ist im Notfall unsichtbar.',
+        pitchAllOk: 'Ihre Tierarztpraxis ist online erreichbar.'
+    },
+    'accounting': {
+        name: 'Steuerberater',
+        mustHave: [
+            { id: 'leistungen', label: 'Leistungen (Bilanz/EUER/USt-VA/Lohn)', detect: { subPage: /leistung|service|beratung/i, body: /\b(bilanz|EUER|euer\b|umsatzsteuer|ust[- ]?va|lohnabrechnung|jahresabschluss|steuererklaerung|steuererklärung|finanzbuchhaltung)\b/i } },
+            { id: 'team', label: 'Steuerberater-/Team-Vorstellung', detect: { subPage: /team|kanzlei|ueber[- ]?uns|über[- ]?uns/i, body: /\b(steuerberater(in)?|wirtschaftspruefer|wirtschaftsprüfer|fachberater|kanzlei|sozietät)\b/i } },
+            { id: 'kontakt-adresse', label: 'Kontakt mit Kanzleiadresse', detect: { subPage: /kontakt|anfahrt|standort/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } },
+            { id: 'mandantenportal', label: 'Mandantenportal / DATEV-Hinweis', detect: { body: /mandantenportal|datev|unternehmen[- ]?online|beleg.?upload|digitalbuchhaltung/i } }
+        ],
+        shouldHave: [
+            { id: 'fachgebiete', label: 'Branchen-/Fachgebiet-Spezialisierung', detect: { subPage: /fachgebiet|branche|spezialis/i, body: /\b(spezialisierung|fachgebiet|aerzte|ärzte|handwerk|gastronomie|gemeinnuetzig|gemeinnützig)\b/i } },
+            { id: 'kosten-rechner', label: 'Honorar-/StBVV-Hinweis', detect: { body: /honorar|gebührenordnung|gebuehrenordnung|\bstbvv\b|kostenfair|vorab.?berechnung/i } }
+        ],
+        pitchMissing: 'Mandanten googeln "Steuerberater + Branche + Stadt" + erwarten Belegupload-Portal — fehlt eines, gehen sie zur Konkurrenz.',
+        pitchAllOk: 'Ihre Kanzlei ist online entscheidbar.'
+    },
+    'architect': {
+        name: 'Architekturbuero',
+        mustHave: [
+            { id: 'portfolio', label: 'Projekt-Portfolio mit Bildern', detect: { subPage: /portfolio|projekt|referenz|werke|galerie/i, body: /\b(projekte|projektliste|referenzprojekte|werkschau|portfolio)\b/i } },
+            { id: 'leistungen', label: 'Leistungen (Planung/Bauleitung/HOAI)', detect: { subPage: /leistung|planung/i, body: /\b(planung|entwurfsplanung|bauleitung|baugenehmigung|\bhoai\b|leistungsphasen)\b/i } },
+            { id: 'team', label: 'Architekten-/Team-Vorstellung', detect: { subPage: /team|architekt|ueber[- ]?uns|über[- ]?uns/i, body: /\b(architekt(in)?|innenarchitekt|büroleitung|buero|bauleiter(in)?)\b/i } },
+            { id: 'kontakt-adresse', label: 'Kontakt mit Bueroadresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'schwerpunkte', label: 'Schwerpunkte (Wohn-/Gewerbe-/Sanierung)', detect: { subPage: /schwerpunkt|spezialis/i, body: /\b(wohnungsbau|gewerbebau|sanierung|denkmalschutz|bestandsbau|neubau|umbau|energieberatung)\b/i } },
+            { id: 'kosten-rechner', label: 'HOAI-Rechner / Honorarbeispiele', detect: { body: /honorar.?beispiel|\bhoai\b.*rechner|kostenschaetzung|kostenschätzung|kostenrahmen|honorarrechner/i } }
+        ],
+        pitchMissing: 'Bauherren googeln Portfolio + HOAI-Schaetzung vor dem Erstgespraech — wer nichts zeigt, ist nicht im Bewerber-Pool.',
+        pitchAllOk: 'Ihr Buero ist online entscheidbar.'
+    },
     'auto_repair': {
         name: 'Kfz-Werkstatt',
         mustHave: [

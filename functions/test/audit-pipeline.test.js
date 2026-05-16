@@ -197,6 +197,70 @@ test('checkBranchStandards: dentist Sprint 71 kontakt-adresse PLZ', () => {
     assert.ok(r.mustHave.find(i => i.id === 'kontakt-adresse').found, 'PLZ-Pattern fuer SPA-Sites');
 });
 
+test('checkBranchStandards: pharmacy Sprint 76 — Notdienst/Rezept/Bestand', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Notdienst 24/7. E-Rezept bequem hochladen. Apotheker Mueller berät. Stuttgart 70173. Mo-Fr 8:00 Uhr. Beratung Impfung.'
+    };
+    const r = checkBranchStandards('pharmacy', ctx);
+    assert.equal(r.primaryType, 'pharmacy');
+    assert.ok(r.mustHave.find(i => i.id === 'notdienst').found);
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Beratung-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'rezept-online').found, 'E-Rezept-Pattern');
+});
+
+test('checkBranchStandards: veterinary_care Sprint 76 — Tier-Spezialisierung + Notfall', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Praxis für Hund, Katze und Kleintier. Tierärztin Dr. Mueller. Sprechzeit Mo-Fr 9 Uhr. Notdienst 24h.'
+    };
+    const r = checkBranchStandards('veterinary_care', ctx);
+    assert.equal(r.primaryType, 'veterinary_care');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Hund/Katze body-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'team').found, 'Tieraerztin body-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'notfall').found);
+});
+
+test('checkBranchStandards: accounting Sprint 76 — DATEV + Bilanz', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Wir bieten Bilanz, EUER, Lohnabrechnung. Steuerberater Mueller. Stuttgart 70173. Mandantenportal DATEV Unternehmen Online. Honorar nach StBVV.'
+    };
+    const r = checkBranchStandards('accounting', ctx);
+    assert.equal(r.primaryType, 'accounting');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Bilanz/EUER-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'mandantenportal').found, 'DATEV-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'kosten-rechner').found, 'StBVV-Pattern');
+});
+
+test('checkBranchStandards: architect Sprint 76 — Portfolio + HOAI', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Projektliste mit Referenzprojekten. Planung und Bauleitung nach HOAI Leistungsphasen. Architekt Mueller. Wohnungsbau, Sanierung, Denkmalschutz. Stuttgart 70173.'
+    };
+    const r = checkBranchStandards('architect', ctx);
+    assert.equal(r.primaryType, 'architect');
+    assert.ok(r.mustHave.find(i => i.id === 'portfolio').found);
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'HOAI-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'schwerpunkte').found, 'Wohnungsbau-Pattern');
+});
+
+test('normalizePlacesType: Sprint 76 Sub-Types', () => {
+    assert.equal(normalizePlacesType('drug_store'), 'pharmacy');
+    assert.equal(normalizePlacesType('veterinarian'), 'veterinary_care');
+    assert.equal(normalizePlacesType('animal_hospital'), 'veterinary_care');
+    assert.equal(normalizePlacesType('tax_consultant'), 'accounting');
+    assert.equal(normalizePlacesType('accountant'), 'accounting');
+    assert.equal(normalizePlacesType('architecture_firm'), 'architect');
+});
+
+test('guessBranchFromUrl: Sprint 76 Domains', () => {
+    assert.equal(guessBranchFromUrl('https://apotheke-mueller.de'), 'pharmacy');
+    assert.equal(guessBranchFromUrl('https://tierarzt-stuttgart.de'), 'veterinary_care');
+    assert.equal(guessBranchFromUrl('https://steuerberater-mueller.de'), 'accounting');
+    assert.equal(guessBranchFromUrl('https://architekt-mueller.de'), 'architect');
+});
+
 test('checkBranchStandards: unbekannter primaryType → _default + usedDefault=true', () => {
     const r = checkBranchStandards('unknown_branch', { subPages: [], body: '' });
     assert.equal(r.usedDefault, true);
