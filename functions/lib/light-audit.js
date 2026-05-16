@@ -183,6 +183,32 @@ function bfsgHeuristic(html) {
 }
 
 /**
+ * Sprint 70 — Normalisiert Google-Places primaryType auf BRANCH_STANDARDS-Hauptkategorien.
+ * Places liefert Sub-Types wie 'german_restaurant', 'general_dentist', 'barber_shop',
+ * 'hvac_contractor' — die ohne Map auf '_default' fallen wuerden.
+ */
+function normalizePlacesType(t) {
+    if (!t) return t;
+    // Restaurant-Cuisine-Suffix (american_restaurant, german_restaurant, pizza_restaurant, ...)
+    if (/_restaurant$/.test(t)) return 'restaurant';
+    if (['steakhouse', 'fast_food_restaurant', 'cafeteria', 'sushi_restaurant', 'ramen_restaurant', 'cafe', 'coffee_shop', 'bakery_cafe', 'tea_house', 'bar', 'pub', 'meal_takeaway'].includes(t)) return 'restaurant';
+    // Healthcare
+    if (['general_dentist', 'oral_surgeon', 'orthodontist', 'cosmetic_dentist', 'dental_clinic'].includes(t)) return 'dentist';
+    if (['general_physician', 'family_practice', 'internal_medicine', 'pediatrician', 'gynecologist', 'dermatologist', 'cardiologist', 'medical_clinic', 'doctors_office'].includes(t)) return 'doctor';
+    if (['physical_therapist'].includes(t)) return 'physiotherapist';
+    // Trades
+    if (['hvac_contractor', 'gas_installer', 'general_contractor'].includes(t)) return 'plumber';
+    if (['electrical_contractor'].includes(t)) return 'electrician';
+    if (['car_repair', 'tire_shop'].includes(t)) return 'auto_repair';
+    // Beauty
+    if (['barber_shop'].includes(t)) return 'hair_salon';
+    if (['nail_salon', 'spa', 'massage', 'day_spa'].includes(t)) return 'beauty_salon';
+    // Legal
+    if (['law_firm', 'attorney'].includes(t)) return 'lawyer';
+    return t;
+}
+
+/**
  * Sprint 67 — URL-Heuristik als Fallback wenn Google-Places keine Branche findet.
  * Erkennt anhand der Hostname-Slugs typische deutsche KMU-Branchen.
  * Liefert primaryType im Google-Places-Schema (z.B. 'real_estate_agency'),
@@ -198,7 +224,7 @@ function guessBranchFromUrl(url) {
             { re: /(zahnarzt|dental|kieferorthop|implantolog)/i, type: 'dentist' },
             { re: /(hausarzt|praxis[-_]?dr|dr[-_]|praxis-|hno|orthop|gyn|augenarzt|kinderarzt|allgemeinmed|hautarzt)/i, type: 'doctor' },
             { re: /(physio|krankengymnastik|reha[-_])/i, type: 'physiotherapist' },
-            { re: /(restaurant|gasthof|gasthaus|trattoria|pizzeria|brauerei|wirtshaus|steak|hirsch|krone|adler|loewe|löwe)/i, type: 'restaurant' },
+            { re: /(restaurant|gasthof|gasthaus|trattoria|osteria|pizzeria|brauerei|wirtshaus|brasserie|sattlerei|steak|hirsch|krone|adler|loewe|löwe)/i, type: 'restaurant' },
             { re: /(hotel|pension|gaeste|gäste|herberge)/i, type: 'hotel' },
             { re: /(friseur|hairdesign|hairstudio|barber|coiffeur|salon)/i, type: 'hair_salon' },
             { re: /(kosmetik|beauty|nageldesign|aesthetik|ästhetik)/i, type: 'beauty_salon' },
@@ -389,7 +415,10 @@ async function detectSeoGeo(html, baseUrl) {
         });
     });
 
-    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'HealthAndBeautyBusiness', 'Dentist', 'Physician', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Organization'];
+    // Sprint 70 — Organization raus (zu generisch, hat fast jeder Site → False-Positive).
+    // Ergaenzt um valide LocalBusiness-Subtypen laut schema.org: FoodEstablishment, DentalClinic,
+    // MedicalClinic, Store, ProfessionalService.
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService'];
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical
@@ -473,11 +502,11 @@ async function runLightAudit(url, placesKey) {
     const techAge = analyzeTechAge(tech, wayback);
     const bfsg = bfsgHeuristic(html);
 
-    // Sprint 67 — URL-Heuristik als Fallback wenn Google-Places leer liefert
-    // ODER einen generic-Type wie "service"/"establishment" zurueckgibt, der
-    // in BRANCH_STANDARDS nicht gemappt ist. So bekommen Sites mit klaren
-    // Branchen-Slugs (kablan-immobilien.de) eine sinnvolle primaryType statt _default.
-    let primaryType = placesType;
+    // Sprint 70 — Sub-Types wie 'german_restaurant', 'barber_shop' auf Hauptkategorie normalisieren.
+    // Sprint 67 — URL-Heuristik als Fallback wenn Google-Places leer liefert ODER einen
+    // generic-Type wie "service"/"establishment" zurueckgibt, der in BRANCH_STANDARDS
+    // nicht gemappt ist.
+    let primaryType = normalizePlacesType(placesType);
     if (!primaryType || !BRANCH_STANDARDS[primaryType]) {
         const guessed = guessBranchFromUrl(finalUrl || url);
         if (guessed && BRANCH_STANDARDS[guessed]) primaryType = guessed;
@@ -521,6 +550,7 @@ module.exports = {
     fetchHtml,
     fetchPlaceType,
     guessBranchFromUrl,
+    normalizePlacesType,
     detectPainPoints,
     detectSeoGeo
 };

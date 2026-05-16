@@ -117,14 +117,17 @@ const BRANCH_STANDARDS = {
     'hair_salon': {
         name: 'Friseursalon',
         mustHave: [
-            { id: 'leistungen-preise', label: 'Leistungen mit Preisen', detect: { subPage: /leistung|preis/i, body: /€\s?\d|ab\s?\d+\s?€/i } },
+            // Sprint 70 — body-Fallback fuer Preisliste/€-Pattern (kimbutun.de hatte "PREISLISTE" 2x, war false)
+            { id: 'leistungen-preise', label: 'Leistungen mit Preisen', detect: { subPage: /leistung|preis|service/i, body: /€\s?\d|ab\s?\d+\s?€|\b(preisliste|preisuebersicht|preisübersicht|preise|preisinformation)\b/i } },
             { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|mo[- ]?fr|mo[- ]?sa/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } },
-            { id: 'team', label: 'Team mit Foto', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i } }
+            // Sprint 70 — body-Fallback fuer Team-Keywords (kimbutun.de hatte "Unser Team" sichtbar, war false)
+            { id: 'team', label: 'Team mit Foto', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /\b(unser team|über uns|ueber uns|stylistin|stylist|friseurmeister(in)?|hairstylist)\b/i } }
         ],
         shouldHave: [
             { id: 'termin-online', label: 'Online-Terminbuchung 24/7', detect: { body: /termin.*online|treatwell|booksy|salonkee|shore|fresha/i } },
-            { id: 'galerie', label: 'Stil-/Galerie-Beispiele', detect: { subPage: /galerie|inspiration|frisuren/i } },
+            // Sprint 70 — body-Fallback fuer Galerie-Keyword (kimbutun.de hatte "GALERIE" sichtbar, war false)
+            { id: 'galerie', label: 'Stil-/Galerie-Beispiele', detect: { subPage: /galerie|inspiration|frisuren|portfolio|gallery/i, body: /\b(galerie|gallery|portfolio|inspiration|impressionen)\b/i } },
             // Sprint 67 — Karriaro-typische Friseur-Werkzeuge
             { id: 'stylist-wahl', label: 'Wunsch-Stylist wählbar', detect: { body: /stylist.*waehlen|stylist.*wählen|lieblings.*stylist|persönlich.*stylist/i } },
             { id: 'stilberatung', label: 'Stil-/Farbberatung explizit', detect: { body: /stilberatung|farbberatung|hairconcept|typberatung|colour.*consult/i } }
@@ -165,10 +168,13 @@ const BRANCH_STANDARDS = {
     'plumber': {
         name: 'Sanitaer-/Heizungs-Betrieb',
         mustHave: [
-            { id: 'leistungen', label: 'Leistungs-Liste', detect: { subPage: /leistung|service|angebot/i } },
+            // Sprint 70 — body-Fallback fuer Leistungs-Keywords (hwoe.de hatte "Leistungen" 14x sichtbar, war false)
+            { id: 'leistungen', label: 'Leistungs-Liste', detect: { subPage: /leistung|service|angebot/i, body: /\b(leistungen|unsere leistungen|services?|leistungsspektrum|unser angebot|wir bieten|heizungsbau|sanitaer|sanitär|bad(planung|sanierung)?)\b/i } },
             { id: 'notdienst', label: 'Notdienst-Hinweis', detect: { body: /notdienst|notfall|24h|24[- ]?stund/i } },
             { id: 'einsatzgebiet', label: 'Einsatzgebiet / Region', detect: { body: /einsatzgebiet|umkreis|region|umgebung/i } },
-            { id: 'kontakt-telefon', label: 'Telefon prominent', detect: { body: /tel[\.: ]\s*[\+\d]/i } }
+            // Sprint 70 — robust gegen verschiedene Tel-Darstellungen (body ist visible-text, ohne href-Attribute).
+            // Matched "Telefon: ...", "Tel ...", "+49 ...", "0711 ..." (DE-Festnetz + Mobil).
+            { id: 'kontakt-telefon', label: 'Telefon prominent', detect: { body: /\b(telefon|tel\.?|☎|📞|fon)\s*[:\.]?\s*[\+\d][\d\s\-\/]{4,}|\b\+49[\s\-\/]?[\d][\d\s\-\/]{5,}|\b0\d{2,4}[\s\-\/][\d][\d\s\-\/]{3,}/i } }
         ],
         shouldHave: [
             { id: 'referenzen', label: 'Projekt-Referenzen / Bilder', detect: { subPage: /referenz|projekt|galerie/i } },
@@ -184,10 +190,12 @@ const BRANCH_STANDARDS = {
     'electrician': {
         name: 'Elektriker',
         mustHave: [
-            { id: 'leistungen', label: 'Leistungs-Liste', detect: { subPage: /leistung|service|angebot/i } },
+            // Sprint 70 — body-Fallback gleich wie plumber
+            { id: 'leistungen', label: 'Leistungs-Liste', detect: { subPage: /leistung|service|angebot/i, body: /\b(leistungen|unsere leistungen|services?|leistungsspektrum|unser angebot|wir bieten|elektroinstallation|elektrotechnik)\b/i } },
             { id: 'notdienst', label: 'Notdienst-Hinweis', detect: { body: /notdienst|notfall|24h/i } },
             { id: 'einsatzgebiet', label: 'Einsatzgebiet / Region', detect: { body: /einsatzgebiet|umkreis|region/i } },
-            { id: 'kontakt-telefon', label: 'Telefon prominent', detect: { body: /tel[\.: ]\s*[\+\d]/i } }
+            // Sprint 70 — robustes Telefon-Pattern (visible-text statt href)
+            { id: 'kontakt-telefon', label: 'Telefon prominent', detect: { body: /\b(telefon|tel\.?|☎|📞|fon)\s*[:\.]?\s*[\+\d][\d\s\-\/]{4,}|\b\+49[\s\-\/]?[\d][\d\s\-\/]{5,}|\b0\d{2,4}[\s\-\/][\d][\d\s\-\/]{3,}/i } }
         ],
         shouldHave: [
             { id: 'pv-foerder', label: 'PV-/Wallbox-/Foerder-Hinweis', detect: { body: /photovoltaik|\bpv\b|wallbox|\bkfw\b|foerderung|förderung/i } },

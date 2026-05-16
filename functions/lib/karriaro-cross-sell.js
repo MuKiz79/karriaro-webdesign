@@ -8,13 +8,18 @@
  * Die Werkzeuge entsprechen den 8 Live-Demos auf den Sub-Pages
  * (src/js/karriaro-tools.js + src/portfolio/*.html). Audit-Ergebnis
  * enthält Direkt-Links zu den Live-Demos.
+ *
+ * Sprint 70 — `aliasFor`-Feld pro Tool: bildet die Tool-ID auf die
+ * korrespondierende BRANCH_STANDARDS-Item-ID ab, damit die Filter-Logik
+ * (getCrossSell) Tools ausblendet, die bereits auf der User-Site detected
+ * wurden. Wenn `aliasFor` fehlt, wird gegen `id` selbst gematcht.
  */
 
 const CROSS_SELL = {
     'real_estate_agency': {
         tools: [
-            { id: 'wertermittlung', name: 'Online-Wertermittlungs-Rechner', demoUrl: '/portfolio/immobilien-makler.html#wertermittlung' },
-            { id: 'marktbarometer', name: 'Marktbarometer mit Mikromarkt-Daten', demoUrl: '/portfolio/immobilien-makler.html#marktbericht' },
+            { id: 'wertermittlung', aliasFor: 'bewertung', name: 'Online-Wertermittlungs-Rechner', demoUrl: '/portfolio/immobilien-makler.html#wertermittlung' },
+            { id: 'marktbarometer', aliasFor: 'marktbericht', name: 'Marktbarometer mit Mikromarkt-Daten', demoUrl: '/portfolio/immobilien-makler.html#marktbericht' },
             { id: 'verkaeufer-dashboard', name: 'Verkäufer-Dashboard (Live-Status)', demoUrl: '/portfolio/immobilien-makler.html' }
         ],
         trend: 'Trend 2026: Eigentümer entscheiden vor dem Anruf — wer Wertermittlung + Mikromarkt-Daten zeigt, gewinnt 3× mehr Erstgespräche.'
@@ -44,22 +49,22 @@ const CROSS_SELL = {
     },
     'restaurant': {
         tools: [
-            { id: 'sommelier', name: 'AI-Sommelier (Wein-Pairing live)', demoUrl: '/portfolio/restaurant-template.html#ai-sommelier' },
+            { id: 'sommelier', aliasFor: 'wein-pairing', name: 'AI-Sommelier (Wein-Pairing live)', demoUrl: '/portfolio/restaurant-template.html#ai-sommelier' },
             { id: 'saisonkarte', name: 'Saisonkarte mit Auto-Update', demoUrl: '/portfolio/restaurant-template.html' },
-            { id: 'tisch-online', name: 'Online-Tisch-Reservierung', demoUrl: '/portfolio/restaurant-template.html' }
+            { id: 'tisch-online', aliasFor: 'reservierung', name: 'Online-Tisch-Reservierung', demoUrl: '/portfolio/restaurant-template.html' }
         ],
         trend: 'Restaurant-Trend 2026: AI-Sommelier + Saisonkarte mit Filter — was Gäste in Google-Snippets sehen, entscheidet vor dem Tisch.'
     },
     'cafe': {
         tools: [
-            { id: 'tisch-online', name: 'Online-Tisch-Reservierung', demoUrl: '/portfolio/restaurant-template.html' },
+            { id: 'tisch-online', aliasFor: 'reservierung', name: 'Online-Tisch-Reservierung', demoUrl: '/portfolio/restaurant-template.html' },
             { id: 'saisonkarte', name: 'Tagesangebot live', demoUrl: '/portfolio/restaurant-template.html' }
         ],
         trend: 'Café-Trend 2026: Tagesangebot live online — Stamm-Gäste schauen vor dem Vorbeikommen.'
     },
     'hair_salon': {
         tools: [
-            { id: 'style-empfehlung', name: 'Style-Empfehlung (Gesichtsform + Anlass)', demoUrl: '/portfolio/friseur-salon.html#style-empfehlung' },
+            { id: 'style-empfehlung', aliasFor: 'stilberatung', name: 'Style-Empfehlung (Gesichtsform + Anlass)', demoUrl: '/portfolio/friseur-salon.html#style-empfehlung' },
             { id: 'stylist-wahl', name: 'Wunsch-Stylist-Direkt-Buchung', demoUrl: '/portfolio/friseur-salon.html' },
             { id: 'galerie', name: 'Style-Galerie nach Branche/Anlass', demoUrl: '/portfolio/friseur-salon.html' }
         ],
@@ -74,9 +79,9 @@ const CROSS_SELL = {
     },
     'plumber': {
         tools: [
-            { id: 'notdienst-puls', name: 'Notdienst-Puls mit Anrückzeit', demoUrl: '/portfolio/meisterbetrieb-mueller.html#notdienst' },
-            { id: 'foto-festpreis', name: 'Foto-Festpreis-Anfrage-Tool', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
-            { id: 'bafa-rechner', name: 'BAFA-Förder-Rechner (Wärmepumpe)', demoUrl: '/portfolio/dachdecker-meisterbetrieb.html' }
+            { id: 'notdienst-puls', aliasFor: 'notdienst', name: 'Notdienst-Puls mit Anrückzeit', demoUrl: '/portfolio/meisterbetrieb-mueller.html#notdienst' },
+            { id: 'foto-festpreis', aliasFor: 'festpreis', name: 'Foto-Festpreis-Anfrage-Tool', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
+            { id: 'bafa-rechner', aliasFor: 'foerder', name: 'BAFA-Förder-Rechner (Wärmepumpe)', demoUrl: '/portfolio/dachdecker-meisterbetrieb.html' }
         ],
         trend: 'Handwerk-Trend 2026: Festpreis-Foto reduziert Telefonanrufe um 30 % — direkt zum Auftrag ohne Vor-Ort-Termin.'
     },
@@ -84,21 +89,21 @@ const CROSS_SELL = {
         tools: [
             { id: 'notdienst', name: 'Notdienst-Puls (PLZ-basiert)', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
             { id: 'foto-festpreis', name: 'Foto-Festpreis-Anfrage', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
-            { id: 'wallbox-pv', name: 'Wallbox-/PV-Konfigurator', demoUrl: '/portfolio/meisterbetrieb-mueller.html' }
+            { id: 'wallbox-pv', aliasFor: 'pv-foerder', name: 'Wallbox-/PV-Konfigurator', demoUrl: '/portfolio/meisterbetrieb-mueller.html' }
         ],
         trend: 'Elektro-Trend 2026: Wallbox + PV-Förderung sichtbar machen — Privatkunden googeln das vor jedem Anruf.'
     },
     'auto_repair': {
         tools: [
-            { id: 'tuev-termin', name: 'TÜV-/HU-Slot-Live-Buchung', demoUrl: '/portfolio/spedition-schwaben.html' },
+            { id: 'tuev-termin', aliasFor: 'tuev', name: 'TÜV-/HU-Slot-Live-Buchung', demoUrl: '/portfolio/spedition-schwaben.html' },
             { id: 'kostenvoranschlag', name: 'Online-Kostenvoranschlag-Form', demoUrl: '/portfolio/spedition-schwaben.html' }
         ],
         trend: 'Kfz-Trend 2026: Autofahrer googeln „TÜV [Stadt]" — wer Slot online zeigt, kommt in die Top-3.'
     },
     'lawyer': {
         tools: [
-            { id: 'honorar-rechner', name: 'Honorar-Rechner / RVG-Vorschau', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' },
-            { id: 'fachgebiet-filter', name: 'Fachgebiet-Filter + Direkt-Anwalt-Wahl', demoUrl: '/portfolio/coaching-lehmann.html' }
+            { id: 'honorar-rechner', aliasFor: 'honorar', name: 'Honorar-Rechner / RVG-Vorschau', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' },
+            { id: 'fachgebiet-filter', aliasFor: 'fachgebiete', name: 'Fachgebiet-Filter + Direkt-Anwalt-Wahl', demoUrl: '/portfolio/coaching-lehmann.html' }
         ],
         trend: 'Kanzlei-Trend 2026: Mandanten entscheiden anhand Online-Honorar-Transparenz + Fachgebiet vor dem Erstgespräch.'
     },
@@ -127,8 +132,8 @@ function getCrossSell(primaryType, branch) {
     const entry = CROSS_SELL[primaryType];
     if (!entry) return null;
 
-    // Filter: Tools, die NICHT bereits in branch.foundCount via BRANCH_STANDARDS detected sind
-    // (Match per ID — wenn BRANCH_STANDARDS-Item-ID identisch mit Tool-ID).
+    // Filter: Tools, die NICHT bereits via BRANCH_STANDARDS detected sind.
+    // Sprint 70 — Match per aliasFor wenn vorhanden (Tool-IDs ≠ BRANCH_STANDARDS-IDs).
     const detectedIds = new Set();
     if (branch && Array.isArray(branch.mustHave)) {
         branch.mustHave.forEach(i => { if (i.found && i.id) detectedIds.add(i.id); });
@@ -136,7 +141,7 @@ function getCrossSell(primaryType, branch) {
     if (branch && Array.isArray(branch.shouldHave)) {
         branch.shouldHave.forEach(i => { if (i.found && i.id) detectedIds.add(i.id); });
     }
-    const missingTools = entry.tools.filter(t => !detectedIds.has(t.id));
+    const missingTools = entry.tools.filter(t => !detectedIds.has(t.aliasFor || t.id));
 
     // Fallback: wenn alles detected ist, trotzdem die 3 Tools zeigen (positiv: „Sie haben alle, hier nochmal")
     const toolsToShow = missingTools.length > 0 ? missingTools : entry.tools;
