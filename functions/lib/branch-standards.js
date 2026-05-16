@@ -52,8 +52,11 @@ const BRANCH_STANDARDS = {
             { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i } }
         ],
         shouldHave: [
-            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|doctolib|jameda|samedi/i } },
-            { id: 'kassen', label: 'Kassen-/Privatpatient-Hinweis', detect: { body: /gesetzlich.*kasse|privatpatient|alle.*kassen/i } }
+            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|doctolib|jameda|samedi|terminland/i } },
+            { id: 'kassen', label: 'Kassen-/Privatpatient-Hinweis', detect: { body: /gesetzlich.*kasse|privatpatient|alle.*kassen/i } },
+            // Sprint 67 — Karriaro-typische Praxis-Werkzeuge
+            { id: 'rezept-online', label: 'Online-/Folge-Rezept-Anfrage', detect: { body: /rezept.*online|folgerezept|e[-_]?rezept|rezept.*anfordern|rezept.*bestellen/i } },
+            { id: 'telemedizin', label: 'Telemedizin / Videosprechstunde', detect: { body: /telemedizin|video.*sprechstunde|videosprechstund|online.*sprechstunde/i } }
         ],
         pitchMissing: 'Patienten erwarten online klare Sprechzeiten und Termin-Buchung. Fehlt das, wird die Praxis nicht gefunden — oder nicht angerufen.',
         pitchAllOk: 'Ihre Praxis ist online entscheidbar.'
@@ -67,10 +70,14 @@ const BRANCH_STANDARDS = {
             { id: 'kontakt-adresse', label: 'Kontakt mit Buerostandort', detect: { subPage: /kontakt/i } }
         ],
         shouldHave: [
-            { id: 'bewertung', label: 'Online-Bewertungs-Tool', detect: { body: /immobilienbewertung|wert.*ermitteln|kostenlos.*bewertung/i } },
-            { id: 'referenzen', label: 'Referenzen / Erfolgsgeschichten', detect: { subPage: /referenz|kundenstimme|verkauf/i, body: /verkauft|erfolgreich.*vermittelt/i } }
+            { id: 'bewertung', label: 'Online-Wertermittlungs-Rechner', detect: { body: /immobilienbewertung|wert.*ermitteln|kostenlos.*bewertung|wertermittlung|sprengnetter|preisatlas/i } },
+            { id: 'referenzen', label: 'Referenzen / Erfolgsgeschichten', detect: { subPage: /referenz|kundenstimme|verkauf/i, body: /verkauft|erfolgreich.*vermittelt/i } },
+            // Sprint 67 — Karriaro-typische Immobilien-Werkzeuge
+            { id: 'ivd-zert', label: 'IVD-/HypZert-Mitgliedschaft', detect: { body: /\bIVD\b|hypzert|sachverstaendig|sachverständig|öbuv/i } },
+            { id: 'marktbericht', label: 'Marktbericht / Marktbarometer', detect: { subPage: /markt|news|insights|wissen|magazin/i, body: /marktbericht|marktbarometer|marktanalyse|quadratmeter[- ]?preis/i } },
+            { id: 'objekt-filter', label: 'Filter-/Suche-Werkzeug im Portfolio', detect: { body: /filter|sortieren|preis.*von.*bis|zimmer.*anzahl|kaufen.*mieten/i } }
         ],
-        pitchMissing: 'Eigentuemer suchen vor dem Erstgespraech — Online-Bewertung, Referenzen und transparente Leistungen schaffen das Vertrauen.',
+        pitchMissing: 'Eigentuemer entscheiden online vor dem Erstgespraech — Wertermittlung, Marktbericht und IVD-Zertifikat schaffen das Vertrauen.',
         pitchAllOk: 'Ihre Maklerseite zeigt, was Eigentuemer suchen.'
     },
     'hotel': {
@@ -94,11 +101,15 @@ const BRANCH_STANDARDS = {
             { id: 'speisekarte', label: 'Speisekarte', detect: { subPage: /speise|menu|menü|karte/i } },
             { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|montag.*sonntag|mo[- ]?fr|mo[- ]?so/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-ZAEOEUae][a-zaeoeuß]+/i } },
-            { id: 'reservierung', label: 'Reservierungs-Moeglichkeit', detect: { body: /reserv|tisch.*buch|opentable/i } }
+            { id: 'reservierung', label: 'Online-Reservierungs-Tool', detect: { body: /reserv|tisch.*buch|opentable|quandoo|bookatable|formitable/i } }
         ],
         shouldHave: [
             { id: 'galerie', label: 'Galerie / Foodfotos', detect: { subPage: /galerie|impression|fotos/i } },
-            { id: 'events', label: 'Events / Catering', detect: { subPage: /event|catering|feier/i } }
+            { id: 'events', label: 'Events / Catering', detect: { subPage: /event|catering|feier/i } },
+            // Sprint 67 — Karriaro-typische Gastro-Werkzeuge
+            { id: 'saisonkarte', label: 'Saisonkarte / Tagesempfehlung', detect: { body: /saisonal|saisonkarte|tagesempfehlung|wochenkarte|saison.*menu/i } },
+            { id: 'wein-pairing', label: 'Weinkarte / Sommelier-Empfehlung', detect: { body: /weinkarte|weinempfehlung|sommelier|wein.*pairing/i } },
+            { id: 'bewertungen', label: 'Google-/TripAdvisor-Bewertungen sichtbar', detect: { body: /google.*bewert|tripadvisor|sterne.*bewertung|trustpilot/i } }
         ],
         pitchMissing: 'Speisekarte, Oeffnungszeiten und Reservierung sind die drei Klicks, nach denen Gaeste suchen — fehlt einer, gehen sie nebenan essen.',
         pitchAllOk: 'Ihre Restaurant-Seite liefert die drei Entscheidungs-Klicks.'
@@ -112,8 +123,11 @@ const BRANCH_STANDARDS = {
             { id: 'team', label: 'Team mit Foto', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i } }
         ],
         shouldHave: [
-            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|treatwell|booksy|salonkee/i } },
-            { id: 'galerie', label: 'Stil-/Galerie-Beispiele', detect: { subPage: /galerie|inspiration|frisuren/i } }
+            { id: 'termin-online', label: 'Online-Terminbuchung 24/7', detect: { body: /termin.*online|treatwell|booksy|salonkee|shore|fresha/i } },
+            { id: 'galerie', label: 'Stil-/Galerie-Beispiele', detect: { subPage: /galerie|inspiration|frisuren/i } },
+            // Sprint 67 — Karriaro-typische Friseur-Werkzeuge
+            { id: 'stylist-wahl', label: 'Wunsch-Stylist wählbar', detect: { body: /stylist.*waehlen|stylist.*wählen|lieblings.*stylist|persönlich.*stylist/i } },
+            { id: 'stilberatung', label: 'Stil-/Farbberatung explizit', detect: { body: /stilberatung|farbberatung|hairconcept|typberatung|colour.*consult/i } }
         ],
         pitchMissing: 'Kundinnen entscheiden via Bilder und Preise vor dem ersten Termin — wer beides nicht zeigt, kostet Walk-ins.',
         pitchAllOk: 'Ihr Salon zeigt online, was Kundinnen suchen.'
@@ -158,7 +172,11 @@ const BRANCH_STANDARDS = {
         ],
         shouldHave: [
             { id: 'referenzen', label: 'Projekt-Referenzen / Bilder', detect: { subPage: /referenz|projekt|galerie/i } },
-            { id: 'foerder', label: 'Foerder-/BAFA-Hinweis Waermepumpe', detect: { body: /BAFA|foerderung|förderung|waermepump|wärmepump/i } }
+            { id: 'foerder', label: 'Foerder-/BAFA-Hinweis Waermepumpe', detect: { body: /BAFA|foerderung|förderung|waermepump|wärmepump/i } },
+            // Sprint 67 — Karriaro-typische Handwerk-Werkzeuge
+            { id: 'anfrage-formular', label: 'Online-Anfrage-Formular (statt nur Telefon)', detect: { subPage: /anfrage|kontaktformular/i, body: /anfrage.*formular|jetzt.*anfragen|kostenloses.*angebot/i } },
+            { id: 'festpreis', label: 'Festpreis-/Foto-Anfrage-Tool', detect: { body: /festpreis|fixpreis|garantierter.*preis|foto.*anfrage|bild.*hochladen|schadensfoto/i } },
+            { id: 'innung', label: 'SHK-/Innungs-Mitgliedschaft', detect: { body: /\bSHK\b|innung|handwerkskammer|\bHWK\b|fachverband/i } }
         ],
         pitchMissing: 'Hausbesitzer rufen den Betrieb an, der Leistungen, Notdienst und Telefonnummer in 5 Sekunden zeigt.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'
@@ -173,7 +191,10 @@ const BRANCH_STANDARDS = {
         ],
         shouldHave: [
             { id: 'pv-foerder', label: 'PV-/Wallbox-/Foerder-Hinweis', detect: { body: /photovoltaik|\bpv\b|wallbox|\bkfw\b|foerderung|förderung/i } },
-            { id: 'referenzen', label: 'Projekt-Referenzen', detect: { subPage: /referenz|projekt/i } }
+            { id: 'referenzen', label: 'Projekt-Referenzen', detect: { subPage: /referenz|projekt/i } },
+            // Sprint 67 — Karriaro-typische Elektro-Werkzeuge
+            { id: 'anfrage-formular', label: 'Online-Anfrage-Formular', detect: { subPage: /anfrage|kontaktformular/i, body: /anfrage.*formular|jetzt.*anfragen|kostenloses.*angebot/i } },
+            { id: 'innung', label: 'Elektro-Innung / HWK-Mitgliedschaft', detect: { body: /innung|handwerkskammer|\bHWK\b|fachverband|elektro.*meister/i } }
         ],
         pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, faellt aus dem Suchergebnis.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'

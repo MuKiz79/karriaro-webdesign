@@ -13,7 +13,7 @@
 
 const { checkFreshness, analyzeTechAge } = require('./audit-pipeline.js');
 const { extractSubPages, htmlToText } = require('./deep-research.js');
-const { checkBranchStandards } = require('./branch-standards.js');
+const { checkBranchStandards, BRANCH_STANDARDS } = require('./branch-standards.js');
 
 // Repliziert aus audit-pipeline.js (dort intern, nicht exportiert).
 // Hier auf HTML-Body angewendet, nicht auf PSI-Network-Request-URLs.
@@ -177,6 +177,40 @@ function bfsgHeuristic(html) {
     };
 }
 
+/**
+ * Sprint 67 — URL-Heuristik als Fallback wenn Google-Places keine Branche findet.
+ * Erkennt anhand der Hostname-Slugs typische deutsche KMU-Branchen.
+ * Liefert primaryType im Google-Places-Schema (z.B. 'real_estate_agency'),
+ * damit checkBranchStandards() das gleiche Mapping nutzen kann.
+ */
+function guessBranchFromUrl(url) {
+    try {
+        var host = new URL(url).hostname.replace(/^www\./, '').toLowerCase();
+        // Pattern-Matching auf Domain-Slugs. Order matters — spezifischere zuerst.
+        var rules = [
+            { re: /(immobilien|makler|maklerin|realestate|immo[-_]|[-_]immo)/i, type: 'real_estate_agency' },
+            { re: /(kanzlei|anwalt|rechtsanwalt|notar|advokat|jurist)/i, type: 'lawyer' },
+            { re: /(zahnarzt|dental|kieferorthop|implantolog)/i, type: 'dentist' },
+            { re: /(hausarzt|praxis[-_]?dr|dr[-_]|praxis-|hno|orthop|gyn|augenarzt|kinderarzt|allgemeinmed|hautarzt)/i, type: 'doctor' },
+            { re: /(physio|krankengymnastik|reha[-_])/i, type: 'physiotherapist' },
+            { re: /(restaurant|gasthof|gasthaus|trattoria|pizzeria|brauerei|wirtshaus|steak|hirsch|krone|adler|loewe|löwe)/i, type: 'restaurant' },
+            { re: /(hotel|pension|gaeste|gäste|herberge)/i, type: 'hotel' },
+            { re: /(friseur|hairdesign|hairstudio|barber|coiffeur|salon)/i, type: 'hair_salon' },
+            { re: /(kosmetik|beauty|nageldesign|aesthetik|ästhetik)/i, type: 'beauty_salon' },
+            { re: /(sanitaer|sanitär|installateur|heizung|klempner|gas[-_]?wasser)/i, type: 'plumber' },
+            { re: /(elektro|elektriker|elektrotechnik|elektroinstall)/i, type: 'electrician' },
+            { re: /(kfz|autowerk|werkstatt[-_]|reifenservice|tuev|tüv[-_])/i, type: 'auto_repair' },
+            { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
+        ];
+        for (var i = 0; i < rules.length; i++) {
+            if (rules[i].re.test(host)) return rules[i].type;
+        }
+        return null;
+    } catch (_) {
+        return null;
+    }
+}
+
 async function fetchPlaceType(url, placesKey) {
     if (!placesKey) return null;
     try {
@@ -221,7 +255,7 @@ async function fetchPlaceType(url, placesKey) {
  */
 async function runLightAudit(url, placesKey) {
     // Parallel: HTML + Wayback + Place-Lookup (Branchen-Detect)
-    const [htmlResult, wayback, primaryType] = await Promise.all([
+    const [htmlResult, wayback, placesType] = await Promise.all([
         fetchHtml(url),
         checkFreshness(url).catch(() => ({ available: false })),
         fetchPlaceType(url, placesKey).catch(() => null)
@@ -231,6 +265,16 @@ async function runLightAudit(url, placesKey) {
     const tech = detectTechFromHtml(html, finalUrl);
     const techAge = analyzeTechAge(tech, wayback);
     const bfsg = bfsgHeuristic(html);
+
+    // Sprint 67 — URL-Heuristik als Fallback wenn Google-Places leer liefert
+    // ODER einen generic-Type wie "service"/"establishment" zurueckgibt, der
+    // in BRANCH_STANDARDS nicht gemappt ist. So bekommen Sites mit klaren
+    // Branchen-Slugs (kablan-immobilien.de) eine sinnvolle primaryType statt _default.
+    let primaryType = placesType;
+    if (!primaryType || !BRANCH_STANDARDS[primaryType]) {
+        const guessed = guessBranchFromUrl(finalUrl || url);
+        if (guessed && BRANCH_STANDARDS[guessed]) primaryType = guessed;
+    }
 
     const subPages = extractSubPages(html, finalUrl, 8);
     const body = htmlToText(html, 50000);
@@ -255,5 +299,6 @@ module.exports = {
     detectTechFromHtml,
     bfsgHeuristic,
     fetchHtml,
-    fetchPlaceType
+    fetchPlaceType,
+    guessBranchFromUrl
 };

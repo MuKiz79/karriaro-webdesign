@@ -4198,11 +4198,11 @@
                 if (!b || !b.totalCount) return '';
                 const sevCls = branchSeverityClass(b.severity);
                 const labelText = b.usedDefault
-                    ? 'Branchen-Standards (allgemein)'
-                    : 'Was Ihre Branche erwartet';
+                    ? 'Allgemeine Web-Standards (Branche nicht erkannt)'
+                    : 'Branchen-Werkzeuge & Standards';
                 const headline = b.usedDefault
-                    ? escape(b.name) + ' — Online-Standards'
-                    : escape(b.name) + ' — Standard-Erwartungen';
+                    ? escape(b.name) + ' — Was eine gute Website braucht'
+                    : escape(b.name) + ' — Was Ihre Kunden erwarten';
                 const meta = '<span><strong>' + b.foundCount + ' / ' + b.totalCount + '</strong> Standards erfüllt</span>';
 
                 const items = [].concat(b.mustHave || [], b.shouldHave || []);
@@ -4334,7 +4334,8 @@
 
                 if (branch) {
                     cards.push(renderBranchCard(branch));
-                    cards.push(renderToolsCard(branch));  // Sprint 66 — Werkzeug-Card direkt nach Standards
+                    // Sprint 67 — renderToolsCard entfernt: Backend liefert jetzt echte
+                    // Werkzeug-Detection (mustHave/shouldHave) statt ?-Marker-Soll-Liste.
                 }
 
                 // Sprint 65 — Tech-Card nur, wenn echter Veränderungs-Bedarf (severity >= 2).
