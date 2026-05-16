@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Karriaro-Webdesign · Square-Avatar 1080x1080 · MIT URL
+  Use: alternative Avatar-Variante mit kompletter Webadresse
+  Layout: Bracket-K + Wortmarke + Sublabel + URL
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" role="img" aria-label="Karriaro Webdesign Manufaktur — karriaro-webdesign.de">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=Inter:wght@500;600&amp;display=swap');
+      .name { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 112px; letter-spacing: 0.12em; fill: #14202B; text-transform: uppercase; }
+      .sub { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 28px; letter-spacing: 0.32em; fill: #525E6B; text-transform: uppercase; }
+      .url { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 30px; letter-spacing: 0.04em; fill: #14202B; }
+      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 600; font-size: 280px; fill: #14202B; letter-spacing: -0.025em; }
+      .bracket { fill: none; stroke: #14202B; stroke-width: 12; stroke-linecap: square; }
+      .accent-dot { fill: #1A2E40; }
+      .divider { stroke: #14202B; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <!-- Bone-Hintergrund (warmer Cream-Ton) -->
+  <rect width="1080" height="1080" fill="#FBFAF7"/>
+
+  <!-- Code-Siegel zentriert: K im Bracket -->
+  <path class="bracket" d="M 330 350 L 270 350 L 270 670 L 330 670"/>
+  <path class="bracket" d="M 750 350 L 810 350 L 810 670 L 750 670"/>
+  <text class="letter" x="540" y="610" text-anchor="middle">K</text>
+
+  <!-- Wortmarke unter Mark -->
+  <text class="name" x="540" y="810" text-anchor="middle">Karriaro</text>
+
+  <!-- Sublabel mit Indigo-Akzent-Punkt -->
+  <text class="sub" x="540" y="870" text-anchor="middle">
+    Webdesign<tspan class="accent-dot" dx="14" dy="0">·</tspan><tspan dx="14" dy="0">Manufaktur</tspan>
+  </text>
+
+  <!-- Trennlinie (kurz, mittig) -->
+  <line class="divider" x1="490" y1="930" x2="590" y2="930"/>
+
+  <!-- URL unten -->
+  <text class="url" x="540" y="990" text-anchor="middle">karriaro-webdesign.de</text>
+</svg>
