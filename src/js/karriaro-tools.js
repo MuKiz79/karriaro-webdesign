@@ -149,8 +149,49 @@
     }
 
     // === Friseur · Style-Empfehlung ===
-    /* DEMO-NOTE: Slot + Preis (Donnerstag 14:30 bei Sara M. · 65 €) sind
-       hartcodiert für die Demo. Reale Produktion: Treatwell/Shore-Slot-API. */
+    /* Sprint 84 — Slot + Preis rotieren jetzt pro Aufruf. Slot aus 8er-Pool
+       via Date.now()-Modulo, Preis aus Style-Kategorie. Reale Produktion
+       wuerde noch Treatwell/Shore-Slot-API anbinden. */
+    var FRISEUR_SLOTS = [
+        'Dienstag 9:30 bei Sara M.',
+        'Dienstag 16:00 bei Yusuf',
+        'Mittwoch 11:00 bei Mara',
+        'Donnerstag 14:30 bei Sara M.',
+        'Donnerstag 17:30 bei Yusuf',
+        'Freitag 10:00 bei Mara',
+        'Freitag 16:00 bei Yusuf',
+        'Samstag 11:00 bei Sara M.'
+    ];
+    var FRISEUR_PREISE = {
+        'Long-Bob mit weichen Layers': 65,
+        'Klassischer Bob auf Kinnhöhe': 55,
+        'Hollywood-Waves Halboffen': 85,
+        'Stufenschnitt mit Volumen oben': 60,
+        'Side-Part Lob mit Tiefe': 75,
+        'Hochgesteckte Welle, asymmetrisch': 90,
+        'Pony schräg, mittellang': 55,
+        'Curtain-Bangs mit Bob': 70,
+        'Knot mit Akzent-Strähnen': 85,
+        'Soft-Layers, Mittellang': 60,
+        'Stumpfer Schnitt, Schulterhöhe': 55,
+        'Weiche Updo mit Locken': 95
+    };
+    // Sprint 84 — Style-Galerie-Vorschau: jeder Style mappt auf ein vorhandenes
+    // Foto-Asset aus src/images/friseur/. Ersetzt das FAQ-versprochene "AR-Try-On".
+    var FRISEUR_BILDER = {
+        'Long-Bob mit weichen Layers': 'french-bob.jpg',
+        'Klassischer Bob auf Kinnhöhe': 'french-bob.jpg',
+        'Hollywood-Waves Halboffen': 'modern-shag.jpg',
+        'Stufenschnitt mit Volumen oben': 'long-pixie.jpg',
+        'Side-Part Lob mit Tiefe': 'caramel-highlights.jpg',
+        'Hochgesteckte Welle, asymmetrisch': 'bridal-updo.jpg',
+        'Pony schräg, mittellang': 'curtain-bangs.jpg',
+        'Curtain-Bangs mit Bob': 'curtain-bangs.jpg',
+        'Knot mit Akzent-Strähnen': 'bridal-updo.jpg',
+        'Soft-Layers, Mittellang': 'honey-balayage.jpg',
+        'Stumpfer Schnitt, Schulterhöhe': 'fade-cut.jpg',
+        'Weiche Updo mit Locken': 'brautstyling.jpg'
+    };
     function attachFriseur() {
         var f = document.querySelector('[data-kr-tool-form="friseur"]');
         if (!f) return;
@@ -174,9 +215,15 @@
                 'eckig_event': 'Weiche Updo mit Locken'
             };
             var style = stiles[form + '_' + anlass] || 'Persönliche Beratung empfohlen';
+            var slot = FRISEUR_SLOTS[Math.floor(Date.now() / 1000) % FRISEUR_SLOTS.length];
+            var preis = FRISEUR_PREISE[style] || 65;
+            var bild = FRISEUR_BILDER[style];
+            var bildHtml = bild
+                ? '<img src="/images/friseur/' + bild + '" alt="Style-Vorschau ' + style + '" loading="lazy" width="180" height="180" style="float:left; width:90px; height:90px; object-fit:cover; border-radius:8px; margin:0 14px 8px 0;">'
+                : '';
             showOutput('friseur',
                 style,
-                'Nächster freier Slot: <strong>Donnerstag 14:30 bei Sara M.</strong> · 65 €. Echte Demo lädt Foto hoch und zeigt AR-Preview.'
+                bildHtml + 'Nächster freier Slot: <strong>' + slot + '</strong> · ' + preis + ' €. Style-Vorschau aus unserer Galerie (echte Stylistinnen-Arbeit).<div style="clear:both;"></div>'
             );
         });
     }
@@ -235,8 +282,34 @@
     }
 
     // === Spedition · Quote ===
-    /* DEMO-NOTE: Distanz via |parseInt(von) - parseInt(bis)| / 5 ist absichtliche
-       Vereinfachung. Reale Produktion: Google-Distance-Matrix oder PTV-xRoute. */
+    /* Sprint 84 — Distanz via PLZ-Region-Centroid-Mapping (10 deutsche
+       Postleitregionen) + Haversine-Formel. Reale Spedition wuerde noch
+       Google-Distance-Matrix oder PTV-xRoute hinzuziehen, aber die Werte
+       sind jetzt im Bereich der realen Strassen-km (vorher: |20-80|/5 = 12 km
+       fuer Hamburg-Muenchen statt ~775 km). */
+    var PLZ_CENTROIDS = {
+        '0': [51.05, 13.74],  // Sachsen/Brandenburg-Sued (Dresden)
+        '1': [52.52, 13.40],  // Berlin/Brandenburg (Berlin)
+        '2': [53.55, 9.99],   // Hamburg/Schleswig-Holstein (Hamburg)
+        '3': [52.37, 9.73],   // Niedersachsen-Mitte (Hannover)
+        '4': [51.51, 7.46],   // Nordrhein-Westfalen Nord (Dortmund)
+        '5': [50.94, 6.96],   // NRW-Sued/Rheinland (Koeln)
+        '6': [50.11, 8.68],   // Hessen/Rhein-Main (Frankfurt)
+        '7': [48.78, 9.18],   // Baden-Wuerttemberg (Stuttgart)
+        '8': [48.14, 11.58],  // Bayern-Sued (Muenchen)
+        '9': [49.45, 11.08]   // Bayern-Nord/Franken (Nuernberg)
+    };
+    function plzDistanceKm(fromPlz, toPlz) {
+        var a = PLZ_CENTROIDS[String(fromPlz)[0]] || PLZ_CENTROIDS['5'];
+        var b = PLZ_CENTROIDS[String(toPlz)[0]]   || PLZ_CENTROIDS['5'];
+        var R = 6371, toRad = function (x) { return x * Math.PI / 180; };
+        var dLat = toRad(b[0] - a[0]), dLon = toRad(b[1] - a[1]);
+        var x = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+              + Math.cos(toRad(a[0])) * Math.cos(toRad(b[0]))
+              * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        // Strassen-Aufschlag ~25% gegenueber Luftlinie (DACH-Median)
+        return Math.round(2 * R * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x)) * 1.25);
+    }
     function attachSpedition() {
         var f = document.querySelector('[data-kr-tool-form="spedition"]');
         if (!f) return;
@@ -250,14 +323,13 @@
                 showOutput('spedition', '—', 'Bitte gültiges Gewicht zwischen 1 und 24000 kg eingeben.');
                 return;
             }
-            var distance = Math.abs(parseInt(von, 10) - parseInt(bis, 10));
-            var km = Math.max(80, Math.round(distance / 5));
+            var km = Math.max(80, plzDistanceKm(von, bis));
             var preis = km * 0.65 + kg * 0.18;
             var etaHours = Math.ceil(km / 60) + 6;
             var fahrzeug = kg < 100 ? 'Sprinter' : kg < 1000 ? 'Wechselbrücke' : kg < 5000 ? '7,5-Tonner' : 'Sattelzug';
             showOutput('spedition',
                 formatEUR(preis) + ' <span style="color:var(--color-graphite-soft,#525E6B); font-weight:300;">· ETA ' + etaHours + ' h · ' + fahrzeug + '</span>',
-                '~' + km + ' km · ' + kg + ' kg. Echte Demo prüft Live-Flotten-Auslastung und schließt im Backend-CRM direkt ab.'
+                '~' + km + ' km · ' + kg + ' kg. Demo-Schätzung über PLZ-Regionen-Centroide; echte Quote über Disponent.'
             );
         });
     }
@@ -299,10 +371,78 @@
         });
     }
 
+    // === Immobilien · Hypothekenrechner (Annuitaeten-Formel) ===
+    /* Sprint 84 — Standard-Annuitaeten-Berechnung. Inputs: Kaufpreis,
+       Eigenkapital, Zins %, Tilgung %. Output: Monatsrate, Laufzeit,
+       Restschuld nach 5/10/15 Jahren. */
+    function annuitaet(kreditEUR, zinsProzent, tilgungProzent) {
+        var r = zinsProzent / 100, t = tilgungProzent / 100;
+        var monatsrate = kreditEUR * (r + t) / 12;
+        var annuitaetJahr = kreditEUR * (r + t);
+        function restschuld(n) {
+            if (r === 0) return Math.max(0, Math.round(kreditEUR - annuitaetJahr * n));
+            var faktor = Math.pow(1 + r, n);
+            return Math.max(0, Math.round(kreditEUR * faktor - annuitaetJahr * (faktor - 1) / r));
+        }
+        var laufzeit;
+        if (r === 0) {
+            laufzeit = kreditEUR / annuitaetJahr;
+        } else if (annuitaetJahr <= kreditEUR * r) {
+            // Tilgung deckt nicht mal die Zinsen
+            laufzeit = 999;
+        } else {
+            laufzeit = Math.log(annuitaetJahr / (annuitaetJahr - kreditEUR * r)) / Math.log(1 + r);
+        }
+        var laufzeitJahre = Math.round(laufzeit);
+        return {
+            monatsrate: Math.round(monatsrate),
+            annuitaetJahr: Math.round(annuitaetJahr),
+            laufzeitJahre: laufzeitJahre,
+            zinslastGesamt: Math.max(0, Math.round(annuitaetJahr * laufzeitJahre - kreditEUR)),
+            nach5: restschuld(5),
+            nach10: restschuld(10),
+            nach15: restschuld(15)
+        };
+    }
+    function attachHypotheken() {
+        var f = document.querySelector('[data-kr-tool-form="hypotheken"]');
+        if (!f) return;
+        f.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var kaufpreis = getPositiveNumber(f, 'kaufpreis', 50000, 5000000);
+            var eigenkapital = getPositiveNumber(f, 'eigenkapital', 0, 5000000);
+            var zins = getPositiveNumber(f, 'zins', 0.1, 12);
+            var tilgung = getPositiveNumber(f, 'tilgung', 0.5, 10);
+            if (kaufpreis === null || eigenkapital === null || zins === null || tilgung === null) {
+                showOutput('hypotheken', '—', 'Bitte alle Felder mit plausiblen Werten ausfüllen.');
+                return;
+            }
+            if (eigenkapital >= kaufpreis) {
+                showOutput('hypotheken', '—', 'Eigenkapital muss kleiner als Kaufpreis sein.');
+                return;
+            }
+            var kredit = kaufpreis - eigenkapital;
+            var r = annuitaet(kredit, zins, tilgung);
+            if (r.laufzeitJahre >= 999) {
+                showOutput('hypotheken', '—', 'Bei dieser Tilgungsrate würde der Kredit nie getilgt — bitte Tilgung erhöhen.');
+                return;
+            }
+            var bigNum = '<strong style="font-size: 1.3em;">' + formatEUR(r.monatsrate) + '</strong> <span style="color:var(--color-graphite-soft,#525E6B); font-weight:300;">/ Monat · ' + r.laufzeitJahre + ' Jahre Laufzeit</span>';
+            var details = 'Kredit: ' + formatEUR(kredit)
+                + ' · Zinslast über Gesamtlaufzeit: ' + formatEUR(r.zinslastGesamt)
+                + '. Restschuld nach 5 J.: ' + formatEUR(r.nach5)
+                + ' · nach 10 J.: ' + formatEUR(r.nach10)
+                + ' · nach 15 J.: ' + formatEUR(r.nach15)
+                + '. Demo-Berechnung mit Standard-Annuitätenformel; echtes Angebot über Finanzierungsberater.';
+            showOutput('hypotheken', bigNum, details);
+        });
+    }
+
     // === Init ===
     function init() {
         attachDachdecker();
         attachImmobilien();
+        attachHypotheken();
         attachPraxis();
         attachFriseur();
         attachSanitaer();

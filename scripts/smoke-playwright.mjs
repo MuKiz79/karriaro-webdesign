@@ -146,10 +146,11 @@ const CORRECTNESS_CASES = [
         fill: { gericht: 'rind', preis: '60+' },
         expect: /Barolo/ },
 
-    // Spedition — Quote-Calc (PLZ-Distanz × Gewicht × Vehicle-Tier)
+    // Spedition — Quote-Calc (PLZ-Centroid Haversine + Gewicht × Vehicle-Tier)
+    // Sprint 84 — realistische Distanzen statt |fromPlz-toPlz|/5. Stuttgart-Muenchen ~238km.
     { name: 'spedition · stuttgart-muenchen', url: '/portfolio/spedition-schwaben.html', branche: 'spedition',
         fill: { von: '70173', bis: '80331', gewicht: '500' },
-        expect: /1\.411\s*€[\s\S]*?Wechselbrücke/ },
+        expect: /245\s*€[\s\S]*?Wechselbrücke/ },
     { name: 'spedition · same-plz fallback', url: '/portfolio/spedition-schwaben.html', branche: 'spedition',
         fill: { von: '70173', bis: '70173', gewicht: '500' },
         expect: /142\s*€[\s\S]*?ETA\s*8\s*h/ },
