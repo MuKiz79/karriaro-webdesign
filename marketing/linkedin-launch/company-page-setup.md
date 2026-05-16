@@ -39,18 +39,20 @@
 **Tagline (max 120 Zeichen):**
 > Wenn Ihr Name draufsteht, steht unserer dahinter. Handgeschriebene Websites fuer den DACH-Mittelstand. BFSG-konform.
 
-**Beschreibung (max 2.000 Zeichen):**
+**Beschreibung (max 2.000 Zeichen, gesynct mit Hauptseite-Hero src/index.html:3039):**
 ```
+Wenn Ihr Name draufsteht, steht unserer dahinter.
+
+Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290 € einmalig, Wartung inklusive ab 99 €/Mt.
+
 Karriaro Webdesign ist eine Manufaktur. Wir schreiben Webseiten von Hand — HTML, CSS, ein wenig JavaScript — kein WordPress, kein Plugin-Wildwuchs, kein 80-MB-Theme.
 
 Was Sie bekommen:
-- Erster Entwurf nach 14 Tagen
 - Lighthouse-Score 95+ (handmade-Performance)
 - WCAG 2.2 AA · BFSG-konform ab Tag 1 inkl. Audit-Report
-- Branchen-Module fuer Friseur, Restaurant, Dachdecker, Sanitaer, Spedition, Immobilien, Praxis
-- Live-Tools: Foerderrechner, KI-Schadens-Check, Wertermittlung, Online-Buchung
+- Branchen-Module für Friseur, Restaurant, Dachdecker, Sanitär, Spedition, Immobilien, Praxis
+- Live-Tools: Förderrechner, KI-Schadens-Check, Wertermittlung, Online-Buchung
 - Code-Ownership: Sie bekommen den Quellcode, kein Lock-in
-- Care-Wartung optional 99 €/Mt
 
 Preise transparent auf der Webseite:
 - Essential ab 1.290 € (Friseur, Restaurant)
@@ -60,8 +62,12 @@ Preise transparent auf der Webseite:
 
 Sie sehen sich selbst, bevor Sie entscheiden. Audit-Tool kostenfrei: karriaro-webdesign.de/website-check
 
+Unser Siegel · Das Karriaro-Manufaktursiegel
+Vier Eck-Brackets als Frame, dreizehn Punkte innen, angeordnet nach dem Goldenen Winkel (137,5°). Das ist die Mathematik der Sonnenblume — und die Hallmark-Tradition der Goldschmiede seit dem 14. Jahrhundert. Wenn das Siegel auf einer Seite steht, steht Karriaro dahinter.
+→ karriaro-webdesign.de/gruender#siegel
+
 Sitz · DACH · 100 % remote
-Gegruendet · 2026 · Muammer Kizilaslan
+Gegründet · 2026
 ```
 
 **Kontakt-Block:**
@@ -74,13 +80,6 @@ Gegruendet · 2026 · Muammer Kizilaslan
 - Auch sichtbar: Berlin, Hamburg, Muenchen, Koeln, Frankfurt (als „Wir bedienen…") — dies verstaerkt Local-SEO
 
 **Hashtags (3):** `#Webdesign` · `#Manufaktur` · `#BFSG`
-
-**Block "Unser Siegel" (am Ende der Beschreibung anhaengen, kurz vor den Preisen oder als eigener Absatz):**
-```
-Unser Siegel · Das Karriaro-Manufaktursiegel
-Vier Eck-Brackets als Frame, dreizehn Punkte innen, angeordnet nach dem Goldenen Winkel (137,5°). Das ist die Mathematik der Sonnenblume — und die Hallmark-Tradition der Goldschmiede seit dem 14. Jahrhundert. Wenn das Siegel auf einer Seite steht, steht Karriaro dahinter.
-→ karriaro-webdesign.de/gruender#siegel
-```
 
 ---
 
