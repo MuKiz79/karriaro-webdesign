@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Audit — Karriaro Webdesign</title>
+    <meta name="description" content="5-Sekunden-Mini-Audit für Ihre Website. BFSG, SEO, Performance, Branchen-Standards.">
+    <link rel="canonical" href="https://karriaro-webdesign.de/audit.html">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Cormorant+Garamond:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body>
+
+<a href="#main" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+<nav class="m-nav">
+    <div class="m-nav-inner">
+        <a href="/m/" class="m-nav-logo"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro" height="36"></a>
+        <button class="m-nav-toggle" aria-label="Menü öffnen" data-m-nav-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+        </button>
+    </div>
+</nav>
+<div class="m-nav-backdrop" data-m-nav-backdrop></div>
+<aside class="m-nav-drawer" data-m-nav-drawer>
+    <button class="m-nav-drawer-close" aria-label="Menü schließen" data-m-nav-close>×</button>
+    <a href="/m/">Startseite</a>
+    <a href="/m/preise.html">Preise</a>
+    <a href="/m/gruender.html">Gründer</a>
+    <a href="/m/audit.html">Audit</a>
+    <a href="/m/portfolio/immobilien-makler.html">Portfolio</a>
+    <a href="/m/warum-handcoded.html">Warum Handcode</a>
+    <a href="/m/blog.html">Blog</a>
+    <a href="/m/impressum.html">Impressum</a>
+</aside>
+
+<main id="main">
+
+<section class="m-hero">
+    <span class="m-eyebrow">Mini-Audit · kostenfrei</span>
+    <h1 class="m-h1">Wie steht Ihre <em>Site</em> da?</h1>
+    <p class="m-lead">5 Sekunden, kein Login, kein Mailing-Spam. Wir prüfen BFSG-Konformität, Tech-Aktualität, SEO-Setup und Branchen-Standards.</p>
+</section>
+
+<section class="m-section">
+    <div class="m-wrap">
+        <form class="m-form" action="https://europe-west1-apex-executive.cloudfunctions.net/quickAudit" method="POST" id="audit-form">
+            <label>Website-URL
+                <input type="url" name="url" placeholder="https://ihre-website.de" required>
+            </label>
+            <input type="text" name="hp" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px;" aria-hidden="true">
+            <button type="submit" class="m-btn m-btn-primary">Audit starten</button>
+        </form>
+        <div class="m-badges" style="margin-top: 16px;">
+            <span class="m-badge">Keine E-Mail nötig</span>
+            <span class="m-badge">5 Sekunden</span>
+            <span class="m-badge">DSGVO-konform</span>
+        </div>
+        <p class="m-text m-text-soft" style="margin-top: 24px; font-size: 13px;">Möchten Sie das vollständige Audit per E-Mail als PDF? <a href="https://karriaro-webdesign.de/audit.html" style="color: var(--m-color-indigo);">Hier weiter →</a></p>
+    </div>
+</section>
+
+<section class="m-section m-section--soft">
+    <div class="m-wrap">
+        <span class="m-eyebrow">Was wird geprüft</span>
+        <h2 class="m-h2">Vier Dimensionen.</h2>
+        <article class="m-card">
+            <span class="m-card-eyebrow">BFSG-Konformität</span>
+            <h3 class="m-card-title">Barrierefreiheits-Heuristik</h3>
+            <p class="m-text">Color-Contrast, Form-Labels, Alt-Texte, ARIA — Schwachstellen vor dem Stichtag.</p>
+        </article>
+        <article class="m-card">
+            <span class="m-card-eyebrow">Tech-Stack</span>
+            <h3 class="m-card-title">Aktualität + EOL-Status</h3>
+            <p class="m-text">WordPress 5.x von 2018? TYPO3 8 EOL? Wir zeigen es ehrlich.</p>
+        </article>
+        <article class="m-card">
+            <span class="m-card-eyebrow">SEO + GEO</span>
+            <h3 class="m-card-title">Schema.org &amp; KI-Lesbarkeit</h3>
+            <p class="m-text">Wer von ChatGPT zitiert werden will, braucht FAQPage + BreadcrumbList.</p>
+        </article>
+        <article class="m-card">
+            <span class="m-card-eyebrow">Branchen-Standards</span>
+            <h3 class="m-card-title">23 Branchen-Patterns</h3>
+            <p class="m-text">Hat ein Restaurant eine Speisekarte? Ein Arzt eine Sprechstunde? Friseur Termin-Tool?</p>
+        </article>
+    </div>
+</section>
+
+</main>
+
+<footer class="m-footer">
+    <div class="m-footer-brand">Karriaro Webdesign</div>
+    <div class="m-footer-tag">Wenn Ihr Name draufsteht, steht unserer dahinter.</div>
+    <nav class="m-footer-links">
+        <a href="/m/">Startseite</a>
+        <a href="/m/preise.html">Preise</a>
+        <a href="/m/gruender.html">Gründer</a>
+        <a href="/m/audit.html">Audit</a>
+        <a href="/m/impressum.html">Impressum</a>
+        <a href="/m/datenschutz.html">Datenschutz</a>
+        <a href="/m/agb.html">AGB</a>
+        <a href="/m/barrierefreiheit.html">Barrierefreiheit</a>
+    </nav>
+    <a href="https://karriaro-webdesign.de/audit.html" class="m-footer-desktop">Desktop-Version anzeigen →</a>
+    <div class="m-footer-meta">&copy; 2026 Karriaro Webdesign · Spitalstr. 7, 77761 Schiltach · kontakt@karriaro.de</div>
+</footer>
+
+<script>(function(){var t=document.querySelector('[data-m-nav-toggle]'),d=document.querySelector('[data-m-nav-drawer]'),b=document.querySelector('[data-m-nav-backdrop]'),c=document.querySelector('[data-m-nav-close]');function o(){d.classList.add('is-open');b.classList.add('is-open');t.setAttribute('aria-expanded','true')}function s(){d.classList.remove('is-open');b.classList.remove('is-open');t.setAttribute('aria-expanded','false')}t&&t.addEventListener('click',o);c&&c.addEventListener('click',s);b&&b.addEventListener('click',s)})();</script>
+
+</body>
+</html>
