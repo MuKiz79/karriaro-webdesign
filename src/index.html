@@ -4563,26 +4563,64 @@
                     );
                 }
 
-                // Sprint 65 — Next-Step-Block: Mittelstand-CEO-Bedürfnis adressieren
-                // (Was kostet's? Wie lange dauert's? Wer macht das?).
-                cards.push(
-                    '<div class="audit-next-step">' +
-                        '<div class="audit-next-step-headline">In 14 Tagen behoben.</div>' +
-                        '<div class="audit-next-step-row">' +
-                            '<div class="audit-next-step-card">' +
-                                '<div class="audit-next-step-card-eyebrow">Komplettaudit (PDF, 20 Seiten)</div>' +
-                                '<div class="audit-next-step-card-body">Konkrete Roadmap, Bußgeld-Risiko-Bewertung, Performance-Messung, WCAG-Fix-Liste. Kostenfrei. Lieferung in 24h.</div>' +
-                                '<a href="#kontakt" class="btn-primary" data-paket="Komplettaudit gewünscht">Komplettaudit anfordern →</a>' +
+                // Sprint 78 — Severity-driven Next-Step: 3 Varianten basierend auf krScore.
+                // High (<50): Bremse, Neue Site dominant. Mid (50-79): Quick-Wins via Komplettaudit.
+                // Low (80+): Solide, jetzt Vorsprung via Branchen-Tools.
+                let nextStepHtml;
+                if (krScore < 50) {
+                    nextStepHtml =
+                        '<div class="audit-next-step">' +
+                            '<div class="audit-next-step-headline">Kritisch. Mehr Anzeigen helfen jetzt nicht — fixen Sie erst die Site.</div>' +
+                            '<div class="audit-next-step-row">' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">Neue Website (handcodiert, 14 Tage)</div>' +
+                                    '<div class="audit-next-step-card-body">Premium 2.990 €: branchen-spezifische Werkzeuge, BFSG-konform, SEO + GEO-optimiert. Erster Entwurf in 24 h. Zahlung erst bei Zufriedenheit.</div>' +
+                                    '<a href="#preise" class="btn-primary" data-paket="Premium">Premium ab 2.990 € →</a>' +
+                                '</div>' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">30-Min-Erstgespräch</div>' +
+                                    '<div class="audit-next-step-card-body">Wir gehen den Audit-Befund zusammen durch und finden den schnellsten Weg, die Site auf Stand zu bringen — ohne Verkaufsdruck.</div>' +
+                                    '<a href="#kontakt" class="btn-ghost">Termin buchen →</a>' +
+                                '</div>' +
                             '</div>' +
-                            '<div class="audit-next-step-card">' +
-                                '<div class="audit-next-step-card-eyebrow">Neue Website (handcodiert)</div>' +
-                                '<div class="audit-next-step-card-body">BFSG-konform, handcodiert, vier Pakete: Essential 1.290 €, Professional 1.990 €, Premium 2.990 €, Premium+ 3.990 €. Wartung optional 99–199 €/Mt.</div>' +
-                                '<a href="#preis" class="btn-ghost">Preise sehen →</a>' +
+                        '</div>';
+                } else if (krScore < 80) {
+                    nextStepHtml =
+                        '<div class="audit-next-step">' +
+                            '<div class="audit-next-step-headline">In 14 Tagen behoben.</div>' +
+                            '<div class="audit-next-step-row">' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">Komplettaudit (PDF, 20 Seiten)</div>' +
+                                    '<div class="audit-next-step-card-body">Konkrete Roadmap, Bußgeld-Risiko-Bewertung, Performance-Messung, WCAG-Fix-Liste. Kostenfrei. Lieferung in 24 h.</div>' +
+                                    '<a href="#kontakt" class="btn-primary" data-paket="Komplettaudit gewünscht">Komplettaudit anfordern →</a>' +
+                                '</div>' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">Neue Website (handcodiert)</div>' +
+                                    '<div class="audit-next-step-card-body">BFSG-konform, handcodiert, vier Pakete: Essential 1.290 €, Professional 1.990 €, Premium 2.990 €, Premium+ 3.990 €. Wartung optional 99–199 €/Mt.</div>' +
+                                    '<a href="#preise" class="btn-ghost">Preise sehen →</a>' +
+                                '</div>' +
                             '</div>' +
-                        '</div>' +
-                        '<p class="audit-next-step-note">Oder direkt sprechen: <a href="#kontakt">30-Min-Erstgespräch buchen</a>.</p>' +
-                    '</div>'
-                );
+                            '<p class="audit-next-step-note">Oder direkt sprechen: <a href="#kontakt">30-Min-Erstgespräch buchen</a>.</p>' +
+                        '</div>';
+                } else {
+                    nextStepHtml =
+                        '<div class="audit-next-step">' +
+                            '<div class="audit-next-step-headline">Solide Basis. Jetzt Vorsprung holen.</div>' +
+                            '<div class="audit-next-step-row">' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">Branchen-Werkzeug-Upgrade (Premium-Tools)</div>' +
+                                    '<div class="audit-next-step-card-body">AI-Sommelier, Notdienst-Puls, Wertermittlungs-Rechner & Co.: 8 branchen-spezifische Live-Demos, die Mitbewerber-Sites nicht haben. Premium-Tier 2.990 €.</div>' +
+                                    '<a href="#portfolio" class="btn-primary">Live-Demos ansehen →</a>' +
+                                '</div>' +
+                                '<div class="audit-next-step-card">' +
+                                    '<div class="audit-next-step-card-eyebrow">30-Min-Strategiegespräch</div>' +
+                                    '<div class="audit-next-step-card-body">Welche 2-3 Hebel bringen 2026 noch Vorsprung in Ihrer Branche? Wir gehen das gemeinsam durch — ohne Verkaufsdruck.</div>' +
+                                    '<a href="#kontakt" class="btn-ghost">Termin buchen →</a>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>';
+                }
+                cards.push(nextStepHtml);
 
                 cardsEl.innerHTML = cards.join('');
                 let statusText;
