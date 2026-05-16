@@ -23,71 +23,20 @@
     box-shadow: 0 0 0 1px #444;
   }
 
-  /* ====== LOGO oben links ====== */
+  /* ====== LOGO oben links — Einbindung der offiziellen SVG ====== */
+  /* Quelle: src/images/karriaro-logo-nav.svg (Code-Siegel, Variante 1.A)
+     Eine Quelle der Wahrheit fuer das Logo. Skalierung via CSS height. */
   .banner-logo {
     position: absolute;
     top: 64px;
     left: 96px;
-    display: inline-flex;
-    align-items: center;
-    gap: 18px;
-    color: #0A0A0A;
+    display: block;
   }
-  .logo-mark {
-    position: relative;
-    width: 56px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  .banner-logo img {
+    display: block;
+    height: 80px;
+    width: auto;
   }
-  .logo-mark::before,
-  .logo-mark::after {
-    content: '';
-    position: absolute;
-    top: 9px; bottom: 9px;
-    width: 10px;
-    border: 1.6px solid currentColor;
-  }
-  .logo-mark::before { left: 0; border-right: none; }
-  .logo-mark::after { right: 0; border-left: none; }
-  .logo-letter {
-    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
-    font-weight: 600;
-    font-size: 34px;
-    line-height: 1;
-    letter-spacing: -0.025em;
-    position: relative;
-    top: -1px;
-  }
-  .logo-text {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-left: 18px;
-    border-left: 0.75px solid currentColor;
-    align-self: stretch;
-    justify-content: center;
-  }
-  .logo-name {
-    font-family: 'Cormorant Garamond', 'Times New Roman', serif;
-    font-weight: 500;
-    font-size: 25px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    line-height: 1;
-  }
-  .logo-sub {
-    font-family: 'Inter', sans-serif;
-    font-size: 10.5px;
-    letter-spacing: 0.26em;
-    text-transform: uppercase;
-    font-weight: 500;
-    line-height: 1;
-    color: #1F2937;
-  }
-  .logo-sub .dot { color: #1A2E40; font-weight: 600; margin: 0 4px; }
 
   /* ====== TEXT-BLOCK oben rechts ====== */
   .banner-text {
@@ -161,11 +110,7 @@
 <div class="banner">
   <!-- Logo oben links -->
   <div class="banner-logo">
-    <div class="logo-mark"><span class="logo-letter">K</span></div>
-    <div class="logo-text">
-      <div class="logo-name">Karriaro</div>
-      <div class="logo-sub">Webdesign<span class="dot">·</span>Manufaktur</div>
-    </div>
+    <img src="../../src/images/karriaro-logo-nav.svg?v=3" alt="Karriaro Webdesign-Manufaktur">
   </div>
 
   <!-- Text-Block oben rechts -->

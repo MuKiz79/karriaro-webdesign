@@ -3,12 +3,12 @@
   <defs>
     <style type="text/css">
       @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&amp;family=Inter:wght@500&amp;display=swap');
-      .name { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 14px; letter-spacing: 1.68px; fill: #0A0A0A; text-transform: uppercase; }
-      .sub { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 7px; letter-spacing: 1.82px; fill: #1F2937; text-transform: uppercase; }
-      .dot { fill: #0071E3; font-weight: 600; }
-      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 600; font-size: 19px; fill: #0A0A0A; letter-spacing: -0.025em; }
-      .bracket { fill: none; stroke: #0A0A0A; stroke-width: 1.2; }
-      .divider { stroke: #0A0A0A; stroke-width: 0.6; }
+      .name { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 14px; letter-spacing: 1.68px; fill: #14202B; text-transform: uppercase; }
+      .sub { font-family: 'Inter', -apple-system, sans-serif; font-weight: 500; font-size: 7px; letter-spacing: 1.82px; fill: #525E6B; text-transform: uppercase; }
+      .dot { fill: #1A2E40; font-weight: 600; }
+      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 600; font-size: 19px; fill: #14202B; letter-spacing: -0.025em; }
+      .bracket { fill: none; stroke: #14202B; stroke-width: 1.2; }
+      .divider { stroke: #14202B; stroke-width: 0.6; }
     </style>
   </defs>
   <!-- Linker Bracket -->
