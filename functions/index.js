@@ -404,6 +404,10 @@ function buildQuickResponse(domain, light, full) {
             severity: light.branch.severity,
             pitchArg: light.branch.pitchArg
         } : null,
+        // Sprint 68 — Pain-Points: Content-Freshness, Security-Headers,
+        // Vendor-Lockin, Mobile-Viewport, Social-Meta. Adressiert die Buy-Trigger
+        // (Veraltung, Sicherheit, kein Self-Service, Mobile-Probleme, Social-Sharing).
+        painPoints: light.painPoints || null,
         summary: full?.summary || null
     };
 }

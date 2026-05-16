@@ -42,8 +42,40 @@ const ANCHOR_TEXT_HINTS = {
 const SLOT_PRIORITY = ['about', 'services', 'pricing', 'contact', 'impressum', 'blog', 'faq', 'jobs', 'privacy'];
 
 /**
+ * Sprint 68 — Mappt einen SPA-Anchor-Slug + Link-Text auf einen Slot.
+ * Erlaubt extractSubPages, auch bei SPAs (Anchor-only-Navigation) sinnvolle
+ * "virtuelle Sub-Pages" zurückzugeben.
+ */
+function anchorToSlot(anchorId, anchorText) {
+    const id = (anchorId || '').toLowerCase();
+    const txt = (anchorText || '').toLowerCase();
+    // about / team
+    if (/^(ueber|über|about|team|wir|inhaber)/.test(id)) return 'about';
+    if (/(über uns|über mich|ueber uns|ueber mich|wer wir sind|unser team|das team)/i.test(txt)) return 'about';
+    // services / leistungen
+    if (/^(leistung|service|angebot|was-wir|portfolio)/.test(id)) return 'services';
+    if (/(leistung|service|angebot|portfolio|objekt|immobilie)/i.test(txt)) return 'services';
+    // pricing
+    if (/^(preis|honorar|tarif|cost|pricing)/.test(id)) return 'pricing';
+    if (/(preis|honorar|tarif)/i.test(txt)) return 'pricing';
+    // contact
+    if (/^(kontakt|contact|reach|standort|impressum)/.test(id)) return 'contact';
+    if (/(kontakt|contact|standort|adresse)/i.test(txt)) return 'contact';
+    // blog
+    if (/^(blog|news|aktuell|magazin|insights)/.test(id)) return 'blog';
+    if (/(blog|news|magazin)/i.test(txt)) return 'blog';
+    // faq
+    if (/^(faq|frage|hilfe|help)/.test(id)) return 'faq';
+    if (/(faq|häufig.*frage|hilfe)/i.test(txt)) return 'faq';
+    return null;
+}
+
+/**
  * Extrahiert Sub-Page-URLs aus Homepage-HTML. Gibt max 1 URL pro Slot,
  * insgesamt max `maxPages` zurück (Default 6). Sortierung nach SLOT_PRIORITY.
+ * Sprint 68: Akzeptiert auch SPA-Anchor-Sections (`href="#leistungen"`)
+ * als virtuelle Sub-Pages, damit Branchen-Standards-Detection auch bei
+ * Single-Page-Apps greift.
  */
 function extractSubPages(html, baseUrl, maxPages = 6) {
     if (!html) return [];
@@ -57,7 +89,21 @@ function extractSubPages(html, baseUrl, maxPages = 6) {
     while ((m = anchorRe.exec(html))) {
         const rawHref = m[1].trim();
         const rawText = m[2].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-        if (!rawHref || rawHref.startsWith('#') || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:') || rawHref.startsWith('javascript:')) continue;
+        if (!rawHref || rawHref.startsWith('mailto:') || rawHref.startsWith('tel:') || rawHref.startsWith('javascript:')) continue;
+
+        // Sprint 68 — SPA-Anchor-Links als virtuelle Sub-Pages aufnehmen,
+        // damit Detection-Patterns auch bei modernen Single-Page-Sites greifen.
+        if (rawHref.startsWith('#') && rawHref.length > 1) {
+            const slot = anchorToSlot(rawHref.slice(1), rawText);
+            if (slot && !found[slot]) {
+                found[slot] = {
+                    slot,
+                    url: baseUrl + rawHref,
+                    anchorText: rawText.slice(0, 60)
+                };
+            }
+            continue;
+        }
 
         let absUrl;
         try { absUrl = new URL(rawHref, baseUrl); } catch { continue; }

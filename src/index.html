@@ -4283,6 +4283,47 @@
                 return { key: key, label: d.label || branch.name, features: d.features };
             }
 
+            // Sprint 68 — Pain-Points-Card: Was Mittelstand-Inhaber peinlich macht.
+            // Adressiert die Buy-Trigger (Veraltung, Security, Vendor-Lockin, Mobile, Social).
+            // Backend liefert d.painPoints mit { contentFreshness, securityHeaders,
+            // vendorLockin, mobileViewport, socialMeta } — jedes als {ok, label, ...}.
+            function renderPainPointsCard(painPoints) {
+                if (!painPoints) return '';
+                const items = [
+                    painPoints.contentFreshness,
+                    painPoints.securityHeaders,
+                    painPoints.vendorLockin,
+                    painPoints.mobileViewport,
+                    painPoints.socialMeta
+                ].filter(Boolean);
+                if (!items.length) return '';
+                const risksCount = items.filter(i => !i.ok).length;
+                const sevCls = risksCount >= 4 ? 'severity-high' : risksCount >= 2 ? 'severity-mid' : 'severity-low';
+                const rows = items.map(function(it) {
+                    const icon = it.ok
+                        ? '<span style="color:#30d158;font-weight:600;flex-shrink:0">✓</span>'
+                        : '<span style="color:#ff453a;font-weight:600;flex-shrink:0">✗</span>';
+                    const style = it.ok
+                        ? 'color:var(--color-graphite-soft)'
+                        : 'color:var(--color-onyx);font-weight:500';
+                    return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;' + style + '">' +
+                               icon + '<span>' + escape(it.label || '') + '</span>' +
+                           '</div>';
+                }).join('');
+                const pitch = risksCount === 0
+                    ? 'Solide Basis — wir prüfen im Komplettaudit jeden Punkt im Detail.'
+                    : risksCount <= 2
+                        ? 'Zwei oder weniger dieser Punkte fallen Kunden meist nicht auf. Beheben wir im Sprint mit.'
+                        : 'Diese Punkte fallen Inhabern selten auf — Kunden aber sofort. Im Komplettaudit liefern wir konkrete Fix-Roadmap pro Punkt.';
+                return '<div class="audit-card ' + sevCls + '">' +
+                            '<div class="audit-card-label">Was Sie peinlich macht (oder bald wird)</div>' +
+                            '<div class="audit-card-headline">' + risksCount + ' von 5 Bauchgefühl-Risiken auf Ihrer Seite</div>' +
+                            '<div class="audit-card-meta"><span><strong>' + risksCount + ' / 5</strong> Risiken aktiv</span></div>' +
+                            '<div style="margin-top:10px">' + rows + '</div>' +
+                            '<div class="audit-card-pitch">' + pitch + '</div>' +
+                        '</div>';
+            }
+
             // Sprint 66 — Werkzeug-Card: zeigt typische Branchen-Funktionen.
             // Q-Marker (statt ✓/✗) weil Quick-Audit Werkzeug-Presence nicht prüft;
             // Pitch verweist auf Komplettaudit + Karriaro-Live-Demos.
@@ -4336,6 +4377,12 @@
                     cards.push(renderBranchCard(branch));
                     // Sprint 67 — renderToolsCard entfernt: Backend liefert jetzt echte
                     // Werkzeug-Detection (mustHave/shouldHave) statt ?-Marker-Soll-Liste.
+                }
+
+                // Sprint 68 — Pain-Points-Card direkt nach Branchen-Standards.
+                // Zeigt Content-Veraltung, Security-Header, Vendor-Lockin, Mobile, Social.
+                if (d.painPoints) {
+                    cards.push(renderPainPointsCard(d.painPoints));
                 }
 
                 // Sprint 65 — Tech-Card nur, wenn echter Veränderungs-Bedarf (severity >= 2).

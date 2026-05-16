@@ -64,10 +64,10 @@ const BRANCH_STANDARDS = {
     'real_estate_agency': {
         name: 'Immobilienmakler',
         mustHave: [
-            { id: 'objekte', label: 'Objekt-/Immobilien-Liste', detect: { subPage: /objekt|immobilie|expose|exposé|angebot/i } },
-            { id: 'leistungen', label: 'Leistungs-Seite (Vermarktung/Bewertung)', detect: { subPage: /leistung|service|verkauf|vermiet|bewertung/i } },
-            { id: 'team', label: 'Makler-/Team-Vorstellung', detect: { subPage: /team|makler|ueber[- ]?uns|über[- ]?uns/i } },
-            { id: 'kontakt-adresse', label: 'Kontakt mit Buerostandort', detect: { subPage: /kontakt/i } }
+            { id: 'objekte', label: 'Objekt-/Immobilien-Liste', detect: { subPage: /objekt|immobilie|expose|exposé|angebot|portfolio/i, body: /\b(portfolio|aktuelle angebote|unsere immobilien|expose|exposé|verkaufsobjekt|mietobjekt)\b/i } },
+            { id: 'leistungen', label: 'Leistungs-Seite (Vermarktung/Bewertung)', detect: { subPage: /leistung|service|verkauf|vermiet|bewertung/i, body: /\b(leistungen|unsere leistungen|services?|unser angebot|wir bieten|leistungsspektrum|was wir tun|verkaufen|vermieten|kauf.*verkauf)\b/i } },
+            { id: 'team', label: 'Makler-/Team-Vorstellung', detect: { subPage: /team|makler|ueber[- ]?uns|über[- ]?uns/i, body: /\b(über uns|über mich|ueber uns|ueber mich|unser team|das team|wer wir sind|inhabergeführt|inhaberin|inhaber|geschäftsführer|geschaeftsfuehrer)\b/i } },
+            { id: 'kontakt-adresse', label: 'Kontakt mit Buerostandort', detect: { subPage: /kontakt/i, body: /\bkontakt\b[\s\S]{0,800}(\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+|Stuttgart|München|Muenchen|Berlin|Hamburg|Köln|Koeln|Düsseldorf|Duesseldorf|Frankfurt|Leipzig|Hannover|Bremen|Nürnberg|Nuernberg|Dortmund|Essen|Dresden)/i } }
         ],
         shouldHave: [
             { id: 'bewertung', label: 'Online-Wertermittlungs-Rechner', detect: { body: /immobilienbewertung|wert.*ermitteln|kostenlos.*bewertung|wertermittlung|sprengnetter|preisatlas/i } },

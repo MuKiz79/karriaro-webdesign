@@ -53,7 +53,12 @@ async function fetchHtml(url, timeoutMs = 8000) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const finalUrl = res.url || url;
         const html = await res.text();
-        return { html, finalUrl };
+        // Sprint 68 — Response-Headers fuer Pain-Points-Security-Check propagieren.
+        const headers = {};
+        try {
+            res.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
+        } catch (_) { /* headers iteration kann fehlschlagen je nach runtime */ }
+        return { html, finalUrl, headers };
     } finally {
         clearTimeout(t);
     }
@@ -253,6 +258,113 @@ async function fetchPlaceType(url, placesKey) {
  * @param {string} placesKey  Google Places API Key (optional, Default '')
  * @returns {Promise<object>} { ok, light:true, tech, wayback, techAge, bfsg, branch }
  */
+/**
+ * Sprint 68 — Pain-Points-Detection.
+ * Adressiert die 5 typischen Buy-Trigger fuer Mittelstands-Webseiten:
+ * Content-Veraltung, Security-Luecken, Vendor-Lockin, Mobile-Probleme,
+ * fehlende Social-Meta.
+ *
+ * @param {string} html
+ * @param {Object<string,string>} headers  HTTP-Response-Headers (lowercase keys)
+ * @param {Object} wayback                 { available, lastSnapshot? }
+ * @param {Object} tech                    { cms, ... }
+ * @returns {Object} painPoints
+ */
+function detectPainPoints(html, headers, wayback, tech) {
+    const h = html || '';
+    const head = h.slice(0, 20000); // Head/upper-body fuer Meta-Tag-Checks
+    const hdrs = headers || {};
+
+    // P1 — Content-Freshness via Wayback + Copyright-Jahr
+    let lastSnapshotMonthsAgo = null;
+    if (wayback?.lastSnapshot) {
+        const snapDate = new Date(wayback.lastSnapshot);
+        if (!isNaN(snapDate.getTime())) {
+            lastSnapshotMonthsAgo = Math.round((Date.now() - snapDate.getTime()) / (30.44 * 24 * 60 * 60 * 1000));
+        }
+    }
+    const copyrightMatch = h.match(/©\s*(20\d{2})|\bcopyright\b[^\d]*(20\d{2})/i);
+    const copyrightYear = copyrightMatch ? parseInt(copyrightMatch[1] || copyrightMatch[2], 10) : null;
+    const currentYear = new Date().getFullYear();
+    const contentStaleByCopyright = copyrightYear && copyrightYear < currentYear - 1;
+    const contentStaleByWayback = lastSnapshotMonthsAgo !== null && lastSnapshotMonthsAgo > 18;
+    const contentFresh = !contentStaleByCopyright && !contentStaleByWayback;
+
+    // P2 — Security-Header-Check (HTTPS-essentiell)
+    const securityChecks = {
+        hsts: !!(hdrs['strict-transport-security']),
+        xFrameOptions: !!(hdrs['x-frame-options'] || /content-security-policy[^,]*frame-ancestors/i.test(hdrs['content-security-policy'] || '')),
+        xContentTypeOptions: (hdrs['x-content-type-options'] || '').toLowerCase().includes('nosniff'),
+        referrerPolicy: !!(hdrs['referrer-policy']),
+        csp: !!(hdrs['content-security-policy'])
+    };
+    const missingHeaders = Object.entries(securityChecks).filter(([, v]) => !v).map(([k]) => k);
+    const securityOk = missingHeaders.length <= 1; // 1 fehlend toleriert
+
+    // P3 — Vendor-Lockin (Wix/Jimdo/Squarespace = locked-in, kein Self-Service-Export)
+    const VENDOR_LOCKIN = new Set(['Wix', 'Jimdo', 'Squarespace', 'Webnode', 'IONOS MyWebsite']);
+    const lockinPlatform = (tech?.cms && VENDOR_LOCKIN.has(tech.cms)) ? tech.cms : null;
+    const vendorOk = !lockinPlatform;
+
+    // P4 — Mobile-Viewport-Meta-Tag
+    const viewportMatch = head.match(/<meta\s+name\s*=\s*["']viewport["'][^>]*content\s*=\s*["']([^"']+)/i);
+    const hasViewport = !!viewportMatch;
+    const viewportOk = hasViewport && /width\s*=\s*device-width/i.test(viewportMatch?.[1] || '');
+
+    // P5 — Open-Graph + Twitter-Card-Meta (Social-Sharing)
+    const ogTitle = /<meta\s+property\s*=\s*["']og:title["']/i.test(head);
+    const ogImage = /<meta\s+property\s*=\s*["']og:image["']/i.test(head);
+    const ogDescription = /<meta\s+property\s*=\s*["']og:description["']/i.test(head);
+    const twitterCard = /<meta\s+name\s*=\s*["']twitter:card["']/i.test(head);
+    const socialMissing = [];
+    if (!ogTitle) socialMissing.push('og:title');
+    if (!ogImage) socialMissing.push('og:image');
+    if (!ogDescription) socialMissing.push('og:description');
+    if (!twitterCard) socialMissing.push('twitter:card');
+    const socialOk = socialMissing.length <= 1;
+
+    return {
+        contentFreshness: {
+            ok: contentFresh,
+            lastSnapshotMonthsAgo,
+            copyrightYear,
+            label: contentFresh
+                ? 'Letzter sichtbarer Inhalt aktuell'
+                : (contentStaleByCopyright
+                    ? `Copyright-Jahr ${copyrightYear} (aktuell: ${currentYear})`
+                    : `Letztes Wayback-Snapshot vor ~${lastSnapshotMonthsAgo} Monaten`)
+        },
+        securityHeaders: {
+            ok: securityOk,
+            missing: missingHeaders,
+            label: securityOk
+                ? 'Security-Headers gesetzt (HSTS, CSP, etc.)'
+                : `${missingHeaders.length} Security-Header fehlen: ${missingHeaders.join(', ')}`
+        },
+        vendorLockin: {
+            ok: vendorOk,
+            platform: lockinPlatform,
+            label: vendorOk
+                ? 'Kein Vendor-Lock-in erkannt (Self-Service möglich)'
+                : `${lockinPlatform} erkannt — kein Self-Service-Export möglich`
+        },
+        mobileViewport: {
+            ok: viewportOk,
+            hasViewport,
+            label: viewportOk
+                ? 'Mobile-Viewport korrekt gesetzt'
+                : (hasViewport ? 'Viewport-Meta vorhanden, aber nicht responsive' : 'Mobile-Viewport-Meta fehlt — Layout bricht auf iPhone')
+        },
+        socialMeta: {
+            ok: socialOk,
+            missing: socialMissing,
+            label: socialOk
+                ? 'Social-Sharing-Tags (Open-Graph) vorhanden'
+                : `${socialMissing.length} Social-Tags fehlen: ${socialMissing.join(', ')} — WhatsApp/LinkedIn-Shares zeigen kein Bild`
+        }
+    };
+}
+
 async function runLightAudit(url, placesKey) {
     // Parallel: HTML + Wayback + Place-Lookup (Branchen-Detect)
     const [htmlResult, wayback, placesType] = await Promise.all([
@@ -261,7 +373,7 @@ async function runLightAudit(url, placesKey) {
         fetchPlaceType(url, placesKey).catch(() => null)
     ]);
 
-    const { html, finalUrl } = htmlResult;
+    const { html, finalUrl, headers } = htmlResult;
     const tech = detectTechFromHtml(html, finalUrl);
     const techAge = analyzeTechAge(tech, wayback);
     const bfsg = bfsgHeuristic(html);
@@ -280,6 +392,9 @@ async function runLightAudit(url, placesKey) {
     const body = htmlToText(html, 50000);
     const branch = checkBranchStandards(primaryType, { subPages, body });
 
+    // Sprint 68 — Pain-Points-Audit fuer Mittelstands-Buy-Trigger.
+    const painPoints = detectPainPoints(html, headers, wayback, tech);
+
     return {
         ok: true,
         light: true,
@@ -290,7 +405,8 @@ async function runLightAudit(url, placesKey) {
         techAge,
         bfsg,
         branch,
-        subPages
+        subPages,
+        painPoints
     };
 }
 
@@ -300,5 +416,6 @@ module.exports = {
     bfsgHeuristic,
     fetchHtml,
     fetchPlaceType,
-    guessBranchFromUrl
+    guessBranchFromUrl,
+    detectPainPoints
 };
