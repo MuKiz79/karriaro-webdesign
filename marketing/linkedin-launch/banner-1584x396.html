@@ -16,7 +16,7 @@
   .banner {
     width: 1584px;
     height: 396px;
-    background: #FFFFFF;
+    background: #FBFAF7;
     position: relative;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
@@ -93,9 +93,31 @@
   .banner-text {
     position: absolute;
     top: 80px;
-    right: 96px;
-    max-width: 920px;
+    right: 200px;
+    max-width: 880px;
   }
+
+  /* ====== BRACKET-PAGINA rechts vertikal-mittig ====== */
+  .banner-pagina {
+    position: absolute;
+    right: 96px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 110px;
+    color: #8A7B5C;
+  }
+  .banner-pagina::before,
+  .banner-pagina::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    border: 1.8px solid currentColor;
+  }
+  .banner-pagina::before { left: 0; border-right: none; }
+  .banner-pagina::after  { right: 0; border-left: none; }
   .banner-headline {
     font-family: 'Cormorant Garamond', 'Times New Roman', serif;
     font-weight: 500;
@@ -158,6 +180,9 @@
   <div class="banner-text">
     <div class="banner-headline">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</div>
   </div>
+
+  <!-- Bracket-Pagina rechts vertikal-mittig (zitiert Logo-Mark) -->
+  <div class="banner-pagina" aria-hidden="true"></div>
 </div>
 
 <div class="hint" style="margin-top: 32px;">
