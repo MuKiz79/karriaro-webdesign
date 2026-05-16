@@ -151,10 +151,10 @@ Reihenfolge folgt der **5-Kategorien-Mischung**, die der 30-Tage-Kalender brauch
 > **CTA:** Preise → karriaro-webdesign.de/#preise
 > **Hashtags:** #Pricing #Webdesign #Transparenz
 
-### E4 · Warum unsere Punze 13 Punkte hat
-> **Hook:** 137,5°. Die Mathematik der Sonnenblume — und unser Mark.
-> **Body:** Goldschmiede haben seit dem 14. Jahrhundert ihre Punze. Ein eingeschlagenes Siegel, das juristisch beweist: dieser Meister steht fuer dieses Stueck. Karriaro hat seit 2026 eine eigene. Vier Eck-Brackets, die das K-Logo zitieren. Innen dreizehn Punkte, angeordnet nach der Phyllotaxis-Formel — derselben Mathematik, mit der Sonnenblumen ihre Kerne ordnen, damit keine zwei auf einer Linie liegen. Der Goldene Winkel von 137,5° ist eine irrationale Zahl. Sie kommt aus der Natur und sortiert sich nicht beliebig nach. Dreizehn ist eine Fibonacci-Zahl — weil zwoelf zu rund ist und einundzwanzig zu dicht. Wenn die Punze auf einer Seite steht, steht Karriaro dahinter. Wie ein Silberstempel.
-> **CTA:** Mehr zur Punze → karriaro-webdesign.de/gruender#punze
+### E4 · Warum unser Siegel 13 Punkte hat
+> **Hook:** 137,5°. Die Mathematik der Sonnenblume — und unser Siegel.
+> **Body:** Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stueck. Der juristische Beweis: dieser Meister steht fuer dieses Stueck. Karriaro hat seit 2026 ein eigenes. Vier Eck-Brackets, die das K-Logo zitieren. Innen dreizehn Punkte, angeordnet nach der Phyllotaxis-Formel — derselben Mathematik, mit der Sonnenblumen ihre Kerne ordnen, damit keine zwei auf einer Linie liegen. Der Goldene Winkel von 137,5° ist eine irrationale Zahl. Sie kommt aus der Natur und sortiert sich nicht beliebig nach. Dreizehn ist eine Fibonacci-Zahl — weil zwoelf zu rund ist und einundzwanzig zu dicht. Wenn unser Siegel auf einer Seite steht, steht Karriaro dahinter. Wie ein Silberstempel.
+> **CTA:** Mehr zum Siegel → karriaro-webdesign.de/gruender#siegel
 > **Hashtags:** #Manufaktur #Webdesign #Phyllotaxis #Karriaro #Mathematik
 
 ---
