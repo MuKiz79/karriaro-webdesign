@@ -491,7 +491,7 @@ exports.quickAudit = onRequest(
                 cachedAtMs: Date.now(),
                 domain,
                 url: auditUrl,
-                hadFullResult: !!fullResult,
+                hadFullResult: false,
                 payload,
                 expiresAt: new admin.firestore.Timestamp(
                     Math.floor((Date.now() + QUICK_AUDIT_TTL_DAYS * 86400000) / 1000), 0

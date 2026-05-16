@@ -3019,13 +3019,14 @@
                 BFSG-Risiko, Ladezeit, SEO-Lücken und Branchen-Standards in einem Bericht. Auch wenn Sie nichts buchen.
             </p>
 
-            <form id="hero-audit-form" data-lead="kwd-hero-audit-form" class="hero-audit-form" novalidate>
+            <form id="hero-audit-form" data-lead="kwd-hero-audit-form" data-track-event="TOOL_SUBMIT" data-track-tool="hero-audit" class="hero-audit-form" novalidate>
                 <label for="hero-audit-url" class="sr-only" style="position:absolute;left:-9999px;">Ihre Website-Adresse</label>
                 <input
                     type="text"
                     inputmode="url"
                     id="hero-audit-url"
                     name="url"
+                    data-track-capture="url"
                     placeholder="ihre-website.de"
                     autocomplete="url"
                     required
