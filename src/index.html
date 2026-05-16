@@ -815,6 +815,44 @@
             margin-top: 8px; font-size: 11px; color: var(--color-graphite-soft); opacity: 0.7;
         }
 
+        /* Sprint 80 — Print/PDF-Optimierung */
+        .audit-toolbar { margin-top: 16px; text-align: center; }
+        .audit-pdf-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: transparent; color: var(--color-graphite-soft);
+            border: 1px solid var(--color-line); border-radius: 999px;
+            font-size: 13px; font-weight: 500; padding: 8px 16px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .audit-pdf-btn:hover { background: var(--color-cream-soft); color: var(--color-onyx); border-color: var(--color-onyx); }
+        .audit-print-header { display: none; }
+        @media print {
+            /* Nur das Audit-Ergebnis drucken — visibility-Trick: alles unsichtbar, dann
+               nur #audit-result + Kinder wieder sichtbar machen, oben absolut positionieren. */
+            body { background: #fff !important; }
+            body * { visibility: hidden; }
+            #audit-result, #audit-result * { visibility: visible; }
+            #audit-result {
+                position: absolute; left: 0; top: 0; right: 0;
+                width: 100% !important; max-width: none !important; margin: 0 !important;
+                padding: 0 !important;
+            }
+            /* Conversion-Elemente raus aus PDF — Audit ist Befund, nicht Anzeige. */
+            .audit-toolbar, .audit-next-step, .audit-pricing-exit,
+            .audit-toolbar *, .audit-next-step *, .audit-pricing-exit * { display: none !important; visibility: hidden !important; }
+            /* Cards sauber drucken */
+            #audit-cards { display: block !important; }
+            .audit-card, .audit-score-hero { break-inside: avoid; page-break-inside: avoid; margin-bottom: 12px; box-shadow: none !important; opacity: 1 !important; transform: none !important; }
+            .audit-print-header {
+                display: block !important; visibility: visible !important;
+                text-align: center; padding: 0 0 24px; margin-bottom: 24px;
+                border-bottom: 1px solid #ccc;
+            }
+            .audit-print-header h1 { font-size: 18px; margin: 0 0 6px; }
+            .audit-print-header p { font-size: 13px; color: #666; margin: 0; }
+            @page { margin: 15mm; }
+        }
+
         /* Sprint 65 — Next-Step-Block: prominenter CTA-Bereich nach den Cards */
         .audit-next-step {
             margin-top: 24px; padding: 28px 28px 24px;
@@ -3043,8 +3081,14 @@
             </p>
 
             <div id="audit-result" class="audit-result-wrap" aria-live="polite">
+                <div id="audit-print-header" class="audit-print-header" aria-hidden="true"></div>
                 <p id="audit-status" class="audit-status"></p>
                 <div id="audit-cards"></div>
+                <div id="audit-toolbar" class="audit-toolbar" style="display:none;">
+                    <button type="button" class="audit-pdf-btn" id="audit-pdf-btn" aria-label="Audit als PDF speichern">
+                        <span aria-hidden="true">⤓</span> Audit als PDF speichern
+                    </button>
+                </div>
                 <div id="audit-cta" class="audit-cta-row" style="display:none;"></div>
                 <div id="audit-pricing-exit" class="audit-pricing-exit" aria-hidden="true">
                     <div class="audit-pricing-exit-text">
@@ -4633,6 +4677,24 @@
                     if (d.cached) statusText += ' (aus den letzten 24 Stunden)';
                 }
                 statusEl.textContent = statusText + '.';
+
+                // Sprint 80 — Print-Header (nur im PDF/Print sichtbar) + PDF-Button einblenden
+                const printHeaderEl = document.getElementById('audit-print-header');
+                const toolbarEl = document.getElementById('audit-toolbar');
+                if (printHeaderEl && !d.demo) {
+                    const auditDate = new Date().toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });
+                    printHeaderEl.innerHTML =
+                        '<h1>Karriaro-Audit für ' + escape(d.domain || '') + '</h1>' +
+                        '<p>' + escape(auditDate) + ' · karriaro-webdesign.de</p>';
+                }
+                if (toolbarEl) {
+                    toolbarEl.style.display = '';
+                    const pdfBtn = document.getElementById('audit-pdf-btn');
+                    if (pdfBtn && !pdfBtn.dataset.bound) {
+                        pdfBtn.addEventListener('click', function() { window.print(); });
+                        pdfBtn.dataset.bound = '1';
+                    }
+                }
 
                 // Sprint 65 — Stagger-Reveal über alle reveal-baren Elemente
                 // (Score-Hero, Audit-Cards, Next-Step-Block).
