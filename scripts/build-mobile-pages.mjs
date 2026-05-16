@@ -61,7 +61,7 @@ const FOOTER_HTML = (desktopUrl) => `<footer class="m-footer">
         <a href="/m/agb.html">AGB</a>
         <a href="/m/barrierefreiheit.html">Barrierefreiheit</a>
     </nav>
-    <a href="${desktopUrl}" class="m-footer-desktop">Desktop-Version anzeigen →</a>
+    <a href="${desktopUrl}" class="m-footer-desktop" onclick="sessionStorage.setItem('kr-keep-desktop','1')">Desktop-Version anzeigen →</a>
     <div class="m-footer-meta">&copy; 2026 Karriaro Webdesign · Spitalstr. 7, 77761 Schiltach · kontakt@karriaro.de</div>
 </footer>
 
