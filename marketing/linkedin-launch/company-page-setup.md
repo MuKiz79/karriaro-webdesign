@@ -37,7 +37,7 @@
 ## Schritt 3 · About-Section (20 Min)
 
 **Tagline (max 120 Zeichen):**
-> Handgemachte Websites fuer lokale Unternehmen. Erster Entwurf in 14 Tagen. Ab 1.290 € einmalig. BFSG-konform.
+> Wenn Ihr Name draufsteht, steht unserer dahinter. Handgeschriebene Websites fuer den DACH-Mittelstand. BFSG-konform.
 
 **Beschreibung (max 2.000 Zeichen):**
 ```
