@@ -440,7 +440,7 @@ async function detectSeoGeo(html, baseUrl) {
     // Sprint 70 — Organization raus (zu generisch, hat fast jeder Site → False-Positive).
     // Ergaenzt um valide LocalBusiness-Subtypen laut schema.org: FoodEstablishment, DentalClinic,
     // MedicalClinic, Store, ProfessionalService.
-    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService'];
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency'];
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical

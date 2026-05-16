@@ -1,0 +1,47 @@
+# Karriaro Webdesign
+
+> Handgemachte Websites für deutsche KMU — Immobilienmakler, Praxen, Restaurants, Handwerker, Anwälte. Erster Entwurf in 24 Stunden. Festpreis ab 1.290 €.
+
+Wenn Ihr Name draufsteht, steht unserer dahinter. Wir verkaufen keine Templates — wir handcodieren jede Site einmalig für den Kunden, mit eigenem Brand-Charakter, eigenen Tools, eigener Geschichte.
+
+Inhaber & Gründer: Muammer Kızıl Aslan (Stuttgart). Karriaro Webdesign ist ein Manufaktur-Studio, kein Massenagentur-Modell.
+
+## Leistungen
+
+- [Essential — 1.290 €](https://karriaro-webdesign.de/#preise): Statische Single-Page, 4-6 Sektionen, mobile-optimiert, BFSG-konform, SEO-Foundation.
+- [Professional — 1.990 €](https://karriaro-webdesign.de/#preise): Multi-Page-Site mit 5-10 Unterseiten, individuelle Sektionen, Contact-Formular, Schema.org-Markup.
+- [Premium — 2.990 €](https://karriaro-webdesign.de/#preise): Branchenspezifische Live-Tools (Wertermittlung, Symptom-Checker, AI-Sommelier, etc.), erweiterte Schema.org-Strukturen.
+- [Business — 3.990 €](https://karriaro-webdesign.de/#preise): Komplettes Branchen-Setup mit CRM-Anbindung, Buchungssystemen, BFSG-Audit + GEO-Optimierung.
+
+## Branchen-Beispiele (Live-Demos)
+
+- [Immobilienmakler](https://karriaro-webdesign.de/portfolio/immobilien-makler.html): Online-Wertermittlung, Marktbericht-Anker, Objekt-Filter, Verkäufer-Dashboard.
+- [Arztpraxis](https://karriaro-webdesign.de/portfolio/praxis-weber.html): KI-Symptom-Checker mit Slot-Vorschlag, Online-Rezept, Videosprechstunde.
+- [Restaurant](https://karriaro-webdesign.de/portfolio/restaurant-template.html): AI-Sommelier (Wein-Pairing), Saisonkarte mit Auto-Update, Online-Tisch-Reservierung.
+- [Friseursalon](https://karriaro-webdesign.de/portfolio/friseur-salon.html): Style-Empfehlung (Gesichtsform + Anlass), Wunsch-Stylist-Direkt-Buchung.
+- [Handwerk / SHK](https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller.html): Notdienst-Puls mit Anrückzeit, Foto-Festpreis-Anfrage, BAFA-Förder-Rechner.
+- [Dachdecker](https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html): BAFA-Wärmepumpe-Rechner, Förder-Übersicht.
+- [Coaching](https://karriaro-webdesign.de/portfolio/coaching-lehmann.html): Mandanten-Klarheits-Score (Anwalt/Coach), Fachgebiet-Filter.
+- [Spedition](https://karriaro-webdesign.de/portfolio/spedition-schwaben.html): TÜV-/HU-Slot-Live-Buchung, Online-Kostenvoranschlag.
+
+## Audit-Tool
+
+- [Kostenloser Sofort-Audit](https://karriaro-webdesign.de/#audit): URL eingeben, in 30 Sekunden BFSG-Compliance + SEO + GEO (KI-Lesbarkeit) + Branchen-Standards + Pain-Points (Security/Mobile/Social) als Bericht.
+
+## Kontakt
+
+- E-Mail: muammer.kizilaslan@gmail.com
+- LinkedIn: https://www.linkedin.com/in/muammer-kizilaslan/
+- Standort: Stuttgart, Deutschland
+- Antwortzeit: Werktags <4 h
+
+## Gründer
+
+- [Über Muammer Kızıl Aslan](https://karriaro-webdesign.de/gruender.html): Hintergrund, Founder-POV, persönliches Werkstattprinzip.
+
+## Rechtliches
+
+- [Impressum](https://karriaro-webdesign.de/impressum.html)
+- [Datenschutz](https://karriaro-webdesign.de/datenschutz.html)
+- [AGB](https://karriaro-webdesign.de/agb.html)
+- [Barrierefreiheits-Erklärung (BFSG)](https://karriaro-webdesign.de/barrierefreiheit.html)
