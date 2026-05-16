@@ -268,13 +268,30 @@ const HAUPTSEITE_CASES = [
         }
     },
     // Sprint 65 — Demo-Buttons-Block entfernt; nur noch URL-Submit-Test.
-    // Test verifiziert nur, dass Form-Submit ein Result rendert.
-    // Score-Hero + Next-Step werden NUR bei realer API-Success-Response gerendert
-    // (kanzlei-mueller.de existiert nicht öffentlich → API liefert degraded → showError-Pfad).
-    // Echter Browser-Check zeigt Redesign-Features bei realen URLs.
     { name: 'hero-audit · form-submit-renders-result',
         action: async (page) => {
             await page.locator('#hero-audit-url').fill('https://kanzlei-mueller.de');
+            await page.locator('#hero-audit-form button[type="submit"]').click();
+            await sleep(3500);
+            const result = await page.locator('#audit-result').innerText().catch(() => '');
+            return { pass: result.length > 50, msg: `result-len=${result.length}` };
+        }
+    },
+    // Sprint 66 — URL-Normalisierung: www-Prefix ohne Protokoll wird akzeptiert
+    // (vorher: type="url" blockierte Submit mit nativem Browser-Tooltip).
+    { name: 'hero-audit · www-url-akzeptiert (Sprint 66)',
+        action: async (page) => {
+            await page.locator('#hero-audit-url').fill('www.kablan-immobilien.de');
+            await page.locator('#hero-audit-form button[type="submit"]').click();
+            await sleep(3500);
+            const result = await page.locator('#audit-result').innerText().catch(() => '');
+            return { pass: result.length > 50, msg: `result-len=${result.length}` };
+        }
+    },
+    // Sprint 66 — Bare-Domain ohne Protokoll wird akzeptiert (normalizeUrl prefixt https://)
+    { name: 'hero-audit · bare-domain-akzeptiert (Sprint 66)',
+        action: async (page) => {
+            await page.locator('#hero-audit-url').fill('kablan-immobilien.de');
             await page.locator('#hero-audit-form button[type="submit"]').click();
             await sleep(3500);
             const result = await page.locator('#audit-result').innerText().catch(() => '');

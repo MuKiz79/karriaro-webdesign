@@ -2996,10 +2996,11 @@
             <form id="hero-audit-form" data-lead="kwd-hero-audit-form" class="hero-audit-form" novalidate>
                 <label for="hero-audit-url" class="sr-only" style="position:absolute;left:-9999px;">Ihre Website-Adresse</label>
                 <input
-                    type="url"
+                    type="text"
+                    inputmode="url"
                     id="hero-audit-url"
                     name="url"
-                    placeholder="https://www.ihre-website.de"
+                    placeholder="ihre-website.de"
                     autocomplete="url"
                     required
                     aria-label="Ihre Website-Adresse"
@@ -4236,6 +4237,73 @@
                     '</div>';
             }
 
+            // Sprint 66 — API-primaryType → Karriaro-Branche-Key (für features-Lookup).
+            var BRANCH_API_TO_DATA_KEY = {
+                'lawyer': null,
+                'attorney': null,
+                'law_firm': null,
+                'doctor': 'praxis',
+                'physician': 'praxis',
+                'medical_practice': 'praxis',
+                'dentist': 'praxis',
+                'restaurant': 'gastro',
+                'cafe': 'gastro',
+                'bakery': 'gastro',
+                'food': 'gastro',
+                'hair_salon': 'friseur',
+                'beauty_salon': 'friseur',
+                'barber': 'friseur',
+                'real_estate': 'immobilien',
+                'real_estate_agency': 'immobilien',
+                'realtor': 'immobilien',
+                'plumber': 'handwerk',
+                'plumbing': 'handwerk',
+                'roofer': 'handwerk',
+                'roofing': 'handwerk',
+                'craftsman': 'handwerk',
+                'craftsmen': 'handwerk',
+                'electrician': 'handwerk',
+                'handyman': 'handwerk',
+                'logistics': 'logistik',
+                'freight': 'logistik',
+                'freight_forwarder': 'logistik',
+                'shipping': 'logistik',
+                'coach': 'coaching',
+                'business_coach': 'coaching',
+                'consultant': 'coaching',
+                'consulting': 'coaching'
+            };
+
+            function getBranchTools(branch) {
+                if (!branch || branch.usedDefault) return null;
+                var key = BRANCH_API_TO_DATA_KEY[branch.primaryType];
+                if (!key) return null;
+                var d = (typeof window.__krBrancheData !== 'undefined') ? window.__krBrancheData[key] : null;
+                if (!d || !d.features || !d.features.length) return null;
+                return { key: key, label: d.label || branch.name, features: d.features };
+            }
+
+            // Sprint 66 — Werkzeug-Card: zeigt typische Branchen-Funktionen.
+            // Q-Marker (statt ✓/✗) weil Quick-Audit Werkzeug-Presence nicht prüft;
+            // Pitch verweist auf Komplettaudit + Karriaro-Live-Demos.
+            function renderToolsCard(branch) {
+                var tools = getBranchTools(branch);
+                if (!tools) return '';
+                var rows = tools.features.map(function(f) {
+                    return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;color:var(--color-graphite-soft)">' +
+                               '<span style="color:var(--color-gold);font-weight:600;flex-shrink:0">?</span>' +
+                               '<span>' + escape(f) + '</span>' +
+                           '</div>';
+                }).join('');
+                return '<div class="audit-card severity-mid">' +
+                            '<div class="audit-card-label">Branchen-Werkzeuge — was Ihre Kunden erwarten</div>' +
+                            '<div class="audit-card-headline">' + escape(tools.label) + ' — typische Funktionen</div>' +
+                            '<div class="audit-card-meta"><span><strong>' + tools.features.length + '</strong> erwartete Werkzeuge</span></div>' +
+                            '<div style="margin-top:10px">' + rows + '</div>' +
+                            '<div class="audit-card-pitch">Im Komplettaudit prüfen wir konkret, welche dieser Werkzeuge Ihre Seite bereits hat. Karriaro liefert sie als Standard-Bauteile — Live-Demos in dieser Branche sehen Sie unten im Werkzeug-Bühnen-Bereich.</div>' +
+                        '</div>';
+            }
+
             function renderCards(d) {
                 const url = urlInput.value.trim();
                 const encoded = encodeURIComponent(url);
@@ -4266,6 +4334,7 @@
 
                 if (branch) {
                     cards.push(renderBranchCard(branch));
+                    cards.push(renderToolsCard(branch));  // Sprint 66 — Werkzeug-Card direkt nach Standards
                 }
 
                 // Sprint 65 — Tech-Card nur, wenn echter Veränderungs-Bedarf (severity >= 2).
@@ -4420,10 +4489,24 @@
                 ctaEl.style.display = 'flex';
             }
 
+            // Sprint 66 — URL-Normalisierung: User darf „www.x.de" oder „x.de" eingeben.
+            // Wir fügen automatisch https:// als Prefix hinzu, falls Protokoll fehlt.
+            function normalizeUrl(raw) {
+                var s = String(raw || '').trim();
+                if (!s) return '';
+                if (/^https?:\/\//i.test(s)) return s;
+                return 'https://' + s.replace(/^\/+/, '');
+            }
+
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const url = urlInput.value.trim();
-                if (!url) { urlInput.focus(); return; }
+                const rawUrl = urlInput.value.trim();
+                if (!rawUrl) { urlInput.focus(); return; }
+                const url = normalizeUrl(rawUrl);
+                try { new URL(url); } catch (err) {
+                    showError('Bitte eine gültige Website-Adresse eingeben (z.B. ihre-firma.de).');
+                    return;
+                }
 
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Wird geprüft …';
@@ -4670,6 +4753,8 @@
                     href: '/portfolio/coaching-lehmann.html'
                 }
             };
+            // Sprint 66 — Export für Hero-Audit-Werkzeug-Card (renderToolsCard liest features[]).
+            window.__krBrancheData = data;
 
             // Sektion 1.7 — Feature-Erklärungen für die i-Buttons (alle 48 Werkzeuge, Duplikate teilen sich den Eintrag)
             var FEATURE_INFO = {
