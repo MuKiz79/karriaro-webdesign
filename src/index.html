@@ -853,6 +853,59 @@
             @page { margin: 15mm; }
         }
 
+        /* Sprint 81 — Social-Share-Block (LinkedIn) im Low-Severity-Next-Step */
+        .audit-share-card {
+            margin-top: 14px; padding: 14px 18px; background: #fff;
+            border: 1px solid var(--color-line); border-radius: 12px;
+            display: flex; flex-wrap: wrap; align-items: center; gap: 14px; justify-content: space-between;
+        }
+        .audit-share-card p { font-size: 14px; color: var(--color-graphite-soft); margin: 0; }
+        .btn-linkedin {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #0A66C2; color: #fff !important;
+            padding: 9px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500; text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-linkedin:hover { background: #084d92; }
+
+        /* Sprint 81 — Email-Magnet-Modal nach Audit */
+        .audit-email-magnet {
+            margin-top: 18px; padding: 24px 28px;
+            background: linear-gradient(180deg, rgba(110,89,164,0.04), rgba(110,89,164,0.01));
+            border: 1px solid var(--color-line); border-radius: 16px;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .audit-email-magnet.is-revealed { opacity: 1; transform: translateY(0); }
+        .audit-email-magnet h3 {
+            font-family: var(--font-display, 'Fraunces', Georgia, serif);
+            font-size: 21px; font-weight: 500; color: var(--color-onyx);
+            margin: 0 0 8px; letter-spacing: -0.01em;
+        }
+        .audit-email-magnet-sub { font-size: 14px; color: var(--color-graphite-soft); margin: 0 0 16px; line-height: 1.5; }
+        .audit-email-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .audit-email-form input[type="text"], .audit-email-form input[type="email"] {
+            width: 100%; padding: 10px 14px; font-size: 14px;
+            background: #fff; border: 1px solid var(--color-line); border-radius: 8px;
+            color: var(--color-onyx);
+        }
+        .audit-email-form input:focus { outline: none; border-color: var(--color-indigo); }
+        .audit-email-form .audit-consent { grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-graphite-soft); line-height: 1.4; }
+        .audit-email-form .audit-consent input { margin-top: 2px; }
+        .audit-email-form .audit-consent a { color: var(--color-indigo); text-decoration: underline; }
+        .audit-email-form button { grid-column: 1 / -1; padding: 11px 24px; background: var(--color-indigo); color: #fff; border: 0; border-radius: 999px; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .audit-email-form button:hover { background: #0F1F2E; }
+        .audit-email-form .honeypot { position: absolute; left: -9999px; }
+        .audit-email-success {
+            padding: 16px; background: rgba(58,128,98,0.06); border: 1px solid rgba(58,128,98,0.2);
+            border-radius: 10px; color: var(--color-onyx); font-size: 14px; text-align: center;
+        }
+        @media (max-width: 540px) {
+            .audit-email-form { grid-template-columns: 1fr; }
+            .audit-share-card { flex-direction: column; align-items: flex-start; }
+        }
+
         /* Sprint 65 — Next-Step-Block: prominenter CTA-Bereich nach den Cards */
         .audit-next-step {
             margin-top: 24px; padding: 28px 28px 24px;
@@ -4648,6 +4701,10 @@
                             '<p class="audit-next-step-note">Oder direkt sprechen: <a href="#kontakt">30-Min-Erstgespräch buchen</a>.</p>' +
                         '</div>';
                 } else {
+                    // Sprint 81 — Social-Share-Block für hohe Scores: LinkedIn-Share als Stolz-Beleg
+                    const branchName = (d.branch && d.branch.name) ? d.branch.name : 'Mittelstand';
+                    const shareSummary = encodeURIComponent('Mein Karriaro-Audit: ' + krScore + '/100. Branche: ' + branchName + '. Karriaro-Webdesign ist online entscheidbar.');
+                    const shareUrl = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent('https://karriaro-webdesign.de/') + '&summary=' + shareSummary;
                     nextStepHtml =
                         '<div class="audit-next-step">' +
                             '<div class="audit-next-step-headline">Solide Basis. Jetzt Vorsprung holen.</div>' +
@@ -4663,9 +4720,39 @@
                                     '<a href="#kontakt" class="btn-ghost">Termin buchen →</a>' +
                                 '</div>' +
                             '</div>' +
+                            '<div class="audit-share-card">' +
+                                '<p>Stolz auf Ihren Score? <strong>Teilen Sie\'s auf LinkedIn.</strong></p>' +
+                                '<a href="' + shareUrl + '" target="_blank" rel="noopener" class="btn-linkedin">' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>' +
+                                    'Auf LinkedIn teilen' +
+                                '</a>' +
+                            '</div>' +
                         '</div>';
                 }
                 cards.push(nextStepHtml);
+
+                // Sprint 81 — Email-Magnet-Block (zwischen Cards und Next-Step — visuell vor Next-Step)
+                // Pitch passt sich an Severity an: low = Stolz-Beleg, mid/high = Quick-Win-Anreiz.
+                const emailPitch = krScore >= 80
+                    ? 'Möchten Sie den Audit-Befund als PDF zugeschickt bekommen? Wir senden Ihnen den Stand zu — kostenfrei, keine Verkaufs-Mails.'
+                    : 'Bekommen Sie den vollständigen Audit-Befund inkl. 14-Tage-Roadmap als PDF — kostenfrei.';
+                cards.push(
+                    '<div class="audit-email-magnet" data-domain="' + escape(d.domain || '') + '">' +
+                        '<h3>Audit per E-Mail erhalten?</h3>' +
+                        '<p class="audit-email-magnet-sub">' + emailPitch + '</p>' +
+                        '<form class="audit-email-form" data-handler="email-magnet">' +
+                            '<input type="text" name="name" placeholder="Ihr Name (optional)" />' +
+                            '<input type="email" name="email" placeholder="E-Mail-Adresse" required />' +
+                            '<label class="audit-consent">' +
+                                '<input type="checkbox" name="consent" required />' +
+                                '<span>Ich willige in die Verarbeitung meiner Daten gemäß <a href="/datenschutz.html" target="_blank">Datenschutz</a> ein. Jederzeit widerrufbar.</span>' +
+                            '</label>' +
+                            '<input type="text" name="company" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />' +
+                            '<button type="submit">Audit-PDF anfordern →</button>' +
+                        '</form>' +
+                        '<div class="audit-email-success" style="display:none;">Mail unterwegs. Bitte prüfen Sie Ihren Posteingang in den nächsten Minuten.</div>' +
+                    '</div>'
+                );
 
                 cardsEl.innerHTML = cards.join('');
                 let statusText;
@@ -4697,11 +4784,50 @@
                 }
 
                 // Sprint 65 — Stagger-Reveal über alle reveal-baren Elemente
-                // (Score-Hero, Audit-Cards, Next-Step-Block).
-                const cardEls = cardsEl.querySelectorAll('.audit-card, .audit-score-hero, .audit-next-step');
+                // (Score-Hero, Audit-Cards, Next-Step-Block, Email-Magnet).
+                const cardEls = cardsEl.querySelectorAll('.audit-card, .audit-score-hero, .audit-next-step, .audit-email-magnet');
                 cardEls.forEach(function(c, i) {
                     setTimeout(function() { c.classList.add('is-revealed'); }, 80 + i * 150);
                 });
+
+                // Sprint 81 — Email-Magnet-Form-Submit: an requestAudit-Endpoint.
+                const emailForm = cardsEl.querySelector('form[data-handler="email-magnet"]');
+                if (emailForm && !emailForm.dataset.bound) {
+                    emailForm.dataset.bound = '1';
+                    emailForm.addEventListener('submit', async function(ev) {
+                        ev.preventDefault();
+                        const magnet = emailForm.closest('.audit-email-magnet');
+                        const successEl = magnet ? magnet.querySelector('.audit-email-success') : null;
+                        const fd = new FormData(emailForm);
+                        const payload = {
+                            url: (magnet && magnet.dataset.domain) ? ('https://' + magnet.dataset.domain) : (urlInput.value.trim()),
+                            name: fd.get('name') || '',
+                            email: fd.get('email') || '',
+                            consent: !!fd.get('consent'),
+                            company: fd.get('company') || ''
+                        };
+                        const submitBtn = emailForm.querySelector('button[type="submit"]');
+                        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sende…'; }
+                        try {
+                            const r = await fetch('https://europe-west1-apex-executive.cloudfunctions.net/requestAudit', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+                            const j = await r.json().catch(() => ({}));
+                            if (r.ok && j.ok !== false) {
+                                emailForm.style.display = 'none';
+                                if (successEl) successEl.style.display = 'block';
+                            } else {
+                                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Audit-PDF anfordern →'; }
+                                alert(j.error || 'Anfrage konnte nicht gesendet werden. Bitte später nochmal versuchen.');
+                            }
+                        } catch (e) {
+                            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Audit-PDF anfordern →'; }
+                            alert('Netzwerkfehler. Bitte später nochmal versuchen.');
+                        }
+                    });
+                }
 
                 // Sprint 65 — Existing #audit-cta wird leergeräumt; Next-Step-Block
                 // im cards-Container hat jetzt alle CTAs.

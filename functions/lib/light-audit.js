@@ -197,7 +197,8 @@ function normalizePlacesType(t) {
     if (['general_physician', 'family_practice', 'internal_medicine', 'pediatrician', 'gynecologist', 'dermatologist', 'cardiologist', 'medical_clinic', 'doctors_office'].includes(t)) return 'doctor';
     if (['physical_therapist'].includes(t)) return 'physiotherapist';
     // Trades
-    if (['hvac_contractor', 'gas_installer', 'general_contractor'].includes(t)) return 'plumber';
+    // Sprint 81: general_contractor entfernt aus plumber-Mapping (zu breit), eigene Branche jetzt
+    if (['hvac_contractor', 'gas_installer'].includes(t)) return 'plumber';
     if (['electrical_contractor'].includes(t)) return 'electrician';
     if (['car_repair', 'tire_shop'].includes(t)) return 'auto_repair';
     // Beauty
@@ -215,6 +216,11 @@ function normalizePlacesType(t) {
     if (['cafeteria_bakery'].includes(t)) return 'bakery'; // bakery wird direkt durchgereicht
     if (['cemetery', 'mortuary'].includes(t)) return 'funeral_home';
     if (['tour_agency', 'tourist_information_center'].includes(t)) return 'travel_agency';
+    // Sprint 81 — Bau/Garten/Handwerk-Branchen
+    if (['painting_contractor'].includes(t)) return 'painter';
+    if (['landscape_designer', 'lawn_care_service', 'tree_service'].includes(t)) return 'landscaper';
+    if (['construction_company', 'building_contractor'].includes(t)) return 'general_contractor';
+    if (['cabinet_maker', 'woodworker'].includes(t)) return 'carpenter';
     return t;
 }
 
@@ -249,6 +255,10 @@ function guessBranchFromUrl(url) {
             { re: /(baeckerei|bäckerei|backhaus|backwerk|baeck[-_]|bäck[-_]|backstube)/i, type: 'bakery' },
             { re: /(bestatter|bestattung|trauerhilfe|trauerinstitut|abschiedshaus)/i, type: 'funeral_home' },
             { re: /(reisebuero|reisebüro|reisecenter|travelagent|reiseberat)/i, type: 'travel_agency' },
+            { re: /(malerei|maler[-_]|fassadenmaler|lackierbetrieb)/i, type: 'painter' },
+            { re: /(gartenbau|landschaftsbau|baumpflege|gartengestaltung|gartenservice)/i, type: 'landscaper' },
+            { re: /(bauunternehmen|bauunternehmer|hochbau|tiefbau|baufirma)/i, type: 'general_contractor' },
+            { re: /(schreiner|tischler|holzbau|moebelbau|möbelbau|innenausbau)/i, type: 'carpenter' },
             { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
         ];
         for (var i = 0; i < rules.length; i++) {
@@ -459,8 +469,8 @@ async function detectSeoGeo(html, baseUrl) {
     // Ergaenzt um valide LocalBusiness-Subtypen laut schema.org: FoodEstablishment, DentalClinic,
     // MedicalClinic, Store, ProfessionalService.
     // Sprint 76 — neue Subtypen: Pharmacy, VeterinaryCare, AccountingService, Architect
-    // Sprint 79 — neue Subtypen: Optician, BakeryOrBakery, FuneralHome, TravelAgency
-    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect', 'Optician', 'Bakery', 'FuneralHome', 'TravelAgency'];
+    // Sprint 81 — Bau-Handwerk: HousePainter, GeneralContractor (Schema.org); für carpenter/landscaper kein dedizierter Schema-Type, ProfessionalService (Sprint 70) fängt das ab.
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect', 'Optician', 'Bakery', 'FuneralHome', 'TravelAgency', 'HousePainter', 'GeneralContractor'];
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical

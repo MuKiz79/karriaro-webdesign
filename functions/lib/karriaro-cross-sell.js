@@ -114,6 +114,38 @@ const CROSS_SELL = {
         ],
         trend: 'Physio-Trend 2026: Behandlungs-Filter + Online-Slot — Patienten kommen mit Rezept und buchen direkt.'
     },
+    'painter': {
+        tools: [
+            { id: 'vorher-nachher-galerie', aliasFor: 'referenzen', name: 'Vorher-Nachher-Galerie mit Schieberegler', demoUrl: '/portfolio/dachdecker-meisterbetrieb.html' },
+            { id: 'foto-festpreis', name: 'Foto-Festpreis-Anfrage (Wand-Foto → Preis)', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
+            { id: 'farbberatung-online', aliasFor: 'farb-beratung', name: 'Online-Farbberatung mit KI-Vorschau', demoUrl: '/portfolio/friseur-salon.html#style-empfehlung' }
+        ],
+        trend: 'Maler-Trend 2026: Vorher-Nachher-Bilder + Foto-Festpreis ersetzen Vor-Ort-Termine — wer das anbietet, gewinnt 30 % mehr Erstauftraege.'
+    },
+    'landscaper': {
+        tools: [
+            { id: 'projekt-galerie', aliasFor: 'foto-galerie', name: 'Interaktive Garten-Projekt-Galerie (Saison-Filter)', demoUrl: '/portfolio/immobilien-makler.html' },
+            { id: 'beratung-termin', aliasFor: 'beratung-vorort', name: 'Vor-Ort-Beratungs-Termin online buchen', demoUrl: '/portfolio/praxis-weber.html' },
+            { id: 'foto-festpreis', name: 'Foto-Festpreis-Anfrage (Gartenfoto → Pflegepreis)', demoUrl: '/portfolio/meisterbetrieb-mueller.html' }
+        ],
+        trend: 'Garten-Trend 2026: Hausbesitzer wollen Garten-Foto hochladen + Pflegepreis erhalten — wer das nicht bietet, verliert an Service-Apps.'
+    },
+    'general_contractor': {
+        tools: [
+            { id: 'bauprojekt-cockpit', name: 'Bauprojekt-Cockpit (Phasen + Termine + Dokumente)', demoUrl: '/portfolio/coaching-lehmann.html' },
+            { id: 'projekt-galerie-3d', aliasFor: 'referenzen', name: 'Bauprojekt-Galerie mit 360°-Vorschau', demoUrl: '/portfolio/immobilien-makler.html' },
+            { id: 'kosten-rechner', name: 'Bau-Kostenschaetzer nach BKI / Quadratmeter', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' }
+        ],
+        trend: 'Bau-Trend 2026: Bauherren erwarten Projekt-Cockpit + Kosten-Schaetzung vor jedem Erstgespraech — wer das nicht bietet, verliert das Auftrags-Sondieren.'
+    },
+    'carpenter': {
+        tools: [
+            { id: 'moebel-konfigurator', aliasFor: 'leistungen', name: 'Möbel-Konfigurator (Holzart + Maße + Live-Preis)', demoUrl: '/portfolio/immobilien-makler.html' },
+            { id: 'foto-aufmass', aliasFor: 'beratung-vorort', name: 'Foto-Aufmaß-Tool (Foto → Maße + Angebot)', demoUrl: '/portfolio/meisterbetrieb-mueller.html' },
+            { id: 'galerie-werkschau', aliasFor: 'referenzen', name: 'Möbel-Werkschau-Galerie (Stile + Materialien)', demoUrl: '/portfolio/friseur-salon.html' }
+        ],
+        trend: 'Schreinerei-Trend 2026: Möbel-Konfigurator + Foto-Aufmaß ersetzen 2 Vor-Ort-Termine — wer das anbietet, gewinnt 25 % mehr Premium-Auftraege.'
+    },
     'optical_store': {
         tools: [
             { id: 'sehtest-online', aliasFor: 'sehtest-online', name: 'Online-Sehtest mit Slot-Vorschlag', demoUrl: '/portfolio/praxis-weber.html#symptom-checker' },

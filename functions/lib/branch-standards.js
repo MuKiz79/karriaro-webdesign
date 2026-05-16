@@ -221,6 +221,67 @@ const BRANCH_STANDARDS = {
         pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, faellt aus dem Suchergebnis.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'
     },
+    'painter': {
+        name: 'Malerbetrieb',
+        mustHave: [
+            { id: 'leistungen', label: 'Leistungen (Innen/Außen/Fassade/Lackier)', detect: { subPage: /leistung|service|angebot/i, body: /\b(innenanstrich|aussenanstrich|fassaden(arbeit|sanierung|gestaltung)?|lackier(arbeit|en)?|tapezier(arbeit|en)?|spachtelarbeit|maler(arbeit|werk)?)\b/i } },
+            { id: 'referenzen', label: 'Vorher-Nachher-Projekte / Galerie', detect: { subPage: /referenz|projekt|galerie|portfolio/i, body: /\b(referenzprojekt|kundenprojekt|vorher.?nachher|werkschau)\b/i } },
+            { id: 'einsatzgebiet', label: 'Einsatzgebiet / Region', detect: { body: /einsatzgebiet|umkreis|region|umgebung|tätigkeitsgebiet/i } },
+            { id: 'kontakt-telefon', label: 'Telefon prominent', detect: { body: /\b(telefon|tel\.?|☎|📞|fon)\s*[:\.]?\s*[\+\d][\d\s\-\/]{4,}|\b\+49[\s\-\/]?[\d][\d\s\-\/]{5,}|\b0\d{2,4}[\s\-\/][\d][\d\s\-\/]{3,}/i } }
+        ],
+        shouldHave: [
+            { id: 'team', label: 'Maler-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /malermeister\w*|inhaber(in)?|unser team|familienbetrieb/i } },
+            { id: 'innung', label: 'Maler-Innung / HWK-Mitgliedschaft', detect: { body: /maler.?innung|innung|handwerkskammer|\bHWK\b|fachverband/i } },
+            { id: 'farb-beratung', label: 'Farb-/Stil-Beratung explizit', detect: { body: /farbberatung|farbkonzept|wandgestaltung|stilberatung|wohnberatung/i } }
+        ],
+        pitchMissing: 'Privatkunden googeln "Maler + Stadt" + erwarten Vorher-Nachher-Galerie und Region. Wer das nicht zeigt, ruft nicht an.',
+        pitchAllOk: 'Ihr Malerbetrieb ist online entscheidbar.'
+    },
+    'landscaper': {
+        name: 'Garten-/Landschaftsbau',
+        mustHave: [
+            { id: 'leistungen', label: 'Leistungen (Gartenanlage/Pflege/Baumpflege)', detect: { subPage: /leistung|service|angebot|garten|pflege/i, body: /\b(gartenanlage|gartenpflege|baumpflege|baumfäll|hecken(schnitt|pflege)?|rollrasen|terrassen(bau)?|wegebau|teich(bau|pflege)?)\b/i } },
+            { id: 'einsatzgebiet', label: 'Einsatzgebiet / Region', detect: { body: /einsatzgebiet|umkreis|region|umgebung|tätigkeitsgebiet/i } },
+            { id: 'foto-galerie', label: 'Garten-Foto-Galerie', detect: { subPage: /galerie|portfolio|projekte|referenz/i, body: /\b(galerie|projektgalerie|kundenprojekt|referenzgalerie|werkschau)\b/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'team', label: 'Meister-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /gärtnermeister\w*|landschaftsgärtner\w*|inhaber(in)?|unser team|familienbetrieb/i } },
+            { id: 'beratung-vorort', label: 'Vor-Ort-Beratung / Gartenplanung', detect: { body: /vor.?ort.?beratung|gartenplanung|kostenfrei.*beratung|individuelle.*planung/i } }
+        ],
+        pitchMissing: 'Hausbesitzer googeln „Garten + Pflege + Stadt" + erwarten Foto-Galerie und Region — wer nichts zeigt, ist im Vergleich unsichtbar.',
+        pitchAllOk: 'Ihr Garten-Landschaftsbau ist online entscheidbar.'
+    },
+    'general_contractor': {
+        name: 'Bauunternehmen',
+        mustHave: [
+            { id: 'leistungen', label: 'Leistungen (Rohbau/Schlüsselfertig/Sanierung)', detect: { subPage: /leistung|service|angebot/i, body: /\b(rohbau|schluesselfertig|schlüsselfertig|hochbau|tiefbau|sanierung|umbau|neubau|baubetreuung|baukoordination)\b/i } },
+            { id: 'referenzen', label: 'Bauprojekt-Referenzen / Portfolio', detect: { subPage: /referenz|projekt|portfolio|galerie/i, body: /\b(referenzprojekt|bauprojekt|fertiggestellt|kundenprojekt|projektgalerie)\b/i } },
+            { id: 'team', label: 'Bauleitungs-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /bauleiter(in)?|polier|baumeister|geschäftsführ|inhaber(in)?|architekt(in)?/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'einsatzgebiet', label: 'Einsatzgebiet / Bauleistungs-Region', detect: { body: /einsatzgebiet|baugebiet|umkreis|region|umgebung/i } },
+            { id: 'innung', label: 'Bau-Innung / HWK-Mitgliedschaft', detect: { body: /bauinnung|innung|handwerkskammer|\bHWK\b|fachverband|gütezeichen|gütesiegel/i } }
+        ],
+        pitchMissing: 'Bauherren entscheiden via Referenzprojekte + Team-Substanz. Wer Bauleitung + Bauten nicht zeigt, ist nicht im Pool.',
+        pitchAllOk: 'Ihr Bauunternehmen ist online entscheidbar.'
+    },
+    'carpenter': {
+        name: 'Schreinerei/Tischlerei',
+        mustHave: [
+            { id: 'leistungen', label: 'Leistungen (Möbel/Treppen/Türen/Küchen)', detect: { subPage: /leistung|service|angebot|möbel|moebel|kueche|küche/i, body: /\b(möbelbau|moebelbau|massivholz|einbaumöbel|einbaumoebel|treppen(bau)?|türen|tueren|fenster|kuechen|küchen|möbelschreiner|moebelschreiner|innenausbau)\b/i } },
+            { id: 'referenzen', label: 'Möbel-/Foto-Galerie', detect: { subPage: /galerie|portfolio|projekte|referenz/i, body: /\b(galerie|kundenprojekt|werkschau|projektgalerie|möbelgalerie|moebelgalerie)\b/i } },
+            { id: 'team', label: 'Schreinermeister-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /schreinermeister\w*|tischlermeister\w*|holzhandwerk|inhaber(in)?|familienbetrieb/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Werkstatt-Standort', detect: { subPage: /kontakt|anfahrt|werkstatt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'beratung-vorort', label: 'Vor-Ort-Aufmaß / Beratung', detect: { body: /aufmaß|aufmass|kostenfrei.*beratung|individuelle.*planung|maßgeschneidert|massgeschneidert/i } },
+            { id: 'innung', label: 'Schreiner-Innung / HWK', detect: { body: /schreiner.?innung|tischler.?innung|innung|handwerkskammer|\bHWK\b/i } }
+        ],
+        pitchMissing: 'Bauherren googeln „Schreiner + Möbel + Stadt" + erwarten Foto-Galerie individueller Arbeiten — wer nichts zeigt, verliert das Erstgespräch.',
+        pitchAllOk: 'Ihre Schreinerei ist online entscheidbar.'
+    },
     'optical_store': {
         name: 'Optiker',
         mustHave: [

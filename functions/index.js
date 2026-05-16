@@ -357,6 +357,30 @@ function quickAuditCacheKey(url) {
     return crypto.createHash("sha256").update(url).digest("hex").slice(0, 32);
 }
 
+// Sprint 81 — Server-Side Score-Berechnung analog zu Frontend computeKarriaroScore (index.html).
+// Liefert int 0-100 fuer Severity-Tracking & spaeter Industry-Benchmark.
+function computeServerScore(payload) {
+    let score = 100;
+    const branch = payload.branch;
+    if (branch && branch.totalCount) {
+        score -= (1 - branch.foundCount / branch.totalCount) * 30;
+    }
+    const ta = payload.techAge;
+    if (ta) {
+        if (ta.severity >= 4) score -= 25;
+        else if (ta.severity >= 2) score -= 12;
+    }
+    const bfsg = payload.bfsg;
+    if (bfsg && bfsg.complianceScore != null) {
+        score -= (100 - bfsg.complianceScore) * 0.35;
+    }
+    const perf = payload.performance;
+    if (perf && perf.score != null) {
+        score -= (100 - perf.score) * 0.15;
+    }
+    return Math.max(0, Math.min(100, Math.round(score)));
+}
+
 function buildQuickResponse(domain, light, full) {
     // Light liefert immer: tech, wayback, techAge (heur.), bfsg (heur.), branch.
     // Full liefert wenn verfuegbar: techAge (PSI-confirmed), bfsg (WCAG), websiteScore, summary.
@@ -499,6 +523,35 @@ exports.quickAudit = onRequest(
             });
         } catch (err) {
             console.warn("quickAudit cache write failed:", err.message);
+        }
+
+        // Sprint 81 — Severity-Tracking fuer Industry-Benchmark (Folge-Sprint).
+        // Separate Collection, 90-Tage-Retention (vs. 7d Cache).
+        try {
+            const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
+            const ipHash = crypto.createHash("sha256").update(ip + "-karriaro-salt").digest("hex").slice(0, 16);
+            const seo = payload.seoGeo?.seo || {};
+            const geo = payload.seoGeo?.geo || {};
+            const branchInfo = payload.branch || {};
+            const score = computeServerScore(payload);
+            const sevClass = score < 50 ? "high" : score < 80 ? "mid" : "low";
+            await db.collection("auditAnalytics").add({
+                domain,
+                score,
+                sevClass,
+                branchType: branchInfo.primaryType || null,
+                usedDefault: branchInfo.usedDefault || false,
+                foundCount: branchInfo.foundCount || 0,
+                totalCount: branchInfo.totalCount || 0,
+                seoFound: seo.found || 0,
+                geoFound: geo.found || 0,
+                isSpa: !!payload.painPoints?.spaArchitecture?.isSpa,
+                bfsgScore: payload.bfsg?.complianceScore ?? null,
+                ipHash,
+                ts: admin.firestore.FieldValue.serverTimestamp()
+            });
+        } catch (err) {
+            console.warn("auditAnalytics write failed:", err.message);
         }
 
         return res.json(payload);

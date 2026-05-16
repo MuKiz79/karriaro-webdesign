@@ -54,7 +54,8 @@ test('normalizePlacesType: physician sub-types → doctor', () => {
 test('normalizePlacesType: trade sub-types → plumber/electrician', () => {
     assert.equal(normalizePlacesType('hvac_contractor'), 'plumber');
     assert.equal(normalizePlacesType('gas_installer'), 'plumber');
-    assert.equal(normalizePlacesType('general_contractor'), 'plumber');
+    // Sprint 81: general_contractor wurde aus plumber-Mapping entfernt (eigene Branche)
+    assert.equal(normalizePlacesType('general_contractor'), 'general_contractor');
     assert.equal(normalizePlacesType('electrical_contractor'), 'electrician');
 });
 
@@ -322,6 +323,74 @@ test('guessBranchFromUrl: Sprint 79 Domains', () => {
     assert.equal(guessBranchFromUrl('https://baeckerei-mueller.de'), 'bakery');
     assert.equal(guessBranchFromUrl('https://bestatter-mueller.de'), 'funeral_home');
     assert.equal(guessBranchFromUrl('https://reisebuero-mueller.de'), 'travel_agency');
+});
+
+test('checkBranchStandards: painter Sprint 81', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Fassadenarbeit und Innenanstrich. Malermeister Mueller. Einsatzgebiet Stuttgart. Telefon: 0711 12345. Vorher-Nachher-Projekte ansehen.'
+    };
+    const r = checkBranchStandards('painter', ctx);
+    assert.equal(r.primaryType, 'painter');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found);
+    assert.ok(r.mustHave.find(i => i.id === 'einsatzgebiet').found);
+    assert.ok(r.mustHave.find(i => i.id === 'kontakt-telefon').found);
+    assert.ok(r.shouldHave.find(i => i.id === 'team').found, 'Malermeister-Pattern');
+});
+
+test('checkBranchStandards: landscaper Sprint 81', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Gartenanlage und Baumpflege. Gärtnermeister Mueller. Einsatzgebiet Stuttgart. Stuttgart 70173. Projektgalerie aktuell.'
+    };
+    const r = checkBranchStandards('landscaper', ctx);
+    assert.equal(r.primaryType, 'landscaper');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found);
+    assert.ok(r.mustHave.find(i => i.id === 'einsatzgebiet').found);
+    assert.ok(r.mustHave.find(i => i.id === 'foto-galerie').found, 'Projektgalerie-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'team').found, 'Gärtnermeister-Pattern');
+});
+
+test('checkBranchStandards: general_contractor Sprint 81', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Schlüsselfertig-Bau, Rohbau und Sanierung. Bauleiter Mueller. Stuttgart 70173. Referenzprojekt fertiggestellt 2025.'
+    };
+    const r = checkBranchStandards('general_contractor', ctx);
+    assert.equal(r.primaryType, 'general_contractor');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Schlüsselfertig-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'referenzen').found, 'Referenzprojekt-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'team').found, 'Bauleiter-Pattern');
+});
+
+test('checkBranchStandards: carpenter Sprint 81', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Möbelschreiner-Werkstatt. Massivholz-Treppen und Einbaumöbel. Schreinermeister Mueller. Stuttgart 70173. Möbelgalerie ansehen.'
+    };
+    const r = checkBranchStandards('carpenter', ctx);
+    assert.equal(r.primaryType, 'carpenter');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Möbel/Treppen-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'referenzen').found, 'Möbelgalerie-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'team').found, 'Schreinermeister-Pattern');
+});
+
+test('normalizePlacesType: Sprint 81 Sub-Types', () => {
+    assert.equal(normalizePlacesType('painting_contractor'), 'painter');
+    assert.equal(normalizePlacesType('landscape_designer'), 'landscaper');
+    assert.equal(normalizePlacesType('lawn_care_service'), 'landscaper');
+    assert.equal(normalizePlacesType('tree_service'), 'landscaper');
+    assert.equal(normalizePlacesType('construction_company'), 'general_contractor');
+    assert.equal(normalizePlacesType('cabinet_maker'), 'carpenter');
+    // Sprint 81 Konflikt-Klaerung: general_contractor mappt jetzt auf sich selbst (war Sprint-76 plumber)
+    assert.equal(normalizePlacesType('general_contractor'), 'general_contractor');
+});
+
+test('guessBranchFromUrl: Sprint 81 Domains', () => {
+    assert.equal(guessBranchFromUrl('https://malerei-mueller.de'), 'painter');
+    assert.equal(guessBranchFromUrl('https://gartenbau-mueller.de'), 'landscaper');
+    assert.equal(guessBranchFromUrl('https://bauunternehmen-mueller.de'), 'general_contractor');
+    assert.equal(guessBranchFromUrl('https://schreiner-mueller.de'), 'carpenter');
 });
 
 test('checkBranchStandards: unbekannter primaryType → _default + usedDefault=true', () => {
