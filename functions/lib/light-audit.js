@@ -349,6 +349,19 @@ function detectPainPoints(html, headers, wayback, tech) {
     if (!twitterCard) socialMissing.push('twitter:card');
     const socialOk = socialMissing.length <= 1;
 
+    // Sprint 72 — P6 SPA-Architektur. Erkennt Framework-Marker (React/Vue/Next/Nuxt/Angular)
+    // im HTML — die Sites rendern Inhalt erst nach JS-Bootstrap. Google + ChatGPT/Perplexity
+    // sehen oft nur leere Container.
+    // textRatio < 0.005 als zusaetzlicher Notfall-Indikator fuer extreme SPAs.
+    // textRatio wird nicht alleine genutzt, weil WordPress-Sites mit inline-CSS oft ~0.01-0.03
+    // textRatio haben aber komplett SSR sind.
+    const bodyTextLen = htmlToText(h, 50000).length;
+    const textRatio = bodyTextLen / Math.max(h.length, 1);
+    const frameworkMarkers = /id\s*=\s*["'](root|app|__next|__nuxt|svelte-app)["']|data-reactroot|data-react-helmet|ng-app|v-app|__NEXT_DATA__|__NUXT__|window\.__INITIAL_STATE__/.test(h);
+    const extremelyEmpty = h.length > 5000 && textRatio < 0.005;
+    const isSpa = frameworkMarkers || extremelyEmpty;
+    const spaOk = !isSpa;
+
     return {
         contentFreshness: {
             ok: contentFresh,
@@ -387,6 +400,15 @@ function detectPainPoints(html, headers, wayback, tech) {
             label: socialOk
                 ? 'Social-Sharing-Tags (Open-Graph) vorhanden'
                 : `${socialMissing.length} Social-Tags fehlen: ${socialMissing.join(', ')} — WhatsApp/LinkedIn-Shares zeigen kein Bild`
+        },
+        spaArchitecture: {
+            ok: spaOk,
+            isSpa,
+            textRatio: Math.round(textRatio * 10000) / 10000,
+            frameworkMarkers,
+            label: spaOk
+                ? 'Server-rendered HTML — Suchmaschinen sehen alle Inhalte'
+                : 'Single-Page-App: Inhalte werden per JavaScript geladen — Google + ChatGPT/Perplexity sehen oft nur leere Container, Adresse + Leistungen fehlen in der Suche'
         }
     };
 }

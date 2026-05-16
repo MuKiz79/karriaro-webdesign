@@ -16,8 +16,9 @@ const BRANCH_STANDARDS = {
     'lawyer': {
         name: 'Anwaltskanzlei',
         mustHave: [
-            { id: 'fachgebiete', label: 'Fachgebiete-/Rechtsgebiete-Seite', detect: { subPage: /fachgebiet|rechtsgebiet|taetigkeit|tätigkeit|spezialis/i } },
-            { id: 'team', label: 'Anwalts-/Team-Vorstellung', detect: { subPage: /team|anwalt|kanzlei|ueber[- ]?uns|über[- ]?uns/i } },
+            // Sprint 72 — body-Fallbacks (steiger-zerr.de hat "Rechtsgebiete" + "Kanzlei" sichtbar, war ✗)
+            { id: 'fachgebiete', label: 'Fachgebiete-/Rechtsgebiete-Seite', detect: { subPage: /fachgebiet|rechtsgebiet|taetigkeit|tätigkeit|spezialis/i, body: /\b(fachgebiete?|rechtsgebiete?|tätigkeitsfelder?|spezialisierung|rechtsbereich)\b/i } },
+            { id: 'team', label: 'Anwalts-/Team-Vorstellung', detect: { subPage: /team|anwalt|kanzlei|ueber[- ]?uns|über[- ]?uns/i, body: /\b(anwa[lt]+|fachanwa[lt]+|partner(in)?|kanzlei|sozietät|unsere kanzlei|anwaltskanzlei)\b/i } },
             { id: 'impressum-rak', label: 'Impressum mit Rechtsanwaltskammer', detect: { body: /rechtsanwaltskammer|\bRAK\b/i } },
             // Sprint 71 — body-Fallback (PLZ-Pattern) fuer SPA-Sites ohne /kontakt-SubPage
             { id: 'kontakt-adresse', label: 'Kontakt mit Kanzleiadresse', detect: { subPage: /kontakt|anfahrt|standort/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
@@ -34,7 +35,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             { id: 'leistungen', label: 'Leistungs-/Behandlungs-Seite', detect: { subPage: /leistung|behandl|therap|prophylax/i } },
             { id: 'team', label: 'Praxis-/Team-Vorstellung', detect: { subPage: /team|praxis|ueber[- ]?uns|über[- ]?uns/i } },
-            { id: 'sprechzeiten', label: 'Sprechzeiten / Oeffnungszeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|montag.*freitag|mo[- ]?fr/i } },
+            // Sprint 72 — Pattern erweitert um Weekday+Time (Site mit "Montag - Freitag 9:00 Uhr" sichtbar)
+            { id: 'sprechzeiten', label: 'Sprechzeiten / Oeffnungszeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|montag.*freitag|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             // Sprint 71 — body-Fallback fuer SPA-Sites ohne /kontakt-SubPage (deuschle.de hat "70329 Stuttgart" im body sichtbar)
             { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
         ],
@@ -50,7 +52,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             { id: 'leistungen', label: 'Leistungs-/Behandlungs-Seite', detect: { subPage: /leistung|behandl|therap|sprech/i } },
             { id: 'team', label: 'Aerzte-/Team-Vorstellung', detect: { subPage: /team|aerzt|ärzt|arzt|praxis|ueber[- ]?uns|über[- ]?uns/i } },
-            { id: 'sprechzeiten', label: 'Sprechzeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|mo[- ]?fr/i } },
+            // Sprint 72 — Weekday+Time-Pattern
+            { id: 'sprechzeiten', label: 'Sprechzeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             // Sprint 71 — body-Fallback fuer SPA-Sites (gleicher Fix wie dentist)
             { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
         ],
@@ -104,7 +107,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             // Sprint 71 — body-Fallback: "ZUR SPEISEKARTE" als Button-Text sichtbar (zur-sattlerei.de) auch wenn kein /speisekarte-SubPage-Anker
             { id: 'speisekarte', label: 'Speisekarte', detect: { subPage: /speise|menu|menü|karte/i, body: /\b(speisekarte|speise.?karte|menü|menu(\skarte)?|gerichte|à\s?la\s?carte|tagesempfehlung|wochenkarte|spargelkarte|mittagstisch)\b/i } },
-            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|montag.*sonntag|mo[- ]?fr|mo[- ]?so/i } },
+            // Sprint 72 — Weekday+Time-Pattern
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|montag.*sonntag|mo[- ]?fr|mo[- ]?so|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-ZAEOEUae][a-zaeoeuß]+/i } },
             { id: 'reservierung', label: 'Online-Reservierungs-Tool', detect: { body: /reserv|tisch.*buch|opentable|quandoo|bookatable|formitable/i } }
         ],
@@ -124,7 +128,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             // Sprint 70 — body-Fallback fuer Preisliste/€-Pattern (kimbutun.de hatte "PREISLISTE" 2x, war false)
             { id: 'leistungen-preise', label: 'Leistungen mit Preisen', detect: { subPage: /leistung|preis|service/i, body: /€\s?\d|ab\s?\d+\s?€|\b(preisliste|preisuebersicht|preisübersicht|preise|preisinformation)\b/i } },
-            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|mo[- ]?fr|mo[- ]?sa/i } },
+            // Sprint 72 — Weekday+Time-Pattern
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } },
             // Sprint 70 — body-Fallback fuer Team-Keywords (kimbutun.de hatte "Unser Team" sichtbar, war false)
             { id: 'team', label: 'Team mit Foto', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /\b(unser team|über uns|ueber uns|stylistin|stylist|friseurmeister(in)?|hairstylist)\b/i } }
@@ -144,13 +149,16 @@ const BRANCH_STANDARDS = {
         name: 'Kosmetikstudio',
         mustHave: [
             { id: 'leistungen-preise', label: 'Behandlungen mit Preisen', detect: { subPage: /behandl|leistung|preis/i, body: /€|preis/i } },
-            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|mo[- ]?sa/i } },
+            // Sprint 72 — Weekday+Time
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } },
-            { id: 'team', label: 'Studio-/Team-Vorstellung', detect: { subPage: /team|studio|ueber[- ]?uns|über[- ]?uns/i } }
+            // Sprint 72 — body-Fallback (beautyspa36.de hat "Kosmetikerin"/"Inhaberin" sichtbar)
+            { id: 'team', label: 'Studio-/Team-Vorstellung', detect: { subPage: /team|studio|ueber[- ]?uns|über[- ]?uns/i, body: /\b(unser team|über uns|kosmetikerin|inhaberin|inhaber|mein team)\b/i } }
         ],
         shouldHave: [
-            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|booksy|treatwell/i } },
-            { id: 'gutscheine', label: 'Gutschein-Verkauf', detect: { subPage: /gutschein/i } }
+            { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|booksy|treatwell|wellme/i } },
+            // Sprint 72 — body-Fallback (beautyspa36.de hat "Gutschein" sichtbar als Button-Text)
+            { id: 'gutscheine', label: 'Gutschein-Verkauf', detect: { subPage: /gutschein/i, body: /\b(gutschein|geschenkgutschein)\b/i } }
         ],
         pitchMissing: 'Kundinnen vergleichen Behandlungen und Preise online — fehlt Transparenz, wandern sie zur Konkurrenz.',
         pitchAllOk: 'Ihr Studio ist online entscheidbar.'
@@ -160,7 +168,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             { id: 'leistungen', label: 'Behandlungs-/Therapie-Uebersicht', detect: { subPage: /behandl|therap|leistung/i } },
             { id: 'team', label: 'Therapeuten-/Team-Vorstellung', detect: { subPage: /team|therapeut|ueber[- ]?uns|über[- ]?uns/i } },
-            { id: 'oeffnungszeiten', label: 'Sprechzeiten', detect: { body: /oeffnungszeit|öffnungszeit|sprechzeit|mo[- ]?fr/i } },
+            // Sprint 72 — Weekday+Time
+            { id: 'oeffnungszeiten', label: 'Sprechzeiten', detect: { body: /oeffnungszeit|öffnungszeit|sprechzeit|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } }
         ],
         shouldHave: [
@@ -216,13 +225,15 @@ const BRANCH_STANDARDS = {
         name: 'Kfz-Werkstatt',
         mustHave: [
             { id: 'leistungen', label: 'Leistungs-Liste (TUEV, Inspektion, Reifen, ...)', detect: { subPage: /leistung|service/i, body: /tuev|tüv|inspektion|reifen|oelwechsel|ölwechsel/i } },
-            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr/i } },
+            // Sprint 72 — Weekday+Time
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } },
             { id: 'tuev', label: 'TUEV/HU-Service genannt', detect: { body: /tuev|tüv|hauptuntersuchung|\bhu\b|\bau\b/i } }
         ],
         shouldHave: [
             { id: 'termin-online', label: 'Online-Termin / Werkstatt-Anfrage', detect: { body: /termin.*online|werkstatt.*anfrage|kostenvoranschlag/i } },
-            { id: 'marken', label: 'Marken-Spezialisierung sichtbar', detect: { body: /\bvw\b|\bbmw\b|mercedes|\baudi\b|\bopel\b|\bford\b|spezialist/i } }
+            // Sprint 72 — body-Fallback (sass-auto.de sagt "markenungebundene" — markenunabhängig sichtbar)
+            { id: 'marken', label: 'Marken-Spezialisierung sichtbar', detect: { body: /\bvw\b|\bbmw\b|mercedes|\baudi\b|\bopel\b|\bford\b|spezialist|markenwerkstatt|markenungebunden|markenunabh[äa]ngig|\bmarke[ns]?\b/i } }
         ],
         pitchMissing: 'Autofahrer googeln "TUEV [Stadt]" — wer das nicht prominent zeigt, taucht in der Suche nicht auf.',
         pitchAllOk: 'Ihre Werkstatt ist online auffindbar.'
@@ -232,7 +243,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             { id: 'leistungen', label: 'Leistungs-/Service-Uebersicht', detect: { subPage: /leistung|service|angebot|produkt/i } },
             { id: 'kontakt-adresse', label: 'Kontakt mit Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-Z][a-zäöüß]+/i } },
-            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten oder Erreichbarkeit', detect: { body: /oeffnungszeit|öffnungszeit|sprechzeit|mo[- ]?fr/i } }
+            // Sprint 72 — Weekday+Time
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten oder Erreichbarkeit', detect: { body: /oeffnungszeit|öffnungszeit|sprechzeit|mo[- ]?fr|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } }
         ],
         shouldHave: [
             { id: 'team', label: 'Team-/Ueber-uns-Seite', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns|about/i } }

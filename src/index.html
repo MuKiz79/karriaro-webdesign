@@ -4365,7 +4365,8 @@
                     painPoints.securityHeaders,
                     painPoints.vendorLockin,
                     painPoints.mobileViewport,
-                    painPoints.socialMeta
+                    painPoints.socialMeta,
+                    painPoints.spaArchitecture
                 ].filter(Boolean);
                 if (!items.length) return '';
                 const risksCount = items.filter(i => !i.ok).length;
