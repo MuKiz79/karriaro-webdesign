@@ -19,7 +19,8 @@ const BRANCH_STANDARDS = {
             { id: 'fachgebiete', label: 'Fachgebiete-/Rechtsgebiete-Seite', detect: { subPage: /fachgebiet|rechtsgebiet|taetigkeit|tätigkeit|spezialis/i } },
             { id: 'team', label: 'Anwalts-/Team-Vorstellung', detect: { subPage: /team|anwalt|kanzlei|ueber[- ]?uns|über[- ]?uns/i } },
             { id: 'impressum-rak', label: 'Impressum mit Rechtsanwaltskammer', detect: { body: /rechtsanwaltskammer|\bRAK\b/i } },
-            { id: 'kontakt-adresse', label: 'Kontakt mit Kanzleiadresse', detect: { subPage: /kontakt|anfahrt|standort/i } }
+            // Sprint 71 — body-Fallback (PLZ-Pattern) fuer SPA-Sites ohne /kontakt-SubPage
+            { id: 'kontakt-adresse', label: 'Kontakt mit Kanzleiadresse', detect: { subPage: /kontakt|anfahrt|standort/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
         ],
         shouldHave: [
             { id: 'honorar', label: 'Honorar-/Gebuehreninformation', detect: { subPage: /honorar|gebuehr|gebühr|preis|kosten/i, body: /honorar|stundensatz|\bRVG\b/i } },
@@ -34,7 +35,8 @@ const BRANCH_STANDARDS = {
             { id: 'leistungen', label: 'Leistungs-/Behandlungs-Seite', detect: { subPage: /leistung|behandl|therap|prophylax/i } },
             { id: 'team', label: 'Praxis-/Team-Vorstellung', detect: { subPage: /team|praxis|ueber[- ]?uns|über[- ]?uns/i } },
             { id: 'sprechzeiten', label: 'Sprechzeiten / Oeffnungszeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|montag.*freitag|mo[- ]?fr/i } },
-            { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i } }
+            // Sprint 71 — body-Fallback fuer SPA-Sites ohne /kontakt-SubPage (deuschle.de hat "70329 Stuttgart" im body sichtbar)
+            { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
         ],
         shouldHave: [
             { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|doctolib|jameda|samedi|terminland/i } },
@@ -49,7 +51,8 @@ const BRANCH_STANDARDS = {
             { id: 'leistungen', label: 'Leistungs-/Behandlungs-Seite', detect: { subPage: /leistung|behandl|therap|sprech/i } },
             { id: 'team', label: 'Aerzte-/Team-Vorstellung', detect: { subPage: /team|aerzt|ärzt|arzt|praxis|ueber[- ]?uns|über[- ]?uns/i } },
             { id: 'sprechzeiten', label: 'Sprechzeiten', detect: { body: /sprechzeit|oeffnungszeit|öffnungszeit|mo[- ]?fr/i } },
-            { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i } }
+            // Sprint 71 — body-Fallback fuer SPA-Sites (gleicher Fix wie dentist)
+            { id: 'kontakt-adresse', label: 'Kontakt mit Praxis-Adresse', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
         ],
         shouldHave: [
             { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|doctolib|jameda|samedi|terminland/i } },
@@ -85,7 +88,8 @@ const BRANCH_STANDARDS = {
         mustHave: [
             { id: 'zimmer', label: 'Zimmer-/Suiten-Uebersicht', detect: { subPage: /zimmer|suite|unterkunft/i } },
             { id: 'preise', label: 'Preise oder Buchungs-Widget', detect: { body: /€\s?\d|ab\s?\d+\s?€|booking|hrs|reservierung/i } },
-            { id: 'kontakt-adresse', label: 'Kontakt mit Adresse + Anfahrt', detect: { subPage: /kontakt|anfahrt|lage/i } },
+            // Sprint 71 — body-Fallback (PLZ-Pattern) fuer SPA-Sites
+            { id: 'kontakt-adresse', label: 'Kontakt mit Adresse + Anfahrt', detect: { subPage: /kontakt|anfahrt|lage/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } },
             { id: 'fruehstueck', label: 'Fruehstueck / Verpflegung', detect: { body: /fruehstueck|frühstück|halbpension|inklusive/i } }
         ],
         shouldHave: [
@@ -98,7 +102,8 @@ const BRANCH_STANDARDS = {
     'restaurant': {
         name: 'Restaurant',
         mustHave: [
-            { id: 'speisekarte', label: 'Speisekarte', detect: { subPage: /speise|menu|menü|karte/i } },
+            // Sprint 71 — body-Fallback: "ZUR SPEISEKARTE" als Button-Text sichtbar (zur-sattlerei.de) auch wenn kein /speisekarte-SubPage-Anker
+            { id: 'speisekarte', label: 'Speisekarte', detect: { subPage: /speise|menu|menü|karte/i, body: /\b(speisekarte|speise.?karte|menü|menu(\skarte)?|gerichte|à\s?la\s?carte|tagesempfehlung|wochenkarte|spargelkarte|mittagstisch)\b/i } },
             { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|geoeffnet|geöffnet|montag.*sonntag|mo[- ]?fr|mo[- ]?so/i } },
             { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { body: /\b\d{5}\s+[A-ZAEOEUae][a-zaeoeuß]+/i } },
             { id: 'reservierung', label: 'Online-Reservierungs-Tool', detect: { body: /reserv|tisch.*buch|opentable|quandoo|bookatable|formitable/i } }
