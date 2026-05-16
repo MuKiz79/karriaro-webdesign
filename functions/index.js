@@ -15,6 +15,9 @@ const {
 } = require("./lib/deep-research.js");
 const mockupGenerator = require("./lib/mockup-generator.js");
 const { runSecurityAudit } = require("./lib/security-audit.js");
+// Sprint 82 — Firestore-backed Rate-Limit + Client-IP-Parser (X-Forwarded-For-aware).
+const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
+const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
 const db = admin.firestore();
@@ -31,9 +34,6 @@ const DEEP_RESEARCH_CACHE_DAYS = 7;
 
 const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080"];
 const PLACES_BASE = "https://places.googleapis.com/v1/places";
-const RATE_LIMIT = new Map(); // IP -> { count, resetTime }
-const MAX_REQUESTS_PER_MINUTE = 30;
-const AUDIT_RATE_LIMIT = new Map(); // IP -> { count, resetTime } für requestAudit (3/h)
 
 const AUDIT_FROM = '"Karriaro Webdesign" <noreply@karriaro.de>';
 const AUDIT_REPLY_TO = "kontakt@karriaro.de";
@@ -49,24 +49,10 @@ function cors(req, res, methods = "POST, OPTIONS") {
     return false;
 }
 
-function rateLimit(req, res) {
-    const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
-    const now = Date.now();
-    const entry = RATE_LIMIT.get(ip) || { count: 0, resetTime: now + 60000 };
-    if (now > entry.resetTime) { entry.count = 0; entry.resetTime = now + 60000; }
-    entry.count++;
-    RATE_LIMIT.set(ip, entry);
-    if (entry.count > MAX_REQUESTS_PER_MINUTE) {
-        res.status(429).json({ error: "Rate limit exceeded. Max 30 requests/minute." });
-        return true;
-    }
-    return false;
-}
-
 // ── Text Search: "Friseur Berlin" or "beispiel.de" ──
 exports.searchPlaces = onRequest({ region: "europe-west1", cors: false, secrets: [PLACES_KEY] }, async (req, res) => {
     if (cors(req, res)) return;
-    if (rateLimit(req, res)) return;
+    if (await enforceRateLimit(db, req, res, "searchPlaces", 30, 60)) return;
 
     const { query, maxResults = 10 } = req.body || {};
     if (!query) return res.status(400).json({ error: "query required" });
@@ -95,7 +81,7 @@ exports.searchPlaces = onRequest({ region: "europe-west1", cors: false, secrets:
 // ── Nearby Search: competitors in same area + category ──
 exports.nearbyPlaces = onRequest({ region: "europe-west1", cors: false, secrets: [PLACES_KEY] }, async (req, res) => {
     if (cors(req, res)) return;
-    if (rateLimit(req, res)) return;
+    if (await enforceRateLimit(db, req, res, "nearbyPlaces", 30, 60)) return;
 
     const { lat, lng, type, radiusMeters = 5000, maxResults = 5 } = req.body || {};
     if (!lat || !lng || !type) return res.status(400).json({ error: "lat, lng, type required" });
@@ -130,20 +116,6 @@ exports.nearbyPlaces = onRequest({ region: "europe-west1", cors: false, secrets:
 // ═══════════════════════════════════════════════════════════════
 // INBOUND-AUDIT-PIPELINE: requestAudit, getAuditData, trackLeadView
 // ═══════════════════════════════════════════════════════════════
-
-function auditRateLimit(req, res) {
-    const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
-    const now = Date.now();
-    const entry = AUDIT_RATE_LIMIT.get(ip) || { count: 0, resetTime: now + 3600000 }; // 1h
-    if (now > entry.resetTime) { entry.count = 0; entry.resetTime = now + 3600000; }
-    entry.count++;
-    AUDIT_RATE_LIMIT.set(ip, entry);
-    if (entry.count > 3) {
-        res.status(429).json({ error: "Sie haben das stündliche Limit erreicht. Bitte später erneut." });
-        return true;
-    }
-    return false;
-}
 
 function generateSlug() {
     // 12 Zeichen, URL-safe, Crockford-base32 ohne ähnliche Zeichen.
@@ -223,7 +195,9 @@ exports.requestAudit = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (auditRateLimit(req, res)) return;
+        // IP-Limit 3/h + (weiter unten) Per-Email-Limit 5/Tag schuetzen Mail-Spam.
+        if (await enforceRateLimit(db, req, res, "requestAudit", 3, 3600,
+            "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
 
         const { url, name, email, consent, company } = req.body || {};
 
@@ -238,6 +212,11 @@ exports.requestAudit = onRequest(
         if (!isValidEmail(email)) return res.status(400).json({ error: "Ungültige E-Mail" });
         const safeName = String(name || "").trim().slice(0, 100);
 
+        // Sprint 82 — Per-Email-Limit (5/Tag) als zweite Schutzschicht gegen Mail-Spam-Floods.
+        const emailHash = crypto.createHash("sha256").update(email.toLowerCase()).digest("hex").slice(0, 24);
+        if (await enforceRateLimit(db, { ip: emailHash, headers: {} }, res, "requestAudit:email", 5, 86400,
+            "Diese E-Mail-Adresse hat das tägliche Limit erreicht. Bitte morgen erneut.")) return;
+
         const slug = generateSlug();
         const domain = new URL(auditUrl).hostname.replace(/^www\./, "");
 
@@ -247,7 +226,9 @@ exports.requestAudit = onRequest(
         try {
             pipelineResult = await runAuditPipeline(auditUrl, "");
         } catch (err) {
-            console.error("Pipeline failed:", err.message);
+            logger.error("requestAudit pipeline failed", {
+                fn: "requestAudit", domain, error: err.message
+            });
             return res.status(502).json({ error: "Audit-Pipeline fehlgeschlagen", details: err.message });
         }
 
@@ -324,7 +305,9 @@ exports.requestAudit = onRequest(
         try {
             await sendAuditMail(email, safeName, slug, domain);
         } catch (err) {
-            console.error("Mail-Versand fehlgeschlagen:", err.message);
+            logger.error("requestAudit mail send failed", {
+                fn: "requestAudit", slug, domain, error: err.message
+            });
             await db.collection("auditRequests").doc(slug).update({ mailError: err.message });
         }
 
@@ -335,26 +318,26 @@ exports.requestAudit = onRequest(
 // ─── quickAudit ─── POST {url, hp(honeypot)}
 //   Hero-Inline-Reveal: 3-Karten-Snippet, KEIN Mail-Versand, KEIN PII-Persist.
 //   Cache 24h frisch, Storage-TTL 7 Tage (Feld `expiresAt`).
-const QUICK_AUDIT_RATE_LIMIT = new Map();           // IP -> { count, resetTime } 5/h
 const QUICK_AUDIT_FRESH_MS = 24 * 3600 * 1000;
 const QUICK_AUDIT_TTL_DAYS = 7;
 
-function quickAuditRateLimit(req, res) {
-    const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
-    const now = Date.now();
-    const entry = QUICK_AUDIT_RATE_LIMIT.get(ip) || { count: 0, resetTime: now + 3600000 };
-    if (now > entry.resetTime) { entry.count = 0; entry.resetTime = now + 3600000; }
-    entry.count++;
-    QUICK_AUDIT_RATE_LIMIT.set(ip, entry);
-    if (entry.count > 5) {
-        res.status(429).json({ error: "Sie haben das stündliche Limit erreicht. Bitte später erneut." });
-        return true;
-    }
-    return false;
-}
-
 function quickAuditCacheKey(url) {
     return crypto.createHash("sha256").update(url).digest("hex").slice(0, 32);
+}
+
+// Sprint 82 — Rotating-Salt fuer ipHash. Salt wechselt taeglich, plus optional
+// ein zusaetzlicher Secret-Wert (IPHASH_SALT_BASE), den der Betreiber per
+// `firebase functions:secrets:set IPHASH_SALT_BASE` rotieren kann ohne Code-Deploy.
+// Auch ohne Secret ist die Pseudonymisierung jetzt taeglich neu (keine Korrelation
+// ueber Tage hinweg moeglich, im Gegensatz zum statischen Salt der Vorgaenger-Version).
+function dailyIpHash(ip) {
+    const dayKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD UTC
+    const base = process.env.IPHASH_SALT_BASE || "karriaro-rotating";
+    return crypto
+        .createHash("sha256")
+        .update(`${ip}:${dayKey}:${base}`)
+        .digest("hex")
+        .slice(0, 16);
 }
 
 // Sprint 81 — Server-Side Score-Berechnung analog zu Frontend computeKarriaroScore (index.html).
@@ -457,7 +440,8 @@ exports.quickAudit = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (quickAuditRateLimit(req, res)) return;
+        if (await enforceRateLimit(db, req, res, "quickAudit", 5, 3600,
+            "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
 
         const { url, hp } = req.body || {};
 
@@ -495,9 +479,14 @@ exports.quickAudit = onRequest(
         try {
             lightResult = await runLightAudit(auditUrl, placesKey);
         } catch (err) {
-            console.error("quickAudit light failed:", err.message);
+            // SSRF-Errors als WARNING, alles andere als ERROR (Sprint 82 trennt Angriffe vom Infra-Bug).
+            const isSsrf = String(err.message || "").startsWith("SSRF blocked");
+            const sev = isSsrf ? "warn" : "error";
+            logger[sev]("quickAudit light failed", {
+                fn: "quickAudit", domain, error: err.message, ssrf: isSsrf
+            });
             const lower = String(err.message || "").toLowerCase();
-            const isUnreachable = lower.includes("http ") || lower.includes("abort") || lower.includes("fetch");
+            const isUnreachable = lower.includes("http ") || lower.includes("abort") || lower.includes("fetch") || isSsrf;
             return res.json({
                 ok: true,
                 degraded: true,
@@ -527,9 +516,10 @@ exports.quickAudit = onRequest(
 
         // Sprint 81 — Severity-Tracking fuer Industry-Benchmark (Folge-Sprint).
         // Separate Collection, 90-Tage-Retention (vs. 7d Cache).
+        // Sprint 82 — clientIp() statt ungesplittetem X-Forwarded-For, dailyIpHash() statt statischem Salt.
         try {
-            const ip = req.ip || req.headers["x-forwarded-for"] || "unknown";
-            const ipHash = crypto.createHash("sha256").update(ip + "-karriaro-salt").digest("hex").slice(0, 16);
+            const ip = clientIp(req);
+            const ipHash = dailyIpHash(ip);
             const seo = payload.seoGeo?.seo || {};
             const geo = payload.seoGeo?.geo || {};
             const branchInfo = payload.branch || {};
@@ -725,7 +715,8 @@ exports.deepResearch = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (rateLimit(req, res)) return;
+        // Claude-Calls = $$$ → strenges Limit 5/h
+        if (await enforceRateLimit(db, req, res, "deepResearch", 5, 3600)) return;
 
         const startMs = Date.now();
         let { url, branche = null, place = null, psiData = null, force = false } = req.body || {};
@@ -938,7 +929,8 @@ exports.generateMockup = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (rateLimit(req, res)) return;
+        // Claude-Calls = $$$ → strenges Limit 5/h
+        if (await enforceRateLimit(db, req, res, "generateMockup", 5, 3600)) return;
 
         const startMs = Date.now();
         let { url, branche = null, businessName = null, currentIssues = null, deepResearchSummary = null, force = false } = req.body || {};
@@ -1050,7 +1042,7 @@ exports.securityAudit = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (rateLimit(req, res)) return;
+        if (await enforceRateLimit(db, req, res, "securityAudit", 10, 3600)) return;
 
         const startMs = Date.now();
         let { url, psiData = null, force = false } = req.body || {};

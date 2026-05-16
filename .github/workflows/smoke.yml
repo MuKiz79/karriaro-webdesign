@@ -32,6 +32,23 @@ jobs:
       - name: Run smoke test
         run: npm run smoke
 
+  audit-tests:
+    name: Cloud-Function Unit-Tests (96 tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run audit-pipeline + safe-fetch + rate-limit tests
+        run: node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js
+
   unit:
     name: lead-intelligence Vitest (304 tests)
     runs-on: ubuntu-latest

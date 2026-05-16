@@ -101,6 +101,25 @@
             <p>Einzelne Unterseiten dieses Angebots laden Schriftarten und Icons von cdnjs.cloudflare.com (Cloudflare, Inc., 101 Townsend St, San Francisco, CA 94107, USA). Dabei wird Ihre IP-Adresse an Cloudflare übermittelt. Dies ist zur korrekten Darstellung der Inhalte erforderlich.</p>
             <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einheitlichen Darstellung).</p>
 
+            <h2>Mini-Audit und Komplettaudit per E-Mail</h2>
+            <p>Auf unserer Seite können Sie eine eigene Domain in ein Audit-Eingabefeld eingeben. Wir prüfen die angegebene Website kurz auf technische und gestalterische Auffälligkeiten (z.&nbsp;B. eingesetztes CMS, Aktualität, Branchen-typische Standards) und zeigen Ihnen das Ergebnis sofort als Karten-Übersicht an. Hierfür rufen wir die angegebene URL <strong>serverseitig von unserer Cloud-Function</strong> aus auf und werten den öffentlich abrufbaren HTML-Inhalt aus. Das Ergebnis wird zur Wiederverwendung 7&nbsp;Tage zwischengespeichert.</p>
+            <p>Für statistische Auswertungen (anonymer Branchen-Score-Durchschnitt) speichern wir je Audit zusätzlich: erreichter Score, Branche, Anzahl gefundener Standards, sowie einen <strong>täglich rotierenden, nicht umkehrbaren Hash Ihrer IP-Adresse</strong> (kein geräteübergreifendes Tracking). Diese Daten werden nach 90&nbsp;Tagen automatisch gelöscht (Firestore-TTL-Policy auf Feld <code>expiresAt</code>).</p>
+            <p>Wenn Sie zusätzlich Ihre E-Mail-Adresse hinterlassen, um ein vollständiges Audit-PDF zu erhalten, speichern wir Name, E-Mail-Adresse und die angefragte URL für die Erstellung und Zusendung des Audit-Reports. Diese Daten werden ebenfalls nach 90&nbsp;Tagen automatisch gelöscht.</p>
+            <p>Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (vorvertragliche Maßnahmen auf Ihre Anfrage), für den anonymen IP-Hash und das statistische Sample Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an Qualitätssicherung und Branchen-Vergleichswerten).</p>
+
+            <h2>Auftragsverarbeiter und Empfänger</h2>
+            <p>Im Rahmen der oben beschriebenen Verarbeitungen kommen folgende Dienstleister zum Einsatz, mit denen wir Auftragsverarbeitungsverträge (AVV) gemäß Art.&nbsp;28 DSGVO geschlossen haben oder schließen werden:</p>
+            <ul style="margin: 12px 0 12px 24px; padding-left: 0; line-height: 1.7;">
+                <li><strong>GitHub, Inc.</strong> (USA) — statisches Hosting der Marketing-Site (GitHub Pages), siehe oben.</li>
+                <li><strong>Formspree, Inc.</strong> (USA) — Weiterleitung des Kontaktformulars an unsere E-Mail-Adresse.</li>
+                <li><strong>Google Ireland Ltd.</strong> (Dublin, Irland) — Hosting der Audit-Cloud-Function und der Firestore-Datenbank im Rechenzentrum Belgien (Region <code>europe-west1</code>), inklusive Aufrufe der Google&nbsp;Places&nbsp;API und der PageSpeed&nbsp;Insights&nbsp;API für branchen-spezifische Zusatz-Informationen.</li>
+                <li><strong>Anthropic PBC</strong> (USA) — Sprachmodell (Claude) für vertiefte Audit-Analysen. Bei Aktivierung wird der öffentlich abrufbare Text der angefragten Audit-URL an Anthropic übermittelt. Wird nur bei expliziter Anforderung eines Deep-Audits genutzt.</li>
+                <li><strong>Internet Archive</strong> (USA) — Aufruf der Wayback-Machine zur Bestimmung des letzten Bearbeitungsdatums der angefragten Audit-URL (kein personenbezogener Datentransfer, nur die URL).</li>
+                <li><strong>Karriaros SMTP-Versand-Provider</strong> — Versand der Audit-Reports an die von Ihnen angegebene E-Mail-Adresse. Aktueller Anbieter siehe Impressum.</li>
+                <li><strong>Hetzner Online GmbH</strong> (Gunzenhausen, Deutschland) — Betrieb unseres eigenen Reichweite-Servers <code>lighthouse.karriaro.de</code>, siehe oben.</li>
+            </ul>
+            <p>Die Übermittlung in die USA erfolgt auf Grundlage des EU-US Data Privacy Framework bzw. der Standardvertragsklauseln nach Art.&nbsp;46 DSGVO. Auf Wunsch stellen wir Ihnen Kopien dieser Garantien zur Verfügung.</p>
+
             <h2>SSL-Verschlüsselung</h2>
             <p>Diese Seite nutzt eine SSL- bzw. TLS-Verschlüsselung. Sie erkennen dies am Schloss-Symbol in der Adresszeile Ihres Browsers. Damit sind Daten, die Sie an uns übermitteln, vor dem Zugriff Dritter geschützt.</p>
 
@@ -112,7 +131,7 @@
             <h2>Widerspruch gegen Werbe-Mails</h2>
             <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung wird hiermit widersprochen. Wir behalten uns ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen vor.</p>
 
-            <p style="margin-top: 48px; font-size: 13px;">Stand: April 2026</p>
+            <p style="margin-top: 48px; font-size: 13px;">Stand: Mai 2026</p>
         </div>
     </section>
 

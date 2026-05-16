@@ -178,14 +178,15 @@ function htmlToText(html, maxChars = 1500) {
  */
 async function fetchPagesParallel(urls, opts = {}) {
     const { timeoutMs = 8000, userAgent = 'Karriaro-LeadBot/1.0', textChars = 1500 } = opts;
+    // Sprint 82 — safeFetch validiert jede URL gegen SSRF (private IPs blockiert).
+    const { safeFetch } = require('./safe-fetch.js');
     return Promise.all(urls.map(async (entry) => {
         const u = entry.url || entry;
         const slot = entry.slot || 'unknown';
         try {
-            const res = await fetch(u, {
+            const res = await safeFetch(u, {
                 headers: { 'User-Agent': userAgent, 'Accept': 'text/html,*/*' },
-                signal: AbortSignal.timeout(timeoutMs),
-                redirect: 'follow'
+                timeoutMs
             });
             const status = res.status;
             const html = res.ok ? await res.text() : '';

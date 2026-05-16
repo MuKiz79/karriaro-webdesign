@@ -161,6 +161,9 @@
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Sprint 82 — Preload des CSS senkt LCP um ~250ms, da Browser nicht
+         erst auf Render-Discovery wartet. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         /* Sprint 39 — Karriaro Design-Tokens (Brand-Codification für Designaward-Submission) */
@@ -236,6 +239,29 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Sprint 82 — Skip-to-Main fuer Tastatur-Navigation (WCAG 2.4.1).
+           Per default visuell ausgeblendet, on-focus sichtbar oben links. */
+        .skip-to-main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(-200%);
+            z-index: 9999;
+            background: var(--color-indigo);
+            color: #fff;
+            padding: 12px 20px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 0 0 6px 0;
+            transition: transform 120ms ease-out;
+        }
+        .skip-to-main:focus {
+            transform: translateY(0);
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
 
         body {
             font-family: var(--font-body);
@@ -2986,6 +3012,9 @@
 </head>
 <body>
 
+    <!-- Sprint 82 — Skip-to-Main fuer Keyboard-Navigation (WCAG 2.4.1 Bypass Blocks). -->
+    <a href="#main" class="skip-to-main">Zum Hauptinhalt springen</a>
+
     <!-- Sprint 14 — Topbar entfernt; Telefon ist im Footer (Z. 1419) prominent platziert -->
 
     <nav>
@@ -3015,7 +3044,7 @@
 
     <div class="kr-reading-progress" aria-hidden="true"></div>
 
-    <main>
+    <main id="main">
 
     <!-- 1 · Hero — Premium-Atelier-Stil B: 1 großes Mockup + Story-Caption -->
     <!-- Sprint 54 — Editorial-Award-Polish: Eyebrow + Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt -->

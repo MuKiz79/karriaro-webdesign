@@ -11,21 +11,9 @@
  */
 
 // ─────────── tech-detect (Port aus signals/tech-detect.js) ───────────
-
-const TECH_PATTERNS = [
-    { match: /\/wp-content\/|\/wp-includes\//i, cms: 'WordPress', baukasten: false },
-    { match: /static\.wixstatic\.com|parastorage\.com/i, cms: 'Wix', baukasten: true },
-    { match: /jimdo-storage\.|a\.jimdo\.com|jimdo\.com/i, cms: 'Jimdo', baukasten: true },
-    { match: /squarespace\.com|static1\.squarespace/i, cms: 'Squarespace', baukasten: true },
-    { match: /cdn\.shopify\.com/i, cms: 'Shopify', baukasten: true },
-    { match: /weeblycloud\.com|weebly\.com/i, cms: 'Weebly', baukasten: true },
-    { match: /\.webflow\.com|webflow\.io/i, cms: 'Webflow', baukasten: false },
-    { match: /divi\/includes|et-boc|et_pb_/i, cms: 'WordPress + Divi', baukasten: false },
-    { match: /elementor/i, cms: 'WordPress + Elementor', baukasten: false },
-    { match: /ionos\.com|1and1|1und1/i, cms: 'IONOS Baukasten', baukasten: true },
-    { match: /strato\.de/i, cms: 'Strato Homepage-Baukasten', baukasten: true }
-];
-const BAUKASTEN_SUBDOMAIN = /\.jimdosite\.com|\.jimdo\.com|\.wixsite\.com|\.weebly\.com|\.webflow\.io/;
+// Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
+// (vorher in light-audit.js + audit-pipeline.js dupliziert).
+const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
 
 function detectTech(psiData) {
     const lh = psiData?.lighthouseResult || {};
