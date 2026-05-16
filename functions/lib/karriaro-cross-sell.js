@@ -114,6 +114,38 @@ const CROSS_SELL = {
         ],
         trend: 'Physio-Trend 2026: Behandlungs-Filter + Online-Slot — Patienten kommen mit Rezept und buchen direkt.'
     },
+    'optical_store': {
+        tools: [
+            { id: 'sehtest-online', aliasFor: 'sehtest-online', name: 'Online-Sehtest mit Slot-Vorschlag', demoUrl: '/portfolio/praxis-weber.html#symptom-checker' },
+            { id: 'termin-online', aliasFor: 'termin-online', name: 'Sehtest-Termin live buchen', demoUrl: '/portfolio/praxis-weber.html' },
+            { id: 'brillen-konfigurator', name: 'Brillen-Konfigurator (Gesichtsform + Stil)', demoUrl: '/portfolio/friseur-salon.html#style-empfehlung' }
+        ],
+        trend: 'Optiker-Trend 2026: Kunden gehen mit Wunsch-Termin + Brillen-Idee ins Geschaeft — wer das online vorbereitet, gewinnt 30 % mehr Erstkontakte.'
+    },
+    'bakery': {
+        tools: [
+            { id: 'torten-konfigurator', aliasFor: 'vorbestellung', name: 'Torten-Konfigurator + Foto-Upload', demoUrl: '/portfolio/restaurant-template.html' },
+            { id: 'broetchen-abo', aliasFor: 'lieferservice', name: 'Sonntags-Broetchen-Abo Online', demoUrl: '/portfolio/restaurant-template.html' },
+            { id: 'tagesfrisch-board', aliasFor: 'frische', name: 'Tagesfrisch-Board (heute gebacken)', demoUrl: '/portfolio/restaurant-template.html' }
+        ],
+        trend: 'Baeckerei-Trend 2026: Sonntag-Broetchen + Geburtstagstorten werden Mittwoch online vorbestellt — wer kein Vorbestell-Formular hat, verschenkt Familien-Auftraege.'
+    },
+    'funeral_home': {
+        tools: [
+            { id: 'trauer-cockpit', name: 'Trauer-Cockpit mit Schritt-fuer-Schritt-Begleitung', demoUrl: '/portfolio/coaching-lehmann.html' },
+            { id: 'vorsorge-portal', aliasFor: 'vorsorge', name: 'Bestattungs-Vorsorge-Konfigurator', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' },
+            { id: 'kosten-rechner', aliasFor: 'kosten-rechner', name: 'Kosten-Klarheit-Rechner', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' }
+        ],
+        trend: 'Bestattungs-Trend 2026: Hinterbliebene googeln im Akutfall + brauchen 24h-Erreichbarkeit + Kosten-Transparenz — wer das nicht zeigt, wird nicht angerufen.'
+    },
+    'travel_agency': {
+        tools: [
+            { id: 'reise-konfigurator', aliasFor: 'leistungen', name: 'Reise-Konfigurator (Budget + Ziel + Saison)', demoUrl: '/portfolio/spedition-schwaben.html' },
+            { id: 'saison-deals', aliasFor: 'katalog', name: 'Live-Saison-Deals (auto-aktualisierend)', demoUrl: '/portfolio/spedition-schwaben.html' },
+            { id: 'reise-notfall', aliasFor: 'notfall-hotline', name: 'Reise-Notfall-Hotline mit GPS-Tracking', demoUrl: '/portfolio/spedition-schwaben.html' }
+        ],
+        trend: 'Reisebuero-Trend 2026: Last-Minute + Fruehbucher 2026 werden im Smartphone gegen Booking.com verglichen — wer Saisonangebote nicht live zeigt, ist im Pool nicht sichtbar.'
+    },
     'pharmacy': {
         tools: [
             { id: 'notdienst-puls', aliasFor: 'notdienst', name: 'Notdienst-Apotheken-Puls (PLZ-Live)', demoUrl: '/portfolio/meisterbetrieb-mueller.html#notdienst' },

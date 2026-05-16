@@ -221,6 +221,68 @@ const BRANCH_STANDARDS = {
         pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, faellt aus dem Suchergebnis.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'
     },
+    'optical_store': {
+        name: 'Optiker',
+        mustHave: [
+            { id: 'leistungen', label: 'Brillen-/Kontaktlinsen-/Sehtest-Leistungen', detect: { subPage: /leistung|brille|kontaktlins|sehtest/i, body: /\b(brille|kontaktlins|sehtest|gleitsicht|sonnenbrille|sportbrille|kinderbrille)\b/i } },
+            { id: 'team', label: 'Augenoptiker-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /augenoptik\w*|optikermeister\w*|hörakustik\w*|hoerakustik\w*|inhaber(in)?/i } },
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'termin-online', label: 'Online-Termin (Sehtest/Beratung)', detect: { body: /termin.*online|sehtest.*termin|online.*buchen|terminland|calendly/i } },
+            { id: 'marken', label: 'Brillen-Marken / Premium-Marken', detect: { body: /\b(ray[- ]?ban|persol|silhouette|lindberg|prada|gucci|tom\s?ford|oakley|essilor|zeiss|rodenstock)\b|markenuebersicht|markenwelt/i } },
+            { id: 'sehtest-online', label: 'Online-Sehtest oder Vor-Check', detect: { body: /sehtest.?online|onlinesehtest|sehtest.?vor|sehtest.?check|sehprofil/i } }
+        ],
+        pitchMissing: 'Kunden googeln "Optiker + Stadt" + erwarten Sehtest-Slot online — wer das nicht bietet, verliert sie an Apollo/Fielmann.',
+        pitchAllOk: 'Ihr Geschaeft ist online auffindbar und entscheidbar.'
+    },
+    'bakery': {
+        name: 'Baeckerei',
+        mustHave: [
+            { id: 'sortiment', label: 'Sortiment (Brot/Kuchen/Snacks)', detect: { subPage: /sortiment|produkte|brote|backwaren/i, body: /\b(brot(sorten)?|kuchen|toerten|torten|backwaren|brötchen|broetchen|gebäck|gebaeck|snack)\b/i } },
+            { id: 'frische', label: 'Frische- / Regionalitäts-Hinweis', detect: { body: /\b(taeglich frisch|täglich frisch|frisch gebacken|regional|biobaeckerei|biobäckerei|handwerksbaeckerei|handwerksbäckerei|familienbaeckerei|familienbäckerei|traditionsbaeckerei|traditionsbäckerei)\b/i } },
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
+            { id: 'kontakt-adresse', label: 'Filialen / Adressen', detect: { subPage: /kontakt|anfahrt|filiale|standort/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'vorbestellung', label: 'Online-Vorbestellung Torten/Catering', detect: { body: /\b(torten.?bestell|vorbestell|catering|partyservice|hochzeitstorte|geburtstagstorte|brötchen.?service|broetchen.?service)\b/i } },
+            { id: 'lieferservice', label: 'Lieferservice', detect: { body: /lieferservice|brötchen.?lieferung|broetchen.?lieferung|frühstücks.?lieferung|fruehstuecks.?lieferung/i } },
+            { id: 'bio-glutenfrei', label: 'Bio- / Glutenfrei-Angebot', detect: { body: /\bbio\b|biozertifik|glutenfrei|laktosefrei|vegan|dinkelvollkorn/i } }
+        ],
+        pitchMissing: 'Stammkunden bestellen Sonntags-Brötchen + Geburtstagstorten online — wer kein Vorbestell-Formular hat, verschenkt Familien-Aufträge.',
+        pitchAllOk: 'Ihre Baeckerei ist online erreichbar.'
+    },
+    'funeral_home': {
+        name: 'Bestattungsinstitut',
+        mustHave: [
+            { id: 'leistungen', label: 'Bestattungs-Leistungen (Erd/Feuer/See/Baum)', detect: { subPage: /leistung|bestattung|abschied|trauer/i, body: /\b(erdbestattung|feuerbestattung|seebestattung|baumbestattung|urnenbeisetzung|trauerfeier|abschiednahme)\b/i } },
+            { id: 'team', label: 'Team / Bestatter-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /bestatter(meister)?|trauerbegleit\w*|inhaber(in)?|familienbetrieb/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + 24h-Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } },
+            { id: 'notfall', label: '24h-Erreichbarkeit / Trauerfall-Hotline', detect: { body: /24[- ]?stund|24h|trauerfall|jederzeit erreichbar|tag und nacht|notruf|sterbefall/i } }
+        ],
+        shouldHave: [
+            { id: 'vorsorge', label: 'Bestattungs-Vorsorge / Vorsorgevertrag', detect: { body: /\bvorsorge\b|bestattungsvorsorge|vorsorgevertrag|treuhand|sicherheits.?vorsorge/i } },
+            { id: 'kosten-rechner', label: 'Kosten-Uebersicht / Vorab-Schaetzung', detect: { body: /kosten.?ueberblick|kosten.?übersicht|preise|festpreis|kostenklarheit|kostenrechner/i } }
+        ],
+        pitchMissing: 'Hinterbliebene googeln im Akutfall — wer 24h-Erreichbarkeit + Kosten-Transparenz nicht zeigt, wird nicht angerufen.',
+        pitchAllOk: 'Ihr Institut ist online jederzeit erreichbar.'
+    },
+    'travel_agency': {
+        name: 'Reisebuero',
+        mustHave: [
+            { id: 'leistungen', label: 'Reise-Angebote (Pauschal/Individual/Gruppen)', detect: { subPage: /leistung|angebot|reise|pauschal|individual/i, body: /\b(pauschalreise|individualreise|gruppenreise|familienreise|kreuzfahrt|busreise|fernreise|städtereise|staedtereise|aktivreise)\b/i } },
+            { id: 'team', label: 'Reiseberater-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /reisefachfrau|reisefachmann|reiseberater(in)?|reiseverkehrskauffrau|reiseverkehrskaufmann|inhaber(in)?/i } },
+            { id: 'oeffnungszeiten', label: 'Oeffnungszeiten', detect: { body: /oeffnungszeit|öffnungszeit|mo[- ]?fr|mo[- ]?sa|\b(montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)\b[\s\S]{0,80}(\d|uhr|geöffnet|geschlossen)|\b(mo|di|mi|do|fr|sa|so)\.?\s*[-–]\s*(mo|di|mi|do|fr|sa|so)\b/i } },
+            { id: 'kontakt-adresse', label: 'Adresse + Telefon', detect: { subPage: /kontakt|anfahrt/i, body: /\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'katalog', label: 'Saison-Angebote / Reise-Katalog', detect: { body: /\b(saisonangebot|fruehbucher|frühbucher|lastminute|reiseangebot|sonderangebot|hot[- ]?deal|topangebot)\b/i } },
+            { id: 'notfall-hotline', label: 'Reise-Notfall-Hotline', detect: { body: /reise.?notfall|24h.?hotline|notfall.?nummer|reise.?notdienst/i } }
+        ],
+        pitchMissing: 'Reisende googeln Last-Minute + Frühbucher 2026 — wer keine aktuellen Saisonangebote zeigt, ist im Vergleich unsichtbar.',
+        pitchAllOk: 'Ihr Reisebuero ist online entscheidbar.'
+    },
     'pharmacy': {
         name: 'Apotheke',
         mustHave: [

@@ -210,6 +210,11 @@ function normalizePlacesType(t) {
     if (['veterinarian', 'animal_hospital'].includes(t)) return 'veterinary_care';
     if (['tax_consultant', 'accountant', 'bookkeeper'].includes(t)) return 'accounting';
     if (['architecture_firm', 'architectural_design'].includes(t)) return 'architect';
+    // Sprint 79 — neue Branchen
+    if (['optician', 'eye_care_center'].includes(t)) return 'optical_store';
+    if (['cafeteria_bakery'].includes(t)) return 'bakery'; // bakery wird direkt durchgereicht
+    if (['cemetery', 'mortuary'].includes(t)) return 'funeral_home';
+    if (['tour_agency', 'tourist_information_center'].includes(t)) return 'travel_agency';
     return t;
 }
 
@@ -240,6 +245,10 @@ function guessBranchFromUrl(url) {
             { re: /(tierarzt|tieraerztin|tierärzt|tier[-_]?klinik|veterinaer|veterinär)/i, type: 'veterinary_care' },
             { re: /(steuer|steuerboard|wirtschaftspruefer|wirtschaftsprüfer|buchhaltung|fibu)/i, type: 'accounting' },
             { re: /(architekt|architektur|architects[-_]|baubuero|baubüro)/i, type: 'architect' },
+            { re: /(optiker|optikermeister|augenoptik|sehzentrum|brille[-_]?n)/i, type: 'optical_store' },
+            { re: /(baeckerei|bäckerei|backhaus|backwerk|baeck[-_]|bäck[-_]|backstube)/i, type: 'bakery' },
+            { re: /(bestatter|bestattung|trauerhilfe|trauerinstitut|abschiedshaus)/i, type: 'funeral_home' },
+            { re: /(reisebuero|reisebüro|reisecenter|travelagent|reiseberat)/i, type: 'travel_agency' },
             { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
         ];
         for (var i = 0; i < rules.length; i++) {
@@ -450,7 +459,8 @@ async function detectSeoGeo(html, baseUrl) {
     // Ergaenzt um valide LocalBusiness-Subtypen laut schema.org: FoodEstablishment, DentalClinic,
     // MedicalClinic, Store, ProfessionalService.
     // Sprint 76 — neue Subtypen: Pharmacy, VeterinaryCare, AccountingService, Architect
-    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect'];
+    // Sprint 79 — neue Subtypen: Optician, BakeryOrBakery, FuneralHome, TravelAgency
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect', 'Optician', 'Bakery', 'FuneralHome', 'TravelAgency'];
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical

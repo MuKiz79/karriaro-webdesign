@@ -261,6 +261,69 @@ test('guessBranchFromUrl: Sprint 76 Domains', () => {
     assert.equal(guessBranchFromUrl('https://architekt-mueller.de'), 'architect');
 });
 
+test('checkBranchStandards: optical_store Sprint 79', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Wir bieten Brillen, Kontaktlinsen, Gleitsicht und Sehtest. Augenoptikermeister Mueller. Stuttgart 70173. Mo - Fr 9 Uhr. Marken: Ray-Ban, Persol, Silhouette.'
+    };
+    const r = checkBranchStandards('optical_store', ctx);
+    assert.equal(r.primaryType, 'optical_store');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Brillen-Keyword');
+    assert.ok(r.mustHave.find(i => i.id === 'team').found, 'Augenoptikermeister');
+    assert.ok(r.shouldHave.find(i => i.id === 'marken').found, 'Ray-Ban-Pattern');
+});
+
+test('checkBranchStandards: bakery Sprint 79', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Familienbäckerei seit 1923. Täglich frisch gebacken. Brot, Brötchen, Kuchen, Torten. Stuttgart 70173. Mo - Sa 6:00 Uhr.'
+    };
+    const r = checkBranchStandards('bakery', ctx);
+    assert.equal(r.primaryType, 'bakery');
+    assert.ok(r.mustHave.find(i => i.id === 'sortiment').found, 'Brot-Keyword');
+    assert.ok(r.mustHave.find(i => i.id === 'frische').found, 'Familienbaeckerei-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'oeffnungszeiten').found, 'Mo - Sa Pattern');
+});
+
+test('checkBranchStandards: funeral_home Sprint 79', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Trauerhilfe. Erdbestattung, Feuerbestattung, Seebestattung. Bestattermeister Mueller. 24-Stunden erreichbar bei Trauerfall. 70173 Stuttgart. Vorsorgevertrag möglich.'
+    };
+    const r = checkBranchStandards('funeral_home', ctx);
+    assert.equal(r.primaryType, 'funeral_home');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Erdbestattung-Keyword');
+    assert.ok(r.mustHave.find(i => i.id === 'notfall').found, '24-Stunden + Trauerfall-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'vorsorge').found, 'Vorsorgevertrag-Pattern');
+});
+
+test('checkBranchStandards: travel_agency Sprint 79', () => {
+    const ctx = {
+        subPages: [],
+        body: 'Pauschalreise, Individualreise, Kreuzfahrt. Reisefachfrau Mueller. Stuttgart 70173. Mo - Fr 9 Uhr. Frühbucher 2026 sichern, Last-Minute-Angebote.'
+    };
+    const r = checkBranchStandards('travel_agency', ctx);
+    assert.equal(r.primaryType, 'travel_agency');
+    assert.ok(r.mustHave.find(i => i.id === 'leistungen').found, 'Pauschalreise-Pattern');
+    assert.ok(r.mustHave.find(i => i.id === 'team').found, 'Reisefachfrau-Pattern');
+    assert.ok(r.shouldHave.find(i => i.id === 'katalog').found, 'Fruehbucher/Lastminute-Pattern');
+});
+
+test('normalizePlacesType: Sprint 79 Sub-Types', () => {
+    assert.equal(normalizePlacesType('optician'), 'optical_store');
+    assert.equal(normalizePlacesType('eye_care_center'), 'optical_store');
+    assert.equal(normalizePlacesType('mortuary'), 'funeral_home');
+    assert.equal(normalizePlacesType('cemetery'), 'funeral_home');
+    assert.equal(normalizePlacesType('tour_agency'), 'travel_agency');
+});
+
+test('guessBranchFromUrl: Sprint 79 Domains', () => {
+    assert.equal(guessBranchFromUrl('https://optiker-mueller.de'), 'optical_store');
+    assert.equal(guessBranchFromUrl('https://baeckerei-mueller.de'), 'bakery');
+    assert.equal(guessBranchFromUrl('https://bestatter-mueller.de'), 'funeral_home');
+    assert.equal(guessBranchFromUrl('https://reisebuero-mueller.de'), 'travel_agency');
+});
+
 test('checkBranchStandards: unbekannter primaryType → _default + usedDefault=true', () => {
     const r = checkBranchStandards('unknown_branch', { subPages: [], body: '' });
     assert.equal(r.usedDefault, true);
