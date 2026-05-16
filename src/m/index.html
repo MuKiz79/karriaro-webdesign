@@ -2,181 +2,315 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#F8F4ED">
-    <title>Karriaro Webdesign — Manufaktur</title>
-    <meta name="description" content="Wenn Ihr Name draufsteht, steht unserer dahinter. Handcodierte Websites ab 1.290 €, BFSG-konform, in 14 Tagen.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A2E40">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Karriaro">
+    <title>Karriaro Webdesign</title>
+    <meta name="description" content="Handcodierte Websites ab 1.290 €. BFSG-konform. In 14 Tagen.">
     <link rel="canonical" href="https://karriaro-webdesign.de/">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/svg+xml" href="https://karriaro-webdesign.de/images/favicon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Cormorant+Garamond:ital@0;1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/mobile.css">
+    <link rel="stylesheet" href="/css/mobile.css?v=89">
 </head>
 <body>
 
 <a href="#main" class="m-skip">Zum Hauptinhalt</a>
 
-<nav class="m-nav">
-    <div class="m-nav-inner">
-        <a href="/" class="m-nav-logo" aria-label="Karriaro Startseite">
-            <img src="https://karriaro-webdesign.de/images/karriaro-logo-nav.svg?v=2" alt="Karriaro">
-        </a>
-        <button class="m-nav-toggle" aria-label="Menü öffnen" data-m-nav-toggle>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-        </button>
+<!-- ── Top-Nav: iOS-Title-Bar ── -->
+<header class="m-topnav">
+    <div class="m-topnav-inner">
+        <span class="m-topnav-brand">Karriaro</span>
+        <button class="m-topnav-action" aria-label="Mehr" data-m-sheet-open="more">Mehr</button>
     </div>
-</nav>
-<div class="m-nav-backdrop" data-m-nav-backdrop></div>
-<aside class="m-nav-drawer" data-m-nav-drawer aria-label="Navigation">
-    <button class="m-nav-drawer-close" aria-label="Menü schließen" data-m-nav-close>×</button>
-    <a href="/">Start</a>
-    <a href="/preise.html">Preise</a>
-    <a href="/audit.html">Audit</a>
-    <a href="/portfolio/immobilien-makler.html">Portfolio</a>
-    <a href="/gruender.html">Gründer</a>
-    <a href="/warum-handcoded.html">Warum Handcode</a>
-    <a href="/blog.html">Blog</a>
-    <a href="/impressum.html">Impressum</a>
-</aside>
+</header>
 
 <main id="main">
 
-    <!-- ── Screen 1 — Hero: das Statement ── -->
-    <section class="m-screen m-screen--cream">
-        <span class="m-eyebrow">N° 1 · Karriaro · 2026</span>
-        <h1 class="m-h1">Ihre Website.<em>Handgemacht.</em></h1>
-        <p class="m-sub">Wenn Ihr Name draufsteht, steht unserer dahinter.</p>
-        <a href="/audit.html" class="m-cta m-cta-primary">Mini-Audit starten</a>
-        <a href="/preise.html" class="m-link">Pakete ansehen</a>
-        <span class="m-scroll-hint">Weiter</span>
+    <!-- ── Hero-Card (Brand-Statement, iOS-Card-Style) ── -->
+    <section class="m-hero-card" aria-labelledby="hero-title">
+        <h1 class="m-hero-brand" id="hero-title">Ihre Website.<br><em>Handgemacht.</em></h1>
+        <p class="m-hero-sub">Wenn Ihr Name draufsteht, steht unserer dahinter. Handcodiert, BFSG-konform, in 14 Tagen.</p>
+        <button class="m-hero-cta" data-m-sheet-open="audit">Mini-Audit starten</button>
     </section>
 
-    <!-- ── Screen 2 — Showcase: Was es heisst ── -->
-    <section class="m-screen m-screen--white">
-        <span class="m-eyebrow">Stadtmakler Stuttgart · Immobilien</span>
-        <h2 class="m-h2">So sieht eine <em>Karriaro-Site aus.</em></h2>
-        <figure class="m-mockup">
-            <div class="m-mockup-chrome">
-                <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-                <span class="url">stadtmakler-stuttgart.de</span>
-            </div>
-            <img src="https://karriaro-webdesign.de/images/immobilien-stadtmakler-mockup.jpg?v=86" alt="Stadtmakler Stuttgart — Beispiel-Site" width="1586" height="992" loading="lazy">
-        </figure>
-        <p class="m-caption">Premium-Paket <span class="sep">·</span> 14 Tage Lieferzeit</p>
-        <a href="/portfolio/immobilien-makler.html" class="m-link">Volle Demo ansehen</a>
+    <!-- ── Pakete als Inset-Group-List (iOS Settings-Style) ── -->
+    <section class="m-section">
+        <h2 class="m-section-title">Pakete</h2>
+        <div class="m-list">
+            <button class="m-list-row" data-m-sheet-open="pkg-essential">
+                <span class="m-list-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+                </span>
+                <span class="m-list-row-text">
+                    <span class="m-list-row-title">Essential</span>
+                    <span class="m-list-row-sub">Eine Seite · 7 Tage</span>
+                </span>
+                <span class="m-list-row-trail m-list-row-trail--price">1.290 €</span>
+            </button>
+            <button class="m-list-row" data-m-sheet-open="pkg-professional">
+                <span class="m-list-row-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </span>
+                <span class="m-list-row-text">
+                    <span class="m-list-row-title">Professional</span>
+                    <span class="m-list-row-sub">4–6 Seiten + Werkzeug · 10 Tage</span>
+                </span>
+                <span class="m-list-row-trail m-list-row-trail--price">1.990 €</span>
+            </button>
+            <button class="m-list-row" data-m-sheet-open="pkg-premium">
+                <span class="m-list-row-icon m-list-row-icon--gold">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>
+                </span>
+                <span class="m-list-row-text">
+                    <span class="m-list-row-title">Premium <span class="m-badge-premium">Manufaktur</span></span>
+                    <span class="m-list-row-sub">Volle Werkzeug-Palette · 14 Tage</span>
+                </span>
+                <span class="m-list-row-trail m-list-row-trail--price">2.990 €</span>
+            </button>
+        </div>
+        <p class="m-section-footer">Einmalpreis. Quellcode gehört Ihnen. Wartung 99 €/Monat optional.</p>
     </section>
 
-    <!-- ── Screen 3 — Werkzeuge: Horizontal-Scroll ── -->
-    <section class="m-screen m-screen--cream m-screen--no-min">
-        <span class="m-eyebrow">Werkzeuge</span>
-        <h2 class="m-h2">Live, in jeder Karriaro-Site.</h2>
-        <p class="m-sub">Pro Branche ein Live-Werkzeug. Wird mit Ihrer Site mit ausgeliefert.</p>
-
-        <div class="m-rail-wrap">
-            <div class="m-rail">
-                <article class="m-rail-card">
-                    <div class="m-rail-card-eyebrow">Immobilien</div>
-                    <h3 class="m-rail-card-title">Wertermittlung &amp; Hypothekenrechner</h3>
-                    <p class="m-rail-card-text">PLZ + Fläche + Baujahr → Live-Marktwert. Plus Annuitäten-Tilgungsplan.</p>
-                    <a href="/portfolio/immobilien-makler.html" class="m-rail-card-link">Ansehen</a>
-                </article>
-                <article class="m-rail-card">
-                    <div class="m-rail-card-eyebrow">Dachdecker</div>
-                    <h3 class="m-rail-card-title">BAFA-Förderrechner 2026</h3>
-                    <p class="m-rail-card-text">15 % Grund + 5 % iSFP-Bonus. KfW-261 ab 2,8 % p.a. Live-Berechnung.</p>
-                    <a href="/portfolio/dachdecker-meisterbetrieb.html" class="m-rail-card-link">Ansehen</a>
-                </article>
-                <article class="m-rail-card">
-                    <div class="m-rail-card-eyebrow">Praxis</div>
-                    <h3 class="m-rail-card-title">KI-Vor-Anamnese</h3>
-                    <p class="m-rail-card-text">Symptome wählen → strukturierter Termin-Vorschlag. Keine Diagnose, aber Zeitersparnis für die MFA.</p>
-                    <a href="/portfolio/praxis-weber.html" class="m-rail-card-link">Ansehen</a>
-                </article>
-                <article class="m-rail-card">
-                    <div class="m-rail-card-eyebrow">Friseur</div>
-                    <h3 class="m-rail-card-title">Style-Galerie mit Foto-Vorschau</h3>
-                    <p class="m-rail-card-text">Gesichtsform + Anlass → 12 Stil-Empfehlungen aus dem Atelier-Portfolio.</p>
-                    <a href="/portfolio/friseur-salon.html" class="m-rail-card-link">Ansehen</a>
-                </article>
-                <article class="m-rail-card">
-                    <div class="m-rail-card-eyebrow">Spedition</div>
-                    <h3 class="m-rail-card-title">Frachtquote mit ETA</h3>
-                    <p class="m-rail-card-text">Von-PLZ + Bis-PLZ + Gewicht → Live-Quote mit Fahrzeugklasse und Ankunftszeit.</p>
-                    <a href="/portfolio/spedition-schwaben.html" class="m-rail-card-link">Ansehen</a>
-                </article>
+    <!-- ── Showcase: ein Karriaro-Demo ohne Browser-Mockup ── -->
+    <section class="m-section">
+        <h2 class="m-section-title">Live-Demo</h2>
+        <div class="m-snapshot">
+            <img class="m-snapshot-img" src="https://karriaro-webdesign.de/images/immobilien/andreas-team.jpg" alt="Andreas Müller, Geschäftsführer Stadtmakler Stuttgart" loading="lazy">
+            <div class="m-snapshot-body">
+                <div class="m-snapshot-eyebrow">Premium · 14 Tage</div>
+                <div class="m-snapshot-title">Stadtmakler Stuttgart</div>
+                <div class="m-snapshot-sub">Immobilien-Site mit Wertermittlung + Hypothekenrechner. Live im Browser.</div>
             </div>
         </div>
     </section>
 
-    <!-- ── Screen 4 — Pakete: Dunkler Cut für Premium-Feeling ── -->
-    <section class="m-screen m-screen--dark">
-        <span class="m-eyebrow">Pakete</span>
-        <p class="m-sub" style="margin-bottom: 8px;">Ab</p>
-        <h2 class="m-mega">1.290 €</h2>
-        <p class="m-sub">Einmalig. Quellcode gehört Ihnen. Keine Abo-Falle.</p>
-
-        <ul class="m-mini-list">
-            <li><strong>Essential</strong> <span>1.290 € · 7 Tage</span></li>
-            <li><strong>Professional</strong> <span>1.990 € · 10 Tage</span></li>
-            <li><strong>Premium</strong> <span>2.990 € · 14 Tage</span></li>
-        </ul>
-
-        <a href="/preise.html" class="m-cta m-cta-primary">Pakete vergleichen</a>
-        <a href="/audit.html" class="m-link">Lieber direkt zum Audit</a>
-    </section>
-
-    <!-- ── Screen 5 — Trust: Code-Counter + Badges ── -->
-    <section class="m-screen m-screen--white">
-        <span class="m-eyebrow">Beweis</span>
-        <h2 class="m-mega">10.538<br>Zeilen.</h2>
-        <p class="m-sub">Aus 7 Branchen-Demos. Live im Browser. Kein Lead-Mockup.</p>
-
-        <div class="m-badge-grid">
-            <span class="m-badge">BFSG-konform</span>
-            <span class="m-badge">DSGVO + DE/EU</span>
-            <span class="m-badge">Lighthouse 95+</span>
-            <span class="m-badge">Schema.org</span>
-            <span class="m-badge">Mobile-First</span>
-            <span class="m-badge">Hosting in DE</span>
+    <!-- ── Werkzeuge als Liste ── -->
+    <section class="m-section">
+        <h2 class="m-section-title">Live-Werkzeuge</h2>
+        <div class="m-list">
+            <a class="m-list-row" href="/portfolio/immobilien-makler.html">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">Immobilien-Wertermittlung</span><span class="m-list-row-sub">PLZ + Fläche + Baujahr → Live-Marktwert</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
+            <a class="m-list-row" href="/portfolio/dachdecker-meisterbetrieb.html">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4 12H1m22 0h-3"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">BAFA-Förderrechner</span><span class="m-list-row-sub">15 % Grund + 5 % iSFP, Stand 2026</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
+            <a class="m-list-row" href="/portfolio/praxis-weber.html">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.35-7-11a5 5 0 019-3 5 5 0 019 3c0 6.65-7 11-7 11z"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">KI-Vor-Anamnese</span><span class="m-list-row-sub">Symptome → Termin-Empfehlung</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
+            <a class="m-list-row" href="/portfolio/friseur-salon.html">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="14" r="3"/><circle cx="18" cy="14" r="3"/><path d="M12 2L8 12m4-10l4 10"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">Style-Galerie</span><span class="m-list-row-sub">Gesichtsform → 12 Style-Vorschläge</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
+            <a class="m-list-row" href="/portfolio/spedition-schwaben.html">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="15" height="10" rx="2"/><polygon points="16,8 20,8 23,12 23,16 16,16"/><circle cx="6" cy="18" r="2"/><circle cx="19" cy="18" r="2"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">Frachtquote</span><span class="m-list-row-sub">PLZ + Gewicht → Live-Quote mit ETA</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
         </div>
     </section>
 
-    <!-- ── Screen 6 — Final-CTA ── -->
-    <section class="m-screen m-screen--cream">
-        <span class="m-eyebrow">Bereit?</span>
-        <h2 class="m-h1">Fünf <em>Sekunden.</em></h2>
-        <p class="m-sub">Das Mini-Audit zeigt, wo Ihre Site steht. BFSG, SEO, Branchen-Standards.</p>
-        <a href="/audit.html" class="m-cta m-cta-primary">Audit starten</a>
-        <a href="mailto:kontakt@karriaro.de" class="m-link">Oder direkt schreiben</a>
+    <!-- ── Trust ── -->
+    <section class="m-section">
+        <h2 class="m-section-title">Eingebaut</h2>
+        <div class="m-list">
+            <div class="m-list-row">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">BFSG-konform</span><span class="m-list-row-sub">Eingebaut, nicht nachgerüstet</span></span>
+            </div>
+            <div class="m-list-row">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">DSGVO + Hosting in DE</span><span class="m-list-row-sub">Server in Deutschland, AVV mit Hetzner</span></span>
+            </div>
+            <div class="m-list-row">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">Lighthouse 95+</span><span class="m-list-row-sub">Lab-Mode bei Auslieferung garantiert</span></span>
+            </div>
+            <div class="m-list-row">
+                <span class="m-list-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                <span class="m-list-row-text"><span class="m-list-row-title">Quellcode gehört Ihnen</span><span class="m-list-row-sub">Kein Vendor Lock-In, kein Abo-Zwang</span></span>
+            </div>
+        </div>
     </section>
+
+    <footer class="m-footer">
+        Karriaro Webdesign · Spitalstr. 7 · 77761 Schiltach
+        <div class="m-footer-meta">&copy; 2026</div>
+    </footer>
 
 </main>
 
-<footer class="m-footer">
-    <div class="m-footer-brand">Karriaro Webdesign</div>
-    <div class="m-footer-tag">Wenn Ihr Name draufsteht, steht unserer dahinter.</div>
-    <nav class="m-footer-links">
-        <a href="/impressum.html">Impressum</a>
-        <a href="/datenschutz.html">Datenschutz</a>
-        <a href="/agb.html">AGB</a>
-        <a href="/barrierefreiheit.html">Barrierefreiheit</a>
-    </nav>
-    <a href="https://karriaro-webdesign.de/" class="m-footer-desktop" onclick="sessionStorage.setItem('kr-keep-desktop','1')">Desktop-Version ansehen →</a>
-    <div class="m-footer-meta">&copy; 2026 Karriaro Webdesign · Spitalstr. 7 · 77761 Schiltach · kontakt@karriaro.de</div>
-</footer>
+<!-- ── Bottom-Tab-Bar ── -->
+<nav class="m-tabbar" aria-label="Hauptnavigation">
+    <a href="/" class="m-tabbar-item is-active" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+        Start
+    </a>
+    <a href="/portfolio/immobilien-makler.html" class="m-tabbar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Werkzeuge
+    </a>
+    <button class="m-tabbar-item" data-m-sheet-open="audit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        Audit
+    </button>
+    <button class="m-tabbar-item" data-m-sheet-open="more">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+        Mehr
+    </button>
+</nav>
+
+<!-- ── Sheet-Modals ── -->
+<div class="m-sheet-backdrop" data-m-sheet-backdrop></div>
+
+<!-- Audit-Sheet -->
+<aside class="m-sheet" data-m-sheet="audit" aria-labelledby="audit-title" aria-hidden="true">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-head">
+        <span class="m-sheet-title" id="audit-title">Mini-Audit</span>
+        <button class="m-sheet-close" data-m-sheet-close>Schließen</button>
+    </div>
+    <div class="m-sheet-body">
+        <p class="m-section-footer" style="margin-bottom: 16px;">URL eingeben, 5 Sekunden warten. Prüfen: BFSG, SEO, Branchen-Standards.</p>
+        <form class="m-form-group" action="https://europe-west1-apex-executive.cloudfunctions.net/quickAudit" method="POST">
+            <input class="m-input" type="url" name="url" placeholder="https://ihre-website.de" required autocomplete="url">
+        </form>
+        <button type="submit" class="m-form-cta" form="audit-form">Audit starten</button>
+        <p class="m-section-footer" style="margin-top: 16px;">Kein Login. Keine E-Mail nötig. DSGVO-konform.</p>
+    </div>
+</aside>
+
+<!-- Pakete-Sheets (eines beispielhaft, andere identisch strukturiert) -->
+<aside class="m-sheet" data-m-sheet="pkg-essential" aria-labelledby="essential-title" aria-hidden="true">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-head">
+        <span class="m-sheet-title" id="essential-title">Essential — 1.290 €</span>
+        <button class="m-sheet-close" data-m-sheet-close>Schließen</button>
+    </div>
+    <div class="m-sheet-body">
+        <h3 class="m-section-title">Was enthalten ist</h3>
+        <div class="m-list">
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Eine Seite</span><span class="m-list-row-sub">Hero, Leistungen, Kontakt</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">BFSG-konform</span><span class="m-list-row-sub">Inkl. DSGVO-Texte</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Mobile-optimiert</span><span class="m-list-row-sub">Lighthouse 95+ Lab-Mode</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Schema.org-Markup</span><span class="m-list-row-sub">Google + KI-Suche-Lesbarkeit</span></span></div>
+        </div>
+        <a href="mailto:kontakt@karriaro.de?subject=Essential anfragen" class="m-form-cta">Essential anfragen</a>
+    </div>
+</aside>
+
+<aside class="m-sheet" data-m-sheet="pkg-professional" aria-labelledby="pro-title" aria-hidden="true">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-head">
+        <span class="m-sheet-title" id="pro-title">Professional — 1.990 €</span>
+        <button class="m-sheet-close" data-m-sheet-close>Schließen</button>
+    </div>
+    <div class="m-sheet-body">
+        <h3 class="m-section-title">Was enthalten ist</h3>
+        <div class="m-list">
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">4–6 Seiten</span><span class="m-list-row-sub">Inkl. Portfolio + Blog</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Branchen-Werkzeug-Light</span><span class="m-list-row-sub">Z. B. Termin-Widget oder Rechner</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Performance &lt; 0,5 s LCP</span><span class="m-list-row-sub">Schneller als 95 % der DACH-Sites</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">SEO-Setup</span><span class="m-list-row-sub">Inkl. Google-Business-Verknüpfung</span></span></div>
+        </div>
+        <a href="mailto:kontakt@karriaro.de?subject=Professional anfragen" class="m-form-cta">Professional anfragen</a>
+    </div>
+</aside>
+
+<aside class="m-sheet" data-m-sheet="pkg-premium" aria-labelledby="prem-title" aria-hidden="true">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-head">
+        <span class="m-sheet-title" id="prem-title">Premium — 2.990 €</span>
+        <button class="m-sheet-close" data-m-sheet-close>Schließen</button>
+    </div>
+    <div class="m-sheet-body">
+        <h3 class="m-section-title">Was enthalten ist</h3>
+        <div class="m-list">
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Volle Werkzeug-Palette</span><span class="m-list-row-sub">Pro Branche das passende Live-Tool</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Editorial-Polish</span><span class="m-list-row-sub">Custom-Typografie, Marginalia, Pull-Quotes</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">SEO-Stadt-Landings</span><span class="m-list-row-sub">Bis zu 14 lokale Landing-Pages</span></span></div>
+            <div class="m-list-row"><span class="m-list-row-text"><span class="m-list-row-title">Custom-Bilder + Foto-Galerie</span><span class="m-list-row-sub">KI-generiert oder eigene Fotos</span></span></div>
+        </div>
+        <a href="mailto:kontakt@karriaro.de?subject=Premium anfragen" class="m-form-cta">Premium anfragen</a>
+    </div>
+</aside>
+
+<!-- Mehr-Sheet (Navigation zu Sub-Pages) -->
+<aside class="m-sheet" data-m-sheet="more" aria-labelledby="more-title" aria-hidden="true">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-head">
+        <span class="m-sheet-title" id="more-title">Mehr</span>
+        <button class="m-sheet-close" data-m-sheet-close>Schließen</button>
+    </div>
+    <div class="m-sheet-body">
+        <h3 class="m-section-title">Karriaro</h3>
+        <div class="m-list">
+            <a class="m-list-row" href="/preise.html"><span class="m-list-row-text"><span class="m-list-row-title">Alle Pakete</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/gruender.html"><span class="m-list-row-text"><span class="m-list-row-title">Warum es Karriaro gibt</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/warum-handcoded.html"><span class="m-list-row-text"><span class="m-list-row-title">Warum Handcode</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/blog.html"><span class="m-list-row-text"><span class="m-list-row-title">Blog</span></span><span class="m-list-row-trail"></span></a>
+        </div>
+        <h3 class="m-section-title">Rechtliches</h3>
+        <div class="m-list">
+            <a class="m-list-row" href="/impressum.html"><span class="m-list-row-text"><span class="m-list-row-title">Impressum</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/datenschutz.html"><span class="m-list-row-text"><span class="m-list-row-title">Datenschutz</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/agb.html"><span class="m-list-row-text"><span class="m-list-row-title">AGB</span></span><span class="m-list-row-trail"></span></a>
+            <a class="m-list-row" href="/barrierefreiheit.html"><span class="m-list-row-text"><span class="m-list-row-title">Barrierefreiheit</span></span><span class="m-list-row-trail"></span></a>
+        </div>
+        <h3 class="m-section-title">Andere Version</h3>
+        <div class="m-list">
+            <a class="m-list-row" href="https://karriaro-webdesign.de/" onclick="sessionStorage.setItem('kr-keep-desktop','1')">
+                <span class="m-list-row-text"><span class="m-list-row-title">Desktop-Version</span><span class="m-list-row-sub">karriaro-webdesign.de</span></span>
+                <span class="m-list-row-trail"></span>
+            </a>
+        </div>
+    </div>
+</aside>
 
 <script>
 (function () {
-    var t = document.querySelector('[data-m-nav-toggle]');
-    var d = document.querySelector('[data-m-nav-drawer]');
-    var b = document.querySelector('[data-m-nav-backdrop]');
-    var c = document.querySelector('[data-m-nav-close]');
-    function open() { d.classList.add('is-open'); b.classList.add('is-open'); t.setAttribute('aria-expanded', 'true'); }
-    function shut() { d.classList.remove('is-open'); b.classList.remove('is-open'); t.setAttribute('aria-expanded', 'false'); }
-    if (t) t.addEventListener('click', open);
-    if (c) c.addEventListener('click', shut);
-    if (b) b.addEventListener('click', shut);
+    // Sheet-Open/Close
+    var backdrop = document.querySelector('[data-m-sheet-backdrop]');
+    var sheets = document.querySelectorAll('[data-m-sheet]');
+    function open(name) {
+        var s = document.querySelector('[data-m-sheet="' + name + '"]');
+        if (!s) return;
+        s.classList.add('is-open');
+        s.setAttribute('aria-hidden', 'false');
+        backdrop.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    }
+    function shutAll() {
+        sheets.forEach(function (s) { s.classList.remove('is-open'); s.setAttribute('aria-hidden', 'true'); });
+        backdrop.classList.remove('is-open');
+        document.body.style.overflow = '';
+    }
+    document.querySelectorAll('[data-m-sheet-open]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            open(el.getAttribute('data-m-sheet-open'));
+        });
+    });
+    document.querySelectorAll('[data-m-sheet-close]').forEach(function (el) {
+        el.addEventListener('click', shutAll);
+    });
+    backdrop.addEventListener('click', shutAll);
+
+    // PWA-SW registrieren
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/sw.js').catch(function () {});
+        });
+    }
 })();
 </script>
 
