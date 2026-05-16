@@ -107,6 +107,49 @@
             <p>Eine Agentur muss 4 Vertriebsleute, 2 Account-Manager und 3 Projektleiter durchfüttern. Davon fließt nicht viel in den Code. Eine Manufaktur ist ich. Was Sie zahlen, fließt in Ihre Website. Punkt.</p>
             <p>Das schränkt die Kapazität ein — pro Quartal nehme ich höchstens fünf Pilot-Plätze. Aber jede dieser Websites bekommt die Sorgfalt, die Konzerne für ihre Top-Marken aufwenden. Das ist mein Versprechen.</p>
 
+            <h2 id="punze">Unsere Manufakturpunze</h2>
+            <p>Goldschmiede haben seit dem 14. Jahrhundert ihre Punze — ein eingeschlagenes Siegel, das juristisch beweist: <em>dieser Meister steht für dieses Stück.</em> Wenn etwas am Silber nicht stimmt, weiß die Goldschmiedeinnung, an wessen Tür sie klopfen muss. Diese Tradition heißt <strong>Hallmarking</strong> und ist heute in jedem EU-Land vorgeschrieben.</p>
+
+            <div class="punze-block" style="display:flex; gap:48px; align-items:center; margin:32px 0; flex-wrap:wrap;">
+                <svg width="160" height="160" viewBox="0 0 90 90" aria-hidden="true" style="flex-shrink:0;">
+                    <path d="M 5 18 L 5 5 L 18 5" stroke="#14202B" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 72 5 L 85 5 L 85 18" stroke="#14202B" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 5 72 L 5 85 L 18 85" stroke="#14202B" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 72 85 L 85 85 L 85 72" stroke="#14202B" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <g id="gruender-punze-dots"></g>
+                </svg>
+                <div>
+                    <p style="margin:0 0 12px 0;">Karriaro hat seit 2026 eine eigene. Vier Eck-Marks, die das Bracket-K unseres Logos zitieren. Innen dreizehn Punkte — angeordnet nach der Mathematik, mit der Sonnenblumen ihre Kerne ordnen.</p>
+                    <p style="margin:0; font-size: 14px; color: var(--color-graphite-soft, #525E6B); font-family: 'JetBrains Mono', monospace;">θ = (3 − √5) · π = 137,50776° · n = 13</p>
+                </div>
+            </div>
+
+            <p>Die Formel heißt <strong>Phyllotaxis</strong>. Tannenzapfen kennen sie, Aloe-Pflanzen, Galaxien. Der Goldene Winkel von 137,5° sorgt dafür, dass keine zwei Punkte je auf einer Linie liegen — die optimale Platznutzung, die die Natur in Hunderten Millionen Jahren ausprobiert hat. Wir nehmen sie als Vorlage, weil sie keine bloße Geometrie ist, sondern ein Naturgesetz der Sorgfalt.</p>
+
+            <p>Die Dreizehn ist eine Fibonacci-Zahl — die Folge, in der jede Zahl die Summe der zwei vorangegangenen ist (1, 1, 2, 3, 5, 8, 13, 21, 34…). Auch das kommt aus der Natur: in jeder Sonnenblume zählt man Fibonacci-Spiralen. Wir haben dreizehn genommen, weil zwölf zu rund ist und einundzwanzig zu dicht — dreizehn ist das Verhältnis, in dem die Punkte atmen.</p>
+
+            <p>Wenn Sie unsere Punze auf einer Seite finden — Banner, Stempel, Footer — bedeutet sie dasselbe wie das Silbersiegel: <em>„Wenn Ihr Name draufsteht, steht unserer dahinter."</em></p>
+
+            <script>
+                (function() {
+                    var goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+                    var g = document.getElementById('gruender-punze-dots');
+                    var svgNS = 'http://www.w3.org/2000/svg';
+                    for (var n = 1; n <= 13; n++) {
+                        var r = Math.sqrt(n) * 8;
+                        var theta = n * goldenAngle;
+                        var x = 45 + r * Math.cos(theta);
+                        var y = 45 + r * Math.sin(theta);
+                        var c = document.createElementNS(svgNS, 'circle');
+                        c.setAttribute('cx', x.toFixed(2));
+                        c.setAttribute('cy', y.toFixed(2));
+                        c.setAttribute('r', '1.5');
+                        c.setAttribute('fill', '#14202B');
+                        g.appendChild(c);
+                    }
+                })();
+            </script>
+
             <h2>Wer ich nicht bin</h2>
             <p>Ich bin keine Werbeagentur. Ich entwerfe keine Logos, drehe keine Imagefilme, schalte keine Google-Ads. Ich baue Websites — die schnellsten, sichersten und schlausten, die ein KMU für 990 € bekommen kann.</p>
             <p>Wenn Sie ein Branding-Refresh wollen, sind Sie woanders besser. Wenn Sie eine Website wollen, die Anfragen bringt, Abmahnungen verhindert und in Google steht — dann sprechen Sie mit mir.</p>

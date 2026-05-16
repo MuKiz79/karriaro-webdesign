@@ -75,6 +75,13 @@ Gegruendet · 2026 · Muammer Kizilaslan
 
 **Hashtags (3):** `#Webdesign` · `#Manufaktur` · `#BFSG`
 
+**Block "Unser Mark" (am Ende der Beschreibung anhaengen, kurz vor den Preisen oder als eigener Absatz):**
+```
+Unser Mark · Die Karriaro-Manufakturpunze
+Vier Eck-Brackets als Frame, dreizehn Punkte innen, angeordnet nach dem Goldenen Winkel (137,5°). Das ist die Mathematik der Sonnenblume — und die Hallmark-Tradition der Goldschmiede seit dem 14. Jahrhundert. Wenn die Punze auf einer Seite steht, steht Karriaro dahinter.
+→ karriaro-webdesign.de/gruender#punze
+```
+
 ---
 
 ## Schritt 4 · Featured-Items (15 Min)

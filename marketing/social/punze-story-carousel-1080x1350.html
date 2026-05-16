@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Karriaro Punze-Story · 7 Slides · 1080x1350</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0,1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Karriaro-Webdesign · Punze-Story-Carousel
+     7 Slides, 1080x1350 (LinkedIn 4:5)
+     Story: Behind the Manufakturpunze
+     Export: cmd+shift+4 + Leertaste + Klick auf einzelne .slide
+     ============================================================ */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --kr-ink: #14202B;
+    --kr-blue: #1A2E40;
+    --kr-blue-light: #4A6B85;
+    --kr-gold: #8A7B5C;
+    --kr-grey: #525E6B;
+    --kr-grey-soft: #8A8278;
+    --kr-bg: #FBFAF7;
+    --kr-bg-soft: #F8F4ED;
+    --kr-border: rgba(20,30,40,0.10);
+  }
+
+  body {
+    background: #2A2A2A;
+    padding: 48px 32px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hint {
+    color: #C0C0C0;
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 1080px;
+    text-align: center;
+  }
+  .hint kbd { background: #1A1A1A; color: #FFFFFF; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 11px; }
+  .hint strong { color: #FFFFFF; }
+
+  /* ====== SLIDE ====== */
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    overflow: hidden;
+    background: var(--kr-bg);
+    color: var(--kr-ink);
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 0 1px #444;
+    padding: 96px;
+    display: flex;
+    flex-direction: column;
+  }
+  .slide.dark {
+    background: var(--kr-ink);
+    color: var(--kr-bg);
+  }
+  .slide.dark .footer-logo-name,
+  .slide.dark .footer-page { color: var(--kr-bg); }
+  .slide.dark .footer-logo-sub,
+  .slide.dark .footer-page-label { color: rgba(251,250,247,0.55); }
+  .slide.dark .footer { border-top-color: rgba(251,250,247,0.18); }
+  .slide.dark .logo-mark { color: var(--kr-bg); }
+
+  /* ====== FOOTER ====== */
+  .footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding-top: 32px;
+    border-top: 0.75px solid var(--kr-border);
+  }
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-mark {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--kr-ink);
+  }
+  .logo-mark::before,
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    top: 7px; bottom: 7px;
+    width: 9px;
+    border: 1.6px solid currentColor;
+  }
+  .logo-mark::before { left: 0; border-right: none; }
+  .logo-mark::after { right: 0; border-left: none; }
+  .logo-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    position: relative;
+    top: -1px;
+  }
+  .footer-logo-divider {
+    width: 0.75px;
+    height: 40px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+  .footer-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .footer-logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--kr-ink);
+  }
+  .footer-logo-sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+    line-height: 1;
+  }
+  .footer-page {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--kr-ink);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .footer-page-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+  }
+
+  /* ====== SHARED ELEMENTS ====== */
+  .eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-gold);
+    margin-bottom: 56px;
+  }
+  .slide-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--kr-grey);
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+  }
+  .slide-num strong { color: var(--kr-blue); font-weight: 500; }
+
+  /* ====== SLIDE 1: HOOK ====== */
+  .hook-headline {
+    font-family: 'Fraunces', 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 124px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--kr-ink);
+    font-variation-settings: 'opsz' 124, 'WONK' 1, 'SOFT' 0;
+  }
+  .hook-headline .accent {
+    color: var(--kr-gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .hook-sub {
+    margin-top: 56px;
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    color: var(--kr-grey);
+    line-height: 1.5;
+    max-width: 720px;
+  }
+
+  /* ====== SLIDE 2: HALLMARK-TRADITION ====== */
+  .body-head {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 84px;
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+    color: var(--kr-ink);
+    margin-bottom: 48px;
+    max-width: 820px;
+    font-variation-settings: 'opsz' 84, 'WONK' 1;
+  }
+  .body-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    line-height: 1.62;
+    color: var(--kr-grey);
+    max-width: 720px;
+  }
+  .body-text + .body-text { margin-top: 24px; }
+  .body-text strong { color: var(--kr-ink); font-weight: 500; }
+
+  /* ====== SLIDE 4: FORMEL ====== */
+  .formula {
+    margin: 64px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 56px;
+    color: var(--kr-blue);
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .formula .var { color: var(--kr-gold); }
+  .formula .value {
+    display: block;
+    margin-top: 32px;
+    font-size: 36px;
+    color: var(--kr-grey);
+  }
+
+  /* ====== SLIDE 5: BRACKET COMPARE ====== */
+  .compare-row {
+    margin: 56px 0 32px;
+    display: flex;
+    gap: 64px;
+    align-items: center;
+  }
+  .compare-item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--kr-grey);
+  }
+  .big-bracket {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--kr-ink);
+  }
+  .big-bracket::before,
+  .big-bracket::after {
+    content: '';
+    position: absolute;
+    top: 32px; bottom: 32px;
+    width: 36px;
+    border: 4px solid currentColor;
+  }
+  .big-bracket::before { left: 0; border-right: none; }
+  .big-bracket::after { right: 0; border-left: none; }
+  .big-bracket .letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 124px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    position: relative;
+    top: -4px;
+  }
+  .arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 36px;
+    color: var(--kr-gold);
+  }
+
+  /* ====== SLIDE 6: PROMISE (dark) ====== */
+  .promise {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 96px;
+    line-height: 1.06;
+    letter-spacing: -0.018em;
+    color: var(--kr-bg);
+    margin-top: 80px;
+    font-variation-settings: 'opsz' 96, 'WONK' 1;
+  }
+  .promise .accent {
+    color: var(--kr-gold);
+    font-style: italic;
+  }
+  .promise-attr {
+    margin-top: 56px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: rgba(251,250,247,0.7);
+    letter-spacing: 0.04em;
+  }
+
+  /* ====== SLIDE 7: PUNZE FINAL ====== */
+  .punze-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+  }
+  .punze-final {
+    width: 480px;
+    height: 480px;
+  }
+  .punze-caption {
+    text-align: center;
+  }
+  .punze-caption-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--kr-gold);
+    margin-bottom: 20px;
+  }
+  .punze-caption-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 1.1;
+    color: var(--kr-ink);
+    letter-spacing: -0.012em;
+    font-variation-settings: 'opsz' 64, 'WONK' 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="hint">
+  <strong>Punze-Story-Carousel · 7 Slides · 1080×1350</strong><br>
+  Export: <kbd>cmd + shift + 4</kbd> + <kbd>Leertaste</kbd> + Klick auf einzelne <em>.slide</em>.<br>
+  Story: Behind the Manufakturpunze. Pinned-Post fuer LinkedIn-Firmenseite.
+</div>
+
+<!-- ====== SLIDE 1: HOOK ====== -->
+<div class="slide" id="slide-1">
+  <div class="eyebrow">Manufakturpunze · Eine Story</div>
+  <h1 class="hook-headline">13 Punkte. <span class="accent">137,5°.</span><br>Ein Stempel.</h1>
+  <p class="hook-sub">Warum unser Mark so aussieht, wie er aussieht.</p>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>01 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 2: HALLMARK-TRADITION ====== -->
+<div class="slide" id="slide-2">
+  <div class="slide-num"><strong>02</strong> · Hallmark-Tradition</div>
+  <div class="eyebrow">Seit 1300</div>
+  <h2 class="body-head">Goldschmiede haben<br>seit dem Mittelalter<br>ihre Punze.</h2>
+  <p class="body-text">Eine <strong>Punze</strong> ist ein eingeschlagenes Siegel — der juristische Beweis, dass ein bestimmter Meister fuer ein bestimmtes Stueck verantwortlich ist. Ein Stempel, der sagt: <em>„Wenn Ihr Name draufsteht, steht meiner dahinter."</em></p>
+  <p class="body-text">Goldschmiede tun das seit 700 Jahren. Wir tun es seit 2026.</p>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>02 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 3: PHYLLOTAXIS ====== -->
+<div class="slide" id="slide-3">
+  <div class="slide-num"><strong>03</strong> · Phyllotaxis</div>
+  <div class="eyebrow">Die Mathematik der Natur</div>
+  <h2 class="body-head">Sonnenblumen<br>ordnen ihre Kerne<br>nach einer Formel.</h2>
+  <p class="body-text">Diese Formel heisst <strong>Phyllotaxis</strong>. Tannenzapfen kennen sie. Aloe-Pflanzen. Galaxien. Sie ist das Naturgesetz der <strong>optimalen Platznutzung</strong> — weil sie sicherstellt, dass keine zwei Punkte je auf einer Linie liegen.</p>
+  <p class="body-text">Unsere 13 Punkte sind nach derselben Formel angeordnet.</p>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>03 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 4: FORMEL ====== -->
+<div class="slide" id="slide-4">
+  <div class="slide-num"><strong>04</strong> · Goldener Winkel</div>
+  <div class="eyebrow">Die Konstante der Natur</div>
+  <h2 class="body-head">Der Winkel, mit dem<br>sich die Spirale dreht.</h2>
+  <div class="formula">
+    <span class="var">θ</span> = (3 − √5) · π<br>
+    <span class="value">= 137,50776...°</span>
+  </div>
+  <p class="body-text">Eine <strong>irrationale Zahl</strong>. Nicht teilbar, nicht zufaellig &mdash; das einzige Verhaeltnis im Universum, das Sonnenblumenkerne so anordnet, dass keiner den anderen verdeckt.</p>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>04 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 5: BRACKET = LOGO-DNA ====== -->
+<div class="slide" id="slide-5">
+  <div class="slide-num"><strong>05</strong> · Logo-DNA</div>
+  <div class="eyebrow">Bracket-Familie</div>
+  <h2 class="body-head">Der Eck-Rahmen<br>zitiert unser Logo.</h2>
+  <div class="compare-row">
+    <div class="compare-item">
+      <div class="big-bracket"><span class="letter">K</span></div>
+      <div class="compare-label">Logo-Mark</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="compare-item">
+      <svg width="200" height="200" viewBox="0 0 90 90">
+        <path d="M 5 18 L 5 5 L 18 5" stroke="#14202B" stroke-width="2" fill="none"/>
+        <path d="M 72 5 L 85 5 L 85 18" stroke="#14202B" stroke-width="2" fill="none"/>
+        <path d="M 5 72 L 5 85 L 18 85" stroke="#14202B" stroke-width="2" fill="none"/>
+        <path d="M 72 85 L 85 85 L 85 72" stroke="#14202B" stroke-width="2" fill="none"/>
+      </svg>
+      <div class="compare-label">Punze-Frame</div>
+    </div>
+  </div>
+  <p class="body-text">Vier Eck-Marks bilden den Rahmen — dieselbe Bracket-Geometrie wie das Code-Siegel des Logos.</p>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>05 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 6: PROMISE (dark) ====== -->
+<div class="slide dark" id="slide-6">
+  <div class="slide-num"><strong>06</strong> · Karriaro-Promise</div>
+  <div class="eyebrow">Was die Punze bedeutet</div>
+  <p class="promise">Wenn Ihr Name<br>draufsteht,<br><span class="accent">steht unserer<br>dahinter.</span></p>
+  <div class="promise-attr">— Karriaro-Manufakturpunze · seit 2026</div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>06 / 07</div>
+  </div>
+</div>
+
+<!-- ====== SLIDE 7: PUNZE FINAL ====== -->
+<div class="slide" id="slide-7">
+  <div class="slide-num"><strong>07</strong> · Die Punze</div>
+  <div class="punze-wrap">
+    <svg class="punze-final" viewBox="0 0 90 90" aria-hidden="true">
+      <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+      <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+      <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+      <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+      <g id="hallmark-dots-final"></g>
+    </svg>
+    <div class="punze-caption">
+      <div class="punze-caption-eyebrow">Unser Mark</div>
+      <div class="punze-caption-name">Karriaro-Manufakturpunze</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-logo">
+      <div class="logo-mark"><span class="logo-letter">K</span></div>
+      <div class="footer-logo-divider"></div>
+      <div class="footer-logo-text">
+        <div class="footer-logo-name">Karriaro</div>
+        <div class="footer-logo-sub">Webdesign · Manufaktur</div>
+      </div>
+    </div>
+    <div class="footer-page"><span class="footer-page-label">Slide</span>07 / 07</div>
+  </div>
+</div>
+
+<script>
+  // Phyllotaxis-Punkte fuer die finale Punze (Slide 7)
+  (function() {
+    const goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+    const g = document.getElementById('hallmark-dots-final');
+    const svgNS = 'http://www.w3.org/2000/svg';
+    for (let n = 1; n <= 13; n++) {
+      const r = Math.sqrt(n) * 8;
+      const theta = n * goldenAngle;
+      const x = 45 + r * Math.cos(theta);
+      const y = 45 + r * Math.sin(theta);
+      const c = document.createElementNS(svgNS, 'circle');
+      c.setAttribute('cx', x.toFixed(2));
+      c.setAttribute('cy', y.toFixed(2));
+      c.setAttribute('r', '1.5');
+      c.setAttribute('fill', '#8A7B5C');
+      g.appendChild(c);
+    }
+  })();
+</script>
+
+</body>
+</html>
