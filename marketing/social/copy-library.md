@@ -134,7 +134,7 @@ Reihenfolge folgt der **5-Kategorien-Mischung**, die der 30-Tage-Kalender brauch
 ## E · Founder-POV (3) · Muammer cross-postet vom Personal-Profil
 
 ### E1 · Warum wir „Manufaktur" nennen
-> **Hook:** Vor zehn Jahren habe ich meine erste Webseite mit Wix gebaut. 320 € fuer die Vorlage, 19 € im Monat, 4,1 Sekunden Ladezeit. Heute bauen wir das anders.
+> **Hook:** Vor zehn Jahren war Wix-mit-Vorlage der ueblichste Weg zur ersten Webseite. 320 € fuer die Vorlage, 19 € im Monat, 4,1 Sekunden Ladezeit. Heute bauen wir das anders.
 > **Body:** Karriaro Webdesign ist eine Manufaktur, weil wir uns weigern, eine WordPress-Datenbank-mit-14-Plugins zu liefern. Wir schreiben HTML, CSS und ein wenig JS — wie ein guter Schneider mit Stoff und Faden. Ergebnis: Lighthouse 98+, BFSG-konform, lebt jahrelang ohne Update-Stress.
 > **CTA:** —
 > **Hashtags:** #Manufaktur #Webdesign #Handwerk
@@ -147,7 +147,7 @@ Reihenfolge folgt der **5-Kategorien-Mischung**, die der 30-Tage-Kalender brauch
 
 ### E3 · Pricing-Transparenz
 > **Hook:** 1.290 €. 1.990 €. 2.990 €. Auf der Webseite. Ohne „auf Anfrage".
-> **Body:** Ich habe noch nie verstanden, warum Agenturen ihre Preise verstecken. Hat es jemals einen B2B-Kaeufer angezogen, „kontaktieren Sie uns fuer ein individuelles Angebot" zu lesen? Wir zeigen die Tarife auf der Hauptseite. Sie wissen vor dem ersten Anruf, was Sie bekommen.
+> **Body:** Wir haben noch nie verstanden, warum Agenturen ihre Preise verstecken. Hat es jemals einen B2B-Kaeufer angezogen, „kontaktieren Sie uns fuer ein individuelles Angebot" zu lesen? Wir zeigen die Tarife auf der Hauptseite. Sie wissen vor dem ersten Anruf, was Sie bekommen.
 > **CTA:** Preise → karriaro-webdesign.de/#preise
 > **Hashtags:** #Pricing #Webdesign #Transparenz
 
