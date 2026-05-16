@@ -4283,6 +4283,77 @@
                 return { key: key, label: d.label || branch.name, features: d.features };
             }
 
+            // Sprint 69 — SEO + GEO Card: klassische SEO + KI-Readability (llms.txt, FAQ-Schema).
+            function renderSeoGeoCard(seoGeo) {
+                if (!seoGeo || !seoGeo.seo || !seoGeo.geo) return '';
+                const allItems = [].concat(seoGeo.seo.items || [], seoGeo.geo.items || []);
+                if (!allItems.length) return '';
+                const seoFound = seoGeo.seo.found;
+                const seoTotal = seoGeo.seo.total;
+                const geoFound = seoGeo.geo.found;
+                const geoTotal = seoGeo.geo.total;
+                const totalMissing = (seoTotal - seoFound) + (geoTotal - geoFound);
+                const sevCls = totalMissing >= 6 ? 'severity-high' : totalMissing >= 3 ? 'severity-mid' : 'severity-low';
+
+                const seoRows = (seoGeo.seo.items || []).map(function(it) {
+                    const icon = it.ok
+                        ? '<span style="color:#30d158;font-weight:600;flex-shrink:0">✓</span>'
+                        : '<span style="color:#ff453a;font-weight:600;flex-shrink:0">✗</span>';
+                    const style = it.ok ? 'color:var(--color-graphite-soft)' : 'color:var(--color-onyx);font-weight:500';
+                    return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;' + style + '">' + icon + '<span>' + escape(it.label || '') + '</span></div>';
+                }).join('');
+
+                const geoRows = (seoGeo.geo.items || []).map(function(it) {
+                    const icon = it.ok
+                        ? '<span style="color:#30d158;font-weight:600;flex-shrink:0">✓</span>'
+                        : '<span style="color:#ff453a;font-weight:600;flex-shrink:0">✗</span>';
+                    const style = it.ok ? 'color:var(--color-graphite-soft)' : 'color:var(--color-onyx);font-weight:500';
+                    return '<div style="display:flex;gap:10px;padding:6px 0;font-size:14px;' + style + '">' + icon + '<span>' + escape(it.label || '') + '</span></div>';
+                }).join('');
+
+                return '<div class="audit-card ' + sevCls + '">' +
+                            '<div class="audit-card-label">SEO + KI-Lesbarkeit (Generative Engine Optimization)</div>' +
+                            '<div class="audit-card-headline">Google-Sichtbarkeit + ChatGPT-/Perplexity-Readiness</div>' +
+                            '<div class="audit-card-meta">' +
+                                '<span><strong>' + seoFound + '/' + seoTotal + '</strong> SEO-Standards</span>' +
+                                '<span><strong>' + geoFound + '/' + geoTotal + '</strong> GEO-Standards (KI)</span>' +
+                            '</div>' +
+                            '<div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-graphite-soft);font-weight:500">SEO — Google</div>' +
+                            '<div style="margin-top:4px">' + seoRows + '</div>' +
+                            '<div style="margin-top:14px;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-graphite-soft);font-weight:500">GEO — KI-Suchmaschinen (2025/26)</div>' +
+                            '<div style="margin-top:4px">' + geoRows + '</div>' +
+                            '<div class="audit-card-pitch"><strong>Trend 2026:</strong> ~18 % der Mittelstand-Käufer fragen erst ChatGPT/Perplexity, bevor sie googeln. Wer KI-lesbar ist (FAQ-Schema, llms.txt, BreadcrumbList), wird zitiert. Wer nicht — bleibt unsichtbar.</div>' +
+                        '</div>';
+            }
+
+            // Sprint 69 — Cross-Sell-Card: Was Karriaro zusätzlich liefert + Branchen-Trend.
+            function renderCrossSellCard(crossSell) {
+                if (!crossSell || !crossSell.tools || !crossSell.tools.length) return '';
+                const toolRows = crossSell.tools.map(function(t) {
+                    const link = t.demoUrl
+                        ? '<a href="' + escape(t.demoUrl) + '" style="color:var(--color-indigo);text-decoration:underline;text-underline-offset:3px">' + escape(t.name) + ' — Live-Demo →</a>'
+                        : escape(t.name);
+                    return '<div style="display:flex;gap:10px;padding:8px 0;font-size:14px;color:var(--color-onyx);font-weight:500">' +
+                               '<span style="color:var(--color-gold);font-weight:600;flex-shrink:0">→</span>' +
+                               '<span>' + link + '</span>' +
+                           '</div>';
+                }).join('');
+                const headline = crossSell.allDetected
+                    ? 'Bonus-Werkzeuge in Ihrer Branche — Sie haben schon viele!'
+                    : crossSell.tools.length + ' Werkzeuge, die in Ihrer Branche 2026 sticken — und Ihrer Seite fehlen';
+                return '<div class="audit-card severity-mid">' +
+                            '<div class="audit-card-label">Was Karriaro für Sie zusätzlich hätte</div>' +
+                            '<div class="audit-card-headline">' + escape(headline) + '</div>' +
+                            '<div style="margin-top:10px">' + toolRows + '</div>' +
+                            '<div class="audit-card-pitch">' +
+                                '<strong>' + escape(crossSell.trend || '') + '</strong>' +
+                                '<br><br>Pakete von <strong>1.290 €</strong> (Essential) bis <strong>3.990 €</strong> (Premium+) — Komplettaudit gibt konkrete Roadmap. ' +
+                                '<a href="#preis" style="color:var(--color-indigo);text-decoration:underline;text-underline-offset:3px">Preise sehen</a> · ' +
+                                '<a href="#kontakt" style="color:var(--color-indigo);text-decoration:underline;text-underline-offset:3px">30-Min-Erstgespräch</a>' +
+                            '</div>' +
+                        '</div>';
+            }
+
             // Sprint 68 — Pain-Points-Card: Was Mittelstand-Inhaber peinlich macht.
             // Adressiert die Buy-Trigger (Veraltung, Security, Vendor-Lockin, Mobile, Social).
             // Backend liefert d.painPoints mit { contentFreshness, securityHeaders,
@@ -4383,6 +4454,16 @@
                 // Zeigt Content-Veraltung, Security-Header, Vendor-Lockin, Mobile, Social.
                 if (d.painPoints) {
                     cards.push(renderPainPointsCard(d.painPoints));
+                }
+
+                // Sprint 69 — SEO + GEO Card (Google-Sichtbarkeit + KI-Lesbarkeit).
+                if (d.seoGeo) {
+                    cards.push(renderSeoGeoCard(d.seoGeo));
+                }
+
+                // Sprint 69 — Cross-Sell-Card: Was Karriaro für die Branche zusätzlich hätte + Trend.
+                if (d.crossSell) {
+                    cards.push(renderCrossSellCard(d.crossSell));
                 }
 
                 // Sprint 65 — Tech-Card nur, wenn echter Veränderungs-Bedarf (severity >= 2).

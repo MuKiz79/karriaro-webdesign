@@ -408,6 +408,11 @@ function buildQuickResponse(domain, light, full) {
         // Vendor-Lockin, Mobile-Viewport, Social-Meta. Adressiert die Buy-Trigger
         // (Veraltung, Sicherheit, kein Self-Service, Mobile-Probleme, Social-Sharing).
         painPoints: light.painPoints || null,
+        // Sprint 69 — SEO (Schema.org, Canonical, robots/sitemap, Title/Meta-Description)
+        // + GEO (llms.txt, FAQ-/Article-/BreadcrumbList-Schema fuer ChatGPT/Perplexity).
+        seoGeo: light.seoGeo || null,
+        // Sprint 69 — Karriaro-Cross-Sell-Tools pro Branche + Trend-Phrase.
+        crossSell: light.crossSell || null,
         summary: full?.summary || null
     };
 }

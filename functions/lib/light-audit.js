@@ -365,6 +365,101 @@ function detectPainPoints(html, headers, wayback, tech) {
     };
 }
 
+/**
+ * Sprint 69 — SEO + GEO (Generative Engine Optimization) Detection.
+ * Prüft strukturierte Daten, klassische SEO-Marker und 2025/26 KI-Readability
+ * (llms.txt, FAQ-/Article-/BreadcrumbList-Schema).
+ *
+ * @param {string} html
+ * @param {string} baseUrl
+ * @returns {Promise<{seo: object, geo: object}>}
+ */
+async function detectSeoGeo(html, baseUrl) {
+    const head = (html || '').slice(0, 30000);
+
+    // Schema.org JSON-LD-Blocks parsen
+    const jsonLdMatches = head.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
+    const schemaTypes = new Set();
+    jsonLdMatches.forEach(block => {
+        const content = block.replace(/<[^>]+>/g, '');
+        const typeMatches = content.match(/"@type"\s*:\s*"([^"]+)"/g) || [];
+        typeMatches.forEach(t => {
+            const m = t.match(/"@type"\s*:\s*"([^"]+)"/);
+            if (m) schemaTypes.add(m[1]);
+        });
+    });
+
+    const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'HealthAndBeautyBusiness', 'Dentist', 'Physician', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Organization'];
+    const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
+
+    // Canonical
+    const hasCanonical = /<link\s+rel\s*=\s*["']canonical["']/i.test(head);
+
+    // Meta-Description
+    const metaDescMatch = head.match(/<meta\s+name\s*=\s*["']description["'][^>]*content\s*=\s*["']([^"']+)/i);
+    const metaDescLen = metaDescMatch ? metaDescMatch[1].length : 0;
+    const metaDescOk = metaDescLen >= 80 && metaDescLen <= 165;
+
+    // Title-Tag
+    const titleMatch = head.match(/<title[^>]*>([^<]+)<\/title>/i);
+    const titleLen = titleMatch ? titleMatch[1].trim().length : 0;
+    const titleOk = titleLen >= 30 && titleLen <= 65;
+
+    // robots.txt + sitemap.xml + llms.txt — parallele HEAD-Requests
+    let origin;
+    try { origin = new URL(baseUrl).origin; } catch { origin = null; }
+    async function probe(path) {
+        if (!origin) return false;
+        try {
+            const ctrl = new AbortController();
+            const t = setTimeout(() => ctrl.abort(), 3000);
+            const res = await fetch(origin + path, { method: 'HEAD', signal: ctrl.signal, redirect: 'follow' });
+            clearTimeout(t);
+            return res.ok;
+        } catch (_) { return false; }
+    }
+    const [hasRobots, hasSitemap, hasLlmsTxt] = await Promise.all([
+        probe('/robots.txt'),
+        probe('/sitemap.xml'),
+        probe('/llms.txt')
+    ]);
+
+    // GEO — strukturierte Daten für KI-Crawler
+    const hasFaqSchema = schemaTypes.has('FAQPage');
+    const hasArticleSchema = schemaTypes.has('Article') || schemaTypes.has('BlogPosting') || schemaTypes.has('NewsArticle');
+    const hasBreadcrumb = schemaTypes.has('BreadcrumbList');
+    const anyStructuredData = jsonLdMatches.length > 0;
+
+    const seoItems = [
+        { ok: hasLocalBusiness, label: 'Schema.org LocalBusiness (für Google-Rich-Results)' },
+        { ok: hasCanonical, label: 'Canonical-URL gesetzt' },
+        { ok: metaDescOk, label: `Meta-Description (${metaDescLen}/80–165 Zeichen)` },
+        { ok: titleOk, label: `Page-Title (${titleLen}/30–65 Zeichen)` },
+        { ok: hasRobots, label: 'robots.txt erreichbar' },
+        { ok: hasSitemap, label: 'sitemap.xml erreichbar' }
+    ];
+    const geoItems = [
+        { ok: hasLlmsTxt, label: 'llms.txt vorhanden (2025-Standard für ChatGPT/Perplexity)' },
+        { ok: hasFaqSchema, label: 'FAQ-Schema (FAQPage) für KI-Zitierung' },
+        { ok: hasBreadcrumb, label: 'BreadcrumbList-Schema für Navigation-KI' },
+        { ok: anyStructuredData, label: `Strukturierte Daten (JSON-LD): ${jsonLdMatches.length}× vorhanden` }
+    ];
+
+    return {
+        seo: {
+            items: seoItems,
+            found: seoItems.filter(i => i.ok).length,
+            total: seoItems.length,
+            schemaTypes: Array.from(schemaTypes)
+        },
+        geo: {
+            items: geoItems,
+            found: geoItems.filter(i => i.ok).length,
+            total: geoItems.length
+        }
+    };
+}
+
 async function runLightAudit(url, placesKey) {
     // Parallel: HTML + Wayback + Place-Lookup (Branchen-Detect)
     const [htmlResult, wayback, placesType] = await Promise.all([
@@ -395,6 +490,13 @@ async function runLightAudit(url, placesKey) {
     // Sprint 68 — Pain-Points-Audit fuer Mittelstands-Buy-Trigger.
     const painPoints = detectPainPoints(html, headers, wayback, tech);
 
+    // Sprint 69 — SEO + GEO Detection (parallele HEAD-Requests fuer robots/sitemap/llms.txt).
+    const seoGeo = await detectSeoGeo(html, finalUrl).catch(() => null);
+
+    // Sprint 69 — Karriaro-Cross-Sell Tools + Trend-Phrase pro Branche.
+    const { getCrossSell } = require('./karriaro-cross-sell.js');
+    const crossSell = getCrossSell(primaryType, branch);
+
     return {
         ok: true,
         light: true,
@@ -406,7 +508,9 @@ async function runLightAudit(url, placesKey) {
         bfsg,
         branch,
         subPages,
-        painPoints
+        painPoints,
+        seoGeo,
+        crossSell
     };
 }
 
@@ -417,5 +521,6 @@ module.exports = {
     fetchHtml,
     fetchPlaceType,
     guessBranchFromUrl,
-    detectPainPoints
+    detectPainPoints,
+    detectSeoGeo
 };
