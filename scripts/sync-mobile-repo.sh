@@ -30,10 +30,10 @@ cd "$MOBILE_REPO"
 echo "→ Mobile-Repo refreshen"
 git pull origin main --rebase
 
-echo "→ Bestehende HTML + CSS loeschen (CNAME, README, .git bleiben)"
+echo "→ Bestehende HTML + CSS + Mockups-Opt loeschen (CNAME, README, .git bleiben)"
 find . -maxdepth 1 -name "*.html" -delete
-rm -rf portfolio blog css
-mkdir -p portfolio blog css
+rm -rf portfolio blog css images/mockups-opt
+mkdir -p portfolio blog css images/mockups-opt
 
 echo "→ Files aus Haupt-Repo kopieren"
 cp "$MAIN_REPO"/src/m/*.html .
@@ -42,11 +42,19 @@ cp "$MAIN_REPO"/src/m/blog/*.html blog/
 # Sprint 91: Generator-Output benoetigt alle Desktop-CSS-Files (tokens, karriaro-tools, mobile-overrides etc.)
 # nicht nur mobile.css. Wir spiegeln src/css/ komplett.
 cp "$MAIN_REPO"/src/css/*.css css/ 2>/dev/null || true
+# Sprint 103: Demo-Swiper-Mockup-Bilder optimiert (webp 480/800 + jpg-Fallback)
+cp "$MAIN_REPO"/src/images/mockups-opt/*.webp images/mockups-opt/ 2>/dev/null || true
+cp "$MAIN_REPO"/src/images/mockups-opt/*.jpg  images/mockups-opt/ 2>/dev/null || true
 
 echo "→ Pfad-Rewrite: /images/ → https://karriaro-webdesign.de/images/"
 find . -name "*.html" -print0 | xargs -0 sed -i '' \
     -e 's|src="/images/|src="https://karriaro-webdesign.de/images/|g' \
     -e 's|href="/images/|href="https://karriaro-webdesign.de/images/|g'
+
+echo "→ Pfad-Rewrite UNDO: mockups-opt lokal (Mobile-Repo hat eigene Kopie, Sprint 103)"
+find . -name "*.html" -print0 | xargs -0 sed -i '' \
+    -e 's|src="https://karriaro-webdesign.de/images/mockups-opt/|src="/images/mockups-opt/|g' \
+    -e 's|href="https://karriaro-webdesign.de/images/mockups-opt/|href="/images/mockups-opt/|g'
 
 echo "→ Pfad-Rewrite: /m/ → /"
 find . -name "*.html" -print0 | xargs -0 sed -i '' 's|href="/m/|href="/|g'

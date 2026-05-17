@@ -3011,7 +3011,7 @@
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=102">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=103">
 </head>
 <body>
 
@@ -3068,7 +3068,7 @@
                     Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290&nbsp;€ einmalig, Wartung inklusive ab 99 €/Mt.
                 </p>
                 <div class="hero-cta-row">
-                    <a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span><ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:880ms"><li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li><li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li><li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li></ul><dl class="m-hero-mini-specs m-hero-stagger" style="--m-delay:1000ms"><div><dt>24 h</dt><dd>Erster Entwurf</dd></div><div><dt>7—14 Tage</dt><dd>Lieferzeit</dd></div><div><dt>1.290 €</dt><dd>einmalig, ab</dd></div><div><dt>7 Branchen</dt><dd>Live-Demos</dd></div></dl>
+                    <a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a><ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:760ms"><li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li><li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li><li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li></ul>
                 </div>
                 <a href="#audit" class="hero-audit-link" data-audit-bridge>
                     Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
@@ -3132,10 +3132,92 @@
 
     <!-- 1b · Audit-Werkzeug — Sprint 38 wieder nach oben gezogen (Lead-Magnet First, Audit-V2-P1) -->
     
-<!-- Sprint 101 — Editorial-Magazin-Sektionen unter Hero -->
+<!-- Mobile Demo-Swiper (Sprint 103 — Picture+webp, Persona-Context, IO-Registry) -->
+
+<!-- Sprint 103 — Persona-Tile-Grid (zwischen Tools und Demo-Swiper) -->
+<section class="m-mag-personas" id="branchen" aria-label="Branchenpassung">
+    <p class="m-mag-eyebrow">№ 03 · Branchenpassung</p>
+    <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
+    <div class="m-mag-personas-grid">
+        <button type="button" class="m-persona-tile" data-m-persona-target="0" aria-label="Immobilien: Eigener Marktauftritt — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+            <span class="m-persona-name">Immobilien</span>
+            <span class="m-persona-headline">Eigener Marktauftritt</span>
+            <span class="m-persona-body">Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="2" aria-label="Praxis: Termine ohne Hotline — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="11" r="2"/></svg>
+            <span class="m-persona-name">Praxis</span>
+            <span class="m-persona-headline">Termine ohne Hotline</span>
+            <span class="m-persona-body">Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="3" aria-label="Friseur: Termine die füllen — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
+            <span class="m-persona-name">Friseur</span>
+            <span class="m-persona-headline">Termine die füllen</span>
+            <span class="m-persona-body">Online-Buchung, Style-Galerie, weniger No-Shows.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="4" aria-label="Dachdecker: Förderung & Angebot — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M10 11V5h4v6"/></svg>
+            <span class="m-persona-name">Dachdecker</span>
+            <span class="m-persona-headline">Förderung & Angebot</span>
+            <span class="m-persona-body">BAFA-Rechner zeigt sofort die Förderhöhe.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="1" aria-label="Coaching: Erstgespräch direkt — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="m-persona-name">Coaching</span>
+            <span class="m-persona-headline">Erstgespräch direkt</span>
+            <span class="m-persona-body">Vita, Methodik, Buchungs-Button der konvertiert.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="5" aria-label="Gastronomie: Wie OpenTable — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18M6 11h2M6 7h2M18 3v18M14 3v6a4 4 0 0 0 4 4"/></svg>
+            <span class="m-persona-name">Gastronomie</span>
+            <span class="m-persona-headline">Wie OpenTable</span>
+            <span class="m-persona-body">Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.</span>
+        </button>
+        <button type="button" class="m-persona-tile" data-m-persona-target="6" aria-label="Logistik: Frachtquote sofort — Demo öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="10" rx="1"/><path d="M15 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+            <span class="m-persona-name">Logistik</span>
+            <span class="m-persona-headline">Frachtquote sofort</span>
+            <span class="m-persona-body">PLZ + Gewicht → Preis in 3 Sekunden.</span>
+        </button>
+        
+        <a class="m-persona-tile m-persona-tile--wide" href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20meine%20Branche%20steht%20nicht%20in%20der%20Liste%20%E2%80%94%20k%C3%B6nnen%20wir%20kurz%20sprechen%3F" target="_blank" rel="noopener" aria-label="Andere Branche — WhatsApp öffnen">
+            <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+            <span class="m-persona-name">Ihre Branche fehlt?</span>
+            <span class="m-persona-headline">Wir bauen für alle Mittelständler.</span>
+            <span class="m-persona-body">Sprechen Sie uns an — Antwort per WhatsApp.</span>
+        </a>
+    </div>
+</section>
+
+<script>
+(function () {
+    var tiles = document.querySelectorAll('[data-m-persona-target]');
+    if (!tiles.length) return;
+    tiles.forEach(function (t) {
+        t.addEventListener('click', function () {
+            var idx = parseInt(t.getAttribute('data-m-persona-target'), 10);
+            if (isNaN(idx)) return;
+            var slide = document.querySelector('[data-m-demo-slide="' + idx + '"]');
+            if (!slide) return;
+            // Scroll zum Demo-Slide (horizontal im Rail)
+            slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
+            // Sheet-Modal direkt öffnen via Card-Click-Trigger
+            var card = slide.querySelector('[data-m-demo-open]');
+            if (card) {
+                setTimeout(function () { card.click(); }, 320);
+            }
+        });
+    });
+})();
+</script>
+
+
+<!-- Sprint 103 — Editorial-Magazin-Sektionen unter Hero -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">Branchen-Funktionen</p>
-    <p class="m-mag-tools-sub">Plus 100+ weitere Funktionen individuell pro Branche</p>
+    <p class="m-mag-eyebrow">№ 02 · Branchen-Funktionen</p>
+    <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
         <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
         <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
@@ -3145,8 +3227,6 @@
         <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
         <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
     </ol>
-    <p class="m-mag-tools-footnote">Maßgeschneidert für Ihre Branche</p>
-    <p class="m-mag-tools-footnote-sub">Kein Template-Aufsatz, kein Plugin-Risiko, kein WordPress-Wartungsstress.</p>
 </section>
 
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
@@ -3160,14 +3240,12 @@
     <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
 </section>
 
-    
-<!-- Mobile Demo-Swiper (Sprint 93 — Browser-Frame + Sheet-Modal, kein Auto-Rotation) -->
-<section class="m-demo-swiper-mobile" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">Sieben Branchen · Live</p>
+<section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
+    <p class="m-demo-swiper-section-eyebrow">№ 04 · Sieben Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>sieben echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="0">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/immobilien-makler.html" data-m-demo-title="Stadtmakler Stuttgart" data-m-demo-domain="stadtmakler-stuttgart.de" aria-label="Stadtmakler Stuttgart Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3182,17 +3260,22 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/immobilien-stadtmakler-mockup.jpg" alt="Stadtmakler Stuttgart — Karriaro-Demo" loading="eager" decoding="async" fetchpriority="high">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/immobilien-stadtmakler-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/immobilien-stadtmakler-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/immobilien-stadtmakler-mockup-800.jpg" alt="Stadtmakler Stuttgart — Karriaro-Demo" loading="eager" decoding="async" fetchpriority="high" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
-                <span class="m-demo-swiper-eyebrow">Immobilien · Premium-Paket</span>
+                <span class="m-demo-swiper-eyebrow">Immobilien · Premium</span>
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Stadtmakler Stuttgart</h3>
+            <p class="m-demo-swiper-persona-context">Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="1">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/coaching-lehmann.html" data-m-demo-title="Lehmann Beratung" data-m-demo-domain="lehmann-beratung.de" aria-label="Lehmann Beratung Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3207,7 +3290,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/coaching-lehmann-mockup.jpg" alt="Lehmann Beratung — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/coaching-lehmann-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/coaching-lehmann-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/coaching-lehmann-mockup-800.jpg" alt="Lehmann Beratung — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3216,8 +3303,9 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Lehmann Beratung</h3>
+            <p class="m-demo-swiper-persona-context">Vita, Methodik, Buchungs-Button der konvertiert.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="2">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/praxis-weber.html" data-m-demo-title="Dr. Weber" data-m-demo-domain="praxis-weber.de" aria-label="Dr. Weber Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3232,7 +3320,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/praxis-weber-mockup.jpg" alt="Dr. Weber — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/praxis-weber-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/praxis-weber-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/praxis-weber-mockup-800.jpg" alt="Dr. Weber — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3241,8 +3333,9 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Dr. Weber</h3>
+            <p class="m-demo-swiper-persona-context">Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="3">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/friseur-salon.html" data-m-demo-title="Salon Müller" data-m-demo-domain="salon-mueller.de" aria-label="Salon Müller Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3257,7 +3350,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/friseur-mueller-mockup.jpg" alt="Salon Müller — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/friseur-mueller-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/friseur-mueller-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/friseur-mueller-mockup-800.jpg" alt="Salon Müller — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3266,8 +3363,9 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Salon Müller</h3>
+            <p class="m-demo-swiper-persona-context">Online-Buchung, Style-Galerie, weniger No-Shows.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="4">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/dachdecker-meisterbetrieb.html" data-m-demo-title="Dachdecker-Meister" data-m-demo-domain="dachdecker-meisterbetrieb.de" aria-label="Dachdecker-Meister Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3282,7 +3380,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/dachdecker-meister-mockup.jpg" alt="Dachdecker-Meister — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/dachdecker-meister-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/dachdecker-meister-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/dachdecker-meister-mockup-800.jpg" alt="Dachdecker-Meister — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3291,8 +3393,9 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Dachdecker-Meister</h3>
+            <p class="m-demo-swiper-persona-context">BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="5">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/restaurant-template.html" data-m-demo-title="Hirsch" data-m-demo-domain="gasthof-hirsch.de" aria-label="Hirsch Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3307,7 +3410,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/gastro-hirsch-mockup.jpg" alt="Hirsch — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/gastro-hirsch-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/gastro-hirsch-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/gastro-hirsch-mockup-800.jpg" alt="Hirsch — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3316,8 +3423,9 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Hirsch</h3>
+            <p class="m-demo-swiper-persona-context">Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.</p>
         </article>
-        <article class="m-demo-swiper-slide">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="6">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="/portfolio/spedition-schwaben.html" data-m-demo-title="Schwaben Logistik" data-m-demo-domain="schwaben-logistik.de" aria-label="Schwaben Logistik Live-Demo öffnen">
                 <div class="m-bf">
             <div class="m-bf-chrome">
@@ -3332,7 +3440,11 @@
                 </div>
             </div>
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/logistik-schwaben-mockup.jpg" alt="Schwaben Logistik — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/logistik-schwaben-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/logistik-schwaben-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/logistik-schwaben-mockup-800.jpg" alt="Schwaben Logistik — Karriaro-Demo" loading="lazy" decoding="async" fetchpriority="low" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -3341,6 +3453,7 @@
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">Schwaben Logistik</h3>
+            <p class="m-demo-swiper-persona-context">PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.</p>
         </article>
     </div>
     <div class="m-demo-swiper-dots" data-m-demo-dots aria-hidden="true"></div>

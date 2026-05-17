@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=102">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=103">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -158,22 +158,16 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 101 — CTA + Meta + Customer-Benefits-Trust-Liste + Mini-Specs.
+    // Sprint 103 — Hero-Kompaktierung: nur Button + 3-Bullet-Trust-Liste.
+    // Meta-Line + Mini-Specs raus damit Hero in 100svh auf iPhone SE (667px) passt.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
         '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a>' +
-        '<span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span>' +
-        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:880ms">' +
+        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:760ms">' +
             '<li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li>' +
             '<li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li>' +
             '<li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li>' +
-        '</ul>' +
-        '<dl class="m-hero-mini-specs m-hero-stagger" style="--m-delay:1000ms">' +
-            '<div><dt>24 h</dt><dd>Erster Entwurf</dd></div>' +
-            '<div><dt>7—14 Tage</dt><dd>Lieferzeit</dd></div>' +
-            '<div><dt>1.290 €</dt><dd>einmalig, ab</dd></div>' +
-            '<div><dt>7 Branchen</dt><dd>Live-Demos</dd></div>' +
-        '</dl>'
+        '</ul>'
     );
 }
 
@@ -185,15 +179,14 @@ function injectHeroEyebrowStagger(html) {
     );
 }
 
-// Sprint 101 — Editorial-Sektionen geschrumpft:
-// - m-mag-specs entfaellt (Specs wandern in Hero)
-// - m-mag-proof entfaellt (User-Wunsch)
-// Bleibt: Tools (mit "100+") und Siegel (mit echtem Brand-Logo).
+// Sprint 103 — Editorial-Sektionen weiter gestrafft:
+// Tools-Section: subheader + footnote raus, 7 Items mit space-evenly statt flex-start.
+// Siegel-Section unverändert.
 const EDITORIAL_SECTIONS_HTML = `
-<!-- Sprint 101 — Editorial-Magazin-Sektionen unter Hero -->
+<!-- Sprint 103 — Editorial-Magazin-Sektionen unter Hero -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">Branchen-Funktionen</p>
-    <p class="m-mag-tools-sub">Plus 100+ weitere Funktionen individuell pro Branche</p>
+    <p class="m-mag-eyebrow">№ 02 · Branchen-Funktionen</p>
+    <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
         <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
         <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
@@ -203,8 +196,6 @@ const EDITORIAL_SECTIONS_HTML = `
         <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
         <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
     </ol>
-    <p class="m-mag-tools-footnote">Maßgeschneidert für Ihre Branche</p>
-    <p class="m-mag-tools-footnote-sub">Kein Template-Aufsatz, kein Plugin-Risiko, kein WordPress-Wartungsstress.</p>
 </section>
 
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
@@ -220,7 +211,7 @@ const EDITORIAL_SECTIONS_HTML = `
 `;
 
 function injectEditorialSections(html) {
-    if (html.includes('m-mag-specs')) return html;
+    if (html.includes('m-mag-tools-title')) return html;
     // Anker: vor Demo-Swiper-Section (= zwischen Hero und Demo-Swiper).
     // Falls Demo-Swiper noch nicht injiziert, vor <section id="audit"> als Fallback.
     const swiperAnchor = /<section class="m-demo-swiper-mobile"/;
@@ -232,6 +223,94 @@ function injectEditorialSections(html) {
         return html.replace(auditAnchor, EDITORIAL_SECTIONS_HTML + '\n    <section id="audit"');
     }
     console.warn('  ⚠ kein Anker für Editorial-Sektionen gefunden');
+    return html;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 103 — Persona-Section (NEU)
+// 2×4 Tile-Grid zwischen Tools und Demo-Swiper. Tap = scroll to Demo + open Sheet.
+// ────────────────────────────────────────────────────────────────
+
+const PERSONA_ICON_HOUSE = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>';
+const PERSONA_ICON_STETHO = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="11" r="2"/></svg>';
+const PERSONA_ICON_SCISSORS = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>';
+const PERSONA_ICON_HARDHAT = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M10 11V5h4v6"/></svg>';
+const PERSONA_ICON_CHAT = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
+const PERSONA_ICON_FORK = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18M6 11h2M6 7h2M18 3v18M14 3v6a4 4 0 0 0 4 4"/></svg>';
+const PERSONA_ICON_TRUCK = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="10" rx="1"/><path d="M15 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
+const PERSONA_ICON_PLUS = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
+
+// Reihenfolge im Grid (2×4) — Top-Conversion-Personas zuerst.
+// data-demo-target = Index in DEMO_SWIPER_SLIDES (für Tap → Scroll + Sheet-Open).
+const PERSONAS = [
+    { slug: 'immobilien', icon: PERSONA_ICON_HOUSE,    name: 'Immobilien',   headline: 'Eigener Marktauftritt',   body: 'Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.',     demoTarget: 0 },
+    { slug: 'praxis',     icon: PERSONA_ICON_STETHO,   name: 'Praxis',       headline: 'Termine ohne Hotline',    body: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',             demoTarget: 2 },
+    { slug: 'friseur',    icon: PERSONA_ICON_SCISSORS, name: 'Friseur',      headline: 'Termine die füllen',      body: 'Online-Buchung, Style-Galerie, weniger No-Shows.',              demoTarget: 3 },
+    { slug: 'dachdecker', icon: PERSONA_ICON_HARDHAT,  name: 'Dachdecker',   headline: 'Förderung & Angebot',     body: 'BAFA-Rechner zeigt sofort die Förderhöhe.',                     demoTarget: 4 },
+    { slug: 'coaching',   icon: PERSONA_ICON_CHAT,     name: 'Coaching',     headline: 'Erstgespräch direkt',     body: 'Vita, Methodik, Buchungs-Button der konvertiert.',              demoTarget: 1 },
+    { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 5 },
+    { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 6 },
+];
+
+function buildPersonaSectionHtml() {
+    const tiles = PERSONAS.map((p) => `
+        <button type="button" class="m-persona-tile" data-m-persona-target="${p.demoTarget}" aria-label="${p.name}: ${p.headline} — Demo öffnen">
+            ${p.icon}
+            <span class="m-persona-name">${p.name}</span>
+            <span class="m-persona-headline">${p.headline}</span>
+            <span class="m-persona-body">${p.body}</span>
+        </button>`).join('');
+
+    const wideTile = `
+        <a class="m-persona-tile m-persona-tile--wide" href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20meine%20Branche%20steht%20nicht%20in%20der%20Liste%20%E2%80%94%20k%C3%B6nnen%20wir%20kurz%20sprechen%3F" target="_blank" rel="noopener" aria-label="Andere Branche — WhatsApp öffnen">
+            ${PERSONA_ICON_PLUS}
+            <span class="m-persona-name">Ihre Branche fehlt?</span>
+            <span class="m-persona-headline">Wir bauen für alle Mittelständler.</span>
+            <span class="m-persona-body">Sprechen Sie uns an — Antwort per WhatsApp.</span>
+        </a>`;
+
+    return `
+<!-- Sprint 103 — Persona-Tile-Grid (zwischen Tools und Demo-Swiper) -->
+<section class="m-mag-personas" id="branchen" aria-label="Branchenpassung">
+    <p class="m-mag-eyebrow">№ 03 · Branchenpassung</p>
+    <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
+    <div class="m-mag-personas-grid">${tiles}
+        ${wideTile}
+    </div>
+</section>
+
+<script>
+(function () {
+    var tiles = document.querySelectorAll('[data-m-persona-target]');
+    if (!tiles.length) return;
+    tiles.forEach(function (t) {
+        t.addEventListener('click', function () {
+            var idx = parseInt(t.getAttribute('data-m-persona-target'), 10);
+            if (isNaN(idx)) return;
+            var slide = document.querySelector('[data-m-demo-slide="' + idx + '"]');
+            if (!slide) return;
+            // Scroll zum Demo-Slide (horizontal im Rail)
+            slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
+            // Sheet-Modal direkt öffnen via Card-Click-Trigger
+            var card = slide.querySelector('[data-m-demo-open]');
+            if (card) {
+                setTimeout(function () { card.click(); }, 320);
+            }
+        });
+    });
+})();
+</script>
+`;
+}
+
+function injectPersonaSection(html) {
+    if (html.includes('m-mag-personas-grid')) return html;
+    // Anker: vor Demo-Swiper-Section (= zwischen Tools und Demo).
+    const swiperAnchor = /<section class="m-demo-swiper-mobile"/;
+    if (swiperAnchor.test(html)) {
+        return html.replace(swiperAnchor, buildPersonaSectionHtml() + '\n<section class="m-demo-swiper-mobile"');
+    }
+    console.warn('  ⚠ kein Anker für Persona-Section gefunden');
     return html;
 }
 
@@ -305,18 +384,18 @@ function injectScrollAnimations(html) {
     return html.slice(0, closeBodyIdx) + SCROLL_ANIMATIONS_SCRIPT + html.slice(closeBodyIdx);
 }
 
-// Sprint 93/97 — Premium-Manufaktur-Demos
+// Sprint 103 — Demo-Slides mit Persona-Bezug (personaContext-Headline unter Mockup).
 // Reihenfolge wie Desktop-Branche-Switcher (src/index.html:3113-3120):
 // Immobilien → Coaching → Praxis → Friseur → Dachdecker → Gastronomie → Logistik
-// Pro Branche: slug, eyebrow, title, domain (für Browser-URL-Bar), href (Demo-Page).
+// Pro Branche: slug, eyebrow, title, domain (URL-Bar), href (Demo), personaContext (1-Zeile-Pain-Point).
 const DEMO_SWIPER_SLIDES = [
-    ['immobilien-stadtmakler', 'Immobilien · Premium-Paket', 'Stadtmakler Stuttgart', 'stadtmakler-stuttgart.de', '/portfolio/immobilien-makler.html'],
-    ['coaching-lehmann', 'Coaching · Essential', 'Lehmann Beratung', 'lehmann-beratung.de', '/portfolio/coaching-lehmann.html'],
-    ['praxis-weber', 'Praxis · Professional', 'Dr. Weber', 'praxis-weber.de', '/portfolio/praxis-weber.html'],
-    ['friseur-mueller', 'Beauty · Essential', 'Salon Müller', 'salon-mueller.de', '/portfolio/friseur-salon.html'],
-    ['dachdecker-meister', 'Handwerk · Professional', 'Dachdecker-Meister', 'dachdecker-meisterbetrieb.de', '/portfolio/dachdecker-meisterbetrieb.html'],
-    ['gastro-hirsch', 'Gastronomie · Professional', 'Hirsch', 'gasthof-hirsch.de', '/portfolio/restaurant-template.html'],
-    ['logistik-schwaben', 'Spedition · Premium', 'Schwaben Logistik', 'schwaben-logistik.de', '/portfolio/spedition-schwaben.html'],
+    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium', title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de', href: '/portfolio/immobilien-makler.html', personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
+    { slug: 'coaching-lehmann', eyebrow: 'Coaching · Essential', title: 'Lehmann Beratung', domain: 'lehmann-beratung.de', href: '/portfolio/coaching-lehmann.html', personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.' },
+    { slug: 'praxis-weber', eyebrow: 'Praxis · Professional', title: 'Dr. Weber', domain: 'praxis-weber.de', href: '/portfolio/praxis-weber.html', personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.' },
+    { slug: 'friseur-mueller', eyebrow: 'Beauty · Essential', title: 'Salon Müller', domain: 'salon-mueller.de', href: '/portfolio/friseur-salon.html', personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.' },
+    { slug: 'dachdecker-meister', eyebrow: 'Handwerk · Professional', title: 'Dachdecker-Meister', domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.' },
+    { slug: 'gastro-hirsch', eyebrow: 'Gastronomie · Professional', title: 'Hirsch', domain: 'gasthof-hirsch.de', href: '/portfolio/restaurant-template.html', personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
+    { slug: 'logistik-schwaben', eyebrow: 'Spedition · Premium', title: 'Schwaben Logistik', domain: 'schwaben-logistik.de', href: '/portfolio/spedition-schwaben.html', personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
 ];
 
 function buildBrowserChromeHtml(domain) {
@@ -336,12 +415,19 @@ function buildBrowserChromeHtml(domain) {
 }
 
 function buildDemoSwiperHtml() {
-    const slides = DEMO_SWIPER_SLIDES.map(([slug, eyebrow, title, domain, href], i) => `
-        <article class="m-demo-swiper-slide">
+    const slides = DEMO_SWIPER_SLIDES.map((slide, i) => {
+        const { slug, eyebrow, title, domain, href, personaContext } = slide;
+        const eager = i === 0;
+        return `
+        <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <div class="m-bf">${buildBrowserChromeHtml(domain)}
                     <div class="m-bf-canvas">
-                        <img class="m-bf-img" src="/images/${slug}-mockup.jpg" alt="${title} — Karriaro-Demo" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${i === 0 ? 'high' : 'low'}">
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -350,12 +436,14 @@ function buildDemoSwiperHtml() {
                 <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
             </div>
             <h3 class="m-demo-swiper-title">${title}</h3>
-        </article>`).join('');
+            <p class="m-demo-swiper-persona-context">${personaContext}</p>
+        </article>`;
+    }).join('');
 
     return `
-<!-- Mobile Demo-Swiper (Sprint 93 — Browser-Frame + Sheet-Modal, kein Auto-Rotation) -->
-<section class="m-demo-swiper-mobile" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">Sieben Branchen · Live</p>
+<!-- Mobile Demo-Swiper (Sprint 103 — Picture+webp, Persona-Context, IO-Registry) -->
+<section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
+    <p class="m-demo-swiper-section-eyebrow">№ 04 · Sieben Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>sieben echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
@@ -546,9 +634,11 @@ function buildPage(relPath) {
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
-        // Sprint 98 — Editorial-Sektionen (Specs/Werkzeuge/Beweis) als eigene Sektionen
-        html = injectEditorialSections(html);
+        // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper
+        // Demo-Swiper muss zuerst injected werden, damit Personas davor landen können.
         html = injectDemoSwiper(html);
+        html = injectPersonaSection(html);
+        html = injectEditorialSections(html);
     }
     // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
     html = injectScrollAnimations(html);

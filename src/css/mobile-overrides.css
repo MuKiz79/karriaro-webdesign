@@ -260,16 +260,13 @@
         left: 0;
         right: 0;
         z-index: 95;
-        background: rgba(255, 255, 255, 0.97);
-        -webkit-backdrop-filter: saturate(180%) blur(20px);
-        backdrop-filter: saturate(180%) blur(20px);
-        border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.98);
+        box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.06);
         padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
         gap: 12px;
         align-items: center;
         transform: translateY(110%);
         transition: transform 360ms cubic-bezier(0.32, 0.72, 0.16, 1);
-        will-change: transform;
     }
     .m-sticky-cta-bar.is-visible {
         transform: translateY(0);
@@ -381,7 +378,7 @@
         letter-spacing: 0.22em !important;
         text-transform: uppercase !important;
         color: rgba(60, 60, 67, 0.45) !important;
-        margin: 0 24px 32px !important;
+        margin: 0 24px clamp(14px, 2.5svh, 28px) !important;
         line-height: 1.5 !important;
         display: flex !important;
         flex-wrap: wrap !important;
@@ -413,8 +410,8 @@
         text-align: left !important;
     }
     .hero-headline {
-        font-size: clamp(56px, 14vw, 80px) !important;
-        line-height: 0.98 !important;
+        font-size: clamp(40px, 9svh, 64px) !important;
+        line-height: 1.0 !important;
         letter-spacing: -0.035em !important;
         margin: 0 24px !important;
         font-weight: 500 !important;
@@ -425,13 +422,13 @@
         text-align: left !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: clamp(26px, 6.5vw, 36px) !important;
+        font-size: clamp(20px, 5vw, 28px) !important;
         line-height: 1.2 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
         font-weight: 400 !important;
         letter-spacing: -0.012em !important;
-        margin-top: 16px !important;
+        margin-top: 12px !important;
         display: block !important;
     }
     /* Drop-Cap weg auf Mobile — wirkt typografisch nicht */
@@ -453,7 +450,7 @@
 
     /* CTA-Block: 1 Primary + 1 Meta-Line + Audit-Link versteckt */
     .hero-with-photo .hero-cta-row {
-        margin: 32px 24px 0 !important;
+        margin: clamp(20px, 3svh, 32px) 24px 0 !important;
         flex-direction: column !important;
         align-items: stretch !important;
         text-align: left !important;
@@ -461,8 +458,8 @@
     .hero-with-photo .hero-cta-row .btn {
         width: 100% !important;
         text-align: center !important;
-        padding: 18px 24px !important;
-        min-height: 52px !important;
+        padding: 16px 24px !important;
+        min-height: 48px !important;
         font-size: 15px !important;
         letter-spacing: -0.005em !important;
     }
@@ -649,7 +646,7 @@
 .m-demo-swiper-rail {
     display: flex;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 4px;
@@ -838,9 +835,7 @@
 .m-demo-sheet-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.45);
 }
 .m-demo-sheet-panel {
     position: absolute;
@@ -962,9 +957,7 @@
     padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0));
     border-top: 0.5px solid rgba(0, 0, 0, 0.06);
     text-align: center;
-    background: rgba(255, 255, 255, 0.92);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
+    background: #FFFFFF;
 }
 .m-demo-sheet-open-tab {
     font-size: 14px;
@@ -1410,20 +1403,20 @@
     .hero-with-photo,
     .m-mag-specs,
     .m-mag-proof {
-        min-height: 100dvh !important;
+        min-height: 100svh !important;
         scroll-snap-align: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        padding: 80px 24px !important;
+        padding: clamp(40px, 6svh, 80px) clamp(20px, 5vw, 32px) !important;
         box-sizing: border-box !important;
     }
     /* Demo-Swiper: KEIN flex-center (broke 100vw-Slide-Rail) */
     .m-demo-swiper-mobile {
-        min-height: 100dvh !important;
+        min-height: 100svh !important;
         scroll-snap-align: none !important;
         display: block !important;
-        padding: 80px 0 !important;
+        padding: clamp(40px, 6svh, 80px) 0 !important;
         box-sizing: border-box !important;
     }
     /* Demo-Section innen-Eyebrow/Title bekommen eigenes horizontal-padding */
@@ -1433,15 +1426,30 @@
         margin-left: 24px !important;
         margin-right: 24px !important;
     }
-    /* Werkzeuge: 7 Items koennen lang werden — start-align statt center */
+    /* Sprint 103 — 7 Items mit space-evenly (passen in 100svh auf iPhone SE) */
     .m-mag-tools {
-        min-height: 100dvh !important;
+        min-height: 100svh !important;
         scroll-snap-align: none !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important;
-        padding: 80px 24px !important;
+        justify-content: center !important;
+        padding: clamp(40px, 6svh, 80px) clamp(20px, 5vw, 32px) !important;
         box-sizing: border-box !important;
+    }
+    /* Tools-Title (Sprint 103 — neue Klasse statt subheader) */
+    .m-mag-tools-title {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif !important;
+        font-size: clamp(28px, 7svh, 44px) !important;
+        font-weight: 600 !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.03em !important;
+        color: var(--color-indigo-strong, #061320) !important;
+        margin: 0 0 clamp(20px, 3svh, 36px) !important;
+    }
+    .m-mag-tools-title::before { content: none !important; }
+    /* Items kompakter (space-evenly verteilt Whitespace, padding bleibt klein) */
+    .m-mag-tools-list li {
+        padding: clamp(8px, 1.6svh, 14px) 0 !important;
     }
 
     /* === Monochrom alternierend Weiss / Apple-Grey === */
@@ -1476,15 +1484,33 @@
     }
 }
 
-/* Sehr kleine Geraete (iPhone SE) — etwas weniger Padding fuer mehr Inhaltsplatz */
+/* Sprint 103 — Sehr kleine Geraete (iPhone SE 375×667) noch kompakter */
 @media (max-width: 379px) {
     .hero-with-photo,
     .m-mag-specs,
     .m-mag-tools,
+    .m-mag-personas,
     .m-mag-proof,
     .m-demo-swiper-mobile {
-        padding: 64px 16px !important;
+        padding: 32px 16px !important;
     }
+    /* Headlines auf SE schrumpfen um 8-10% */
+    .hero-headline { font-size: clamp(40px, 11vw, 56px) !important; }
+    .m-mag-tools-title,
+    .m-mag-personas-title { font-size: clamp(24px, 6.5vw, 32px) !important; }
+}
+
+/* Sprint 103 — Zusätzlich Edge-Case sehr niedrige Screens (kombi mit schmal) */
+@media (max-height: 700px) {
+    .hero-with-photo,
+    .m-mag-tools,
+    .m-mag-personas,
+    .m-mag-siegel {
+        padding-top: 32px !important;
+        padding-bottom: 32px !important;
+    }
+    .m-hero-trust-list { margin-top: 18px !important; gap: 8px !important; }
+    .m-hero-trust-list li { font-size: 14px !important; }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1511,14 +1537,8 @@
         background: #FFFFFF !important;
         position: relative;
     }
-    .m-bf-canvas::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(245, 245, 247, 0.18);
-        mix-blend-mode: lighten;
-        pointer-events: none;
-    }
+    /* Sprint 103 — Inset-Overlay raus (mix-blend-mode kostet Repaint, nicht sichtbar wirksam) */
+    .m-bf-canvas::after { content: none; }
 
     /* === Hero-Trust-Strip unter CTA (Sprint 100 — bleibt fuer Folge-Sprints) === */
     .m-hero-trust-strip {
@@ -1536,11 +1556,11 @@
     /* === Sprint 101 — Hero-Trust-Liste (3 Customer-Benefits mit Gold-Check) === */
     .m-hero-trust-list {
         list-style: none;
-        margin: 28px 24px 0 !important;
+        margin: clamp(16px, 2.5svh, 28px) 24px 0 !important;
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: clamp(8px, 1.2svh, 12px);
     }
     .m-hero-trust-list li {
         display: flex;
@@ -1686,7 +1706,7 @@
 
     /* === Footer-Siegel-Sektion === */
     .m-mag-siegel {
-        min-height: 100dvh !important;
+        min-height: 100svh !important;
         scroll-snap-align: start;
         scroll-snap-stop: normal;
         display: flex !important;
@@ -1926,3 +1946,149 @@
         display: none !important;
     }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 103 — Adaptive Sizing + Persona-Section + Perf-Härtung
+   1. Hero-Defensive: alte Mini-Specs/Meta verstecken (falls noch im HTML)
+   2. Persona-Tile-Grid (NEU, 2×4)
+   3. Demo-Swiper Persona-Context-Zeile
+   4. content-visibility fuer Below-the-fold Sections
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+
+    /* === Defensive: alte Hero-Inserts versteckt (Sprint 103 Hero-Strip) === */
+    .m-hero-cta-meta,
+    .m-hero-mini-specs {
+        display: none !important;
+    }
+
+    /* === Persona-Section (NEU) — 100svh, 2×4 Tile-Grid === */
+    .m-mag-personas {
+        min-height: 100svh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: clamp(40px, 6svh, 80px) clamp(20px, 5vw, 32px) !important;
+        background: #F5F5F7 !important;
+        box-sizing: border-box !important;
+        border-top: 0 !important;
+    }
+    .m-mag-personas-title {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif !important;
+        font-size: clamp(28px, 7svh, 44px) !important;
+        font-weight: 600 !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.03em !important;
+        color: var(--color-indigo-strong, #061320) !important;
+        margin: 0 0 clamp(20px, 3svh, 36px) !important;
+    }
+    .m-mag-personas-title::before { content: none !important; }
+
+    .m-mag-personas-grid {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .m-persona-tile {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        text-align: left !important;
+        padding: 16px 14px !important;
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 14px !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif !important;
+        -webkit-tap-highlight-color: transparent !important;
+        transition: transform 80ms ease-out, border-color 200ms ease-out !important;
+    }
+    .m-persona-tile:active {
+        transform: scale(0.97) !important;
+        border-color: rgba(0, 0, 0, 0.18) !important;
+    }
+    .m-persona-icon {
+        width: 22px !important;
+        height: 22px !important;
+        color: var(--color-indigo, #1A2E40) !important;
+        margin-bottom: 4px !important;
+        flex-shrink: 0 !important;
+    }
+    .m-persona-name {
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        line-height: 1.2 !important;
+    }
+    .m-persona-headline {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.02em !important;
+        color: var(--color-indigo-strong, #061320) !important;
+        line-height: 1.2 !important;
+    }
+    .m-persona-body {
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        line-height: 1.4 !important;
+        letter-spacing: -0.005em !important;
+    }
+    /* Wide-Tile (Andere Branche?) spannt 2 Spalten + Gold-Akzent */
+    .m-persona-tile--wide {
+        grid-column: span 2 !important;
+        border-color: var(--color-gold, #8A7B5C) !important;
+        background: rgba(138, 123, 92, 0.04) !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 14px !important;
+        padding: 14px 16px !important;
+    }
+    .m-persona-tile--wide .m-persona-icon {
+        color: var(--color-gold, #8A7B5C) !important;
+        margin-bottom: 0 !important;
+        width: 26px !important;
+        height: 26px !important;
+    }
+    .m-persona-tile--wide .m-persona-name,
+    .m-persona-tile--wide .m-persona-headline,
+    .m-persona-tile--wide .m-persona-body {
+        flex: 1 !important;
+    }
+    .m-persona-tile--wide .m-persona-name { display: none !important; }
+    .m-persona-tile--wide .m-persona-headline { font-size: 14px !important; }
+    .m-persona-tile--wide .m-persona-body { font-size: 11px !important; }
+
+    /* === Demo-Swiper Persona-Context-Zeile (Sprint 103) === */
+    .m-demo-swiper-persona-context {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 400 !important;
+        line-height: 1.45 !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        margin: 8px 6px 0 !important;
+        letter-spacing: -0.005em !important;
+    }
+
+    /* === content-visibility fuer Below-the-fold Sections (Perf-Hardening) === */
+    /* Hero bleibt OHNE — ist Above-the-fold und muss sofort rendern */
+    .m-mag-tools,
+    .m-mag-personas,
+    .m-demo-swiper-mobile,
+    .m-mag-siegel {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 100svh;
+    }
+}
+
+/* Desktop default: Persona-Section unsichtbar */
+.m-mag-personas { display: none; }
+
