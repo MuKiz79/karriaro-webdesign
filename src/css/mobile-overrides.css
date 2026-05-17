@@ -1241,6 +1241,26 @@
     /* Demo-Swiper-Background kuehler */
     .m-bf-canvas {
         background: #F5F5F7 !important;
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 16 / 10;
+    }
+    /* Sprint 115 — Live-iframe als Demo-Vorschau statt PNG-Mockup.
+       Scaled-down (200% size, 0.5 transform) damit die ganze Portfolio-Seite
+       in die Karte passt. sandbox="allow-same-origin" verhindert JS-Execution
+       — Layout sichtbar, Interaktion nicht möglich (Touch geht durch). */
+    .m-bf-iframe {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 200% !important;
+        height: 200% !important;
+        transform: scale(0.5) !important;
+        transform-origin: top left !important;
+        border: 0 !important;
+        background: #FFFFFF !important;
+        pointer-events: none !important;
+        display: block !important;
     }
 
     /* Demo-Sheet kuehler */
@@ -1379,6 +1399,18 @@
         color: var(--color-indigo-strong, #061320);
         letter-spacing: -0.018em;
         line-height: 1.25;
+    }
+    /* Sprint 115 — "+93 weitere" Item dezent abgesetzt vom 01-07-Lockup */
+    .m-mag-tools-list li.m-mag-tools-more {
+        opacity: 0.7;
+    }
+    .m-mag-tools-list li.m-mag-tools-more .m-mag-tool-num {
+        color: var(--color-gold, #8A7B5C);
+    }
+    .m-mag-tools-list li.m-mag-tools-more .m-mag-tool-name {
+        font-style: italic;
+        font-size: 18px;
+        color: var(--color-graphite-soft, #6e6e73);
     }
     .m-mag-tools-footnote {
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
@@ -1794,6 +1826,14 @@
         padding: 14px 18px;
         border-radius: 4px;
         display: inline-block;
+    }
+    /* Sprint 115 — Phyllotaxis-Siegel-SVG (13 Punkte, Goldener Winkel),
+       ersetzt das [K]-Mark als zentrales Manufaktursiegel-Visual. */
+    .m-siegel-svg {
+        display: block;
+        width: 96px;
+        height: 96px;
+        flex-shrink: 0;
     }
     .m-siegel-year {
         font-family: "JetBrains Mono", "SF Mono", monospace;

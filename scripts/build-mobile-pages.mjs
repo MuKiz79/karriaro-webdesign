@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=114">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=115">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -174,14 +174,14 @@ function rewriteHeroCta(html) {
                 '<span class="m-hero-trust-num">100+</span>' +
                 '<span class="m-hero-trust-body">' +
                     '<strong>Branchen-Funktionen</strong>' +
-                    '<small>Wertermittlung, BAFA-Rechner, Symptom-Checker.</small>' +
+                    '<small>Wertermittlung, BAFA-Rechner, Symptom-Checker und 90+ weitere.</small>' +
                 '</span>' +
             '</li>' +
             '<li>' +
                 '<span class="m-hero-trust-num">[K]</span>' +
                 '<span class="m-hero-trust-body">' +
                     '<strong>Lead-Cockpit Lighthouse</strong>' +
-                    '<small>Sie sehen jeden Besucher, KI leitet die Strategie.</small>' +
+                    '<small>Sie sehen jeden Besucher, KI übersetzt das in nächste Schritte.</small>' +
                 '</span>' +
             '</li>' +
             '<li>' +
@@ -357,9 +357,33 @@ function injectHeroSiegelVisual(html) {
     return html.replace(trustListEnd, '$1' + HERO_SIEGEL_HTML);
 }
 
+// Sprint 115 — Phyllotaxis-Punkte als statisches SVG (Goldener Winkel 137,5°).
+// 13 Punkte, pre-computed im Node-Build damit kein Runtime-JS nötig ist.
+// Quelle: marketing/social/siegel-story-carousel-1080x1350.html Slide 7.
+function buildPhyllotaxisDots() {
+    const goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+    let dots = '';
+    for (let n = 1; n <= 13; n++) {
+        const r = Math.sqrt(n) * 8;
+        const theta = n * goldenAngle;
+        const x = (45 + r * Math.cos(theta)).toFixed(2);
+        const y = (45 + r * Math.sin(theta)).toFixed(2);
+        dots += `<circle cx="${x}" cy="${y}" r="1.5" fill="#8A7B5C"/>`;
+    }
+    return dots;
+}
+
+const PHYLLOTAXIS_SVG = `<svg class="m-siegel-svg" viewBox="0 0 90 90" aria-hidden="true">
+<path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+<path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+<path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+<path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+${buildPhyllotaxisDots()}
+</svg>`;
+
 // Sprint 103 — Editorial-Sektionen weiter gestrafft:
 // Tools-Section: subheader + footnote raus, 7 Items mit space-evenly statt flex-start.
-// Siegel-Section unverändert.
+// Siegel-Section: Sprint 115 — [K]-Mark ersetzt durch 13-Punkte-Phyllotaxis-SVG.
 const EDITORIAL_SECTIONS_HTML = `
 <!-- Sprint 103 — Editorial-Magazin-Sektionen unter Hero -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
@@ -373,12 +397,13 @@ const EDITORIAL_SECTIONS_HTML = `
         <li><span class="m-mag-tool-num">05</span><span class="m-mag-tool-name">Frachtquote</span></li>
         <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
         <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
+        <li class="m-mag-tools-more"><span class="m-mag-tool-num">+93</span><span class="m-mag-tool-name">weitere — branchen-spezifisch</span></li>
     </ol>
 </section>
 
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
     <div class="m-siegel-emblem">
-        <span class="m-siegel-mark">[K]</span>
+        ${PHYLLOTAXIS_SVG}
         <span class="m-siegel-year">№ 01 · 2026</span>
     </div>
     <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>
@@ -574,6 +599,7 @@ const DEMO_SWIPER_SLIDES = [
     { slug: 'dachdecker-meister', eyebrow: 'Handwerk · Professional', title: 'Dachdecker-Meister', domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.' },
     { slug: 'gastro-hirsch', eyebrow: 'Gastronomie · Professional', title: 'Hirsch', domain: 'gasthof-hirsch.de', href: '/portfolio/restaurant-template.html', personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
     { slug: 'logistik-schwaben', eyebrow: 'Spedition · Premium', title: 'Schwaben Logistik', domain: 'schwaben-logistik.de', href: '/portfolio/spedition-schwaben.html', personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
+    { slug: 'handwerk-mueller', eyebrow: 'Sanitär · Professional', title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de', href: '/portfolio/meisterbetrieb-mueller.html', personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.' },
 ];
 
 function buildBrowserChromeHtml(domain) {
@@ -601,11 +627,7 @@ function buildDemoSwiperHtml() {
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <div class="m-bf">${buildBrowserChromeHtml(domain)}
                     <div class="m-bf-canvas">
-                        <picture>
-                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
-                            <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="500">
-                        </picture>
+                        <iframe class="m-bf-iframe" data-m-bf-src="${href}" ${eager ? `src="${href}"` : ''} scrolling="no" loading="${eager ? 'eager' : 'lazy'}" sandbox="allow-same-origin" referrerpolicy="no-referrer-when-downgrade" aria-hidden="true" tabindex="-1" title="${title} — Live-Vorschau"></iframe>
                     </div>
                 </div>
             </button>
@@ -621,8 +643,8 @@ function buildDemoSwiperHtml() {
     return `
 <!-- Mobile Demo-Swiper (Sprint 103 — Picture+webp, Persona-Context, IO-Registry) -->
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">№ 04 · Sieben Branchen · Live</p>
-    <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>sieben echte Demos.</h2>
+    <p class="m-demo-swiper-section-eyebrow">№ 04 · Acht Branchen · Live</p>
+    <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
     </div>
@@ -682,15 +704,24 @@ function buildDemoSwiperHtml() {
     var dotEls = dotsBox.querySelectorAll('.m-demo-swiper-dot');
 
     // Active-Dot folgt natürlichem Swipe (kein Auto-Rotation, User-controlled)
+    // Sprint 115 — Plus: Lazy-Mount der iframes bei Slide-Approach (intersectionRatio > 0.1)
     if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
+                // Lazy-Mount iframe wenn Karte in Sicht kommt (auch nur teilweise)
+                if (e.isIntersecting) {
+                    var ifr = e.target.querySelector('iframe.m-bf-iframe');
+                    if (ifr && !ifr.src && ifr.dataset.mBfSrc) {
+                        ifr.src = ifr.dataset.mBfSrc;
+                    }
+                }
+                // Dot-Indicator: nur bei dominant sichtbarer Slide
                 if (e.isIntersecting && e.intersectionRatio > 0.6) {
                     var i = Array.prototype.indexOf.call(slides, e.target);
                     if (i >= 0) dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
                 }
             });
-        }, { root: rail, threshold: [0.6] });
+        }, { root: rail, threshold: [0.1, 0.6] });
         slides.forEach(function (s) { io.observe(s); });
     }
 
