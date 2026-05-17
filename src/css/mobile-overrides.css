@@ -406,24 +406,24 @@
         padding: 0 !important;
     }
 
-    /* Headline-Hierarchie: Roman gross + Italic-Subline klein */
-    .hero-headline {
-        font-size: clamp(48px, 13vw, 72px) !important;
-        line-height: 1.0 !important;
-        letter-spacing: -0.03em !important;
-        margin: 0 24px !important;
+    /* Sprint 95 — Statement-Hero "Manufaktur statt Massenware." */
+    .hero-headline.m-hero-statement {
+        font-size: clamp(60px, 17vw, 110px) !important;
+        line-height: 0.92 !important;
+        letter-spacing: -0.04em !important;
+        margin: 8px 24px 0 !important;
         font-weight: 500 !important;
     }
-    .hero-h1-line { display: block !important; }
-    .hero-h1-line.m-hero-accent {
-        font-size: clamp(22px, 5.5vw, 30px) !important;
-        line-height: 1.22 !important;
+    .m-hero-statement .hero-h1-line {
+        display: block !important;
+    }
+    .m-hero-statement .hero-h1-line.m-hero-accent {
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
-        font-weight: 400 !important;
-        letter-spacing: -0.012em !important;
-        margin-top: 18px !important;
-        display: block !important;
+        font-size: inherit !important;
+        font-weight: 500 !important;
+        margin-top: 0 !important;
+        letter-spacing: -0.04em !important;
     }
     /* Drop-Cap weg auf Mobile — wirkt typografisch nicht */
     .hero-dropcap {
@@ -562,13 +562,15 @@
     .mockup-wrap {
         display: none !important;
     }
-    .m-demo-swiper-mobile {
+    /* Sprint 95 — höhere Spezifität (body + Klasse) damit Default-Block überschrieben wird */
+    body .m-demo-swiper-mobile {
         display: block !important;
     }
 }
 
 /* === Defaults (Desktop): Mobile-only-Elemente unsichtbar === */
-.m-demo-swiper-mobile { display: none; }
+/* Sprint 95 — !important damit @media-Override sicher greift bei CSS-Reihenfolge */
+.m-demo-swiper-mobile { display: none !important; }
 
 /* ════════════════════════════════════════════════════════════
    Sprint 93 — Demo-Swiper PREMIUM-MANUFAKTUR-EDITION
@@ -933,4 +935,138 @@
     color: var(--color-indigo, #1A2E40);
     text-decoration: none;
     letter-spacing: -0.005em;
+}
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 95 — Editorial-Animations + Trust-Block + Brand-Stempel
+   ════════════════════════════════════════════════════════════ */
+
+/* Trust-Block (Counter "10.538 Zeilen Code, 7 Branchen, 0 Templates") */
+.m-hero-trust {
+    display: none;
+}
+.m-hero-trust-eyebrow {
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-gold, #8A7B5C);
+    margin: 0 0 6px;
+}
+.m-hero-trust-text {
+    margin: 0;
+    font-family: "JetBrains Mono", "SF Mono", monospace;
+    font-size: 13px;
+    color: var(--color-graphite-soft, #6e6e73);
+    line-height: 1.55;
+}
+.m-hero-counter {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 500;
+    font-style: normal;
+    color: var(--color-indigo-strong, #061320);
+    font-variant-numeric: tabular-nums;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+}
+
+@media (max-width: 1023px) {
+    .m-hero-trust {
+        display: block !important;
+        margin: 24px 24px 0 !important;
+        padding-top: 20px;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Stagger-Fade-Up Animation (greift nur bei Mobile + ohne reduced-motion) */
+@media (max-width: 1023px) {
+    .m-hero-stagger {
+        opacity: 0;
+        transform: translateY(14px);
+        animation: m-hero-fadeup 700ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--m-delay, 0ms) forwards;
+    }
+}
+@keyframes m-hero-fadeup {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .m-hero-stagger {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
+
+/* Brand-Stempel [K] vor H2-Sektion-Headlines */
+@media (max-width: 1023px) {
+    section h2::before {
+        content: "[K]";
+        display: block;
+        font-family: "JetBrains Mono", "SF Mono", monospace;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--color-gold, #8A7B5C);
+        letter-spacing: 0.12em;
+        opacity: 0.65;
+        margin-bottom: 14px;
+    }
+    /* Ausnahmen: nicht in Hero, Demo-Swiper-Mobile, Sheet, Mobile-Specifics */
+    .hero-with-photo h2::before,
+    .m-demo-swiper-mobile h2::before,
+    .m-demo-sheet h2::before,
+    .m-sticky-cta-bar h2::before {
+        content: none !important;
+    }
+}
+
+/* Pull-Quote-Linie draw-in on scroll (Mobile + ohne reduced-motion) */
+@media (max-width: 1023px) {
+    blockquote,
+    .pull-quote {
+        border-left: 0 !important;
+        position: relative;
+        padding-left: 22px !important;
+    }
+    blockquote::before,
+    .pull-quote::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 2px;
+        background: var(--color-indigo, #1A2E40);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    blockquote.m-in-view::before,
+    .pull-quote.m-in-view::before {
+        transform: scaleY(1);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    blockquote::before,
+    .pull-quote::before {
+        transform: scaleY(1) !important;
+        transition: none !important;
+    }
+}
+
+/* Touch-Feedback (überall — Mobile-Premium-Detail) */
+@media (max-width: 1023px) {
+    .btn:active,
+    .submit-btn:active,
+    .m-sticky-cta:active,
+    .m-demo-swiper-card:active,
+    .m-demo-link:active,
+    .kr-tools-tab:active,
+    .m-demo-sheet-close:active {
+        transform: scale(0.97);
+        transition: transform 80ms ease-out, background 80ms ease-out;
+    }
 }

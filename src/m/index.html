@@ -3011,7 +3011,7 @@
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=91">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=95">
 </head>
 <body>
 
@@ -3054,7 +3054,7 @@
     <section aria-label="Einleitung" class="hero-with-photo">
         <div class="hero-inner">
             <div class="hero-text-block">
-                <p class="hero-folio-eyebrow">
+                <p class="hero-folio-eyebrow m-hero-stagger" style="--m-delay:0ms">
                     <span>№&nbsp;01</span>
                     <span class="dot">·</span>
                     <span>Karriaro</span>
@@ -3063,20 +3063,25 @@
                     <span class="dot">·</span>
                     <span>Frühjahr 2026</span>
                 </p>
-                <h1 class="hero-headline">
-                    <span class="hero-h1-line">Ihre Website.</span>
-                    <span class="hero-h1-line m-hero-accent">Aus unserer Design-Manufaktur.</span>
-                </h1>
-                <ul class="m-hero-specs" aria-label="Eckdaten">
+                <h1 class="hero-headline m-hero-statement"><span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur</span><span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">statt</span><span class="hero-h1-line m-hero-stagger m-hero-accent" style="--m-delay:240ms">Massenware.</span></h1>
+                <ul class="m-hero-specs m-hero-stagger" style="--m-delay:380ms" aria-label="Eckdaten">
                     <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
                     <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
                     <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
                 </ul>
+                <div class="m-hero-trust m-hero-stagger" style="--m-delay:500ms">
+                    <p class="m-hero-trust-eyebrow">Beweis</p>
+                    <p class="m-hero-trust-text">
+                        <span class="m-hero-counter" data-target="10538">0</span> Zeilen Code,
+                        <span class="m-hero-counter" data-target="7">0</span> Branchen,
+                        <span class="m-hero-counter" data-target="0">0</span> Templates.
+                    </p>
+                </div>
                 <p class="subhead">
                     Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290&nbsp;€ einmalig, Wartung inklusive ab 99 €/Mt.
                 </p>
                 <div class="hero-cta-row">
-                    <a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta">Antwort in 24 h</span>
+                    <a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:620ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:740ms">Antwort in 24 h</span>
                 </div>
                 <a href="#audit" class="hero-audit-link" data-audit-bridge>
                     Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
@@ -6038,6 +6043,49 @@
         });
     }, { threshold: 0.05 });
     io.observe(hero);
+})();
+</script>
+
+<!-- Sprint 95: Editorial-Scroll-Animations (Counter-Up + Pull-Quote-Line-Draw) -->
+<script>
+(function () {
+    if (!('IntersectionObserver' in window)) return;
+
+    // Counter-Up beim Scroll-In
+    var counters = document.querySelectorAll('.m-hero-counter');
+    if (counters.length) {
+        var ioCounter = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                var el = e.target;
+                var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                var dur = 1200, start = performance.now();
+                function tick(now) {
+                    var p = Math.min(1, (now - start) / dur);
+                    var eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+                ioCounter.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(function (c) { ioCounter.observe(c); });
+    }
+
+    // Pull-Quote-Linie draw-in on scroll
+    var quotes = document.querySelectorAll('blockquote, .pull-quote');
+    if (quotes.length) {
+        var ioQuote = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('m-in-view');
+                    ioQuote.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        quotes.forEach(function (q) { ioQuote.observe(q); });
+    }
 })();
 </script>
 </body>

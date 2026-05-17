@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=91">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=95">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 94 — 1 Button + 1 Link, erscheint bei Scroll) -->
@@ -135,31 +135,34 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 94 — Premium-Hero-Headline:
-    // (a) Drop-Cap-Wrapper auf erstem Buchstaben entfernen — "I" funktioniert nicht als Drop-Cap.
-    // (b) Akzent-Zeile ohne hardcoded <br>, browser umbricht natürlich wenn nötig.
-    // (c) Akzent wird per CSS zur kleineren Italic-Subline (Spannung statt 1:1-Größe).
-    html = html.replace(
-        /<span class="hero-dropcap">I<\/span>hre Website\./,
-        'Ihre Website.'
+    // Sprint 95 — Statement-Hero "Manufaktur statt Massenware."
+    // Ersetzt komplette Headline mit Mega-Display-Statement.
+    // Stagger-Klassen mit CSS-Variable für Animation-Delays.
+    return html.replace(
+        /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
+        '<h1 class="hero-headline m-hero-statement">' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">statt</span>' +
+        '<span class="hero-h1-line m-hero-stagger m-hero-accent" style="--m-delay:240ms">Massenware.</span>' +
+        '</h1>'
     );
-    html = html.replace(
-        /<span class="hero-h1-line">Handgemacht\.<\/span>/,
-        '<span class="hero-h1-line m-hero-accent">Aus unserer Design-Manufaktur.</span>'
-    );
-    return html;
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 94 — Textklotz wird zu 3 Editorial-Specs.
-    // Match: <p class="subhead">…lang…</p> direkt nach hero-headline.
-    // Wir verstecken ihn per CSS und injizieren stattdessen die Spec-List.
-    const specs = `<ul class="m-hero-specs" aria-label="Eckdaten">
+    // Sprint 94/95 — Textklotz wird zu Specs + Trust-Block mit Stagger-Animation.
+    const specs = `<ul class="m-hero-specs m-hero-stagger" style="--m-delay:380ms" aria-label="Eckdaten">
                     <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
                     <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
                     <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
-                </ul>`;
-    // Injiziere direkt VOR der subhead-Section, damit die Specs vor dem CTA stehen.
+                </ul>
+                <div class="m-hero-trust m-hero-stagger" style="--m-delay:500ms">
+                    <p class="m-hero-trust-eyebrow">Beweis</p>
+                    <p class="m-hero-trust-text">
+                        <span class="m-hero-counter" data-target="10538">0</span> Zeilen Code,
+                        <span class="m-hero-counter" data-target="7">0</span> Branchen,
+                        <span class="m-hero-counter" data-target="0">0</span> Templates.
+                    </p>
+                </div>`;
     return html.replace(
         /(<p class="subhead">)/,
         specs + '\n                $1'
@@ -167,11 +170,75 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 94 — CTA-Text kürzen, "Antwort in 24 h" als Meta-Line.
+    // Sprint 94/95 — CTA-Text kürzen, Stagger-Delays.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta">Antwort in 24 h</span>'
+        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:620ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:740ms">Antwort in 24 h</span>'
     );
+}
+
+function injectHeroEyebrowStagger(html) {
+    // Sprint 95 — Eyebrow startet als Erstes (Delay 0ms)
+    return html.replace(
+        /<p class="hero-folio-eyebrow">/,
+        '<p class="hero-folio-eyebrow m-hero-stagger" style="--m-delay:0ms">'
+    );
+}
+
+const SCROLL_ANIMATIONS_SCRIPT = `
+<!-- Sprint 95: Editorial-Scroll-Animations (Counter-Up + Pull-Quote-Line-Draw) -->
+<script>
+(function () {
+    if (!('IntersectionObserver' in window)) return;
+
+    // Counter-Up beim Scroll-In
+    var counters = document.querySelectorAll('.m-hero-counter');
+    if (counters.length) {
+        var ioCounter = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                var el = e.target;
+                var target = parseInt(el.getAttribute('data-target'), 10) || 0;
+                var dur = 1200, start = performance.now();
+                function tick(now) {
+                    var p = Math.min(1, (now - start) / dur);
+                    var eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+                ioCounter.unobserve(el);
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(function (c) { ioCounter.observe(c); });
+    }
+
+    // Pull-Quote-Linie draw-in on scroll
+    var quotes = document.querySelectorAll('blockquote, .pull-quote');
+    if (quotes.length) {
+        var ioQuote = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('m-in-view');
+                    ioQuote.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        quotes.forEach(function (q) { ioQuote.observe(q); });
+    }
+})();
+</script>
+`;
+
+function injectScrollAnimations(html) {
+    if (html.includes('m-in-view') && html.includes('m-hero-counter')) {
+        // Bereits drin (idempotent)
+    }
+    if (html.includes('Sprint 95: Editorial-Scroll-Animations')) return html;
+    const closeTag = '</' + 'body>';
+    const closeBodyIdx = html.lastIndexOf(closeTag);
+    if (closeBodyIdx === -1) return html;
+    return html.slice(0, closeBodyIdx) + SCROLL_ANIMATIONS_SCRIPT + html.slice(closeBodyIdx);
 }
 
 // Sprint 93 — Premium-Manufaktur-Demos
@@ -407,13 +474,16 @@ function buildPage(relPath) {
         html = injectStickyCta(html);
     }
     if (isIndex(relPath)) {
-        // Sprint 92 — index-spezifisch: Headline-Akzent + Demo-Swiper
+        // Sprint 92/95 — Statement-Hero "Manufaktur statt Massenware" + Stagger
         html = rewriteHeroHeadline(html);
-        // Sprint 94 — Editorial-Premium-Hero: Sub-Specs, CTA-Reduktion
+        html = injectHeroEyebrowStagger(html);
+        // Sprint 94/95 — Editorial-Premium-Hero: Sub-Specs + Trust + CTA-Reduktion
         html = rewriteHeroSubhead(html);
         html = rewriteHeroCta(html);
         html = injectDemoSwiper(html);
     }
+    // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
+    html = injectScrollAnimations(html);
     html = addGeneratorMarker(html, relPath);
 
     mkdirSync(dirname(outFile), { recursive: true });
