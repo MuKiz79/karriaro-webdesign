@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=109">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=110">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -139,54 +139,56 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 106 — Webdesign-Manufaktur + Unikat-Statement (User-Wahl Senior-Marketing)
+    // Sprint 110 — Boutique-Print-Disziplin: H1 zwei kurze Zeilen mit je
+    // einem Punkt, kein Compound-Bindestrich-Bruch. Italic-Sub bleibt.
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Webdesign-Manufaktur.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Jede Seite handcodiert ein Unikat.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Webdesign.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:200ms">Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:320ms">Jede Seite handcodiert ein Unikat.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 107 — Hero-Subhead mit KI-Aera-Statement, explizite <br> fuer
-    // kontrollierten 3-Zeilen-Wrap auf iPhone-Width.
+    // Sprint 110 — Boutique-Voice: 1 dichter Satz statt 3 Slack-TLDR-Statements.
+    // KI-Ära-Substanz bleibt, Konjunktiv-Drohung raus.
     return html.replace(
         /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
-        '<p class="subhead m-hero-stagger" style="--m-delay:380ms">' +
-        'Optimiert für die KI-Ära.<br>' +
-        'SEO + GEO + Schema.org.<br>' +
-        'Damit Sie auch zukünftig gefunden werden.' +
+        '<p class="subhead m-hero-stagger" style="--m-delay:460ms">' +
+        'Handcodiert, BFSG-konform, für die KI-Ära gemacht.' +
         '</p>'
     );
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 107 — Hero gestrafft: 3 Power-USPs prominent, Single-CTA klein am Hero-Ende.
-    // Performance-Check raus. Auto-Margin pusht Button an Hero-Boden (kein Siegel mehr).
+    // Sprint 110 — Boutique-Spec-Strip-Disziplin (Hermès/Aesop-Pattern):
+    // Strong = Substantiv-Phrase 2-3 Wörter ohne wertendes Adjektiv.
+    // Small  = drei konkrete Substantive mit Komma, geschlossener Satz mit Punkt.
+    // Marker bleiben heterogen (Brand-Code), visuell konsistent (Sprint 109).
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
         '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:640ms">' +
             '<li>' +
                 '<span class="m-hero-trust-num">100+</span>' +
                 '<span class="m-hero-trust-body">' +
-                    '<strong>Einzigartige Branchen-Funktionen</strong>' +
-                    '<small>Wertermittlung · BAFA-Rechner · Symptom-Checker · Style-Galerie · …</small>' +
+                    '<strong>Branchen-Funktionen</strong>' +
+                    '<small>Wertermittlung, BAFA-Rechner, Symptom-Checker.</small>' +
                 '</span>' +
             '</li>' +
             '<li>' +
                 '<span class="m-hero-trust-num">[K]</span>' +
                 '<span class="m-hero-trust-body">' +
                     '<strong>Lead-Cockpit Lighthouse</strong>' +
-                    '<small>Sie sehen wer Ihre Seite besucht. KI leitet daraus Ihre Strategie ab.</small>' +
+                    '<small>Sie sehen jeden Besucher, KI leitet die Strategie.</small>' +
                 '</span>' +
             '</li>' +
             '<li>' +
                 '<span class="m-hero-trust-num">⤳</span>' +
                 '<span class="m-hero-trust-body">' +
-                    '<strong>Automation-Workflows mit KI</strong>' +
-                    '<small>Emails, Follow-ups, Anfragen-Routing — laufen von selbst.</small>' +
+                    '<strong>KI-Automation</strong>' +
+                    '<small>Mails, Follow-ups, Anfragen-Routing.</small>' +
                 '</span>' +
             '</li>' +
         '</ul>' +
@@ -205,15 +207,26 @@ function injectHeroEyebrowStagger(html) {
 }
 
 function compactHeroEyebrow(html) {
-    // Sprint 104 — Eyebrow auf 1 Zeile fuer iPhone 14 (390px): "Frühjahr 2026" → "2026",
-    // "Webdesign-Manufaktur" → "Manufaktur". Resultat: "Nº 01 · MANUFAKTUR · 2026"
-    // Sprint 106 — Targetiert nur Spans innerhalb hero-folio-eyebrow (nicht site-weit),
-    // damit "Webdesign-Manufaktur." in H1 nicht versehentlich gekürzt wird.
+    // Sprint 110 — Boutique-Voice-Disziplin: Wort-Doppelung MANUFAKTUR raus.
+    // Resultat sichtbar (CSS blendet Span 3 "Karriaro" aus):
+    //   "Nº 01 · FÜR JEDE PROFESSION · EIN ATELIER"
+    // Targetiert nur Spans innerhalb hero-folio-eyebrow (nicht site-weit).
     return html.replace(
         /<p class="hero-folio-eyebrow[^"]*"[^>]*>[\s\S]*?<\/p>/,
         (match) => match
-            .replace(/Frühjahr\s+2026/gi, '2026')
-            .replace(/>Webdesign-Manufaktur</gi, '>Manufaktur<')
+            .replace(/>Webdesign-Manufaktur</gi, '>Für jede Profession<')
+            .replace(/>Frühjahr\s+2026</gi, '>Ein Atelier<')
+    );
+}
+
+function rewriteFolioMarker(html) {
+    // Sprint 110 — Folio-Marker am Hero-Boden re-aktiviert (löst CTA-"Lonely").
+    // Section-Label "Manufaktur" → "Atelier" — Symmetrie zum Eyebrow "EIN ATELIER",
+    // vermeidet die 4. MANUFAKTUR-Wiederholung im Hero.
+    // Desktop bleibt unverändert (Mobile-only-Rewrite).
+    return html.replace(
+        /(<div class="hero-folio-marker"[^>]*>[\s\S]*?<span class="folio-section">)Manufaktur(<\/span>)/,
+        '$1Atelier$2'
     );
 }
 
@@ -794,6 +807,8 @@ function buildPage(relPath) {
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
+        // Sprint 110 — Folio-Marker "Manufaktur" → "Atelier" (Boutique-Symmetrie zum Eyebrow)
+        html = rewriteFolioMarker(html);
         // Sprint 107 — Siegel-Visual + Stats raus aus Hero (User-Wunsch: Hero gestrafft)
         // injectHeroSiegelVisual bleibt im Code als Dead-Code fuer ggf. spaeteren Re-Use
         // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper

@@ -494,14 +494,41 @@
     }
 
     /* Hero-Mockup-Block KOMPLETT verstecken auf Mobile —
-       Demo-Swiper unten ist der einzige Showcase (kein Duplikat). */
+       Demo-Swiper unten ist der einzige Showcase (kein Duplikat).
+       Sprint 110: hero-folio-marker NICHT mehr versteckt (siehe Mobile-Folio-Block weiter unten). */
     .hero-with-photo .hero-mockup-block,
     .hero-with-photo .mockup-features,
     .hero-with-photo .mockup-features-list,
-    .hero-with-photo .hero-folio-marker,
     .hero-with-photo .marginalia,
     .hero-with-photo .hero-marginalia {
         display: none !important;
+    }
+
+    /* Sprint 110 — Folio-Marker am Hero-Boden re-aktiviert (Boutique-Print-Code).
+       Löst CTA-"Lonely"-Problem (150 px Whitespace unter CTA bekommt jetzt
+       Editorial-Signatur "S. 01 · ATELIER" einzeilig links-bündig). */
+    .hero-with-photo .hero-folio-marker {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin: clamp(48px, 6svh, 80px) 24px 0 !important;
+        padding: 0 !important;
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 10px !important;
+        letter-spacing: 0.22em !important;
+        text-transform: uppercase !important;
+        color: rgba(60, 60, 67, 0.45) !important;
+        line-height: 1.5 !important;
+    }
+    .hero-with-photo .hero-folio-marker .folio-page,
+    .hero-with-photo .hero-folio-marker .folio-section {
+        display: inline-block !important;
+    }
+    .hero-with-photo .hero-folio-marker .folio-page::after {
+        content: "·";
+        opacity: 0.5;
+        margin-left: 8px;
     }
 
     /* === Editorial-Specs-Grid 2x2 (Sprint 96 — 4 Items mit 7 Werkzeuge) === */
@@ -2528,19 +2555,20 @@
 .m-hero-cta-bottom { display: none; }
 
 @media (max-width: 1023px) {
-    /* Sprint 109 — CTA-Bottom: kein margin-top:auto mehr. Hero ist Content-Hoehe,
-       CTA direkt unter Trust-List mit fixem Section-Break (28-40px). */
+    /* Sprint 110 — CTA-Bottom: margin-left 0 (Parent .hero-cta-row traegt
+       schon 24px). Vorher Doppel-Indent → CTA war 48px nach rechts versetzt. */
     .m-hero-cta-bottom {
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        margin: clamp(28px, 4svh, 40px) 24px 0 !important;
+        margin: clamp(28px, 4svh, 40px) 0 0 !important;
         padding: 0 !important;
     }
     .m-hero-cta-bottom .btn.m-hero-primary {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
+        align-self: flex-start !important;  /* Sprint 110 — Boutique-Alignment-Achse links-bündig */
         width: auto !important;
         max-width: none !important;
         padding: 14px 28px !important;
