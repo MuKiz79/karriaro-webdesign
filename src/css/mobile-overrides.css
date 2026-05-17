@@ -409,11 +409,12 @@
     .hero-with-photo .hero-text-block {
         text-align: left !important;
     }
-    /* Sprint 109 — Apple-Type-Tier: H1 = 100% (~40px), tight Air, nicht randvoll. */
+    /* Sprint 111 — Boutique-Editorial-Display: H1 deutlich grösser
+       (User-Wunsch). Subhead raus → mehr Platz für H1+Italic-Lockup. */
     .hero-headline {
-        font-size: clamp(36px, 8svh, 44px) !important;
-        line-height: 1.05 !important;
-        letter-spacing: -0.035em !important;
+        font-size: clamp(48px, 12svh, 64px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -0.038em !important;
         margin: 0 24px !important;
         font-weight: 600 !important;
         text-align: left !important;
@@ -422,15 +423,16 @@
         display: block !important;
         text-align: left !important;
     }
-    /* Sprint 109 — Italic-Sub = 45% der H1, als Lockup ans H1 (8px statt 14px) */
+    /* Sprint 111 — Italic-Sub proportional groesser (45% der H1, ~26-28 px),
+       Lockup-Margin auf 12 px erhoeht da Italic groesser ist. */
     .hero-h1-line.m-hero-accent {
-        font-size: clamp(17px, 3.8vw, 19px) !important;
-        line-height: 1.32 !important;
+        font-size: clamp(22px, 5.5vw, 28px) !important;
+        line-height: 1.25 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
         font-weight: 400 !important;
-        letter-spacing: -0.012em !important;
-        margin-top: 8px !important;
+        letter-spacing: -0.015em !important;
+        margin-top: 12px !important;
         display: block !important;
         word-break: normal !important;
         overflow-wrap: break-word !important;
@@ -447,27 +449,12 @@
         display: inline !important;
     }
 
-    /* Sprint 109 — Subhead = 38% der H1, konstant 15px (Apple-Body Mobile),
-       grosser Section-Break vom Italic-Sub (24-32px), atmet. */
+    /* Sprint 111 — Subhead komplett aus Mobile-Hero (User-Wunsch).
+       Italic-Sub trägt jetzt allein die poetische Voice unter dem H1.
+       Desktop-Subhead bleibt unveraendert (nur Mobile-Override). */
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
-        display: block !important;
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
-        font-size: 15px !important;
-        font-weight: 400 !important;
-        line-height: 1.5 !important;
-        letter-spacing: -0.008em !important;
-        color: var(--color-graphite-soft, #6e6e73) !important;
-        margin: clamp(24px, 3svh, 32px) 0 0 !important;
-        padding: 0 24px !important;
-        text-align: left !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        white-space: normal !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-        word-break: normal !important;
+        display: none !important;
     }
 
     /* CTA-Block: 1 Primary + 1 Meta-Line + Audit-Link versteckt */
@@ -2491,15 +2478,13 @@
     }
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
-        font-size: 13px !important;
-        line-height: 1.45 !important;
-        margin: 14px 16px 0 !important;
+        display: none !important;
     }
     .hero-headline {
-        font-size: 32px !important;
-        line-height: 1.08 !important;
+        font-size: 44px !important;
+        line-height: 1.05 !important;
         margin: 0 16px !important;
-        letter-spacing: -0.03em !important;
+        letter-spacing: -0.035em !important;
         word-break: keep-all !important;
         overflow-wrap: break-word !important;
     }
@@ -2508,8 +2493,8 @@
         max-width: 100% !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: 15px !important;
-        margin-top: 6px !important;
+        font-size: 20px !important;
+        margin-top: 8px !important;
     }
     .m-hero-cta-stack {
         margin-top: 18px !important;
@@ -2590,20 +2575,18 @@
         padding: 88px 16px 16px !important;
     }
     .hero-headline {
-        font-size: 24px !important;
+        font-size: 34px !important;
         line-height: 1.08 !important;
         margin: 0 16px !important;
-        letter-spacing: -0.025em !important;
+        letter-spacing: -0.03em !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: 13.5px !important;
+        font-size: 16px !important;
         margin-top: 6px !important;
     }
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
-        font-size: 12.5px !important;
-        margin-top: 12px !important;
-        padding: 0 16px !important;
+        display: none !important;
     }
     .m-hero-trust-list {
         margin: 16px 16px 0 !important;

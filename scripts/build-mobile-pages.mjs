@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=110">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=111">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
