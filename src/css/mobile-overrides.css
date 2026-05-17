@@ -470,11 +470,15 @@
     }
 
     /* CTA-Block: 1 Primary + 1 Meta-Line + Audit-Link versteckt */
+    /* Sprint 108 — flex:1 damit margin-top:auto auf cta-bottom den Button an Hero-Boden drueckt */
     .hero-with-photo .hero-cta-row {
         margin: clamp(20px, 3svh, 32px) 24px 0 !important;
+        display: flex !important;
         flex-direction: column !important;
         align-items: stretch !important;
         text-align: left !important;
+        flex: 1 !important;
+        min-height: 0 !important;
     }
     .hero-with-photo .hero-cta-row .btn {
         width: 100% !important;
@@ -2338,9 +2342,10 @@
     }
 
     /* === Trust-List Sprint 107: groesser proportional, mehr Fluss === */
+    /* Sprint 108 — Seiten-Margins von 24 auf 18 (mehr Platz fuer 393-Viewport-Subtitles) */
     .m-hero-trust-list {
         list-style: none !important;
-        margin: clamp(28px, 4svh, 44px) 24px 0 !important;
+        margin: clamp(28px, 4svh, 44px) 18px 0 !important;
         padding: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2349,7 +2354,7 @@
     .m-hero-trust-list li {
         display: flex !important;
         align-items: flex-start !important;
-        gap: 16px !important;
+        gap: 12px !important;  /* Sprint 108 — von 16 auf 12 fuer schmalere Viewports */
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif !important;
         font-size: inherit !important;
         line-height: inherit !important;
@@ -2358,18 +2363,19 @@
     .m-hero-trust-num {
         flex-shrink: 0 !important;
         font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
-        font-size: 17px !important;
+        font-size: 15px !important;  /* Sprint 108 — von 17 auf 15 damit body mehr Platz hat */
         font-weight: 600 !important;
         color: var(--color-gold, #8A7B5C) !important;
         letter-spacing: 0.04em !important;
         line-height: 1.3 !important;
-        min-width: 44px !important;
+        min-width: 38px !important;  /* Sprint 108 — von 44 auf 38 */
     }
     .m-hero-trust-body {
         display: flex !important;
         flex-direction: column !important;
         gap: 3px !important;
-        flex: 1 !important;
+        flex: 1 1 0 !important;
+        min-width: 0 !important;  /* Sprint 108 — sonst overflowt small-Text rechts raus */
     }
     .m-hero-trust-body strong {
         font-size: 17px !important;
@@ -2377,13 +2383,25 @@
         color: var(--color-indigo-strong, #061320) !important;
         letter-spacing: -0.012em !important;
         line-height: 1.25 !important;
+        overflow-wrap: break-word !important;
     }
     .m-hero-trust-body small {
-        font-size: 14px !important;
+        display: block !important;  /* Sprint 108 — sonst inline und ignoriert width */
+        width: 100% !important;
+        max-width: 100% !important;
+        font-size: 13px !important;  /* Sprint 108 — von 14 auf 13 fuer narrow viewports */
         font-weight: 400 !important;
         color: var(--color-graphite-soft, #6e6e73) !important;
         letter-spacing: -0.005em !important;
         line-height: 1.4 !important;
+        white-space: normal !important;
+        overflow-wrap: break-word !important;
+        word-break: normal !important;
+    }
+    .m-hero-trust-body strong {
+        display: block !important;  /* Sprint 108 — block damit width:100% wirkt */
+        width: 100% !important;
+        max-width: 100% !important;
     }
     /* Alte einfache Bullet-Checkmark verstecken falls noch im HTML (defensive) */
     .m-hero-trust-list li > .m-hero-trust-check { display: none !important; }
@@ -2422,7 +2440,8 @@
     .m-hero-secondary:active { opacity: 0.6 !important; }
 }
 
-/* Edge-Case iPhone SE (max-height: 700px) — Siegel kompakter, Sub-Text raus */
+/* Sprint 108 — Overlap-Fix (Nav 72px + Breath) gilt bei kleineren Viewports (iPhone SE 667,
+   plus alle Safari-URL-Bar-Zustaende). Subtitles bleiben aber sichtbar (nur kleiner). */
 @media (max-height: 700px) {
     .m-hero-siegel-frame {
         width: 76px !important;
@@ -2433,25 +2452,20 @@
     }
     .m-hero-siegel-stats {
         font-size: 10px !important;
-        flex-direction: column !important;  /* Strip vertikal damit nichts cuttet */
+        flex-direction: column !important;
         gap: 2px !important;
     }
     .m-hero-siegel-stats .m-hero-siegel-dot { display: none !important; }
-    .m-hero-trust-body small {
-        display: none !important;  /* nur Headline sichtbar auf SE */
-    }
-    /* Padding-Top noch hoeher — Nav 72px + topbar 14px + breath 16px = 102px */
+    /* Padding-Top: Nav 72px + topbar 14px + breath 16px = 102px */
     .hero-with-photo {
         padding-top: 102px !important;
     }
-    /* Sprint 106 — Subhead kompakter auf SE */
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
         font-size: 13px !important;
         line-height: 1.45 !important;
         margin: 12px 16px 0 !important;
     }
-    /* Headline tighter auf SE damit lange Texte nicht overflowt */
     .hero-headline {
         font-size: 26px !important;
         line-height: 1.12 !important;
@@ -2468,7 +2482,6 @@
         font-size: 16px !important;
         margin-top: 6px !important;
     }
-    /* CTA-Stack kompakter */
     .m-hero-cta-stack {
         margin-top: 16px !important;
         gap: 6px !important;
@@ -2483,7 +2496,7 @@
         min-height: 32px !important;
         font-size: 13px !important;
     }
-    /* Trust-List kompakter — gap reduzieren */
+    /* Trust-List kompakter aber Subtitles SICHTBAR (Substanz-Argument) */
     .m-hero-trust-list {
         margin-top: 14px !important;
         gap: 8px !important;
@@ -2491,6 +2504,7 @@
     .m-hero-trust-list li { gap: 10px !important; }
     .m-hero-trust-num { font-size: 12px !important; min-width: 28px !important; }
     .m-hero-trust-body strong { font-size: 13px !important; }
+    .m-hero-trust-body small { font-size: 10.5px !important; line-height: 1.3 !important; }
 }
 
 
@@ -2538,42 +2552,43 @@
     }
 }
 
-/* Edge-Case iPhone SE (max-height: 700px) — Skala fuer 375px-Width tighter */
-@media (max-height: 700px) {
+/* Sprint 108 — Sehr enge Viewports (iPhone SE 667 mit ausgeklappter Safari-URL-Bar
+   = sichtbarer Bereich ~580px). Hier Subtitles ausnahmsweise raus damit alles passt. */
+@media (max-height: 580px) {
     .hero-with-photo {
         padding: 88px 16px 16px !important;
     }
     .hero-headline {
-        font-size: 26px !important;
+        font-size: 24px !important;
         line-height: 1.08 !important;
         margin: 0 16px !important;
         letter-spacing: -0.025em !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: 16px !important;
-        margin-top: 8px !important;
+        font-size: 15px !important;
+        margin-top: 6px !important;
     }
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
-        font-size: 13px !important;
-        margin-top: 12px !important;
+        font-size: 12.5px !important;
+        margin-top: 10px !important;
         padding: 0 16px !important;
     }
     .m-hero-trust-list {
-        margin: 18px 16px 0 !important;
-        gap: 10px !important;
+        margin: 14px 16px 0 !important;
+        gap: 6px !important;
     }
-    .m-hero-trust-num { font-size: 14px !important; min-width: 36px !important; }
-    .m-hero-trust-body strong { font-size: 14px !important; }
-    .m-hero-trust-body small { display: none !important; }
+    .m-hero-trust-num { font-size: 12px !important; min-width: 28px !important; }
+    .m-hero-trust-body strong { font-size: 12.5px !important; }
+    .m-hero-trust-body small { display: none !important; }  /* nur auf SEHR engen Viewports */
     .m-hero-cta-bottom {
-        margin: 18px 16px 0 !important;
+        margin: 14px 16px 0 !important;
         margin-top: auto !important;
         margin-bottom: 0 !important;
     }
     .m-hero-cta-bottom .btn.m-hero-primary {
-        padding: 11px 22px !important;
-        min-height: 40px !important;
-        font-size: 13px !important;
+        padding: 10px 20px !important;
+        min-height: 38px !important;
+        font-size: 12.5px !important;
     }
 }
