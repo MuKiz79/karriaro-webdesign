@@ -1842,3 +1842,87 @@
     .m-mag-proof.m-in-view .m-mag-benefit:nth-child(2) { transition-delay: 150ms; }
     .m-mag-proof.m-in-view .m-mag-benefit:nth-child(3) { transition-delay: 300ms; }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 102 — Komplett-Apple-Font + Rollbacks
+   Fraunces komplett raus, alles auf SF Pro System-Font-Stack.
+   Manufaktur-Serif-Brand-Anker bewusst aufgegeben fuer Apple-Look.
+   Plus: Siegel-Logo zurueck auf [K]-Mono (Sprint-101-Logo war Test).
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+
+    /* Universal Apple-Font auf ALLES — ueberschreibt alle Fraunces-Refs */
+    body, h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select, label, li, dt, dd, ol, ul, dl,
+    .hero-headline, .hero-h1-line, .hero-h1-line.m-hero-accent,
+    .m-hero-cta-meta, .m-hero-trust-list, .m-hero-trust-list li,
+    .m-hero-mini-specs, .m-hero-mini-specs dt, .m-hero-mini-specs dd,
+    .m-mag-eyebrow, .m-mag-spec-num, .m-mag-spec-label,
+    .m-mag-tools-sub, .m-mag-tools-list li, .m-mag-tool-num, .m-mag-tool-name,
+    .m-mag-tools-footnote, .m-mag-tools-footnote-sub,
+    .m-mag-benefit-num, .m-mag-benefit-label, .m-mag-benefit-meta,
+    .m-siegel-eyebrow, .m-siegel-title, .m-siegel-body, .m-siegel-link,
+    .m-siegel-mark, .m-siegel-year,
+    .m-demo-swiper-section-eyebrow, .m-demo-swiper-section-title,
+    .m-demo-swiper-section-hint, .m-demo-swiper-eyebrow,
+    .m-demo-swiper-cta, .m-demo-swiper-title,
+    .m-demo-sheet-eyebrow, .m-demo-sheet-title,
+    .m-bf-domain, .m-sticky-cta, .m-sticky-cta-link,
+    blockquote, .pull-quote {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, "Segoe UI", sans-serif !important;
+    }
+
+    /* Headline-Tuning fuer Sans-Serif (mehr Weight, mehr Tracking) */
+    .hero-headline {
+        letter-spacing: -0.04em !important;
+        font-weight: 600 !important;
+    }
+    .hero-h1-line.m-hero-accent {
+        font-style: italic !important;
+        font-weight: 300 !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    /* Display-Zahlen-Gewichte */
+    .m-mag-spec-num,
+    .m-mag-benefit-num,
+    .m-hero-mini-specs dt {
+        font-weight: 600 !important;
+        letter-spacing: -0.04em !important;
+        font-style: normal !important;
+    }
+    .m-mag-tool-name {
+        font-weight: 500 !important;
+        font-style: normal !important;
+    }
+    .m-siegel-title {
+        font-weight: 600 !important;
+        letter-spacing: -0.025em !important;
+    }
+
+    /* Italic-Akzente raus (Sans-Serif-Italic wirkt nicht wie Fraunces-Italic) */
+    .m-mag-tools-sub,
+    .m-mag-benefit-meta,
+    .m-siegel-body,
+    .m-mag-proof-meta {
+        font-style: normal !important;
+        font-weight: 400 !important;
+    }
+
+    /* === Siegel-Mark zurueck auf [K]-Mono sichtbar === */
+    .m-siegel-mark {
+        display: inline-block !important;
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 28px !important;
+        font-weight: 600 !important;
+        color: var(--color-gold, #8A7B5C) !important;
+        letter-spacing: 0.1em !important;
+        border: 1.5px solid var(--color-gold, #8A7B5C) !important;
+        padding: 14px 18px !important;
+        border-radius: 4px !important;
+    }
+    /* m-siegel-logo (Sprint-101-Bild) versteckt falls noch im HTML */
+    .m-siegel-logo {
+        display: none !important;
+    }
+}

@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=101">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=102">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -139,12 +139,12 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 101 — Neue Headline: "Jede Website ein Unikat. Handcodiert aus unserer Manufaktur."
+    // Sprint 102 — Rollback auf "Ihre Website. Aus unserer Manufaktur." (User-Wunsch)
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Jede Website ein Unikat.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Handcodiert aus unserer Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Ihre Website.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Aus unserer Manufaktur.</span>' +
         '</h1>'
     );
 }
@@ -209,7 +209,7 @@ const EDITORIAL_SECTIONS_HTML = `
 
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
     <div class="m-siegel-emblem">
-        <img class="m-siegel-logo" src="/images/karriaro-webdesign-logo.svg" alt="Karriaro Manufaktursiegel" width="200" height="200">
+        <span class="m-siegel-mark">[K]</span>
         <span class="m-siegel-year">№ 01 · 2026</span>
     </div>
     <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>
