@@ -1582,10 +1582,29 @@
     </script>
     <script src="/js/karriaro-tools.js"></script>
 
-<!-- Mobile-Sticky-CTA-Bar (Sprint 91 generator-injected) -->
+<!-- Mobile-Sticky-CTA-Bar (Sprint 94 — 1 Button + 1 Link, erscheint bei Scroll) -->
 <div class="m-sticky-cta-bar" data-m-sticky-cta>
-    <a href="/audit.html" class="m-sticky-cta">Mini-Audit starten</a>
-    <a href="mailto:kontakt@karriaro.de?subject=Beratung%20anfragen" class="m-sticky-cta m-sticky-cta--secondary">Beratung anfragen</a>
+    <a href="#kontakt" class="m-sticky-cta">Erstgespräch buchen</a>
+    <a href="#audit" class="m-sticky-cta-link">Mini-Audit</a>
 </div>
+<script>
+(function () {
+    var bar = document.querySelector('[data-m-sticky-cta]');
+    var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
+    if (!bar) return;
+    if (!hero || !('IntersectionObserver' in window)) {
+        // Fallback: immer sichtbar (alte Browser / Pages ohne Hero)
+        bar.classList.add('is-visible');
+        return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            // Bar erscheint sobald der Hero (komplett oder fast komplett) raus-scrollt
+            bar.classList.toggle('is-visible', !e.isIntersecting);
+        });
+    }, { threshold: 0.05 });
+    io.observe(hero);
+})();
+</script>
 </body>
 </html>

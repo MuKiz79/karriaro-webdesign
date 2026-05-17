@@ -62,11 +62,30 @@ const SKIP = new Set([
 const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=91">`;
 
 const STICKY_CTA_BAR = `
-<!-- Mobile-Sticky-CTA-Bar (Sprint 91 generator-injected) -->
+<!-- Mobile-Sticky-CTA-Bar (Sprint 94 — 1 Button + 1 Link, erscheint bei Scroll) -->
 <div class="m-sticky-cta-bar" data-m-sticky-cta>
-    <a href="/audit.html" class="m-sticky-cta">Mini-Audit starten</a>
-    <a href="mailto:kontakt@karriaro.de?subject=Beratung%20anfragen" class="m-sticky-cta m-sticky-cta--secondary">Beratung anfragen</a>
+    <a href="#kontakt" class="m-sticky-cta">Erstgespräch buchen</a>
+    <a href="#audit" class="m-sticky-cta-link">Mini-Audit</a>
 </div>
+<script>
+(function () {
+    var bar = document.querySelector('[data-m-sticky-cta]');
+    var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
+    if (!bar) return;
+    if (!hero || !('IntersectionObserver' in window)) {
+        // Fallback: immer sichtbar (alte Browser / Pages ohne Hero)
+        bar.classList.add('is-visible');
+        return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            // Bar erscheint sobald der Hero (komplett oder fast komplett) raus-scrollt
+            bar.classList.toggle('is-visible', !e.isIntersecting);
+        });
+    }, { threshold: 0.05 });
+    io.observe(hero);
+})();
+</script>
 `;
 
 // ────────────────────────────────────────────────────────────────
@@ -116,11 +135,42 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Ersetzt im Hero die zweite Headline-Zeile "Handgemacht."
-    // durch "Aus unserer Design-Manufaktur." mit Italic+Gold-Akzent.
-    return html.replace(
+    // Sprint 94 — Premium-Hero-Headline:
+    // (a) Drop-Cap-Wrapper auf erstem Buchstaben entfernen — "I" funktioniert nicht als Drop-Cap.
+    // (b) Akzent-Zeile ohne hardcoded <br>, browser umbricht natürlich wenn nötig.
+    // (c) Akzent wird per CSS zur kleineren Italic-Subline (Spannung statt 1:1-Größe).
+    html = html.replace(
+        /<span class="hero-dropcap">I<\/span>hre Website\./,
+        'Ihre Website.'
+    );
+    html = html.replace(
         /<span class="hero-h1-line">Handgemacht\.<\/span>/,
-        '<span class="hero-h1-line m-hero-accent">Aus unserer<br>Design-Manufaktur.</span>'
+        '<span class="hero-h1-line m-hero-accent">Aus unserer Design-Manufaktur.</span>'
+    );
+    return html;
+}
+
+function rewriteHeroSubhead(html) {
+    // Sprint 94 — Textklotz wird zu 3 Editorial-Specs.
+    // Match: <p class="subhead">…lang…</p> direkt nach hero-headline.
+    // Wir verstecken ihn per CSS und injizieren stattdessen die Spec-List.
+    const specs = `<ul class="m-hero-specs" aria-label="Eckdaten">
+                    <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
+                    <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
+                    <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
+                </ul>`;
+    // Injiziere direkt VOR der subhead-Section, damit die Specs vor dem CTA stehen.
+    return html.replace(
+        /(<p class="subhead">)/,
+        specs + '\n                $1'
+    );
+}
+
+function rewriteHeroCta(html) {
+    // Sprint 94 — CTA-Text kürzen, "Antwort in 24 h" als Meta-Line.
+    return html.replace(
+        /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
+        '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta">Antwort in 24 h</span>'
     );
 }
 
@@ -359,6 +409,9 @@ function buildPage(relPath) {
     if (isIndex(relPath)) {
         // Sprint 92 — index-spezifisch: Headline-Akzent + Demo-Swiper
         html = rewriteHeroHeadline(html);
+        // Sprint 94 — Editorial-Premium-Hero: Sub-Specs, CTA-Reduktion
+        html = rewriteHeroSubhead(html);
+        html = rewriteHeroCta(html);
         html = injectDemoSwiper(html);
     }
     html = addGeneratorMarker(html, relPath);

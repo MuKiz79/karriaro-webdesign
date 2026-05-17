@@ -3064,14 +3064,19 @@
                     <span>Frühjahr 2026</span>
                 </p>
                 <h1 class="hero-headline">
-                    <span class="hero-h1-line"><span class="hero-dropcap">I</span>hre Website.</span>
-                    <span class="hero-h1-line m-hero-accent">Aus unserer<br>Design-Manufaktur.</span>
+                    <span class="hero-h1-line">Ihre Website.</span>
+                    <span class="hero-h1-line m-hero-accent">Aus unserer Design-Manufaktur.</span>
                 </h1>
+                <ul class="m-hero-specs" aria-label="Eckdaten">
+                    <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
+                    <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
+                    <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
+                </ul>
                 <p class="subhead">
                     Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290&nbsp;€ einmalig, Wartung inklusive ab 99 €/Mt.
                 </p>
                 <div class="hero-cta-row">
-                    <a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h</a>
+                    <a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta">Antwort in 24 h</span>
                 </div>
                 <a href="#audit" class="hero-audit-link" data-audit-bridge>
                     Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
@@ -6011,10 +6016,29 @@
     </script>
 
 
-<!-- Mobile-Sticky-CTA-Bar (Sprint 91 generator-injected) -->
+<!-- Mobile-Sticky-CTA-Bar (Sprint 94 — 1 Button + 1 Link, erscheint bei Scroll) -->
 <div class="m-sticky-cta-bar" data-m-sticky-cta>
-    <a href="/audit.html" class="m-sticky-cta">Mini-Audit starten</a>
-    <a href="mailto:kontakt@karriaro.de?subject=Beratung%20anfragen" class="m-sticky-cta m-sticky-cta--secondary">Beratung anfragen</a>
+    <a href="#kontakt" class="m-sticky-cta">Erstgespräch buchen</a>
+    <a href="#audit" class="m-sticky-cta-link">Mini-Audit</a>
 </div>
+<script>
+(function () {
+    var bar = document.querySelector('[data-m-sticky-cta]');
+    var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
+    if (!bar) return;
+    if (!hero || !('IntersectionObserver' in window)) {
+        // Fallback: immer sichtbar (alte Browser / Pages ohne Hero)
+        bar.classList.add('is-visible');
+        return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            // Bar erscheint sobald der Hero (komplett oder fast komplett) raus-scrollt
+            bar.classList.toggle('is-visible', !e.isIntersecting);
+        });
+    }, { threshold: 0.05 });
+    io.observe(hero);
+})();
+</script>
 </body>
 </html>
