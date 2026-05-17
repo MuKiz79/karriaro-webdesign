@@ -407,24 +407,31 @@
         padding: 0 !important;
     }
 
-    /* Sprint 96 — Rollback auf "Ihre Website. Aus unserer Manufaktur."
-       Roman dominiert (Sprint-94-Hierarchie), Italic-Subline klein in Gold. */
+    /* Sprint 98 — Hero Apple-Pure: Headline grösser, links-buendig, Italic-Sub eigenstaendiger */
+    .hero-with-photo,
+    .hero-with-photo .hero-text-block {
+        text-align: left !important;
+    }
     .hero-headline {
-        font-size: clamp(48px, 13vw, 72px) !important;
-        line-height: 1.0 !important;
-        letter-spacing: -0.03em !important;
+        font-size: clamp(56px, 14vw, 80px) !important;
+        line-height: 0.98 !important;
+        letter-spacing: -0.035em !important;
         margin: 0 24px !important;
         font-weight: 500 !important;
+        text-align: left !important;
     }
-    .hero-h1-line { display: block !important; }
+    .hero-h1-line {
+        display: block !important;
+        text-align: left !important;
+    }
     .hero-h1-line.m-hero-accent {
-        font-size: clamp(22px, 5.5vw, 30px) !important;
-        line-height: 1.22 !important;
+        font-size: clamp(26px, 6.5vw, 36px) !important;
+        line-height: 1.2 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
         font-weight: 400 !important;
         letter-spacing: -0.012em !important;
-        margin-top: 18px !important;
+        margin-top: 16px !important;
         display: block !important;
     }
     /* Drop-Cap weg auf Mobile — wirkt typografisch nicht */
@@ -1219,5 +1226,161 @@
     /* Section-Padding etwas grosszuegiger (Apple liebt Whitespace) */
     section {
         padding: 96px 0 !important;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 98 — Editorial-Magazin-Sektionen (.m-mag-*)
+   Specs/Werkzeuge/Beweis kommen als eigene Sektionen UNTER Hero,
+   nicht mehr im Hero gequetscht. Zahlen gross, Labels klein.
+   ════════════════════════════════════════════════════════════ */
+
+/* Desktop default: Editorial-Sektionen unsichtbar */
+.m-mag-specs,
+.m-mag-tools,
+.m-mag-proof {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+
+    /* Alte Hero-Inserts verstecken (sind im HTML aber wandern visuell raus) */
+    .m-hero-specs,
+    .m-hero-tools,
+    .m-hero-trust {
+        display: none !important;
+    }
+
+    /* Logo-Tagline auf Mobile weg (Doppelung mit Eyebrow) */
+    .kr-logo-tagline,
+    nav .kr-brand-tagline,
+    .brand-tagline {
+        display: none !important;
+    }
+
+    /* Editorial-Magazin-Sektionen sichtbar machen */
+    .m-mag-specs,
+    .m-mag-tools,
+    .m-mag-proof {
+        display: block !important;
+        padding: 72px 24px !important;
+        background: #FFFFFF;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+        text-align: left;
+    }
+    .m-mag-eyebrow {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 0 0 36px;
+    }
+
+    /* === Specs-Block: Zahl gross, Label klein === */
+    .m-mag-specs-list {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+    }
+    .m-mag-spec {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .m-mag-spec-num {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(42px, 12vw, 56px);
+        font-weight: 500;
+        line-height: 0.98;
+        letter-spacing: -0.035em;
+        color: var(--color-indigo-strong, #061320);
+        font-variant-numeric: tabular-nums;
+        margin: 0;
+    }
+    .m-mag-spec-label {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 0;
+    }
+
+    /* === Werkzeug-Liste 01-07 === */
+    .m-mag-tools-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .m-mag-tools-list li {
+        display: flex;
+        align-items: baseline;
+        gap: 22px;
+        padding: 18px 0;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+    }
+    .m-mag-tools-list li:first-child {
+        border-top: 0;
+        padding-top: 0;
+    }
+    .m-mag-tool-num {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-graphite-soft, #6e6e73);
+        flex-shrink: 0;
+        min-width: 24px;
+        letter-spacing: 0.04em;
+    }
+    .m-mag-tool-name {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--color-indigo-strong, #061320);
+        letter-spacing: -0.018em;
+        line-height: 1.25;
+    }
+    .m-mag-tools-footnote {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 32px 0 0;
+    }
+
+    /* === Beweis-Counter massive === */
+    .m-mag-proof-num {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(76px, 22vw, 112px);
+        font-weight: 500;
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+        color: var(--color-indigo-strong, #061320);
+        font-variant-numeric: tabular-nums;
+        margin: 0;
+    }
+    .m-mag-proof-label {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 16px 0 0;
+    }
+    .m-mag-proof-meta {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 16px;
+        font-style: italic;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 24px 0 0;
     }
 }

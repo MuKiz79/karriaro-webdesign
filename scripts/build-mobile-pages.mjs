@@ -149,30 +149,11 @@ function rewriteHeroHeadline(html) {
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 96 — Specs auf 4 Items (2x2-Grid) + Werkzeug-Liste-Block + Trust-Counter.
-    // 4. Spec macht Werkzeuge zum gleichberechtigten Verkaufsargument neben 24h/7-14T/1.290€.
-    const specs = `<ul class="m-hero-specs m-hero-stagger" style="--m-delay:380ms" aria-label="Eckdaten">
-                    <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
-                    <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
-                    <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
-                    <li><span class="m-hero-spec-num">7</span><span class="m-hero-spec-label">Live-Werkzeuge</span></li>
-                </ul>
-                <div class="m-hero-tools m-hero-stagger" style="--m-delay:440ms">
-                    <p class="m-hero-tools-eyebrow">Eingebaut, nicht angeklebt</p>
-                    <p class="m-hero-tools-list">Wertermittlung · BAFA-Rechner · Symptom-Checker · Style-Galerie · Frachtquote · Coaching-Check · Reservierung</p>
-                </div>
-                <div class="m-hero-trust m-hero-stagger" style="--m-delay:520ms">
-                    <p class="m-hero-trust-eyebrow">Beweis</p>
-                    <p class="m-hero-trust-text">
-                        <span class="m-hero-counter" data-target="10538">0</span> Zeilen Code,
-                        <span class="m-hero-counter" data-target="7">0</span> Branchen,
-                        <span class="m-hero-counter" data-target="0">0</span> Templates.
-                    </p>
-                </div>`;
-    return html.replace(
-        /(<p class="subhead">)/,
-        specs + '\n                $1'
-    );
+    // Sprint 98 — No-op. Hero ist reduziert auf Headline + Italic-Sub + CTA.
+    // Specs/Werkzeuge/Beweis kommen jetzt als EIGENE Sektionen via
+    // injectEditorialSections() unter dem Hero — siehe SCREEN 2-4 in Plan.
+    // .subhead bleibt im HTML aber per CSS versteckt.
+    return html;
 }
 
 function rewriteHeroCta(html) {
@@ -189,6 +170,70 @@ function injectHeroEyebrowStagger(html) {
         /<p class="hero-folio-eyebrow">/,
         '<p class="hero-folio-eyebrow m-hero-stagger" style="--m-delay:0ms">'
     );
+}
+
+// Sprint 98 — Editorial-Sektionen: Specs/Werkzeuge/Beweis als eigene Sektionen
+// NACH dem Hero, statt im Hero gequetscht.
+const EDITORIAL_SECTIONS_HTML = `
+<!-- Sprint 98 — Editorial-Magazin-Sektionen unter Hero -->
+<section class="m-mag-specs" aria-label="Eckdaten">
+    <p class="m-mag-eyebrow">Was Sie bekommen</p>
+    <dl class="m-mag-specs-list">
+        <div class="m-mag-spec">
+            <dt class="m-mag-spec-num">24 h</dt>
+            <dd class="m-mag-spec-label">Erster Entwurf</dd>
+        </div>
+        <div class="m-mag-spec">
+            <dt class="m-mag-spec-num">7—14 Tage</dt>
+            <dd class="m-mag-spec-label">Lieferzeit</dd>
+        </div>
+        <div class="m-mag-spec">
+            <dt class="m-mag-spec-num">1.290 €</dt>
+            <dd class="m-mag-spec-label">Einmalig, ab</dd>
+        </div>
+        <div class="m-mag-spec">
+            <dt class="m-mag-spec-num">7 Werkzeuge</dt>
+            <dd class="m-mag-spec-label">Live eingebaut</dd>
+        </div>
+    </dl>
+</section>
+
+<section class="m-mag-tools" aria-label="Live-Werkzeuge">
+    <p class="m-mag-eyebrow">Was Karriaro anders macht</p>
+    <ol class="m-mag-tools-list">
+        <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
+        <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
+        <li><span class="m-mag-tool-num">03</span><span class="m-mag-tool-name">Symptom-Checker</span></li>
+        <li><span class="m-mag-tool-num">04</span><span class="m-mag-tool-name">Style-Galerie</span></li>
+        <li><span class="m-mag-tool-num">05</span><span class="m-mag-tool-name">Frachtquote</span></li>
+        <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
+        <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
+    </ol>
+    <p class="m-mag-tools-footnote">Eingebaut, nicht angeklebt</p>
+</section>
+
+<section class="m-mag-proof" aria-label="Beweis">
+    <p class="m-mag-eyebrow">Beweis</p>
+    <p class="m-mag-proof-num"><span class="m-hero-counter" data-target="10538">0</span></p>
+    <p class="m-mag-proof-label">Zeilen Handarbeit</p>
+    <p class="m-mag-proof-meta">Aus 7 Branchen · 0 Templates</p>
+</section>
+`;
+
+function injectEditorialSections(html) {
+    if (html.includes('m-mag-specs')) return html;
+    // Anker: vor Demo-Swiper-Section (= zwischen Hero und Demo-Swiper).
+    // Falls Demo-Swiper noch nicht injiziert, vor <section id="audit"> als Fallback.
+    const swiperAnchor = /<section class="m-demo-swiper-mobile"/;
+    if (swiperAnchor.test(html)) {
+        return html.replace(swiperAnchor, EDITORIAL_SECTIONS_HTML + '\n<section class="m-demo-swiper-mobile"');
+    }
+    const auditAnchor = /<section id="audit"/;
+    if (auditAnchor.test(html)) {
+        return html.replace(auditAnchor, EDITORIAL_SECTIONS_HTML + '\n    <section id="audit"');
+    }
+    console.warn('  ⚠ kein Anker für Editorial-Sektionen gefunden');
+    return html;
 }
 
 const SCROLL_ANIMATIONS_SCRIPT = `
@@ -482,12 +527,14 @@ function buildPage(relPath) {
         html = injectStickyCta(html);
     }
     if (isIndex(relPath)) {
-        // Sprint 92/95 — Statement-Hero "Manufaktur statt Massenware" + Stagger
+        // Sprint 92/95/96 — Hero-Headline + Eyebrow-Stagger
         html = rewriteHeroHeadline(html);
         html = injectHeroEyebrowStagger(html);
-        // Sprint 94/95 — Editorial-Premium-Hero: Sub-Specs + Trust + CTA-Reduktion
-        html = rewriteHeroSubhead(html);
+        // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
+        html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
+        // Sprint 98 — Editorial-Sektionen (Specs/Werkzeuge/Beweis) als eigene Sektionen
+        html = injectEditorialSections(html);
         html = injectDemoSwiper(html);
     }
     // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
