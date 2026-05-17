@@ -409,13 +409,14 @@
     .hero-with-photo .hero-text-block {
         text-align: left !important;
     }
-    /* Sprint 111 — Boutique-Editorial-Display: H1 deutlich grösser
-       (User-Wunsch). Subhead raus → mehr Platz für H1+Italic-Lockup. */
+    /* Sprint 112 — Headlines weiter vergroessert (User-Wunsch "noch groesser").
+       H1 auf Boutique-Display-Maximum, Margin auf 18 px reduziert um Platz
+       fuer "Manufaktur." (11 Zeichen) bei 72 px zu schaffen. */
     .hero-headline {
-        font-size: clamp(48px, 12svh, 64px) !important;
-        line-height: 1.02 !important;
-        letter-spacing: -0.038em !important;
-        margin: 0 24px !important;
+        font-size: clamp(56px, 14svh, 72px) !important;
+        line-height: 1.0 !important;
+        letter-spacing: -0.04em !important;
+        margin: 0 18px !important;
         font-weight: 600 !important;
         text-align: left !important;
     }
@@ -423,16 +424,15 @@
         display: block !important;
         text-align: left !important;
     }
-    /* Sprint 111 — Italic-Sub proportional groesser (45% der H1, ~26-28 px),
-       Lockup-Margin auf 12 px erhoeht da Italic groesser ist. */
+    /* Sprint 112 — Italic-Sub auf 30-36 px (~45% der H1), Lockup 14 px. */
     .hero-h1-line.m-hero-accent {
-        font-size: clamp(22px, 5.5vw, 28px) !important;
-        line-height: 1.25 !important;
+        font-size: clamp(28px, 7vw, 34px) !important;
+        line-height: 1.22 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
         font-weight: 400 !important;
-        letter-spacing: -0.015em !important;
-        margin-top: 12px !important;
+        letter-spacing: -0.018em !important;
+        margin-top: 14px !important;
         display: block !important;
         word-break: normal !important;
         overflow-wrap: break-word !important;
@@ -2481,10 +2481,10 @@
         display: none !important;
     }
     .hero-headline {
-        font-size: 44px !important;
-        line-height: 1.05 !important;
+        font-size: 54px !important;
+        line-height: 1.02 !important;
         margin: 0 16px !important;
-        letter-spacing: -0.035em !important;
+        letter-spacing: -0.038em !important;
         word-break: keep-all !important;
         overflow-wrap: break-word !important;
     }
@@ -2493,8 +2493,8 @@
         max-width: 100% !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: 20px !important;
-        margin-top: 8px !important;
+        font-size: 24px !important;
+        margin-top: 10px !important;
     }
     .m-hero-cta-stack {
         margin-top: 18px !important;
@@ -2575,14 +2575,14 @@
         padding: 88px 16px 16px !important;
     }
     .hero-headline {
-        font-size: 34px !important;
-        line-height: 1.08 !important;
-        margin: 0 16px !important;
-        letter-spacing: -0.03em !important;
+        font-size: 42px !important;
+        line-height: 1.04 !important;
+        margin: 0 14px !important;
+        letter-spacing: -0.035em !important;
     }
     .hero-h1-line.m-hero-accent {
-        font-size: 16px !important;
-        margin-top: 6px !important;
+        font-size: 18px !important;
+        margin-top: 8px !important;
     }
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
