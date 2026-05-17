@@ -3938,6 +3938,7 @@
             <div class="kr-tools-tablist" role="tablist" aria-label="Branche wählen">
                 <button type="button" class="kr-tools-tab is-active" data-kr-tool="dachdecker" role="tab" aria-selected="true">Dachdecker</button>
                 <button type="button" class="kr-tools-tab" data-kr-tool="immobilien" role="tab" aria-selected="false">Immobilien</button>
+                <button type="button" class="kr-tools-tab" data-kr-tool="coaching" role="tab" aria-selected="false">Coaching</button>
                 <button type="button" class="kr-tools-tab" data-kr-tool="praxis" role="tab" aria-selected="false">Praxis</button>
                 <button type="button" class="kr-tools-tab" data-kr-tool="friseur" role="tab" aria-selected="false">Friseur</button>
                 <button type="button" class="kr-tools-tab" data-kr-tool="sanitaer" role="tab" aria-selected="false">Sanitär</button>
@@ -3992,6 +3993,41 @@
                             <p class="kr-tool-output-label">Marktwert-Spanne (Schätzung)</p>
                             <p class="kr-tool-output-value">— € bis — €</p>
                             <p class="kr-tool-output-note">Daten eingeben für Live-Berechnung</p>
+                        </output>
+                    </div>
+                </div>
+
+                <!-- Coaching: Klarheits-Score (5 Fragen → Score + Empfehlung) -->
+                <div class="kr-tool-panel" data-kr-panel="coaching" role="tabpanel" hidden>
+                    <div class="kr-tool-meta">
+                        <p class="kr-tool-eyebrow">Live-Werkzeug · Coaching-Demo</p>
+                        <h3 class="kr-tool-title">Klarheits-Check in 60 Sekunden</h3>
+                        <p class="kr-tool-desc">Fünf kurze Selbst-Einschätzungen, das System empfiehlt das passende Coaching-Format — Intensiv, 90-Tage-Programm, Strategie-Sparring oder Sounding-Board. Kein Discovery-Call nötig.</p>
+                        <p><a href="/portfolio/coaching-lehmann.html" class="link-arrow">Volle Coaching-Demo ansehen →</a></p>
+                    </div>
+                    <div class="kr-tool-live">
+                        <form class="kr-tool-form" data-kr-tool-form="coaching" data-track-event="TOOL_SUBMIT" data-track-tool="coaching">
+                            <label>Karriere-Fokus
+                                <select name="focus" required><option value="">— bewerten —</option><option value="1">1 — verschwommen</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — glasklar</option></select>
+                            </label>
+                            <label>Team-Konstellation
+                                <select name="team" required><option value="">— bewerten —</option><option value="1">1 — instabil</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — stabil</option></select>
+                            </label>
+                            <label>Zeit für Strategie
+                                <select name="time" required><option value="">— bewerten —</option><option value="1">1 — keine</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — genug</option></select>
+                            </label>
+                            <label>Energie-Niveau
+                                <select name="energy" required><option value="">— bewerten —</option><option value="1">1 — erschöpft</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — motiviert</option></select>
+                            </label>
+                            <label>Nächster Schritt klar?
+                                <select name="next-step" required><option value="">— bewerten —</option><option value="1">1 — unklar</option><option value="2">2</option><option value="3">3 — mittel</option><option value="4">4</option><option value="5">5 — geplant</option></select>
+                            </label>
+                            <button type="submit">Klarheits-Score berechnen</button>
+                        </form>
+                        <output class="kr-tool-output" data-kr-tool-output="coaching">
+                            <p class="kr-tool-output-label">Klarheits-Score &amp; Coaching-Empfehlung</p>
+                            <p class="kr-tool-output-value">—</p>
+                            <p class="kr-tool-output-note">Alle 5 Fragen bewerten für Empfehlung</p>
                         </output>
                     </div>
                 </div>
@@ -4137,7 +4173,7 @@
                     <span class="kr-proof-counter-label">interaktive Funktionen</span>
                 </div>
                 <div class="kr-proof-counter">
-                    <span class="kr-proof-counter-num" data-kr-counter="7">0</span>
+                    <span class="kr-proof-counter-num" data-kr-counter="8">0</span>
                     <span class="kr-proof-counter-label">Branchen-Demos live</span>
                 </div>
                 <div class="kr-proof-counter">
