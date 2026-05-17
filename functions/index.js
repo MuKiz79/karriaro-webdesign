@@ -32,7 +32,7 @@ const PSI_API_KEY = defineSecret("PSI_API_KEY");
 const DEEP_RESEARCH_MODEL = "claude-sonnet-4-20250514";
 const DEEP_RESEARCH_CACHE_DAYS = 7;
 
-const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080"];
+const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "https://m.karriaro-webdesign.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080", "http://localhost:8780"];
 const PLACES_BASE = "https://places.googleapis.com/v1/places";
 
 const AUDIT_FROM = '"Karriaro Webdesign" <noreply@karriaro.de>';
@@ -579,6 +579,183 @@ exports.getAuditData = onRequest(
         // Cache-Header für 5 Min
         res.set("Cache-Control", "public, max-age=300");
         res.json(safe);
+    }
+);
+
+// ─── requestPackage ─── POST {name, email, industry, pkg, url?, message?, _hp}
+//   Sprint 90 — Mobile-Lead-Form ersetzt mailto-Friction.
+//   Speichert in Firestore `packageRequests` (TTL 90 Tage), sendet Mail an kontakt@karriaro.de.
+const PACKAGE_INDUSTRY_ALLOWLIST = new Set([
+    "immobilien", "dachdecker", "praxis", "friseur", "coaching",
+    "gastro", "handwerk", "logistik", "anwalt", "sonstiges"
+]);
+const PACKAGE_TIER_ALLOWLIST = new Set([
+    "essential", "professional", "premium", "premium-plus", "unsure"
+]);
+const PACKAGE_TIER_LABEL = {
+    "essential": "Essential (1.290 €)",
+    "professional": "Professional (1.990 €)",
+    "premium": "Premium (2.990 €)",
+    "premium-plus": "Premium+ Anwalt (3.990 €)",
+    "unsure": "Unsicher – Beratung gewünscht"
+};
+const PACKAGE_INDUSTRY_LABEL = {
+    "immobilien": "Immobilien-Makler",
+    "dachdecker": "Dachdecker / Handwerk",
+    "praxis": "Arztpraxis / Therapeut",
+    "friseur": "Friseur / Beauty",
+    "coaching": "Coaching / Beratung",
+    "gastro": "Gastronomie",
+    "handwerk": "Handwerk (allgemein)",
+    "logistik": "Spedition / Logistik",
+    "anwalt": "Anwaltskanzlei",
+    "sonstiges": "Sonstiges"
+};
+
+async function sendPackageRequestMail(payload) {
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST.value(),
+        port: 587,
+        secure: false,
+        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() }
+    });
+    const industryLabel = PACKAGE_INDUSTRY_LABEL[payload.industry] || payload.industry;
+    const pkgLabel = PACKAGE_TIER_LABEL[payload.pkg] || payload.pkg;
+    const subject = `Neue Paket-Anfrage: ${pkgLabel} (${industryLabel})`;
+    const text = `Neue Anfrage von der Mobile-Seite:
+
+Name:           ${payload.name}
+E-Mail:         ${payload.email}
+Branche:        ${industryLabel}
+Wunsch-Paket:   ${pkgLabel}
+Aktuelle Site:  ${payload.url || "—"}
+Nachricht:      ${payload.message || "—"}
+
+Request-ID:     ${payload.requestId}
+Quelle:         ${payload.source}
+IP-Hash:        ${payload.ipHash}
+User-Agent:     ${payload.userAgent || "—"}
+Eingegangen:    ${new Date().toISOString()}
+
+— Karriaro Backend (functions/index.js → requestPackage)`;
+
+    const html = `<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 580px; margin: 0 auto; color: #1d1d1f; line-height: 1.55;">
+        <h2 style="font-size:18px;margin:0 0 16px">Neue Paket-Anfrage (Mobile)</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b;width:130px">Name</td><td style="padding:6px 0;font-weight:500">${payload.name}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">E-Mail</td><td style="padding:6px 0"><a href="mailto:${payload.email}" style="color:#0071e3">${payload.email}</a></td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Branche</td><td style="padding:6px 0">${industryLabel}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Wunsch-Paket</td><td style="padding:6px 0;font-weight:500">${pkgLabel}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Aktuelle Site</td><td style="padding:6px 0">${payload.url ? `<a href="${payload.url}" style="color:#0071e3">${payload.url}</a>` : "—"}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b;vertical-align:top">Nachricht</td><td style="padding:6px 0;white-space:pre-wrap">${payload.message || "—"}</td></tr>
+        </table>
+        <hr style="border:none;border-top:1px solid #e5e5e7;margin:24px 0">
+        <p style="font-size:11px;color:#86868b">Request-ID ${payload.requestId} · Quelle ${payload.source} · IP-Hash ${payload.ipHash} · ${new Date().toISOString()}</p>
+    </div>`;
+
+    await transporter.sendMail({
+        from: AUDIT_FROM,
+        replyTo: payload.email,
+        to: AUDIT_REPLY_TO,
+        subject,
+        text,
+        html
+    });
+}
+
+exports.requestPackage = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 30,
+        cors: false,
+        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ ok: false, error: "POST only" });
+
+        const body = req.body || {};
+        // Honeypot — Bot füllt _hp aus, wir antworten mit 204 ohne Verarbeitung.
+        if (body._hp && String(body._hp).trim().length > 0) {
+            return res.status(204).send("");
+        }
+
+        // Rate-Limit: 3 Requests pro IP pro 24h
+        if (await enforceRateLimit(db, req, res, "requestPackage", 3, 86400,
+            "Sie haben das tägliche Limit erreicht. Bitte morgen erneut oder schreiben Sie an kontakt@karriaro.de.")) return;
+
+        const name = String(body.name || "").trim().slice(0, 100);
+        const email = String(body.email || "").trim().toLowerCase();
+        const industry = String(body.industry || "").trim().toLowerCase();
+        const pkg = String(body.pkg || "").trim().toLowerCase();
+        const rawUrl = body.url ? String(body.url).trim() : "";
+        const message = String(body.message || "").trim().slice(0, 500);
+
+        if (!name) return res.status(400).json({ ok: false, error: "Name fehlt" });
+        if (!isValidEmail(email)) return res.status(400).json({ ok: false, error: "Ungültige E-Mail" });
+        if (!PACKAGE_INDUSTRY_ALLOWLIST.has(industry)) {
+            return res.status(400).json({ ok: false, error: "Ungültige Branche" });
+        }
+        if (!PACKAGE_TIER_ALLOWLIST.has(pkg)) {
+            return res.status(400).json({ ok: false, error: "Ungültiges Paket" });
+        }
+        let url = "";
+        if (rawUrl) {
+            const normalized = normalizeUrl(rawUrl);
+            if (!normalized) return res.status(400).json({ ok: false, error: "Ungültige Website-URL" });
+            url = normalized;
+        }
+
+        // Per-Email-Limit: 5/Tag als zweite Schutzschicht.
+        const emailHash = crypto.createHash("sha256").update(email).digest("hex").slice(0, 24);
+        if (await enforceRateLimit(db, { ip: emailHash, headers: {} }, res, "requestPackage:email", 5, 86400,
+            "Diese E-Mail-Adresse hat das tägliche Limit erreicht.")) return;
+
+        const requestId = generateSlug();
+        const ip = clientIp(req);
+        const ipHash = dailyIpHash(ip);
+        const userAgent = String(req.headers["user-agent"] || "").slice(0, 200);
+        const source = String(body.source || "mobile-index").slice(0, 40);
+
+        const doc = {
+            requestId,
+            name,
+            email,
+            industry,
+            pkg,
+            url,
+            message,
+            ipHash,
+            userAgent,
+            source,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            createdAtMs: Date.now(),
+            expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 90 * 86400000) / 1000), 0),
+            mailSent: false
+        };
+
+        try {
+            await db.collection("packageRequests").doc(requestId).set(doc);
+        } catch (err) {
+            logger.error("requestPackage firestore write failed", {
+                fn: "requestPackage", requestId, error: err.message
+            });
+            return res.status(500).json({ ok: false, error: "Speichern fehlgeschlagen" });
+        }
+
+        try {
+            await sendPackageRequestMail({ ...doc, requestId });
+            await db.collection("packageRequests").doc(requestId).update({ mailSent: true });
+        } catch (err) {
+            logger.error("requestPackage mail send failed", {
+                fn: "requestPackage", requestId, error: err.message
+            });
+            await db.collection("packageRequests").doc(requestId).update({ mailError: err.message });
+            // Mail-Fehler nicht zum User durchreichen — Daten sind gespeichert, Team sieht es im Cockpit.
+        }
+
+        return res.json({ ok: true, requestId });
     }
 );
 
