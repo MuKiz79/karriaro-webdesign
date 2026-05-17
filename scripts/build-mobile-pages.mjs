@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=100">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=101">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -139,15 +139,12 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 96 — Rollback auf "Ihre Website. Aus unserer Manufaktur."
-    // (User-Verdict: "Manufaktur statt Massenware" war zu radikal)
-    // Roman dominiert (Sprint 94-Hierarchie), Italic-Subline klein in Gold.
-    // Stagger-Delays für Fade-Up-Animation bleiben aus Sprint 95.
+    // Sprint 101 — Neue Headline: "Jede Website ein Unikat. Handcodiert aus unserer Manufaktur."
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Ihre Website.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Aus unserer Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Jede Website ein Unikat.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Handcodiert aus unserer Manufaktur.</span>' +
         '</h1>'
     );
 }
@@ -161,12 +158,22 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 94/95/100 — CTA + Meta + Trust-Strip.
+    // Sprint 101 — CTA + Meta + Customer-Benefits-Trust-Liste + Mini-Specs.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
         '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a>' +
         '<span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span>' +
-        '<p class="m-hero-trust-strip m-hero-stagger" style="--m-delay:880ms">Schwarzwald · seit 2026 · 7 Live-Demos · 0 Templates</p>'
+        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:880ms">' +
+            '<li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li>' +
+            '<li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li>' +
+            '<li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li>' +
+        '</ul>' +
+        '<dl class="m-hero-mini-specs m-hero-stagger" style="--m-delay:1000ms">' +
+            '<div><dt>24 h</dt><dd>Erster Entwurf</dd></div>' +
+            '<div><dt>7—14 Tage</dt><dd>Lieferzeit</dd></div>' +
+            '<div><dt>1.290 €</dt><dd>einmalig, ab</dd></div>' +
+            '<div><dt>7 Branchen</dt><dd>Live-Demos</dd></div>' +
+        '</dl>'
     );
 }
 
@@ -178,35 +185,15 @@ function injectHeroEyebrowStagger(html) {
     );
 }
 
-// Sprint 100 — Editorial-Sektionen mit neuen Titeln + Customer-Benefits.
-// Beweis-Sektion: 3 Customer-Benefits statt 1 Producer-Pride-Counter.
+// Sprint 101 — Editorial-Sektionen geschrumpft:
+// - m-mag-specs entfaellt (Specs wandern in Hero)
+// - m-mag-proof entfaellt (User-Wunsch)
+// Bleibt: Tools (mit "100+") und Siegel (mit echtem Brand-Logo).
 const EDITORIAL_SECTIONS_HTML = `
-<!-- Sprint 100 — Editorial-Magazin-Sektionen unter Hero -->
-<section class="m-mag-specs" aria-label="Der Karriaro-Unterschied">
-    <p class="m-mag-eyebrow">Der Karriaro-Unterschied</p>
-    <dl class="m-mag-specs-list">
-        <div class="m-mag-spec">
-            <dt class="m-mag-spec-num">24 h</dt>
-            <dd class="m-mag-spec-label">Erster Entwurf</dd>
-        </div>
-        <div class="m-mag-spec">
-            <dt class="m-mag-spec-num">7—14 Tage</dt>
-            <dd class="m-mag-spec-label">Lieferzeit</dd>
-        </div>
-        <div class="m-mag-spec">
-            <dt class="m-mag-spec-num">1.290 €</dt>
-            <dd class="m-mag-spec-label">Einmalig, ab</dd>
-        </div>
-        <div class="m-mag-spec">
-            <dt class="m-mag-spec-num">7 Branchen</dt>
-            <dd class="m-mag-spec-label">Live-Demos</dd>
-        </div>
-    </dl>
-</section>
-
+<!-- Sprint 101 — Editorial-Magazin-Sektionen unter Hero -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
     <p class="m-mag-eyebrow">Branchen-Funktionen</p>
-    <p class="m-mag-tools-sub">Plus 50+ weitere Features individuell pro Branche</p>
+    <p class="m-mag-tools-sub">Plus 100+ weitere Funktionen individuell pro Branche</p>
     <ol class="m-mag-tools-list">
         <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
         <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
@@ -220,30 +207,9 @@ const EDITORIAL_SECTIONS_HTML = `
     <p class="m-mag-tools-footnote-sub">Kein Template-Aufsatz, kein Plugin-Risiko, kein WordPress-Wartungsstress.</p>
 </section>
 
-<section class="m-mag-proof" aria-label="Was Sie davon haben">
-    <p class="m-mag-eyebrow">Was Sie davon haben</p>
-    <dl class="m-mag-proof-list">
-        <div class="m-mag-benefit">
-            <dt class="m-mag-benefit-num">0,2 s</dt>
-            <dd class="m-mag-benefit-label">Ladezeit</dd>
-            <dd class="m-mag-benefit-meta">DACH-Median: 3,1 s — Ihre Karriaro-Seite ist 15× schneller.</dd>
-        </div>
-        <div class="m-mag-benefit">
-            <dt class="m-mag-benefit-num">Tag 1</dt>
-            <dd class="m-mag-benefit-label">BFSG-konform</dd>
-            <dd class="m-mag-benefit-meta">Eingebaut, nicht nachgerüstet. Vor dem Stichtag, ohne Anwalt.</dd>
-        </div>
-        <div class="m-mag-benefit">
-            <dt class="m-mag-benefit-num">0 €</dt>
-            <dd class="m-mag-benefit-label">Vendor-Lock-in</dd>
-            <dd class="m-mag-benefit-meta">Code gehört Ihnen. Kein WordPress, kein Wix, keine Plugins.</dd>
-        </div>
-    </dl>
-</section>
-
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
     <div class="m-siegel-emblem">
-        <span class="m-siegel-mark">[K]</span>
+        <img class="m-siegel-logo" src="/images/karriaro-webdesign-logo.svg" alt="Karriaro Manufaktursiegel" width="200" height="200">
         <span class="m-siegel-year">№ 01 · 2026</span>
     </div>
     <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>

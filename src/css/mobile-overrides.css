@@ -1394,9 +1394,10 @@
 
 @media (max-width: 1023px) {
 
-    /* Snap-Scroll auf Root */
+    /* Sprint 101 — Snap-Scroll RAUS (iOS Safari ruckelt bei proximity-snap).
+       min-height: 100dvh pro Sektion bleibt fuer 1-Screen-pro-Bereich. */
     html {
-        scroll-snap-type: y proximity;
+        scroll-snap-type: none !important;
         scroll-behavior: smooth;
     }
 
@@ -1405,25 +1406,37 @@
         background: #FFFFFF !important;
     }
 
-    /* === 1 Bildschirm pro Sektion (5 Magazin-Sektionen) === */
+    /* === 1 Bildschirm pro Sektion — Snap raus, aber min-height bleibt === */
     .hero-with-photo,
     .m-mag-specs,
-    .m-mag-proof,
-    .m-demo-swiper-mobile {
+    .m-mag-proof {
         min-height: 100dvh !important;
-        scroll-snap-align: start;
-        scroll-snap-stop: normal;
+        scroll-snap-align: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         padding: 80px 24px !important;
         box-sizing: border-box !important;
     }
+    /* Demo-Swiper: KEIN flex-center (broke 100vw-Slide-Rail) */
+    .m-demo-swiper-mobile {
+        min-height: 100dvh !important;
+        scroll-snap-align: none !important;
+        display: block !important;
+        padding: 80px 0 !important;
+        box-sizing: border-box !important;
+    }
+    /* Demo-Section innen-Eyebrow/Title bekommen eigenes horizontal-padding */
+    .m-demo-swiper-section-eyebrow,
+    .m-demo-swiper-section-title,
+    .m-demo-swiper-section-hint {
+        margin-left: 24px !important;
+        margin-right: 24px !important;
+    }
     /* Werkzeuge: 7 Items koennen lang werden — start-align statt center */
     .m-mag-tools {
         min-height: 100dvh !important;
-        scroll-snap-align: start;
-        scroll-snap-stop: normal;
+        scroll-snap-align: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
@@ -1507,7 +1520,7 @@
         pointer-events: none;
     }
 
-    /* === Hero-Trust-Strip unter CTA === */
+    /* === Hero-Trust-Strip unter CTA (Sprint 100 — bleibt fuer Folge-Sprints) === */
     .m-hero-trust-strip {
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
         font-size: 11px;
@@ -1518,6 +1531,89 @@
         opacity: 0.55;
         margin: 22px 24px 0 !important;
         text-align: left;
+    }
+
+    /* === Sprint 101 — Hero-Trust-Liste (3 Customer-Benefits mit Gold-Check) === */
+    .m-hero-trust-list {
+        list-style: none;
+        margin: 28px 24px 0 !important;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .m-hero-trust-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 15px;
+        line-height: 1.45;
+        color: var(--color-indigo-strong, #061320);
+    }
+    .m-hero-trust-check {
+        flex-shrink: 0;
+        color: var(--color-gold, #8A7B5C);
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.5;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* === Sprint 101 — Hero-Mini-Specs (4 Items 2x2-Grid, kompakt) === */
+    .m-hero-mini-specs {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px 12px;
+        margin: 32px 24px 0 !important;
+        padding: 18px 0;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+    .m-hero-mini-specs > div {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 0 14px;
+        border-left: 0.5px solid rgba(0, 0, 0, 0.06);
+        min-width: 0;
+    }
+    .m-hero-mini-specs > div:nth-child(odd) {
+        padding-left: 0;
+        border-left: 0;
+    }
+    .m-hero-mini-specs dt {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(20px, 5.2vw, 24px);
+        font-weight: 500;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        color: var(--color-indigo-strong, #061320);
+        font-variant-numeric: tabular-nums;
+        margin: 0;
+    }
+    .m-hero-mini-specs dd {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 0;
+    }
+
+    /* === Siegel-Logo (echtes Brand-SVG statt hardcoded [K]) === */
+    .m-siegel-logo {
+        width: 200px;
+        height: auto;
+        display: block;
+        /* SVG-Logo ist dunkel — invert + sepia für Gold-Tonalitaet auf dunklem BG */
+        filter: brightness(0) invert(1) sepia(0.5) saturate(1.5) hue-rotate(355deg) brightness(0.85);
+        margin-bottom: 4px;
+    }
+    /* Alte .m-siegel-mark (text [K]) versteckt — bleibt im HTML als Fallback wenn img fehlt */
+    .m-siegel-mark {
+        display: none !important;
     }
 
     /* === Werkzeug-Sektion: neuer Sub-Text unter Eyebrow === */
