@@ -39,7 +39,9 @@ echo "→ Files aus Haupt-Repo kopieren"
 cp "$MAIN_REPO"/src/m/*.html .
 cp "$MAIN_REPO"/src/m/portfolio/*.html portfolio/
 cp "$MAIN_REPO"/src/m/blog/*.html blog/
-cp "$MAIN_REPO"/src/css/mobile.css css/
+# Sprint 91: Generator-Output benoetigt alle Desktop-CSS-Files (tokens, karriaro-tools, mobile-overrides etc.)
+# nicht nur mobile.css. Wir spiegeln src/css/ komplett.
+cp "$MAIN_REPO"/src/css/*.css css/ 2>/dev/null || true
 
 echo "→ Pfad-Rewrite: /images/ → https://karriaro-webdesign.de/images/"
 find . -name "*.html" -print0 | xargs -0 sed -i '' \
