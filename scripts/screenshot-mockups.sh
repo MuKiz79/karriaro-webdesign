@@ -49,9 +49,10 @@ for spec in "${PAGES[@]}"; do
   URL="http://localhost:$PORT/portfolio/$page.html"
   echo "[start] $page → $out"
 
+  # Sprint 116 — 2x Retina (3072x1920) + JPEG 95 für "hochklassig" perceived quality
   "$CHROME" --headless --disable-gpu --hide-scrollbars \
     --virtual-time-budget=5000 \
-    --window-size=1536,960 \
+    --window-size=3072,1920 \
     --screenshot="$TMP/s.png" \
     "$URL" 2>/dev/null
 
@@ -61,7 +62,7 @@ for spec in "${PAGES[@]}"; do
     continue
   fi
 
-  sips -s format jpeg -s formatOptions 85 "$TMP/s.png" --out "$OUT_DIR/$out" >/dev/null 2>&1
+  sips -s format jpeg -s formatOptions 95 "$TMP/s.png" --out "$OUT_DIR/$out" >/dev/null 2>&1
 
   size=$(stat -f %z "$OUT_DIR/$out" 2>/dev/null || stat -c %s "$OUT_DIR/$out")
   echo "[done] $page → $out ($size bytes)"

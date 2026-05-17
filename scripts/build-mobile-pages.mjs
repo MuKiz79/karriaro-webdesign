@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=115">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=116">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -627,7 +627,11 @@ function buildDemoSwiperHtml() {
             <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <div class="m-bf">${buildBrowserChromeHtml(domain)}
                     <div class="m-bf-canvas">
-                        <iframe class="m-bf-iframe" data-m-bf-src="${href}" ${eager ? `src="${href}"` : ''} scrolling="no" loading="${eager ? 'eager' : 'lazy'}" sandbox="allow-same-origin" referrerpolicy="no-referrer-when-downgrade" aria-hidden="true" tabindex="-1" title="${title} — Live-Vorschau"></iframe>
+                        <picture>
+                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
+                            <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
+                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="500">
+                        </picture>
                     </div>
                 </div>
             </button>
@@ -704,24 +708,15 @@ function buildDemoSwiperHtml() {
     var dotEls = dotsBox.querySelectorAll('.m-demo-swiper-dot');
 
     // Active-Dot folgt natürlichem Swipe (kein Auto-Rotation, User-controlled)
-    // Sprint 115 — Plus: Lazy-Mount der iframes bei Slide-Approach (intersectionRatio > 0.1)
     if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
-                // Lazy-Mount iframe wenn Karte in Sicht kommt (auch nur teilweise)
-                if (e.isIntersecting) {
-                    var ifr = e.target.querySelector('iframe.m-bf-iframe');
-                    if (ifr && !ifr.src && ifr.dataset.mBfSrc) {
-                        ifr.src = ifr.dataset.mBfSrc;
-                    }
-                }
-                // Dot-Indicator: nur bei dominant sichtbarer Slide
                 if (e.isIntersecting && e.intersectionRatio > 0.6) {
                     var i = Array.prototype.indexOf.call(slides, e.target);
                     if (i >= 0) dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
                 }
             });
-        }, { root: rail, threshold: [0.1, 0.6] });
+        }, { root: rail, threshold: [0.6] });
         slides.forEach(function (s) { io.observe(s); });
     }
 

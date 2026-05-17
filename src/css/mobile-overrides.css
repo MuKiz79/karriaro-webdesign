@@ -1241,26 +1241,6 @@
     /* Demo-Swiper-Background kuehler */
     .m-bf-canvas {
         background: #F5F5F7 !important;
-        position: relative;
-        overflow: hidden;
-        aspect-ratio: 16 / 10;
-    }
-    /* Sprint 115 — Live-iframe als Demo-Vorschau statt PNG-Mockup.
-       Scaled-down (200% size, 0.5 transform) damit die ganze Portfolio-Seite
-       in die Karte passt. sandbox="allow-same-origin" verhindert JS-Execution
-       — Layout sichtbar, Interaktion nicht möglich (Touch geht durch). */
-    .m-bf-iframe {
-        position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 200% !important;
-        height: 200% !important;
-        transform: scale(0.5) !important;
-        transform-origin: top left !important;
-        border: 0 !important;
-        background: #FFFFFF !important;
-        pointer-events: none !important;
-        display: block !important;
     }
 
     /* Demo-Sheet kuehler */

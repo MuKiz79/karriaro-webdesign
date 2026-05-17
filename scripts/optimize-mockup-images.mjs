@@ -40,12 +40,15 @@ const MOCKUP_SLUGS = [
     'dachdecker-meister',
     'gastro-hirsch',
     'logistik-schwaben',
+    'handwerk-mueller',
 ];
 
+// Sprint 116 — Q-Werte hoch für "hochklassig" Mockup-Wirkung (war 75/80/78).
+// Source-Mockups sind jetzt 2x Retina (3072x1920), Optimize ist Mobile-Display-Resolution.
 const VARIANTS = [
-    { suffix: '-480.webp', maxDim: 480, format: 'webp',  quality: 75 },
-    { suffix: '-800.webp', maxDim: 800, format: 'webp',  quality: 80 },
-    { suffix: '-800.jpg',  maxDim: 800, format: 'jpeg', quality: 78 },
+    { suffix: '-480.webp', maxDim: 480, format: 'webp',  quality: 82 },
+    { suffix: '-800.webp', maxDim: 800, format: 'webp',  quality: 88 },
+    { suffix: '-800.jpg',  maxDim: 800, format: 'jpeg', quality: 88 },
 ];
 
 function isUpToDate(inputPath, outputPath) {
