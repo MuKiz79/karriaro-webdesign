@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=105">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=106">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -139,23 +139,26 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 105 — Brand-Manifest-Headline (Apple-Watch-Pattern, Brand-Story als Anker)
-    // Das Manifest ist schon Site-weit etabliert (Footer + Pull-Quote in src/index.html)
+    // Sprint 106 — Webdesign-Manufaktur + Unikat-Statement (User-Wahl Senior-Marketing)
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Wenn Ihr Name draufsteht,</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">steht unserer dahinter.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Webdesign-Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Jede Seite handcodiert ein Unikat.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 98 — No-op. Hero ist reduziert auf Headline + Italic-Sub + CTA.
-    // Specs/Werkzeuge/Beweis kommen jetzt als EIGENE Sektionen via
-    // injectEditorialSections() unter dem Hero — siehe SCREEN 2-4 in Plan.
-    // .subhead bleibt im HTML aber per CSS versteckt.
-    return html;
+    // Sprint 106 — Hero-Subhead reaktiviert mit KI-Aera-Statement (User-Wahl).
+    // Expliziter <br> fuer kontrollierten Wrap auf Mobile.
+    return html.replace(
+        /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
+        '<p class="subhead m-hero-stagger" style="--m-delay:380ms">' +
+        'Optimiert für die KI-Ära. SEO + GEO + Schema.org.' +
+        '<br>Damit Sie auch zukünftig gefunden werden.' +
+        '</p>'
+    );
 }
 
 function rewriteHeroCta(html) {
@@ -204,9 +207,14 @@ function injectHeroEyebrowStagger(html) {
 function compactHeroEyebrow(html) {
     // Sprint 104 — Eyebrow auf 1 Zeile fuer iPhone 14 (390px): "Frühjahr 2026" → "2026",
     // "Webdesign-Manufaktur" → "Manufaktur". Resultat: "Nº 01 · MANUFAKTUR · 2026"
-    return html
-        .replace(/Frühjahr\s+2026/gi, '2026')
-        .replace(/Webdesign-Manufaktur/gi, 'Manufaktur');
+    // Sprint 106 — Targetiert nur Spans innerhalb hero-folio-eyebrow (nicht site-weit),
+    // damit "Webdesign-Manufaktur." in H1 nicht versehentlich gekürzt wird.
+    return html.replace(
+        /<p class="hero-folio-eyebrow[^"]*"[^>]*>[\s\S]*?<\/p>/,
+        (match) => match
+            .replace(/Frühjahr\s+2026/gi, '2026')
+            .replace(/>Webdesign-Manufaktur</gi, '>Manufaktur<')
+    );
 }
 
 // ────────────────────────────────────────────────────────────────
