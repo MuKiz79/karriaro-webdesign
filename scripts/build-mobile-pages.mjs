@@ -59,13 +59,19 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=99">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=100">`;
 
 const STICKY_CTA_BAR = `
-<!-- Mobile-Sticky-CTA-Bar (Sprint 94 — 1 Button + 1 Link, erscheint bei Scroll) -->
+<!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
 <div class="m-sticky-cta-bar" data-m-sticky-cta>
-    <a href="#kontakt" class="m-sticky-cta">Erstgespräch buchen</a>
-    <a href="#audit" class="m-sticky-cta-link">Mini-Audit</a>
+    <a href="tel:+491742796784" class="m-sticky-cta m-sticky-cta--phone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Anrufen
+    </a>
+    <a href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20handcodierte%20Website%20f%C3%BCr%20mein%20Unternehmen.%20K%C3%B6nnen%20wir%20kurz%20sprechen%3F" target="_blank" rel="noopener" class="m-sticky-cta m-sticky-cta--whatsapp">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.6 6.31C16.16 4.86 14.16 4 12.07 4 7.88 4 4.5 7.42 4.5 11.66c0 1.36.36 2.7 1.04 3.87L4.4 19.7l4.27-1.12c1.13.6 2.4.93 3.7.93h.01c4.18 0 7.58-3.42 7.58-7.66 0-2.05-.81-3.97-2.36-5.54zm-5.53 11.79h-.01c-1.16 0-2.3-.31-3.3-.91l-.24-.14-2.52.66.67-2.46-.15-.25c-.65-1.04-1-2.25-1-3.5 0-3.62 2.94-6.55 6.56-6.55 1.75 0 3.4.68 4.64 1.92 1.23 1.23 1.93 2.86 1.92 4.62-.01 3.61-2.94 6.61-6.58 6.61z"/></svg>
+        WhatsApp
+    </a>
 </div>
 <script>
 (function () {
@@ -73,13 +79,11 @@ const STICKY_CTA_BAR = `
     var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
     if (!bar) return;
     if (!hero || !('IntersectionObserver' in window)) {
-        // Fallback: immer sichtbar (alte Browser / Pages ohne Hero)
         bar.classList.add('is-visible');
         return;
     }
     var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
-            // Bar erscheint sobald der Hero (komplett oder fast komplett) raus-scrollt
             bar.classList.toggle('is-visible', !e.isIntersecting);
         });
     }, { threshold: 0.05 });
@@ -157,10 +161,12 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 94/95 — CTA-Text kürzen, Stagger-Delays.
+    // Sprint 94/95/100 — CTA + Meta + Trust-Strip.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span>'
+        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a>' +
+        '<span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span>' +
+        '<p class="m-hero-trust-strip m-hero-stagger" style="--m-delay:880ms">Schwarzwald · seit 2026 · 7 Live-Demos · 0 Templates</p>'
     );
 }
 
@@ -172,12 +178,12 @@ function injectHeroEyebrowStagger(html) {
     );
 }
 
-// Sprint 98 — Editorial-Sektionen: Specs/Werkzeuge/Beweis als eigene Sektionen
-// NACH dem Hero, statt im Hero gequetscht.
+// Sprint 100 — Editorial-Sektionen mit neuen Titeln + Customer-Benefits.
+// Beweis-Sektion: 3 Customer-Benefits statt 1 Producer-Pride-Counter.
 const EDITORIAL_SECTIONS_HTML = `
-<!-- Sprint 98 — Editorial-Magazin-Sektionen unter Hero -->
-<section class="m-mag-specs" aria-label="Eckdaten">
-    <p class="m-mag-eyebrow">Was Sie bekommen</p>
+<!-- Sprint 100 — Editorial-Magazin-Sektionen unter Hero -->
+<section class="m-mag-specs" aria-label="Der Karriaro-Unterschied">
+    <p class="m-mag-eyebrow">Der Karriaro-Unterschied</p>
     <dl class="m-mag-specs-list">
         <div class="m-mag-spec">
             <dt class="m-mag-spec-num">24 h</dt>
@@ -192,14 +198,15 @@ const EDITORIAL_SECTIONS_HTML = `
             <dd class="m-mag-spec-label">Einmalig, ab</dd>
         </div>
         <div class="m-mag-spec">
-            <dt class="m-mag-spec-num">7 Werkzeuge</dt>
-            <dd class="m-mag-spec-label">Live eingebaut</dd>
+            <dt class="m-mag-spec-num">7 Branchen</dt>
+            <dd class="m-mag-spec-label">Live-Demos</dd>
         </div>
     </dl>
 </section>
 
-<section class="m-mag-tools" aria-label="Live-Werkzeuge">
-    <p class="m-mag-eyebrow">Was Karriaro anders macht</p>
+<section class="m-mag-tools" aria-label="Branchen-Funktionen">
+    <p class="m-mag-eyebrow">Branchen-Funktionen</p>
+    <p class="m-mag-tools-sub">Plus 50+ weitere Features individuell pro Branche</p>
     <ol class="m-mag-tools-list">
         <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
         <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
@@ -209,14 +216,40 @@ const EDITORIAL_SECTIONS_HTML = `
         <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
         <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
     </ol>
-    <p class="m-mag-tools-footnote">Eingebaut, nicht angeklebt</p>
+    <p class="m-mag-tools-footnote">Maßgeschneidert für Ihre Branche</p>
+    <p class="m-mag-tools-footnote-sub">Kein Template-Aufsatz, kein Plugin-Risiko, kein WordPress-Wartungsstress.</p>
 </section>
 
-<section class="m-mag-proof" aria-label="Beweis">
-    <p class="m-mag-eyebrow">Beweis</p>
-    <p class="m-mag-proof-num"><span class="m-hero-counter" data-target="10538">0</span></p>
-    <p class="m-mag-proof-label">Zeilen Handarbeit</p>
-    <p class="m-mag-proof-meta">Aus 7 Branchen · 0 Templates</p>
+<section class="m-mag-proof" aria-label="Was Sie davon haben">
+    <p class="m-mag-eyebrow">Was Sie davon haben</p>
+    <dl class="m-mag-proof-list">
+        <div class="m-mag-benefit">
+            <dt class="m-mag-benefit-num">0,2 s</dt>
+            <dd class="m-mag-benefit-label">Ladezeit</dd>
+            <dd class="m-mag-benefit-meta">DACH-Median: 3,1 s — Ihre Karriaro-Seite ist 15× schneller.</dd>
+        </div>
+        <div class="m-mag-benefit">
+            <dt class="m-mag-benefit-num">Tag 1</dt>
+            <dd class="m-mag-benefit-label">BFSG-konform</dd>
+            <dd class="m-mag-benefit-meta">Eingebaut, nicht nachgerüstet. Vor dem Stichtag, ohne Anwalt.</dd>
+        </div>
+        <div class="m-mag-benefit">
+            <dt class="m-mag-benefit-num">0 €</dt>
+            <dd class="m-mag-benefit-label">Vendor-Lock-in</dd>
+            <dd class="m-mag-benefit-meta">Code gehört Ihnen. Kein WordPress, kein Wix, keine Plugins.</dd>
+        </div>
+    </dl>
+</section>
+
+<section class="m-mag-siegel" aria-label="Manufaktursiegel">
+    <div class="m-siegel-emblem">
+        <span class="m-siegel-mark">[K]</span>
+        <span class="m-siegel-year">№ 01 · 2026</span>
+    </div>
+    <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>
+    <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
+    <p class="m-siegel-body">Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stück — der juristische Beweis: dieser Meister steht für dieses Stück. Wir schlagen unseres in jeden Code.</p>
+    <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
 </section>
 `;
 
@@ -276,6 +309,20 @@ const SCROLL_ANIMATIONS_SCRIPT = `
             });
         }, { threshold: 0.2 });
         quotes.forEach(function (q) { ioQuote.observe(q); });
+    }
+
+    // Sprint 100 — Magazin-Sektionen Stagger-Reveal
+    var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
+    if (magSections.length) {
+        var ioMag = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('m-in-view');
+                    ioMag.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        magSections.forEach(function (s) { ioMag.observe(s); });
     }
 })();
 </script>

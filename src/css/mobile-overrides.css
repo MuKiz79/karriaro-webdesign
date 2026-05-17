@@ -1473,3 +1473,276 @@
         padding: 64px 16px !important;
     }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 100 — Inhalts-Refresh + UI-Polish
+   Gold-Eyebrows, staerkerer Mockup-Filter, Customer-Benefit-Block,
+   Hero-Trust-Strip, Sticky-CTA Anrufen+WhatsApp, Footer-Siegel,
+   Stagger-Reveal-Animation.
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+
+    /* === Eyebrows in Gold (User mag den Italic-Gold-Akzent) === */
+    .m-mag-eyebrow,
+    .m-siegel-eyebrow,
+    .m-mag-tools-footnote {
+        color: var(--color-gold, #8A7B5C) !important;
+    }
+
+    /* === Mockup-Filter staerker (gegen "gelb-altbacken") === */
+    .m-bf-img {
+        filter: saturate(0.65) brightness(1.06) contrast(0.98) !important;
+    }
+    .m-bf-canvas {
+        background: #FFFFFF !important;
+        position: relative;
+    }
+    .m-bf-canvas::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(245, 245, 247, 0.18);
+        mix-blend-mode: lighten;
+        pointer-events: none;
+    }
+
+    /* === Hero-Trust-Strip unter CTA === */
+    .m-hero-trust-strip {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        opacity: 0.55;
+        margin: 22px 24px 0 !important;
+        text-align: left;
+    }
+
+    /* === Werkzeug-Sektion: neuer Sub-Text unter Eyebrow === */
+    .m-mag-tools-sub {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 17px;
+        font-style: italic;
+        line-height: 1.4;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: -24px 0 32px;
+    }
+    /* Footnote-Sub neu */
+    .m-mag-tools-footnote-sub {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 13px;
+        color: var(--color-graphite-soft, #6e6e73);
+        line-height: 1.55;
+        margin: 8px 0 0;
+        max-width: 320px;
+    }
+
+    /* === Customer-Benefits-Block (m-mag-benefit) === */
+    .m-mag-proof-list {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+    }
+    .m-mag-benefit {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .m-mag-benefit-num {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(56px, 16vw, 80px);
+        font-weight: 500;
+        line-height: 0.96;
+        letter-spacing: -0.04em;
+        color: var(--color-indigo-strong, #061320);
+        font-variant-numeric: tabular-nums;
+        margin: 0;
+    }
+    .m-mag-benefit-label {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        margin: 0;
+    }
+    .m-mag-benefit-meta {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 15px;
+        font-style: italic;
+        color: var(--color-graphite-soft, #6e6e73);
+        line-height: 1.5;
+        margin: 8px 0 0;
+        max-width: 320px;
+    }
+    /* Alte .m-mag-proof-num/-label/-meta-Klassen unsichtbar (Sprint 98-Reste) */
+    .m-mag-proof-num,
+    .m-mag-proof-label,
+    .m-mag-proof-meta {
+        display: none !important;
+    }
+
+    /* === Footer-Siegel-Sektion === */
+    .m-mag-siegel {
+        min-height: 100dvh !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 80px 24px !important;
+        box-sizing: border-box !important;
+        background: var(--color-indigo-strong, #061320) !important;
+        color: #FFFFFF !important;
+        text-align: center !important;
+        border-top: 0 !important;
+    }
+    .m-siegel-emblem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 32px;
+    }
+    .m-siegel-mark {
+        font-family: "JetBrains Mono", "SF Mono", monospace;
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--color-gold, #8A7B5C);
+        letter-spacing: 0.1em;
+        border: 1.5px solid var(--color-gold, #8A7B5C);
+        padding: 14px 18px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    .m-siegel-year {
+        font-family: "JetBrains Mono", "SF Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .m-siegel-eyebrow {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--color-gold, #8A7B5C) !important;
+        margin: 0 0 20px;
+    }
+    .m-siegel-title {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(28px, 8vw, 38px);
+        font-weight: 500;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        color: #FFFFFF;
+        margin: 0 0 28px;
+        max-width: 360px;
+    }
+    .m-siegel-title::before { content: none !important; }
+    .m-siegel-body {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 16px;
+        font-style: italic;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.75);
+        margin: 0 0 32px;
+        max-width: 380px;
+    }
+    .m-siegel-link {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-gold, #8A7B5C);
+        text-decoration: none;
+        letter-spacing: -0.005em;
+        border-bottom: 0.5px solid var(--color-gold, #8A7B5C);
+        padding-bottom: 2px;
+    }
+
+    /* === Sticky-CTA-Bar mit Phone + WhatsApp-Variante === */
+    .m-sticky-cta--phone {
+        background: var(--color-indigo, #1A2E40) !important;
+        color: #FFFFFF !important;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    .m-sticky-cta--phone svg {
+        width: 16px;
+        height: 16px;
+    }
+    .m-sticky-cta--whatsapp {
+        background: #25D366 !important;
+        color: #FFFFFF !important;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 13px 18px;
+        border-radius: 999px;
+        min-height: 46px;
+        line-height: 1.2;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .m-sticky-cta--whatsapp svg {
+        width: 18px;
+        height: 18px;
+    }
+    .m-sticky-cta--whatsapp:active {
+        background: #1FAE54 !important;
+    }
+    .m-sticky-cta--phone:active {
+        background: var(--color-indigo-deep, #0F1F2E) !important;
+    }
+}
+
+/* === Stagger-Reveal-Animation für Magazin-Items === */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+    .m-mag-spec,
+    .m-mag-tools-list li,
+    .m-mag-benefit {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 600ms ease-out, transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+    .m-mag-specs.m-in-view .m-mag-spec,
+    .m-mag-tools.m-in-view .m-mag-tools-list li,
+    .m-mag-proof.m-in-view .m-mag-benefit {
+        opacity: 1;
+        transform: none;
+    }
+    /* Stagger via nth-child */
+    .m-mag-specs.m-in-view .m-mag-spec:nth-child(1) { transition-delay: 0ms; }
+    .m-mag-specs.m-in-view .m-mag-spec:nth-child(2) { transition-delay: 100ms; }
+    .m-mag-specs.m-in-view .m-mag-spec:nth-child(3) { transition-delay: 200ms; }
+    .m-mag-specs.m-in-view .m-mag-spec:nth-child(4) { transition-delay: 300ms; }
+
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(1) { transition-delay: 0ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(2) { transition-delay: 80ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(3) { transition-delay: 160ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(4) { transition-delay: 240ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(5) { transition-delay: 320ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(6) { transition-delay: 400ms; }
+    .m-mag-tools.m-in-view .m-mag-tools-list li:nth-child(7) { transition-delay: 480ms; }
+
+    .m-mag-proof.m-in-view .m-mag-benefit:nth-child(1) { transition-delay: 0ms; }
+    .m-mag-proof.m-in-view .m-mag-benefit:nth-child(2) { transition-delay: 150ms; }
+    .m-mag-proof.m-in-view .m-mag-benefit:nth-child(3) { transition-delay: 300ms; }
+}

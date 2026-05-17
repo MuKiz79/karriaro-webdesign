@@ -60,7 +60,7 @@
         }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=99">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=100">
 </head>
 <body class="antialiased">
 
@@ -352,6 +352,20 @@
             });
         }, { threshold: 0.2 });
         quotes.forEach(function (q) { ioQuote.observe(q); });
+    }
+
+    // Sprint 100 — Magazin-Sektionen Stagger-Reveal
+    var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
+    if (magSections.length) {
+        var ioMag = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.classList.add('m-in-view');
+                    ioMag.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        magSections.forEach(function (s) { ioMag.observe(s); });
     }
 })();
 </script>
