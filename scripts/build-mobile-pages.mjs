@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=106">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=107">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -150,27 +150,24 @@ function rewriteHeroHeadline(html) {
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 106 — Hero-Subhead reaktiviert mit KI-Aera-Statement (User-Wahl).
-    // Expliziter <br> fuer kontrollierten Wrap auf Mobile.
+    // Sprint 107 — Hero-Subhead mit KI-Aera-Statement, explizite <br> fuer
+    // kontrollierten 3-Zeilen-Wrap auf iPhone-Width.
     return html.replace(
         /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
         '<p class="subhead m-hero-stagger" style="--m-delay:380ms">' +
-        'Optimiert für die KI-Ära. SEO + GEO + Schema.org.' +
-        '<br>Damit Sie auch zukünftig gefunden werden.' +
+        'Optimiert für die KI-Ära.<br>' +
+        'SEO + GEO + Schema.org.<br>' +
+        'Damit Sie auch zukünftig gefunden werden.' +
         '</p>'
     );
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 105 — Dual-CTA (Erstgespraech + Performance-Check) + 3 Power-USPs
-    // Power-USPs: 100+ Branchen-Funktionen / Lead-Cockpit Lighthouse / KI-Automation-Workflows
+    // Sprint 107 — Hero gestrafft: 3 Power-USPs prominent, Single-CTA klein am Hero-Ende.
+    // Performance-Check raus. Auto-Margin pusht Button an Hero-Boden (kein Siegel mehr).
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<div class="m-hero-cta-stack m-hero-stagger" style="--m-delay:640ms">' +
-            '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a>' +
-            '<a href="/audit.html" class="m-hero-secondary">Performance-Check →</a>' +
-        '</div>' +
-        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:880ms">' +
+        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:640ms">' +
             '<li>' +
                 '<span class="m-hero-trust-num">100+</span>' +
                 '<span class="m-hero-trust-body">' +
@@ -192,7 +189,10 @@ function rewriteHeroCta(html) {
                     '<small>Emails, Follow-ups, Anfragen-Routing — laufen von selbst.</small>' +
                 '</span>' +
             '</li>' +
-        '</ul>'
+        '</ul>' +
+        '<div class="m-hero-cta-bottom m-hero-stagger" style="--m-delay:880ms">' +
+            '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a>' +
+        '</div>'
     );
 }
 
@@ -794,8 +794,8 @@ function buildPage(relPath) {
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
-        // Sprint 105 — Manufaktursiegel-Visual (ersetzt Sprint-104 Auto-Rotation-Card)
-        html = injectHeroSiegelVisual(html);
+        // Sprint 107 — Siegel-Visual + Stats raus aus Hero (User-Wunsch: Hero gestrafft)
+        // injectHeroSiegelVisual bleibt im Code als Dead-Code fuer ggf. spaeteren Re-Use
         // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper
         // Demo-Swiper muss zuerst injected werden, damit Personas davor landen können.
         html = injectDemoSwiper(html);

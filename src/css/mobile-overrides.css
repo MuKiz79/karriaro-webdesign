@@ -409,10 +409,11 @@
     .hero-with-photo .hero-text-block {
         text-align: left !important;
     }
+    /* Sprint 107 — Hero-Texte groesser, Hero-Flaeche besser nutzen */
     .hero-headline {
-        font-size: clamp(32px, 7.5svh, 52px) !important;
-        line-height: 1.05 !important;
-        letter-spacing: -0.03em !important;
+        font-size: clamp(42px, 10svh, 64px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -0.035em !important;
         margin: 0 24px !important;
         font-weight: 600 !important;
         text-align: left !important;
@@ -421,16 +422,17 @@
         display: block !important;
         text-align: left !important;
     }
+    /* Sprint 107 — Italic-Akzent groesser proportional */
     .hero-h1-line.m-hero-accent {
-        font-size: clamp(17px, 4.4vw, 24px) !important;
+        font-size: clamp(18px, 4.6vw, 26px) !important;
         line-height: 1.3 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
         font-weight: 400 !important;
         letter-spacing: -0.012em !important;
-        margin-top: 10px !important;
+        margin-top: 14px !important;
         display: block !important;
-        word-break: keep-all !important;
+        word-break: normal !important;
         overflow-wrap: break-word !important;
         max-width: 100% !important;
     }
@@ -445,17 +447,17 @@
         display: inline !important;
     }
 
-    /* Sprint 106 — Subhead reaktiviert (KI-Aera-Statement, User-Wahl) */
+    /* Sprint 107 — Subhead groesser proportional (war 13-15, jetzt 15-17) */
     .hero-with-photo .subhead,
     .hero-with-photo h1 + .subhead {
         display: block !important;
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
-        font-size: clamp(13px, 1.7svh, 15px) !important;
+        font-size: clamp(15px, 2svh, 17px) !important;
         font-weight: 400 !important;
-        line-height: 1.5 !important;
+        line-height: 1.45 !important;
         letter-spacing: -0.008em !important;
         color: var(--color-graphite-soft, #6e6e73) !important;
-        margin: clamp(14px, 2svh, 20px) 0 0 !important;
+        margin: clamp(18px, 2.5svh, 26px) 0 0 !important;
         padding: 0 24px !important;
         text-align: left !important;
         width: 100% !important;
@@ -1436,8 +1438,8 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
-        /* Sprint 105 — padding-top auf >= Nav-Hoehe (72px) + Breathing-Room (16px) = 88px Mindest */
-        padding: clamp(88px, 11svh, 112px) clamp(20px, 5vw, 32px) clamp(24px, 4svh, 48px) !important;
+        /* Sprint 107 — padding-top zurueck auf 80-96 (Nav 72 + 8px breathing) damit mehr Content-Platz */
+        padding: clamp(80px, 9.5svh, 96px) clamp(20px, 5vw, 32px) clamp(20px, 3svh, 40px) !important;
         box-sizing: border-box !important;
     }
     /* Demo-Swiper: KEIN flex-center (broke 100vw-Slide-Rail) */
@@ -2335,20 +2337,19 @@
         opacity: 0.4 !important;
     }
 
-    /* === NEUE Trust-List mit Num + Body (statt einfacher Bullets) === */
-    /* Sprint 105 — komplettes Override der Sprint-103-Trust-List-Styles */
+    /* === Trust-List Sprint 107: groesser proportional, mehr Fluss === */
     .m-hero-trust-list {
         list-style: none !important;
-        margin: clamp(20px, 3svh, 32px) 24px 0 !important;
+        margin: clamp(28px, 4svh, 44px) 24px 0 !important;
         padding: 0 !important;
         display: flex !important;
         flex-direction: column !important;
-        gap: clamp(12px, 1.8svh, 18px) !important;
+        gap: clamp(16px, 2.2svh, 22px) !important;
     }
     .m-hero-trust-list li {
         display: flex !important;
         align-items: flex-start !important;
-        gap: 14px !important;
+        gap: 16px !important;
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif !important;
         font-size: inherit !important;
         line-height: inherit !important;
@@ -2357,28 +2358,28 @@
     .m-hero-trust-num {
         flex-shrink: 0 !important;
         font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
-        font-size: 14px !important;
+        font-size: 17px !important;
         font-weight: 600 !important;
         color: var(--color-gold, #8A7B5C) !important;
         letter-spacing: 0.04em !important;
-        line-height: 1.4 !important;
-        min-width: 36px !important;
+        line-height: 1.3 !important;
+        min-width: 44px !important;
     }
     .m-hero-trust-body {
         display: flex !important;
         flex-direction: column !important;
-        gap: 2px !important;
+        gap: 3px !important;
         flex: 1 !important;
     }
     .m-hero-trust-body strong {
-        font-size: 14px !important;
+        font-size: 17px !important;
         font-weight: 600 !important;
         color: var(--color-indigo-strong, #061320) !important;
-        letter-spacing: -0.005em !important;
-        line-height: 1.3 !important;
+        letter-spacing: -0.012em !important;
+        line-height: 1.25 !important;
     }
     .m-hero-trust-body small {
-        font-size: 12px !important;
+        font-size: 14px !important;
         font-weight: 400 !important;
         color: var(--color-graphite-soft, #6e6e73) !important;
         letter-spacing: -0.005em !important;
@@ -2492,3 +2493,87 @@
     .m-hero-trust-body strong { font-size: 13px !important; }
 }
 
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 107 — Hero gestrafft: Siegel + Stats + Performance-Check
+   raus. Texte groesser, CTA klein am Hero-Boden (auto-margin).
+   ════════════════════════════════════════════════════════════ */
+
+/* Sprint 105 Siegel-Visual + Stats-Strip + CTA-Stack komplett aus Hero (defensive) */
+.m-hero-siegel-visual,
+.m-hero-siegel-frame,
+.m-hero-siegel-stats,
+.m-hero-cta-stack,
+.m-hero-secondary {
+    display: none !important;
+}
+
+/* Desktop default: Sprint-107-Bottom-CTA unsichtbar */
+.m-hero-cta-bottom { display: none; }
+
+@media (max-width: 1023px) {
+    /* Sprint 107 — CTA-Bottom-Block: kleinerer Button am Hero-Ende */
+    .m-hero-cta-bottom {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        margin: clamp(28px, 4svh, 48px) 24px 0 !important;
+        margin-top: auto !important;  /* pusht Button an Hero-Boden */
+        padding: 0 !important;
+    }
+    .m-hero-cta-bottom .btn.m-hero-primary {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: auto !important;
+        max-width: none !important;
+        padding: 12px 26px !important;
+        min-height: 42px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.005em !important;
+        border-radius: 999px !important;
+        text-align: center !important;
+        text-decoration: none !important;
+    }
+}
+
+/* Edge-Case iPhone SE (max-height: 700px) — Skala fuer 375px-Width tighter */
+@media (max-height: 700px) {
+    .hero-with-photo {
+        padding: 88px 16px 16px !important;
+    }
+    .hero-headline {
+        font-size: 26px !important;
+        line-height: 1.08 !important;
+        margin: 0 16px !important;
+        letter-spacing: -0.025em !important;
+    }
+    .hero-h1-line.m-hero-accent {
+        font-size: 16px !important;
+        margin-top: 8px !important;
+    }
+    .hero-with-photo .subhead,
+    .hero-with-photo h1 + .subhead {
+        font-size: 13px !important;
+        margin-top: 12px !important;
+        padding: 0 16px !important;
+    }
+    .m-hero-trust-list {
+        margin: 18px 16px 0 !important;
+        gap: 10px !important;
+    }
+    .m-hero-trust-num { font-size: 14px !important; min-width: 36px !important; }
+    .m-hero-trust-body strong { font-size: 14px !important; }
+    .m-hero-trust-body small { display: none !important; }
+    .m-hero-cta-bottom {
+        margin: 18px 16px 0 !important;
+        margin-top: auto !important;
+        margin-bottom: 0 !important;
+    }
+    .m-hero-cta-bottom .btn.m-hero-primary {
+        padding: 11px 22px !important;
+        min-height: 40px !important;
+        font-size: 13px !important;
+    }
+}
