@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=103">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=104">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -177,6 +177,98 @@ function injectHeroEyebrowStagger(html) {
         /<p class="hero-folio-eyebrow">/,
         '<p class="hero-folio-eyebrow m-hero-stagger" style="--m-delay:0ms">'
     );
+}
+
+function compactHeroEyebrow(html) {
+    // Sprint 104 — Eyebrow auf 1 Zeile fuer iPhone 14 (390px): "Frühjahr 2026" → "2026",
+    // "Webdesign-Manufaktur" → "Manufaktur". Resultat: "Nº 01 · MANUFAKTUR · 2026"
+    return html
+        .replace(/Frühjahr\s+2026/gi, '2026')
+        .replace(/Webdesign-Manufaktur/gi, 'Manufaktur');
+}
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 104 — Hero-Demo-Card (Apple iPhone-Page-Pattern)
+// Browser-Chrome + Mockup, Auto-Rotation alle 4s zwischen 3 Branchen.
+// Tap = scroll to demo-swiper-section.
+// ────────────────────────────────────────────────────────────────
+
+const HERO_DEMO_SPOT_HTML = `
+<!-- Sprint 104 — Hero-Demo-Card-Spot (iPhone-Page-Pattern, auto-margin pusht an Hero-Boden) -->
+<div class="m-hero-demo-spot" data-m-hero-demo-spot aria-label="Mini-Demo Branchen-Vorschau">
+    <button type="button" class="m-hero-demo-card" data-m-hero-demo-click aria-label="Live-Demos ansehen">
+        <div class="m-hero-bf">
+            <div class="m-hero-bf-chrome">
+                <div class="m-bf-dots">
+                    <span class="m-bf-dot m-bf-dot--red"></span>
+                    <span class="m-bf-dot m-bf-dot--yellow"></span>
+                    <span class="m-bf-dot m-bf-dot--green"></span>
+                </div>
+                <div class="m-bf-url">
+                    <span class="m-bf-domain" data-m-hero-demo-domain>stadtmakler-stuttgart.de</span>
+                </div>
+            </div>
+            <div class="m-bf-canvas" data-m-hero-demo-canvas>
+                <picture>
+                    <source type="image/webp" srcset="/images/mockups-opt/immobilien-stadtmakler-mockup-480.webp" data-m-hero-demo-webp>
+                    <img src="/images/mockups-opt/immobilien-stadtmakler-mockup-800.jpg" data-m-hero-demo-img alt="Demo-Mockup" loading="eager" decoding="async" fetchpriority="high" width="800" height="500">
+                </picture>
+            </div>
+        </div>
+        <span class="m-hero-demo-hint" aria-hidden="true">Tippen für Live-Vorschau</span>
+    </button>
+</div>
+<script>
+(function () {
+    var domainEl = document.querySelector('[data-m-hero-demo-domain]');
+    var webpEl   = document.querySelector('[data-m-hero-demo-webp]');
+    var imgEl    = document.querySelector('[data-m-hero-demo-img]');
+    var canvas   = document.querySelector('[data-m-hero-demo-canvas]');
+    var card     = document.querySelector('[data-m-hero-demo-click]');
+    if (!card || !canvas) return;
+
+    var rotation = [
+        { slug: 'immobilien-stadtmakler', domain: 'stadtmakler-stuttgart.de' },
+        { slug: 'praxis-weber',           domain: 'praxis-weber.de' },
+        { slug: 'friseur-mueller',        domain: 'salon-mueller.de' }
+    ];
+    var idx = 0;
+
+    var rmq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    var reducedMotion = rmq && rmq.matches;
+
+    if (!reducedMotion) {
+        setInterval(function () {
+            idx = (idx + 1) % rotation.length;
+            var next = rotation[idx];
+            canvas.style.opacity = '0';
+            setTimeout(function () {
+                if (domainEl) domainEl.textContent = next.domain;
+                if (webpEl)   webpEl.srcset = '/images/mockups-opt/' + next.slug + '-mockup-480.webp';
+                if (imgEl)    imgEl.src    = '/images/mockups-opt/' + next.slug + '-mockup-800.jpg';
+                canvas.style.opacity = '1';
+            }, 280);
+        }, 4000);
+    }
+
+    card.addEventListener('click', function () {
+        var demos = document.querySelector('#demos');
+        if (demos) demos.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+})();
+</script>
+`;
+
+function injectHeroDemoSpot(html) {
+    if (html.includes('m-hero-demo-card')) return html;
+    // Anker: nach Trust-List schließendem </ul> (rewriteHeroCta hat sie schon injiziert)
+    // Class kann mehrere Werte haben: "m-hero-trust-list m-hero-stagger" — daher [^"]*
+    const trustListEnd = /(<ul class="m-hero-trust-list[^"]*"[\s\S]*?<\/ul>)/;
+    if (!trustListEnd.test(html)) {
+        console.warn('  ⚠ m-hero-trust-list nicht gefunden — Hero-Demo-Spot nicht injiziert');
+        return html;
+    }
+    return html.replace(trustListEnd, '$1' + HERO_DEMO_SPOT_HTML);
 }
 
 // Sprint 103 — Editorial-Sektionen weiter gestrafft:
@@ -631,9 +723,13 @@ function buildPage(relPath) {
         // Sprint 92/95/96 — Hero-Headline + Eyebrow-Stagger
         html = rewriteHeroHeadline(html);
         html = injectHeroEyebrowStagger(html);
+        // Sprint 104 — Eyebrow auf 1 Zeile (Frühjahr 2026 → 2026, Webdesign-Manufaktur → Manufaktur)
+        html = compactHeroEyebrow(html);
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
+        // Sprint 104 — Hero-Demo-Card-Spot (Browser-Chrome + Auto-Rotation 3 Branchen)
+        html = injectHeroDemoSpot(html);
         // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper
         // Demo-Swiper muss zuerst injected werden, damit Personas davor landen können.
         html = injectDemoSwiper(html);

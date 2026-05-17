@@ -1400,7 +1400,7 @@
     }
 
     /* === 1 Bildschirm pro Sektion — Snap raus, aber min-height bleibt === */
-    .hero-with-photo,
+    /* Sprint 104 — .hero-with-photo bekommt eigenen Block mit flex-start für iPhone-Page-Pattern */
     .m-mag-specs,
     .m-mag-proof {
         min-height: 100svh !important;
@@ -1409,6 +1409,15 @@
         flex-direction: column !important;
         justify-content: center !important;
         padding: clamp(40px, 6svh, 80px) clamp(20px, 5vw, 32px) !important;
+        box-sizing: border-box !important;
+    }
+    .hero-with-photo {
+        min-height: 100svh !important;
+        scroll-snap-align: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        padding: clamp(48px, 7svh, 80px) clamp(20px, 5vw, 32px) clamp(24px, 4svh, 48px) !important;
         box-sizing: border-box !important;
     }
     /* Demo-Swiper: KEIN flex-center (broke 100vw-Slide-Rail) */
@@ -1475,12 +1484,17 @@
         background: #F5F5F7 !important;
     }
 
-    /* Hero-Inner-Grid auf 100% Hoehe ausnutzen */
+    /* Sprint 104 — Hero-Inner top-anchored, Card-Spot wird per margin-top:auto an Boden gedrückt */
     .hero-with-photo .hero-inner {
         flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
+    }
+    .hero-with-photo .hero-text-block {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
     }
 }
 
@@ -2091,4 +2105,134 @@
 
 /* Desktop default: Persona-Section unsichtbar */
 .m-mag-personas { display: none; }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 104 — Hero-Demo-Card (iPhone-Page-Pattern)
+   Text top-anchored, Card am Boden via margin-top:auto.
+   Browser-Chrome + Mockup, Auto-Rotation 3 Branchen alle 4s.
+   ════════════════════════════════════════════════════════════ */
+
+/* Desktop default: Hero-Demo-Spot unsichtbar */
+.m-hero-demo-spot { display: none; }
+
+@media (max-width: 1023px) {
+    .m-hero-demo-spot {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin: clamp(24px, 4svh, 48px) 0 0 !important;
+        padding: 0 !important;
+        /* Wichtig: auto-margin drueckt Spot an Hero-Boden */
+        margin-top: auto !important;
+    }
+
+    .m-hero-demo-card {
+        display: block !important;
+        width: 100% !important;
+        max-width: 360px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        cursor: pointer !important;
+        -webkit-tap-highlight-color: transparent !important;
+        transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1) !important;
+    }
+    .m-hero-demo-card:active { transform: scale(0.97) !important; }
+
+    .m-hero-bf {
+        background: #FFFFFF !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.04),
+            0 8px 28px rgba(0, 0, 0, 0.10) !important;
+        border: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+    }
+    .m-hero-bf-chrome {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 8px 10px !important;
+        background: linear-gradient(to bottom, #f6f6f8 0%, #ececef 100%) !important;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.08) !important;
+    }
+    .m-hero-bf-chrome .m-bf-dots {
+        display: flex !important;
+        gap: 5px !important;
+        flex-shrink: 0 !important;
+    }
+    .m-hero-bf-chrome .m-bf-dot {
+        width: 9px !important;
+        height: 9px !important;
+        border-radius: 50% !important;
+        display: block !important;
+    }
+    .m-hero-bf-chrome .m-bf-url {
+        flex: 1 !important;
+        background: #FFFFFF !important;
+        border-radius: 5px !important;
+        padding: 3px 8px !important;
+        min-height: 18px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.08) !important;
+        margin-right: 28px !important;
+    }
+    .m-hero-bf-chrome .m-bf-domain {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+        font-size: 10px !important;
+        color: #424245 !important;
+        letter-spacing: -0.005em !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    .m-hero-bf .m-bf-canvas {
+        aspect-ratio: 16 / 10 !important;
+        max-height: clamp(140px, 22svh, 220px) !important;
+        background: #F5F5F7 !important;
+        overflow: hidden !important;
+        transition: opacity 280ms ease-out !important;
+        position: relative !important;
+    }
+    .m-hero-bf .m-bf-canvas::after { content: none !important; }
+    .m-hero-bf .m-bf-canvas picture {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .m-hero-bf .m-bf-canvas img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: top center !important;
+        display: block !important;
+        filter: none !important;
+    }
+    .m-hero-demo-hint {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        opacity: 0.7 !important;
+        margin: 0 !important;
+    }
+}
+
+/* Edge-Case iPhone SE (kurz: <=700px Hoehe) — Card kompakter, Hint ausblenden */
+@media (max-height: 700px) {
+    .m-hero-bf .m-bf-canvas {
+        max-height: 130px !important;
+    }
+    .m-hero-demo-hint { display: none !important; }
+    .m-hero-demo-spot {
+        margin: clamp(16px, 2svh, 24px) 0 0 !important;
+        margin-top: auto !important;
+    }
+}
 

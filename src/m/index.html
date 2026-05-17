@@ -3011,7 +3011,7 @@
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=103">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=104">
 </head>
 <body>
 
@@ -3022,7 +3022,7 @@
 
     <nav>
         <div class="inner">
-            <a href="/" class="nav-logo" aria-label="Karriaro Webdesign-Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Webdesign-Manufaktur" width="316" height="46" style="display: block; height: 46px; width: auto;"></a>
+            <a href="/" class="nav-logo" aria-label="Karriaro Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Manufaktur" width="316" height="46" style="display: block; height: 46px; width: auto;"></a>
             <div class="links">
                 <a href="#faq">FAQ</a>
                 <a href="#preis">Preis</a>
@@ -3059,9 +3059,9 @@
                     <span class="dot">·</span>
                     <span>Karriaro</span>
                     <span class="dot">·</span>
-                    <span>Webdesign-Manufaktur</span>
+                    <span>Manufaktur</span>
                     <span class="dot">·</span>
-                    <span>Frühjahr 2026</span>
+                    <span>2026</span>
                 </p>
                 <h1 class="hero-headline"><span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Ihre Website.</span><span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Aus unserer Manufaktur.</span></h1>
                 <p class="subhead">
@@ -3069,6 +3069,70 @@
                 </p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a><ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:760ms"><li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li><li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li><li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li></ul>
+<!-- Sprint 104 — Hero-Demo-Card-Spot (iPhone-Page-Pattern, auto-margin pusht an Hero-Boden) -->
+<div class="m-hero-demo-spot" data-m-hero-demo-spot aria-label="Mini-Demo Branchen-Vorschau">
+    <button type="button" class="m-hero-demo-card" data-m-hero-demo-click aria-label="Live-Demos ansehen">
+        <div class="m-hero-bf">
+            <div class="m-hero-bf-chrome">
+                <div class="m-bf-dots">
+                    <span class="m-bf-dot m-bf-dot--red"></span>
+                    <span class="m-bf-dot m-bf-dot--yellow"></span>
+                    <span class="m-bf-dot m-bf-dot--green"></span>
+                </div>
+                <div class="m-bf-url">
+                    <span class="m-bf-domain" data-m-hero-demo-domain>stadtmakler-stuttgart.de</span>
+                </div>
+            </div>
+            <div class="m-bf-canvas" data-m-hero-demo-canvas>
+                <picture>
+                    <source type="image/webp" srcset="/images/mockups-opt/immobilien-stadtmakler-mockup-480.webp" data-m-hero-demo-webp>
+                    <img src="/images/mockups-opt/immobilien-stadtmakler-mockup-800.jpg" data-m-hero-demo-img alt="Demo-Mockup" loading="eager" decoding="async" fetchpriority="high" width="800" height="500">
+                </picture>
+            </div>
+        </div>
+        <span class="m-hero-demo-hint" aria-hidden="true">Tippen für Live-Vorschau</span>
+    </button>
+</div>
+<script>
+(function () {
+    var domainEl = document.querySelector('[data-m-hero-demo-domain]');
+    var webpEl   = document.querySelector('[data-m-hero-demo-webp]');
+    var imgEl    = document.querySelector('[data-m-hero-demo-img]');
+    var canvas   = document.querySelector('[data-m-hero-demo-canvas]');
+    var card     = document.querySelector('[data-m-hero-demo-click]');
+    if (!card || !canvas) return;
+
+    var rotation = [
+        { slug: 'immobilien-stadtmakler', domain: 'stadtmakler-stuttgart.de' },
+        { slug: 'praxis-weber',           domain: 'praxis-weber.de' },
+        { slug: 'friseur-mueller',        domain: 'salon-mueller.de' }
+    ];
+    var idx = 0;
+
+    var rmq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    var reducedMotion = rmq && rmq.matches;
+
+    if (!reducedMotion) {
+        setInterval(function () {
+            idx = (idx + 1) % rotation.length;
+            var next = rotation[idx];
+            canvas.style.opacity = '0';
+            setTimeout(function () {
+                if (domainEl) domainEl.textContent = next.domain;
+                if (webpEl)   webpEl.srcset = '/images/mockups-opt/' + next.slug + '-mockup-480.webp';
+                if (imgEl)    imgEl.src    = '/images/mockups-opt/' + next.slug + '-mockup-800.jpg';
+                canvas.style.opacity = '1';
+            }, 280);
+        }, 4000);
+    }
+
+    card.addEventListener('click', function () {
+        var demos = document.querySelector('#demos');
+        if (demos) demos.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+})();
+</script>
+
                 </div>
                 <a href="#audit" class="hero-audit-link" data-audit-bridge>
                     Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
@@ -4230,7 +4294,7 @@
                     <div class="kr-tier-wartung">
                         <label>
                             <input type="checkbox" class="kr-wartung-toggle" data-care="99" checked>
-                            <span class="kr-wartung-text"><strong>+ 99 €/Mt Care</strong> · Hosting · Backups · Quartals-Update</span>
+                            <span class="kr-wartung-text"><strong>+ 99 €/Mt Care</strong> · Hosting · Backups · Quartals-Update · <em>+15 €/Mt für Lighthouse Visitor-Cockpit zubuchbar</em></span>
                         </label>
                     </div>
                     <div class="kr-tier-cta">
@@ -4255,7 +4319,7 @@
                     <div class="kr-tier-wartung">
                         <label>
                             <input type="checkbox" class="kr-wartung-toggle" data-care="99" checked>
-                            <span class="kr-wartung-text"><strong>+ 99 €/Mt Care</strong> · Hosting · Backups · Quartals-Update</span>
+                            <span class="kr-wartung-text"><strong>+ 99 €/Mt Care</strong> · Hosting · Backups · Quartals-Update · <em>+15 €/Mt für Lighthouse Visitor-Cockpit zubuchbar</em></span>
                         </label>
                     </div>
                     <div class="kr-tier-cta">
@@ -4518,8 +4582,8 @@
         <div class="wrap">
             <div class="footer-kontakt-row">
                 <div class="footer-kontakt-brand">
-                    <p class="footer-kontakt-eyebrow">Karriaro · Webdesign-Manufaktur</p>
-                    <p class="footer-kontakt-tagline">Webdesign-Manufaktur aus Deutschland.<br><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr> · DSGVO · Hosting in DE/EU · Deutsches Vertragsrecht.</p>
+                    <p class="footer-kontakt-eyebrow">Karriaro · Manufaktur</p>
+                    <p class="footer-kontakt-tagline">Manufaktur aus Deutschland.<br><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr> · DSGVO · Hosting in DE/EU · Deutsches Vertragsrecht.</p>
                 </div>
                 <div class="footer-kontakt-list">
                     <a href="tel:+491742796784" class="footer-kontakt-link">
