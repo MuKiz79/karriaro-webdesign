@@ -1,0 +1,309 @@
+/* ============================================================
+   Karriaro Mobile-Overrides (Sprint 91)
+
+   Wird NUR auf m.karriaro-webdesign.de geladen, via dem
+   Build-Generator scripts/build-mobile-pages.mjs in den
+   generierten /m/*.html-Pages eingehaengt.
+
+   Greift unter 1024px (Kablan-Pattern, gleicher Breakpoint).
+
+   Prinzip: Desktop-HTML bleibt unangetastet, nur Layout-
+   Anpassungen via Selektoren auf bestehende Klassen.
+   Inhalt + Brand-Look (Fraunces, Indigo, Cream) bleiben.
+   ============================================================ */
+
+@media (max-width: 1023px) {
+
+    /* === Reset für Mobile-Safety === */
+    html, body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    body {
+        /* Platz fuer Sticky-CTA-Bar reservieren auf Pages die sie haben */
+        padding-bottom: 0;
+    }
+    body:has(.m-sticky-cta-bar) {
+        padding-bottom: 72px;
+    }
+    img, video, iframe {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* === Top-Bar (kr-topbar) — kompakter === */
+    .kr-topbar {
+        font-size: 11px !important;
+    }
+    .kr-topbar-hours { display: none !important; }
+
+    /* === Hauptnav: Hamburger schon ab 1024px statt 640px === */
+    nav .inner {
+        padding: 0 16px !important;
+        height: 64px !important;
+    }
+    nav .links {
+        display: none !important;
+    }
+    nav .cta {
+        display: none !important; /* CTA wandert in Sticky-CTA-Bar bzw. Mobile-Menu */
+    }
+    nav .menu-toggle {
+        display: block !important;
+        min-height: 44px !important;
+        min-width: 44px !important;
+        padding: 12px !important;
+    }
+    nav .menu-toggle span {
+        width: 22px !important;
+        height: 2px !important;
+        margin: 5px 0 !important;
+    }
+    .mobile-menu {
+        top: 64px !important;
+        padding: 32px 24px !important;
+    }
+    .mobile-menu.open {
+        gap: 24px !important;
+    }
+    .mobile-menu a {
+        font-size: 20px !important;
+        font-weight: 500 !important;
+        padding: 8px 0 !important;
+        min-height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* === Section-Padding reduziert === */
+    section {
+        padding: 80px 0 !important;
+    }
+
+    /* === Typography Mobile-Tuning === */
+    h1 {
+        font-size: clamp(34px, 9vw, 48px) !important;
+        line-height: 1.08 !important;
+    }
+    h2 {
+        font-size: clamp(28px, 7vw, 38px) !important;
+        line-height: 1.1 !important;
+    }
+    h3 {
+        font-size: clamp(20px, 5vw, 26px) !important;
+    }
+    .subhead {
+        font-size: 17px !important;
+        margin-top: 20px !important;
+    }
+
+    /* === Wrap-Container: Padding reduziert === */
+    .wrap, .wrap-sm, .wrap-xs {
+        padding: 0 20px !important;
+    }
+
+    /* === Touch-Targets >= 44px (WCAG) === */
+    .btn, .btn-outline, .btn-primary-on-dark, .submit-btn {
+        min-height: 48px !important;
+        padding: 14px 24px !important;
+        font-size: 16px !important;
+        box-sizing: border-box !important;
+    }
+    .btn {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    input[type="text"], input[type="email"], input[type="url"], input[type="tel"],
+    textarea, select {
+        min-height: 48px !important;
+        font-size: 16px !important; /* kein iOS-Zoom bei Focus */
+        padding: 14px 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* === Grids stacken === */
+    .grid-3, .grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .kr-pricing-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .price-card, .price-card-active {
+        padding: 24px !important;
+        border-radius: 16px !important;
+    }
+    #audit-cards {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    .kr-tools-grid,
+    .kr-tools-stage-grid,
+    .kr-tool-embed-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    /* === Card-Variants generisch eindampfen === */
+    .preview-card {
+        border-radius: 12px !important;
+    }
+    .preview-card-content {
+        padding: 16px !important;
+    }
+    .preview-card-title {
+        font-size: 16px !important;
+    }
+
+    /* === Footer Kontakt — min-width raus === */
+    .footer-kontakt-link,
+    .footer-contact-link,
+    .footer-spalte {
+        min-width: auto !important;
+        width: 100% !important;
+    }
+
+    /* === Floating CTA verstecken (kollidiert mit Sticky-Bar) === */
+    .kr-cta-float,
+    .floating-cta,
+    .scroll-top,
+    .scroll-to-top {
+        display: none !important;
+    }
+
+    /* === Branche-Switcher / Tools-Tabs scrollbar === */
+    .kr-tools-tabs,
+    .branche-switcher-tabs,
+    .kr-tabs-row {
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+        flex-wrap: nowrap !important;
+        padding-bottom: 8px !important;
+    }
+    .kr-tools-tabs::-webkit-scrollbar,
+    .branche-switcher-tabs::-webkit-scrollbar,
+    .kr-tabs-row::-webkit-scrollbar {
+        display: none;
+    }
+    .kr-tools-tab,
+    .branche-switcher-tab {
+        flex: 0 0 auto !important;
+        min-height: 44px !important;
+    }
+
+    /* === Hero-Mockup / Browser-Frame — keine fixed widths === */
+    .hero-mockup,
+    .hero-mockup-frame,
+    .browser-mockup,
+    .kr-hero-mockup {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .hero-mockup img,
+    .hero-mockup-img {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* === Schemata / SVG / Diagrams === */
+    svg {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* === Table-Container scrollbar (z.B. Vergleichs-Tabellen) === */
+    .table-scroll,
+    .kr-table-scroll {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    /* === Pre / Code Blocks scrollbar === */
+    pre, code, .code-block {
+        overflow-x: auto !important;
+        max-width: 100% !important;
+        word-wrap: break-word !important;
+    }
+
+    /* === FAQ Details — mehr Padding für Touch === */
+    details summary,
+    .kr-faq summary,
+    .faq-item summary {
+        min-height: 48px !important;
+        padding: 16px !important;
+        font-size: 16px !important;
+    }
+
+    /* === Editorial-Polish entschaerfen auf Mobile === */
+    /* Pull-Quotes etc. nicht ueber Container hinaus */
+    blockquote, .pull-quote {
+        margin: 24px 0 !important;
+        padding: 20px !important;
+        font-size: 18px !important;
+    }
+
+}
+
+/* === Sticky-CTA-Bar (vom Generator injiziert auf verkaufenden Pages) === */
+/* Diese Klasse wird IMMER geladen (auch ohne Media-Query), aber nur sichtbar < 1024px */
+.m-sticky-cta-bar {
+    display: none;
+}
+@media (max-width: 1023px) {
+    .m-sticky-cta-bar {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 95;
+        background: rgba(255, 255, 255, 0.97);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        backdrop-filter: saturate(180%) blur(20px);
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+        gap: 8px;
+        align-items: stretch;
+    }
+    .m-sticky-cta {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background: var(--color-indigo, #1A2E40);
+        color: #fff !important;
+        font-family: var(--font-body, "Inter", system-ui, sans-serif);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 12px 14px;
+        border-radius: 999px;
+        min-height: 44px;
+        line-height: 1.2;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .m-sticky-cta:active {
+        background: var(--color-indigo-deep, #0F1F2E);
+    }
+    .m-sticky-cta--secondary {
+        background: transparent;
+        color: var(--color-indigo, #1A2E40) !important;
+        border: 1.5px solid var(--color-indigo, #1A2E40);
+    }
+    .m-sticky-cta--secondary:active {
+        background: rgba(26, 46, 64, 0.06);
+    }
+}
+
+/* === noch eine Layer für sehr kleine Geräte (< 380px iPhone SE & ältere) === */
+@media (max-width: 379px) {
+    nav .inner { padding: 0 12px !important; }
+    .wrap, .wrap-sm, .wrap-xs { padding: 0 16px !important; }
+    h1 { font-size: 30px !important; }
+    h2 { font-size: 24px !important; }
+    .price-card, .price-card-active { padding: 20px !important; }
+    .m-sticky-cta { font-size: 13px !important; padding: 10px 10px !important; }
+}

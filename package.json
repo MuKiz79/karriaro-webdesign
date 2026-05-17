@@ -8,6 +8,7 @@
     "copy": "cp -r src/*.html dist/ && cp -r src/blog dist/ && cp -r src/portfolio dist/ && cp -r src/images dist/ && cp src/robots.txt dist/ && cp src/sitemap.xml dist/ && cp src/llms.txt dist/ && cp -r assets dist/ 2>/dev/null || true",
     "preview": "npx serve dist",
     "clean": "rm -rf dist && mkdir -p dist",
+    "build:mobile": "node scripts/build-mobile-pages.mjs",
     "smoke": "node scripts/smoke-playwright.mjs",
     "smoke:quick": "node scripts/smoke-playwright.mjs --quick",
     "test:audit": "node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js",
