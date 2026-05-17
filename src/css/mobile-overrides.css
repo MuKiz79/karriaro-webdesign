@@ -1100,3 +1100,124 @@
         transition: transform 80ms ease-out, background 80ms ease-out;
     }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 97 — Apple-Polish-Layer
+   Kuehlere Background (#F5F5F7), Gold radikal reduziert (nur 1
+   Stelle), Eyebrows SF Pro Caps statt JetBrains-Mono, Stempel
+   dezenter, Schatten kuehler. Fraunces bleibt fuer Display.
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+
+    /* Apple-Light-Background statt warmes Cream */
+    body {
+        background-color: #F5F5F7 !important;
+    }
+    /* Sections die im Desktop einen warmen Bg haben, werden auf Mobile kuehler */
+    section[style*="--color-cream-soft"],
+    section[style*="--color-bone"],
+    section[style*="background"] {
+        background-color: #FFFFFF !important;
+    }
+
+    /* Eyebrows: SF Pro Caps statt JetBrains-Mono */
+    .hero-folio-eyebrow,
+    .m-hero-trust-eyebrow,
+    .m-hero-tools-eyebrow,
+    .m-hero-spec-label,
+    .m-hero-cta-meta,
+    .m-demo-swiper-section-eyebrow,
+    .m-demo-swiper-eyebrow,
+    .m-demo-swiper-section-hint,
+    .m-demo-sheet-eyebrow,
+    .eyebrow,
+    .kr-eyebrow,
+    [class*="-eyebrow"] {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif !important;
+        font-weight: 500 !important;
+    }
+
+    /* Gold radikal reduziert — bleibt NUR auf Hero-Italic-Subline */
+    .m-hero-trust-eyebrow,
+    .m-hero-tools-eyebrow {
+        color: var(--color-graphite-soft, #6e6e73) !important;
+    }
+    /* Tools-Liste ohne Italic-Fraunces (Apple ist Sans-Roman) */
+    .m-hero-tools-list {
+        font-style: normal !important;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif !important;
+        font-size: 14px !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        line-height: 1.55 !important;
+    }
+
+    /* Brand-Stempel [K] dezenter — duenn-grau statt Gold */
+    section h2::before {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif !important;
+        font-size: 10px !important;
+        font-weight: 500 !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        opacity: 0.4 !important;
+        letter-spacing: 0.16em !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Headlines tighter tracking (Apple-Detail) */
+    .hero-headline {
+        letter-spacing: -0.035em !important;
+    }
+    section h2 {
+        letter-spacing: -0.025em !important;
+    }
+
+    /* Schatten kuehler + weicher */
+    .m-bf {
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.04),
+            0 8px 32px rgba(0, 0, 0, 0.06) !important;
+        border: 0.5px solid rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Touch-Feedback subtiler (0.97 -> 0.985) */
+    .btn:active,
+    .submit-btn:active,
+    .m-sticky-cta:active,
+    .m-demo-swiper-card:active,
+    .m-demo-link:active,
+    .kr-tools-tab:active,
+    .m-demo-sheet-close:active {
+        transform: scale(0.985) !important;
+        transition: transform 80ms ease-out, background 80ms ease-out !important;
+    }
+
+    /* Sticky-CTA-Bar kuehler */
+    .m-sticky-cta-bar {
+        background: rgba(245, 245, 247, 0.95) !important;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Demo-Swiper-Background kuehler */
+    .m-bf-canvas {
+        background: #F5F5F7 !important;
+    }
+
+    /* Demo-Sheet kuehler */
+    .m-demo-sheet-body {
+        background: #FFFFFF !important;
+    }
+
+    /* Specs-Borders duenner und kuehler */
+    .m-hero-specs {
+        border-top-color: rgba(0, 0, 0, 0.08) !important;
+        border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+    }
+    .m-hero-specs li {
+        border-left-color: rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Section-Padding etwas grosszuegiger (Apple liebt Whitespace) */
+    section {
+        padding: 96px 0 !important;
+    }
+}

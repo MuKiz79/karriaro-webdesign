@@ -247,14 +247,16 @@ function injectScrollAnimations(html) {
     return html.slice(0, closeBodyIdx) + SCROLL_ANIMATIONS_SCRIPT + html.slice(closeBodyIdx);
 }
 
-// Sprint 93 — Premium-Manufaktur-Demos
+// Sprint 93/97 — Premium-Manufaktur-Demos
+// Reihenfolge wie Desktop-Branche-Switcher (src/index.html:3113-3120):
+// Immobilien → Coaching → Praxis → Friseur → Dachdecker → Gastronomie → Logistik
 // Pro Branche: slug, eyebrow, title, domain (für Browser-URL-Bar), href (Demo-Page).
 const DEMO_SWIPER_SLIDES = [
     ['immobilien-stadtmakler', 'Immobilien · Premium-Paket', 'Stadtmakler Stuttgart', 'stadtmakler-stuttgart.de', '/portfolio/immobilien-makler.html'],
-    ['dachdecker-meister', 'Handwerk · Professional', 'Dachdecker-Meister', 'dachdecker-meisterbetrieb.de', '/portfolio/dachdecker-meisterbetrieb.html'],
+    ['coaching-lehmann', 'Coaching · Essential', 'Lehmann Beratung', 'lehmann-beratung.de', '/portfolio/coaching-lehmann.html'],
     ['praxis-weber', 'Praxis · Professional', 'Dr. Weber', 'praxis-weber.de', '/portfolio/praxis-weber.html'],
     ['friseur-mueller', 'Beauty · Essential', 'Salon Müller', 'salon-mueller.de', '/portfolio/friseur-salon.html'],
-    ['coaching-lehmann', 'Coaching · Essential', 'Lehmann Beratung', 'lehmann-beratung.de', '/portfolio/coaching-lehmann.html'],
+    ['dachdecker-meister', 'Handwerk · Professional', 'Dachdecker-Meister', 'dachdecker-meisterbetrieb.de', '/portfolio/dachdecker-meisterbetrieb.html'],
     ['gastro-hirsch', 'Gastronomie · Professional', 'Hirsch', 'gasthof-hirsch.de', '/portfolio/restaurant-template.html'],
     ['logistik-schwaben', 'Spedition · Premium', 'Schwaben Logistik', 'schwaben-logistik.de', '/portfolio/spedition-schwaben.html'],
 ];
