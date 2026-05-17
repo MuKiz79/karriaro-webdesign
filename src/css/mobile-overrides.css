@@ -1384,3 +1384,92 @@
         margin: 24px 0 0;
     }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Sprint 99 — Snap-Scroll + 100dvh + Monochrom-Alternierung
+   1 Bildschirm pro Sektion, Apple iPhone-Page-Pattern.
+   Proximity-Snap (sanft, nicht aufdringlich).
+   Backgrounds alternieren Weiss / Apple-Grey.
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1023px) {
+
+    /* Snap-Scroll auf Root */
+    html {
+        scroll-snap-type: y proximity;
+        scroll-behavior: smooth;
+    }
+
+    /* Body weiss als Basis */
+    body {
+        background: #FFFFFF !important;
+    }
+
+    /* === 1 Bildschirm pro Sektion (5 Magazin-Sektionen) === */
+    .hero-with-photo,
+    .m-mag-specs,
+    .m-mag-proof,
+    .m-demo-swiper-mobile {
+        min-height: 100dvh !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 80px 24px !important;
+        box-sizing: border-box !important;
+    }
+    /* Werkzeuge: 7 Items koennen lang werden — start-align statt center */
+    .m-mag-tools {
+        min-height: 100dvh !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        padding: 80px 24px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* === Monochrom alternierend Weiss / Apple-Grey === */
+    .hero-with-photo            { background: #FFFFFF !important; }
+    .m-mag-specs                { background: #F5F5F7 !important; }
+    .m-mag-tools                { background: #FFFFFF !important; }
+    .m-mag-proof                { background: #F5F5F7 !important; }
+    .m-demo-swiper-mobile       { background: #FFFFFF !important; }
+
+    /* Border-Top entfaellt — Background-Wechsel = visuelle Trennung */
+    .m-mag-specs,
+    .m-mag-tools,
+    .m-mag-proof,
+    .m-demo-swiper-mobile {
+        border-top: 0 !important;
+    }
+
+    /* Mockup-Bilder kuehler tonalisieren (statt JPGs neu zu generieren) */
+    .m-bf-img {
+        filter: saturate(0.94) brightness(1.01) !important;
+    }
+    .m-bf-canvas {
+        background: #F5F5F7 !important;
+    }
+
+    /* Hero-Inner-Grid auf 100% Hoehe ausnutzen */
+    .hero-with-photo .hero-inner {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+    }
+}
+
+/* Sehr kleine Geraete (iPhone SE) — etwas weniger Padding fuer mehr Inhaltsplatz */
+@media (max-width: 379px) {
+    .hero-with-photo,
+    .m-mag-specs,
+    .m-mag-tools,
+    .m-mag-proof,
+    .m-demo-swiper-mobile {
+        padding: 64px 16px !important;
+    }
+}
