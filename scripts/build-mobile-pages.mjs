@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=112">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=113">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -189,6 +189,13 @@ function rewriteHeroCta(html) {
                 '<span class="m-hero-trust-body">' +
                     '<strong>KI-Automation</strong>' +
                     '<small>Mails, Follow-ups, Anfragen-Routing.</small>' +
+                '</span>' +
+            '</li>' +
+            '<li>' +
+                '<span class="m-hero-trust-num">◎</span>' +
+                '<span class="m-hero-trust-body">' +
+                    '<strong>KI-Auffindbarkeit</strong>' +
+                    '<small>SEO, GEO, AEO, LLMO, llms.txt, Schema.org.</small>' +
                 '</span>' +
             '</li>' +
         '</ul>' +
