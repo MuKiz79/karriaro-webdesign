@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=104">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=105">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -139,12 +139,13 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 102 — Rollback auf "Ihre Website. Aus unserer Manufaktur." (User-Wunsch)
+    // Sprint 105 — Brand-Manifest-Headline (Apple-Watch-Pattern, Brand-Story als Anker)
+    // Das Manifest ist schon Site-weit etabliert (Footer + Pull-Quote in src/index.html)
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Ihre Website.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Aus unserer Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Wenn Ihr Name draufsteht,</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">steht unserer dahinter.</span>' +
         '</h1>'
     );
 }
@@ -158,15 +159,36 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 103 — Hero-Kompaktierung: nur Button + 3-Bullet-Trust-Liste.
-    // Meta-Line + Mini-Specs raus damit Hero in 100svh auf iPhone SE (667px) passt.
+    // Sprint 105 — Dual-CTA (Erstgespraech + Performance-Check) + 3 Power-USPs
+    // Power-USPs: 100+ Branchen-Funktionen / Lead-Cockpit Lighthouse / KI-Automation-Workflows
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a>' +
-        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:760ms">' +
-            '<li><span class="m-hero-trust-check">✓</span>0 Templates — alles handcodiert</li>' +
-            '<li><span class="m-hero-trust-check">✓</span>SEO + GEO für KI-Suchen</li>' +
-            '<li><span class="m-hero-trust-check">✓</span>100+ Branchen-Funktionen wie BAFA-Rechner, Wertermittlung, Frachtquote</li>' +
+        '<div class="m-hero-cta-stack m-hero-stagger" style="--m-delay:640ms">' +
+            '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a>' +
+            '<a href="/audit.html" class="m-hero-secondary">Performance-Check →</a>' +
+        '</div>' +
+        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:880ms">' +
+            '<li>' +
+                '<span class="m-hero-trust-num">100+</span>' +
+                '<span class="m-hero-trust-body">' +
+                    '<strong>Einzigartige Branchen-Funktionen</strong>' +
+                    '<small>Wertermittlung · BAFA-Rechner · Symptom-Checker · Style-Galerie · …</small>' +
+                '</span>' +
+            '</li>' +
+            '<li>' +
+                '<span class="m-hero-trust-num">[K]</span>' +
+                '<span class="m-hero-trust-body">' +
+                    '<strong>Lead-Cockpit Lighthouse</strong>' +
+                    '<small>Sie sehen wer Ihre Seite besucht. KI leitet daraus Ihre Strategie ab.</small>' +
+                '</span>' +
+            '</li>' +
+            '<li>' +
+                '<span class="m-hero-trust-num">⤳</span>' +
+                '<span class="m-hero-trust-body">' +
+                    '<strong>Automation-Workflows mit KI</strong>' +
+                    '<small>Emails, Follow-ups, Anfragen-Routing — laufen von selbst.</small>' +
+                '</span>' +
+            '</li>' +
         '</ul>'
     );
 }
@@ -269,6 +291,42 @@ function injectHeroDemoSpot(html) {
         return html;
     }
     return html.replace(trustListEnd, '$1' + HERO_DEMO_SPOT_HTML);
+}
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 105 — Manufaktursiegel-Hero-Visual (Apple Watch-Page-Pattern)
+// Ersetzt Sprint-104 Auto-Rotation-Demo-Card. Statisches Brand-Anker
+// am Hero-Boden + Performance-Stats-Strip darunter.
+// ────────────────────────────────────────────────────────────────
+
+const HERO_SIEGEL_HTML = `
+<!-- Sprint 105 — Manufaktursiegel-Visual am Hero-Boden (Brand-Anker + Performance-Stats) -->
+<div class="m-hero-siegel-visual" data-m-hero-siegel aria-label="Karriaro Manufaktursiegel">
+    <div class="m-hero-siegel-frame">
+        <span class="m-hero-siegel-corner m-hero-siegel-corner--tl" aria-hidden="true">⌐</span>
+        <span class="m-hero-siegel-corner m-hero-siegel-corner--tr" aria-hidden="true">¬</span>
+        <span class="m-hero-siegel-mark">[K]</span>
+        <span class="m-hero-siegel-corner m-hero-siegel-corner--bl" aria-hidden="true">⌊</span>
+        <span class="m-hero-siegel-corner m-hero-siegel-corner--br" aria-hidden="true">⌋</span>
+    </div>
+    <p class="m-hero-siegel-stats">
+        <span><strong>0,3 s</strong> Ladezeit</span>
+        <span class="m-hero-siegel-dot" aria-hidden="true">·</span>
+        <span><strong>BFSG</strong> + DSGVO</span>
+        <span class="m-hero-siegel-dot" aria-hidden="true">·</span>
+        <span>Schneller als <strong>95%</strong></span>
+    </p>
+</div>
+`;
+
+function injectHeroSiegelVisual(html) {
+    if (html.includes('m-hero-siegel-visual')) return html;
+    const trustListEnd = /(<ul class="m-hero-trust-list[^"]*"[\s\S]*?<\/ul>)/;
+    if (!trustListEnd.test(html)) {
+        console.warn('  ⚠ m-hero-trust-list nicht gefunden — Hero-Siegel-Visual nicht injiziert');
+        return html;
+    }
+    return html.replace(trustListEnd, '$1' + HERO_SIEGEL_HTML);
 }
 
 // Sprint 103 — Editorial-Sektionen weiter gestrafft:
@@ -728,8 +786,8 @@ function buildPage(relPath) {
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
-        // Sprint 104 — Hero-Demo-Card-Spot (Browser-Chrome + Auto-Rotation 3 Branchen)
-        html = injectHeroDemoSpot(html);
+        // Sprint 105 — Manufaktursiegel-Visual (ersetzt Sprint-104 Auto-Rotation-Card)
+        html = injectHeroSiegelVisual(html);
         // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper
         // Demo-Swiper muss zuerst injected werden, damit Personas davor landen können.
         html = injectDemoSwiper(html);
