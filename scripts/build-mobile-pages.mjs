@@ -124,45 +124,104 @@ function rewriteHeroHeadline(html) {
     );
 }
 
+// Sprint 93 — Premium-Manufaktur-Demos
+// Pro Branche: slug, eyebrow, title, domain (für Browser-URL-Bar), href (Demo-Page).
 const DEMO_SWIPER_SLIDES = [
-    ['immobilien-stadtmakler', 'Immobilien · Premium-Paket', 'Stadtmakler Stuttgart', '/portfolio/immobilien-makler.html'],
-    ['dachdecker-meister', 'Handwerk · Professional', 'Dachdecker-Meister', '/portfolio/dachdecker-meisterbetrieb.html'],
-    ['praxis-weber', 'Praxis · Professional', 'Dr. Weber', '/portfolio/praxis-weber.html'],
-    ['friseur-mueller', 'Beauty · Essential', 'Salon Müller', '/portfolio/friseur-salon.html'],
-    ['coaching-lehmann', 'Coaching · Essential', 'Lehmann Beratung', '/portfolio/coaching-lehmann.html'],
-    ['gastro-hirsch', 'Gastronomie · Professional', 'Hirsch', '/portfolio/restaurant-template.html'],
-    ['logistik-schwaben', 'Spedition · Premium', 'Schwaben Logistik', '/portfolio/spedition-schwaben.html'],
+    ['immobilien-stadtmakler', 'Immobilien · Premium-Paket', 'Stadtmakler Stuttgart', 'stadtmakler-stuttgart.de', '/portfolio/immobilien-makler.html'],
+    ['dachdecker-meister', 'Handwerk · Professional', 'Dachdecker-Meister', 'dachdecker-meisterbetrieb.de', '/portfolio/dachdecker-meisterbetrieb.html'],
+    ['praxis-weber', 'Praxis · Professional', 'Dr. Weber', 'praxis-weber.de', '/portfolio/praxis-weber.html'],
+    ['friseur-mueller', 'Beauty · Essential', 'Salon Müller', 'salon-mueller.de', '/portfolio/friseur-salon.html'],
+    ['coaching-lehmann', 'Coaching · Essential', 'Lehmann Beratung', 'lehmann-beratung.de', '/portfolio/coaching-lehmann.html'],
+    ['gastro-hirsch', 'Gastronomie · Professional', 'Hirsch', 'gasthof-hirsch.de', '/portfolio/restaurant-template.html'],
+    ['logistik-schwaben', 'Spedition · Premium', 'Schwaben Logistik', 'schwaben-logistik.de', '/portfolio/spedition-schwaben.html'],
 ];
 
-function buildDemoSwiperHtml() {
-    const slides = DEMO_SWIPER_SLIDES.map(([slug, eyebrow, title, href]) => `
-        <article class="m-demo-swiper-slide">
-            <a href="${href}">
-                <img class="m-demo-swiper-img" src="/images/${slug}-mockup.jpg" alt="${title} — Karriaro-Demo" loading="lazy" decoding="async">
-                <div class="m-demo-swiper-meta">
-                    <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
-                    <span class="m-demo-swiper-cta">Ansehen →</span>
+function buildBrowserChromeHtml(domain) {
+    // macOS-Safari-Style Chrome — 3 Dots links, URL-Bar zentriert mit Lock-Icon.
+    return `
+            <div class="m-bf-chrome">
+                <div class="m-bf-dots">
+                    <span class="m-bf-dot m-bf-dot--red"></span>
+                    <span class="m-bf-dot m-bf-dot--yellow"></span>
+                    <span class="m-bf-dot m-bf-dot--green"></span>
                 </div>
-                <h3 class="m-demo-swiper-title">${title}</h3>
-            </a>
+                <div class="m-bf-url">
+                    <svg class="m-bf-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                    <span class="m-bf-domain">${domain}</span>
+                </div>
+            </div>`;
+}
+
+function buildDemoSwiperHtml() {
+    const slides = DEMO_SWIPER_SLIDES.map(([slug, eyebrow, title, domain, href], i) => `
+        <article class="m-demo-swiper-slide">
+            <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
+                <div class="m-bf">${buildBrowserChromeHtml(domain)}
+                    <div class="m-bf-canvas">
+                        <img class="m-bf-img" src="/images/${slug}-mockup.jpg" alt="${title} — Karriaro-Demo" loading="${i === 0 ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${i === 0 ? 'high' : 'low'}">
+                    </div>
+                </div>
+            </button>
+            <div class="m-demo-swiper-meta">
+                <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
+                <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
+            </div>
+            <h3 class="m-demo-swiper-title">${title}</h3>
         </article>`).join('');
 
     return `
-<!-- Mobile Demo-Swiper (Sprint 92 generator-injected) -->
+<!-- Mobile Demo-Swiper (Sprint 93 — Browser-Frame + Sheet-Modal, kein Auto-Rotation) -->
 <section class="m-demo-swiper-mobile" aria-label="Branchen-Demos">
     <p class="m-demo-swiper-section-eyebrow">Sieben Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>sieben echte Demos.</h2>
+    <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
     </div>
     <div class="m-demo-swiper-dots" data-m-demo-dots aria-hidden="true"></div>
 </section>
+
+<!-- Live-Demo Sheet-Modal -->
+<div class="m-demo-sheet" data-m-demo-sheet aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="m-demo-sheet-title">
+    <div class="m-demo-sheet-backdrop" data-m-demo-sheet-close></div>
+    <div class="m-demo-sheet-panel">
+        <div class="m-demo-sheet-handle" aria-hidden="true"></div>
+        <header class="m-demo-sheet-head">
+            <div class="m-demo-sheet-head-text">
+                <p class="m-demo-sheet-eyebrow" data-m-demo-sheet-eyebrow>Live-Demo</p>
+                <h3 class="m-demo-sheet-title" id="m-demo-sheet-title" data-m-demo-sheet-title>Demo</h3>
+            </div>
+            <button type="button" class="m-demo-sheet-close" data-m-demo-sheet-close aria-label="Schließen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </header>
+        <div class="m-demo-sheet-body">
+            <div class="m-demo-sheet-loader" data-m-demo-sheet-loader>
+                <div class="m-demo-sheet-spinner" aria-hidden="true"></div>
+                <p>Demo wird geladen…</p>
+            </div>
+            <iframe class="m-demo-sheet-frame" data-m-demo-sheet-frame title="Live-Demo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <footer class="m-demo-sheet-foot">
+            <a class="m-demo-sheet-open-tab" data-m-demo-sheet-tab href="#" target="_blank" rel="noopener">In neuem Tab öffnen ↗</a>
+        </footer>
+    </div>
+</div>
+
 <script>
 (function () {
     var rail = document.querySelector('[data-m-demo-rail]');
     var dotsBox = document.querySelector('[data-m-demo-dots]');
-    if (!rail || !dotsBox) return;
+    var sheet = document.querySelector('[data-m-demo-sheet]');
+    var sheetFrame = document.querySelector('[data-m-demo-sheet-frame]');
+    var sheetLoader = document.querySelector('[data-m-demo-sheet-loader]');
+    var sheetTitle = document.querySelector('[data-m-demo-sheet-title]');
+    var sheetEyebrow = document.querySelector('[data-m-demo-sheet-eyebrow]');
+    var sheetTab = document.querySelector('[data-m-demo-sheet-tab]');
+    if (!rail || !dotsBox || !sheet) return;
     var slides = rail.querySelectorAll('.m-demo-swiper-slide');
     if (!slides.length) return;
+
+    // Dot-Indicator aufbauen
     slides.forEach(function (_, i) {
         var b = document.createElement('button');
         b.type = 'button';
@@ -172,40 +231,66 @@ function buildDemoSwiperHtml() {
         dotsBox.appendChild(b);
     });
     var dotEls = dotsBox.querySelectorAll('.m-demo-swiper-dot');
-    var idx = 0, paused = false, interval;
-    function go(n) {
-        idx = (n + slides.length) % slides.length;
-        slides[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-        dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === idx); });
-    }
-    function tick() { if (!paused) go(idx + 1); }
-    function start() { interval = setInterval(tick, 5000); }
-    function stop() { clearInterval(interval); }
-    rail.addEventListener('touchstart', function () { paused = true; stop(); }, { passive: true });
-    rail.addEventListener('mouseenter', function () { paused = true; stop(); });
+
+    // Active-Dot folgt natürlichem Swipe (kein Auto-Rotation, User-controlled)
     if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
                 if (e.isIntersecting && e.intersectionRatio > 0.6) {
                     var i = Array.prototype.indexOf.call(slides, e.target);
-                    if (i >= 0) { idx = i; dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); }); }
+                    if (i >= 0) dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
                 }
             });
         }, { root: rail, threshold: [0.6] });
         slides.forEach(function (s) { io.observe(s); });
-        // Pause when off-screen entirely
-        var sectionEl = document.querySelector('.m-demo-swiper-mobile');
-        if (sectionEl) {
-            var io2 = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                    if (!e.isIntersecting) { paused = true; stop(); }
-                    else if (!paused) { stop(); start(); }
-                });
-            }, { threshold: [0, 0.5] });
-            io2.observe(sectionEl);
-        }
     }
-    start();
+
+    // Sheet-Modal Open/Close
+    var lastFocus = null;
+    function openSheet(href, title, domain) {
+        lastFocus = document.activeElement;
+        if (sheetTitle) sheetTitle.textContent = title;
+        if (sheetEyebrow) sheetEyebrow.textContent = domain;
+        if (sheetTab) sheetTab.setAttribute('href', href);
+        if (sheetLoader) sheetLoader.classList.remove('is-hidden');
+        if (sheetFrame) {
+            sheetFrame.setAttribute('src', href);
+            sheetFrame.style.opacity = '0';
+        }
+        sheet.classList.add('is-open');
+        sheet.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSheet() {
+        sheet.classList.remove('is-open');
+        sheet.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (sheetFrame) {
+            sheetFrame.setAttribute('src', 'about:blank');
+            sheetFrame.style.opacity = '0';
+        }
+        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    }
+    if (sheetFrame) {
+        sheetFrame.addEventListener('load', function () {
+            if (sheetFrame.getAttribute('src') === 'about:blank') return;
+            if (sheetLoader) sheetLoader.classList.add('is-hidden');
+            sheetFrame.style.transition = 'opacity 240ms ease';
+            sheetFrame.style.opacity = '1';
+        });
+    }
+    document.querySelectorAll('[data-m-demo-open]').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+            e.preventDefault();
+            openSheet(el.getAttribute('data-m-demo-href'), el.getAttribute('data-m-demo-title'), el.getAttribute('data-m-demo-domain'));
+        });
+    });
+    document.querySelectorAll('[data-m-demo-sheet-close]').forEach(function (el) {
+        el.addEventListener('click', closeSheet);
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet();
+    });
 })();
 </script>
 `;
