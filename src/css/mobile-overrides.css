@@ -307,3 +307,284 @@
     .price-card, .price-card-active { padding: 20px !important; }
     .m-sticky-cta { font-size: 13px !important; padding: 10px 10px !important; }
 }
+
+/* ============================================================
+   Sprint 92 — Polish + Hero-Redesign + Demo-Swiper
+
+   1) Bug-Fixes: blaues Fragezeichen (.tool-info) + Werkzeuge
+      unleserlich (.kr-tool-panel)
+   2) Hero modern: Editorial-Eyebrow (vorhanden, nur Styling),
+      grosse Headline, "Aus unserer Design-Manufaktur" italic+gold
+   3) Demo-Swiper-Mobile: Full-bleed Auto-Rotation, ersetzt
+      Branche-Switcher unter 1024px
+   4) Editorial-Magazin-Polish: groessere H2, monospace-Eyebrows,
+      Pull-Quotes mit Linie, mehr Body-Line-Height
+   ============================================================ */
+
+@media (max-width: 1023px) {
+
+    /* === Bug 1: Blaues Fragezeichen weg === */
+    .tool-info,
+    .mockup-features .tool-info {
+        display: none !important;
+    }
+
+    /* === Bug 2: Werkzeug-Panels stacken vollstaendig === */
+    .kr-tool-panel,
+    .kr-tool-embed-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+    .kr-tools-stage {
+        padding: 24px 16px !important;
+    }
+    .kr-tool-embed-card,
+    .kr-tool-content,
+    .kr-tool-embed-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+    .kr-tools-tab {
+        min-height: 44px !important;
+        font-size: 13px !important;
+        white-space: nowrap !important;
+        padding: 10px 16px !important;
+    }
+
+    /* === Hero-Editorial-Polish === */
+    .hero-folio-eyebrow {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 10px !important;
+        letter-spacing: 0.16em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+        margin: 0 24px 28px !important;
+        line-height: 1.5 !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+    .hero-folio-eyebrow .dot { opacity: 0.5; }
+
+    .hero-with-photo {
+        padding: 80px 0 56px !important;
+    }
+    .hero-with-photo .hero-inner {
+        grid-template-columns: 1fr !important;
+        gap: 32px !important;
+        padding: 0 !important;
+    }
+    .hero-with-photo .hero-text-block {
+        text-align: left !important;
+        padding: 0 !important;
+    }
+    .hero-headline {
+        font-size: clamp(44px, 12vw, 64px) !important;
+        line-height: 1.02 !important;
+        letter-spacing: -0.028em !important;
+        margin: 0 24px !important;
+    }
+    .hero-h1-line { display: block !important; }
+    .hero-h1-line.m-hero-accent {
+        font-style: italic !important;
+        color: var(--color-gold, #8A7B5C) !important;
+        display: block !important;
+        margin-top: 6px !important;
+        line-height: 1.05 !important;
+    }
+    .hero-dropcap {
+        font-size: 1.25em !important;
+    }
+    .hero-with-photo .subhead,
+    .hero-with-photo h1 + .subhead {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+        margin: 28px 24px 0 !important;
+        text-align: left !important;
+        max-width: none !important;
+    }
+    .hero-with-photo .hero-cta-row {
+        margin: 28px 24px 0 !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        text-align: left !important;
+    }
+    .hero-with-photo .hero-cta-row .btn {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .hero-with-photo .hero-audit-link {
+        margin: 20px 24px 0 !important;
+        display: block !important;
+        text-align: left !important;
+    }
+    /* Hero-Mockup-Block: full-bleed Bild ohne Browser-Frame-Padding */
+    .hero-with-photo .hero-mockup-block {
+        margin: 32px 0 0 !important;
+        padding: 0 16px !important;
+    }
+    .hero-with-photo .browser-frame,
+    .hero-with-photo .browser-frame-large {
+        max-width: 100% !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+    }
+    /* Folio-Marker und Marginalia auf Mobile ausblenden — sind Desktop-Decoration */
+    .hero-with-photo .hero-folio-marker,
+    .hero-with-photo .marginalia { display: none !important; }
+
+    /* === Editorial-Magazin-Polish global === */
+    section h2 {
+        font-size: clamp(32px, 8vw, 44px) !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.022em !important;
+        margin-bottom: 20px !important;
+    }
+    .eyebrow,
+    .kr-eyebrow,
+    .section-eyebrow,
+    [class*="-eyebrow"] {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 11px !important;
+        letter-spacing: 0.15em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #6e6e73) !important;
+    }
+    blockquote,
+    .pull-quote {
+        border-left: 2px solid var(--color-indigo, #1A2E40) !important;
+        padding: 6px 0 6px 18px !important;
+        margin: 28px 0 !important;
+        font-family: "Fraunces", Georgia, serif !important;
+        font-size: 21px !important;
+        line-height: 1.3 !important;
+        font-style: italic !important;
+    }
+    p { line-height: 1.6 !important; }
+
+    /* === Demo-Swiper-Mobile: zeige neuen Swiper, verstecke Branche-Switcher === */
+    .branche-switcher-wrap,
+    #arbeiten .branche-switcher,
+    #arbeiten .mockup-wrap,
+    #arbeiten .branche-switcher-tabs,
+    .branche-switcher,
+    .mockup-wrap {
+        display: none !important;
+    }
+    .m-demo-swiper-mobile {
+        display: block !important;
+    }
+}
+
+/* === Defaults (Desktop): Mobile-only-Elemente unsichtbar === */
+.m-demo-swiper-mobile { display: none; }
+
+/* === Demo-Swiper-Mobile Innenleben === */
+.m-demo-swiper-mobile {
+    margin: 56px 0 72px;
+    padding: 0;
+}
+.m-demo-swiper-section-eyebrow {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-graphite-soft, #6e6e73);
+    margin: 0 24px 8px;
+}
+.m-demo-swiper-section-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(28px, 7vw, 38px);
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--color-indigo-strong, #061320);
+    margin: 0 24px 24px;
+    letter-spacing: -0.02em;
+}
+.m-demo-swiper-rail {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+.m-demo-swiper-rail::-webkit-scrollbar { display: none; }
+.m-demo-swiper-slide {
+    flex: 0 0 100vw;
+    width: 100vw;
+    max-width: 100vw;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+.m-demo-swiper-slide a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.m-demo-swiper-img {
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 12px;
+    display: block;
+    background: var(--color-cream-soft, #f5f3ee);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.m-demo-swiper-meta {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 14px 4px 0;
+    gap: 12px;
+}
+.m-demo-swiper-eyebrow {
+    font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-graphite-soft, #6e6e73);
+    line-height: 1.4;
+    flex: 1;
+}
+.m-demo-swiper-cta {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-indigo, #1A2E40);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.m-demo-swiper-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--color-indigo-strong, #061320);
+    margin: 6px 4px 0;
+    letter-spacing: -0.015em;
+}
+.m-demo-swiper-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px 0 0;
+}
+.m-demo-swiper-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-graphite-soft, #6e6e73);
+    opacity: 0.3;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 200ms, transform 200ms, background 200ms;
+}
+.m-demo-swiper-dot.is-active {
+    opacity: 1;
+    transform: scale(1.4);
+    background: var(--color-indigo, #1A2E40);
+}
