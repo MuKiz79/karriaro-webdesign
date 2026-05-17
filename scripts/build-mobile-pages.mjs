@@ -135,27 +135,33 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 95 — Statement-Hero "Manufaktur statt Massenware."
-    // Ersetzt komplette Headline mit Mega-Display-Statement.
-    // Stagger-Klassen mit CSS-Variable für Animation-Delays.
+    // Sprint 96 — Rollback auf "Ihre Website. Aus unserer Manufaktur."
+    // (User-Verdict: "Manufaktur statt Massenware" war zu radikal)
+    // Roman dominiert (Sprint 94-Hierarchie), Italic-Subline klein in Gold.
+    // Stagger-Delays für Fade-Up-Animation bleiben aus Sprint 95.
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
-        '<h1 class="hero-headline m-hero-statement">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur</span>' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">statt</span>' +
-        '<span class="hero-h1-line m-hero-stagger m-hero-accent" style="--m-delay:240ms">Massenware.</span>' +
+        '<h1 class="hero-headline">' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Ihre Website.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:240ms">Aus unserer Manufaktur.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 94/95 — Textklotz wird zu Specs + Trust-Block mit Stagger-Animation.
+    // Sprint 96 — Specs auf 4 Items (2x2-Grid) + Werkzeug-Liste-Block + Trust-Counter.
+    // 4. Spec macht Werkzeuge zum gleichberechtigten Verkaufsargument neben 24h/7-14T/1.290€.
     const specs = `<ul class="m-hero-specs m-hero-stagger" style="--m-delay:380ms" aria-label="Eckdaten">
                     <li><span class="m-hero-spec-num">24 h</span><span class="m-hero-spec-label">Erster Entwurf</span></li>
                     <li><span class="m-hero-spec-num">7–14 Tage</span><span class="m-hero-spec-label">Lieferzeit</span></li>
                     <li><span class="m-hero-spec-num">1.290 €</span><span class="m-hero-spec-label">einmalig, ab</span></li>
+                    <li><span class="m-hero-spec-num">7</span><span class="m-hero-spec-label">Live-Werkzeuge</span></li>
                 </ul>
-                <div class="m-hero-trust m-hero-stagger" style="--m-delay:500ms">
+                <div class="m-hero-tools m-hero-stagger" style="--m-delay:440ms">
+                    <p class="m-hero-tools-eyebrow">Eingebaut, nicht angeklebt</p>
+                    <p class="m-hero-tools-list">Wertermittlung · BAFA-Rechner · Symptom-Checker · Style-Galerie · Frachtquote · Coaching-Check · Reservierung</p>
+                </div>
+                <div class="m-hero-trust m-hero-stagger" style="--m-delay:520ms">
                     <p class="m-hero-trust-eyebrow">Beweis</p>
                     <p class="m-hero-trust-text">
                         <span class="m-hero-counter" data-target="10538">0</span> Zeilen Code,
@@ -173,7 +179,7 @@ function rewriteHeroCta(html) {
     // Sprint 94/95 — CTA-Text kürzen, Stagger-Delays.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:620ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:740ms">Antwort in 24 h</span>'
+        '<a href="#kontakt" class="btn m-hero-primary m-hero-stagger" style="--m-delay:640ms" data-kr-magnetic>Erstgespräch buchen</a><span class="m-hero-cta-meta m-hero-stagger" style="--m-delay:760ms">Antwort in 24 h</span>'
     );
 }
 
@@ -415,15 +421,15 @@ function buildDemoSwiperHtml() {
 
 function injectDemoSwiper(html) {
     if (html.includes('m-demo-swiper-mobile')) return html;
-    // Karriaro-Index hat <div id="arbeiten" class="branche-switcher-wrap"> als Anker.
-    // Wir injizieren den Mobile-Swiper direkt davor — CSS versteckt das Original
-    // unter 1024px und zeigt unseren Swiper.
-    const anchor = /<div id="arbeiten"/;
+    // Sprint 96 — Anker ist <section id="audit" (zwischen Hero und Audit-Sektion).
+    // Vorher: <div id="arbeiten"> — das lag INNERHALB hero-with-photo und brach das Layout.
+    // Jetzt: nach Hero-Schluss, vor Audit-Schluss. Saubere standalone-Section.
+    const anchor = /<section id="audit"/;
     if (!anchor.test(html)) {
-        console.warn('  ⚠ id="arbeiten" nicht gefunden — Demo-Swiper nicht injiziert');
+        console.warn('  ⚠ <section id="audit" nicht gefunden — Demo-Swiper nicht injiziert');
         return html;
     }
-    return html.replace(anchor, buildDemoSwiperHtml() + '\n<div id="arbeiten"');
+    return html.replace(anchor, buildDemoSwiperHtml() + '\n    <section id="audit"');
 }
 
 // ────────────────────────────────────────────────────────────────

@@ -311,9 +311,10 @@
     .m-sticky-cta-link:active { opacity: 0.6; }
 }
 
-/* Desktop default: Specs + CTA-Meta unsichtbar (sind nur Mobile-Inserts) */
+/* Desktop default: Specs + CTA-Meta + Tools unsichtbar (sind nur Mobile-Inserts) */
 .m-hero-specs,
-.m-hero-cta-meta {
+.m-hero-cta-meta,
+.m-hero-tools {
     display: none;
 }
 
@@ -406,24 +407,25 @@
         padding: 0 !important;
     }
 
-    /* Sprint 95 — Statement-Hero "Manufaktur statt Massenware." */
-    .hero-headline.m-hero-statement {
-        font-size: clamp(60px, 17vw, 110px) !important;
-        line-height: 0.92 !important;
-        letter-spacing: -0.04em !important;
-        margin: 8px 24px 0 !important;
+    /* Sprint 96 — Rollback auf "Ihre Website. Aus unserer Manufaktur."
+       Roman dominiert (Sprint-94-Hierarchie), Italic-Subline klein in Gold. */
+    .hero-headline {
+        font-size: clamp(48px, 13vw, 72px) !important;
+        line-height: 1.0 !important;
+        letter-spacing: -0.03em !important;
+        margin: 0 24px !important;
         font-weight: 500 !important;
     }
-    .m-hero-statement .hero-h1-line {
-        display: block !important;
-    }
-    .m-hero-statement .hero-h1-line.m-hero-accent {
+    .hero-h1-line { display: block !important; }
+    .hero-h1-line.m-hero-accent {
+        font-size: clamp(22px, 5.5vw, 30px) !important;
+        line-height: 1.22 !important;
         font-style: italic !important;
         color: var(--color-gold, #8A7B5C) !important;
-        font-size: inherit !important;
-        font-weight: 500 !important;
-        margin-top: 0 !important;
-        letter-spacing: -0.04em !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.012em !important;
+        margin-top: 18px !important;
+        display: block !important;
     }
     /* Drop-Cap weg auf Mobile — wirkt typografisch nicht */
     .hero-dropcap {
@@ -472,11 +474,12 @@
         display: none !important;
     }
 
-    /* === Editorial-Specs-Grid (ersetzt Subhead-Klotz) === */
+    /* === Editorial-Specs-Grid 2x2 (Sprint 96 — 4 Items mit 7 Werkzeuge) === */
     .m-hero-specs {
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
+        grid-template-columns: repeat(2, 1fr) !important;
+        column-gap: 0;
+        row-gap: 18px;
         margin: 36px 24px 0 !important;
         padding: 20px 0;
         border-top: 0.5px solid rgba(0, 0, 0, 0.14);
@@ -487,17 +490,21 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
-        padding: 0 10px;
+        padding: 0 16px;
         border-left: 0.5px solid rgba(0, 0, 0, 0.08);
         min-width: 0;
     }
-    .m-hero-specs li:first-child { padding-left: 0; border-left: 0; }
+    /* Links in der 1. Spalte (odd children) keinen Border-Left */
+    .m-hero-specs li:nth-child(odd) {
+        padding-left: 0;
+        border-left: 0;
+    }
     .m-hero-spec-num {
         font-family: "Fraunces", Georgia, serif;
-        font-size: clamp(15px, 4vw, 18px);
+        font-size: clamp(20px, 5.2vw, 24px);
         font-weight: 500;
         color: var(--color-indigo-strong, #061320);
-        letter-spacing: -0.015em;
+        letter-spacing: -0.018em;
         line-height: 1.05;
         white-space: nowrap;
         overflow: hidden;
@@ -505,11 +512,34 @@
     }
     .m-hero-spec-label {
         font-family: "JetBrains Mono", "SF Mono", monospace;
-        font-size: 9px;
+        font-size: 10px;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--color-graphite-soft, #6e6e73);
         line-height: 1.3;
+    }
+
+    /* === Werkzeug-Liste als Editorial-Statement (Sprint 96) === */
+    .m-hero-tools {
+        display: block !important;
+        margin: 24px 24px 0 !important;
+    }
+    .m-hero-tools-eyebrow {
+        font-family: "JetBrains Mono", "SF Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-gold, #8A7B5C);
+        margin: 0 0 8px;
+    }
+    .m-hero-tools-list {
+        font-family: "Fraunces", Georgia, serif;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--color-indigo-strong, #061320);
+        margin: 0;
+        font-style: italic;
+        letter-spacing: -0.005em;
     }
 
     /* CTA-Meta-Line unter Primary-Button */
