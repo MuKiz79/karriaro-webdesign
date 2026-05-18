@@ -63,6 +63,10 @@ const SKIP = new Set([
 const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=127">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
+// Sprint 128 — Sticky-CTA-IO + Demo-Sheet + Persona-Click + Scroll-Anim
+// wurden aus den Inline-Snippets in src/js/m-interactions.js extrahiert.
+// Eine externe <script>-Referenz wird via M_INTERACTIONS_SCRIPT am
+// </body>-Ende eingehaengt.
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
 <div class="m-sticky-cta-bar" data-m-sticky-cta>
@@ -75,24 +79,21 @@ const STICKY_CTA_BAR = `
         WhatsApp
     </a>
 </div>
-<script>
-(function () {
-    var bar = document.querySelector('[data-m-sticky-cta]');
-    var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
-    if (!bar) return;
-    if (!hero || !('IntersectionObserver' in window)) {
-        bar.classList.add('is-visible');
-        return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-            bar.classList.toggle('is-visible', !e.isIntersecting);
-        });
-    }, { threshold: 0.05 });
-    io.observe(hero);
-})();
-</script>
 `;
+
+// Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=128" defer></script>\n`;
+
+function injectMInteractionsScript(html) {
+    if (html.includes('m-interactions.js')) return html;
+    const closeTag = '</' + 'body>';
+    const closeBodyIdx = html.lastIndexOf(closeTag);
+    if (closeBodyIdx === -1) {
+        console.warn('  ⚠ kein body-close — m-interactions.js nicht injiziert');
+        return html;
+    }
+    return html.slice(0, closeBodyIdx) + M_INTERACTIONS_SCRIPT + html.slice(closeBodyIdx);
+}
 
 // ────────────────────────────────────────────────────────────────
 // Transformationen
@@ -270,46 +271,8 @@ const HERO_DEMO_SPOT_HTML = `
         <span class="m-hero-demo-hint" aria-hidden="true">Tippen für Live-Vorschau</span>
     </button>
 </div>
-<script>
-(function () {
-    var domainEl = document.querySelector('[data-m-hero-demo-domain]');
-    var webpEl   = document.querySelector('[data-m-hero-demo-webp]');
-    var imgEl    = document.querySelector('[data-m-hero-demo-img]');
-    var canvas   = document.querySelector('[data-m-hero-demo-canvas]');
-    var card     = document.querySelector('[data-m-hero-demo-click]');
-    if (!card || !canvas) return;
-
-    var rotation = [
-        { slug: 'immobilien-stadtmakler', domain: 'stadtmakler-stuttgart.de' },
-        { slug: 'praxis-weber',           domain: 'praxis-weber.de' },
-        { slug: 'friseur-mueller',        domain: 'salon-mueller.de' }
-    ];
-    var idx = 0;
-
-    var rmq = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-    var reducedMotion = rmq && rmq.matches;
-
-    if (!reducedMotion) {
-        setInterval(function () {
-            idx = (idx + 1) % rotation.length;
-            var next = rotation[idx];
-            canvas.style.opacity = '0';
-            setTimeout(function () {
-                if (domainEl) domainEl.textContent = next.domain;
-                if (webpEl)   webpEl.srcset = '/images/mockups-opt/' + next.slug + '-mockup-480.webp';
-                if (imgEl)    imgEl.src    = '/images/mockups-opt/' + next.slug + '-mockup-800.jpg';
-                canvas.style.opacity = '1';
-            }, 280);
-        }, 4000);
-    }
-
-    card.addEventListener('click', function () {
-        var demos = document.querySelector('#demos');
-        if (demos) demos.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-})();
-</script>
 `;
+// Sprint 128 — Hero-Demo-Spot-JS extrahiert nach src/js/m-interactions.js (mHeroDemoSpot)
 
 function injectHeroDemoSpot(html) {
     if (html.includes('m-hero-demo-card')) return html;
@@ -485,29 +448,8 @@ function buildPersonaSectionHtml() {
         ${wideTile}
     </div>
 </section>
-
-<script>
-(function () {
-    var tiles = document.querySelectorAll('[data-m-persona-target]');
-    if (!tiles.length) return;
-    tiles.forEach(function (t) {
-        t.addEventListener('click', function () {
-            var idx = parseInt(t.getAttribute('data-m-persona-target'), 10);
-            if (isNaN(idx)) return;
-            var slide = document.querySelector('[data-m-demo-slide="' + idx + '"]');
-            if (!slide) return;
-            // Scroll zum Demo-Slide (horizontal im Rail)
-            slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
-            // Sheet-Modal direkt öffnen via Card-Click-Trigger
-            var card = slide.querySelector('[data-m-demo-open]');
-            if (card) {
-                setTimeout(function () { card.click(); }, 320);
-            }
-        });
-    });
-})();
-</script>
 `;
+// Sprint 128 — Persona-Tile-Click-Handler extrahiert nach src/js/m-interactions.js (mPersonaTiles)
 }
 
 function injectPersonaSection(html) {
@@ -521,64 +463,8 @@ function injectPersonaSection(html) {
     return html;
 }
 
-const SCROLL_ANIMATIONS_SCRIPT = `
-<!-- Sprint 95: Editorial-Scroll-Animations (Counter-Up + Pull-Quote-Line-Draw) -->
-<script>
-(function () {
-    if (!('IntersectionObserver' in window)) return;
-
-    // Counter-Up beim Scroll-In
-    var counters = document.querySelectorAll('.m-hero-counter');
-    if (counters.length) {
-        var ioCounter = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (!e.isIntersecting) return;
-                var el = e.target;
-                var target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                var dur = 1200, start = performance.now();
-                function tick(now) {
-                    var p = Math.min(1, (now - start) / dur);
-                    var eased = 1 - Math.pow(1 - p, 3);
-                    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
-                    if (p < 1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-                ioCounter.unobserve(el);
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(function (c) { ioCounter.observe(c); });
-    }
-
-    // Pull-Quote-Linie draw-in on scroll
-    var quotes = document.querySelectorAll('blockquote, .pull-quote');
-    if (quotes.length) {
-        var ioQuote = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioQuote.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.2 });
-        quotes.forEach(function (q) { ioQuote.observe(q); });
-    }
-
-    // Sprint 100 — Magazin-Sektionen Stagger-Reveal
-    var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
-    if (magSections.length) {
-        var ioMag = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioMag.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        magSections.forEach(function (s) { ioMag.observe(s); });
-    }
-})();
-</script>
-`;
+// Sprint 128 — Scroll-Animations-Script extrahiert nach src/js/m-interactions.js (mScrollAnimations)
+const SCROLL_ANIMATIONS_SCRIPT = '';
 
 function injectScrollAnimations(html) {
     if (html.includes('m-in-view') && html.includes('m-hero-counter')) {
@@ -595,28 +481,17 @@ function injectScrollAnimations(html) {
 // Reihenfolge wie Desktop-Branche-Switcher (src/index.html:3113-3120):
 // Immobilien → Coaching → Praxis → Friseur → Dachdecker → Gastronomie → Logistik
 // Pro Branche: slug, eyebrow, title, domain (URL-Bar), href (Demo), personaContext (1-Zeile-Pain-Point).
-// Sprint 122 — Poster-Card: headline (Sans Bold), italicSub (Serif Italic),
-// brandColor (Portfolio :root --accent). Editorial-Plakat statt Mockup-Tile.
-// Sprint 123 — Portfolio-Signets: SVG-Hero-Dekos aus den Portfolios extrahiert
-// (Coaching neu designt) + signetClass ('wide' für Map-SVGs, 'glyph' für 60×60).
-const SIGNET_IMMOBILIEN = '<svg viewBox="0 0 280 80" fill="none" stroke="currentColor" stroke-width="1"><path d="M4 60 L40 28 L88 44 L132 18 L188 38 L232 22 L276 46"/><circle cx="40" cy="28" r="2.4" fill="currentColor"/><circle cx="132" cy="18" r="3.6" fill="currentColor"/><circle cx="232" cy="22" r="2.4" fill="currentColor"/><text x="46" y="22" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.7">Cannstatt</text><text x="138" y="14" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.9">Killesberg</text><text x="238" y="18" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.7">Vaihingen</text></svg>';
-const SIGNET_COACHING   = '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="6" y1="20" x2="54" y2="20"/><line x1="14" y1="32" x2="46" y2="32"/><line x1="22" y1="44" x2="38" y2="44"/></svg>';
-const SIGNET_PRAXIS     = '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M14 8 L14 22 Q14 32 22 36 L24 38"/><path d="M44 8 L44 22 Q44 32 36 36 L34 38"/><circle cx="29" cy="44" r="3"/><path d="M29 47 L29 50"/><circle cx="29" cy="52" r="2"/><path d="M11 8 L17 8"/><path d="M41 8 L47 8"/></svg>';
-const SIGNET_FRISEUR    = '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="14" cy="46" r="7"/><circle cx="46" cy="46" r="7"/><path d="M21 46 L46 12"/><path d="M39 46 L14 12"/><path d="M14 12 L20 18"/><path d="M46 12 L40 18"/></svg>';
-const SIGNET_DACHDECKER = '<svg viewBox="0 0 60 36" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M2 30 L30 6 L58 30"/><path d="M8 26 L30 12 L52 26" opacity="0.55"/><path d="M14 22 L30 18 L46 22" opacity="0.3"/></svg>';
-const SIGNET_GASTRO     = '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="30" cy="30" r="22"/><circle cx="30" cy="30" r="14" opacity="0.5"/><path d="M22 30 Q30 22 38 30" opacity="0.7"/><circle cx="26" cy="32" r="1.4" fill="currentColor"/><circle cx="34" cy="32" r="1.4" fill="currentColor"/></svg>';
-const SIGNET_LOGISTIK   = '<svg viewBox="0 0 280 80" fill="none" stroke="currentColor" stroke-width="1"><path d="M10 56 C 60 56, 80 14, 130 22 S 220 60, 270 28"/><circle cx="10" cy="56" r="3" fill="currentColor"/><circle cx="130" cy="22" r="3" fill="currentColor"/><circle cx="270" cy="28" r="3" fill="currentColor"/><text x="14" y="68" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.7">Stuttgart</text><text x="116" y="14" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.7">Berlin</text><text x="248" y="20" font-family="ui-monospace, Menlo, monospace" font-size="7" fill="currentColor" opacity="0.7">Wien</text></svg>';
-const SIGNET_SANITAER   = '<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 14 L28 14 L28 24 L42 24 L42 14 L50 14"/><path d="M28 24 L28 38 L42 38 L42 24"/><circle cx="35" cy="48" r="4"/><path d="M35 52 L35 56"/></svg>';
-
+// Sprint 128 — Editorial-Poster-Felder (headline/italicSub/brandColor/signet/signetClass)
+// gelöscht, da Sprint 126/127 Live-Hero-Capture statt Editorial-Poster rendert.
 const DEMO_SWIPER_SLIDES = [
-    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de', href: '/portfolio/immobilien-makler.html',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.', headline: 'Wir verkaufen keine Häuser.',     italicSub: 'Wir verkaufen Übergänge.',                              brandColor: '#1A2E40', signet: SIGNET_IMMOBILIEN, signetClass: 'wide'  },
-    { slug: 'coaching-lehmann',       eyebrow: 'Coaching · Essential',     title: 'Lehmann Beratung',      domain: 'lehmann-beratung.de',      href: '/portfolio/coaching-lehmann.html',          personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.',                       headline: 'Klarheit ist eine Entscheidung.', italicSub: 'Nicht in 90 Tagen — in einem Gespräch.',                brandColor: '#2C2C2C', signet: SIGNET_COACHING,   signetClass: 'glyph' },
-    { slug: 'praxis-weber',           eyebrow: 'Praxis · Professional',    title: 'Dr. Weber',             domain: 'praxis-weber.de',          href: '/portfolio/praxis-weber.html',              personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',                      headline: 'Hausarzt wie früher.',            italicSub: 'Organisiert wie heute.',                                brandColor: '#6A8266', signet: SIGNET_PRAXIS,     signetClass: 'glyph' },
-    { slug: 'friseur-mueller',        eyebrow: 'Beauty · Essential',       title: 'Salon Müller',          domain: 'salon-mueller.de',         href: '/portfolio/friseur-salon.html',             personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.',                       headline: 'Erst das Gespräch.',              italicSub: 'Dann der Schnitt.',                                     brandColor: '#B07B5E', signet: SIGNET_FRISEUR,    signetClass: 'glyph' },
-    { slug: 'dachdecker-meister',     eyebrow: 'Handwerk · Professional',  title: 'Dachdecker-Meister',    domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.', headline: 'Ein Dach hält 50 Jahre.',         italicSub: 'Oder nicht.',                                           brandColor: '#4A5D4F', signet: SIGNET_DACHDECKER, signetClass: 'glyph' },
-    { slug: 'gastro-hirsch',          eyebrow: 'Gastronomie · Professional', title: 'Hirsch',              domain: 'gasthof-hirsch.de',        href: '/portfolio/restaurant-template.html',       personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',                        headline: 'Wir kochen nach Saison.',         italicSub: 'Nicht nach Marge.',                                     brandColor: '#5C1F1F', signet: SIGNET_GASTRO,     signetClass: 'glyph' },
-    { slug: 'logistik-schwaben',      eyebrow: 'Spedition · Premium',      title: 'Schwaben Logistik',     domain: 'schwaben-logistik.de',     href: '/portfolio/spedition-schwaben.html',        personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.',       headline: '320 Mitarbeiter.',                italicSub: 'Ein Versprechen.',                                      brandColor: '#0E1F33', signet: SIGNET_LOGISTIK,   signetClass: 'wide'  },
-    { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',      href: '/portfolio/meisterbetrieb-mueller.html',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.', headline: 'Wasser ist kein Spaß.',           italicSub: 'Wir nehmen das ernst — und Ihre Zeit auch.',           brandColor: '#B47045', signet: SIGNET_SANITAER,   signetClass: 'glyph' },
+    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de',     href: '/portfolio/immobilien-makler.html',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
+    { slug: 'coaching-lehmann',       eyebrow: 'Coaching · Essential',     title: 'Lehmann Beratung',      domain: 'lehmann-beratung.de',          href: '/portfolio/coaching-lehmann.html',          personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.' },
+    { slug: 'praxis-weber',           eyebrow: 'Praxis · Professional',    title: 'Dr. Weber',             domain: 'praxis-weber.de',              href: '/portfolio/praxis-weber.html',              personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.' },
+    { slug: 'friseur-mueller',        eyebrow: 'Beauty · Essential',       title: 'Salon Müller',          domain: 'salon-mueller.de',             href: '/portfolio/friseur-salon.html',             personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.' },
+    { slug: 'dachdecker-meister',     eyebrow: 'Handwerk · Professional',  title: 'Dachdecker-Meister',    domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.' },
+    { slug: 'gastro-hirsch',          eyebrow: 'Gastronomie · Professional', title: 'Hirsch',              domain: 'gasthof-hirsch.de',            href: '/portfolio/restaurant-template.html',       personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
+    { slug: 'logistik-schwaben',      eyebrow: 'Spedition · Premium',      title: 'Schwaben Logistik',     domain: 'schwaben-logistik.de',         href: '/portfolio/spedition-schwaben.html',        personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
+    { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',          href: '/portfolio/meisterbetrieb-mueller.html',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.' },
 ];
 
 // Sprint 126 — Image-Dims pro Mockup für intrinsic <img width="W" height="H">.
@@ -644,22 +519,6 @@ function readMockupDims(slug) {
         MOCKUP_DIMS_CACHE.set(slug, fallback);
         return fallback;
     }
-}
-
-function buildBrowserChromeHtml(domain) {
-    // macOS-Safari-Style Chrome — 3 Dots links, URL-Bar zentriert mit Lock-Icon.
-    return `
-            <div class="m-bf-chrome">
-                <div class="m-bf-dots">
-                    <span class="m-bf-dot m-bf-dot--red"></span>
-                    <span class="m-bf-dot m-bf-dot--yellow"></span>
-                    <span class="m-bf-dot m-bf-dot--green"></span>
-                </div>
-                <div class="m-bf-url">
-                    <svg class="m-bf-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-                    <span class="m-bf-domain">${domain}</span>
-                </div>
-            </div>`;
 }
 
 function buildDemoSwiperHtml() {
@@ -727,94 +586,8 @@ function buildDemoSwiperHtml() {
         </footer>
     </div>
 </div>
-
-<script>
-(function () {
-    var rail = document.querySelector('[data-m-demo-rail]');
-    var dotsBox = document.querySelector('[data-m-demo-dots]');
-    var sheet = document.querySelector('[data-m-demo-sheet]');
-    var sheetFrame = document.querySelector('[data-m-demo-sheet-frame]');
-    var sheetLoader = document.querySelector('[data-m-demo-sheet-loader]');
-    var sheetTitle = document.querySelector('[data-m-demo-sheet-title]');
-    var sheetEyebrow = document.querySelector('[data-m-demo-sheet-eyebrow]');
-    var sheetTab = document.querySelector('[data-m-demo-sheet-tab]');
-    if (!rail || !dotsBox || !sheet) return;
-    var slides = rail.querySelectorAll('.m-demo-swiper-slide');
-    if (!slides.length) return;
-
-    // Dot-Indicator aufbauen
-    slides.forEach(function (_, i) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'm-demo-swiper-dot' + (i === 0 ? ' is-active' : '');
-        b.setAttribute('aria-label', 'Demo ' + (i + 1) + ' von ' + slides.length);
-        b.addEventListener('click', function () { slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' }); });
-        dotsBox.appendChild(b);
-    });
-    var dotEls = dotsBox.querySelectorAll('.m-demo-swiper-dot');
-
-    // Active-Dot folgt natürlichem Swipe (kein Auto-Rotation, User-controlled)
-    if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting && e.intersectionRatio > 0.6) {
-                    var i = Array.prototype.indexOf.call(slides, e.target);
-                    if (i >= 0) dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
-                }
-            });
-        }, { root: rail, threshold: [0.6] });
-        slides.forEach(function (s) { io.observe(s); });
-    }
-
-    // Sheet-Modal Open/Close
-    var lastFocus = null;
-    function openSheet(href, title, domain) {
-        lastFocus = document.activeElement;
-        if (sheetTitle) sheetTitle.textContent = title;
-        if (sheetEyebrow) sheetEyebrow.textContent = domain;
-        if (sheetTab) sheetTab.setAttribute('href', href);
-        if (sheetLoader) sheetLoader.classList.remove('is-hidden');
-        if (sheetFrame) {
-            sheetFrame.setAttribute('src', href);
-            sheetFrame.style.opacity = '0';
-        }
-        sheet.classList.add('is-open');
-        sheet.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSheet() {
-        sheet.classList.remove('is-open');
-        sheet.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        if (sheetFrame) {
-            sheetFrame.setAttribute('src', 'about:blank');
-            sheetFrame.style.opacity = '0';
-        }
-        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
-    }
-    if (sheetFrame) {
-        sheetFrame.addEventListener('load', function () {
-            if (sheetFrame.getAttribute('src') === 'about:blank') return;
-            if (sheetLoader) sheetLoader.classList.add('is-hidden');
-            sheetFrame.style.transition = 'opacity 240ms ease';
-            sheetFrame.style.opacity = '1';
-        });
-    }
-    document.querySelectorAll('[data-m-demo-open]').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-            e.preventDefault();
-            openSheet(el.getAttribute('data-m-demo-href'), el.getAttribute('data-m-demo-title'), el.getAttribute('data-m-demo-domain'));
-        });
-    });
-    document.querySelectorAll('[data-m-demo-sheet-close]').forEach(function (el) {
-        el.addEventListener('click', closeSheet);
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet();
-    });
-})();
-</script>
 `;
+// Sprint 128 — Demo-Swiper Dots + Sheet-Modal-Logik extrahiert nach src/js/m-interactions.js (mDemoSwiper)
 }
 
 function injectDemoSwiper(html) {
@@ -897,7 +670,11 @@ function buildPage(relPath) {
         html = injectEditorialSections(html);
     }
     // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
+    // Sprint 128 — Logik nach src/js/m-interactions.js extrahiert. Funktion behalten
+    // als kompatibler No-Op, falls fruehere Pages den Marker erwarten.
     html = injectScrollAnimations(html);
+    // Sprint 128 — Mobile-Interaktions-JS-Bundle am </body>-Ende laden.
+    html = injectMInteractionsScript(html);
     html = addGeneratorMarker(html, relPath);
 
     mkdirSync(dirname(outFile), { recursive: true });

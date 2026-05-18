@@ -130,61 +130,6 @@
     </footer>
 
 
-<!-- Sprint 95: Editorial-Scroll-Animations (Counter-Up + Pull-Quote-Line-Draw) -->
-<script>
-(function () {
-    if (!('IntersectionObserver' in window)) return;
-
-    // Counter-Up beim Scroll-In
-    var counters = document.querySelectorAll('.m-hero-counter');
-    if (counters.length) {
-        var ioCounter = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (!e.isIntersecting) return;
-                var el = e.target;
-                var target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                var dur = 1200, start = performance.now();
-                function tick(now) {
-                    var p = Math.min(1, (now - start) / dur);
-                    var eased = 1 - Math.pow(1 - p, 3);
-                    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
-                    if (p < 1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-                ioCounter.unobserve(el);
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(function (c) { ioCounter.observe(c); });
-    }
-
-    // Pull-Quote-Linie draw-in on scroll
-    var quotes = document.querySelectorAll('blockquote, .pull-quote');
-    if (quotes.length) {
-        var ioQuote = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioQuote.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.2 });
-        quotes.forEach(function (q) { ioQuote.observe(q); });
-    }
-
-    // Sprint 100 — Magazin-Sektionen Stagger-Reveal
-    var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
-    if (magSections.length) {
-        var ioMag = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioMag.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        magSections.forEach(function (s) { ioMag.observe(s); });
-    }
-})();
-</script>
+<script src="/js/m-interactions.js?v=128" defer></script>
 </body>
 </html>

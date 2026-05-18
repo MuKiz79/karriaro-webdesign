@@ -3196,28 +3196,6 @@
     </div>
 </section>
 
-<script>
-(function () {
-    var tiles = document.querySelectorAll('[data-m-persona-target]');
-    if (!tiles.length) return;
-    tiles.forEach(function (t) {
-        t.addEventListener('click', function () {
-            var idx = parseInt(t.getAttribute('data-m-persona-target'), 10);
-            if (isNaN(idx)) return;
-            var slide = document.querySelector('[data-m-demo-slide="' + idx + '"]');
-            if (!slide) return;
-            // Scroll zum Demo-Slide (horizontal im Rail)
-            slide.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'center' });
-            // Sheet-Modal direkt öffnen via Card-Click-Trigger
-            var card = slide.querySelector('[data-m-demo-open]');
-            if (card) {
-                setTimeout(function () { card.click(); }, 320);
-            }
-        });
-    });
-})();
-</script>
-
 
 <!-- Sprint 103 — Editorial-Magazin-Sektionen unter Hero -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
@@ -3407,93 +3385,6 @@
         </footer>
     </div>
 </div>
-
-<script>
-(function () {
-    var rail = document.querySelector('[data-m-demo-rail]');
-    var dotsBox = document.querySelector('[data-m-demo-dots]');
-    var sheet = document.querySelector('[data-m-demo-sheet]');
-    var sheetFrame = document.querySelector('[data-m-demo-sheet-frame]');
-    var sheetLoader = document.querySelector('[data-m-demo-sheet-loader]');
-    var sheetTitle = document.querySelector('[data-m-demo-sheet-title]');
-    var sheetEyebrow = document.querySelector('[data-m-demo-sheet-eyebrow]');
-    var sheetTab = document.querySelector('[data-m-demo-sheet-tab]');
-    if (!rail || !dotsBox || !sheet) return;
-    var slides = rail.querySelectorAll('.m-demo-swiper-slide');
-    if (!slides.length) return;
-
-    // Dot-Indicator aufbauen
-    slides.forEach(function (_, i) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'm-demo-swiper-dot' + (i === 0 ? ' is-active' : '');
-        b.setAttribute('aria-label', 'Demo ' + (i + 1) + ' von ' + slides.length);
-        b.addEventListener('click', function () { slides[i].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' }); });
-        dotsBox.appendChild(b);
-    });
-    var dotEls = dotsBox.querySelectorAll('.m-demo-swiper-dot');
-
-    // Active-Dot folgt natürlichem Swipe (kein Auto-Rotation, User-controlled)
-    if ('IntersectionObserver' in window) {
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting && e.intersectionRatio > 0.6) {
-                    var i = Array.prototype.indexOf.call(slides, e.target);
-                    if (i >= 0) dotEls.forEach(function (d, j) { d.classList.toggle('is-active', j === i); });
-                }
-            });
-        }, { root: rail, threshold: [0.6] });
-        slides.forEach(function (s) { io.observe(s); });
-    }
-
-    // Sheet-Modal Open/Close
-    var lastFocus = null;
-    function openSheet(href, title, domain) {
-        lastFocus = document.activeElement;
-        if (sheetTitle) sheetTitle.textContent = title;
-        if (sheetEyebrow) sheetEyebrow.textContent = domain;
-        if (sheetTab) sheetTab.setAttribute('href', href);
-        if (sheetLoader) sheetLoader.classList.remove('is-hidden');
-        if (sheetFrame) {
-            sheetFrame.setAttribute('src', href);
-            sheetFrame.style.opacity = '0';
-        }
-        sheet.classList.add('is-open');
-        sheet.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSheet() {
-        sheet.classList.remove('is-open');
-        sheet.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        if (sheetFrame) {
-            sheetFrame.setAttribute('src', 'about:blank');
-            sheetFrame.style.opacity = '0';
-        }
-        if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
-    }
-    if (sheetFrame) {
-        sheetFrame.addEventListener('load', function () {
-            if (sheetFrame.getAttribute('src') === 'about:blank') return;
-            if (sheetLoader) sheetLoader.classList.add('is-hidden');
-            sheetFrame.style.transition = 'opacity 240ms ease';
-            sheetFrame.style.opacity = '1';
-        });
-    }
-    document.querySelectorAll('[data-m-demo-open]').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-            e.preventDefault();
-            openSheet(el.getAttribute('data-m-demo-href'), el.getAttribute('data-m-demo-title'), el.getAttribute('data-m-demo-domain'));
-        });
-    });
-    document.querySelectorAll('[data-m-demo-sheet-close]').forEach(function (el) {
-        el.addEventListener('click', closeSheet);
-    });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && sheet.classList.contains('is-open')) closeSheet();
-    });
-})();
-</script>
 
     <section id="audit" aria-label="Mini-Audit" class="fade-in" style="background: var(--color-bone); padding: 96px 0;">
         <div style="max-width: 720px; margin: 0 auto; padding: 0 24px; text-align: center;">
@@ -6119,79 +6010,7 @@
         WhatsApp
     </a>
 </div>
-<script>
-(function () {
-    var bar = document.querySelector('[data-m-sticky-cta]');
-    var hero = document.querySelector('.hero-with-photo') || document.querySelector('.hero, [class*="hero"]');
-    if (!bar) return;
-    if (!hero || !('IntersectionObserver' in window)) {
-        bar.classList.add('is-visible');
-        return;
-    }
-    var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-            bar.classList.toggle('is-visible', !e.isIntersecting);
-        });
-    }, { threshold: 0.05 });
-    io.observe(hero);
-})();
-</script>
 
-<!-- Sprint 95: Editorial-Scroll-Animations (Counter-Up + Pull-Quote-Line-Draw) -->
-<script>
-(function () {
-    if (!('IntersectionObserver' in window)) return;
-
-    // Counter-Up beim Scroll-In
-    var counters = document.querySelectorAll('.m-hero-counter');
-    if (counters.length) {
-        var ioCounter = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (!e.isIntersecting) return;
-                var el = e.target;
-                var target = parseInt(el.getAttribute('data-target'), 10) || 0;
-                var dur = 1200, start = performance.now();
-                function tick(now) {
-                    var p = Math.min(1, (now - start) / dur);
-                    var eased = 1 - Math.pow(1 - p, 3);
-                    el.textContent = Math.round(target * eased).toLocaleString('de-DE');
-                    if (p < 1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-                ioCounter.unobserve(el);
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(function (c) { ioCounter.observe(c); });
-    }
-
-    // Pull-Quote-Linie draw-in on scroll
-    var quotes = document.querySelectorAll('blockquote, .pull-quote');
-    if (quotes.length) {
-        var ioQuote = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioQuote.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.2 });
-        quotes.forEach(function (q) { ioQuote.observe(q); });
-    }
-
-    // Sprint 100 — Magazin-Sektionen Stagger-Reveal
-    var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
-    if (magSections.length) {
-        var ioMag = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) {
-                if (e.isIntersecting) {
-                    e.target.classList.add('m-in-view');
-                    ioMag.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        magSections.forEach(function (s) { ioMag.observe(s); });
-    }
-})();
-</script>
+<script src="/js/m-interactions.js?v=128" defer></script>
 </body>
 </html>

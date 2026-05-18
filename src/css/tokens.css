@@ -71,6 +71,21 @@
   --kr-bg: #FBFAF7;              /* Bone — fast-weiß, warm */
   --kr-bg-soft: #F8F4ED;         /* Skizzen-Cream — wärmster Hellton */
   --kr-border: rgba(20,30,40,0.08);
+
+  /* Sprint 128 — Brand-Token-Vereinheitlichung
+   * Aliase, damit mobile-overrides.css (--color-*) und Brand-Token (--kr-*)
+   * auf eine Single-Source zeigen. mobile-overrides.css darf weiterhin
+   * --color-* verwenden, neue Regeln aber bitte --kr-* */
+  --color-cream-soft: var(--kr-bg-soft);
+  --color-cream: var(--kr-bg);
+  --color-indigo: var(--kr-blue);
+  --color-indigo-strong: #061320;
+  --color-indigo-deep: #0F1F2E;
+  --color-graphite: var(--kr-grey);
+  --color-graphite-soft: var(--kr-grey-soft);
+  --color-gold: var(--kr-gold);
+  --color-ink: var(--kr-ink);
+  --color-border: var(--kr-border);
 }
 
 /* Reduced-Motion respektieren (Refactoring-UI-Standard) */
