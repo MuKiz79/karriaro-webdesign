@@ -49,10 +49,12 @@ for spec in "${PAGES[@]}"; do
   URL="http://localhost:$PORT/portfolio/$page.html"
   echo "[start] $page → $out"
 
-  # Sprint 116 — 2x Retina (3072x1920) + JPEG 95 für "hochklassig" perceived quality
+  # Sprint 119 — Hero-Focus-Crop: 3072×1300 (war 3072×1920 in Sprint 116)
+  # Viewport-Capture zeigt nur den Hero-Bereich der Portfolio-Page →
+  # Demo-Headline + Lead + CTAs + Portrait sichtbar, alles darunter wird nicht gerendert.
   "$CHROME" --headless --disable-gpu --hide-scrollbars \
     --virtual-time-budget=5000 \
-    --window-size=3072,1920 \
+    --window-size=3072,1300 \
     --screenshot="$TMP/s.png" \
     "$URL" 2>/dev/null
 
@@ -63,6 +65,14 @@ for spec in "${PAGES[@]}"; do
   fi
 
   sips -s format jpeg -s formatOptions 95 "$TMP/s.png" --out "$OUT_DIR/$out" >/dev/null 2>&1
+
+  # Defensive Höhen-Sicherung — falls Chrome viewport-clip ignoriert
+  # (Versionsabhängig). Auf macOS Darwin 25.4+ ist sips -c upper-left-anchored.
+  H=$(sips -g pixelHeight "$OUT_DIR/$out" 2>/dev/null | tail -1 | awk '{print $2}')
+  if [ -n "$H" ] && [ "$H" -gt 1300 ]; then
+    echo "[crop] $page — Chrome capture H=$H > 1300, sips-Fallback aktiv"
+    sips -c 1300 3072 "$OUT_DIR/$out" --out "$OUT_DIR/$out" >/dev/null 2>&1
+  fi
 
   size=$(stat -f %z "$OUT_DIR/$out" 2>/dev/null || stat -c %s "$OUT_DIR/$out")
   echo "[done] $page → $out ($size bytes)"
