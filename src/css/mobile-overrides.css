@@ -749,6 +749,33 @@
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.55);
 }
+/* Sprint 123 — Portfolio-Signet (SVG-Hero-Deko aus dem Portfolio extrahiert,
+   Coaching neu). Sitzt im Flex-Content-Block zentriert über der Headline. */
+.m-poster-signet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 22px;
+    color: rgba(255, 255, 255, 0.7);
+    align-self: center;
+}
+.m-poster-signet svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+.m-poster-signet--glyph {
+    width: 64px;
+    height: 64px;
+}
+.m-poster-signet--wide {
+    width: 200px;
+    height: 56px;
+}
+.m-poster-signet svg text {
+    fill: currentColor;
+    opacity: 0.6;
+}
 .m-poster-headline {
     display: flex;
     flex-direction: column;
