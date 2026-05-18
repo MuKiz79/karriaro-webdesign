@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=119">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=120">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -632,7 +632,7 @@ function buildDemoSwiperHtml() {
                         <picture>
                             <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
                             <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="333">
+                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="480" height="733">
                         </picture>
                     </div>
                 </div>

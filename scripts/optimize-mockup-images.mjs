@@ -95,9 +95,11 @@ function processOne(slug) {
                     { stdio: ['ignore', 'pipe', 'pipe'] }
                 );
             } else {
-                // sips fuer JPEG-Fallback (kann das gut)
+                // Sprint 120 — sips JPEG-Fallback: --resampleWidth statt -Z, damit
+                // bei portrait-Quellen (Sprint-120-Mobile-Mockups 786×1200) die
+                // Breite konsistent ist mit den WebP-Varianten (cwebp -resize W 0).
                 execSync(
-                    `sips -Z ${v.maxDim} -s format ${v.format} -s formatOptions ${v.quality} ` +
+                    `sips --resampleWidth ${v.maxDim} -s format ${v.format} -s formatOptions ${v.quality} ` +
                     `"${inputPath}" --out "${outPath}" >/dev/null 2>&1`,
                     { stdio: ['ignore', 'pipe', 'pipe'] }
                 );

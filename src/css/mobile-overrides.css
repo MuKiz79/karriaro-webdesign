@@ -785,7 +785,7 @@
 
 .m-bf-canvas {
     background: var(--color-cream-soft, #f5f3ee);
-    aspect-ratio: 12 / 5;
+    aspect-ratio: 393 / 600;
     overflow: hidden;
 }
 .m-bf-img {
