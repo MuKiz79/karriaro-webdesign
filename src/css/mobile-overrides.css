@@ -722,22 +722,22 @@
     transform: scale(0.985);
 }
 
+/* Sprint 125 — Full-Bleed Hero-Screenshot (Magazine-Cover-Pattern).
+   Card = Screenshot edge-to-edge, kein Phone-Frame, kein Brand-Color-Rahmen,
+   kein Folio/Pfeil. Aspect 4:9 matched Source 480×1080 perfekt. */
 .m-poster {
-    aspect-ratio: 7 / 10;
+    aspect-ratio: 4 / 9;
     border-radius: 14px;
     overflow: hidden;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 32px 28px;
-    color: #fff;
+    display: block;
     box-shadow:
         0 1px 1px rgba(0, 0, 0, 0.06),
         0 4px 12px rgba(20, 32, 43, 0.08),
         0 18px 40px -12px rgba(20, 32, 43, 0.22);
     border: 0.5px solid rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
+    background: var(--color-cream-soft, #f5f3ee);
 }
 /* Sprint 124 — Phone-Frame mit Hero-Screenshot zentriert auf Brand-Color-Card */
 .m-poster-phone {
@@ -763,15 +763,17 @@
     height: 100%;
     object-fit: cover;
     object-position: top center;
-    border-radius: 22px;
     display: block;
 }
-/* Sprint 121/124 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus */
+/* Sprint 121/124/125 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus.
+   Sprint 125 erweitert: alles unterhalb der Hero-Section wird ausgeblendet,
+   damit das Capture wirklich nur den Hero zeigt (keine Folge-Sections). */
 .screenshot-mode .kr-strip,
 .screenshot-mode .topbar,
 .screenshot-mode header,
 .screenshot-mode nav.nav,
-.screenshot-mode .m-sticky-cta-bar {
+.screenshot-mode .m-sticky-cta-bar,
+.screenshot-mode main > *:not(.hero) {
     display: none !important;
 }
 .m-poster-folio {

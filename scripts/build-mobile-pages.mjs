@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=124">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=125">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 const STICKY_CTA_BAR = `
@@ -635,25 +635,20 @@ function buildBrowserChromeHtml(domain) {
 }
 
 function buildDemoSwiperHtml() {
-    // Sprint 122 — Editorial-Poster-Card: Brand-Color-Vollfläche + Nº-Folio + Pfeil.
-    // Sprint 124 — Hero-Screenshot im weißen Phone-Frame statt Typography/Signet.
-    //              3×-Retina-Source (1440×2160) skaliert auf 480/800w-Display.
+    // Sprint 122/124 → Sprint 125 — Full-Bleed Hero-Screenshot (Magazine-Cover).
+    //   Card = Screenshot edge-to-edge. Aspect 4:9 matched Source 480×1080.
+    //   Kein Phone-Frame, kein Brand-Color, kein Folio, kein Pfeil.
     const slides = DEMO_SWIPER_SLIDES.map((slide, i) => {
-        const { slug, title, domain, href, eyebrow, personaContext, brandColor } = slide;
+        const { slug, title, domain, href, eyebrow, personaContext } = slide;
         const eager = i === 0;
-        const folio = '№ ' + String(i + 1).padStart(2, '0');
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
-            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen" style="background-color: ${brandColor};">
-                <span class="m-poster-folio" aria-hidden="true">${folio}</span>
-                <div class="m-poster-phone" aria-hidden="true">
-                    <picture>
-                        <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
-                        <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                        <img class="m-poster-shot" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="1200">
-                    </picture>
-                </div>
-                <span class="m-poster-arrow" aria-hidden="true">→</span>
+            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
+                <picture>
+                    <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
+                    <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
+                    <img class="m-poster-shot" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="1800">
+                </picture>
             </button>
             <div class="m-demo-swiper-meta">
                 <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
