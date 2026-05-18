@@ -59,8 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=121">
-    <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=122">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -594,15 +593,17 @@ function injectScrollAnimations(html) {
 // Reihenfolge wie Desktop-Branche-Switcher (src/index.html:3113-3120):
 // Immobilien → Coaching → Praxis → Friseur → Dachdecker → Gastronomie → Logistik
 // Pro Branche: slug, eyebrow, title, domain (URL-Bar), href (Demo), personaContext (1-Zeile-Pain-Point).
+// Sprint 122 — Poster-Card: headline (Sans Bold), italicSub (Serif Italic),
+// brandColor (Portfolio :root --accent). Editorial-Plakat statt Mockup-Tile.
 const DEMO_SWIPER_SLIDES = [
-    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium', title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de', href: '/portfolio/immobilien-makler.html', personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
-    { slug: 'coaching-lehmann', eyebrow: 'Coaching · Essential', title: 'Lehmann Beratung', domain: 'lehmann-beratung.de', href: '/portfolio/coaching-lehmann.html', personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.' },
-    { slug: 'praxis-weber', eyebrow: 'Praxis · Professional', title: 'Dr. Weber', domain: 'praxis-weber.de', href: '/portfolio/praxis-weber.html', personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.' },
-    { slug: 'friseur-mueller', eyebrow: 'Beauty · Essential', title: 'Salon Müller', domain: 'salon-mueller.de', href: '/portfolio/friseur-salon.html', personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.' },
-    { slug: 'dachdecker-meister', eyebrow: 'Handwerk · Professional', title: 'Dachdecker-Meister', domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.' },
-    { slug: 'gastro-hirsch', eyebrow: 'Gastronomie · Professional', title: 'Hirsch', domain: 'gasthof-hirsch.de', href: '/portfolio/restaurant-template.html', personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
-    { slug: 'logistik-schwaben', eyebrow: 'Spedition · Premium', title: 'Schwaben Logistik', domain: 'schwaben-logistik.de', href: '/portfolio/spedition-schwaben.html', personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
-    { slug: 'handwerk-mueller', eyebrow: 'Sanitär · Professional', title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de', href: '/portfolio/meisterbetrieb-mueller.html', personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.' },
+    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de', href: '/portfolio/immobilien-makler.html',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.', headline: 'Wir verkaufen keine Häuser.',     italicSub: 'Wir verkaufen Übergänge.',                              brandColor: '#1A2E40' },
+    { slug: 'coaching-lehmann',       eyebrow: 'Coaching · Essential',     title: 'Lehmann Beratung',      domain: 'lehmann-beratung.de',      href: '/portfolio/coaching-lehmann.html',          personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.',                       headline: 'Klarheit ist eine Entscheidung.', italicSub: 'Nicht in 90 Tagen — in einem Gespräch.',                brandColor: '#2C2C2C' },
+    { slug: 'praxis-weber',           eyebrow: 'Praxis · Professional',    title: 'Dr. Weber',             domain: 'praxis-weber.de',          href: '/portfolio/praxis-weber.html',              personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',                      headline: 'Hausarzt wie früher.',            italicSub: 'Organisiert wie heute.',                                brandColor: '#6A8266' },
+    { slug: 'friseur-mueller',        eyebrow: 'Beauty · Essential',       title: 'Salon Müller',          domain: 'salon-mueller.de',         href: '/portfolio/friseur-salon.html',             personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.',                       headline: 'Erst das Gespräch.',              italicSub: 'Dann der Schnitt.',                                     brandColor: '#B07B5E' },
+    { slug: 'dachdecker-meister',     eyebrow: 'Handwerk · Professional',  title: 'Dachdecker-Meister',    domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb.html', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.', headline: 'Ein Dach hält 50 Jahre.',         italicSub: 'Oder nicht.',                                           brandColor: '#4A5D4F' },
+    { slug: 'gastro-hirsch',          eyebrow: 'Gastronomie · Professional', title: 'Hirsch',              domain: 'gasthof-hirsch.de',        href: '/portfolio/restaurant-template.html',       personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',                        headline: 'Wir kochen nach Saison.',         italicSub: 'Nicht nach Marge.',                                     brandColor: '#5C1F1F' },
+    { slug: 'logistik-schwaben',      eyebrow: 'Spedition · Premium',      title: 'Schwaben Logistik',     domain: 'schwaben-logistik.de',     href: '/portfolio/spedition-schwaben.html',        personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.',       headline: '320 Mitarbeiter.',                italicSub: 'Ein Versprechen.',                                      brandColor: '#0E1F33' },
+    { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',      href: '/portfolio/meisterbetrieb-mueller.html',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.', headline: 'Wasser ist kein Spaß.',           italicSub: 'Wir nehmen das ernst — und Ihre Zeit auch.',           brandColor: '#B47045' },
 ];
 
 function buildBrowserChromeHtml(domain) {
@@ -622,21 +623,20 @@ function buildBrowserChromeHtml(domain) {
 }
 
 function buildDemoSwiperHtml() {
+    // Sprint 122 — Editorial-Poster-Card: Brand-Color-Vollfläche + Nº-Folio +
+    // Sans-Bold-Headline + Serif-Italic-Sub + Pfeil. KEIN Mockup, KEIN Browser-Chrome.
     const slides = DEMO_SWIPER_SLIDES.map((slide, i) => {
-        const { slug, eyebrow, title, domain, href, personaContext } = slide;
-        const eager = i === 0;
+        const { title, domain, href, eyebrow, personaContext, headline, italicSub, brandColor } = slide;
+        const folio = '№ ' + String(i + 1).padStart(2, '0');
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
-            <button type="button" class="m-demo-swiper-card" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
-                <div class="m-bf">${buildBrowserChromeHtml(domain)}
-                    <div class="m-bf-canvas">
-                        <picture>
-                            <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
-                            <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                            <img class="m-bf-img" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Karriaro-Demo" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="480" height="720">
-                        </picture>
-                    </div>
+            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen" style="background-color: ${brandColor};">
+                <span class="m-poster-folio" aria-hidden="true">${folio}</span>
+                <div class="m-poster-headline">
+                    <span class="m-poster-h1">${headline}</span>
+                    <span class="m-poster-h2">${italicSub}</span>
                 </div>
+                <span class="m-poster-arrow" aria-hidden="true">→</span>
             </button>
             <div class="m-demo-swiper-meta">
                 <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
