@@ -144,34 +144,44 @@ function isIndex(relPath) {
 function rewriteHeroHeadline(html) {
     // Sprint 110 — Boutique-Print-Disziplin: H1 zwei kurze Zeilen mit je
     // einem Punkt, kein Compound-Bindestrich-Bruch. Italic-Sub bleibt.
+    // Sprint 130 — Stagger 3-Beats statt 6-Steps: Beat 1 (0ms) Identity (Webdesign+Manufaktur),
+    // Beat 2 (280ms) Promise (Italic-Sub), Beat 3 (560ms) Proof+Action (siehe rewriteHeroCta).
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:120ms">Webdesign.</span>' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:200ms">Manufaktur.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:320ms">Jede Seite handcodiert ein Unikat.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Webdesign.</span>' +
+        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:280ms">Jede Seite handcodiert ein Unikat.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroSubhead(html) {
     // Sprint 110 — Boutique-Voice: 1 dichter Satz statt 3 Slack-TLDR-Statements.
-    // KI-Ära-Substanz bleibt, Konjunktiv-Drohung raus.
+    // Sprint 130 — Stagger auf Beat 2 (280ms, Promise-Beat). Subhead ist auf
+    // Mobile per CSS hidden — Delay nur als Fallback falls Override wegfällt.
     return html.replace(
         /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
-        '<p class="subhead m-hero-stagger" style="--m-delay:460ms">' +
+        '<p class="subhead m-hero-stagger" style="--m-delay:280ms">' +
         'Handcodiert, BFSG-konform, für die KI-Ära gemacht.' +
         '</p>'
     );
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 129 — Hero-Verdichtung: 4 → 3 Trust-Items.
-    // KI-Auffindbarkeit raus (redundant zur Manufaktur-Promise).
-    // Drei Items = Pentagram-Print-Trios-Pattern (Astrid Stavro).
+    // Sprint 129 — 4 → 3 Trust-Items. Sprint 130 — Stagger zu Beat 3 (560ms)
+    // verdichtet. Marginalia (Pentagram-Print-Annotation) + Siegel-Embossing
+    // (Paula-Scher-Brand-Signature) als Final-Beat.
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:640ms">' +
+        '<aside class="m-hero-marginalia m-hero-stagger" style="--m-delay:560ms" aria-hidden="true">' +
+            '<span class="m-hero-marginalia-item">₁ Handcodiert</span>' +
+            '<span class="m-hero-marginalia-dot">·</span>' +
+            '<span class="m-hero-marginalia-item">₂ Schwarzwald-Atelier</span>' +
+            '<span class="m-hero-marginalia-dot">·</span>' +
+            '<span class="m-hero-marginalia-item">₃ № 01 · 2026</span>' +
+        '</aside>' +
+        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:560ms">' +
             '<li>' +
                 '<span class="m-hero-trust-num">100+</span>' +
                 '<span class="m-hero-trust-body">' +
@@ -194,10 +204,37 @@ function rewriteHeroCta(html) {
                 '</span>' +
             '</li>' +
         '</ul>' +
-        '<div class="m-hero-cta-bottom m-hero-stagger" style="--m-delay:880ms">' +
+        '<div class="m-hero-cta-bottom m-hero-stagger" style="--m-delay:560ms">' +
             '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a>' +
+        '</div>' +
+        // Sprint 130 — Manufaktur-Siegel-Embossing 32 px (Phyllotaxis-SVG verkleinert,
+        // dezent als Brand-Signature unter CTA. Paula-Scher-Hebel: Siegel im Hero-Polish,
+        // nicht als eigene Section in der Magazine-Choreographie verloren.).
+        '<div class="m-hero-siegel-emboss m-hero-stagger" style="--m-delay:560ms" aria-hidden="true">' +
+            '<svg viewBox="0 0 90 90" width="32" height="32">' +
+                '<path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
+                '<path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
+                '<path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
+                '<path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
+                buildPhyllotaxisDotsForSiegel() +
+            '</svg>' +
         '</div>'
     );
+}
+
+// Sprint 130 — Phyllotaxis-Dots für Hero-Siegel-Embossing (currentColor statt Gold
+// fix, damit es im Embossing-Kontext gold-soft scheint).
+function buildPhyllotaxisDotsForSiegel() {
+    const goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+    let dots = '';
+    for (let n = 1; n <= 13; n++) {
+        const r = Math.sqrt(n) * 8;
+        const theta = n * goldenAngle;
+        const x = (45 + r * Math.cos(theta)).toFixed(2);
+        const y = (45 + r * Math.sin(theta)).toFixed(2);
+        dots += `<circle cx="${x}" cy="${y}" r="1.5" fill="currentColor"/>`;
+    }
+    return dots;
 }
 
 function injectHeroEyebrowStagger(html) {

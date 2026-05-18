@@ -413,8 +413,11 @@
         display: none !important;
     }
 
+    /* Sprint 130 — Cover-Atmen: Top respektiert nav-height (fixed 64 px),
+       Bottom 96 px für Schluss-Atmen vor Demos-Section.
+       Die spezifischere Regel weiter unten (Z. ~1516) liefert die clamp-Werte. */
     .hero-with-photo {
-        padding: 64px 0 48px !important;
+        padding: 72px 0 96px !important;
     }
     .hero-with-photo .hero-inner {
         grid-template-columns: 1fr !important;
@@ -432,12 +435,13 @@
         text-align: left !important;
     }
     /* Sprint 112 — Headlines weiter vergroessert (User-Wunsch "noch groesser").
-       H1 auf Boutique-Display-Maximum, Margin auf 18 px reduziert um Platz
-       fuer "Manufaktur." (11 Zeichen) bei 72 px zu schaffen. */
+       Sprint 130 — Mickel-Hebel: letter-spacing entspannt von -0.04em auf -0.02em
+       (Fraunces+Inter haben eigenes Negative-Tracking — eine Variable zu viel).
+       line-height auf 1.06 für 4 px Atmen-Zeile zwischen Webdesign./Manufaktur. */
     .hero-headline {
         font-size: clamp(56px, 14svh, 72px) !important;
-        line-height: 1.0 !important;
-        letter-spacing: -0.04em !important;
+        line-height: 1.06 !important;
+        letter-spacing: -0.02em !important;
         margin: 0 18px !important;
         font-weight: 600 !important;
         text-align: left !important;
@@ -539,6 +543,47 @@
         content: "·";
         opacity: 0.5;
         margin-left: 8px;
+    }
+
+    /* Sprint 130 — Hero-Marginalia (Pentagram-Print-Annotation, Astrid-Stavro-Hebel):
+       3 fine-print Manufaktur-Anker zwischen Italic-Sub und Trust-List.
+       Mobile-only-Insert via rewriteHeroCta. */
+    .m-hero-marginalia {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 8px;
+        margin: clamp(24px, 3svh, 36px) 24px 0;
+        padding-top: 16px;
+        border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        font-size: 10.5px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--color-graphite-soft, #6e6e73);
+        line-height: 1.4;
+    }
+    .m-hero-marginalia-item {
+        white-space: nowrap;
+    }
+    .m-hero-marginalia-dot {
+        opacity: 0.45;
+    }
+
+    /* Sprint 130 — Manufaktur-Siegel-Embossing (Paula-Scher-Hebel: Brand-Signature
+       direkt im Hero-Polish statt als eigene Section verloren). 32 px Phyllotaxis-
+       SVG zentriert unter CTA, Gold-Tinted via currentColor. */
+    .m-hero-siegel-emboss {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: clamp(24px, 3svh, 32px) 24px 0;
+        color: var(--color-gold, #8A7B5C);
+        opacity: 0.55;
+    }
+    .m-hero-siegel-emboss svg {
+        display: block;
     }
 
     /* === Editorial-Specs-Grid 2x2 (Sprint 96 — 4 Items mit 7 Werkzeuge) === */
@@ -1193,9 +1238,10 @@
         margin-bottom: 20px !important;
     }
 
-    /* Headlines tighter tracking (Apple-Detail) */
+    /* Headlines tighter tracking (Apple-Detail).
+       Sprint 130 — Mickel-Hebel: relaxed Tracking. */
     .hero-headline {
-        letter-spacing: -0.035em !important;
+        letter-spacing: -0.02em !important;
     }
     section h2 {
         letter-spacing: -0.025em !important;
@@ -1475,9 +1521,11 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-start !important;
-        /* Sprint 114 — Top reduziert (Content rueckt hoch ab Nº 01),
-           Bottom hochgezogen fuer Sticky-CTA-Safety-Atem (~100 px). */
-        padding: clamp(72px, 8.5svh, 80px) clamp(20px, 5vw, 32px) clamp(96px, 12svh, 120px) !important;
+        /* Sprint 130 — Cover-Atmen: padding-top respektiert nav-height 64 px
+           (position: fixed) + safety (8-24 px), padding-bottom = atmen vor
+           Demos-Page-№02. Sprint-114-Top (72-80 px) bleibt fast erhalten,
+           Bottom auf 96-120 px maximiert (Cover-Schluss-Atmen). */
+        padding: clamp(72px, 8svh, 88px) clamp(20px, 5vw, 32px) clamp(96px, 12svh, 120px) !important;
         box-sizing: border-box !important;
     }
     /* Demo-Swiper: KEIN flex-center (broke 100vw-Slide-Rail) */
@@ -1974,15 +2022,18 @@
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", system-ui, "Segoe UI", sans-serif !important;
     }
 
-    /* Headline-Tuning fuer Sans-Serif (mehr Weight, mehr Tracking) */
+    /* Headline-Tuning fuer Sans-Serif (mehr Weight, mehr Tracking).
+       Sprint 130 — Mickel-Hebel: -0.04em → -0.02em (Inter+Display-Negative
+       war doppelt). line-height 1.06 für Atmen-Zeile. */
     .hero-headline {
-        letter-spacing: -0.04em !important;
+        letter-spacing: -0.02em !important;
+        line-height: 1.06 !important;
         font-weight: 600 !important;
     }
     .hero-h1-line.m-hero-accent {
         font-style: italic !important;
         font-weight: 300 !important;
-        letter-spacing: -0.02em !important;
+        letter-spacing: -0.012em !important;
     }
 
     /* Display-Zahlen-Gewichte */
