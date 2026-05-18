@@ -46,16 +46,17 @@ for spec in "${PAGES[@]}"; do
   page="${spec%|*}"
   out="${spec#*|}"
   TMP=$(mktemp -d)
-  # Sprint 120 — Mobile-Portfolio-Pages (/m/portfolio/) statt Desktop (/portfolio/)
-  URL="http://localhost:$PORT/m/portfolio/$page.html"
+  # Sprint 120 — Mobile-Portfolio-Pages (/m/portfolio/)
+  # Sprint 121 — ?screenshot=1 blendet Nav/Topbar/Sticky-CTA aus
+  URL="http://localhost:$PORT/m/portfolio/$page.html?screenshot=1"
   echo "[start] $page → $out"
 
-  # Sprint 120 — iPhone-Mockup-im-Phone: 393×600 logical @ 2x retina (786×1200 PNG)
-  # Page rendert MOBILE-Breakpoint (viewport 393px) → echte Mobile-Hero-Darstellung
-  # mit nativer Headline-Größe. Im Card displayed bei ~350×534 → near-1×-Scale.
+  # Sprint 121 — Viewport 480×720 (war 393×600 in Sprint 120) für mehr
+  # horizontal-Breathing — verhindert italic-Sub-Headline-Overflow bei einigen
+  # Portfolios (Praxis Weber, Friseur Müller etc.). Aspect 2:3.
   "$CHROME" --headless --disable-gpu --hide-scrollbars \
     --virtual-time-budget=5000 \
-    --window-size=393,600 \
+    --window-size=480,720 \
     --force-device-scale-factor=2 \
     --screenshot="$TMP/s.png" \
     "$URL" 2>/dev/null
@@ -71,9 +72,9 @@ for spec in "${PAGES[@]}"; do
   # Defensive Höhen-Sicherung — falls Chrome viewport-clip ignoriert
   # (Versionsabhängig). Auf macOS Darwin 25.4+ ist sips -c upper-left-anchored.
   H=$(sips -g pixelHeight "$OUT_DIR/$out" 2>/dev/null | tail -1 | awk '{print $2}')
-  if [ -n "$H" ] && [ "$H" -gt 1200 ]; then
-    echo "[crop] $page — Chrome capture H=$H > 1200, sips-Fallback aktiv"
-    sips -c 1200 786 "$OUT_DIR/$out" --out "$OUT_DIR/$out" >/dev/null 2>&1
+  if [ -n "$H" ] && [ "$H" -gt 1440 ]; then
+    echo "[crop] $page — Chrome capture H=$H > 1440, sips-Fallback aktiv"
+    sips -c 1440 960 "$OUT_DIR/$out" --out "$OUT_DIR/$out" >/dev/null 2>&1
   fi
 
   size=$(stat -f %z "$OUT_DIR/$out" 2>/dev/null || stat -c %s "$OUT_DIR/$out")

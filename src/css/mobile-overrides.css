@@ -785,8 +785,20 @@
 
 .m-bf-canvas {
     background: var(--color-cream-soft, #f5f3ee);
-    aspect-ratio: 393 / 600;
+    aspect-ratio: 2 / 3;
     overflow: hidden;
+}
+
+/* Sprint 121 — Screenshot-Mode (?screenshot=1) blendet Karriaro-Strip,
+   Page-Nav (header / nav.nav), Topbar und Sticky-CTA für die Mockup-Capture
+   aus → reiner Hero-Look. 8 Portfolios haben uneinheitliche Tag/Class-Kombi:
+   header.nav (5), header.site (coaching), nav.nav (restaurant, spedition). */
+.screenshot-mode .kr-strip,
+.screenshot-mode .topbar,
+.screenshot-mode header,
+.screenshot-mode nav.nav,
+.screenshot-mode .m-sticky-cta-bar {
+    display: none !important;
 }
 .m-bf-img {
     width: 100%;
