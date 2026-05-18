@@ -59,7 +59,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=116">`;
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=118">`;
 
 const STICKY_CTA_BAR = `
 <!-- Mobile-Sticky-CTA-Bar (Sprint 100 — Anrufen + WhatsApp, erscheint bei Scroll) -->
@@ -442,6 +442,7 @@ const PERSONA_ICON_CHAT = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill=
 const PERSONA_ICON_FORK = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18M6 11h2M6 7h2M18 3v18M14 3v6a4 4 0 0 0 4 4"/></svg>';
 const PERSONA_ICON_TRUCK = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="10" rx="1"/><path d="M15 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>';
 const PERSONA_ICON_PLUS = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
+const PERSONA_ICON_WRENCH = '<svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
 
 // Reihenfolge im Grid (2×4) — Top-Conversion-Personas zuerst.
 // data-demo-target = Index in DEMO_SWIPER_SLIDES (für Tap → Scroll + Sheet-Open).
@@ -453,6 +454,7 @@ const PERSONAS = [
     { slug: 'coaching',   icon: PERSONA_ICON_CHAT,     name: 'Coaching',     headline: 'Erstgespräch direkt',     body: 'Vita, Methodik, Buchungs-Button der konvertiert.',              demoTarget: 1 },
     { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 5 },
     { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 6 },
+    { slug: 'sanitaer',   icon: PERSONA_ICON_WRENCH,   name: 'Sanitär',      headline: 'Notdienst & Festpreis',   body: '3D-Bad-Konfigurator, Foto-Schaden → Festpreis-Antwort.',        demoTarget: 7 },
 ];
 
 function buildPersonaSectionHtml() {
