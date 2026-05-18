@@ -325,6 +325,18 @@
     display: none;
 }
 
+/* Sprint 129 — Kontakt-Numbering ist nur Mobile-Insert (Magazine-Pacing).
+   Default hidden, im @media-Block weiter unten als block aktiviert. */
+.m-mag-eyebrow--kontakt {
+    display: none;
+}
+@media (max-width: 1023px) {
+    .m-mag-eyebrow--kontakt {
+        display: block;
+        text-align: center;
+    }
+}
+
 /* === noch eine Layer für sehr kleine Geräte (< 380px iPhone SE & ältere) === */
 @media (max-width: 379px) {
     nav .inner { padding: 0 12px !important; }
@@ -1279,7 +1291,8 @@
         border-top: 0.5px solid rgba(0, 0, 0, 0.06);
         text-align: left;
     }
-    .m-mag-eyebrow {
+    .m-mag-eyebrow,
+    .m-mag-eyebrow--kontakt {
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
         font-size: 11px;
         font-weight: 500;
@@ -1330,11 +1343,12 @@
         padding: 0;
     }
     .m-mag-tools-list li {
-        display: flex;
-        align-items: baseline;
-        gap: 22px;
-        padding: 18px 0;
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        column-gap: 22px;
+        padding: 24px 0;
         border-top: 0.5px solid rgba(0, 0, 0, 0.08);
+        align-items: baseline;
     }
     .m-mag-tools-list li:first-child {
         border-top: 0;
@@ -1345,9 +1359,9 @@
         font-size: 12px;
         font-weight: 500;
         color: var(--color-graphite-soft, #6e6e73);
-        flex-shrink: 0;
-        min-width: 24px;
         letter-spacing: 0.04em;
+        grid-column: 1;
+        grid-row: 1;
     }
     .m-mag-tool-name {
         font-family: "Fraunces", Georgia, serif;
@@ -1356,6 +1370,20 @@
         color: var(--color-indigo-strong, #061320);
         letter-spacing: -0.018em;
         line-height: 1.25;
+        grid-column: 2;
+        grid-row: 1;
+    }
+    /* Sprint 129 — Mini-Case-Zeile unter dem Tool-Namen (Apple-Acquisitions-Hebel:
+       Qualität statt Quantität, jedes Werkzeug bekommt seinen Use-Case-Satz). */
+    .m-mag-tool-case {
+        grid-column: 2;
+        grid-row: 2;
+        margin-top: 8px;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--color-graphite-soft, #6e6e73);
+        letter-spacing: -0.005em;
     }
     /* Sprint 115 — "+93 weitere" Item dezent abgesetzt vom 01-07-Lockup */
     .m-mag-tools-list li.m-mag-tools-more {

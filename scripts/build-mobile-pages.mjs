@@ -166,10 +166,9 @@ function rewriteHeroSubhead(html) {
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 110 — Boutique-Spec-Strip-Disziplin (Hermès/Aesop-Pattern):
-    // Strong = Substantiv-Phrase 2-3 Wörter ohne wertendes Adjektiv.
-    // Small  = drei konkrete Substantive mit Komma, geschlossener Satz mit Punkt.
-    // Marker bleiben heterogen (Brand-Code), visuell konsistent (Sprint 109).
+    // Sprint 129 — Hero-Verdichtung: 4 → 3 Trust-Items.
+    // KI-Auffindbarkeit raus (redundant zur Manufaktur-Promise).
+    // Drei Items = Pentagram-Print-Trios-Pattern (Astrid Stavro).
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
         '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:640ms">' +
@@ -192,13 +191,6 @@ function rewriteHeroCta(html) {
                 '<span class="m-hero-trust-body">' +
                     '<strong>KI-Automation</strong>' +
                     '<small>Mails, Follow-ups, Anfragen-Routing.</small>' +
-                '</span>' +
-            '</li>' +
-            '<li>' +
-                '<span class="m-hero-trust-num">◎</span>' +
-                '<span class="m-hero-trust-body">' +
-                    '<strong>KI-Auffindbarkeit</strong>' +
-                    '<small>SEO, GEO, AEO, LLMO, llms.txt, Schema.org.</small>' +
                 '</span>' +
             '</li>' +
         '</ul>' +
@@ -230,13 +222,14 @@ function compactHeroEyebrow(html) {
 }
 
 function rewriteFolioMarker(html) {
-    // Sprint 110 — Folio-Marker am Hero-Boden re-aktiviert (löst CTA-"Lonely").
-    // Section-Label "Manufaktur" → "Atelier" — Symmetrie zum Eyebrow "EIN ATELIER",
-    // vermeidet die 4. MANUFAKTUR-Wiederholung im Hero.
+    // Sprint 129 — Hero-Folio-Marker zu Magazine-Cover-Notation:
+    //   "S. 01 · Manufaktur" → "№ 01 · 2026 · EDITORIAL"
+    // Cover-Position des Magazine-Spreads, einheitlich zur Eyebrow-Numbering der
+    // Folge-Sections (Demos № 02, Personas № 03, Tools № 04, Siegel № 05, Kontakt № 06).
     // Desktop bleibt unverändert (Mobile-only-Rewrite).
     return html.replace(
-        /(<div class="hero-folio-marker"[^>]*>[\s\S]*?<span class="folio-section">)Manufaktur(<\/span>)/,
-        '$1Atelier$2'
+        /(<div class="hero-folio-marker"[^>]*>)[\s\S]*?(<\/div>)/,
+        '$1\n            <span class="folio-page">№ 01</span>\n            <span class="folio-section">2026 · Editorial</span>\n        $2'
     );
 }
 
@@ -346,30 +339,51 @@ const PHYLLOTAXIS_SVG = `<svg class="m-siegel-svg" viewBox="0 0 90 90" aria-hidd
 ${buildPhyllotaxisDots()}
 </svg>`;
 
-// Sprint 103 — Editorial-Sektionen weiter gestrafft:
-// Tools-Section: subheader + footnote raus, 7 Items mit space-evenly statt flex-start.
-// Siegel-Section: Sprint 115 — [K]-Mark ersetzt durch 13-Punkte-Phyllotaxis-SVG.
-const EDITORIAL_SECTIONS_HTML = `
-<!-- Sprint 103 — Editorial-Magazin-Sektionen unter Hero -->
+// Sprint 129 — Editorial-Sektionen gesplittet (Tools + Siegel als getrennte
+// Inject-Funktionen, weil sie in der neuen IA an unterschiedlicher Stelle
+// stehen) + Apple-Acquisitions-Hebel: 7+93 → 5 Top-Werkzeuge mit Mini-Case
+// (Quantität wirkt billig, Qualität wirkt premium).
+const TOOLS_SECTION_HTML = `
+<!-- Sprint 129 — Tools-Annotation (№ 04) -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">№ 02 · Branchen-Funktionen</p>
+    <p class="m-mag-eyebrow">№ 04 · Branchen-Annotationen</p>
     <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
-        <li><span class="m-mag-tool-num">01</span><span class="m-mag-tool-name">Wertermittlung</span></li>
-        <li><span class="m-mag-tool-num">02</span><span class="m-mag-tool-name">BAFA-Förderrechner</span></li>
-        <li><span class="m-mag-tool-num">03</span><span class="m-mag-tool-name">Symptom-Checker</span></li>
-        <li><span class="m-mag-tool-num">04</span><span class="m-mag-tool-name">Style-Galerie</span></li>
-        <li><span class="m-mag-tool-num">05</span><span class="m-mag-tool-name">Frachtquote</span></li>
-        <li><span class="m-mag-tool-num">06</span><span class="m-mag-tool-name">Coaching-Check</span></li>
-        <li><span class="m-mag-tool-num">07</span><span class="m-mag-tool-name">Reservierung</span></li>
-        <li class="m-mag-tools-more"><span class="m-mag-tool-num">+93</span><span class="m-mag-tool-name">weitere — branchen-spezifisch</span></li>
+        <li>
+            <span class="m-mag-tool-num">01</span>
+            <span class="m-mag-tool-name">Wertermittlung</span>
+            <span class="m-mag-tool-case">Verkäufer kommt mit Adresse, Karriaro liefert Marktwert in 30 Sekunden — kein ImmoScout-Umweg.</span>
+        </li>
+        <li>
+            <span class="m-mag-tool-num">02</span>
+            <span class="m-mag-tool-name">BAFA-Förderrechner</span>
+            <span class="m-mag-tool-case">Bauherr gibt Dachfläche ein, Karriaro nennt Förderhöhe sofort — vor-qualifiziert die Anfrage.</span>
+        </li>
+        <li>
+            <span class="m-mag-tool-num">03</span>
+            <span class="m-mag-tool-name">Symptom-Checker</span>
+            <span class="m-mag-tool-case">Patient beschreibt Beschwerden, Karriaro routet zur passenden Sprechstunde — entlastet die Telefon-Hotline.</span>
+        </li>
+        <li>
+            <span class="m-mag-tool-num">04</span>
+            <span class="m-mag-tool-name">Frachtquote</span>
+            <span class="m-mag-tool-case">PLZ + Gewicht ergibt Preis in 3 Sekunden — Schwaben-Logistik vergibt 40 % mehr Aufträge ohne Rückruf.</span>
+        </li>
+        <li>
+            <span class="m-mag-tool-num">05</span>
+            <span class="m-mag-tool-name">Foto-zu-Festpreis</span>
+            <span class="m-mag-tool-case">Hausbesitzer schickt Bad-Foto, Karriaro nennt Festpreis — Müller Sanitär spart 6 Erstgespräche pro Tag.</span>
+        </li>
     </ol>
 </section>
+`;
 
+const SIEGEL_SECTION_HTML = `
+<!-- Sprint 129 — Manufaktur-Siegel (№ 05) als Brand-Signature vor Kontakt -->
 <section class="m-mag-siegel" aria-label="Manufaktursiegel">
     <div class="m-siegel-emblem">
         ${PHYLLOTAXIS_SVG}
-        <span class="m-siegel-year">№ 01 · 2026</span>
+        <span class="m-siegel-year">№ 05 · 2026</span>
     </div>
     <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>
     <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
@@ -378,20 +392,34 @@ const EDITORIAL_SECTIONS_HTML = `
 </section>
 `;
 
-function injectEditorialSections(html) {
+function injectToolsSection(html) {
     if (html.includes('m-mag-tools-title')) return html;
-    // Anker: vor Demo-Swiper-Section (= zwischen Hero und Demo-Swiper).
-    // Falls Demo-Swiper noch nicht injiziert, vor <section id="audit"> als Fallback.
-    const swiperAnchor = /<section class="m-demo-swiper-mobile"/;
-    if (swiperAnchor.test(html)) {
-        return html.replace(swiperAnchor, EDITORIAL_SECTIONS_HTML + '\n<section class="m-demo-swiper-mobile"');
-    }
     const auditAnchor = /<section id="audit"/;
     if (auditAnchor.test(html)) {
-        return html.replace(auditAnchor, EDITORIAL_SECTIONS_HTML + '\n    <section id="audit"');
+        return html.replace(auditAnchor, TOOLS_SECTION_HTML + '\n    <section id="audit"');
     }
-    console.warn('  ⚠ kein Anker für Editorial-Sektionen gefunden');
+    console.warn('  ⚠ kein Anker für Tools-Section gefunden');
     return html;
+}
+
+function injectSiegelSection(html) {
+    if (html.includes('m-mag-siegel')) return html;
+    const auditAnchor = /<section id="audit"/;
+    if (auditAnchor.test(html)) {
+        return html.replace(auditAnchor, SIEGEL_SECTION_HTML + '\n    <section id="audit"');
+    }
+    console.warn('  ⚠ kein Anker für Siegel-Section gefunden');
+    return html;
+}
+
+// Sprint 129 — Kontakt-Section bekommt Eyebrow "№ 06 · Kontakt" als Magazine-
+// Pacing-Schluss. Mobile-only via .m-mag-eyebrow--kontakt (Desktop hidden).
+function injectKontaktNumbering(html) {
+    if (html.includes('m-mag-eyebrow--kontakt')) return html;
+    return html.replace(
+        /(<section id="kontakt"[^>]*>\s*<div class="wrap"[^>]*>)/,
+        '$1\n            <p class="m-mag-eyebrow m-mag-eyebrow--kontakt">№ 06 · Kontakt</p>'
+    );
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -454,10 +482,11 @@ function buildPersonaSectionHtml() {
 
 function injectPersonaSection(html) {
     if (html.includes('m-mag-personas-grid')) return html;
-    // Anker: vor Demo-Swiper-Section (= zwischen Tools und Demo).
-    const swiperAnchor = /<section class="m-demo-swiper-mobile"/;
-    if (swiperAnchor.test(html)) {
-        return html.replace(swiperAnchor, buildPersonaSectionHtml() + '\n<section class="m-demo-swiper-mobile"');
+    // Sprint 129 — Anker auf audit umgestellt; in Reverse-Inject-Order landet
+    // Persona zwischen Demos und Tools.
+    const auditAnchor = /<section id="audit"/;
+    if (auditAnchor.test(html)) {
+        return html.replace(auditAnchor, buildPersonaSectionHtml() + '\n    <section id="audit"');
     }
     console.warn('  ⚠ kein Anker für Persona-Section gefunden');
     return html;
@@ -550,9 +579,9 @@ function buildDemoSwiperHtml() {
     }).join('');
 
     return `
-<!-- Mobile Demo-Swiper (Sprint 103 — Picture+webp, Persona-Context, IO-Registry) -->
+<!-- Mobile Demo-Swiper (Sprint 129 — Editorial-Page № 02, show-don't-tell) -->
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">№ 04 · Acht Branchen · Live</p>
+    <p class="m-demo-swiper-section-eyebrow">№ 02 · Acht Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
@@ -659,15 +688,17 @@ function buildPage(relPath) {
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);
-        // Sprint 110 — Folio-Marker "Manufaktur" → "Atelier" (Boutique-Symmetrie zum Eyebrow)
+        // Sprint 129 — Folio-Marker zu "№ 01 · 2026 · EDITORIAL" (Cover-Position)
         html = rewriteFolioMarker(html);
-        // Sprint 107 — Siegel-Visual + Stats raus aus Hero (User-Wunsch: Hero gestrafft)
-        // injectHeroSiegelVisual bleibt im Code als Dead-Code fuer ggf. spaeteren Re-Use
-        // Sprint 103 — Reihenfolge: Tools → Personas → Demo-Swiper
-        // Demo-Swiper muss zuerst injected werden, damit Personas davor landen können.
+        // Sprint 129 — Information-Architecture: Hero → Demos → Personas → Tools → Siegel → Audit → Kontakt
+        // Alle 4 Inject-Funktionen nutzen audit-anchor und prependen DIREKT
+        // vor dem aktuellen Anker-Position. Reihenfolge = Render-Reihenfolge.
         html = injectDemoSwiper(html);
         html = injectPersonaSection(html);
-        html = injectEditorialSections(html);
+        html = injectToolsSection(html);
+        html = injectSiegelSection(html);
+        // Sprint 129 — Kontakt-Numbering (№ 06)
+        html = injectKontaktNumbering(html);
     }
     // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
     // Sprint 128 — Logik nach src/js/m-interactions.js extrahiert. Funktion behalten
