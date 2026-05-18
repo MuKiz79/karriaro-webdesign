@@ -723,7 +723,7 @@
 }
 
 .m-poster {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 7 / 10;
     border-radius: 14px;
     overflow: hidden;
     position: relative;
@@ -738,6 +738,41 @@
         0 18px 40px -12px rgba(20, 32, 43, 0.22);
     border: 0.5px solid rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
+}
+/* Sprint 124 — Phone-Frame mit Hero-Screenshot zentriert auf Brand-Color-Card */
+.m-poster-phone {
+    align-self: center;
+    width: 70%;
+    aspect-ratio: 2 / 3;
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.18),
+        0 22px 50px -10px rgba(0, 0, 0, 0.36);
+}
+.m-poster-phone picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.m-poster-shot {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 22px;
+    display: block;
+}
+/* Sprint 121/124 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus */
+.screenshot-mode .kr-strip,
+.screenshot-mode .topbar,
+.screenshot-mode header,
+.screenshot-mode nav.nav,
+.screenshot-mode .m-sticky-cta-bar {
+    display: none !important;
 }
 .m-poster-folio {
     position: absolute;

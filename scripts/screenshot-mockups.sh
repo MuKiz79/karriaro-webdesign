@@ -52,12 +52,12 @@ for spec in "${PAGES[@]}"; do
   echo "[start] $page → $out"
 
   # Sprint 121 — Viewport 480×720 (war 393×600 in Sprint 120) für mehr
-  # horizontal-Breathing — verhindert italic-Sub-Headline-Overflow bei einigen
-  # Portfolios (Praxis Weber, Friseur Müller etc.). Aspect 2:3.
+  # horizontal-Breathing — verhindert italic-Sub-Headline-Overflow.
+  # Sprint 124 — 3× Retina (war 2×) für premium-Sharpness im Phone-Frame-Display.
   "$CHROME" --headless --disable-gpu --hide-scrollbars \
     --virtual-time-budget=5000 \
     --window-size=480,720 \
-    --force-device-scale-factor=2 \
+    --force-device-scale-factor=3 \
     --screenshot="$TMP/s.png" \
     "$URL" 2>/dev/null
 
@@ -72,9 +72,9 @@ for spec in "${PAGES[@]}"; do
   # Defensive Höhen-Sicherung — falls Chrome viewport-clip ignoriert
   # (Versionsabhängig). Auf macOS Darwin 25.4+ ist sips -c upper-left-anchored.
   H=$(sips -g pixelHeight "$OUT_DIR/$out" 2>/dev/null | tail -1 | awk '{print $2}')
-  if [ -n "$H" ] && [ "$H" -gt 1440 ]; then
-    echo "[crop] $page — Chrome capture H=$H > 1440, sips-Fallback aktiv"
-    sips -c 1440 960 "$OUT_DIR/$out" --out "$OUT_DIR/$out" >/dev/null 2>&1
+  if [ -n "$H" ] && [ "$H" -gt 2160 ]; then
+    echo "[crop] $page — Chrome capture H=$H > 2160, sips-Fallback aktiv"
+    sips -c 2160 1440 "$OUT_DIR/$out" --out "$OUT_DIR/$out" >/dev/null 2>&1
   fi
 
   size=$(stat -f %z "$OUT_DIR/$out" 2>/dev/null || stat -c %s "$OUT_DIR/$out")
