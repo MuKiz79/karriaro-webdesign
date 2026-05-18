@@ -23,6 +23,7 @@ import {
     readFileSync, writeFileSync, mkdirSync, readdirSync, statSync,
     existsSync, unlinkSync
 } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { dirname, resolve, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -59,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=125">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=126">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 const STICKY_CTA_BAR = `
@@ -618,6 +619,33 @@ const DEMO_SWIPER_SLIDES = [
     { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',      href: '/portfolio/meisterbetrieb-mueller.html',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.', headline: 'Wasser ist kein Spaß.',           italicSub: 'Wir nehmen das ernst — und Ihre Zeit auch.',           brandColor: '#B47045', signet: SIGNET_SANITAER,   signetClass: 'glyph' },
 ];
 
+// Sprint 126 — Image-Dims pro Mockup für intrinsic <img width="W" height="H">.
+// Jedes Portfolio hat natürliche Hero-Höhe (Coaching > Stadtmakler etc.) —
+// Browser kennt aspect vor Image-Load → kein Layout-Shift, korrekte Card-Höhe.
+const MOCKUP_DIMS_CACHE = new Map();
+function readMockupDims(slug) {
+    if (MOCKUP_DIMS_CACHE.has(slug)) return MOCKUP_DIMS_CACHE.get(slug);
+    const path = join(SRC, 'images', 'mockups-opt', `${slug}-mockup-800.jpg`);
+    if (!existsSync(path)) {
+        const fallback = { w: 800, h: 1800 };
+        MOCKUP_DIMS_CACHE.set(slug, fallback);
+        return fallback;
+    }
+    try {
+        const out = execSync(`sips -g pixelWidth -g pixelHeight "${path}"`, { encoding: 'utf8' });
+        const dims = {
+            w: parseInt(out.match(/pixelWidth: (\d+)/)?.[1] || '800', 10),
+            h: parseInt(out.match(/pixelHeight: (\d+)/)?.[1] || '1800', 10),
+        };
+        MOCKUP_DIMS_CACHE.set(slug, dims);
+        return dims;
+    } catch {
+        const fallback = { w: 800, h: 1800 };
+        MOCKUP_DIMS_CACHE.set(slug, fallback);
+        return fallback;
+    }
+}
+
 function buildBrowserChromeHtml(domain) {
     // macOS-Safari-Style Chrome — 3 Dots links, URL-Bar zentriert mit Lock-Icon.
     return `
@@ -635,19 +663,22 @@ function buildBrowserChromeHtml(domain) {
 }
 
 function buildDemoSwiperHtml() {
-    // Sprint 122/124 → Sprint 125 — Full-Bleed Hero-Screenshot (Magazine-Cover).
-    //   Card = Screenshot edge-to-edge. Aspect 4:9 matched Source 480×1080.
-    //   Kein Phone-Frame, kein Brand-Color, kein Folio, kein Pfeil.
+    // Sprint 125 → Sprint 126 — Full-Bleed mit NATÜRLICHER Höhe pro Portfolio.
+    //   Jedes Portfolio-Hero wird in seiner natürlichen Höhe gecaptured
+    //   (Playwright element.screenshot). <img width="W" height="H"> liest
+    //   intrinsic Dims aus der File-Datei (readMockupDims). Card aspect-ratio
+    //   in CSS auto — height kommt vom Image.
     const slides = DEMO_SWIPER_SLIDES.map((slide, i) => {
         const { slug, title, domain, href, eyebrow, personaContext } = slide;
         const eager = i === 0;
+        const dims = readMockupDims(slug);
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <picture>
                     <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
                     <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                    <img class="m-poster-shot" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="800" height="1800">
+                    <img class="m-poster-shot" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}">
                 </picture>
             </button>
             <div class="m-demo-swiper-meta">

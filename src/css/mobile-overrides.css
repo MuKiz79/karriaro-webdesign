@@ -722,11 +722,11 @@
     transform: scale(0.985);
 }
 
-/* Sprint 125 — Full-Bleed Hero-Screenshot (Magazine-Cover-Pattern).
-   Card = Screenshot edge-to-edge, kein Phone-Frame, kein Brand-Color-Rahmen,
-   kein Folio/Pfeil. Aspect 4:9 matched Source 480×1080 perfekt. */
+/* Sprint 125/126 — Full-Bleed Hero-Screenshot mit natürlicher Höhe pro Portfolio.
+   KEIN fixed aspect-ratio — intrinsic <img width="W" height="H"> bestimmt Card-Höhe.
+   Jedes Portfolio bekommt seine eigene Höhe (Coaching mit Portrait länger als
+   Stadtmakler ohne Portrait). Kein Crop. */
 .m-poster {
-    aspect-ratio: 4 / 9;
     border-radius: 14px;
     overflow: hidden;
     position: relative;
@@ -760,9 +760,7 @@
 }
 .m-poster-shot {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
+    height: auto;
     display: block;
 }
 /* Sprint 121/124/125 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus.
