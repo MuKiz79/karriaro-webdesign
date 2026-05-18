@@ -722,15 +722,17 @@
     transform: scale(0.985);
 }
 
-/* Sprint 125/126 — Full-Bleed Hero-Screenshot mit natürlicher Höhe pro Portfolio.
-   KEIN fixed aspect-ratio — intrinsic <img width="W" height="H"> bestimmt Card-Höhe.
-   Jedes Portfolio bekommt seine eigene Höhe (Coaching mit Portrait länger als
-   Stadtmakler ohne Portrait). Kein Crop. */
+/* Sprint 127 — Fit-One-Screen: Card aspect 1/2 (350×700), Image scaled
+   via object-fit:contain → kein vertikales Scroll innerhalb der Card.
+   Cream-Soft visible als Frame um das contained-Image. */
 .m-poster {
+    aspect-ratio: 1 / 2;
     border-radius: 14px;
     overflow: hidden;
     position: relative;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow:
         0 1px 1px rgba(0, 0, 0, 0.06),
         0 4px 12px rgba(20, 32, 43, 0.08),
@@ -738,6 +740,10 @@
     border: 0.5px solid rgba(0, 0, 0, 0.06);
     box-sizing: border-box;
     background: var(--color-cream-soft, #f5f3ee);
+}
+.m-poster picture {
+    display: block;
+    height: 100%;
 }
 /* Sprint 124 — Phone-Frame mit Hero-Screenshot zentriert auf Brand-Color-Card */
 .m-poster-phone {
@@ -759,8 +765,10 @@
     height: 100%;
 }
 .m-poster-shot {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
     display: block;
 }
 /* Sprint 121/124/125 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus.
