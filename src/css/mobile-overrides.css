@@ -1210,8 +1210,10 @@
 @media (max-width: 1023px) {
 
     /* Apple-Light-Background statt warmes Cream */
+    /* Sprint 132 — Body-BG wird durch Section-Spy gesteuert.
+       Vorherige Sprint-Setzung auf #F5F5F7 raus (kollidierte mit JS-Update). */
     body {
-        background-color: #F5F5F7 !important;
+        background-color: var(--m-section-bg, #FBFAF7);
     }
     /* Sections die im Desktop einen warmen Bg haben, werden auf Mobile kuehler */
     section[style*="--color-cream-soft"],
@@ -1522,9 +1524,11 @@
         scroll-behavior: smooth;
     }
 
-    /* Body weiss als Basis */
+    /* Body-Basis wird Sprint-132 via --m-section-bg gesteuert (Section-BG-Spy
+       in m-interactions.js setzt die Variable pro sichtbarer Magazine-Page).
+       Default-Fallback Cream-Bone, kein !important damit Spy-Updates wirken. */
     body {
-        background: #FFFFFF !important;
+        background: var(--m-section-bg, #FBFAF7);
     }
 
     /* === 1 Bildschirm pro Sektion — Snap raus, aber min-height bleibt === */
@@ -1998,6 +2002,100 @@
         opacity: 1;
         transform: none;
     }
+
+    /* Sprint 132 — Section-Reveal: Magazine-Page-Turn-Pattern.
+       Jede Hauptsektion fade-up beim Sichtbarwerden (15% Threshold).
+       Subtil (16px translate, 720ms duration) — wirkt wie Magazine-Spread
+       das aufgeschlagen wird, nicht wie aggressive JS-Animation. */
+    .m-mag-personas:not(.m-in-view),
+    .m-demo-swiper-mobile:not(.m-in-view),
+    .m-mag-siegel:not(.m-in-view),
+    section[id="kontakt"]:not(.m-in-view) {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    .m-mag-personas,
+    .m-demo-swiper-mobile,
+    .m-mag-siegel,
+    section[id="kontakt"] {
+        transition: opacity 720ms cubic-bezier(0.2, 0.7, 0.2, 1),
+                    transform 720ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    /* Sprint 132 — Manufaktur-Siegel-Pulse: das Embossing "atmet".
+       Brand-Signature "ist lebendig" — Award-Tier-Microinteraction.
+       8s-Cycle, sehr subtil: 6° Rotation ± + 1.06 Scale-Pulse. */
+    .m-hero-siegel-emboss svg {
+        animation: m-siegel-pulse 8s ease-in-out infinite;
+        transform-origin: center center;
+    }
+    @keyframes m-siegel-pulse {
+        0%, 100% {
+            transform: rotate(0deg) scale(1);
+            opacity: 0.55;
+        }
+        25% {
+            transform: rotate(6deg) scale(1.06);
+            opacity: 0.65;
+        }
+        50% {
+            transform: rotate(0deg) scale(1);
+            opacity: 0.55;
+        }
+        75% {
+            transform: rotate(-6deg) scale(1.06);
+            opacity: 0.65;
+        }
+    }
+
+    /* Sprint 132 — Body-BG-Section-Shift: smooth Color-Transition zwischen
+       Magazine-Pages. Section-Spy in m-interactions.js setzt --m-section-bg
+       basierend auf aktuell sichtbarer Section. Fade-Curve 800ms. */
+    body {
+        --m-section-bg: var(--color-bone, #FBFAF7);
+        background: var(--m-section-bg);
+        transition: background 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+}
+
+/* Sprint 132 — Reduced-Motion: alle scroll-driven Animations static end-state.
+   Award-Accessibility-Anforderung (Tim-Berners-Lee-Hebel + ADA-Voraussetzung). */
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+    .m-mag-personas, .m-demo-swiper-mobile, .m-mag-siegel, section[id="kontakt"] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+    .m-hero-siegel-emboss svg {
+        animation: none !important;
+    }
+    body {
+        transition: none !important;
+    }
+}
+
+/* Sprint 132 — Progressive-Enhancement: animation-timeline: scroll() für
+   Chrome 115+ / Safari TP. Wenn unterstützt, übernimmt scroll-driven die
+   Siegel-Pulse-Sequenz (kontinuierlich an Scroll gekoppelt statt 8s-Loop). */
+@supports (animation-timeline: scroll()) {
+    @media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+        .m-hero-siegel-emboss svg {
+            animation: m-siegel-scroll-rotate linear;
+            animation-timeline: scroll(root);
+            animation-range: 0 50svh;
+        }
+        @keyframes m-siegel-scroll-rotate {
+            from {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.45;
+            }
+            to {
+                transform: rotate(60deg) scale(1.18);
+                opacity: 0.75;
+            }
+        }
+    }
+}
     /* Stagger via nth-child */
     .m-mag-specs.m-in-view .m-mag-spec:nth-child(1) { transition-delay: 0ms; }
     .m-mag-specs.m-in-view .m-mag-spec:nth-child(2) { transition-delay: 100ms; }

@@ -101,7 +101,7 @@
         });
     }
 
-    // ─── 4. Editorial-Scroll-Animations (Sprint 95/100) ─────────
+    // ─── 4. Editorial-Scroll-Animations (Sprint 95/100/132) ─────
     function mScrollAnimations() {
         if (!('IntersectionObserver' in window)) return;
 
@@ -139,7 +139,12 @@
             quotes.forEach(function (q) { ioQuote.observe(q); });
         }
 
-        var magSections = document.querySelectorAll('.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel');
+        // Sprint 132 — Section-Reveal erweitert auf alle Magazine-Sections
+        // (Personas + Demos + Kontakt zusätzlich zu Specs/Tools/Proof/Siegel).
+        var magSections = document.querySelectorAll(
+            '.m-mag-specs, .m-mag-tools, .m-mag-proof, .m-mag-siegel,' +
+            ' .m-mag-personas, .m-demo-swiper-mobile, section[id="kontakt"]'
+        );
         if (magSections.length) {
             var ioMag = new IntersectionObserver(function (entries) {
                 entries.forEach(function (e) {
@@ -151,6 +156,54 @@
             }, { threshold: 0.15 });
             magSections.forEach(function (s) { ioMag.observe(s); });
         }
+    }
+
+    // ─── 6. Section-BG-Spy (Sprint 132 Deep-Moment) ─────────────
+    // Beobachtet welche Magazine-Section die größte Sichtbarkeit hat
+    // und setzt body's --m-section-bg auf die zugehörige Bühnen-Farbe.
+    // Erzeugt das "Magazine-Page-Turn"-Gefühl: Hero=Bone, Demos=Cream-Warm,
+    // Personas=Cream-Warmer, Tools=Bone, Siegel=Cream-Gold-Tint, Kontakt=Bone.
+    function mSectionBgSpy() {
+        if (!('IntersectionObserver' in window)) return;
+        var BG_MAP = {
+            'hero':     '#FBFAF7', // Cream-Bone (Sprint 130 default)
+            'demos':    '#F4EDE0', // Cream-Warmer (Demos-Page)
+            'personas': '#EFE8DA', // Cream-Even-Warmer (Index-Page)
+            'tools':    '#FBFAF7', // Cream-Bone (Annotation)
+            'siegel':   '#F0E8D8', // Cream-Gold-Tint (Brand-Signature)
+            'kontakt':  '#FBFAF7'  // Cream-Bone (Schluss)
+        };
+        // Sections mit data-section-bg-key oder bekannte Klassen
+        var sectionMap = [
+            { sel: '.hero-with-photo',         key: 'hero' },
+            { sel: '.m-demo-swiper-mobile',    key: 'demos' },
+            { sel: '.m-mag-personas',          key: 'personas' },
+            { sel: '.m-mag-tools',             key: 'tools' },
+            { sel: '.m-mag-siegel',            key: 'siegel' },
+            { sel: 'section[id="kontakt"]',    key: 'kontakt' }
+        ];
+        var sections = sectionMap
+            .map(function (s) { return { el: document.querySelector(s.sel), key: s.key }; })
+            .filter(function (s) { return s.el; });
+        if (!sections.length) return;
+
+        var visibility = new Map();
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                visibility.set(e.target, e.intersectionRatio);
+            });
+            // Welche Section hat höchste Sichtbarkeit?
+            var best = sections.reduce(function (acc, s) {
+                var r = visibility.get(s.el) || 0;
+                return r > acc.ratio ? { key: s.key, ratio: r } : acc;
+            }, { key: 'hero', ratio: 0 });
+            var bg = BG_MAP[best.key] || BG_MAP.hero;
+            document.body.style.setProperty('--m-section-bg', bg);
+        }, {
+            // Mehrere Thresholds für graduelle Visibility-Messung
+            threshold: [0, 0.25, 0.5, 0.75, 1.0]
+        });
+        sections.forEach(function (s) { io.observe(s.el); });
     }
 
     // ─── 5. Demo-Swiper Dots + Sheet-Modal (Sprint 93/95) ───────
@@ -245,6 +298,7 @@
         mPersonaTiles();
         mScrollAnimations();
         mDemoSwiper();
+        mSectionBgSpy();    // Sprint 132
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);

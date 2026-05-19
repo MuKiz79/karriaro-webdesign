@@ -82,7 +82,7 @@ const STICKY_CTA_BAR = `
 `;
 
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=128" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=132" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
