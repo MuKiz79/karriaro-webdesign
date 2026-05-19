@@ -81,8 +81,31 @@ const STICKY_CTA_BAR = `
 </div>
 `;
 
+// Sprint 133 — Pin-Spy als Magazine-Page-Counter (top-right, Mobile-only).
+// Zeigt aktuelle Section-Nummer + Label. JS in m-interactions.js (mPinSpy)
+// aktualisiert [data-spy-current] beim Scroll via IntersectionObserver.
+const PIN_SPY_HTML = `
+<!-- Sprint 133 — Magazine-Page-Counter / Section-Reading-Indicator -->
+<aside class="m-pin-spy" data-m-pin-spy aria-hidden="true">
+    <span class="m-pin-spy-num" data-m-pin-spy-num>01</span>
+    <span class="m-pin-spy-sep">/</span>
+    <span class="m-pin-spy-total">06</span>
+    <span class="m-pin-spy-dot" aria-hidden="true">·</span>
+    <span class="m-pin-spy-label" data-m-pin-spy-label>COVER</span>
+</aside>
+`;
+
+function injectPinSpy(html) {
+    if (html.includes('data-m-pin-spy')) return html;
+    const closeTag = '</' + 'body>';
+    const closeBodyIdx = html.lastIndexOf(closeTag);
+    if (closeBodyIdx === -1) return html;
+    return html.slice(0, closeBodyIdx) + PIN_SPY_HTML + html.slice(closeBodyIdx);
+}
+
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=132" defer></script>\n`;
+// Sprint 133 — Cache-Bust v=132 → v=133.
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=133" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -752,6 +775,8 @@ function buildPage(relPath) {
         html = injectSiegelSection(html);
         // Sprint 129 — Kontakt-Numbering (№ 06)
         html = injectKontaktNumbering(html);
+        // Sprint 133 — Pin-Spy (Magazine-Page-Counter)
+        html = injectPinSpy(html);
     }
     // Sprint 95 — Scroll-Animations für ALLE Pages (Counter + Pull-Quotes)
     // Sprint 128 — Logik nach src/js/m-interactions.js extrahiert. Funktion behalten
