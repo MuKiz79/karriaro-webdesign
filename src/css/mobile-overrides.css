@@ -2135,6 +2135,180 @@
     }
 }
 
+/* ════════════════════════════════════════════════════════════
+   Sprint 134 — Dark-Mode für Mobile (ADA-Award-Voraussetzung).
+
+   Variable-Overrides liegen HIER (nicht tokens.css), weil src/index.html
+   inline `:root { --color-* }` mit hardcoded Light-Werten setzt und
+   tokens.css überschreibt. mobile-overrides.css kommt cascadestechnisch
+   ZULETZT (per build-script vor </head> injiziert), also gewinnen unsere
+   Dark-Vars über die Inline-Defaults.
+
+   Aktiv via @media (prefers-color-scheme: dark) — OS-Setting-driven,
+   kein User-Toggle. Editorial-warm dark (kein OLED-pure-black).
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-ink: #f5f3ee;
+        --color-graphite: #b8bcc3;
+        --color-graphite-soft: #8a8e96;
+        --color-graphite-light: #6a6e76;
+        --color-bone: #0f1217;
+        --color-cream: #0f1217;
+        --color-cream-soft: #1a1e25;
+        --color-onyx: #f5f3ee;
+        --color-indigo: #6B8AA3;
+        --color-indigo-deep: #1a1e25;
+        --color-indigo-strong: #f5f3ee;
+        --color-gold: #B59F75;
+        --color-line: rgba(245, 243, 238, 0.10);
+        --color-line-strong: rgba(245, 243, 238, 0.16);
+        /* Magazine-Page-BG-Tokens dark */
+        --m-bg-hero:     #0f1217;
+        --m-bg-demos:    #14181f;
+        --m-bg-personas: #181c23;
+        --m-bg-tools:    #0f1217;
+        --m-bg-siegel:   #1a1e25;
+        --m-bg-kontakt:  #0f1217;
+    }
+}
+
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    /* Body-Color (Sprint 132 Magazine-Page-Turn updated automatisch via JS) */
+    body {
+        color: var(--color-ink, #f5f3ee);
+    }
+    /* Nav-Topbar: backdrop bleibt subtle, Text-Color invertiert */
+    nav.is-scrolled {
+        background: rgba(15, 18, 23, 0.86) !important;
+        backdrop-filter: saturate(160%) blur(20px);
+        border-bottom-color: rgba(245, 243, 238, 0.06) !important;
+    }
+    /* Hero-Headline + Italic */
+    .hero-headline {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .hero-h1-line.m-hero-accent {
+        color: var(--color-gold, #B59F75) !important;
+    }
+    /* Trust-List Numbers + Body */
+    .m-hero-trust-num {
+        color: var(--color-gold, #B59F75) !important;
+    }
+    .m-hero-trust-body strong {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-hero-trust-body small {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    /* Hero-Folio-Marker */
+    .hero-with-photo .hero-folio-marker {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    /* Marginalia + Siegel-Embossing */
+    .m-hero-marginalia {
+        color: var(--color-graphite-soft, #8a8e96);
+    }
+    .m-hero-marginalia,
+    .m-hero-marginalia {
+        border-top-color: rgba(245, 243, 238, 0.08);
+    }
+    /* Hero-CTA-Primary — invertiert (cream auf dark) */
+    .hero-with-photo .hero-cta-row .btn,
+    .m-hero-primary {
+        background: var(--color-ink, #f5f3ee) !important;
+        color: var(--color-cream, #0f1217) !important;
+    }
+    /* Sticky-CTA-Bar */
+    .m-sticky-cta-bar {
+        background: rgba(15, 18, 23, 0.96) !important;
+        box-shadow: 0 -1px 0 rgba(245, 243, 238, 0.08) !important;
+    }
+    .m-sticky-cta {
+        background: var(--color-ink, #f5f3ee) !important;
+        color: #0f1217 !important;
+    }
+    /* Demo-Swiper-Meta + Title */
+    .m-demo-swiper-section-eyebrow,
+    .m-demo-swiper-section-hint,
+    .m-demo-swiper-eyebrow {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    .m-demo-swiper-section-title,
+    .m-demo-swiper-title {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-demo-swiper-cta {
+        color: var(--color-gold, #B59F75) !important;
+    }
+    .m-demo-swiper-dot {
+        background: var(--color-graphite-soft, #8a8e96);
+    }
+    .m-demo-swiper-dot.is-active {
+        background: var(--color-gold, #B59F75) !important;
+    }
+    .m-demo-swiper-persona-context {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    /* Sheet-Modal (Demo-Live-Preview) */
+    .m-demo-sheet-panel {
+        background: #14181f !important;
+    }
+    .m-demo-sheet-title {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-demo-sheet-close {
+        background: rgba(245, 243, 238, 0.08) !important;
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-demo-sheet-body {
+        background: #1a1e25 !important;
+    }
+    /* Persona-Tiles */
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-mag-eyebrow,
+    .m-mag-eyebrow--kontakt,
+    .m-siegel-eyebrow,
+    .m-siegel-body,
+    .m-mag-tool-case {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    .m-mag-tool-name {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-mag-tool-num {
+        color: var(--color-gold, #B59F75) !important;
+    }
+    .m-persona-tile {
+        background: rgba(245, 243, 238, 0.04);
+    }
+    .m-persona-name,
+    .m-persona-headline {
+        color: var(--color-ink, #f5f3ee) !important;
+    }
+    .m-persona-body {
+        color: var(--color-graphite-soft, #8a8e96) !important;
+    }
+    /* Demo-Card Box-Shadow stärker für Dark-Mode-Floating-Effect */
+    .m-poster {
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.4),
+            0 8px 24px rgba(0, 0, 0, 0.4),
+            0 22px 48px -14px rgba(0, 0, 0, 0.55) !important;
+        border-color: rgba(245, 243, 238, 0.08) !important;
+    }
+    .m-poster-shot {
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.32),
+            0 8px 20px rgba(0, 0, 0, 0.48),
+            0 0 0 0.5px rgba(245, 243, 238, 0.12) !important;
+    }
+}
+
 /* Sprint 132 — Progressive-Enhancement: animation-timeline: scroll() für
    Chrome 115+ / Safari TP. Wenn unterstützt, übernimmt scroll-driven die
    Siegel-Pulse-Sequenz (kontinuierlich an Scroll gekoppelt statt 8s-Loop). */

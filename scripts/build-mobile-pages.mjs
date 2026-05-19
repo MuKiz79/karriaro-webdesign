@@ -60,8 +60,30 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=127">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=134">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
+
+// Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
+// Wird vor </head> auf JEDER Mobile-Page injiziert (auch Sub-Pages).
+const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <meta name="theme-color" content="#1A2E40" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0c0f" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Karriaro">
+    <meta name="format-detection" content="telephone=no">
+    <script>(function(){if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}})();</script>`;
+
+function injectPwaHead(html) {
+    if (html.includes('rel="manifest"')) return html;
+    const closeHeadIdx = html.lastIndexOf('</head>');
+    if (closeHeadIdx === -1) return html;
+    return html.slice(0, closeHeadIdx) + PWA_HEAD_BLOCK + '\n' + html.slice(closeHeadIdx);
+}
 
 // Sprint 128 — Sticky-CTA-IO + Demo-Sheet + Persona-Click + Scroll-Anim
 // wurden aus den Inline-Snippets in src/js/m-interactions.js extrahiert.
@@ -104,8 +126,8 @@ function injectPinSpy(html) {
 }
 
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
-// Sprint 133 — Cache-Bust v=132 → v=133.
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=133" defer></script>\n`;
+// Sprint 134 — Cache-Bust v=133 → v=134 (Dark-Mode + neue Section-Reveal-Rules).
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=134" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -752,6 +774,9 @@ function buildPage(relPath) {
 
     html = stripAutoRedirect(html);
     html = injectMobileCss(html);
+    // Sprint 134 — PWA-Foundation (Manifest + Apple-Meta + SW-Registration)
+    // auf JEDER Mobile-Page, nicht nur Index. Macht Sub-Pages installable.
+    html = injectPwaHead(html);
     if (isSelling(relPath)) {
         html = injectStickyCta(html);
     }

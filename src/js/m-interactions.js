@@ -166,14 +166,16 @@
     function mSectionBgSpy() {
         if (!('IntersectionObserver' in window)) return;
 
-        // Section-Konfiguration: Selektor → key → BG-Farbe + Pin-Spy-Daten
+        // Section-Konfiguration: Selektor → key → CSS-Variable + Pin-Spy-Daten.
+        // Sprint 134: BG kommt aus tokens.css via CSS-Variable — Dark-Mode-aware
+        // (Variable wird in @media (prefers-color-scheme: dark) überschrieben).
         var SECTIONS = [
-            { sel: '.hero-with-photo',      key: 'hero',     num: '01', label: 'COVER',    bg: '#FBFAF7' },
-            { sel: '.m-demo-swiper-mobile', key: 'demos',    num: '02', label: 'DEMOS',    bg: '#F4EDE0' },
-            { sel: '.m-mag-personas',       key: 'personas', num: '03', label: 'INDEX',    bg: '#EFE8DA' },
-            { sel: '.m-mag-tools',          key: 'tools',    num: '04', label: 'TOOLS',    bg: '#FBFAF7' },
-            { sel: '.m-mag-siegel',         key: 'siegel',   num: '05', label: 'SIEGEL',   bg: '#F0E8D8' },
-            { sel: 'section[id="kontakt"]', key: 'kontakt',  num: '06', label: 'KONTAKT',  bg: '#FBFAF7' }
+            { sel: '.hero-with-photo',      key: 'hero',     num: '01', label: 'COVER',    bgVar: '--m-bg-hero' },
+            { sel: '.m-demo-swiper-mobile', key: 'demos',    num: '02', label: 'DEMOS',    bgVar: '--m-bg-demos' },
+            { sel: '.m-mag-personas',       key: 'personas', num: '03', label: 'INDEX',    bgVar: '--m-bg-personas' },
+            { sel: '.m-mag-tools',          key: 'tools',    num: '04', label: 'TOOLS',    bgVar: '--m-bg-tools' },
+            { sel: '.m-mag-siegel',         key: 'siegel',   num: '05', label: 'SIEGEL',   bgVar: '--m-bg-siegel' },
+            { sel: 'section[id="kontakt"]', key: 'kontakt',  num: '06', label: 'KONTAKT',  bgVar: '--m-bg-kontakt' }
         ];
         var sections = SECTIONS
             .map(function (s) { return Object.assign({}, s, { el: document.querySelector(s.sel) }); })
@@ -204,8 +206,11 @@
                     best = s;
                 }
             }
-            // Body-BG-Update (Sprint 132)
-            document.body.style.setProperty('--m-section-bg', best.bg);
+            // Body-BG-Update (Sprint 132/134) — liest aktuellen Wert der
+            // Section-bgVar (CSS-Variable aus tokens.css, Dark-Mode-aware).
+            var rootStyles = getComputedStyle(document.documentElement);
+            var bgValue = rootStyles.getPropertyValue(best.bgVar).trim() || '#FBFAF7';
+            document.body.style.setProperty('--m-section-bg', bgValue);
             // Pin-Spy-Update (Sprint 133)
             if (pinSpy && best.key !== lastKey) {
                 if (pinSpyNum)   pinSpyNum.textContent   = best.num;

@@ -86,6 +86,51 @@
   --color-gold: var(--kr-gold);
   --color-ink: var(--kr-ink);
   --color-border: var(--kr-border);
+
+  /* Sprint 134 — Magazine-Page-BG-Tokens (Single-Source für JS-Section-Spy).
+   * Cream-Töne synchron zu mSectionBgSpy in m-interactions.js. */
+  --m-bg-hero:     #FBFAF7;
+  --m-bg-demos:    #F4EDE0;
+  --m-bg-personas: #EFE8DA;
+  --m-bg-tools:    #FBFAF7;
+  --m-bg-siegel:   #F0E8D8;
+  --m-bg-kontakt:  #FBFAF7;
+}
+
+/* Sprint 134 — Dark-Mode-Tokens (ADA-Award-Voraussetzung).
+ * Mappen die wichtigsten Brand-Tokens auf eine dunkle, warme Editorial-
+ * Palette. Aktiv via @media (prefers-color-scheme: dark) — kein User-Toggle,
+ * folgt OS-Setting. Reduced-Contrast für editorial-feel (kein OLED-Schwarz). */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kr-ink: #f5f3ee;
+    --kr-bg: #0f1217;
+    --kr-bg-soft: #161a20;
+    --kr-blue: #4A6B85;
+    --kr-blue-light: #6B8AA3;
+    --kr-grey: #b8bcc3;
+    --kr-grey-soft: #8a8e96;
+    --kr-gold: #B59F75;
+    --kr-border: rgba(245, 243, 238, 0.08);
+
+    --color-cream-soft: #1a1e25;
+    --color-cream: #0f1217;
+    --color-indigo: #6B8AA3;
+    --color-indigo-strong: #f5f3ee;
+    --color-indigo-deep: #1a1e25;
+    --color-graphite-soft: #8a8e96;
+    --color-gold: #B59F75;
+    --color-ink: #f5f3ee;
+    --color-border: rgba(245, 243, 238, 0.08);
+
+    /* Dark-Magazine-Page-BG-Tokens — wärmer als pure-schwarz, dezent abgestuft */
+    --m-bg-hero:     #0f1217;
+    --m-bg-demos:    #14181f;
+    --m-bg-personas: #181c23;
+    --m-bg-tools:    #0f1217;
+    --m-bg-siegel:   #1a1e25;
+    --m-bg-kontakt:  #0f1217;
+  }
 }
 
 /* Reduced-Motion respektieren (Refactoring-UI-Standard) */
