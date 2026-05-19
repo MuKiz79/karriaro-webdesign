@@ -821,9 +821,13 @@ function buildPage(relPath) {
     };
 }
 
+// Sprint 134 — hand-written HTML files in src/m/ die NICHT vom Build
+// generiert werden und beim Cleanup erhalten bleiben müssen.
+const PRESERVED_HTML = new Set(['offline.html']);
+
 function cleanOldMobileOutput() {
-    // Loescht src/m/**/*.html. Lässt manifest.json, sw.js, icons/* unberührt
-    // (PWA-Files aus Sprint 89 — bleiben für den Fall dass jemand /m/ direkt aufruft).
+    // Loescht src/m/**/*.html. Laesst manifest.json, sw.js, icons/* + hand-
+    // geschriebene HTML (PRESERVED_HTML) unberuehrt.
     function walk(dir) {
         if (!existsSync(dir)) return;
         for (const entry of readdirSync(dir)) {
@@ -831,7 +835,7 @@ function cleanOldMobileOutput() {
             const s = statSync(p);
             if (s.isDirectory()) {
                 walk(p);
-            } else if (entry.endsWith('.html')) {
+            } else if (entry.endsWith('.html') && !PRESERVED_HTML.has(entry)) {
                 unlinkSync(p);
             }
         }

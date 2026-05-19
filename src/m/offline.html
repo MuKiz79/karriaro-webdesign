@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline · Karriaro Webdesign</title>
+    <meta name="description" content="Sie sind offline. Das Editorial wartet — sobald Sie wieder online sind, geht es weiter.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1A2E40" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0c0f" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=3">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        :root {
+            --color-bone: #FBFAF7;
+            --color-cream-soft: #F8F4ED;
+            --color-indigo: #1A2E40;
+            --color-gold: #8A7B5C;
+            --color-graphite-soft: #6e6e73;
+            --color-ink: #14202B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+            background: var(--color-bone);
+            color: var(--color-ink);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 64px 24px;
+            text-align: center;
+        }
+        .offline-folio {
+            font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-bottom: 48px;
+        }
+        .offline-siegel {
+            color: var(--color-gold);
+            margin-bottom: 40px;
+            opacity: 0.7;
+            animation: offline-pulse 3.6s ease-in-out infinite;
+        }
+        @keyframes offline-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50%      { transform: scale(1.06); opacity: 0.9; }
+        }
+        h1 {
+            font-family: "Fraunces", "Times New Roman", Georgia, serif;
+            font-size: clamp(36px, 9vw, 48px);
+            font-weight: 500;
+            line-height: 1.06;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+            max-width: 320px;
+        }
+        .offline-italic {
+            display: block;
+            font-style: italic;
+            color: var(--color-gold);
+            font-weight: 400;
+        }
+        .offline-body {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--color-graphite-soft);
+            max-width: 320px;
+            margin-bottom: 40px;
+        }
+        .offline-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-indigo);
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 14px 32px;
+            border-radius: 999px;
+            min-height: 48px;
+            letter-spacing: -0.005em;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .offline-cta:active {
+            transform: scale(0.97);
+            background: #0F1F2E;
+        }
+        .offline-footer {
+            position: fixed;
+            bottom: 24px;
+            left: 0;
+            right: 0;
+            font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            opacity: 0.6;
+            text-align: center;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bone: #0f1217;
+                --color-cream-soft: #1a1e25;
+                --color-indigo: #f5f3ee;
+                --color-gold: #B59F75;
+                --color-graphite-soft: #8a8e96;
+                --color-ink: #f5f3ee;
+            }
+            .offline-cta {
+                color: #0a0c0f;
+            }
+            .offline-cta:active {
+                background: #f5f3ee;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .offline-siegel {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-folio">№ 00 · Offline</div>
+
+    <svg class="offline-siegel" viewBox="0 0 90 90" width="80" height="80" aria-hidden="true">
+        <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+        <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+        <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+        <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+        <circle cx="53.00" cy="45.00" r="1.5" fill="currentColor"/>
+        <circle cx="38.95" cy="50.10" r="1.5" fill="currentColor"/>
+        <circle cx="32.81" cy="38.04" r="1.5" fill="currentColor"/>
+        <circle cx="42.74" cy="29.05" r="1.5" fill="currentColor"/>
+        <circle cx="56.27" cy="32.43" r="1.5" fill="currentColor"/>
+        <circle cx="59.43" cy="46.96" r="1.5" fill="currentColor"/>
+        <circle cx="48.05" cy="55.92" r="1.5" fill="currentColor"/>
+        <circle cx="33.69" cy="51.23" r="1.5" fill="currentColor"/>
+        <circle cx="28.66" cy="37.06" r="1.5" fill="currentColor"/>
+        <circle cx="39.92" cy="23.81" r="1.5" fill="currentColor"/>
+        <circle cx="57.20" cy="22.18" r="1.5" fill="currentColor"/>
+        <circle cx="65.30" cy="34.99" r="1.5" fill="currentColor"/>
+        <circle cx="62.07" cy="52.97" r="1.5" fill="currentColor"/>
+    </svg>
+
+    <h1>
+        Sie sind offline.
+        <span class="offline-italic">Das Editorial wartet.</span>
+    </h1>
+
+    <p class="offline-body">
+        Sobald Ihre Verbindung wieder steht, blättern wir auf der nächsten Seite weiter — acht Branchen-Bühnen, ein Konzept.
+    </p>
+
+    <a href="/" class="offline-cta">Erneut versuchen</a>
+
+    <div class="offline-footer">№ 00 · 2026 · KARRIARO</div>
+</body>
+</html>
