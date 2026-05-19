@@ -791,7 +791,9 @@
 
 /* Sprint 127 — Fit-One-Screen: Card aspect 1/2 (350×700), Image scaled
    via object-fit:contain → kein vertikales Scroll innerhalb der Card.
-   Cream-Soft visible als Frame um das contained-Image. */
+   Sprint 131 — Hermès-Tier-Brand-Vitrine: --m-poster-bg per Portfolio
+   (BRAND_COLOR_MAP) als Bühne statt Cream-uniform. Photo schwebt mit
+   floating-mockup-Shadow, getrennt durch innerer 0.5 px-Stroke. */
 .m-poster {
     aspect-ratio: 1 / 2;
     border-radius: 14px;
@@ -801,16 +803,22 @@
     align-items: center;
     justify-content: center;
     box-shadow:
-        0 1px 1px rgba(0, 0, 0, 0.06),
-        0 4px 12px rgba(20, 32, 43, 0.08),
-        0 18px 40px -12px rgba(20, 32, 43, 0.22);
-    border: 0.5px solid rgba(0, 0, 0, 0.06);
+        0 1px 1px rgba(0, 0, 0, 0.08),
+        0 4px 12px rgba(20, 32, 43, 0.10),
+        0 22px 48px -14px rgba(20, 32, 43, 0.28);
+    border: 0.5px solid rgba(0, 0, 0, 0.10);
     box-sizing: border-box;
-    background: var(--color-cream-soft, #f5f3ee);
+    background: var(--m-poster-bg, var(--color-cream-soft, #f5f3ee));
+    transition:
+        transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        box-shadow 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .m-poster picture {
     display: block;
     height: 100%;
+    /* Sprint 131 — Photo bekommt ein bisschen Atem zum Brand-Color-Frame */
+    padding: 14px 0;
+    box-sizing: border-box;
 }
 .m-poster-shot {
     width: auto;
@@ -818,6 +826,22 @@
     max-width: 100%;
     object-fit: contain;
     display: block;
+    /* Sprint 131 — Floating-Mockup-Shadow: Photo schwebt auf Brand-Color-Bühne.
+       Subtiles Outer-Shadow + 0.5 px-Hairline für Vitrinen-Effekt. */
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.12),
+        0 8px 20px rgba(0, 0, 0, 0.18),
+        0 0 0 0.5px rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}
+/* Sprint 131 — Tactile-Feedback: scale + shadow-lift bei Tap (iOS-Pattern,
+   überschreibt das generische m-demo-swiper-card:active). */
+.m-poster:active {
+    transform: scale(0.97);
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(20, 32, 43, 0.10),
+        0 12px 28px -10px rgba(20, 32, 43, 0.22);
 }
 /* Sprint 121/124/125 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus.
    Sprint 125 erweitert: alles unterhalb der Hero-Section wird ausgeblendet,

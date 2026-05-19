@@ -587,19 +587,35 @@ function readMockupDims(slug) {
     }
 }
 
+// Sprint 131 — Brand-Color pro Portfolio-Vitrine (Hermès-Tier-Pattern,
+// Evans-Hankey-Hebel: Photo = Subject, Brand-Color = Bühne).
+// Aus den Portfolio-Hero-CSS-Variablen --accent extrahiert + Karriaro-Voice
+// abgestimmt (jeder Ton dunkel genug für hellen Photo-Float, ausreichend
+// Kontrast zu Inter-Sans-Bold/Fraunces-Serif unten).
+const BRAND_COLOR_MAP = {
+    'immobilien-stadtmakler': '#1A2E40', // Manufaktur-Indigo
+    'coaching-lehmann':       '#2C2C2C', // Charcoal
+    'praxis-weber':           '#6A8266', // Sage
+    'friseur-mueller':        '#B07B5E', // Taupe-Copper
+    'dachdecker-meister':     '#4A5D4F', // Forest
+    'gastro-hirsch':          '#5C1F1F', // Burgundy
+    'logistik-schwaben':      '#0E1F33', // Deep-Blue
+    'handwerk-mueller':       '#B47045', // Copper
+};
+
 function buildDemoSwiperHtml() {
-    // Sprint 125 → Sprint 126 — Full-Bleed mit NATÜRLICHER Höhe pro Portfolio.
-    //   Jedes Portfolio-Hero wird in seiner natürlichen Höhe gecaptured
-    //   (Playwright element.screenshot). <img width="W" height="H"> liest
-    //   intrinsic Dims aus der File-Datei (readMockupDims). Card aspect-ratio
-    //   in CSS auto — height kommt vom Image.
+    // Sprint 126: Natürliche Hero-Höhe via Playwright-Capture.
+    // Sprint 127: aspect-ratio 1/2 fixed (fit-one-screen), object-fit:contain.
+    // Sprint 131: Brand-Color pro Card-Background statt Cream-Soft uniform.
+    //   Photo schwebt mit floating-shadow auf brand-color-vitrine.
     const slides = DEMO_SWIPER_SLIDES.map((slide, i) => {
         const { slug, title, domain, href, eyebrow, personaContext } = slide;
         const eager = i === 0;
         const dims = readMockupDims(slug);
+        const brandColor = BRAND_COLOR_MAP[slug] || 'var(--color-cream-soft, #f5f3ee)';
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
-            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
+            <button type="button" class="m-demo-swiper-card m-poster" style="--m-poster-bg:${brandColor};" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <picture>
                     <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
                     <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
