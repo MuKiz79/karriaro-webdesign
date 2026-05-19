@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case-Study · Editorial-Manufaktur · Karriaro Webdesign</title>
+    <meta name="description" content="Wie wir aus einer Webdesign-Manufaktur ein Editorial-Magazine machen — Konzept, Sprints, Award-Hebel.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#1A2E40" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0a0c0f" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=3">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="canonical" href="https://m.karriaro-webdesign.de/case-study.html">
+
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://m.karriaro-webdesign.de/case-study.html">
+    <meta property="og:title" content="Case-Study · Editorial-Manufaktur · Karriaro Webdesign">
+    <meta property="og:description" content="Sechs editoriale Bewegungen. Acht Branchen-Bühnen. Eine Manufaktur.">
+    <meta property="og:locale" content="de_DE">
+
+    <style>
+        :root {
+            --color-bone: #FBFAF7;
+            --color-cream-soft: #F8F4ED;
+            --color-cream-warmer: #F4EDE0;
+            --color-cream-gold-tint: #F0E8D8;
+            --color-indigo: #1A2E40;
+            --color-indigo-strong: #061320;
+            --color-gold: #8A7B5C;
+            --color-graphite-soft: #6e6e73;
+            --color-ink: #14202B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+            background: var(--color-bone);
+            color: var(--color-ink);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            line-height: 1.55;
+        }
+        body { padding: 64px 24px 120px; max-width: 720px; margin: 0 auto; }
+
+        .cs-folio {
+            font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-bottom: 32px;
+        }
+        h1 {
+            font-family: "Fraunces", "Times New Roman", Georgia, serif;
+            font-size: clamp(40px, 11vw, 64px);
+            font-weight: 500;
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+            margin-bottom: 18px;
+            color: var(--color-indigo-strong);
+        }
+        h1 .cs-italic {
+            display: block;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--color-gold);
+            margin-top: 8px;
+        }
+        h2 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: clamp(24px, 6vw, 32px);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.018em;
+            margin: 56px 0 16px;
+            color: var(--color-indigo-strong);
+        }
+        h3 {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin: 28px 0 8px;
+            color: var(--color-ink);
+        }
+        p, li {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin-bottom: 14px;
+        }
+        ul, ol { padding-left: 22px; }
+        strong { font-weight: 600; color: var(--color-indigo-strong); }
+        em, i {
+            font-style: italic;
+            font-family: "Fraunces", Georgia, serif;
+            color: var(--color-gold);
+        }
+        .cs-eyebrow {
+            font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin-bottom: 8px;
+        }
+        .cs-lead {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 21px;
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--color-indigo);
+            margin: 24px 0 32px;
+            padding-left: 16px;
+            border-left: 2px solid var(--color-gold);
+        }
+        .cs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px;
+            font-size: 14px;
+        }
+        .cs-table th, .cs-table td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 0.5px solid rgba(20, 32, 43, 0.1);
+        }
+        .cs-table th {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+        }
+        .cs-hebel {
+            background: var(--color-cream-soft);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin: 14px 0;
+        }
+        .cs-hebel-num {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            color: var(--color-gold);
+            margin-bottom: 6px;
+        }
+        .cs-hebel-title {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--color-indigo-strong);
+        }
+        .cs-hebel-body {
+            font-size: 15px;
+            color: var(--color-graphite-soft);
+            line-height: 1.55;
+        }
+        .cs-cta {
+            display: inline-flex;
+            background: var(--color-indigo);
+            color: #fff;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 14px 28px;
+            border-radius: 999px;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 12px 0 0;
+            transition: transform 220ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .cs-cta:active { transform: scale(0.97); }
+        .cs-cta--secondary {
+            background: transparent;
+            color: var(--color-indigo);
+            border: 1px solid rgba(26, 46, 64, 0.2);
+        }
+        .cs-footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 0.5px solid rgba(20, 32, 43, 0.1);
+            font-family: "JetBrains Mono", monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            text-align: center;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bone: #0f1217;
+                --color-cream-soft: #1a1e25;
+                --color-cream-warmer: #14181f;
+                --color-cream-gold-tint: #1a1e25;
+                --color-indigo: #6B8AA3;
+                --color-indigo-strong: #f5f3ee;
+                --color-gold: #B59F75;
+                --color-graphite-soft: #8a8e96;
+                --color-ink: #f5f3ee;
+            }
+            .cs-table th, .cs-table td {
+                border-bottom-color: rgba(245, 243, 238, 0.1);
+            }
+            .cs-footer {
+                border-top-color: rgba(245, 243, 238, 0.1);
+            }
+            .cs-cta {
+                color: #0f1217;
+                background: var(--color-ink);
+            }
+        }
+    </style>
+</head>
+<body>
+    <p class="cs-folio">№ ∞ · Case-Study · 2026</p>
+
+    <h1>
+        Editorial-Manufaktur.
+        <span class="cs-italic">Webdesign als Magazine-Spread.</span>
+    </h1>
+
+    <p class="cs-lead">
+        „Sechs editoriale Bewegungen. Acht Branchen-Bühnen. Eine Manufaktur."
+    </p>
+
+    <p>
+        Karriaro Webdesign ist eine Manufaktur aus dem Schwarzwald. Diese Mobile-Site ist nicht Marketing-Page, sondern ein Editorial-Magazine in sechs Bewegungen — choreographiert wie ein Hermès-Katalog, gepaced wie ein Pentagram-Print-Heft.
+    </p>
+
+    <h2>Konzept</h2>
+    <p>
+        Im Mai 2026 haben wir ein 20-Experten-Audit unserer Mobile-Präsenz gegen Apple Design Awards Standards gemacht. Daraus entstand ein 8-Sprint-Pitch (Sprint 128–135) der die Site von „guter Mobile-Site" zu „Award-Tier-Editorial-Magazine" gebracht hat.
+    </p>
+    <p>
+        Die <em>Grundidee</em>: <strong>Magazine-Pacing für Marketing-Webdesign</strong>. Statt Standard-Marketing-Sektionen (Hero, Features, CTAs) wird die Site als Magazine-Spread in sechs <em>Bewegungen</em> präsentiert — jede mit eigener Editorial-Folio-Numerierung, eigener Bühnen-Farbe und eigener Choreographie.
+    </p>
+
+    <h2>Die sechs Bewegungen</h2>
+
+    <h3>№ 01 · Cover</h3>
+    <p>Hero mit Folio-Marker „Nº 01 · 2026 · EDITORIAL", dreizeiliger Choreography-Headline („Webdesign. / Manufaktur. / Jede Seite handcodiert ein Unikat.") und Pentagram-Print-Marginalia („₁ Handcodiert · ₂ Schwarzwald-Atelier · ₃ № 01 · 2026"). Manufaktur-Siegel-Embossing pulsiert dezent unter dem CTA.</p>
+
+    <h3>№ 02 · Editorial-Page</h3>
+    <p>Acht Branchen, acht Bühnen — jede Portfolio-Demo schwebt auf eigener Brand-Color-Vitrine (Indigo, Charcoal, Sage, Taupe-Copper, Forest, Burgundy, Deep-Blue, Copper). Sheet-Modal mit iOS-Easing-Curve öffnet Live-Demo.</p>
+
+    <h3>№ 03 · Index</h3>
+    <p>Persona-Tile-Grid für acht Mittelstand-Branchen. Touch-Targets ≥44 px, Deep-Link zum Demo-Sheet via IntersectionObserver-Scroll.</p>
+
+    <h3>№ 04 · Annotation</h3>
+    <p>Fünf Werkzeuge mit Mini-Case statt Quantitäts-Theater (Apple-Acquisitions-Hebel: <em>Qualität als Beweis, nicht Quantität als Versprechen.</em>).</p>
+
+    <h3>№ 05 · Brand-Signature</h3>
+    <p>Manufaktur-Siegel als 13-Punkte-Phyllotaxis-SVG nach Goldenem Winkel. „Wenn Ihr Name draufsteht, steht unserer dahinter."</p>
+
+    <h3>№ 06 · Schluss</h3>
+    <p>Kontakt-Letter-Card. Magazine-Numbering injiziert als Mobile-only-Eyebrow „№ 06 · Kontakt".</p>
+
+    <h2>Award-Hebel (7 Stück)</h2>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H1 · SPRINT 129</div>
+        <div class="cs-hebel-title">Information-Architecture-Reorder</div>
+        <div class="cs-hebel-body">Show-don't-tell: Hero → Demos vor Personas. Eyebrow-Numbering konsistent in Render-Reihenfolge.</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H2 · SPRINT 131</div>
+        <div class="cs-hebel-title">Demo-Cards-Statement</div>
+        <div class="cs-hebel-body">Brand-Color-Vitrine pro Portfolio. Floating-Mockup-Shadow auf 8 unterschiedlichen Bühnen-Farben. Tactile-Feedback bei Tap.</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H3 · SPRINT 130</div>
+        <div class="cs-hebel-title">Hero-Verdichtung</div>
+        <div class="cs-hebel-body">Mickel-Letter-Spacing-Polish, Pentagram-Marginalia-Trios, Paula-Scher-Siegel-Embossing, Stagger 6→3 Beats (Identity/Promise/Proof).</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H4 · SPRINT 132</div>
+        <div class="cs-hebel-title">Deep-Moment</div>
+        <div class="cs-hebel-body">IntersectionObserver-Section-Reveal + Body-BG-Shift via 6 Cream-Töne + Siegel-Pulse 8s-Cycle. <em>scroll-timeline</em> als Progressive-Enhancement für Chrome 119+.</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H5 · SPRINT 133</div>
+        <div class="cs-hebel-title">Pin-Spy Reading-Indicator</div>
+        <div class="cs-hebel-body">Magazine-Page-Counter „02/06 · DEMOS" top-right, mix-blend-mode-difference (universal lesbar auf wechselnden BG-Tönen).</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H6 · SPRINT 134</div>
+        <div class="cs-hebel-title">PWA + Dark-Mode</div>
+        <div class="cs-hebel-body">Manifest mit App-Shortcuts, Service-Worker mit stale-while-revalidate, Editorial-Offline-Page, warme Dark-Editorial-Palette (kein OLED-Pure-Black).</div>
+    </div>
+
+    <div class="cs-hebel">
+        <div class="cs-hebel-num">H7 · SPRINT 128</div>
+        <div class="cs-hebel-title">System-Hygiene</div>
+        <div class="cs-hebel-body">Brand-Token-Vereinheitlichung, 2547 Zeilen Dead-Code raus, 5 Inline-Scripts in m-interactions.js extrahiert. Award-Foundation.</div>
+    </div>
+
+    <h2>Technik-Stack</h2>
+    <table class="cs-table">
+        <tr><th>Layer</th><th>Tech</th></tr>
+        <tr><td>HTML</td><td>Vanilla HTML5, kein Framework</td></tr>
+        <tr><td>CSS</td><td>CSS3 + Tailwind 3.4 (utilities only) + Cascade-Layers (geplant)</td></tr>
+        <tr><td>JS</td><td>ES2020 Vanilla, IntersectionObserver, animation-timeline (Progressive)</td></tr>
+        <tr><td>Type</td><td>Fraunces (Serif) + Inter (Sans) + JetBrains Mono (Eyebrows)</td></tr>
+        <tr><td>Capture</td><td>Playwright Chromium für Live-Hero-Element-Screenshots</td></tr>
+        <tr><td>PWA</td><td>Service-Worker (stale-while-revalidate), manifest.json, offline.html</td></tr>
+        <tr><td>Build</td><td>Single-Source: scripts/build-mobile-pages.mjs generiert src/m/* aus src/*</td></tr>
+        <tr><td>Host</td><td>GitHub Pages + Cloudflare DNS</td></tr>
+    </table>
+
+    <h2>Voice + Brand</h2>
+    <p>
+        <strong>Boutique-Manufaktur, nicht Apple-Klon.</strong> Referenzen: Aesop · Hermès · Manufactum · Brunello Cucinelli. Drei-Schrift-System (Fraunces für Display + Italic, Inter für Sans-Body, JetBrains Mono für Eyebrows). Magazine-Numbering № 01-06 als Editorial-Pacing.
+    </p>
+
+    <h2>Accessibility-Statement</h2>
+    <ul>
+        <li>WCAG 2.2 AA Foundation</li>
+        <li>Touch-Targets ≥ 44 px (WCAG 2.5.5)</li>
+        <li>Reduced-Motion-Override für <em>alle</em> Animationen</li>
+        <li>Dark-Mode-Variants via <em>prefers-color-scheme</em></li>
+        <li>Semantisches HTML, ARIA-Labels, aria-hidden, role="dialog"</li>
+        <li>Focus-Rings auf interaktiven Elementen</li>
+        <li>Skip-Link für Screen-Reader</li>
+        <li>BFSG-konform (Deutsches Barrierefreiheits-Stärkungsgesetz)</li>
+    </ul>
+
+    <h2>Stand</h2>
+    <p>
+        Sprint 135 fertig (2026-05-19). 7 Award-Hebel live. Submission ready für Apple Design Awards Web/PWA-Spur, Awwwards Mobile-Excellence, FWA, CSS Design Awards.
+    </p>
+
+    <div style="margin-top: 32px;">
+        <a class="cs-cta" href="/">Site ansehen</a>
+        <a class="cs-cta cs-cta--secondary" href="/#kontakt">Erstgespräch buchen</a>
+    </div>
+
+    <p class="cs-footer">№ ∞ · 2026 · KARRIARO · SCHWARZWALD</p>
+</body>
+</html>

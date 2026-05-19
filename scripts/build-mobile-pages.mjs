@@ -85,6 +85,13 @@ function injectPwaHead(html) {
     return html.slice(0, closeHeadIdx) + PWA_HEAD_BLOCK + '\n' + html.slice(closeHeadIdx);
 }
 
+// Sprint 135 — Mobile-OG-Image (1200×630 Editorial-Spread, Cream+Indigo)
+// ersetzt das generic og-image.jpg auf den Mobile-Pages.
+function rewriteOgImage(html) {
+    return html
+        .replace(/og-image\.jpg/g, 'og-image-mobile.jpg');
+}
+
 // Sprint 128 — Sticky-CTA-IO + Demo-Sheet + Persona-Click + Scroll-Anim
 // wurden aus den Inline-Snippets in src/js/m-interactions.js extrahiert.
 // Eine externe <script>-Referenz wird via M_INTERACTIONS_SCRIPT am
@@ -777,6 +784,8 @@ function buildPage(relPath) {
     // Sprint 134 — PWA-Foundation (Manifest + Apple-Meta + SW-Registration)
     // auf JEDER Mobile-Page, nicht nur Index. Macht Sub-Pages installable.
     html = injectPwaHead(html);
+    // Sprint 135 — Mobile-OG-Image (Editorial-Spread) statt Desktop-generic.
+    html = rewriteOgImage(html);
     if (isSelling(relPath)) {
         html = injectStickyCta(html);
     }
@@ -823,7 +832,8 @@ function buildPage(relPath) {
 
 // Sprint 134 — hand-written HTML files in src/m/ die NICHT vom Build
 // generiert werden und beim Cleanup erhalten bleiben müssen.
-const PRESERVED_HTML = new Set(['offline.html']);
+// Sprint 135 — case-study.html (Award-Submission-Page) hinzugefügt.
+const PRESERVED_HTML = new Set(['offline.html', 'case-study.html']);
 
 function cleanOldMobileOutput() {
     // Loescht src/m/**/*.html. Laesst manifest.json, sw.js, icons/* + hand-

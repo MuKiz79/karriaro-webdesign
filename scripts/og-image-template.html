@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Karriaro OG Template (Sprint 135)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;1,400&family=Inter:wght@500;600&family=JetBrains+Mono:wght@500&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 1200px;
+            height: 630px;
+            font-family: "Inter", -apple-system, system-ui, sans-serif;
+            background: #FBFAF7;
+            color: #14202B;
+            overflow: hidden;
+        }
+        .og {
+            width: 1200px;
+            height: 630px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+        /* LEFT: Brand + Headline */
+        .og-left {
+            background: #FBFAF7;
+            padding: 60px 50px 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .og-folio {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #6e6e73;
+        }
+        .og-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 20px;
+        }
+        .og-logo {
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid #14202B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            font-size: 22px;
+            color: #14202B;
+        }
+        .og-brand-name {
+            font-family: "Inter", sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: #14202B;
+        }
+        .og-brand-sub {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #6e6e73;
+            margin-top: 2px;
+        }
+        .og-headline-block {
+            margin-top: 70px;
+        }
+        h1 {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 64px;
+            font-weight: 500;
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+            color: #061320;
+            margin-bottom: 14px;
+        }
+        h1 .og-italic {
+            display: block;
+            font-style: italic;
+            font-weight: 400;
+            color: #8A7B5C;
+            font-size: 32px;
+            margin-top: 12px;
+            line-height: 1.2;
+        }
+        .og-marginalia {
+            margin-top: 80px;
+            display: flex;
+            gap: 18px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #6e6e73;
+        }
+        .og-marginalia-dot { opacity: 0.45; }
+
+        /* RIGHT: Brand-Color-Vitrine mit Manufaktur-Siegel */
+        .og-right {
+            background: #1A2E40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .og-siegel-frame {
+            position: relative;
+            width: 280px;
+            height: 360px;
+            background: #FBFAF7;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 12px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 0.5px rgba(255, 255, 255, 0.08);
+            gap: 28px;
+        }
+        .og-siegel-folio {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #6e6e73;
+        }
+        .og-siegel-svg {
+            color: #8A7B5C;
+        }
+        .og-siegel-title {
+            font-family: "Fraunces", Georgia, serif;
+            font-size: 22px;
+            font-style: italic;
+            font-weight: 400;
+            color: #14202B;
+            text-align: center;
+            line-height: 1.3;
+            padding: 0 24px;
+        }
+        .og-right-folio {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+        .og-right-bottom {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55);
+        }
+    </style>
+</head>
+<body>
+    <div class="og">
+        <div class="og-left">
+            <div>
+                <div class="og-folio">№ 01 · 2026 · EDITORIAL</div>
+                <div class="og-brand">
+                    <div class="og-logo">[K]</div>
+                    <div>
+                        <div class="og-brand-name">KARRIARO</div>
+                        <div class="og-brand-sub">Webdesign · Manufaktur</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="og-headline-block">
+                <h1>
+                    Webdesign. Manufaktur.
+                    <span class="og-italic">Jede Seite handcodiert ein Unikat.</span>
+                </h1>
+            </div>
+
+            <div class="og-marginalia">
+                <span>₁ Handcodiert</span>
+                <span class="og-marginalia-dot">·</span>
+                <span>₂ Schwarzwald</span>
+                <span class="og-marginalia-dot">·</span>
+                <span>₃ № 01 · 2026</span>
+            </div>
+        </div>
+
+        <div class="og-right">
+            <div class="og-right-folio">Nº 02 · Editorial-Page</div>
+            <div class="og-siegel-frame">
+                <div class="og-siegel-folio">Nº 05 · 2026</div>
+                <svg class="og-siegel-svg" viewBox="0 0 90 90" width="120" height="120" aria-hidden="true">
+                    <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                    <circle cx="53.00" cy="45.00" r="1.5" fill="currentColor"/>
+                    <circle cx="38.95" cy="50.10" r="1.5" fill="currentColor"/>
+                    <circle cx="32.81" cy="38.04" r="1.5" fill="currentColor"/>
+                    <circle cx="42.74" cy="29.05" r="1.5" fill="currentColor"/>
+                    <circle cx="56.27" cy="32.43" r="1.5" fill="currentColor"/>
+                    <circle cx="59.43" cy="46.96" r="1.5" fill="currentColor"/>
+                    <circle cx="48.05" cy="55.92" r="1.5" fill="currentColor"/>
+                    <circle cx="33.69" cy="51.23" r="1.5" fill="currentColor"/>
+                    <circle cx="28.66" cy="37.06" r="1.5" fill="currentColor"/>
+                    <circle cx="39.92" cy="23.81" r="1.5" fill="currentColor"/>
+                    <circle cx="57.20" cy="22.18" r="1.5" fill="currentColor"/>
+                    <circle cx="65.30" cy="34.99" r="1.5" fill="currentColor"/>
+                    <circle cx="62.07" cy="52.97" r="1.5" fill="currentColor"/>
+                </svg>
+                <div class="og-siegel-title">
+                    Wenn Ihr Name draufsteht,<br>steht unserer dahinter.
+                </div>
+            </div>
+            <div class="og-right-bottom">Hermès-Tier · Mobile · BFSG</div>
+        </div>
+    </div>
+</body>
+</html>
