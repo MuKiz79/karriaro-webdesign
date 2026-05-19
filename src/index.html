@@ -1020,7 +1020,11 @@
             min-height: 640px;
             max-height: 1080px;
             display: flex;
-            align-items: center;
+            /* Sprint 136 — flex-start statt center: bei Mockup-Block 3/4 (953 px
+               img + 254 px chrome/caption = 1207 total) sonst Top-Crop von 63 px,
+               Chrome verschwindet hinter Nav. Mit flex-start liegt hero-inner an
+               padding-top:128 anchored, nur Bottom wird gecropt (Mask-Fade-out). */
+            align-items: flex-start;
             padding: 128px 0 64px;
             overflow: hidden;
         }
@@ -1082,6 +1086,11 @@
             gap: 18px;
             min-width: 0;
             max-width: 100%;
+            /* Sprint 136 — Mockup-Block sticks to top of grid-cell, damit
+               Browser-Chrome (3 dots + URL-bar) sichtbar bleibt, wenn img
+               aspect-ratio 3/4 den Block über die Hero-Section-Höhe ausdehnt.
+               Bottom des Images wird via mask-image weich ausgeblendet. */
+            align-self: start;
         }
         .hero-mockup {
             display: block;
@@ -1107,12 +1116,20 @@
             box-shadow: 0 30px 70px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.05);
         }
         .browser-screen-large {
-            aspect-ratio: 16/10;
+            /* Sprint 136 — Reingezoomt-Fix: Source-Mockups sind Sprint-126
+               natural-height (1440×4383-5142). aspect-ratio 16/10 + cover
+               clippte 82% Vertical weg. 3/4 (portrait) + object-position:top
+               zeigt above-fold-Hero (~50% des Sources); mask-image fadet die
+               letzten 22% weich aus (Hero geht in Body über). */
+            aspect-ratio: 3/4;
             width: 100%;
             max-width: 100%;
             height: auto;
             object-fit: cover;
+            object-position: top;
             display: block;
+            -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+                    mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
         }
         .mockup-caption {
             display: flex;
@@ -3085,7 +3102,7 @@
                             <span class="dot dot-g"></span>
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
-                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup.jpg?v=86" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1586" height="992">
+                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup.jpg?v=136" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="1920">
                     </div>
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien-Werkzeuge</span>
