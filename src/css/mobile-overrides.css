@@ -90,6 +90,39 @@
         padding: 80px 0 !important;
     }
 
+    /* Sprint 138 — Portfolio-Hero-Fix:
+       section { padding: 80px 0 } entfernte horizontale Padding von
+       section.hero (alle 8 Portfolio-Pages). Resultat: .hero-portrait img
+       (natural-width 805 px + Caption-Text-min-content) erweiterte Grid-
+       Track auf Mobile (393 viewport) → 37-61 px Overflow nach rechts,
+       Andreas-Müller-Portrait nicht im Frame.
+
+       Fix:
+       1) section.hero bekommt horizontale Padding zurück
+       2) grid-template-columns: minmax(0, 1fr) gegen intrinsic-track-
+          expansion (1fr default = minmax(auto, 1fr), auto-min nutzt
+          content-min-width)
+       3) overflow:hidden auf .hero-portrait als Safety
+       4) overflow-wrap: anywhere auf Caption gegen Text-Overflow */
+    section.hero {
+        padding: 64px 24px !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .hero-portrait {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    .hero-portrait img {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .hero-portrait .hero-portrait-caption {
+        max-width: 100% !important;
+        overflow-wrap: anywhere;
+        word-wrap: break-word;
+    }
+
     /* === Typography Mobile-Tuning === */
     h1 {
         font-size: clamp(34px, 9vw, 48px) !important;
