@@ -904,16 +904,26 @@
         0 2px 8px rgba(20, 32, 43, 0.10),
         0 12px 28px -10px rgba(20, 32, 43, 0.22);
 }
-/* Sprint 121/124/125 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome aus.
-   Sprint 125 erweitert: alles unterhalb der Hero-Section wird ausgeblendet,
-   damit das Capture wirklich nur den Hero zeigt (keine Folge-Sections). */
+/* Sprint 121/124/125/137 — Screenshot-Mode für Mockup-Capture: blendet UI-Chrome
+   und Folge-Sektionen aus. Sprint 137 erweitert um .kr-footer-card + footer
+   (dark BG visible in 1440×900-clip wenn .hero <900 px tall, Sprint-137-Bug). */
 .screenshot-mode .kr-strip,
 .screenshot-mode .topbar,
 .screenshot-mode header,
 .screenshot-mode nav.nav,
 .screenshot-mode .m-sticky-cta-bar,
-.screenshot-mode main > *:not(.hero) {
+.screenshot-mode main > *:not(.hero),
+.screenshot-mode .kr-footer-card,
+.screenshot-mode footer {
     display: none !important;
+}
+/* Sprint 137 — Body-BG cream-soft im screenshot-mode (Fallback falls
+   .hero kürzer ist als capture-clip-height, statt black-Default). */
+.screenshot-mode {
+    background: var(--color-cream, #F8F4ED) !important;
+}
+.screenshot-mode body {
+    background: var(--color-cream, #F8F4ED) !important;
 }
 /* ── Meta + Title unter dem Frame ── */
 .m-demo-swiper-meta {

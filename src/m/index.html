@@ -1021,6 +1021,10 @@
             min-height: 640px;
             max-height: 1080px;
             display: flex;
+            /* Sprint 137 — zurück auf center: mit Above-Fold-Mockups (16:10,
+               img 715×447 + chrome 28 + caption ~226 = ~700 total) passt der
+               Mockup-Block locker in die Hero-Section. Vertikale Zentrierung
+               wirkt visuell ausgewogen. */
             align-items: center;
             padding: 128px 0 64px;
             overflow: hidden;
@@ -1108,6 +1112,9 @@
             box-shadow: 0 30px 70px rgba(0,0,0,0.14), 0 6px 16px rgba(0,0,0,0.05);
         }
         .browser-screen-large {
+            /* Sprint 137 — Above-Fold-Source-Mockups (1440×900, 16:10 aspect)
+               via screenshot-mockups-fold.mjs Viewport-Clip-Capture. Container
+               passt exakt zum Source → kein Crop, kein Fade nötig. */
             aspect-ratio: 16/10;
             width: 100%;
             max-width: 100%;
@@ -3095,7 +3102,7 @@
                             <span class="dot dot-g"></span>
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
-                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup.jpg?v=86" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1586" height="992">
+                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=137" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900">
                     </div>
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien-Werkzeuge</span>
@@ -5408,7 +5415,7 @@
 
             var data = {
                 praxis: {
-                    src: '/images/praxis-weber-mockup.jpg?v=86',
+                    src: '/images/praxis-weber-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Praxis Dr. Weber — Hausarztpraxis mit Online-Terminbuchung',
                     url: 'praxis-dr-weber.de',
                     label: 'Praxis Dr. Weber · Praxis-Werkzeuge',
@@ -5418,7 +5425,7 @@
                     href: '/portfolio/praxis-weber.html'
                 },
                 handwerk: {
-                    src: '/images/handwerk-mueller-mockup.jpg?v=86',
+                    src: '/images/handwerk-mueller-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Meisterbetrieb Müller — Sanitär & Heizung',
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerker-Werkzeuge',
@@ -5428,7 +5435,7 @@
                     href: '/portfolio/meisterbetrieb-mueller.html'
                 },
                 gastro: {
-                    src: '/images/gastro-hirsch-mockup.jpg?v=86',
+                    src: '/images/gastro-hirsch-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Goldener Hirsch — Restaurant',
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastro-Werkzeuge',
@@ -5438,7 +5445,7 @@
                     href: '/portfolio/restaurant-template.html'
                 },
                 logistik: {
-                    src: '/images/logistik-schwaben-mockup.jpg?v=86',
+                    src: '/images/logistik-schwaben-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Schwaben Logistik — Spedition',
                     url: 'schwaben-logistik.de',
                     label: 'Schwaben Logistik · Spedition-Werkzeuge',
@@ -5448,7 +5455,7 @@
                     href: '/portfolio/spedition-schwaben.html'
                 },
                 friseur: {
-                    src: '/images/friseur-mueller-mockup.jpg?v=86',
+                    src: '/images/friseur-mueller-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Salon Müller — Friseur',
                     url: 'salon-mueller.de',
                     label: 'Salon Müller · Friseur-Werkzeuge',
@@ -5458,7 +5465,7 @@
                     href: '/portfolio/friseur-salon.html'
                 },
                 dachdecker: {
-                    src: '/images/dachdecker-meister-mockup.jpg?v=86',
+                    src: '/images/dachdecker-meister-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Dachdecker-Meister Berger',
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Dachdecker-Werkzeuge',
@@ -5468,7 +5475,7 @@
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
                 immobilien: {
-                    src: '/images/immobilien-stadtmakler-mockup.jpg?v=86',
+                    src: '/images/immobilien-stadtmakler-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Stadtmakler Stuttgart — Immobilien',
                     url: 'stadtmakler-stuttgart.de',
                     label: 'Stadtmakler Stuttgart · Immobilien-Werkzeuge',
@@ -5478,7 +5485,7 @@
                     href: '/portfolio/immobilien-makler.html'
                 },
                 coaching: {
-                    src: '/images/coaching-lehmann-mockup.jpg?v=86',
+                    src: '/images/coaching-lehmann-mockup-fold.jpg?v=137',
                     alt: 'Vorschau-Bild für Business-Coach Sarah Lehmann — Coaching & Beratung',
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Coaching-Werkzeuge',
