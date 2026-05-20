@@ -19,13 +19,16 @@ async function call(endpoint, body) {
 }
 
 async function callWebdesign(endpoint, body, opts = {}) {
-    const { timeout = 60000 } = opts;
+    // retries=1: Anthropic-5xx/Overload sind transient — ein zweiter Versuch
+    // rettet ~5-10% sonst verlorener deepResearch/generateMockup-Calls.
+    // cachedFetch wartet 2s zwischen Versuchen. Bei Total-Fail return null.
+    const { timeout = 60000, retries = 1 } = opts;
     try {
         return await cachedFetch(`${WEBDESIGN_FN_BASE}/${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
-        }, { timeout, retries: 0, cacheKey: `wd_${endpoint}_${JSON.stringify(body)}` });
+        }, { timeout, retries, cacheKey: `wd_${endpoint}_${JSON.stringify(body)}` });
     } catch (e) {
         console.warn(`callWebdesign(${endpoint}) failed:`, e?.message || e);
         return null;

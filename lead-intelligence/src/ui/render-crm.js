@@ -174,7 +174,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                         </div>
                     </div>
                     <div class="crm-lead-actions">
-                        <select class="crm-status-select" data-lead-id="${l.id}" data-action="status" style="color:${STATUS_COLORS[l.status] || 'var(--muted)'}">
+                        <select class="crm-status-select" data-lead-id="${l.id}" data-action="status" data-domain="${l.domain}" data-score="${l.leadScore || 0}" data-branch="${l.type || ''}" data-prev-status="${l.status || 'neu'}" style="color:${STATUS_COLORS[l.status] || 'var(--muted)'}">
                             ${Object.entries(STATUS_LABELS).map(([k, v]) => `<option value="${k}" ${l.status === k ? 'selected' : ''}>${v}</option>`).join('')}
                         </select>
                         <button class="crm-btn-delete" data-lead-id="${l.id}" data-action="delete" title="Löschen">✕</button>
@@ -258,13 +258,27 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     el.innerHTML = html;
 
     // ── Events (mit AbortController für Cleanup) ──
-    // Status-Änderung
+    // Status-Änderung — bei Wechsel zu kunde/verloren wird zusätzlich recordOutcome() gefeuert,
+    // damit Calibration/Drift-Monitor/Prior-Update echte Daten bekommen. prev-status verhindert
+    // Doppel-Logs, wenn User mehrfach in den gleichen Endzustand wechselt.
     el.addEventListener('change', async (e) => {
         const id = e.target.dataset.leadId;
         if (!id) return;
         if (e.target.dataset.action === 'status') {
-            await updateLead(id, { status: e.target.value });
-            showToast(`Status → ${STATUS_LABELS[e.target.value] || e.target.value}`);
+            const newStatus = e.target.value;
+            const prevStatus = e.target.dataset.prevStatus;
+            const isOutcome = newStatus === 'kunde' || newStatus === 'verloren';
+            const isNewOutcome = isOutcome && newStatus !== prevStatus;
+            if (isNewOutcome) {
+                const { domain, score, branch } = e.target.dataset;
+                recordOutcome(domain, parseInt(score) || 0, newStatus, branch || null);
+            }
+            await updateLead(id, { status: newStatus });
+            showToast(
+                isNewOutcome && newStatus === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' :
+                isNewOutcome && newStatus === 'verloren' ? 'Als verloren markiert.' :
+                `Status → ${STATUS_LABELS[newStatus] || newStatus}`
+            );
             // Stats + Pipeline refreshen
             renderCRM(filter, searchQuery);
         }

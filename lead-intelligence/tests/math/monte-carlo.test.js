@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { runSimulation, varianceDecomposition } from '../../src/math/monte-carlo.js';
+import { runSimulation } from '../../src/math/monte-carlo.js';
 
 const stages = [
     { name: 'Reach', alpha: 8, beta: 3 },
@@ -53,16 +53,3 @@ describe('runSimulation', () => {
     });
 });
 
-describe('varianceDecomposition', () => {
-    it('should return one entry per stage', () => {
-        const d = varianceDecomposition(stages, 40, 1.0, 100);
-        expect(d).toHaveLength(6);
-    });
-
-    it('percentages should roughly sum to ~100', () => {
-        const d = varianceDecomposition(stages, 40, 1.0, 200);
-        const sum = d.reduce((s, e) => s + e.pct, 0);
-        expect(sum).toBeGreaterThan(50);
-        expect(sum).toBeLessThan(200);
-    });
-});

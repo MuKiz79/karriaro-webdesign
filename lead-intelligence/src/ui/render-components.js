@@ -386,6 +386,9 @@ export function renderScience(el, data) {
 
     const sc = v => v >= 0.6 ? 'good' : v >= 0.3 ? 'ok' : 'bad';
     el.innerHTML = `
+        <div class="metric-desc" style="margin-bottom:8px;padding:8px 12px;background:rgba(255,159,10,0.08);border-left:3px solid var(--orange);border-radius:4px">
+            <strong>Experimentell.</strong> Diese Metriken sind heuristische Inspiration für das Kontaktgespräch — nicht in den Lead-Score eingerechnet, nicht empirisch kalibriert. Verlass dich bei der Priorisierung auf den Aufmerksamkeits-Index.
+        </div>
         <div class="science-grid">
             <div class="card anim-in"><div class="section-label">Thermo-Entropie</div><div class="metric-big ${sc(entropy?.S)}">${entropy?.S ?? '—'}</div><div class="metric-desc">${entropy?.label || ''}</div></div>
             <div class="card anim-in"><div class="section-label">Aktivierungsenergie</div><div class="metric-big ${activation?.Ea <= 25 ? 'good' : activation?.Ea <= 45 ? 'ok' : 'bad'}">${activation?.Ea ?? '—'} kJ</div><div class="metric-desc">${activation?.label || ''}</div></div>

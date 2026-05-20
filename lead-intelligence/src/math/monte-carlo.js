@@ -12,9 +12,6 @@
  * I7: Eine einzige Conversion-Rate aus Bernoulli-Produkt
  */
 
-import { sampleBeta, wilsonCI, percentile } from './sampling.js';
-import { conjugateUpdate, betaMean } from './beta-update.js';
-import { buildTransitionMatrix, monteCarloMarkov } from './markov.js';
 import { runFunnelSimulation } from './funnel-chain.js';
 
 /**
@@ -66,43 +63,3 @@ export function counterfactualSensitivity(buildStagesFn, baseShifts, signalNames
     return sensitivities.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
 }
 
-/**
- * I4 FIX: Sobol-ähnliche Variance Decomposition
- * Welche Stufe trägt die meiste Unsicherheit zur End-Conversion bei?
- */
-export function varianceDecomposition(stages, activationEa, seasonFactor, N = 500) {
-    // Berechne Gesamt-Varianz
-    const results = [];
-    for (let i = 0; i < N; i++) {
-        const rates = stages.map(s => sampleBeta(s.alpha, s.beta));
-        const T = buildTransitionMatrix(rates, activationEa, seasonFactor);
-        const sim = monteCarloMarkov(T, 1);
-        results.push(sim.conversionRate);
-    }
-    const totalVar = variance(results);
-
-    // Pro Stufe: Fixiere alle anderen auf Mean, variiere nur diese
-    const decomposition = stages.map((s, idx) => {
-        const fixedResults = [];
-        for (let i = 0; i < N; i++) {
-            const rates = stages.map((st, j) => j === idx ? sampleBeta(st.alpha, st.beta) : betaMean(st.alpha, st.beta));
-            const T = buildTransitionMatrix(rates, activationEa, seasonFactor);
-            const sim = monteCarloMarkov(T, 1);
-            fixedResults.push(sim.conversionRate);
-        }
-        const stageVar = variance(fixedResults);
-        return { name: s.name, varianceContribution: totalVar > 0 ? stageVar / totalVar : 0 };
-    });
-
-    // Normalisiere
-    const total = decomposition.reduce((s, d) => s + d.varianceContribution, 0);
-    decomposition.forEach(d => d.pct = total > 0 ? Math.round(d.varianceContribution / total * 100) : 17);
-    decomposition.sort((a, b) => b.pct - a.pct);
-
-    return decomposition;
-}
-
-function variance(arr) {
-    const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
-    return arr.reduce((s, v) => s + (v - mean) ** 2, 0) / arr.length;
-}
