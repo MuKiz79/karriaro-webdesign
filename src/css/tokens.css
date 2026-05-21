@@ -1,15 +1,25 @@
 /*
- * Karriaro Design-Tokens — Sprint 9b
+ * Karriaro Design-Tokens — Sprint 9b, erweitert Sprint 147
  *
  * Single-Source-of-Truth fuer Spacing, Radius, Shadow, Type-Scale.
  * Wird in jede HTML-Seite per <link rel="stylesheet" href="/css/tokens.css">
  * eingebunden, BEVOR das seiteneigene <style>-Block geladen wird, damit
  * branchen-spezifische Overrides moeglich bleiben.
  *
- * Was bewusst NICHT hier ist:
- * - Branchen-Farben (--accent, --gold, etc.) bleiben per Sub-Page
- * - Branchen-Fonts (--font-serif, --font-tight) bleiben per Sub-Page
- * - Container-Breite (--max) bleibt per Sub-Page (1200 - 1280px erlaubt)
+ * ─── Namespace-Konvention (Sprint 147, Senior-Review M-12) ───
+ * Hier-definiert (globale Tokens):
+ *   --gap-*, --kr-*, --color-*, --type-*, --ease-*, --radius-*, --shadow-*,
+ *   --btn-pad-*, --font-*  → in JEDER Sub-Page nutzbar via var(--…).
+ *
+ * Sub-Page-eigene Tokens (Portfolio + Geo + Audit + Gruender etc.):
+ *   --accent, --accent-dark, --accent-bg, --bg, --bg-soft, --text,
+ *   --text-soft, --border, --font, --serif, --max
+ *   → DUERFEN nicht denselben Namen wie ein globales Token haben (Cascade-Trap!).
+ *
+ * Sub-Page-Branchen-Variationen die globale Tokens "thematisieren":
+ *   --p-radius, --p-radius-lg, --p-shadow-sm, --p-shadow, --p-shadow-lg
+ *   (`--p-` = Portfolio-Brand-Override; vorher waren das Shadowing-Konflikte
+ *   mit --radius / --shadow aus diesem File, jetzt eigene Namespace).
  */
 
 :root {

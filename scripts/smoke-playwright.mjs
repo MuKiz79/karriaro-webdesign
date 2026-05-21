@@ -454,6 +454,10 @@ const IGNORED_CONSOLE_PATTERNS = [
     // Plausible-Tracking-fetch fails generic mit ERR_FAILED, wenn CORS-
     // Preflight failed. Auf localhost erwartet, in Production OK.
     /Failed to load resource: net::ERR_FAILED/,
+    // SameSite-Cookie-Policy blockt 3rd-Party-Embed-Loads (z.B. Tracking-
+    // Cookies, externe iframe-Sources) auf localhost-Origin. In Production
+    // identische Domain, daher kein Defekt.
+    /net::ERR_BLOCKED_BY_RESPONSE/,
 ];
 function isIgnoredConsoleMsg(text) {
     return IGNORED_CONSOLE_PATTERNS.some((re) => re.test(text));
