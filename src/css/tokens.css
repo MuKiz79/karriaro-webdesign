@@ -67,7 +67,7 @@
   --kr-blue-light: #4A6B85;     /* Indigo-light — Hover / sekundär */
   --kr-gold: #8A7B5C;            /* Werkstatt-Gold (sekundärer Akzent) */
   --kr-grey: #525E6B;            /* Graphit-soft — sekundär-Text */
-  --kr-grey-soft: #8A8278;       /* Graphit-light — meta / tertiär */
+  --kr-grey-soft: #6B5F52;       /* Sprint 141 — Graphit-light auf 5.7:1 contrast (#6B5F52 auf #F8F4ED) — WCAG-AA pass (vorher #8A8278 = 3.8:1) */
   --kr-bg: #FBFAF7;              /* Bone — fast-weiß, warm */
   --kr-bg-soft: #F8F4ED;         /* Skizzen-Cream — wärmster Hellton */
   --kr-border: rgba(20,30,40,0.08);
@@ -141,4 +141,26 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Sprint 143 — Global :focus-visible Brand-Outline (WCAG 2.4.7).
+ * Award-Criteria: Keyboard-Navigation darf nie unsichtbar sein.
+ * Vorher: viele Selektoren mit outline:none ohne Ersatz. Diese Regel
+ * deckt jetzt ALLE Tab-Stops; Page-Level-outline:none-Regeln bleiben
+ * fuer den :focus-State (Mouse-Click), nur :focus-visible (Tab) bekommt
+ * den Brand-Indigo-Ring. */
+:root {
+  --kr-focus-ring: var(--kr-blue, #1A2E40);
+  --kr-focus-ring-offset: var(--kr-bg, #FBFAF7);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --kr-focus-ring: var(--kr-cream-soft, #F8F4ED);
+    --kr-focus-ring-offset: var(--kr-bg, #0f1217);
+  }
+}
+:focus-visible {
+  outline: 3px solid var(--kr-focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
 }

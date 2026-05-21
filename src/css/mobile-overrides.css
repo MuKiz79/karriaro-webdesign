@@ -299,7 +299,9 @@
 @media (max-width: 1023px) {
     .m-pin-spy {
         position: fixed;
-        top: 76px; /* unter nav (height 64) + 12 px Atem */
+        /* Sprint 143 (Senior-Review C-8): responsive top so Pin-Spy nicht
+         * mit Sticky-Nav (height 64) auf kleinen Screens kollidiert. */
+        top: clamp(72px, 10svh, 96px);
         right: 16px;
         z-index: 55; /* unter nav (60), über content */
         display: flex;
@@ -1197,6 +1199,14 @@
     animation: m-demo-spin 0.9s linear infinite;
 }
 @keyframes m-demo-spin { to { transform: rotate(360deg); } }
+/* Sprint 141 — WCAG-2.2 prefers-reduced-motion: Spinner statisch (Border-Pulse statt Rotation) */
+@media (prefers-reduced-motion: reduce) {
+    .m-demo-sheet-spinner {
+        animation: none;
+        border-top-color: var(--color-indigo, #1A2E40);
+        opacity: 0.6;
+    }
+}
 
 .m-demo-sheet-foot {
     flex-shrink: 0;

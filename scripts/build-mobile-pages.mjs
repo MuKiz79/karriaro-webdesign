@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=134">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=143">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -133,8 +133,10 @@ function injectPinSpy(html) {
 }
 
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
-// Sprint 134 — Cache-Bust v=133 → v=134 (Dark-Mode + neue Section-Reveal-Rules).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=134" defer></script>\n`;
+// Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
+// Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
+// Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=143" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -170,15 +172,50 @@ function injectMobileCss(html) {
     return html.slice(0, closeHeadIdx) + MOBILE_OVERRIDES_LINK + '\n' + html.slice(closeHeadIdx);
 }
 
-function injectStickyCta(html) {
-    if (html.includes('data-m-sticky-cta')) return html;
-    const closeTag = '</' + 'body>';
-    const closeBodyIdx = html.lastIndexOf(closeTag);
-    if (closeBodyIdx === -1) {
-        console.warn('  ⚠ kein body-close — Sticky-CTA nicht injiziert');
+// Sprint 143 (Senior-Review C-9) — Critical-CSS inline im <head>.
+// CLAUDE.md fordert das fuer LCP <= 1.8s. Block deckt above-the-fold:
+// body-Reset, fixed Nav, Hero-Skelett, Typografie-Defaults, Pin-Spy +
+// Sticky-CTA als display:none-Initialstate (FOUC-Schutz). Spaeter laden
+// tokens.css + mobile-overrides.css die finalen Werte; gleiche Selektor-
+// Specificity → File-Reihenfolge entscheidet, externe CSS gewinnt.
+const CRITICAL_CSS = `
+<style id="m-critical-css">
+/* Sprint 143 — Critical-CSS Mobile-Hauptseite (LCP-Optimierung) */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F8F4ED;color:#14202B;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+main{display:block}
+nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(251,251,253,0.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);height:64px;display:flex;align-items:center;border-bottom:1px solid rgba(0,0,0,0.04)}
+.hero-with-photo{padding:88px 24px 48px;min-height:100svh;background:#F8F4ED}
+.hero-inner{max-width:560px;margin:0 auto}
+.hero-folio-eyebrow{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#525E6B;margin:0 0 20px;display:flex;flex-wrap:wrap;gap:0 6px;line-height:1.6}
+.hero-folio-eyebrow .dot{opacity:0.5}
+.hero-headline{font-family:Fraunces,Georgia,"Times New Roman",serif;font-size:clamp(34px,9vw,52px);font-weight:600;line-height:1.05;letter-spacing:-0.01em;margin:0 0 24px;color:#14202B}
+.hero-headline .hero-h1-line{display:block}
+.m-pin-spy{display:none}
+.m-sticky-cta-bar{display:none}
+.kr-cta-float{display:none}
+</style>
+`;
+
+function injectCriticalCss(html) {
+    if (html.includes('id="m-critical-css"')) return html;
+    const closeHeadIdx = html.lastIndexOf('</head>');
+    if (closeHeadIdx === -1) {
+        console.warn('  ⚠ kein </head> — Critical-CSS nicht injiziert');
         return html;
     }
-    return html.slice(0, closeBodyIdx) + STICKY_CTA_BAR + html.slice(closeBodyIdx);
+    return html.slice(0, closeHeadIdx) + CRITICAL_CSS + html.slice(closeHeadIdx);
+}
+
+// Sprint 143 — Sticky-Phone+WhatsApp-Bar entfernt (Senior-Design-Review C-1).
+// Begruendung: generisches Conversion-Pattern bricht Editorial-Stille der
+// Manufaktur-Marke (Aesop/Hermes/Monocle-DNA). Founder-Letter im #kontakt
+// + Float-CTA "Erstgespraech" sind die brand-konformen Kontakt-Pfade.
+// Falls reaktivierbar gewuenscht: STICKY_CTA_BAR-Template + dieser Stub
+// bleiben erhalten, aber Caller in der Pipeline (Z. ~791) ueberspringt.
+function injectStickyCta(html) {
+    return html;
 }
 
 function addGeneratorMarker(html, relPath) {
@@ -782,6 +819,8 @@ function buildPage(relPath) {
 
     html = stripAutoRedirect(html);
     html = injectMobileCss(html);
+    // Sprint 143 — Critical-CSS inline (Senior-Review C-9, LCP-Optimierung).
+    html = injectCriticalCss(html);
     // Sprint 134 — PWA-Foundation (Manifest + Apple-Meta + SW-Registration)
     // auf JEDER Mobile-Page, nicht nur Index. Macht Sub-Pages installable.
     html = injectPwaHead(html);
@@ -880,7 +919,10 @@ function main() {
 
     console.log('');
     console.log(`  ✓ ${results.length} Mobile-Pages generiert`);
-    console.log(`  ✓ ${results.filter(r => r.sellingCta).length} mit Sticky-CTA-Bar`);
+    // Sprint 143 — Sticky-CTA-Bar entfernt (Senior-Review C-1). Counter zeigt
+    // jetzt selling-Pages, die *zuvor* die Bar gehabt haetten (= reine
+    // Audit-Spur), nicht tatsaechliche Insertion.
+    console.log(`  ✓ ${results.filter(r => r.sellingCta).length} selling-Pages (Sticky-CTA-Bar deaktiviert seit Sprint 143)`);
 }
 
 main();

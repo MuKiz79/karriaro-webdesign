@@ -3035,7 +3035,7 @@
                 <a href="/en/" style="font-weight: 500;">EN</a>
             </div>
             <a href="#kontakt" class="cta">Erstgespräch</a>
-            <button class="menu-toggle" aria-label="Menü öffnen" onclick="document.getElementById('mobile-menu').classList.toggle('open')">
+            <button class="menu-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobile-menu" onclick="(function(b){var m=document.getElementById('mobile-menu');var o=m.classList.toggle('open');b.setAttribute('aria-expanded',o?'true':'false');b.setAttribute('aria-label',o?'Menü schließen':'Menü öffnen');})(this)">
                 <span></span><span></span><span></span>
             </button>
         </div>

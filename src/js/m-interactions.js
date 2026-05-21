@@ -291,21 +291,43 @@
         }
 
         var lastFocus = null;
+        // Sprint 143 (Senior-Review C-5) — Fail-Timeout damit der Spinner nicht
+        // ewig dreht, falls die Demo-Page nie lädt (CSP, Network, sandboxed).
+        var loadTimer = null;
+        var loadErrorEl = null;
+        function clearLoadTimer() {
+            if (loadTimer) { clearTimeout(loadTimer); loadTimer = null; }
+            if (loadErrorEl) loadErrorEl.style.display = 'none';
+        }
+        function showLoadError() {
+            if (sheetLoader) sheetLoader.classList.add('is-hidden');
+            if (!loadErrorEl && sheetFrame && sheetFrame.parentNode) {
+                loadErrorEl = document.createElement('div');
+                loadErrorEl.setAttribute('role', 'status');
+                loadErrorEl.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:Inter,system-ui,sans-serif;font-size:14px;line-height:1.55;color:var(--kr-ink,#14202B);background:var(--kr-bg,#FBFAF7);';
+                loadErrorEl.innerHTML = '<div><strong style="display:block;margin-bottom:6px;font-weight:600;">Demo konnte nicht geladen werden.</strong><span style="opacity:0.7;">Bitte direkt unter dem Link unten öffnen.</span></div>';
+                sheetFrame.parentNode.appendChild(loadErrorEl);
+            }
+            if (loadErrorEl) loadErrorEl.style.display = 'flex';
+        }
         function openSheet(href, title, domain) {
             lastFocus = document.activeElement;
             if (sheetTitle) sheetTitle.textContent = title;
             if (sheetEyebrow) sheetEyebrow.textContent = domain;
             if (sheetTab) sheetTab.setAttribute('href', href);
             if (sheetLoader) sheetLoader.classList.remove('is-hidden');
+            clearLoadTimer();
             if (sheetFrame) {
                 sheetFrame.setAttribute('src', href);
                 sheetFrame.style.opacity = '0';
+                loadTimer = setTimeout(showLoadError, 8000);
             }
             sheet.classList.add('is-open');
             sheet.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
         }
         function closeSheet() {
+            clearLoadTimer();
             sheet.classList.remove('is-open');
             sheet.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
@@ -318,6 +340,7 @@
         if (sheetFrame) {
             sheetFrame.addEventListener('load', function () {
                 if (sheetFrame.getAttribute('src') === 'about:blank') return;
+                clearLoadTimer();
                 if (sheetLoader) sheetLoader.classList.add('is-hidden');
                 sheetFrame.style.transition = 'opacity 240ms ease';
                 sheetFrame.style.opacity = '1';
@@ -337,6 +360,68 @@
         });
     }
 
+    // ─── 6. Mobile-Menu A11y (Sprint 143 — Senior-Review C-7) ────
+    // aria-expanded-Toggle, Escape-Key zum Schliessen, Focus-Trap im
+    // offenen Menu (Tab/Shift+Tab bleiben im Menu), Focus-Return auf
+    // Toggle-Button beim Schliessen.
+    function mMobileMenu() {
+        var toggle = document.querySelector('.menu-toggle');
+        var menu = document.getElementById('mobile-menu');
+        if (!toggle || !menu) return;
+        // Inline-onclick aus Source-HTML neutralisieren — Mobile bekommt
+        // den vollen Handler (aria-expanded + Escape + Focus-Trap).
+        toggle.onclick = null;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', 'mobile-menu');
+        function isOpen() { return menu.classList.contains('open'); }
+        function focusables() {
+            return menu.querySelectorAll('a[href], button:not([disabled])');
+        }
+        function openMenu() {
+            menu.classList.add('open');
+            toggle.setAttribute('aria-expanded', 'true');
+            toggle.setAttribute('aria-label', 'Menü schließen');
+            var first = focusables()[0];
+            if (first) first.focus();
+        }
+        function closeMenu(returnFocus) {
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.setAttribute('aria-label', 'Menü öffnen');
+            if (returnFocus !== false) toggle.focus();
+        }
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (isOpen()) closeMenu(); else openMenu();
+        });
+        // Link-Click im Menu schliesst es (Navigation passiert sowieso)
+        menu.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () { closeMenu(false); });
+        });
+        // Escape-Key (WCAG 1.4.13)
+        document.addEventListener('keydown', function (e) {
+            if (!isOpen()) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeMenu();
+                return;
+            }
+            // Focus-Trap (Tab + Shift+Tab)
+            if (e.key !== 'Tab') return;
+            var els = focusables();
+            if (!els.length) return;
+            var first = els[0];
+            var last = els[els.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first.focus();
+            }
+        });
+    }
+
     // ─── Boot ────────────────────────────────────────────────────
     function boot() {
         mStickyCta();
@@ -345,6 +430,7 @@
         mScrollAnimations();
         mDemoSwiper();
         mSectionBgSpy();    // Sprint 132
+        mMobileMenu();      // Sprint 143
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);
