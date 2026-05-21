@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+    <!-- Sprint 140 — Embed-Hero-Mode für iframe-Live-Preview im Mobile-Demo-Swiper -->
+    <script>if(location.search.indexOf('embed=hero')!==-1)document.documentElement.classList.add('embed-hero');</script>
+    <style>html.embed-hero{overflow:hidden;background:#fff}html.embed-hero body{background:#fff;margin:0}html.embed-hero .topbar,html.embed-hero .nav,html.embed-hero main>*:not(.hero),html.embed-hero footer{display:none!important}html.embed-hero section.hero{padding:clamp(40px,8svh,64px) 24px!important;min-height:auto!important}</style>
     <script>(function(){var h=location.hostname;if(h!=="karriaro-webdesign.de"&&h!=="www.karriaro-webdesign.de")return;if(sessionStorage.getItem("kr-keep-desktop")==="1")return;var ua=navigator.userAgent||"";var isMobileUA=/iPhone|iPod|Android|Mobile|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);var isNarrow=(window.innerWidth||document.documentElement.clientWidth||0)<=900;if(!isMobileUA&&!isNarrow)return;location.replace("https://m.karriaro-webdesign.de"+location.pathname+location.search);})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

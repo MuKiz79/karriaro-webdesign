@@ -153,9 +153,10 @@ function injectMInteractionsScript(html) {
 
 function stripAutoRedirect(html) {
     // Greift jeden inline-<script>-Block, der "m.karriaro-webdesign.de" enthält.
-    // Achtung: Script-Body kann "<" enthalten (z.B. "<=900"), daher [\s\S]*?
-    // statt [^<]* — wir verlassen uns auf non-greedy + den eindeutigen Marker.
-    const pattern = /<script>[\s\S]*?m\.karriaro-webdesign\.de[\s\S]*?<\/script>\s*/g;
+    // Sprint 140 — Negative-Lookahead gegen </script>, damit der Regex NICHT
+    // über andere benachbarte <script>-Tags hinweg matcht (vorheriger lazy-
+    // Pattern hat zB. den Embed-Hero-Script + <style>-Block mit-konsumiert).
+    const pattern = /<script>(?:(?!<\/script>)[\s\S])*?m\.karriaro-webdesign\.de(?:(?!<\/script>)[\s\S])*?<\/script>\s*/g;
     return html.replace(pattern, '');
 }
 
@@ -665,14 +666,14 @@ function buildDemoSwiperHtml() {
         const eager = i === 0;
         const dims = readMockupDims(slug);
         const brandColor = BRAND_COLOR_MAP[slug] || 'var(--color-cream-soft, #f5f3ee)';
+        const eagerFrame = i <= 1; // Sprint 140 — Stadtmakler + Lehmann eager-load iframe
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
             <button type="button" class="m-demo-swiper-card m-poster" style="--m-poster-bg:${brandColor};" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
-                <picture>
-                    <source type="image/webp" media="(max-width: 480px)" srcset="/images/mockups-opt/${slug}-mockup-480.webp">
-                    <source type="image/webp" srcset="/images/mockups-opt/${slug}-mockup-800.webp">
-                    <img class="m-poster-shot" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}">
-                </picture>
+                <div class="m-poster-stage" data-m-poster-stage>
+                    <img class="m-poster-skeleton" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}" aria-hidden="true">
+                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=hero" title="${title} Hero-Vorschau" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                </div>
             </button>
             <div class="m-demo-swiper-meta">
                 <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
@@ -688,7 +689,7 @@ function buildDemoSwiperHtml() {
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
     <p class="m-demo-swiper-section-eyebrow">№ 02 · Acht Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
-    <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen für Live-Vorschau</p>
+    <p class="m-demo-swiper-section-hint" aria-hidden="true">← swipen ·  tippen zum Öffnen</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
     </div>
     <div class="m-demo-swiper-dots" data-m-demo-dots aria-hidden="true"></div>
