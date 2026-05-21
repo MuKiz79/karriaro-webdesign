@@ -1,19 +1,25 @@
-/* Karriaro Mobile — Service-Worker Sprint 134 (Award-Foundation).
+/* Karriaro Mobile — Service-Worker Sprint 148 (Premium-Vitrine-Refresh).
    Strategien:
    - HTML (navigate-requests): network-first → cache-fallback → offline.html
    - CSS/JS/Images: stale-while-revalidate (fast first-paint + Background-Refresh)
    - Icons + manifest: cache-first (statisch)
+
+   Cache-Version-Konvention: bei jedem mobile-overrides.css- oder
+   m-interactions.js-Update muss CACHE-Konstante mit der ?v=-Version
+   synchron gehen, sonst serviert der SW alten gecachten Stand
+   stale-while-revalidate und der User sieht erst die alte Version,
+   dann die neue (siehe Sprint-148-Befund "andere Sicht zuerst").
 */
 
-const CACHE = 'karriaro-mobile-v134';
+const CACHE = 'karriaro-mobile-v148';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
     '/',
     '/offline.html',
     '/css/mobile.css',
-    '/css/mobile-overrides.css?v=133',
+    '/css/mobile-overrides.css?v=148',
     '/css/tokens.css',
-    '/js/m-interactions.js?v=133',
+    '/js/m-interactions.js?v=148',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/apple-touch-icon.png',
