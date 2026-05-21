@@ -32,28 +32,31 @@ export async function saveLead(domain, url, data) {
 
     // Firestore
     const user = currentUser();
-    if (user && fb()?.db) {
-        try {
-            const ref = fb().fns.doc(fb().db, 'leads', `${user.uid}_${id}`);
-            await fb().fns.setDoc(ref, {
-                uid: user.uid, domain, url,
-                name: data.name || domain,
-                type: data.type || '',
-                rating: data.rating || null,
-                reviews: data.reviews || 0,
-                perf: data.perf || null,
-                seo: data.seo || null,
-                a11y: data.a11y || null,
-                cms: data.cms || '',
-                isBaukasten: data.isBaukasten || false,
-                leadScore: data.leadScore || 0,
-                conversionRate: data.conversionRate || 0,
-                expectedValue: data.expectedValue || 0,
-                status: 'neu', notes: '',
-                savedAt: fb().fns.serverTimestamp(),
-                updatedAt: fb().fns.serverTimestamp()
-            }, { merge: true });
-        } catch (e) { console.error('Firestore save:', e); }
+    if (!user || !fb()?.db) return { ok: true, firestoreSynced: true };
+    try {
+        const ref = fb().fns.doc(fb().db, 'leads', `${user.uid}_${id}`);
+        await fb().fns.setDoc(ref, {
+            uid: user.uid, domain, url,
+            name: data.name || domain,
+            type: data.type || '',
+            rating: data.rating || null,
+            reviews: data.reviews || 0,
+            perf: data.perf || null,
+            seo: data.seo || null,
+            a11y: data.a11y || null,
+            cms: data.cms || '',
+            isBaukasten: data.isBaukasten || false,
+            leadScore: data.leadScore || 0,
+            conversionRate: data.conversionRate || 0,
+            expectedValue: data.expectedValue || 0,
+            status: 'neu', notes: '',
+            savedAt: fb().fns.serverTimestamp(),
+            updatedAt: fb().fns.serverTimestamp()
+        }, { merge: true });
+        return { ok: true, firestoreSynced: true };
+    } catch (e) {
+        console.error('Firestore save:', e);
+        return { ok: true, firestoreSynced: false, firestoreError: e?.message || String(e) };
     }
 }
 
@@ -102,15 +105,18 @@ export async function updateLead(leadId, updates) {
 
     // Firestore
     const user = currentUser();
-    if (user && fb()?.db) {
-        try {
-            const firestoreUpdates = { ...updates, updatedAt: fb().fns.serverTimestamp() };
-            if (updates.status === 'kontaktiert') {
-                firestoreUpdates.contactedAt = fb().fns.serverTimestamp();
-            }
-            const ref = fb().fns.doc(fb().db, 'leads', leadId);
-            await fb().fns.updateDoc(ref, firestoreUpdates);
-        } catch (e) { console.error('Update lead:', e); }
+    if (!user || !fb()?.db) return { ok: true, firestoreSynced: true };
+    try {
+        const firestoreUpdates = { ...updates, updatedAt: fb().fns.serverTimestamp() };
+        if (updates.status === 'kontaktiert') {
+            firestoreUpdates.contactedAt = fb().fns.serverTimestamp();
+        }
+        const ref = fb().fns.doc(fb().db, 'leads', leadId);
+        await fb().fns.updateDoc(ref, firestoreUpdates);
+        return { ok: true, firestoreSynced: true };
+    } catch (e) {
+        console.error('Update lead:', e);
+        return { ok: true, firestoreSynced: false, firestoreError: e?.message || String(e) };
     }
 }
 
@@ -122,31 +128,46 @@ export async function deleteLead(leadId) {
 
     // Firestore
     const user = currentUser();
-    if (user && fb()?.db) {
-        try {
-            await fb().fns.deleteDoc(fb().fns.doc(fb().db, 'leads', leadId));
-        } catch (e) { console.error('Delete lead:', e); }
+    if (!user || !fb()?.db) return { ok: true, firestoreSynced: true };
+    try {
+        await fb().fns.deleteDoc(fb().fns.doc(fb().db, 'leads', leadId));
+        return { ok: true, firestoreSynced: true };
+    } catch (e) {
+        console.error('Delete lead:', e);
+        return { ok: true, firestoreSynced: false, firestoreError: e?.message || String(e) };
     }
 }
 
 // ── Alle Leads löschen ──
-export async function deleteAllLeads() {
+// onProgress(done, total) ist optional — Caller kann Fortschritt anzeigen.
+// Firestore-Deletes laufen in 10er-Chunks parallel, damit 200+ Leads nicht 16 s blocken.
+export async function deleteAllLeads(onProgress = null) {
     // localStorage leeren
     setLocal([]);
 
     // Firestore: alle Leads des Users löschen
     const user = currentUser();
-    if (user && fb()?.db) {
-        try {
-            const q = fb().fns.query(
-                fb().fns.collection(fb().db, 'leads'),
-                fb().fns.where('uid', '==', user.uid)
-            );
-            const snap = await fb().fns.getDocs(q);
-            for (const doc of snap.docs) {
-                await fb().fns.deleteDoc(doc.ref);
-            }
-        } catch (e) { console.error('Delete all leads:', e); }
+    if (!user || !fb()?.db) return { ok: true, firestoreSynced: true, deleted: 0 };
+    try {
+        const q = fb().fns.query(
+            fb().fns.collection(fb().db, 'leads'),
+            fb().fns.where('uid', '==', user.uid)
+        );
+        const snap = await fb().fns.getDocs(q);
+        const docs = snap.docs;
+        const total = docs.length;
+        let done = 0;
+        const CHUNK = 10;
+        for (let i = 0; i < docs.length; i += CHUNK) {
+            const chunk = docs.slice(i, i + CHUNK);
+            await Promise.all(chunk.map(d => fb().fns.deleteDoc(d.ref)));
+            done += chunk.length;
+            if (typeof onProgress === 'function') onProgress(done, total);
+        }
+        return { ok: true, firestoreSynced: true, deleted: done };
+    } catch (e) {
+        console.error('Delete all leads:', e);
+        return { ok: true, firestoreSynced: false, firestoreError: e?.message || String(e) };
     }
 }
 

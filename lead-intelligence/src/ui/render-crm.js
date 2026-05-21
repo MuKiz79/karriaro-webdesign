@@ -258,9 +258,9 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     el.innerHTML = html;
 
     // ── Events (mit AbortController für Cleanup) ──
-    // Status-Änderung — bei Wechsel zu kunde/verloren wird zusätzlich recordOutcome() gefeuert,
-    // damit Calibration/Drift-Monitor/Prior-Update echte Daten bekommen. prev-status verhindert
-    // Doppel-Logs, wenn User mehrfach in den gleichen Endzustand wechselt.
+    // Status-Änderung — Reihenfolge: updateLead AWAIT first (Race-Fix), dann recordOutcome
+    // NUR wenn Firestore-Sync ok. prev-status verhindert Doppel-Logs. Score 0 = Konkurrenz/
+    // Enterprise (_skipPitch in single-check.js:166-171) → kein echtes Outcome für Calibration.
     el.addEventListener('change', async (e) => {
         const id = e.target.dataset.leadId;
         if (!id) return;
@@ -269,16 +269,25 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             const prevStatus = e.target.dataset.prevStatus;
             const isOutcome = newStatus === 'kunde' || newStatus === 'verloren';
             const isNewOutcome = isOutcome && newStatus !== prevStatus;
-            if (isNewOutcome) {
-                const { domain, score, branch } = e.target.dataset;
-                recordOutcome(domain, parseInt(score) || 0, newStatus, branch || null);
+            const { domain, score, branch } = e.target.dataset;
+            const numScore = parseInt(score) || 0;
+
+            const result = await updateLead(id, { status: newStatus });
+
+            // recordOutcome NUR wenn Sync ok + Score > 0 (Score 0 = Konkurrenz/Enterprise)
+            if (isNewOutcome && result.firestoreSynced && numScore > 0) {
+                recordOutcome(domain, numScore, newStatus, branch || null);
             }
-            await updateLead(id, { status: newStatus });
-            showToast(
-                isNewOutcome && newStatus === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' :
-                isNewOutcome && newStatus === 'verloren' ? 'Als verloren markiert.' :
-                `Status → ${STATUS_LABELS[newStatus] || newStatus}`
-            );
+
+            if (!result.firestoreSynced) {
+                showToast('Sync-Fehler — Änderung nur lokal gespeichert');
+            } else {
+                showToast(
+                    isNewOutcome && newStatus === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' :
+                    isNewOutcome && newStatus === 'verloren' ? 'Als verloren markiert.' :
+                    `Status → ${STATUS_LABELS[newStatus] || newStatus}`
+                );
+            }
             // Stats + Pipeline refreshen
             renderCRM(filter, searchQuery);
         }
@@ -288,7 +297,8 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     el.addEventListener('blur', async (e) => {
         const id = e.target.dataset.leadId;
         if (id && e.target.dataset.action === 'notes') {
-            await updateLead(id, { notes: e.target.value });
+            const result = await updateLead(id, { notes: e.target.value });
+            if (!result.firestoreSynced) showToast('Notiz nur lokal — Sync-Fehler');
         }
     }, { capture: true, signal });
     el.addEventListener('keydown', async (e) => {
@@ -304,8 +314,8 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         if (!btn) return;
         const id = btn.dataset.leadId;
         if (id && confirm('Lead wirklich löschen?')) {
-            await deleteLead(id);
-            showToast('Lead gelöscht');
+            const result = await deleteLead(id);
+            showToast(result.firestoreSynced ? 'Lead gelöscht' : 'Lokal gelöscht — Sync-Fehler');
             renderCRM(filter, searchQuery);
         }
     }, { signal });
@@ -350,15 +360,22 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, { signal });
 
-    // Outcome-Tracking (Feedback Loop) — Branch wird mit gespeichert für
-    // Calibration / Drift-Monitor / Prior-Update.
+    // Outcome-Tracking (Feedback Loop) — gleiche Race-Logik wie Status-Dropdown:
+    // updateLead AWAIT first, recordOutcome nur bei Sync-OK + Score > 0.
     el.addEventListener('click', async (e) => {
         const btn = e.target.closest('[data-outcome]');
         if (!btn) return;
         const { leadId, domain, score, outcome, branch } = btn.dataset;
-        recordOutcome(domain, parseInt(score), outcome, branch || null);
-        await updateLead(leadId, { status: outcome });
-        showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : 'Als verloren markiert.');
+        const numScore = parseInt(score) || 0;
+        const result = await updateLead(leadId, { status: outcome });
+        if (result.firestoreSynced && numScore > 0) {
+            recordOutcome(domain, numScore, outcome, branch || null);
+        }
+        if (!result.firestoreSynced) {
+            showToast('Sync-Fehler — Änderung nur lokal gespeichert');
+        } else {
+            showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : 'Als verloren markiert.');
+        }
         renderCRM(filter, searchQuery);
     }, { signal });
 
@@ -371,8 +388,15 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         if (e.target.dataset.action === 'deleteAll') {
             if (!confirm(`Wirklich ALLE ${leads.length} Leads unwiderruflich löschen?`)) return;
             if (!confirm('Sicher? Das kann nicht rückgängig gemacht werden.')) return;
-            await deleteAllLeads();
-            showToast('Alle Leads gelöscht');
+            showToast(`Lösche ${leads.length} Leads...`);
+            const result = await deleteAllLeads((done, total) => {
+                if (done % 50 === 0 || done === total) showToast(`Gelöscht: ${done} / ${total}`);
+            });
+            if (!result.firestoreSynced) {
+                showToast('Lokal geleert — Cloud-Sync-Fehler');
+            } else {
+                showToast(`Alle ${result.deleted ?? leads.length} Leads gelöscht`);
+            }
             renderCRM();
         }
         if (e.target.dataset.action === 'toggleStats') {

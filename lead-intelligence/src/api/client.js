@@ -7,6 +7,8 @@
  * 3. Kein Timeout → 30s Default
  */
 
+import { state } from '../state.js';
+
 const cache = new Map();
 const CACHE_TTL = 5 * 60 * 1000; // 5 Minuten
 
@@ -73,6 +75,9 @@ export async function cachedFetch(url, options = {}, config = {}) {
             if (e.name === 'AbortError') {
                 lastError = new Error(`Timeout nach ${timeout / 1000}s`);
             }
+            // Abort-Aware: Wenn User die Pipeline abgebrochen hat (state.aborted),
+            // KEIN Retry — sonst feuern wir noch eine Anthropic-Anfrage in den Wind.
+            if (state.aborted) throw lastError;
             if (attempt < retries) await delay(2000);
         }
     }

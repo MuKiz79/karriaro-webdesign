@@ -1,15 +1,10 @@
 /**
- * Monte-Carlo Hauptberechnung.
+ * Monte-Carlo Hauptberechnung — Wrapper um funnel-chain.runFunnelSimulation.
  *
- * NEU (Audit 2026-04-30): Die alte "Markov"-Schicht war forward-only und
- * mathematisch identisch zu einem sequenziellen Bernoulli-Funnel. Wir
- * delegieren jetzt an math/funnel-chain.js — selbe Semantik, weniger
- * MC-Varianz, ehrliche conditionalPassRate. Diese Datei bleibt als
- * Aufrufer-API stehen (Tests + lead-scorer importieren von hier).
- *
- * FIXES (alt):
- * I2: Wilson CI aus N Beta-Samples (jetzt: aus runFunnelSimulation)
- * I7: Eine einzige Conversion-Rate aus Bernoulli-Produkt
+ * Hintergrund: Die alte Markov-Schicht (forward-only) war mathematisch
+ * identisch zu einem sequenziellen Bernoulli-Funnel. Math-Audit 2026-04-30
+ * hat funnel-chain.js als ehrlichen Ersatz eingeführt. Diese Datei bleibt
+ * als Aufrufer-API stehen (lead-scorer + Tests importieren von hier).
  */
 
 import { runFunnelSimulation } from './funnel-chain.js';
