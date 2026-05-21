@@ -11,7 +11,7 @@
    dann die neue (siehe Sprint-148-Befund "andere Sicht zuerst").
 */
 
-const CACHE = 'karriaro-mobile-v149';
+const CACHE = 'karriaro-mobile-v150';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
     '/',

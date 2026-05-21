@@ -207,6 +207,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(251,251,253,0
 
 function injectCriticalCss(html) {
     if (html.includes('id="m-critical-css"')) return html;
+    // Sprint 148.3 — Critical-CSS muss SO FRUEH WIE MOEGLICH ins <head>,
+    // direkt nach <meta name="viewport">. Vorher war's am Ende des
+    // <head> (nach 2850 Zeilen Sprint-39-Inline-Style + externer mobile-
+    // overrides.css), und Safari Streaming-HTML-Parse rendert progressiv
+    // mit den Sprint-39-Defaults bevor das Critical-CSS angewandt wird —
+    // Hero erscheint kurz "ueber zwei Seiten" mit sichtbarem Mockup-Block.
+    const viewportMatch = html.match(/<meta\s+name="viewport"[^>]*>/i);
+    if (viewportMatch) {
+        const idx = html.indexOf(viewportMatch[0]) + viewportMatch[0].length;
+        return html.slice(0, idx) + '\n' + CRITICAL_CSS + html.slice(idx);
+    }
+    // Fallback: vor </head> (alter Stand)
     const closeHeadIdx = html.lastIndexOf('</head>');
     if (closeHeadIdx === -1) {
         console.warn('  ⚠ kein </head> — Critical-CSS nicht injiziert');
