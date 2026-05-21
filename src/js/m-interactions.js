@@ -243,28 +243,11 @@
         var slides = rail.querySelectorAll('.m-demo-swiper-slide');
         if (!slides.length) return;
 
-        // Sprint 140 — iframe Live-Preview: src lazy setzen + load-event-fade.
-        // Erste 2 Karten (data-m-poster-eager) sofort, andere via IO.
-        var frames = rail.querySelectorAll('.m-poster-frame[data-m-poster-src]');
-        function loadFrame(frame) {
-            if (frame.src && frame.src !== 'about:blank') return;
-            frame.src = frame.getAttribute('data-m-poster-src');
-            frame.addEventListener('load', function () {
-                var poster = frame.closest('.m-poster');
-                if (poster) poster.classList.add('is-loaded');
-            }, { once: true });
-        }
-        frames.forEach(function (f) { if (f.hasAttribute('data-m-poster-eager')) loadFrame(f); });
-        if ('IntersectionObserver' in window) {
-            var frameIo = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                    if (e.isIntersecting) { loadFrame(e.target); frameIo.unobserve(e.target); }
-                });
-            }, { rootMargin: '200px 0px', threshold: 0.1 });
-            frames.forEach(function (f) { if (!f.hasAttribute('data-m-poster-eager')) frameIo.observe(f); });
-        } else {
-            frames.forEach(loadFrame);
-        }
+        // Sprint 148.4 — iframe-Live-Preview innerhalb der Card entfernt
+        // (Card-internes Viewport rendert Portfolio-Page mit Zoom-Effekt,
+        // kontrastiert mit Skeleton-JPG-Layout). Die Card ist jetzt
+        // Skeleton-only; Sheet-Modal (Tap-to-Open) liefert die volle
+        // Live-Page in eigenem Viewport (siehe sheetFrame-Logik unten).
 
         slides.forEach(function (_, i) {
             var b = document.createElement('button');

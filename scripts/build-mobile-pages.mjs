@@ -727,12 +727,20 @@ function buildDemoSwiperHtml() {
         // Card schwebt auf Brand-Color-Bühne (Sprint-131-Pattern reaktiviert).
         // Editorial-Caption (Eyebrow/Title/Sub/CTA) wandert UNTER die Card,
         // kein Dunkel-Overlay mehr. Folio-Badge raus (siehe Plan Hebel 3).
+        // Sprint 148.4 — iframe-Live-Preview innerhalb der Card ENTFERNT.
+        // Sprint-140-Experiment renderte die Portfolio-Page in einem Card-
+        // internen Viewport (~280×350 px), was zu einem Zoom-Effekt fuehrte:
+        // statisches JPG-Skeleton zeigte das KOMPLETTE Hero-Mockup, iframe
+        // zeigte dann hineingezoomten Andreas-Mueller-Foto + abgeschnittenen
+        // Title. User-Empfindung: "kommt zunaechst ein Screen, dann ein
+        // anderer". Das Skeleton-JPG ist visuell ueberlegen und bleibt das
+        // finale Render. Sheet-Modal (Tap-to-Open) liefert weiterhin die
+        // volle Live-Page in eigenem Viewport — kein Verlust an Funktion.
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
             <button type="button" class="m-demo-swiper-card m-poster" style="--m-poster-bg:${brandColor};" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
                 <div class="m-poster-stage" data-m-poster-stage>
-                    <img class="m-poster-skeleton" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}" aria-hidden="true">
-                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=hero" title="${title} Hero-Vorschau" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                    <img class="m-poster-skeleton" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}">
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
