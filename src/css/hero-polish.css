@@ -54,9 +54,18 @@
     .hero-folio-marker { display: none; }
 }
 
+/* Sprint 146 (Senior-Review M-13) — Race-frei: Initial-State im Selector
+ * ist jetzt der End-State (opsz 144, opacity 1, letter-spacing -0.03em).
+ * Animation läuft mit fill-mode `backwards`, damit waehrend der 200ms
+ * delay-Phase der 0%-Keyframe (opsz 9, opacity 0.42) gilt. Bei
+ * `prefers-reduced-motion: reduce` greift `animation: none` und das
+ * Element bleibt sofort im End-State — kein erster Frame mit reduziertem
+ * opsz/opacity moeglich. */
 .hero-headline {
-    font-variation-settings: "opsz" 9;
-    animation: hero-opsz-reveal 800ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+    font-variation-settings: "opsz" 144;
+    opacity: 1;
+    letter-spacing: -0.03em;
+    animation: hero-opsz-reveal 800ms var(--ease-premium, cubic-bezier(0.16, 1, 0.3, 1)) 200ms backwards;
     text-wrap: balance;
 }
 @keyframes hero-opsz-reveal {
@@ -77,8 +86,5 @@
 @media (prefers-reduced-motion: reduce) {
     .hero-headline {
         animation: none;
-        font-variation-settings: "opsz" 144;
-        opacity: 1;
-        letter-spacing: -0.03em;
     }
 }

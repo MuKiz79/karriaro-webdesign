@@ -442,14 +442,36 @@ function fail(label, reason) {
     console.log(`  ✗ ${label}\n    → ${reason}`);
 }
 
+// Sprint 146 — Externe Tracking-CORS-Errors ignorieren. Das Plausible-EU-
+// Snippet `lighthouse.karriaro.de/t.js` ruft `/api/track/custom-events.json`
+// auf; auf localhost (127.0.0.1) wird das per CORS-Policy geblockt, was als
+// JS-Error im Console landet und Smoke flakey macht. In Production ist die
+// Origin karriaro-webdesign.de erlaubt — kein echter Defekt.
+const IGNORED_CONSOLE_PATTERNS = [
+    /lighthouse\.karriaro\.de/,
+    /custom-events\.json/,
+    /Access to fetch.+blocked by CORS policy/,
+    // Plausible-Tracking-fetch fails generic mit ERR_FAILED, wenn CORS-
+    // Preflight failed. Auf localhost erwartet, in Production OK.
+    /Failed to load resource: net::ERR_FAILED/,
+];
+function isIgnoredConsoleMsg(text) {
+    return IGNORED_CONSOLE_PATTERNS.some((re) => re.test(text));
+}
+
 async function loadPage(page, url, name) {
     const errors = [];
     const consoleErrors = [];
     page.removeAllListeners('pageerror');
     page.removeAllListeners('console');
-    page.on('pageerror', (e) => errors.push(e.message));
+    page.on('pageerror', (e) => {
+        if (!isIgnoredConsoleMsg(e.message)) errors.push(e.message);
+    });
     page.on('console', (msg) => {
-        if (msg.type() === 'error') consoleErrors.push(msg.text());
+        if (msg.type() !== 'error') return;
+        const text = msg.text();
+        if (isIgnoredConsoleMsg(text)) return;
+        consoleErrors.push(text);
     });
 
     let response;
