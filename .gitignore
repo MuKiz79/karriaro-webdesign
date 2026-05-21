@@ -27,3 +27,6 @@ test-results/
 
 # Social-Render-Output (generierte PNGs aus scripts/render-social.mjs)
 marketing/social/out/
+
+# Sprint 141 — Award-Review Reports (Lighthouse + Multi-Agent-Audit, lokale Artefakte)
+award-submissions/.reports/
