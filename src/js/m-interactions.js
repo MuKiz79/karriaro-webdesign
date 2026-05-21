@@ -243,11 +243,59 @@
         var slides = rail.querySelectorAll('.m-demo-swiper-slide');
         if (!slides.length) return;
 
-        // Sprint 148.4 — iframe-Live-Preview innerhalb der Card entfernt
-        // (Card-internes Viewport rendert Portfolio-Page mit Zoom-Effekt,
-        // kontrastiert mit Skeleton-JPG-Layout). Die Card ist jetzt
-        // Skeleton-only; Sheet-Modal (Tap-to-Open) liefert die volle
-        // Live-Page in eigenem Viewport (siehe sheetFrame-Logik unten).
+        // Sprint 148.5 — Transform-Scale iframe-Live-Preview.
+        // iframe rendert in 390×488 native (Mobile-Viewport-Grosse), wird
+        // visuell via transform:scale auf Card-Stage-Breite verkleinert.
+        // Hero rendert dadurch GROSS (Portfolio-Page sieht ihren Viewport
+        // als 390px), iframe wird visuell skaliert ohne Layout-Reflow.
+        var IFRAME_NATIVE_W = 390;
+        var IFRAME_NATIVE_H = 488;
+
+        function setIframeScale(stage) {
+            var w = stage.clientWidth;
+            if (!w) return;
+            var scale = w / IFRAME_NATIVE_W;
+            stage.style.setProperty('--m-iframe-scale', scale.toFixed(4));
+            // CSS aspect-ratio: 390/488 auf .m-poster-stage handhabt Höhe
+            // automatisch — kein inline-style nötig.
+        }
+
+        var stages = rail.querySelectorAll('.m-poster-stage');
+        stages.forEach(setIframeScale);
+
+        if ('ResizeObserver' in window) {
+            var ro = new ResizeObserver(function (entries) {
+                entries.forEach(function (e) { setIframeScale(e.target); });
+            });
+            stages.forEach(function (s) { ro.observe(s); });
+        } else {
+            window.addEventListener('resize', function () {
+                stages.forEach(setIframeScale);
+            }, { passive: true });
+        }
+
+        // iframe-Lazy-Load (Sprint 140 / 148.5): src lazy setzen + fade-in
+        // bei load-event. Eager-Frames (erste 2 via data-m-poster-eager)
+        // sofort, andere via IntersectionObserver mit 200px rootMargin.
+        var frames = rail.querySelectorAll('.m-poster-frame[data-m-poster-src]');
+        function loadFrame(frame) {
+            if (frame.src && frame.src !== 'about:blank') return;
+            frame.src = frame.getAttribute('data-m-poster-src');
+            frame.addEventListener('load', function () {
+                frame.classList.add('is-loaded');
+            }, { once: true });
+        }
+        frames.forEach(function (f) { if (f.hasAttribute('data-m-poster-eager')) loadFrame(f); });
+        if ('IntersectionObserver' in window) {
+            var frameIo = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { loadFrame(e.target); frameIo.unobserve(e.target); }
+                });
+            }, { rootMargin: '200px 0px', threshold: 0.1 });
+            frames.forEach(function (f) { if (!f.hasAttribute('data-m-poster-eager')) frameIo.observe(f); });
+        } else {
+            frames.forEach(loadFrame);
+        }
 
         slides.forEach(function (_, i) {
             var b = document.createElement('button');

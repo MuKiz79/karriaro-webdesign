@@ -1170,32 +1170,46 @@
             0 4px 16px -4px rgba(20, 32, 43, 0.10);
     }
 
-    /* Poster-Stage als innerer Container für Mockup + iframe.
-     * Floating-Shadow auf dem Mockup selbst (Vitrinen-Effekt). */
+    /* Poster-Stage als innerer Container für iframe. Aspect-Ratio matched
+     * iframe-Native (390/488 = 0.799) damit iframe-visual via transform-
+     * scale die Stage exakt füllt. Card-Innen-Whitespace UNTER der Stage
+     * zeigt Brand-Color-Background der Card (Vitrinen-Effekt: Mockup
+     * schwebt zentriert in der Card mit Brand-Color drumherum). */
     .m-demo-swiper-slide .m-poster-stage {
         position: relative;
         width: 100%;
-        height: 100%;
+        aspect-ratio: 390 / 488;
+        height: auto;
         display: block;
         overflow: hidden;
         border-radius: 6px;
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.10),
+            0 8px 20px rgba(0, 0, 0, 0.14);
     }
-    .m-demo-swiper-slide .m-poster-skeleton {
+
+    /* Sprint 148.5 — Transform-Scale iframe-Live-Preview.
+     * iframe rendert in echter Mobile-Viewport-Groesse (390×488 px native),
+     * wird via transform: scale auf Card-Stage-Breite skaliert. JS in
+     * m-interactions.js setzt --m-iframe-scale via ResizeObserver. */
+    .m-demo-swiper-slide .m-poster-frame {
         position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0;
-        object-fit: contain;
-        object-position: center;
-        display: block;
+        top: 0;
+        left: 0;
+        width: 390px;
+        height: 488px;
+        border: 0;
+        background: #fff;
+        pointer-events: none;
+        transform: scale(var(--m-iframe-scale, 1));
+        transform-origin: top left;
+        opacity: 0;
         transition: opacity 320ms ease;
     }
-    /* Sprint 148.4 — .m-poster-frame und .is-loaded entfernt (iframe-Live-
-     * Preview innerhalb der Card war Sprint-140-Experiment, ergab Zoom-
-     * Effekt). Skeleton-JPG ist jetzt das finale Render der Card. */
+    .m-demo-swiper-slide .m-poster-frame.is-loaded {
+        opacity: 1;
+    }
 
     /* Editorial-Caption UNTER der Card. Gleiche max-width wie die Card,
      * damit Caption optisch zur Vitrine gehört, nicht in den Raum bricht. */
