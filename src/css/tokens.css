@@ -36,6 +36,15 @@
   --shadow-lg: 0 24px 48px rgba(0,0,0,0.10);
   --shadow-xl: 0 32px 72px rgba(0,0,0,0.12);
 
+  /* Sprint 144 — Easing-Tokens (Senior-Review M-14).
+   * Vorher: 4 cubic-bezier-Varianten + ease-out + linear quer durchs
+   * Repo verstreut (mobile-overrides, hero-polish, m-interactions). Token
+   * vereinheitlicht Motion-Sprache; Migration der Hardcodes erfolgt
+   * inkrementell, neue Animationen MUESSEN diese Tokens benutzen. */
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);    /* Default UI-Smooth */
+  --ease-spring:   cubic-bezier(0.32, 0.72, 0.16, 1); /* Snappy spring-feel */
+  --ease-premium:  cubic-bezier(0.16, 1, 0.3, 1);     /* Overshoot, Hero opsz-reveal */
+
   /* Type-Scale (clamp-Wertepaare, branchen-spezifische Fonts setzen Family) */
   --type-display-min: 56px;
   --type-display-max: 88px;

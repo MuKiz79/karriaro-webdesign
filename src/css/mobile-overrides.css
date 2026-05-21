@@ -676,7 +676,9 @@
         align-items: center;
         margin: clamp(24px, 3svh, 32px) 24px 0;
         color: var(--color-gold, #8A7B5C);
-        opacity: 0.55;
+        /* Sprint 144 (Senior-Review M-11): 0.55 ergab ~2.1:1 Kontrast auf
+         * Cream — WCAG 1.4.3 Verletzung. 0.75 hebt das auf >3:1. */
+        opacity: 0.75;
     }
     .m-hero-siegel-emboss svg {
         display: block;
@@ -1045,6 +1047,7 @@
     padding: 28px 0 0;
 }
 .m-demo-swiper-dot {
+    position: relative;
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -1054,6 +1057,14 @@
     padding: 0;
     cursor: pointer;
     transition: opacity 220ms ease, transform 220ms ease, background 220ms ease, width 220ms ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.m-demo-swiper-dot::before {
+    /* Sprint 144 (Senior-Review M-6): unsichtbares Hit-Area-Padding 44×44 px
+     * (WCAG 2.5.5 Target Size). Visuelle 6×6 px bleiben unverändert. */
+    content: '';
+    position: absolute;
+    inset: -19px;
 }
 .m-demo-swiper-dot.is-active {
     opacity: 1;
@@ -1061,6 +1072,10 @@
     background: var(--color-indigo, #1A2E40);
     width: 18px;
     border-radius: 4px;
+}
+.m-demo-swiper-dot.is-active::before {
+    /* Hit-Area mitwachsen lassen, damit Pillen-Form gleichmäßig umgeben ist */
+    inset: -19px -13px;
 }
 
 /* ════════════════════════════════════════════════════════════
