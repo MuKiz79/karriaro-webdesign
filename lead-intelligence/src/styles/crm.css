@@ -85,6 +85,31 @@
     color: var(--muted);
     margin-top: 2px;
 }
+.crm-pipe-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    background: rgba(134, 134, 139, 0.08);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.crm-pipe-top:hover { background: rgba(134, 134, 139, 0.16); }
+.crm-pipe-top-score {
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 22px;
+    text-align: center;
+}
+.crm-pipe-top-name {
+    font-size: 11px;
+    color: var(--fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 /* Stats Grid */
 .crm-stats {

@@ -279,8 +279,14 @@ function abort() {
 }
 
 // ── Fix 2: Onboarding ──
+// Speichert Timestamp statt boolean — nach 7 Tagen wird das Modal erneut
+// angezeigt. Hilft Neu-Tab-Routine-Nutzern, die das CRM neu entdecken
+// (z.B. neue Settings, neue Modi).
+const ONBOARDING_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 function checkOnboarding() {
-    if (localStorage.getItem('karriaro_onboarded')) return;
+    const raw = localStorage.getItem('karriaro_onboarded');
+    const stamp = raw ? parseInt(raw, 10) : 0;
+    if (stamp && Date.now() - stamp < ONBOARDING_TTL_MS) return;
     const el = document.getElementById('onboarding');
     el.classList.remove('hidden');
     el.innerHTML = `
@@ -304,7 +310,7 @@ function checkOnboarding() {
         </div>
     `;
     document.getElementById('btn-onboarding-close').addEventListener('click', () => {
-        localStorage.setItem('karriaro_onboarded', '1');
+        localStorage.setItem('karriaro_onboarded', String(Date.now()));
         el.classList.add('hidden');
         el.innerHTML = '';
     });

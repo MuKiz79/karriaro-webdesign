@@ -122,17 +122,28 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         html += renderStatisticsPanel();
     }
 
-    // ── Pipeline-Visualisierung ──
+    // ── Pipeline-Visualisierung (Mini-Kanban) ──
+    // Jede Stage zeigt Count + Wert + den Top-Lead (höchster Score). User sieht
+    // sofort den nächsten Move pro Stage statt nur ein Aggregat. Klick auf Stage
+    // filtert die Liste, Klick auf Top-Lead-Karte scrollt zur Lead-Card.
     const pipeStages = ['neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde'];
     html += `<div class="crm-pipeline">`;
     for (const stage of pipeStages) {
-        const count = leads.filter(l => l.status === stage).length;
-        const value = leads.filter(l => l.status === stage).reduce((s, l) => s + (l.expectedValue || 0), 0);
+        const stageLeads = leads.filter(l => l.status === stage);
+        const count = stageLeads.length;
+        const value = stageLeads.reduce((s, l) => s + (l.expectedValue || 0), 0);
         const isActive = filter === stage;
+        const topLead = stageLeads.length > 0
+            ? [...stageLeads].sort((a, b) => (b.leadScore || 0) - (a.leadScore || 0))[0]
+            : null;
         html += `<div class="crm-pipe-stage${isActive ? ' active' : ''}" data-filter="${stage}">
             <div class="crm-pipe-count" style="color:${STATUS_COLORS[stage]}">${count}</div>
             <div class="crm-pipe-label">${STATUS_LABELS[stage]}</div>
             ${value > 0 ? `<div class="crm-pipe-value">${Math.round(value)}€</div>` : ''}
+            ${topLead ? `<div class="crm-pipe-top" data-scroll-lead="${topLead.id}" title="Top-Lead: ${escapeAttr(topLead.name || topLead.domain)} (Score ${topLead.leadScore || 0})">
+                <span class="crm-pipe-top-score" style="color:${STATUS_COLORS[stage]}">${topLead.leadScore || 0}</span>
+                <span class="crm-pipe-top-name">${escapeAttr((topLead.name || topLead.domain).slice(0, 18))}</span>
+            </div>` : ''}
         </div>`;
     }
     html += `</div>`;
@@ -470,6 +481,14 @@ function notifyHotLead(lead) {
 }
 
 // ── Helpers ──
+function escapeAttr(s) {
+    return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 function timeAgo(ts) {
     const diff = Date.now() - ts;
     const mins = Math.floor(diff / 60000);

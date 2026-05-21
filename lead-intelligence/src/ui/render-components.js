@@ -115,6 +115,36 @@ export function renderScore(el, data, explanation) {
         <div class="explanation-box">${explanation}</div>
     </div>`;
 
+    // Aufmerksamkeits-Index aufschlüsseln — Fit/Intent/Timing mit Bottleneck-Highlight.
+    // title-Tooltip erklärt jede Dimension, Bottleneck bekommt orange Border-Markierung.
+    const cs0 = data.compositeScore;
+    if (!isSkip && cs0 && typeof cs0.fit === 'number') {
+        const bnName = cs0.bottleneck?.name || '';
+        const dims = [
+            { key: 'Fit', val: cs0.fit, title: 'Fit: Passt der Lead zu Karriaro? Branche, Größe, Budget, Digital-Maturity.' },
+            { key: 'Intent', val: cs0.intent, title: 'Intent: Will der Lead eine neue Website? Design-Qualität, Performance-Probleme, BFSG-Risiko, Tech-Alter.' },
+            { key: 'Timing', val: cs0.timing, title: 'Timing: Ist JETZT der richtige Zeitpunkt? Trigger-Events, Saison, Review-Trend, Wettbewerb.' }
+        ];
+        const tone = v => v >= 65 ? 'var(--green)' : v >= 40 ? 'var(--orange)' : 'var(--red)';
+        html += `<div class="card anim-in" style="margin-bottom:24px;padding:16px">
+            <div class="section-label" style="margin-bottom:12px">Aufmerksamkeits-Index · Engpass: ${escapeHtml(bnName || '—')}</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                ${dims.map(d => {
+                    const isBn = d.key === bnName;
+                    const borderColor = isBn ? 'var(--orange)' : 'rgba(134,134,139,0.15)';
+                    return `<div title="${escapeHtml(d.title)}" style="border:1px solid ${borderColor};border-radius:8px;padding:10px;cursor:help">
+                        <div class="metric-desc" style="font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted)">${d.key}${isBn ? ' (Engpass)' : ''}</div>
+                        <div style="font-size:22px;font-weight:700;color:${tone(d.val)};margin:4px 0">${d.val}</div>
+                        <div style="height:4px;background:rgba(134,134,139,0.15);border-radius:2px;overflow:hidden">
+                            <div style="height:100%;width:${Math.max(0, Math.min(100, d.val))}%;background:${tone(d.val)}"></div>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+            ${cs0.recommendation ? `<div class="metric-desc" style="margin-top:12px;font-size:12px;line-height:1.5">${escapeHtml(cs0.recommendation)}</div>` : ''}
+        </div>`;
+    }
+
     // ── Decision-Banner (Single Source of Truth — siehe scoring/decision-engine.js) ──
     // Konsolidiert Composite + Kelly/EV + Trigger-Events zu EINER Top-Empfehlung.
     // Das vermeidet, dass Composite "Exzellent" und Kelly "Skip" gleichzeitig stehen.
