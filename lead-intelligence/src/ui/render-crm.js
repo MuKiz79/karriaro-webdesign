@@ -18,10 +18,21 @@ const STATUS_COLORS = { neu: 'var(--muted)', kontaktiert: 'var(--orange)', inter
 // AbortController für Event-Listener Cleanup
 let crmController = null;
 
-// Inbound-Heat-Listener — global, lebt über CRM-Re-Renders hinweg
+// Inbound-Heat-Listener — global, lebt über CRM-Re-Renders hinweg.
+// Wird bei Sign-Out via cleanupInboundListener() abgebaut, sonst läuft
+// der Firestore-Listener mit alten User-Credentials weiter.
 let inboundUnsubscribe = null;
 let lastNotifiedHotSlugs = new Set();
 let cachedHotLeads = [];
+
+export function cleanupInboundListener() {
+    if (typeof inboundUnsubscribe === 'function') {
+        try { inboundUnsubscribe(); } catch {}
+    }
+    inboundUnsubscribe = null;
+    lastNotifiedHotSlugs = new Set();
+    cachedHotLeads = [];
+}
 
 export async function renderCRM(filter = 'alle', searchQuery = '') {
     const el = document.getElementById('crm-view');

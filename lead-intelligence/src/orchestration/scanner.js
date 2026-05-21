@@ -22,6 +22,7 @@ import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
+import { runWithConcurrency } from '../lib/concurrency.js';
 
 const BRANCHES = [
     { key: 'dentist',           q: 'Zahnarzt',          name: 'Zahnärzte' },
@@ -151,22 +152,7 @@ export async function runScanner() {
     notifyDone(`Scan fertig: ${leads.length} Leads gefunden, ${leads.filter(l => l.leadScore >= 60).length} mit Score ≥60`);
 }
 
-// ─────────── Concurrency-Helper ───────────
-
-async function runWithConcurrency(items, limit, worker) {
-    const queue = items.slice();
-    const running = [];
-    while (queue.length > 0 || running.length > 0) {
-        while (running.length < limit && queue.length > 0) {
-            const item = queue.shift();
-            const p = Promise.resolve().then(() => worker(item)).then(() => {
-                running.splice(running.indexOf(p), 1);
-            });
-            running.push(p);
-        }
-        if (running.length > 0) await Promise.race(running);
-    }
-}
+// runWithConcurrency lebt jetzt in lib/concurrency.js und wird von batch-search.js mitgenutzt.
 
 function hostnameOf(url) {
     try { return new URL(url).hostname.replace(/^www\./, ''); }

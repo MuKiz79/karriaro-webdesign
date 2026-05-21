@@ -1,3 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Firebase-Projekt: apex-executive (shared mit karriaro/app/).
+//
+// Firestore-Rules werden in karriaro/app/firestore.rules verwaltet und über
+// karriaro/app/firebase.json deployt. Dieses Repo deployt NUR Cloud Functions
+// (codebase: webdesign-functions). Die Rules für Lead-Intelligence-Collections
+// (leads, leadSettings) leben dort — siehe karriaro/app/firestore.rules:182.
+// ─────────────────────────────────────────────────────────────────────────────
+
 const { onRequest } = require("firebase-functions/v2/https");
 const { defineString, defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");

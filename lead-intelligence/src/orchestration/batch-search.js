@@ -22,6 +22,7 @@ import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { showToast } from '../ui/render-components.js';
 import { saveFeedback } from '../learning/score-feedback.js';
+import { runWithConcurrency } from '../lib/concurrency.js';
 
 // Baukasten aus URL erkennbar
 const BAUKASTEN_URL = [
@@ -78,9 +79,11 @@ export async function runBatchSearch() {
         for (const s of st) queries.push(`${branch} ${city} ${s}`);
     }
 
+    // Concurrency-Limit 2: schützt Places-API-Quota bei 6-7 Stadtteil-Queries.
+    // Worker absorbiert eigene Fehler — runWithConcurrency liefert null bei Total-Fail.
     let allPlaces = [];
     try {
-        const results = await Promise.all(queries.map(q => searchPlaces(q, 10).catch(() => ({ places: [] }))));
+        const results = await runWithConcurrency(queries, 2, q => searchPlaces(q, 10).catch(() => ({ places: [] })));
         for (const r of results) if (r?.places) allPlaces.push(...r.places);
     } catch { cleanup(); showError('Suche fehlgeschlagen.'); return; }
 

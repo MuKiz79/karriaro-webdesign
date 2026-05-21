@@ -11,7 +11,7 @@ import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } fr
 import { runSingleCheck } from './orchestration/single-check.js';
 import { runBatchSearch } from './orchestration/batch-search.js';
 import { runScanner, requestNotificationPermissionOnGesture } from './orchestration/scanner.js';
-import { renderCRM } from './ui/render-crm.js';
+import { renderCRM, cleanupInboundListener } from './ui/render-crm.js';
 
 // ── Config laden ──
 loadConfig();
@@ -170,6 +170,9 @@ function initAuth() {
         } else {
             btn.textContent = 'Anmelden';
             btn.classList.remove('logged-in');
+            // Sign-Out: Firestore-Listener für Inbound-Hot-Leads abbauen,
+            // sonst läuft er mit alten Credentials weiter.
+            cleanupInboundListener();
         }
     });
 }
