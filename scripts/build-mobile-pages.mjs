@@ -180,7 +180,12 @@ function injectMobileCss(html) {
 // Specificity → File-Reihenfolge entscheidet, externe CSS gewinnt.
 const CRITICAL_CSS = `
 <style id="m-critical-css">
-/* Sprint 143 — Critical-CSS Mobile-Hauptseite (LCP-Optimierung) */
+/* Sprint 143/148.2 — Critical-CSS Mobile-Hauptseite (LCP-Optimierung).
+ * 148.2 (Hero-FOUC-Fix): Desktop-only Hero-Sub-Elemente (Mockup-Block,
+ * Marginalia, Hero-Portrait, Mockup-Features) MUESSEN inline versteckt
+ * sein, sonst rendert das Hero erst gross (mit Mockup-Foto) bis die
+ * externe mobile-overrides.css ihren display:none-Override liefert
+ * (User-Befund "Hero senkrecht ueber zwei Seiten fuer eine Sekunde"). */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#F8F4ED;color:#14202B;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -192,6 +197,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(251,251,253,0
 .hero-folio-eyebrow .dot{opacity:0.5}
 .hero-headline{font-family:Fraunces,Georgia,"Times New Roman",serif;font-size:clamp(34px,9vw,52px);font-weight:600;line-height:1.05;letter-spacing:-0.01em;margin:0 0 24px;color:#14202B}
 .hero-headline .hero-h1-line{display:block}
+/* Desktop-only Hero-Elemente sofort verstecken (vor mobile-overrides.css-Load) */
+.hero-with-photo .hero-mockup-block,.hero-with-photo .mockup-features,.hero-with-photo .mockup-features-list,.hero-with-photo .marginalia,.hero-with-photo .hero-marginalia,.hero-with-photo .hero-portrait,.hero-with-photo picture{display:none!important}
 .m-pin-spy{display:none}
 .m-sticky-cta-bar{display:none}
 .kr-cta-float{display:none}
