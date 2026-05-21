@@ -1079,163 +1079,192 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   Sprint 145 — Demo-Swiper Hermès-Edition: Vertical Snap-Scroll
-   + Full-Bleed Spreads (Senior-Review M-1).
+   Sprint 148 — Demo-Swiper Premium-Vitrine
+   (Sprint 145 polieren, nicht entkernen).
 
-   Refactor: Card-Grid → Magazine-Spreads, jede 100svh hoch, Foto-Mockup
-   edge-to-edge, Eyebrow + Title + Sub-Text + CTA als Text-Overlay unten
-   links mit Dunkel-Gradient. Reverse-bar als Override-Block (Original-
-   Rules Z. 852-1078 bleiben erhalten).
+   Behält: vertikales Snap-Scroll, 100svh-Stages, "↓ scrollen"-Hint.
+   Ersetzt: full-bleed object-fit:cover + dark-gradient-overlay aus
+   Sprint 145 → Mockup schwebt auf Brand-Color-Vitrine (Sprint-131-
+   Pattern reaktiviert), Editorial-Caption UNTER der Card.
+
+   Resultat: 8 Demo-Vitrinen, jede 100svh, Mockup prominent in
+   Branchen-Farbe, Eyebrow/Title/Sub als Caption darunter. Sehen
+   statt Erzählen — der Kunde sieht sofort: das ist Beispielarbeit,
+   kein Stockfoto.
    ════════════════════════════════════════════════════════════ */
 @media (max-width: 1023px) {
-    /* Rail: vertical nested-scroll-container mit y-snap */
+    /* Section-Container bekommt expliziten Frame (Cream-Atmosphäre,
+     * nicht das generische section { padding: 100px 0 }) */
+    .m-demo-swiper-mobile {
+        padding: clamp(80px, 12vh, 140px) 0 clamp(60px, 8vh, 100px);
+        background: var(--color-cream, #F8F4ED);
+        margin: 0;
+    }
+
+    /* Rail: vertikales nested Snap-Scroll, eine 100svh-Stage pro Slide */
     .m-demo-swiper-rail {
+        display: flex;
         flex-direction: column;
         overflow-x: hidden;
         overflow-y: auto;
         height: 100svh;
         scroll-snap-type: y mandatory;
         overscroll-behavior-y: contain;
-        padding-bottom: 0;
-        margin-top: 24px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+        margin: clamp(24px, 4svh, 40px) 0 0;
     }
+    .m-demo-swiper-rail::-webkit-scrollbar { display: none; }
 
-    /* Slide: 100svh tall + full-width, kein padding */
+    /* Slide: 100svh-Stage, Card + Caption zentriert mit atmenden Insets */
     .m-demo-swiper-slide {
         flex: 0 0 100svh;
         width: 100%;
-        max-width: 100%;
         height: 100svh;
         min-height: 100svh;
-        padding: 0;
+        padding: clamp(32px, 6svh, 64px) clamp(20px, 6vw, 36px);
         position: relative;
         scroll-snap-align: start;
         scroll-snap-stop: always;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: clamp(20px, 3svh, 32px);
+        box-sizing: border-box;
     }
 
-    /* Card + Poster: full-bleed, kein Radius, keine Card-Shadow */
-    .m-demo-swiper-card,
+    /* Card als Premium-Vitrine: 4:5-Bühne mit Brand-Color, sanftem
+     * Floating-Shadow + Hairline-Border. Mockup schwebt in der Vitrine. */
+    .m-demo-swiper-slide .m-demo-swiper-card,
     .m-demo-swiper-slide .m-poster {
-        aspect-ratio: auto;
+        aspect-ratio: 4 / 5;
+        width: 100%;
+        max-width: clamp(280px, 78vw, 420px);
+        height: auto;
+        margin: 0 auto;
+        align-self: center;
+        flex: 0 0 auto;
+        display: block;
+        padding: clamp(20px, 5vw, 36px);
+        border-radius: 20px;
+        border: 0.5px solid rgba(20, 32, 43, 0.06);
+        background: var(--m-poster-bg, var(--color-cream-soft, #F0EAE0));
+        box-shadow:
+            0 1px 1px rgba(20, 32, 43, 0.06),
+            0 12px 32px -8px rgba(20, 32, 43, 0.10),
+            0 32px 80px -16px rgba(20, 32, 43, 0.18);
+        cursor: pointer;
+        transition:
+            transform 360ms var(--ease-standard, cubic-bezier(0.2, 0.7, 0.2, 1)),
+            box-shadow 360ms var(--ease-standard, cubic-bezier(0.2, 0.7, 0.2, 1));
+        -webkit-tap-highlight-color: transparent;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    /* Active-Tap: sanfter scale + reduzierter Shadow (kein Inset-Dim mehr) */
+    .m-demo-swiper-slide .m-poster:active {
+        transform: scale(0.985);
+        box-shadow:
+            0 1px 1px rgba(20, 32, 43, 0.04),
+            0 4px 16px -4px rgba(20, 32, 43, 0.10);
+    }
+
+    /* Poster-Stage als innerer Container für Mockup + iframe.
+     * Floating-Shadow auf dem Mockup selbst (Vitrinen-Effekt). */
+    .m-demo-swiper-slide .m-poster-stage {
+        position: relative;
         width: 100%;
         height: 100%;
         display: block;
-        border-radius: 0;
-        border: 0;
-        box-shadow: none;
-        padding: 0;
+        overflow: hidden;
+        border-radius: 6px;
     }
-
-    /* Active-Tap: subtileres Feedback bei Full-Bleed */
-    .m-demo-swiper-slide .m-poster:active {
-        transform: none;
-        box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.10);
-    }
-
-    /* Skeleton-Image + iframe: object-fit cover (statt contain), inset 0,
-     * kein padding-frame, kein Vitrinen-Schatten. */
     .m-demo-swiper-slide .m-poster-skeleton {
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        padding: 0;
-        object-fit: cover;
-        object-position: center;
-    }
-    .m-demo-swiper-slide .m-poster-frame {
-        background: transparent;
-        box-shadow: none;
-        border-radius: 0;
-    }
-
-    /* Spread-Overlay: bottom-left Magazine-Caption mit Dunkel-Gradient.
-     * pointer-events:none, damit Tap durchschlägt zur Card. */
-    .m-spread-overlay {
         position: absolute;
         inset: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: 24px;
-        background: linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0) 0%,
-            rgba(0, 0, 0, 0) 45%,
-            rgba(0, 0, 0, 0.65) 100%
-        );
-        color: #fff;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+        transition: opacity 320ms ease;
+    }
+    .m-demo-swiper-slide .m-poster-frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #fff;
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.10),
+            0 8px 20px rgba(0, 0, 0, 0.14);
+        border-radius: 4px;
         pointer-events: none;
-        z-index: 2;
+        opacity: 0;
+        transition: opacity 320ms ease;
     }
-    .m-spread-folio {
-        align-self: flex-end;
-        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        color: rgba(255, 255, 255, 0.92);
-        background: rgba(0, 0, 0, 0.32);
-        -webkit-backdrop-filter: blur(8px);
-        backdrop-filter: blur(8px);
-        padding: 5px 11px;
-        border-radius: 999px;
-        line-height: 1;
-    }
-    .m-spread-meta {
+    .m-demo-swiper-slide .m-poster.is-loaded .m-poster-frame { opacity: 1; }
+    .m-demo-swiper-slide .m-poster.is-loaded .m-poster-skeleton { opacity: 0; }
+
+    /* Editorial-Caption UNTER der Card. Gleiche max-width wie die Card,
+     * damit Caption optisch zur Vitrine gehört, nicht in den Raum bricht. */
+    .m-demo-swiper-meta {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        color: #fff;
-        max-width: 480px;
+        max-width: clamp(280px, 78vw, 420px);
+        margin: 0 auto;
+        align-self: center;
+        padding: 0 4px;
+        flex: 0 0 auto;
     }
-    .m-spread-meta .m-demo-swiper-eyebrow {
+    .m-demo-swiper-meta .m-demo-swiper-eyebrow {
         font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
         font-size: 11px;
         font-weight: 500;
         letter-spacing: 0.18em;
         text-transform: uppercase;
-        color: rgba(255, 255, 255, 0.88);
+        color: var(--color-gold, #8A7B5C);
         margin: 0;
     }
-    .m-spread-meta .m-demo-swiper-title {
+    .m-demo-swiper-meta .m-demo-swiper-title {
         font-family: "Fraunces", Georgia, serif;
-        font-size: clamp(28px, 7vw, 38px);
+        font-size: clamp(24px, 6vw, 32px);
         font-weight: 500;
-        line-height: 1.06;
+        line-height: 1.1;
         letter-spacing: -0.02em;
-        color: #fff;
+        color: var(--color-indigo-strong, #061320);
         margin: 0;
-        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
     }
-    .m-spread-meta .m-demo-swiper-persona-context {
+    .m-demo-swiper-meta .m-demo-swiper-persona-context {
         font-family: "Inter", -apple-system, sans-serif;
         font-size: 14px;
         line-height: 1.5;
-        color: rgba(255, 255, 255, 0.84);
+        color: var(--color-graphite-soft, #6B5F52);
         margin: 0;
-        max-width: 300px;
-        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
     }
-    .m-spread-meta .m-demo-swiper-cta {
+    .m-demo-swiper-meta .m-demo-swiper-cta {
         font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
         font-size: 12px;
         font-weight: 500;
         letter-spacing: 0.16em;
         text-transform: uppercase;
-        color: #fff;
+        color: var(--color-indigo, #1A2E40);
         margin-top: 4px;
         display: inline-block;
     }
 
-    /* Dot-Indicator: bei vertical scroll obsolet. JS kann ihn ignorieren,
-     * visuell wird er weggeblendet. Pin-Spy bleibt als Section-Indicator. */
+    /* Dot-Indicator bleibt aus (Pin-Spy ist der Reading-Position-Anker) */
     .m-demo-swiper-dots {
         display: none;
     }
 
-    /* Section-Hint umbenannt zu "scrollen" - Style bleibt */
-
-    /* Reduced-Motion: snap-scroll auf proximity statt mandatory entschärfen
-     * (vermeidet hijacking-feel bei sensitiven Nutzern). */
+    /* Reduced-Motion: snap proximity statt mandatory */
     @media (prefers-reduced-motion: reduce) {
         .m-demo-swiper-rail {
             scroll-snap-type: y proximity;

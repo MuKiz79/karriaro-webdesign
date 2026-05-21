@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=145">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=148">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=145" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=148" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -704,12 +704,10 @@ function buildDemoSwiperHtml() {
         const dims = readMockupDims(slug);
         const brandColor = BRAND_COLOR_MAP[slug] || 'var(--color-cream-soft, #f5f3ee)';
         const eagerFrame = i <= 1; // Sprint 140 — Stadtmakler + Lehmann eager-load iframe
-        // Sprint 145 — Hermès-Full-Bleed + vertical snap-scroll. Meta-Overlay
-        // wandert IN die Card (position:absolute bottom mit dark-gradient
-        // fuer Text-Lesbarkeit auf hellen Mockups). Persona-Context bleibt
-        // im Overlay als Sub-Caption.
-        const slideIdx = String(i + 1).padStart(2, '0');
-        const slideTotal = String(DEMO_SWIPER_SLIDES.length).padStart(2, '0');
+        // Sprint 148 — Premium-Vitrine (Sprint 145 polieren, nicht entkernen).
+        // Card schwebt auf Brand-Color-Bühne (Sprint-131-Pattern reaktiviert).
+        // Editorial-Caption (Eyebrow/Title/Sub/CTA) wandert UNTER die Card,
+        // kein Dunkel-Overlay mehr. Folio-Badge raus (siehe Plan Hebel 3).
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
             <button type="button" class="m-demo-swiper-card m-poster" style="--m-poster-bg:${brandColor};" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
@@ -717,16 +715,13 @@ function buildDemoSwiperHtml() {
                     <img class="m-poster-skeleton" src="/images/mockups-opt/${slug}-mockup-800.jpg" alt="${title} — Hero-Vorschau" loading="${eager ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${eager ? 'high' : 'low'}" width="${dims.w}" height="${dims.h}" aria-hidden="true">
                     <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=hero" title="${title} Hero-Vorschau" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
                 </div>
-                <div class="m-spread-overlay" aria-hidden="true">
-                    <span class="m-spread-folio">№ ${slideIdx} / ${slideTotal}</span>
-                    <div class="m-spread-meta">
-                        <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
-                        <h3 class="m-demo-swiper-title">${title}</h3>
-                        <p class="m-demo-swiper-persona-context">${personaContext}</p>
-                        <span class="m-demo-swiper-cta">Live ansehen →</span>
-                    </div>
-                </div>
             </button>
+            <div class="m-demo-swiper-meta">
+                <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
+                <h3 class="m-demo-swiper-title">${title}</h3>
+                <p class="m-demo-swiper-persona-context">${personaContext}</p>
+                <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
+            </div>
         </article>`;
     }).join('');
 
