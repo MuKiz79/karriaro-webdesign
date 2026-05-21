@@ -4,9 +4,10 @@
 
 <head>
     <!-- Sprint 140 — Embed-Hero-Mode für iframe-Live-Preview im Mobile-Demo-Swiper -->
-    <script>if(location.search.indexOf('embed=hero')!==-1)document.documentElement.classList.add('embed-hero');</script>
+    <script>if(location.search.indexOf('embed=hero')!==-1)document.documentElement.classList.add('embed-hero');if(location.search.indexOf('embed=desktop')!==-1)document.documentElement.classList.add('embed-desktop');</script>
     <style>
 html.embed-hero{overflow:hidden;background:#fff}
+html.embed-desktop{overflow:hidden;background:#fff}html.embed-desktop body{background:#fff;margin:0}html.embed-desktop .topbar,html.embed-desktop header,html.embed-desktop nav,html.embed-desktop footer,html.embed-desktop main>*:not(.hero),html.embed-desktop .kr-footer-card,html.embed-desktop .kr-strip{display:none!important}
 html.embed-hero body{background:#fff;margin:0}
 html.embed-hero .topbar,html.embed-hero header,html.embed-hero nav,html.embed-hero footer,html.embed-hero main>*:not(.hero),html.embed-hero .kr-footer-card,html.embed-hero .kr-strip,html.embed-hero .hero-folio-marker,html.embed-hero .hero-deco,html.embed-hero .hero .lead,html.embed-hero .hero-ctas,html.embed-hero .hero-marginalia-anchor{display:none!important}
 html.embed-hero section.hero,html.embed-hero section.hero>.container,html.embed-hero section.hero>.hero-inner,html.embed-hero section.hero .hero-grid{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;padding:0!important;gap:14px!important;max-width:none!important;min-height:auto!important;align-items:stretch!important}
@@ -635,7 +636,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(251,251,253,0
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <link rel="stylesheet" href="/css/karriaro-tools.css">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=149">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=150">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
@@ -1843,6 +1844,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(251,251,253,0
     </script>
     <script src="/js/karriaro-tools.js"></script>
 
-<script src="/js/m-interactions.js?v=149" defer></script>
+<script src="/js/m-interactions.js?v=150" defer></script>
 </body>
 </html>

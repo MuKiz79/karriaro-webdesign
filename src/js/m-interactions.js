@@ -243,13 +243,12 @@
         var slides = rail.querySelectorAll('.m-demo-swiper-slide');
         if (!slides.length) return;
 
-        // Sprint 148.5 — Transform-Scale iframe-Live-Preview.
-        // iframe rendert in 390×488 native (Mobile-Viewport-Grosse), wird
-        // visuell via transform:scale auf Card-Stage-Breite verkleinert.
-        // Hero rendert dadurch GROSS (Portfolio-Page sieht ihren Viewport
-        // als 390px), iframe wird visuell skaliert ohne Layout-Reflow.
-        var IFRAME_NATIVE_W = 390;
-        var IFRAME_NATIVE_H = 488;
+        // Sprint 148.6 — Transform-Scale iframe-Live-Preview im Desktop-
+        // Viewport (1280×800). Card ist 16:10 MacBook-Browser-Mockup,
+        // iframe rendert Portfolio-Page in Desktop-Layout (zweispaltiges
+        // Hero), wird via transform:scale auf Card-Stage-Breite verkleinert.
+        var IFRAME_NATIVE_W = 1280;
+        var IFRAME_NATIVE_H = 800;
 
         function setIframeScale(stage) {
             var w = stage.clientWidth;

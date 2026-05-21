@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=149">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=150">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=149" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=150" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -727,20 +727,27 @@ function buildDemoSwiperHtml() {
         // Card schwebt auf Brand-Color-Bühne (Sprint-131-Pattern reaktiviert).
         // Editorial-Caption (Eyebrow/Title/Sub/CTA) wandert UNTER die Card,
         // kein Dunkel-Overlay mehr. Folio-Badge raus (siehe Plan Hebel 3).
-        // Sprint 148.5 — Demo-Card iframe-Live-Preview (Transform-Scale).
-        // Skeleton-JPG raus (war Sprint 148.4-Workaround), iframe rendert
-        // in echter Mobile-Viewport-Groesse (390×488 native, aspect 4:5).
-        // CSS transform: scale(var(--m-iframe-scale)) skaliert visuell auf
-        // Card-Breite runter — Standard-Web-Preview-Pattern (Dribbble/
-        // Mobbin). Hero rendert dadurch GROSS, nicht hineingezoomt: die
-        // Portfolio-Page sieht ihren Viewport als 390px (Mobile-Default,
-        // Sprint-138-Layout passt), iframe wird dann visuell verkleinert
-        // ohne Layout-Reflow. Sheet-Modal liefert volle Live-Page unverändert.
+        // Sprint 148.6 — Desktop-Hero-Preview in macOS-Safari-Mockup.
+        // Card als MacBook-Browser-Fenster (16:10 horizontal), iframe rendert
+        // in 1280×800 Desktop-Viewport → Portfolio-Page zeigt zweispaltiges
+        // Desktop-Hero-Layout (Text-Block links + Mockup/Avatar rechts).
+        // CSS transform-scale verkleinert visuell auf Card-Stage-Breite.
+        // macOS-Chrome-Header oben mit drei Window-Buttons + URL-Bar (Domain).
+        // Portfolio-Pages haben neuen ?embed=desktop-Mode (nur Nav/Footer
+        // hide, Hero-Layout unverändert).
         return `
         <article class="m-demo-swiper-slide" data-m-demo-slide="${i}">
-            <button type="button" class="m-demo-swiper-card m-poster" style="--m-poster-bg:${brandColor};" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
+            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="${href}" data-m-demo-title="${title}" data-m-demo-domain="${domain}" aria-label="${title} Live-Demo öffnen">
+                <div class="m-poster-chrome" aria-hidden="true">
+                    <span class="m-poster-chrome-buttons">
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--close"></span>
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--min"></span>
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--max"></span>
+                    </span>
+                    <span class="m-poster-chrome-url">${domain}</span>
+                </div>
                 <div class="m-poster-stage" data-m-poster-stage>
-                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=hero" title="${title} Hero-Vorschau" width="390" height="488" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="800" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">

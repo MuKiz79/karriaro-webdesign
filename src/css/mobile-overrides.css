@@ -1134,26 +1134,29 @@
         box-sizing: border-box;
     }
 
-    /* Card als Premium-Vitrine: 4:5-Bühne mit Brand-Color, sanftem
-     * Floating-Shadow + Hairline-Border. Mockup schwebt in der Vitrine. */
+    /* Sprint 148.6 — Card als MacBook-Browser-Fenster (16:10 horizontal).
+     * Browser-Chrome-Header (drei Window-Buttons + URL-Bar) + Stage mit
+     * iframe-Live-Preview im Desktop-Viewport (1280×800), via transform-
+     * scale visuell verkleinert. */
     .m-demo-swiper-slide .m-demo-swiper-card,
     .m-demo-swiper-slide .m-poster {
-        aspect-ratio: 4 / 5;
+        aspect-ratio: auto;
         width: 100%;
-        max-width: clamp(280px, 78vw, 420px);
+        max-width: clamp(300px, 84vw, 460px);
         height: auto;
         margin: 0 auto;
         align-self: center;
         flex: 0 0 auto;
-        display: block;
-        padding: clamp(20px, 5vw, 36px);
-        border-radius: 20px;
-        border: 0.5px solid rgba(20, 32, 43, 0.06);
-        background: var(--m-poster-bg, var(--color-cream-soft, #F0EAE0));
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        border-radius: 12px;
+        border: 0.5px solid rgba(20, 32, 43, 0.10);
+        background: #f5f5f7;
         box-shadow:
-            0 1px 1px rgba(20, 32, 43, 0.06),
-            0 12px 32px -8px rgba(20, 32, 43, 0.10),
-            0 32px 80px -16px rgba(20, 32, 43, 0.18);
+            0 1px 1px rgba(0, 0, 0, 0.06),
+            0 24px 48px -12px rgba(0, 0, 0, 0.18),
+            0 64px 96px -32px rgba(0, 0, 0, 0.22);
         cursor: pointer;
         transition:
             transform 360ms var(--ease-standard, cubic-bezier(0.2, 0.7, 0.2, 1)),
@@ -1161,44 +1164,79 @@
         -webkit-tap-highlight-color: transparent;
         box-sizing: border-box;
         overflow: hidden;
+        text-align: left;
     }
-    /* Active-Tap: sanfter scale + reduzierter Shadow (kein Inset-Dim mehr) */
     .m-demo-swiper-slide .m-poster:active {
         transform: scale(0.985);
         box-shadow:
-            0 1px 1px rgba(20, 32, 43, 0.04),
-            0 4px 16px -4px rgba(20, 32, 43, 0.10);
+            0 1px 1px rgba(0, 0, 0, 0.04),
+            0 8px 20px -4px rgba(0, 0, 0, 0.12);
     }
 
-    /* Poster-Stage als innerer Container für iframe. Aspect-Ratio matched
-     * iframe-Native (390/488 = 0.799) damit iframe-visual via transform-
-     * scale die Stage exakt füllt. Card-Innen-Whitespace UNTER der Stage
-     * zeigt Brand-Color-Background der Card (Vitrinen-Effekt: Mockup
-     * schwebt zentriert in der Card mit Brand-Color drumherum). */
+    /* macOS-Safari-Style Chrome-Header */
+    .m-poster-chrome {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 32px;
+        padding: 0 12px;
+        background: linear-gradient(to bottom, #ececec, #e0e0e0);
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.10);
+        flex: 0 0 auto;
+    }
+    .m-poster-chrome-buttons {
+        display: flex;
+        gap: 6px;
+        flex: 0 0 auto;
+    }
+    .m-poster-chrome-btn {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+    }
+    .m-poster-chrome-btn--close { background: #FF5F57; }
+    .m-poster-chrome-btn--min   { background: #FEBC2E; }
+    .m-poster-chrome-btn--max   { background: #28C840; }
+    .m-poster-chrome-url {
+        flex: 1;
+        text-align: center;
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        font-size: 10.5px;
+        color: #5a5a60;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 999px;
+        padding: 3px 14px;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 70%;
+        margin: 0 auto;
+    }
+
+    /* Stage: 16:10 Browser-Window-Aspect (matched iframe-native 1280/800) */
     .m-demo-swiper-slide .m-poster-stage {
         position: relative;
         width: 100%;
-        aspect-ratio: 390 / 488;
+        aspect-ratio: 1280 / 800;
         height: auto;
         display: block;
         overflow: hidden;
-        border-radius: 6px;
         background: #fff;
-        box-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.10),
-            0 8px 20px rgba(0, 0, 0, 0.14);
+        flex: 0 0 auto;
     }
 
-    /* Sprint 148.5 — Transform-Scale iframe-Live-Preview.
-     * iframe rendert in echter Mobile-Viewport-Groesse (390×488 px native),
-     * wird via transform: scale auf Card-Stage-Breite skaliert. JS in
-     * m-interactions.js setzt --m-iframe-scale via ResizeObserver. */
+    /* iframe rendert in 1280×800 native (Desktop-Viewport), visuell auf
+     * Stage-Breite via transform:scale verkleinert. JS setzt --m-iframe-scale
+     * via ResizeObserver in m-interactions.js. */
     .m-demo-swiper-slide .m-poster-frame {
         position: absolute;
         top: 0;
         left: 0;
-        width: 390px;
-        height: 488px;
+        width: 1280px;
+        height: 800px;
         border: 0;
         background: #fff;
         pointer-events: none;
