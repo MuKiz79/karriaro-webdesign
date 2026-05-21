@@ -1230,15 +1230,28 @@
 
     /* iframe rendert in 1280×800 native (Desktop-Viewport), visuell auf
      * Stage-Breite via transform:scale verkleinert. JS setzt --m-iframe-scale
-     * via ResizeObserver in m-interactions.js. */
+     * via ResizeObserver in m-interactions.js.
+     *
+     * !important auf width/height ist Defense gegen Sprint-140-Rule oben
+     * (Z. 958-975) die `width: 100% !important` analog hatte — Specificity
+     * allein war im Mobile-Safari nicht zuverlässig genug, iframe rendete
+     * in Card-Stage-Breite (~300px) statt 1280px, Portfolio-Page-CSS
+     * @media(max-width:920px) feuerte → Hero single-column gequetscht. */
     .m-demo-swiper-slide .m-poster-frame {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 1280px;
-        height: 800px;
-        border: 0;
-        background: #fff;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+        width: 1280px !important;
+        height: 800px !important;
+        max-width: none !important;
+        max-height: none !important;
+        border: 0 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
         pointer-events: none;
         transform: scale(var(--m-iframe-scale, 1));
         transform-origin: top left;
