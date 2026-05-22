@@ -4895,3 +4895,37 @@
         padding-right: 24px !important;
     }
 }
+
+/* ============================================================
+ * Sprint 150.5 — Section-Reveal disablen (Transparent-Bug-Fix)
+ *
+ * User-Report: „Die Schrift ist zwar schwarz aber transparent."
+ * Root cause: Sprint 132 (Z. 2439-2445) setzt .m-mag-personas /
+ * .m-demo-swiper-mobile / .m-mag-siegel / section#kontakt auf
+ * opacity:0 bis JS .m-in-view-Class setzt. Bei JS-Race oder Hard-
+ * Reload-Timing bleiben Sections inkl. ihrer Headlines transparent.
+ * Sprint 150.5 disable't den Section-Reveal-Stage komplett (wie
+ * Sprint 150.1 mit Hero-Stagger). Magazine-Page-Turn-Pattern fällt
+ * weg — Lesbarkeit gewinnt.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    .m-mag-personas,
+    .m-demo-swiper-mobile,
+    .m-mag-siegel,
+    section[id="kontakt"],
+    .m-mag-personas:not(.m-in-view),
+    .m-demo-swiper-mobile:not(.m-in-view),
+    .m-mag-siegel:not(.m-in-view),
+    section[id="kontakt"]:not(.m-in-view) {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* Magazine-Item-Stagger ebenfalls aus (Z. 2421-2433) */
+    .m-mag-spec,
+    .m-mag-tools-list li,
+    .m-mag-benefit {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
