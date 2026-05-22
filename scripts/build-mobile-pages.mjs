@@ -60,14 +60,16 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=402">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=403">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
+// Sprint 152 — Hero-Image-Preload (LCP-Boost) + SW eager-Registration.
 // Wird vor </head> auf JEDER Mobile-Page injiziert (auch Sub-Pages).
 const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="color-scheme" content="light">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -75,7 +77,7 @@ const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Karriaro">
     <meta name="format-detection" content="telephone=no">
-    <script>(function(){if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}})();</script>`;
+    <script>(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();</script>`;
 
 function injectPwaHead(html) {
     if (html.includes('rel="manifest"')) return html;
@@ -128,11 +130,32 @@ function injectPinSpy(html) {
     return html;
 }
 
+// Sprint 152 — Skip-Link (WCAG 2.4.1 Bypass Blocks). Wird auf JEDER Page
+// als erstes Element nach <body> injiziert. Versteckt bis :focus.
+function injectSkipLink(html) {
+    if (html.includes('class="skip-link"')) return html;
+    const bodyOpen = html.match(/<body[^>]*>/);
+    if (!bodyOpen) return html;
+    const idx = html.indexOf(bodyOpen[0]) + bodyOpen[0].length;
+    return html.slice(0, idx) +
+        '\n<a href="#main-content" class="skip-link">Zum Hauptinhalt</a>' +
+        html.slice(idx);
+}
+
+// Sprint 152 — Hero-Section bekommt id="main-content" als Skip-Link-Target.
+function addMainContentAnchor(html) {
+    if (html.includes('id="main-content"')) return html;
+    return html.replace(
+        /<section aria-label="Einleitung" class="hero-with-photo">/,
+        '<section aria-label="Einleitung" class="hero-with-photo" id="main-content">'
+    );
+}
+
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=402" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=403" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -748,6 +771,9 @@ function buildDemoSwiperHtml() {
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="${href}">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -869,7 +895,11 @@ function buildPage(relPath) {
     if (isSelling(relPath)) {
         html = injectStickyCta(html);
     }
+    // Sprint 152 — Skip-Link auf JEDER Page (WCAG 2.4.1)
+    html = injectSkipLink(html);
     if (isIndex(relPath)) {
+        // Sprint 152 — Hero-Section bekommt id="main-content" als Skip-Anchor
+        html = addMainContentAnchor(html);
         // Sprint 92/95/96 — Hero-Headline + Eyebrow-Stagger
         html = rewriteHeroHeadline(html);
         html = injectHeroEyebrowStagger(html);

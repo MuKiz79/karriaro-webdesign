@@ -133,11 +133,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .badge-green { background: #e3f7e8; color: #1f6b34; }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=402">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=403">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="color-scheme" content="light">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -145,9 +146,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Karriaro">
     <meta name="format-detection" content="telephone=no">
-    <script>(function(){if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}})();</script>
+    <script>(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();</script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Zum Hauptinhalt</a>
 
 <nav>
     <div class="inner">
@@ -450,6 +452,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </script>
 
 
-<script src="/js/m-interactions.js?v=402" defer></script>
+<script src="/js/m-interactions.js?v=403" defer></script>
 </body>
 </html>

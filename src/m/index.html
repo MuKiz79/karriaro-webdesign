@@ -3044,11 +3044,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=402">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=403">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="color-scheme" content="light">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3056,9 +3057,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Karriaro">
     <meta name="format-detection" content="telephone=no">
-    <script>(function(){if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});}})();</script>
+    <script>(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();</script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Zum Hauptinhalt</a>
 
     <!-- Sprint 82 — Skip-to-Main fuer Keyboard-Navigation (WCAG 2.4.1 Bypass Blocks). -->
     <a href="#main" class="skip-to-main">Zum Hauptinhalt springen</a>
@@ -3096,7 +3098,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <!-- 1 · Hero — Premium-Atelier-Stil B: 1 großes Mockup + Story-Caption -->
     <!-- Sprint 54 — Editorial-Award-Polish: Eyebrow + Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt -->
-    <section aria-label="Einleitung" class="hero-with-photo">
+    <section aria-label="Einleitung" class="hero-with-photo" id="main-content">
         <div class="hero-inner">
             <div class="hero-text-block">
                 <p class="hero-folio-eyebrow">
@@ -3188,6 +3190,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/immobilien-makler.html?embed=desktop" title="Stadtmakler Stuttgart Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" data-m-poster-eager></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/immobilien-makler.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3209,6 +3214,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/coaching-lehmann.html?embed=desktop" title="Lehmann Beratung Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" data-m-poster-eager></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/coaching-lehmann.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3230,6 +3238,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/praxis-weber.html?embed=desktop" title="Dr. Weber Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/praxis-weber.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3251,6 +3262,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/friseur-salon.html?embed=desktop" title="Salon Müller Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/friseur-salon.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3272,6 +3286,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/dachdecker-meisterbetrieb.html?embed=desktop" title="Dachdecker-Meister Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/dachdecker-meisterbetrieb.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3293,6 +3310,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/restaurant-template.html?embed=desktop" title="Hirsch Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/restaurant-template.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3314,6 +3334,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/spedition-schwaben.html?embed=desktop" title="Schwaben Logistik Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/spedition-schwaben.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -3335,6 +3358,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
                     <iframe class="m-poster-frame" data-m-poster-src="/portfolio/meisterbetrieb-mueller.html?embed=desktop" title="Müller Meisterbetrieb Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"></iframe>
+                    <div class="m-poster-fallback" role="status" aria-live="polite">
+                        <p>Vorschau lädt nicht — <a href="/portfolio/meisterbetrieb-mueller.html">direkt zur Demo →</a></p>
+                    </div>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">
@@ -6095,6 +6121,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </script>
 
 
-<script src="/js/m-interactions.js?v=402" defer></script>
+<script src="/js/m-interactions.js?v=403" defer></script>
 </body>
 </html>

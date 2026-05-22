@@ -27,17 +27,19 @@
  * ============================================================================ */
 @media (max-width: 1023px) {
     :root {
-        /* Color-System (iOS 17+ Marketing-Page-DNA) */
+        /* Color-System (iOS 17+ Marketing-Page-DNA) — Sprint 152 Contrast-Tune */
         --apple-ink: #000000;           /* primary text — User-Wunsch pure black */
-        --apple-graphite: #6E6E73;      /* secondary text */
-        --apple-platinum: #86868B;      /* tertiary text */
+        --apple-graphite: #5A5A5F;      /* secondary text — Sprint 152: 5.1:1 AAA-near */
+        --apple-platinum: #6E6E73;      /* tertiary text — Sprint 152: 4.7:1 AA-konform */
         --apple-snow: #FFFFFF;          /* white surfaces */
         --apple-fog: #F5F5F7;           /* light-grey card-section bg */
         --apple-blue: #0071E3;          /* system-blue CTA */
         --apple-blue-hover: #0077ED;    /* :active state */
-        --apple-hairline: rgba(0, 0, 0, 0.08);
-        --apple-shadow-card: 0 4px 16px rgba(0, 0, 0, 0.04);
-        --apple-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.06);
+        --apple-hairline: rgba(0, 0, 0, 0.12);    /* Sprint 152: 0.08→0.12 WCAG-Divider */
+        /* Sprint 152 — 3-Stufen-Card-Shadow-System */
+        --apple-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --apple-shadow-card-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
+        --apple-shadow-card-active: 0 2px 4px rgba(0, 0, 0, 0.08);
 
         /* Font-Stack */
         --apple-font-display: -apple-system, BlinkMacSystemFont,
@@ -58,6 +60,63 @@
         /* Radius */
         --apple-radius-card: 18px;
         --apple-radius-pill: 980px;
+    }
+}
+
+/* ============================================================================
+ * Sprint 152 — Skip-Link (WCAG 2.4.1 Bypass Blocks)
+ * ============================================================================ */
+@media (max-width: 1023px) {
+    .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--apple-blue);
+        color: #FFFFFF;
+        padding: 12px 18px;
+        z-index: 100;
+        font-family: var(--apple-font-text);
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: -0.005em;
+        border-radius: 0 0 8px 0;
+        text-decoration: none;
+    }
+    .skip-link:focus {
+        left: 0;
+    }
+}
+
+/* ============================================================================
+ * Sprint 152 — Iframe-Network-Fallback (Pure CSS, kein JS-Touch)
+ * Sichtbar nach 8s wenn iframe nicht .is-loaded ist. :has() iOS 15.4+.
+ * ============================================================================ */
+@media (max-width: 1023px) {
+    .m-poster-fallback {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: var(--apple-fog);
+        text-align: center;
+        font-family: var(--apple-font-text);
+        font-size: 14px;
+        line-height: 1.43;
+        color: var(--apple-graphite);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 240ms 8000ms var(--apple-ease-reveal);
+    }
+    .m-poster-fallback a {
+        color: var(--apple-blue);
+        font-weight: 500;
+    }
+    /* :has()-Selector: wenn iframe nicht .is-loaded ist, Fallback nach 8s */
+    .m-poster:not(:has(.m-poster-frame.is-loaded)) .m-poster-fallback {
+        opacity: 1;
+        pointer-events: auto;
     }
 }
 
@@ -100,6 +159,29 @@
     /* Tap-Highlight raus, Apple-Style */
     a, button {
         -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Sprint 152 — :focus-visible Ring global (WCAG 2.4.7) für
+       Bluetooth-Keyboard-User auf iPad/iPhone */
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+        outline: 2px solid var(--apple-blue);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+    /* Pill-Buttons & Cards behalten Pill/Card-Radius beim Fokus */
+    .btn:focus-visible,
+    .m-hero-primary:focus-visible,
+    button[type="submit"]:focus-visible {
+        outline-offset: 3px;
+        border-radius: var(--apple-radius-pill);
+    }
+    .m-persona-tile:focus-visible,
+    .m-demo-swiper-card:focus-visible {
+        border-radius: var(--apple-radius-card);
     }
 
     /* Desktop-only Hero-Elemente komplett verstecken */
@@ -185,15 +267,18 @@
         display: none;
     }
 
-    /* Hamburger-Toggle */
+    /* Hamburger-Toggle — Sprint 152: 48×48 Touch-Target (WCAG 2.5.5) */
     .menu-toggle {
         background: transparent;
         border: none;
-        padding: 8px;
+        padding: 12px;
+        min-width: 48px;
+        min-height: 48px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--apple-ink);
+        cursor: pointer;
     }
 
     /* Mobile-Overlay-Menu */
@@ -475,7 +560,7 @@
     .m-demo-swiper-card:active,
     .m-demo-swiper-slide .m-poster:active {
         transform: scale(0.98);
-        box-shadow: var(--apple-shadow-card-hover);
+        box-shadow: var(--apple-shadow-card-active);
     }
 
     /* macOS-Browser-Chrome-Header — Iframe-Boundary nur Layout/Color */
@@ -576,24 +661,36 @@
         margin-top: 6px;
     }
 
-    /* Dot-Indicators — Apple-Page-Indicator-Style */
+    /* Dot-Indicators — Apple-Page-Indicator-Style, Sprint 152: 44×44 Touch-Target
+       (WCAG 2.5.5 + Apple HIG). Visueller Dot bleibt 8×8 via ::before. */
     .m-demo-swiper-dots {
         display: flex;
         justify-content: center;
-        gap: 8px;
+        gap: 4px;
         margin: 24px var(--apple-section-pad-x) 0;
     }
     .m-demo-swiper-dot {
+        width: 44px;
+        height: 44px;
+        background: transparent;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    .m-demo-swiper-dot::before {
+        content: '';
+        display: block;
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: rgba(0, 0, 0, 0.18);
-        border: none;
-        padding: 0;
+        background: rgba(0, 0, 0, 0.22);
         transition: background 200ms var(--apple-ease-reveal),
                     transform 200ms var(--apple-ease-reveal);
     }
-    .m-demo-swiper-dot.is-active {
+    .m-demo-swiper-dot.is-active::before {
         background: var(--apple-ink);
         transform: scale(1.2);
     }
@@ -650,6 +747,7 @@
     .m-persona-tile:active {
         transform: scale(0.98);
         background: #EBEBED;
+        box-shadow: var(--apple-shadow-card-active);
     }
 
     .m-persona-icon {
