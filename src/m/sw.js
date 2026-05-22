@@ -11,15 +11,15 @@
    dann die neue (siehe Sprint-148-Befund "andere Sicht zuerst").
 */
 
-const CACHE = 'karriaro-mobile-v157';
+const CACHE = 'karriaro-mobile-v158';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
     '/',
     '/offline.html',
     '/css/mobile.css',
-    '/css/mobile-overrides.css?v=154',
+    '/css/mobile-overrides.css?v=155',
     '/css/tokens.css',
-    '/js/m-interactions.js?v=154',
+    '/js/m-interactions.js?v=155',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/apple-touch-icon.png',

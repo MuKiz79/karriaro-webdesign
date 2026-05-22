@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=154">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=155">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=154" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=155" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -262,6 +262,25 @@ function rewriteHeroHeadline(html) {
         '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur.</span>' +
         '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:280ms">Jede Seite handcodiert ein Unikat.</span>' +
         '</h1>'
+    );
+}
+
+function rewriteHeroDemoTease(html) {
+    // Sprint 148.10 — Demo-Brücke zwischen H1 und Trust-Liste.
+    // Tappable Anchor zu Section 02 (#demos), Editorial-Voice.
+    // Stagger Beat 1.5 (140ms) zwischen H1-Identity (0ms) und
+    // Italic-Promise (280ms), damit Brücke vor dem Trust-Block landet.
+    return html.replace(
+        /<\/h1>/,
+        '</h1>' +
+        '<a href="#demos" class="m-hero-demos-tease m-hero-stagger" ' +
+            'style="--m-delay:140ms" data-track-event="HERO_DEMO_TEASE">' +
+            '<span class="m-hero-demos-tease-text">' +
+                'Acht Branchen, acht Manufaktur-Demos. ' +
+                '<em>Eine Wischgeste entfernt.</em>' +
+            '</span>' +
+            '<span class="m-hero-demos-tease-arrow" aria-hidden="true">↓</span>' +
+        '</a>'
     );
 }
 
@@ -873,6 +892,8 @@ function buildPage(relPath) {
         html = injectHeroEyebrowStagger(html);
         // Sprint 104 — Eyebrow auf 1 Zeile (Frühjahr 2026 → 2026, Webdesign-Manufaktur → Manufaktur)
         html = compactHeroEyebrow(html);
+        // Sprint 148.10 — Demo-Tease zwischen H1 und Trust-Liste (Brücke zu Section 02)
+        html = rewriteHeroDemoTease(html);
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);

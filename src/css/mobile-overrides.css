@@ -3409,3 +3409,56 @@
         font-size: 13px !important;
     }
 }
+
+/* ============================================================
+ * Sprint 148.10 — Hero-Demo-Tease (Brücke H1 → Section 02 #demos)
+ * Editorial-Style: 1 Zeile Mono+Italic-Mix, Pfeil als visueller
+ * Scroll-Hinweis. Tappable, smooth-scroll.
+ * ============================================================ */
+@media (max-width: 768px) {
+    .m-hero-demos-tease {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 24px 16px 0;
+        padding: 12px 16px;
+        border-top: 0.5px solid rgba(20, 32, 43, 0.10);
+        border-bottom: 0.5px solid rgba(20, 32, 43, 0.10);
+        color: var(--color-graphite-soft, #525E6B);
+        text-decoration: none;
+        transition: color 240ms var(--ease-standard, cubic-bezier(0.2, 0.7, 0.2, 1));
+        -webkit-tap-highlight-color: transparent;
+    }
+    .m-hero-demos-tease:hover,
+    .m-hero-demos-tease:focus-visible {
+        color: var(--color-graphite, #14202B);
+    }
+    .m-hero-demos-tease-text {
+        flex: 1;
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        font-size: 11px;
+        line-height: 1.5;
+        letter-spacing: 0.02em;
+    }
+    .m-hero-demos-tease-text em {
+        font-style: italic;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 13px;
+        letter-spacing: 0;
+        color: var(--color-graphite, #14202B);
+    }
+    .m-hero-demos-tease-arrow {
+        flex: 0 0 auto;
+        font-size: 14px;
+        line-height: 1;
+        color: var(--color-gold, #B8985A);
+        animation: m-hero-tease-bounce 2.4s ease-in-out infinite;
+    }
+}
+@keyframes m-hero-tease-bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .m-hero-demos-tease-arrow { animation: none; }
+}
