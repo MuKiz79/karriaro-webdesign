@@ -4574,3 +4574,41 @@
         color: #FFFFFF !important;
     }
 }
+
+/* ============================================================
+ * Sprint 150.1 — Apple Hero-Statement-Refactor + Stagger-Fix
+ *
+ * (A) Stagger-Animation auf Mobile aus (H1 war unsichtbar)
+ * (C) Italic-Sub-Zeile „Jede Seite handcodiert…" verstecken
+ * (D) .subhead Apple-Style sichtbar machen
+ *
+ * (B) Folio-Eyebrow → „Pre-Launch" passiert in
+ *     scripts/build-mobile-pages.mjs compactHeroEyebrow.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    /* A — Stagger-Animation komplett aus */
+    .m-hero-stagger {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    /* C — Italic-Sub-H1-Zeile (Sprint-148-Editorial-Relikt) raus */
+    .hero-h1-line.m-hero-accent {
+        display: none !important;
+    }
+
+    /* D — Apple-Subhead sichtbar machen (war seit Sprint 149.0 hidden) */
+    .hero-with-photo .subhead,
+    .hero-with-photo h1 + .subhead {
+        display: block !important;
+        font-family: -apple-system, BlinkMacSystemFont,
+                     'SF Pro Text', 'Inter', sans-serif !important;
+        font-size: 21px !important;
+        line-height: 1.38 !important;
+        letter-spacing: -0.005em !important;
+        color: var(--color-graphite, #6E6E73) !important;
+        font-weight: 400 !important;
+        margin: 16px 18px 0 !important;
+    }
+}
