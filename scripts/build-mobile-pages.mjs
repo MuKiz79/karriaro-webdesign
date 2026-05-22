@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=159">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=200">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=159" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=200" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -235,6 +235,29 @@ function injectCriticalCss(html) {
 // bleiben erhalten, aber Caller in der Pipeline (Z. ~791) ueberspringt.
 function injectStickyCta(html) {
     return html;
+}
+
+// Sprint 149.0 — Inter Variable als universelle Mobile-Schrift.
+// Apple-Stripe-Tech-Premium-Direction: eine Schrift, alle Weights via
+// Variable Font. preconnect minimiert Latency, display=swap verhindert FOIT.
+const INTER_FONT_LINKS = `
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap" rel="stylesheet">`;
+
+function injectInterFont(html) {
+    if (html.includes('fonts.googleapis.com/css2?family=Inter')) return html;
+    const viewportMatch = html.match(/<meta\s+name="viewport"[^>]*>/i);
+    if (viewportMatch) {
+        const idx = html.indexOf(viewportMatch[0]) + viewportMatch[0].length;
+        return html.slice(0, idx) + INTER_FONT_LINKS + html.slice(idx);
+    }
+    const closeHeadIdx = html.lastIndexOf('</head>');
+    if (closeHeadIdx === -1) {
+        console.warn('  ⚠ kein </head> — Inter-Font nicht injiziert');
+        return html;
+    }
+    return html.slice(0, closeHeadIdx) + INTER_FONT_LINKS + html.slice(closeHeadIdx);
 }
 
 function addGeneratorMarker(html, relPath) {
@@ -878,6 +901,8 @@ function buildPage(relPath) {
     html = injectMobileCss(html);
     // Sprint 143 — Critical-CSS inline (Senior-Review C-9, LCP-Optimierung).
     html = injectCriticalCss(html);
+    // Sprint 149.0 — Inter Variable Font (Apple-Stripe-Tech-Premium-Direction).
+    html = injectInterFont(html);
     // Sprint 134 — PWA-Foundation (Manifest + Apple-Meta + SW-Registration)
     // auf JEDER Mobile-Page, nicht nur Index. Macht Sub-Pages installable.
     html = injectPwaHead(html);
