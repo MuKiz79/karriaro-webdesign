@@ -3916,3 +3916,190 @@
         display: none !important;
     }
 }
+
+/* ============================================================
+ * Sprint 149.2 — Section-Polish: Personas (№ 03), Tools (№ 04),
+ * Siegel (№ 05), Audit, Kontakt (№ 06), Footer.
+ * Konsequent Apple-Stripe-Type-Scale + Blau-Akzent. Pure-CSS.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    /* --color-bone wird in Audit-Section inline genutzt → auf BG-Secondary */
+    :root {
+        --color-bone: #F0F0EE;
+    }
+}
+
+/* Universal Section-Eyebrows (alle „№ XX · Label"-Marker) */
+@media (max-width: 1023px) {
+    .m-mag-eyebrow,
+    .m-siegel-eyebrow {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite, #52525B) !important;
+        opacity: 1 !important;
+        margin-bottom: 20px !important;
+    }
+}
+
+/* Universal Section-Titles */
+@media (max-width: 1023px) {
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-size: 32px !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.02em !important;
+        font-weight: 700 !important;
+        color: var(--color-ink, #0A0A0B) !important;
+    }
+}
+
+/* Section 05 — Siegel-Polish */
+@media (max-width: 1023px) {
+    .m-siegel-body {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+        color: var(--color-graphite, #52525B) !important;
+        margin-top: 16px !important;
+    }
+    .m-siegel-year {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #71717A) !important;
+    }
+    .m-siegel-link {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 500 !important;
+        color: var(--color-gold, #2563EB) !important;
+        text-decoration: none !important;
+        letter-spacing: -0.005em !important;
+        margin-top: 24px !important;
+        display: inline-block !important;
+    }
+    .m-siegel-link:hover,
+    .m-siegel-link:focus-visible {
+        color: var(--color-gold-hover, #1D4ED8) !important;
+        text-decoration: underline !important;
+    }
+}
+
+/* Section 03 — Persona-Tiles als saubere Cards */
+@media (max-width: 1023px) {
+    .m-persona-tile {
+        background: #FFFFFF !important;
+        border: 1px solid #E4E4E7 !important;
+        border-radius: 12px !important;
+        padding: 24px 20px !important;
+        gap: 12px !important;
+        text-align: left !important;
+        transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1),
+                    border-color 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    .m-persona-tile:active,
+    .m-persona-tile:focus-visible {
+        background: #FAFAF9 !important;
+        border-color: var(--color-gold, #2563EB) !important;
+    }
+    .m-persona-icon {
+        color: var(--color-gold, #2563EB) !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
+    .m-persona-name {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.08em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite, #52525B) !important;
+    }
+    .m-persona-headline {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 19px !important;
+        line-height: 1.25 !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.01em !important;
+        color: var(--color-ink, #0A0A0B) !important;
+        display: block !important;
+    }
+    .m-persona-body {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 15px !important;
+        line-height: 1.5 !important;
+        color: var(--color-graphite, #52525B) !important;
+        display: block !important;
+    }
+}
+
+/* Section 04 — Tools-List Items */
+@media (max-width: 1023px) {
+    .m-mag-tool-num {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: var(--color-gold, #2563EB) !important;
+        letter-spacing: 0.04em !important;
+    }
+    .m-mag-tool-name {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 22px !important;
+        font-weight: 600 !important;
+        line-height: 1.25 !important;
+        letter-spacing: -0.01em !important;
+        color: var(--color-ink, #0A0A0B) !important;
+    }
+    .m-mag-tool-case {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 15px !important;
+        line-height: 1.55 !important;
+        color: var(--color-graphite, #52525B) !important;
+    }
+    .m-mag-tools-list li {
+        border-top: 1px solid #E4E4E7 !important;
+        padding-top: 24px !important;
+    }
+    .m-mag-tools-list li:first-child {
+        border-top: 0 !important;
+    }
+}
+
+/* Footer kr-footer-card auf Off-White Match */
+@media (max-width: 1023px) {
+    .kr-footer-card {
+        background: var(--m-bg-kontakt, #F0F0EE) !important;
+        color: var(--color-graphite, #52525B) !important;
+    }
+    .kr-footer-card * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+    .kr-footer-card a {
+        color: var(--color-ink, #0A0A0B) !important;
+    }
+    .kr-footer-card a:hover,
+    .kr-footer-card a:focus-visible {
+        color: var(--color-gold, #2563EB) !important;
+    }
+}
+
+/* Hero CTA + Audit-Bridge cleaner Apple-Stripe-Look */
+@media (max-width: 1023px) {
+    .hero-audit-link {
+        font-family: 'Inter', -apple-system, sans-serif !important;
+        font-size: 15px !important;
+        color: var(--color-graphite, #52525B) !important;
+        text-decoration: none !important;
+    }
+    .hero-audit-link span {
+        color: var(--color-gold, #2563EB) !important;
+        font-weight: 500 !important;
+    }
+}
