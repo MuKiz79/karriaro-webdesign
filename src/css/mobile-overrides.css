@@ -4254,3 +4254,32 @@
         font-style: normal !important;
     }
 }
+
+/* ============================================================
+ * Sprint 149.5 — Warmth-Pivot
+ *
+ * 100-Designer-Konsens: Stripe-Blau ist falsch für Schwarzwald-
+ * Manufaktur. Akzent → Holz-Ocker (Eiche-geölt). Plus H1 +8px,
+ * Body +1px für mehr Display-Confidence.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    :root {
+        --color-gold:       #B8804A;
+        --color-gold-hover: #A06F3D;
+    }
+    .hero-headline {
+        font-size: 52px !important;
+    }
+    section p:not(.hero-folio-eyebrow):not(.subhead):not(.m-mag-eyebrow):not(.m-demo-swiper-section-eyebrow):not(.m-demo-swiper-section-hint):not(.m-siegel-eyebrow):not(.m-siegel-year),
+    section li:not(.m-hero-trust-list li):not(.m-mag-tools-list li):not(.branche-tab):not(.m-demo-swiper-slide):not(.m-persona-tile),
+    [aria-label="Mini-Audit"] p,
+    [aria-label="Mini-Audit"] li {
+        font-size: 18px !important;
+    }
+}
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    :root {
+        --color-gold:       #D9A66C;
+        --color-gold-hover: #E5B584;
+    }
+}
