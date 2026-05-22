@@ -3549,3 +3549,91 @@
         transition: none;
     }
 }
+
+/* ============================================================
+ * Sprint 148.11B — Trust-Liste als Bento-Grid statt Vertikalstrich.
+ * Item 1 (100+) dominant full-width oben mit Fraunces-Stat, Items
+ * 2 + 3 ([K] / ⤳) 2-spaltig darunter kompakt. Overrides Sprint-109
+ * flex-column-Layout (zeile 3166ff.).
+ * ============================================================ */
+@media (max-width: 768px) {
+    .m-hero-trust-list {
+        display: grid !important;
+        flex-direction: unset !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-areas:
+            "hero hero"
+            "k    ki" !important;
+        gap: 10px !important;
+        margin: 24px 16px 0 !important;
+        list-style: none !important;
+        padding: 0 !important;
+    }
+    .m-hero-trust-list li {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        background: rgba(20, 32, 43, 0.025) !important;
+        border: 0.5px solid rgba(20, 32, 43, 0.10) !important;
+        border-radius: 10px !important;
+        padding: 14px 14px !important;
+    }
+    .m-hero-trust-list li:nth-child(1) {
+        grid-area: hero;
+        padding: 18px 16px !important;
+    }
+    .m-hero-trust-list li:nth-child(2) { grid-area: k; }
+    .m-hero-trust-list li:nth-child(3) { grid-area: ki; }
+
+    /* Hero-Item: dominanter Fraunces-Stat, Mono-Uppercase-Label,
+     * Inter-Caption darunter. */
+    .m-hero-trust-list li:nth-child(1) .m-hero-trust-num {
+        font-family: Fraunces, Georgia, "Times New Roman", serif !important;
+        font-size: 40px !important;
+        font-weight: 600 !important;
+        color: var(--color-graphite, #14202B) !important;
+        line-height: 1 !important;
+        letter-spacing: -0.02em !important;
+        min-width: auto !important;
+        margin-bottom: 2px !important;
+    }
+    .m-hero-trust-list li:nth-child(1) .m-hero-trust-body strong {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.10em !important;
+        text-transform: uppercase !important;
+        color: var(--color-graphite-soft, #525E6B) !important;
+        line-height: 1.4 !important;
+    }
+    .m-hero-trust-list li:nth-child(1) .m-hero-trust-body small {
+        display: block !important;
+        font-size: 11.5px !important;
+        line-height: 1.45 !important;
+        color: var(--color-graphite-soft, #525E6B) !important;
+        margin-top: 2px !important;
+    }
+
+    /* Compact-Items: kleiner Mono-Stat in Gold, Sans-Label, small
+     * versteckt (zu wenig Platz in 2-spaltigem Layout). */
+    .m-hero-trust-list li:nth-child(n+2) .m-hero-trust-num {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, monospace !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        color: var(--color-gold, #B8985A) !important;
+        min-width: auto !important;
+        line-height: 1 !important;
+    }
+    .m-hero-trust-list li:nth-child(n+2) .m-hero-trust-body strong {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif !important;
+        font-size: 12.5px !important;
+        font-weight: 500 !important;
+        line-height: 1.25 !important;
+        color: var(--color-graphite, #14202B) !important;
+        letter-spacing: -0.005em !important;
+    }
+    .m-hero-trust-list li:nth-child(n+2) .m-hero-trust-body small {
+        display: none !important;
+    }
+}
