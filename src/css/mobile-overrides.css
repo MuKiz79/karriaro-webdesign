@@ -4539,3 +4539,38 @@
         --m-bg-kontakt:     #1D1D1F;
     }
 }
+
+/* ============================================================
+ * Sprint 150.0.1 — Hotfix: Headlines explizit schwarz
+ *
+ * User-Report: „Webdesign / Manufaktur usw. kann man nicht lesen.
+ * Bitte schwarz." Specificity-Konflikt mit Sprint 148-Dark-Mode-
+ * Block (Z. 2557, var(--color-ink, #f5f3ee) Fallback war Ivory).
+ * Hier hardcoded #000000 mit höchster Specificity-Wahrscheinlichkeit.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    .hero-headline,
+    .hero-headline .hero-h1-line,
+    .hero-h1-line,
+    .hero-h1-line.m-hero-accent,
+    section h2,
+    .m-demo-swiper-section-title,
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title {
+        color: #000000 !important;
+    }
+}
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    .hero-headline,
+    .hero-headline .hero-h1-line,
+    .hero-h1-line,
+    .hero-h1-line.m-hero-accent,
+    section h2,
+    .m-demo-swiper-section-title,
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title {
+        color: #FFFFFF !important;
+    }
+}
