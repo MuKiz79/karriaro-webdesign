@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=307">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=400">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -125,18 +125,15 @@ const PIN_SPY_HTML = `
 `;
 
 function injectPinSpy(html) {
-    if (html.includes('data-m-pin-spy')) return html;
-    const closeTag = '</' + 'body>';
-    const closeBodyIdx = html.lastIndexOf(closeTag);
-    if (closeBodyIdx === -1) return html;
-    return html.slice(0, closeBodyIdx) + PIN_SPY_HTML + html.slice(closeBodyIdx);
+    // Sprint 151 — Pin-Spy (Reading-Progress) entfernt (radikal-Apple).
+    return html;
 }
 
 // Sprint 128 — externe Mobile-Interaktions-JS-Referenz (am </body>-Ende einhaengen).
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=307" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=400" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -271,32 +268,28 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 110 — Boutique-Print-Disziplin: H1 zwei kurze Zeilen mit je
-    // einem Punkt, kein Compound-Bindestrich-Bruch. Italic-Sub bleibt.
-    // Sprint 130 — Stagger 3-Beats statt 6-Steps: Beat 1 (0ms) Identity (Webdesign+Manufaktur),
-    // Beat 2 (280ms) Promise (Italic-Sub), Beat 3 (560ms) Proof+Action (siehe rewriteHeroCta).
+    // Sprint 151 — H1 ohne Stagger-Animation (radikal-Apple). Drei Zeilen
+    // bleiben strukturell: zwei Identity-Lines + Italic-Sub-Accent.
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Webdesign.</span>' +
-        '<span class="hero-h1-line m-hero-stagger" style="--m-delay:0ms">Manufaktur.</span>' +
-        '<span class="hero-h1-line m-hero-accent m-hero-stagger" style="--m-delay:280ms">Jede Seite handcodiert ein Unikat.</span>' +
+        '<span class="hero-h1-line">Webdesign.</span>' +
+        '<span class="hero-h1-line">Manufaktur.</span>' +
+        '<span class="hero-h1-line m-hero-accent">Jede Seite handcodiert ein Unikat.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroDemoTease(html) {
-    // Sprint 148.10 — Demo-Brücke zwischen H1 und Trust-Liste.
-    // Tappable Anchor zu Section 02 (#demos), Editorial-Voice.
-    // Stagger Beat 1.5 (140ms) zwischen H1-Identity (0ms) und
-    // Italic-Promise (280ms), damit Brücke vor dem Trust-Block landet.
+    // Sprint 151 — Demo-Brücke ohne Stagger (radikal-Apple). Tappable Anchor
+    // zu Section 02 (#demos) bleibt, Voice gestrippt von „Manufaktur"-Doppelung.
     return html.replace(
         /<\/h1>/,
         '</h1>' +
-        '<a href="#demos" class="m-hero-demos-tease m-hero-stagger" ' +
-            'style="--m-delay:140ms" data-track-event="HERO_DEMO_TEASE">' +
+        '<a href="#demos" class="m-hero-demos-tease" ' +
+            'data-track-event="HERO_DEMO_TEASE">' +
             '<span class="m-hero-demos-tease-text">' +
-                'Acht Branchen, acht Manufaktur-Demos. ' +
+                'Acht Branchen, acht echte Demos. ' +
                 '<em>Eine Wischgeste entfernt.</em>' +
             '</span>' +
             '<span class="m-hero-demos-tease-arrow" aria-hidden="true">↓</span>' +
@@ -305,31 +298,24 @@ function rewriteHeroDemoTease(html) {
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 110 — Boutique-Voice: 1 dichter Satz statt 3 Slack-TLDR-Statements.
-    // Sprint 130 — Stagger auf Beat 2 (280ms, Promise-Beat). Subhead ist auf
-    // Mobile per CSS hidden — Delay nur als Fallback falls Override wegfällt.
+    // Sprint 151 — Subhead ist auf Mobile per CSS hidden (display:none).
+    // Inhalts-Rewrite bleibt zu Fallback-Zwecken.
     return html.replace(
         /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
-        '<p class="subhead m-hero-stagger" style="--m-delay:280ms">' +
+        '<p class="subhead">' +
         'Handcodiert, BFSG-konform, für die KI-Ära gemacht.' +
         '</p>'
     );
 }
 
 function rewriteHeroCta(html) {
-    // Sprint 129 — 4 → 3 Trust-Items. Sprint 130 — Stagger zu Beat 3 (560ms)
-    // verdichtet. Marginalia (Pentagram-Print-Annotation) + Siegel-Embossing
-    // (Paula-Scher-Brand-Signature) als Final-Beat.
+    // Sprint 151 — Marginalia + Phyllotaxis-Siegel-Embossing entfernt
+    // (radikal-Apple). Stagger-Animation raus. Bleiben: 3-Item-Trust-List
+    // + Pill-CTA-Button. Brand-Stempel [K] in Trust-Item 2 (Lighthouse-
+    // Anker) ersetzt durch K-Bold-Letter (kein Editorial-Symbol mehr).
     return html.replace(
         /<a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h<\/a>/,
-        '<aside class="m-hero-marginalia m-hero-stagger" style="--m-delay:560ms" aria-hidden="true">' +
-            '<span class="m-hero-marginalia-item">₁ Handcodiert</span>' +
-            '<span class="m-hero-marginalia-dot">·</span>' +
-            '<span class="m-hero-marginalia-item">₂ Schwarzwald-Atelier</span>' +
-            '<span class="m-hero-marginalia-dot">·</span>' +
-            '<span class="m-hero-marginalia-item">₃ № 01 · 2026</span>' +
-        '</aside>' +
-        '<ul class="m-hero-trust-list m-hero-stagger" style="--m-delay:560ms">' +
+        '<ul class="m-hero-trust-list">' +
             '<li>' +
                 '<span class="m-hero-trust-num">100+</span>' +
                 '<span class="m-hero-trust-body">' +
@@ -338,34 +324,22 @@ function rewriteHeroCta(html) {
                 '</span>' +
             '</li>' +
             '<li>' +
-                '<span class="m-hero-trust-num">[K]</span>' +
+                '<span class="m-hero-trust-num">K</span>' +
                 '<span class="m-hero-trust-body">' +
                     '<strong>Lead-Cockpit Lighthouse</strong>' +
                     '<small>Sie sehen jeden Besucher, KI übersetzt das in nächste Schritte.</small>' +
                 '</span>' +
             '</li>' +
             '<li>' +
-                '<span class="m-hero-trust-num">⤳</span>' +
+                '<span class="m-hero-trust-num">→</span>' +
                 '<span class="m-hero-trust-body">' +
                     '<strong>KI-Automation</strong>' +
                     '<small>Mails, Follow-ups, Anfragen-Routing.</small>' +
                 '</span>' +
             '</li>' +
         '</ul>' +
-        '<div class="m-hero-cta-bottom m-hero-stagger" style="--m-delay:560ms">' +
+        '<div class="m-hero-cta-bottom">' +
             '<a href="#kontakt" class="btn m-hero-primary" data-kr-magnetic>Erstgespräch buchen</a>' +
-        '</div>' +
-        // Sprint 130 — Manufaktur-Siegel-Embossing 32 px (Phyllotaxis-SVG verkleinert,
-        // dezent als Brand-Signature unter CTA. Paula-Scher-Hebel: Siegel im Hero-Polish,
-        // nicht als eigene Section in der Magazine-Choreographie verloren.).
-        '<div class="m-hero-siegel-emboss m-hero-stagger" style="--m-delay:560ms" aria-hidden="true">' +
-            '<svg viewBox="0 0 90 90" width="32" height="32">' +
-                '<path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
-                '<path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
-                '<path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
-                '<path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="miter"/>' +
-                buildPhyllotaxisDotsForSiegel() +
-            '</svg>' +
         '</div>'
     );
 }
@@ -386,34 +360,30 @@ function buildPhyllotaxisDotsForSiegel() {
 }
 
 function injectHeroEyebrowStagger(html) {
-    // Sprint 95 — Eyebrow startet als Erstes (Delay 0ms)
-    return html.replace(
-        /<p class="hero-folio-eyebrow">/,
-        '<p class="hero-folio-eyebrow m-hero-stagger" style="--m-delay:0ms">'
-    );
+    // Sprint 151 — Stagger-Animation entfernt (radikal-Apple).
+    return html;
 }
 
 function compactHeroEyebrow(html) {
-    // Sprint 150.2 — Original-Eyebrow erhalten (Inhaber: „lösche keine
-    // Objekte"). Sprint 110-Voice-Polish bleibt aktiv: Word-Doppelung
-    // MANUFAKTUR raus, „Frühjahr 2026" → „Ein Atelier".
+    // Sprint 151 — Folio-Numbering "№ 01" raus (radikal-Apple).
+    // Voice-Polish bleibt: Word-Doppelung MANUFAKTUR raus,
+    // „Frühjahr 2026" → „Ein Atelier".
     return html.replace(
         /<p class="hero-folio-eyebrow[^"]*"[^>]*>[\s\S]*?<\/p>/,
         (match) => match
+            .replace(/<span>№[\s&nbsp;]*01<\/span>\s*<span class="dot">·<\/span>\s*/i, '')
             .replace(/>Webdesign-Manufaktur</gi, '>Für jede Profession<')
             .replace(/>Frühjahr\s+2026</gi, '>Ein Atelier<')
     );
 }
 
 function rewriteFolioMarker(html) {
-    // Sprint 129 — Hero-Folio-Marker zu Magazine-Cover-Notation:
-    //   "S. 01 · Manufaktur" → "№ 01 · 2026 · EDITORIAL"
-    // Cover-Position des Magazine-Spreads, einheitlich zur Eyebrow-Numbering der
-    // Folge-Sections (Demos № 02, Personas № 03, Tools № 04, Siegel № 05, Kontakt № 06).
-    // Desktop bleibt unverändert (Mobile-only-Rewrite).
+    // Sprint 151 — Hero-Folio-Marker geleert (radikal-Apple, kein Magazine-
+    // Cover-Notation mehr). Element bleibt im DOM (kein HTML-Strukturbruch),
+    // wird aber via CSS display:none.
     return html.replace(
         /(<div class="hero-folio-marker"[^>]*>)[\s\S]*?(<\/div>)/,
-        '$1\n            <span class="folio-page">№ 01</span>\n            <span class="folio-section">2026 · Editorial</span>\n        $2'
+        '$1$2'
     );
 }
 
@@ -530,7 +500,7 @@ ${buildPhyllotaxisDots()}
 const TOOLS_SECTION_HTML = `
 <!-- Sprint 129 — Tools-Annotation (№ 04) -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">№ 04 · Branchen-Annotationen</p>
+    <p class="m-mag-eyebrow">Werkzeuge</p>
     <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
         <li>
@@ -563,13 +533,9 @@ const TOOLS_SECTION_HTML = `
 `;
 
 const SIEGEL_SECTION_HTML = `
-<!-- Sprint 129 — Manufaktur-Siegel (№ 05) als Brand-Signature vor Kontakt -->
-<section class="m-mag-siegel" aria-label="Manufaktursiegel">
-    <div class="m-siegel-emblem">
-        ${PHYLLOTAXIS_SVG}
-        <span class="m-siegel-year">№ 05 · 2026</span>
-    </div>
-    <p class="m-siegel-eyebrow">Unser Manufaktursiegel</p>
+<!-- Sprint 151 — Brand-Versprechen (Phyllotaxis-SVG + № 05-Notation entfernt) -->
+<section class="m-mag-siegel" aria-label="Unser Versprechen">
+    <p class="m-siegel-eyebrow">Unser Versprechen</p>
     <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
     <p class="m-siegel-body">Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stück — der juristische Beweis: dieser Meister steht für dieses Stück. Wir schlagen unseres in jeden Code.</p>
     <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
@@ -599,11 +565,8 @@ function injectSiegelSection(html) {
 // Sprint 129 — Kontakt-Section bekommt Eyebrow "№ 06 · Kontakt" als Magazine-
 // Pacing-Schluss. Mobile-only via .m-mag-eyebrow--kontakt (Desktop hidden).
 function injectKontaktNumbering(html) {
-    if (html.includes('m-mag-eyebrow--kontakt')) return html;
-    return html.replace(
-        /(<section id="kontakt"[^>]*>\s*<div class="wrap"[^>]*>)/,
-        '$1\n            <p class="m-mag-eyebrow m-mag-eyebrow--kontakt">№ 06 · Kontakt</p>'
-    );
+    // Sprint 151 — № 06 · Kontakt-Eyebrow entfernt (radikal-Apple).
+    return html;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -654,7 +617,7 @@ function buildPersonaSectionHtml() {
     return `
 <!-- Sprint 103 — Persona-Tile-Grid (zwischen Tools und Demo-Swiper) -->
 <section class="m-mag-personas" id="branchen" aria-label="Branchenpassung">
-    <p class="m-mag-eyebrow">№ 03 · Branchenpassung</p>
+    <p class="m-mag-eyebrow">Branchenpassung</p>
     <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
     <div class="m-mag-personas-grid">${tiles}
         ${wideTile}
@@ -800,7 +763,7 @@ function buildDemoSwiperHtml() {
     return `
 <!-- Mobile Demo-Swiper (Sprint 129 — Editorial-Page № 02, show-don't-tell) -->
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">№ 02 · Acht Branchen · Live</p>
+    <p class="m-demo-swiper-section-eyebrow">Acht Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">↓ scrollen ·  tippen zum Öffnen</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}
