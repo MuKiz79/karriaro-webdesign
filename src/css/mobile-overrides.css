@@ -1176,11 +1176,16 @@
             0 8px 20px -4px rgba(0, 0, 0, 0.12);
     }
 
-    /* macOS-Safari-Style Chrome-Header */
+    /* macOS-Safari-Style Chrome-Header.
+     * Sprint 148.9 — Grid statt Flex: 1fr auto 1fr macht URL absolut
+     * zum Window zentriert (echtes macOS-Safari-Verhalten), nicht nur
+     * zum Restraum nach den Buttons. Die rechte 1fr-Spalte bleibt leer
+     * als Counter-Weight. */
     .m-poster-chrome {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        gap: 10px;
+        column-gap: 10px;
         height: 32px;
         padding: 0 12px;
         background: linear-gradient(to bottom, #ececec, #e0e0e0);
@@ -1188,9 +1193,10 @@
         flex: 0 0 auto;
     }
     .m-poster-chrome-buttons {
+        grid-column: 1;
+        justify-self: start;
         display: flex;
         gap: 6px;
-        flex: 0 0 auto;
     }
     .m-poster-chrome-btn {
         width: 11px;
@@ -1203,7 +1209,8 @@
     .m-poster-chrome-btn--min   { background: #FEBC2E; }
     .m-poster-chrome-btn--max   { background: #28C840; }
     .m-poster-chrome-url {
-        flex: 1;
+        grid-column: 2;
+        justify-self: center;
         text-align: center;
         font-family: "JetBrains Mono", "SF Mono", Menlo, monospace;
         font-size: 10.5px;
@@ -1215,8 +1222,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 70%;
-        margin: 0 auto;
+        max-width: 100%;
     }
 
     /* Stage: 5:4 (Sprint 148.8) — vertikal, mehr Hero-Content sichtbar.
