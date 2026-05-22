@@ -1288,43 +1288,15 @@
 }
 
 /* ============================================================================
- * 17. DARK-MODE OVERRIDES
+ * 17. LIGHT-MODE-ONLY (Sprint 151.1)
+ *
+ * Apple-Marketing-Pages (apple.com/iphone-15-pro) sind IMMER weiß,
+ * unabhängig vom System-Dark-Mode. User-Wunsch: kein Dark-Mode-Switch.
+ * Defensive Color-Scheme-Pinning gegen iOS-User-Agent-Auto-Dark-Mode.
  * ============================================================================ */
-@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+@media (max-width: 1023px) {
     :root {
-        --apple-ink: #F5F5F7;
-        --apple-graphite: #A1A1A6;
-        --apple-platinum: #86868B;
-        --apple-snow: #1D1D1F;
-        --apple-fog: #14181F;
-        --apple-blue: #2997FF;
-        --apple-blue-hover: #50AAFF;
-        --apple-hairline: rgba(255, 255, 255, 0.10);
-        --apple-shadow-card: 0 4px 16px rgba(0, 0, 0, 0.30);
-        --apple-shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.40);
-    }
-    body {
-        background: var(--apple-snow);
-    }
-    nav {
-        background: rgba(29, 29, 31, 0.72);
-        border-bottom-color: var(--apple-hairline);
-    }
-    .m-poster-chrome {
-        background: rgba(255, 255, 255, 0.04);
-        border-bottom-color: var(--apple-hairline);
-    }
-    .m-demo-swiper-dot {
-        background: rgba(255, 255, 255, 0.20);
-    }
-    .m-demo-swiper-dot.is-active {
-        background: var(--apple-ink);
-    }
-    .m-persona-tile:active {
-        background: #2A2A2C;
-    }
-    .m-demo-sheet-close {
-        background: var(--apple-fog);
+        color-scheme: light only;
     }
 }
 
