@@ -248,7 +248,7 @@
         // iframe rendert Portfolio-Page in Desktop-Layout (zweispaltiges
         // Hero), wird via transform:scale auf Card-Stage-Breite verkleinert.
         var IFRAME_NATIVE_W = 1280;
-        var IFRAME_NATIVE_H = 800;
+        var IFRAME_NATIVE_H = 1024;
 
         function setIframeScale(stage) {
             var w = stage.clientWidth;

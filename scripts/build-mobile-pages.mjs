@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=152">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=153">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=152" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=153" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -747,7 +747,7 @@ function buildDemoSwiperHtml() {
                     <span class="m-poster-chrome-url">${domain}</span>
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
-                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="800" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
                 </div>
             </button>
             <div class="m-demo-swiper-meta">

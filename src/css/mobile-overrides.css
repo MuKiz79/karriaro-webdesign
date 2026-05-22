@@ -1219,11 +1219,12 @@
         margin: 0 auto;
     }
 
-    /* Stage: 16:10 Browser-Window-Aspect (matched iframe-native 1280/800) */
+    /* Stage: 5:4 (Sprint 148.8) — vertikal, mehr Hero-Content sichtbar.
+     * iframe-native korrespondierend 1280/1024. */
     .m-demo-swiper-slide .m-poster-stage {
         position: relative;
         width: 100%;
-        aspect-ratio: 1280 / 800;
+        aspect-ratio: 1280 / 1024;
         height: auto;
         display: block;
         overflow: hidden;
@@ -1248,7 +1249,7 @@
         bottom: auto !important;
         inset: auto !important;
         width: 1280px !important;
-        height: 800px !important;
+        height: 1024px !important;
         max-width: none !important;
         max-height: none !important;
         border: 0 !important;
