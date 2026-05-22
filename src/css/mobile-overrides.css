@@ -316,8 +316,11 @@
  * 5. HERO (§ 01)
  * ============================================================================ */
 @media (max-width: 1023px) {
+    /* Sprint 153 Alan-Dye: Padding-Top 104 → 64-80px für höhere Above-
+       Fold-Density. CTA + Trust-List rücken näher an H1 — iPhone 15 Pro
+       Hero füllt nun ~60% Above-Fold statt 45%. */
     .hero-with-photo {
-        padding: calc(56px + 48px) var(--apple-section-pad-x) 48px;
+        padding: clamp(64px, 10svh, 80px) var(--apple-section-pad-x) 48px;
         min-height: auto;
         background: var(--apple-snow);
         display: block;
@@ -342,10 +345,11 @@
         line-height: 1.2;
     }
 
-    /* Hero-H1 — Apple-Display 56px / 1.07 / 700 / pure black */
+    /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
+       respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
     .hero-headline {
         font-family: var(--apple-font-display);
-        font-size: 56px;
+        font-size: clamp(48px, 13vw, 56px);
         line-height: 1.07;
         letter-spacing: -0.025em;
         font-weight: 700;
@@ -387,65 +391,76 @@
         font-style: normal;
         font-weight: 500;
     }
+    /* Sprint 153 Alan-Dye: Demo-Tease-Arrow als animiertes Asset
+       (continuous bounce-Loop), nicht statischer UI-Chrome-Pfeil.
+       Apple-iphone-15-pro „Scroll to explore" hat genau diesen Loop. */
     .m-hero-demos-tease-arrow {
         display: inline-block;
-        transition: transform 200ms var(--apple-ease-reveal);
+        animation: m-chevron-bounce 1.8s ease-in-out infinite;
     }
     .m-hero-demos-tease:hover .m-hero-demos-tease-arrow {
-        transform: translateY(2px);
+        transform: none;
+    }
+    @keyframes m-chevron-bounce {
+        0%, 100% { transform: translateY(0); }
+        50%      { transform: translateY(4px); }
     }
 
-    /* Trust-List — 3 Items, Apple-Card-light-Variante */
+    /* Trust-List — Sprint 153 Alan-Dye: 3-Spalten-Grid statt vertikale
+       Liste. Komprimiert ~164px vertikal auf ~80-90px horizontal →
+       CTA rückt deutlich näher. Apple-iphone-15-pro „Key Features"-
+       Pattern auf Mobile. */
     .m-hero-trust-list {
         list-style: none;
         padding: 0;
         margin: 0 0 32px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
     }
     .m-hero-trust-list li {
-        display: grid;
-        grid-template-columns: 48px 1fr;
-        align-items: start;
-        gap: 14px;
-        padding: 14px 0;
-        border-top: 1px solid var(--apple-hairline);
-    }
-    .m-hero-trust-list li:first-child {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
+        padding: 0;
         border-top: none;
-        padding-top: 0;
     }
     .m-hero-trust-num {
         font-family: var(--apple-font-display);
-        font-size: 19px;
+        font-size: 22px;
         font-weight: 700;
-        letter-spacing: -0.018em;
+        letter-spacing: -0.02em;
         color: var(--apple-ink);
         line-height: 1.2;
     }
     .m-hero-trust-body {
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 2px;
     }
     .m-hero-trust-body strong {
         font-family: var(--apple-font-text);
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 600;
         color: var(--apple-ink);
-        line-height: 1.33;
-        letter-spacing: -0.01em;
+        line-height: 1.3;
+        letter-spacing: -0.005em;
     }
     .m-hero-trust-body small {
         font-family: var(--apple-font-text);
-        font-size: 13px;
+        font-size: 11px;
         font-weight: 400;
         color: var(--apple-graphite);
-        line-height: 1.38;
+        line-height: 1.4;
     }
 
-    /* Hero-CTA — Apple Pill-Button, System-Blue */
+    /* Hero-CTA — Apple Pill-Button, System-Blue.
+       Sprint 153 Alan-Dye: 48px → 44px (WCAG-Min), Tap-Feedback per
+       Shadow-Lift statt Scale-Squash (Apple-Marketing-Standard für
+       Depth-Feedback, kein Disney-Toy-Squash). */
     .m-hero-cta-bottom {
         margin: 0;
     }
@@ -464,15 +479,17 @@
         padding: 14px 26px;
         border: none;
         border-radius: var(--apple-radius-pill);
-        min-height: 48px;
+        min-height: 44px;
         text-decoration: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         transition: background 200ms var(--apple-ease-touch),
-                    transform 100ms var(--apple-ease-touch);
+                    box-shadow 120ms var(--apple-ease-touch);
     }
     .hero-with-photo .btn:active,
     .m-hero-primary:active {
         background: var(--apple-blue-hover);
-        transform: scale(0.96);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14);
+        transform: none;
     }
 
     /* Karriaro-Tool-Badge unter CTA verstecken (nur Desktop-Element) */
