@@ -4103,3 +4103,56 @@
         font-weight: 500 !important;
     }
 }
+
+/* ============================================================
+ * Sprint 149.3 — Spacing-Compression Hero (§ 01) + Demo (§ 02).
+ * Inhaber: „Abstände zu groß". Konsens 3-Designer-Debatte.
+ * Hero-Padding halbiert (72/96 → 56/56), Demo-Padding drastisch
+ * zurück (80-140 / 60-100 → 48-72 / 40-56), Element-Gaps in
+ * 8-Punkt-Grid komprimiert.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    /* Hero — Section-Container */
+    .hero-with-photo {
+        padding: 56px 0 56px !important;
+    }
+
+    /* Hero — Element-Gaps */
+    .hero-h1-line.m-hero-accent {
+        margin-top: 12px !important;
+    }
+    .hero-with-photo .hero-cta-row {
+        margin: 24px 24px 0 !important;
+    }
+    .m-hero-trust-list {
+        margin: 20px 16px 0 !important;
+    }
+    .m-hero-demos-tease {
+        margin: 16px 16px 0 !important;
+    }
+
+    /* Demo-Section — Container */
+    .m-demo-swiper-mobile {
+        padding: clamp(48px, 6vh, 72px) 0 clamp(40px, 5vh, 56px) !important;
+    }
+
+    /* Demo-Section — Header */
+    .m-demo-swiper-section-eyebrow {
+        margin: 0 24px 8px !important;
+    }
+    .m-demo-swiper-section-title {
+        margin: 0 24px 8px !important;
+    }
+    .m-demo-swiper-section-hint {
+        margin: 0 24px 20px !important;
+    }
+
+    /* Demo-Section — Rail + Slide */
+    .m-demo-swiper-rail {
+        margin: clamp(16px, 2.5svh, 24px) 0 0 !important;
+    }
+    .m-demo-swiper-slide {
+        padding: clamp(24px, 4svh, 40px) clamp(16px, 5vw, 24px) !important;
+        gap: 16px !important;
+    }
+}
