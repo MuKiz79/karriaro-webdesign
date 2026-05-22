@@ -512,20 +512,28 @@
         text-overflow: ellipsis;
     }
 
-    /* Iframe-Stage — Aspect-Ratio + Overflow nur, transform/opacity JS-controlled */
+    /* Iframe-Stage — aspect-ratio matcht iframe-native 1280×1024 (5:4).
+       Sprint-150.6-Stand übernommen (Greenfield hat das versehentlich
+       auf 16/10 + height 800px geändert → Bug). */
     .m-poster-stage {
         position: relative;
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 1280 / 1024;
         overflow: hidden;
         background: var(--apple-fog);
     }
     .m-poster-frame {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 1280px;
-        height: 800px;
+        height: 1024px;
         border: 0;
         transform-origin: top left;
-        /* --m-iframe-scale wird via JS gesetzt — NICHT überschreiben */
-        transform: scale(var(--m-iframe-scale, 0.3));
+        /* --m-iframe-scale wird via JS gesetzt (m-interactions.js
+           setIframeScale, stage.clientWidth / 1280). Fallback 1 statt
+           0.3, damit bei JS-Aussetzer wenigstens Hero-Topleft sichtbar
+           bleibt (overflow:hidden clippt Überstand). */
+        transform: scale(var(--m-iframe-scale, 1));
         pointer-events: none;
     }
 
@@ -1228,24 +1236,28 @@
  * 15. UTILITY-CLASSES (JS-Hooks)
  * ============================================================================ */
 @media (max-width: 1023px) {
-    /* Skeleton/Iframe-Load — JS setzt .is-loaded auf .m-poster */
+    /* Iframe-Load — JS (m-interactions.js Z. 284) setzt .is-loaded auf das
+       <iframe>-Element selbst (frame.classList.add('is-loaded')), NICHT
+       auf den .m-poster-Parent. Sprint-150.6-Selector-Pattern. */
+    .m-poster-frame {
+        opacity: 0;
+        transition: opacity 240ms var(--apple-ease-reveal);
+    }
+    .m-poster-frame.is-loaded {
+        opacity: 1;
+    }
+    /* Skeleton-Fallback (falls Markup vorhanden, JS triggert über iframe-
+       Sibling-Class) */
     .m-poster-skeleton {
         position: absolute;
         inset: 0;
         background: var(--apple-fog);
         opacity: 1;
         transition: opacity 240ms var(--apple-ease-reveal);
-    }
-    .m-poster.is-loaded .m-poster-skeleton {
-        opacity: 0;
         pointer-events: none;
     }
-    .m-poster-frame {
+    .m-poster-frame.is-loaded ~ .m-poster-skeleton {
         opacity: 0;
-        transition: opacity 240ms var(--apple-ease-reveal);
-    }
-    .m-poster.is-loaded .m-poster-frame {
-        opacity: 1;
     }
 
     /* Section-Reveal-State — Sprint 132-Pattern. Per Sprint 150.5 immer
