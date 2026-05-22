@@ -1142,7 +1142,10 @@
     .m-demo-swiper-slide .m-poster {
         aspect-ratio: auto;
         width: 100%;
-        max-width: clamp(300px, 84vw, 460px);
+        /* Sprint 148.7 — adaptive, 16:10 strikt erhalten. Drei min()-
+         * Constraints: 92vw (Width-relativ), (48svh-32px)*1.6 (Height-
+         * derived bei 16:10), 520px (Tablet/Foldable-Cap). */
+        max-width: min(92vw, calc((48svh - 32px) * 1.6), 520px);
         height: auto;
         margin: 0 auto;
         align-self: center;
@@ -1268,7 +1271,8 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        max-width: clamp(280px, 78vw, 420px);
+        /* Sprint 148.7 — Caption-Max-Width parallel zur Card angehoben. */
+        max-width: min(86vw, 460px);
         margin: 0 auto;
         align-self: center;
         padding: 0 4px;
