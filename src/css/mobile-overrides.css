@@ -4388,3 +4388,154 @@
         color: var(--color-gold, #A8956D) !important;
     }
 }
+
+/* ============================================================
+ * Sprint 150.0 — Apple.com Radical Reset
+ *
+ * Major-Bruch zu Sprint 149.x (Atelier Noir). Pure apple.com-
+ * Marketing-DNA: white + light-grey, SF Pro via system-ui, Apple
+ * System Blue, Pill-Buttons border-radius 980px, Apple-Cards.
+ *
+ * OVERRIDES alle Sprint 149.5/149.6 Tokens via Cascade.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    :root {
+        --color-cream:      #FFFFFF;
+        --color-cream-soft: #F5F5F7;
+        --color-bone:       #F5F5F7;
+        --m-bg-hero:        #FFFFFF;
+        --m-bg-demos:       #F5F5F7;
+        --m-bg-personas:    #FFFFFF;
+        --m-bg-tools:       #F5F5F7;
+        --m-bg-siegel:      #FFFFFF;
+        --m-bg-kontakt:     #F5F5F7;
+
+        --color-ink:           #1D1D1F;
+        --color-indigo-strong: #1D1D1F;
+        --color-graphite:      #6E6E73;
+        --color-graphite-soft: #86868B;
+
+        --color-gold:       #0066CC;
+        --color-gold-hover: #0040A8;
+    }
+
+    /* SF Pro via system-ui auf Apple, Inter Fallback */
+    body, h1, h2, h3, h4, h5, p, span, a, button, input, textarea, li,
+    .hero-headline, .hero-headline *, .hero-folio-eyebrow, .hero-h1-line,
+    .m-hero-trust-list, .m-hero-trust-list *,
+    .m-demo-swiper-title, .m-demo-swiper-eyebrow, .m-demo-swiper-caption,
+    .m-demo-swiper-section-title, .m-demo-swiper-section-eyebrow,
+    .m-poster-chrome-url, .m-hero-demos-tease-text,
+    section h2, .m-mag-personas-title, .m-mag-tools-title, .m-siegel-title {
+        font-family: -apple-system, BlinkMacSystemFont,
+                     'SF Pro Display', 'SF Pro Text',
+                     'Inter', system-ui, sans-serif !important;
+        font-style: normal !important;
+    }
+
+    .hero-headline {
+        font-size: 56px !important;
+        line-height: 1.07 !important;
+        letter-spacing: -0.025em !important;
+        font-weight: 700 !important;
+        color: var(--color-ink, #1D1D1F) !important;
+    }
+
+    .hero-h1-line.m-hero-accent {
+        font-family: -apple-system, BlinkMacSystemFont,
+                     'SF Pro Text', 'Inter', sans-serif !important;
+        font-size: 21px !important;
+        line-height: 1.38 !important;
+        letter-spacing: -0.005em !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        color: var(--color-graphite, #6E6E73) !important;
+        margin-top: 16px !important;
+    }
+
+    section h2,
+    .m-mag-personas-title, .m-mag-tools-title, .m-siegel-title,
+    .m-demo-swiper-section-title {
+        font-size: 32px !important;
+        line-height: 1.12 !important;
+        letter-spacing: -0.02em !important;
+        font-weight: 700 !important;
+        color: var(--color-ink, #1D1D1F) !important;
+        font-style: normal !important;
+    }
+
+    /* Pill-Buttons (Apple-Konvention) */
+    .btn, .m-hero-primary, .hero-cta-row .btn,
+    .m-hero-cta-bottom .btn.m-hero-primary {
+        background: var(--color-gold, #0066CC) !important;
+        color: #FFFFFF !important;
+        border-radius: 980px !important;
+        padding: 12px 22px !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.005em !important;
+        min-height: 44px !important;
+    }
+    .btn:hover, .btn:focus-visible,
+    .m-hero-primary:hover, .m-hero-primary:focus-visible {
+        background: var(--color-gold-hover, #0040A8) !important;
+    }
+
+    /* Apple-Cards */
+    .m-persona-tile {
+        background: #FFFFFF !important;
+        border: 1px solid #D2D2D7 !important;
+        border-radius: 18px !important;
+    }
+    .m-persona-tile:active,
+    .m-persona-tile:focus-visible {
+        background: #F5F5F7 !important;
+        border-color: var(--color-gold, #0066CC) !important;
+    }
+    .m-hero-trust-list li {
+        background: #F5F5F7 !important;
+        border: 1px solid #D2D2D7 !important;
+        border-radius: 18px !important;
+    }
+
+    /* Hairlines */
+    .m-mag-tools-list li {
+        border-top-color: #D2D2D7 !important;
+    }
+    .m-hero-demos-tease {
+        border-top-color: #D2D2D7 !important;
+        border-bottom-color: #D2D2D7 !important;
+    }
+
+    /* Footer Apple-Style */
+    .kr-footer-card {
+        background: #F5F5F7 !important;
+        color: var(--color-graphite, #6E6E73) !important;
+    }
+    .kr-footer-card a {
+        color: var(--color-ink, #1D1D1F) !important;
+    }
+    .kr-footer-card a:hover,
+    .kr-footer-card a:focus-visible {
+        color: var(--color-gold, #0066CC) !important;
+    }
+}
+
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    :root {
+        --color-cream:      #000000;
+        --color-cream-soft: #1D1D1F;
+        --color-bone:       #1D1D1F;
+        --color-ink:        #F5F5F7;
+        --color-indigo-strong: #F5F5F7;
+        --color-graphite:   #A1A1A6;
+        --color-graphite-soft: #6E6E73;
+        --color-gold:       #2997FF;
+        --color-gold-hover: #5AC8FA;
+        --m-bg-hero:        #000000;
+        --m-bg-demos:       #1D1D1F;
+        --m-bg-personas:    #000000;
+        --m-bg-tools:       #1D1D1F;
+        --m-bg-siegel:      #000000;
+        --m-bg-kontakt:     #1D1D1F;
+    }
+}

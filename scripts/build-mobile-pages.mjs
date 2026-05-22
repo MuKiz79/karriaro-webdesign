@@ -60,7 +60,7 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=205">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=300">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -136,7 +136,7 @@ function injectPinSpy(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=205" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=300" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -185,15 +185,15 @@ const CRITICAL_CSS = `
  * jetzt das Apple-Stripe-System statt Sprint-148-Cream/Fraunces. */
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;background:#1A1814;color:#F5F1E8;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter',system-ui,sans-serif;background:#FFFFFF;color:#1D1D1F;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 main{display:block}
-nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(26,24,20,0.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);height:64px;display:flex;align-items:center;border-bottom:1px solid rgba(245,241,232,0.06)}
-.hero-with-photo{padding:56px 0 32px;min-height:100svh;background:#1A1814}
+nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(255,255,255,0.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);height:64px;display:flex;align-items:center;border-bottom:1px solid rgba(0,0,0,0.04)}
+.hero-with-photo{padding:56px 0 32px;min-height:100svh;background:#FFFFFF}
 .hero-inner{max-width:560px;margin:0 auto}
-.hero-folio-eyebrow{font-family:'Inter',-apple-system,sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#C8C0AE;margin:0 18px 20px;font-weight:600;line-height:1.2}
-.hero-headline{font-family:'Source Serif 4','Source Serif Pro',Georgia,serif;font-size:52px;font-weight:400;line-height:1.05;letter-spacing:-0.02em;margin:0 18px 24px;color:#F5F1E8}
+.hero-folio-eyebrow{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#6E6E73;margin:0 18px 20px;font-weight:600;line-height:1.2}
+.hero-headline{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif;font-size:56px;font-weight:700;line-height:1.07;letter-spacing:-0.025em;margin:0 18px 24px;color:#1D1D1F}
 .hero-headline .hero-h1-line{display:block}
-section h2{font-family:'Source Serif 4','Source Serif Pro',Georgia,serif;font-size:32px;font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#F5F1E8}
+section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif;font-size:32px;font-weight:700;line-height:1.12;letter-spacing:-0.02em;color:#1D1D1F}
 /* Desktop-only Hero-Elemente sofort verstecken (vor mobile-overrides.css-Load) */
 .hero-with-photo .hero-mockup-block,.hero-with-photo .mockup-features,.hero-with-photo .mockup-features-list,.hero-with-photo .marginalia,.hero-with-photo .hero-marginalia,.hero-with-photo .hero-portrait,.hero-with-photo picture{display:none!important}
 .m-pin-spy{display:none}
