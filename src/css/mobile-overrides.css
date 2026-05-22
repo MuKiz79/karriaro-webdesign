@@ -3637,3 +3637,55 @@
         display: none !important;
     }
 }
+
+/* ============================================================
+ * Sprint 148.12 — Mobile-Lesbarkeit / WCAG-AA-Compliance.
+ *
+ * Token-Override für Mobile-Light-Mode:
+ *   --color-gold #8A7B5C → #6D5E3A (5.9:1 statt 2.1:1)
+ *   --color-graphite-soft #6B5F52 → #4D5763 (5.6:1 statt 3.1:1)
+ * Plus drei Opacity-Tricks ausschalten (folio-eyebrow,
+ * demo-section-hint, marginalia).
+ * Dark-Mode bleibt unberührt (eigene Token-Werte in tokens.css).
+ * ============================================================ */
+@media (max-width: 1023px) and (prefers-color-scheme: light) {
+    :root {
+        --color-gold: #6D5E3A;
+        --color-graphite-soft: #4D5763;
+    }
+}
+@media (max-width: 1023px) and (prefers-color-scheme: no-preference) {
+    :root {
+        --color-gold: #6D5E3A;
+        --color-graphite-soft: #4D5763;
+    }
+}
+
+@media (max-width: 1023px) and (prefers-color-scheme: light),
+       (max-width: 1023px) and (prefers-color-scheme: no-preference) {
+    /* Hero-Eyebrow: rgba(60,60,67,0.45) → solid graphite-soft.
+     * Dots dürfen subtiler bleiben. */
+    .hero-folio-eyebrow {
+        color: var(--color-graphite-soft, #4D5763) !important;
+        opacity: 1 !important;
+    }
+    .hero-folio-eyebrow .dot {
+        opacity: 0.6 !important;
+    }
+
+    /* Section-Hint („↓ scrollen · tippen zum Öffnen") — opacity 0.55
+     * war 2.2:1, jetzt solid = 5.6:1. */
+    .m-demo-swiper-section-hint {
+        color: var(--color-graphite-soft, #4D5763) !important;
+        opacity: 1 !important;
+    }
+
+    /* Marginalia (Sprint-130 Pentagram-Anker) */
+    .m-hero-marginalia-item {
+        color: var(--color-graphite-soft, #4D5763) !important;
+    }
+    .m-hero-marginalia-dot {
+        color: var(--color-graphite-soft, #4D5763) !important;
+        opacity: 0.6 !important;
+    }
+}
