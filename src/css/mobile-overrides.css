@@ -3462,3 +3462,90 @@
 @media (prefers-reduced-motion: reduce) {
     .m-hero-demos-tease-arrow { animation: none; }
 }
+
+/* ============================================================
+ * Sprint 148.11A — Demo-Card-Sophistication.
+ * Pure-CSS-Polish: smootherer Easing, Lift+Shadow auf Touch,
+ * Gold-Border-Glow on focus/press, Skeleton-Shimmer.
+ * ============================================================ */
+@media (max-width: 768px) {
+
+    /* 1. Smootherer Press-Easing (Apple-Tile-Easing: sharp initial,
+     * soft release) */
+    .m-demo-swiper-slide .m-demo-swiper-card,
+    .m-demo-swiper-slide .m-poster {
+        transition:
+            transform 420ms cubic-bezier(0.32, 0.72, 0, 1),
+            box-shadow 420ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    /* 2. Lift + Shadow-Amplify auf Touch (overwrites Sprint-148.6
+     * scale-only press). translateY(-2px) ist unter Snap-Scroll-
+     * Toleranz, kein Konflikt erwartet. */
+    .m-demo-swiper-slide .m-poster:active {
+        transform: translateY(-2px) scale(0.99);
+        box-shadow:
+            0 1px 1px rgba(0, 0, 0, 0.06),
+            0 28px 56px -12px rgba(0, 0, 0, 0.22),
+            0 72px 108px -32px rgba(0, 0, 0, 0.26);
+    }
+
+    /* 3. Border-Gradient-Glow on focus/press via ::before-Pseudo +
+     * mask-composite (Safari 15.4+ / Chrome 120+; ältere Browser
+     * sehen einfach keinen Glow, Card-Funktion bleibt voll). */
+    .m-demo-swiper-slide .m-poster {
+        position: relative;
+    }
+    .m-demo-swiper-slide .m-poster::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(
+            135deg,
+            var(--color-gold, #B8985A) 0%,
+            transparent 40%,
+            transparent 60%,
+            var(--color-gold, #B8985A) 100%
+        );
+        -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 320ms ease;
+        pointer-events: none;
+    }
+    .m-demo-swiper-slide .m-poster:focus-visible::before,
+    .m-demo-swiper-slide .m-poster:active::before {
+        opacity: 0.75;
+    }
+
+    /* 4. Loading-Skeleton-Shimmer während iframe lädt (cream → bone
+     * → cream Wave, 1.6s ease-in-out). Skeleton wird via JS auf
+     * .is-loaded-Card unterdrückt. */
+    .m-poster-skeleton {
+        background:
+            linear-gradient(
+                90deg,
+                var(--color-cream, #F8F4ED) 0%,
+                var(--color-bone, #EFE9DE) 50%,
+                var(--color-cream, #F8F4ED) 100%
+            );
+        background-size: 200% 100%;
+        animation: m-poster-skeleton-shimmer 1.6s ease-in-out infinite;
+    }
+    @keyframes m-poster-skeleton-shimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .m-poster-skeleton { animation: none; }
+    .m-demo-swiper-slide .m-poster::before {
+        transition: none;
+    }
+}
