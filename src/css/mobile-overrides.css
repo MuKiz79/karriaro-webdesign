@@ -4558,7 +4558,7 @@
     .m-mag-personas-title,
     .m-mag-tools-title,
     .m-siegel-title {
-        color: var(--apple-ink, #1D1D1F) !important;
+        color: var(--apple-ink, #000000) !important;
     }
 }
 @media (max-width: 1023px) and (prefers-color-scheme: dark) {
@@ -4637,7 +4637,7 @@
 @media (max-width: 1023px) {
     :root {
         /* Apple Marketing-Page Color-System (iOS 17+) */
-        --apple-ink: #1D1D1F;        /* primary text (NOT #000000) */
+        --apple-ink: #000000;        /* primary text — Sprint 150.4: pure black per User-Auftrag */
         --apple-graphite: #6E6E73;   /* secondary text */
         --apple-platinum: #86868B;   /* tertiary text / captions */
         --apple-snow: #FFFFFF;       /* white surfaces */
