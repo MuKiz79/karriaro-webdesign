@@ -4612,3 +4612,95 @@
         margin: 16px 18px 0 !important;
     }
 }
+
+/* ============================================================
+ * Sprint 150.2 — Apple-Color-Force + Object-Restore
+ *
+ * Inhaber-Screenshot (§ 03 Personas) zeigte Card-Titles als weiß
+ * auf hellgrau (Specificity-Bug). Plus User-Auftrag: „radikal Apple
+ * aber lösche keine Objekte." Sprint 150.1 hatte Italic-Sub-Zeile
+ * + Folio-Eyebrow gelöscht — wird zurückgebracht.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    /* Headlines + Card-Titles: schwarz */
+    .hero-headline,
+    .hero-headline .hero-h1-line,
+    .hero-h1-line,
+    .hero-h1-line.m-hero-accent,
+    section h2,
+    .m-demo-swiper-section-title,
+    .m-demo-swiper-title,
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title,
+    .m-persona-headline,
+    .m-mag-tool-name {
+        color: #000000 !important;
+    }
+
+    /* Card-Eyebrows + Stats: Apple-near-black */
+    .m-persona-name,
+    .m-hero-trust-list li:nth-child(1) .m-hero-trust-body strong,
+    .m-mag-tool-num {
+        color: #1D1D1F !important;
+    }
+
+    /* Body / Captions / Section-Eyebrows: Apple-graphite */
+    .m-persona-body,
+    .m-mag-tool-case,
+    .m-siegel-body,
+    .m-mag-eyebrow,
+    .m-siegel-eyebrow,
+    .m-demo-swiper-section-eyebrow,
+    .hero-folio-eyebrow,
+    .m-demo-swiper-eyebrow,
+    .m-demo-swiper-caption {
+        color: #6E6E73 !important;
+    }
+
+    /* B1 — Italic-Sub-Zeile wieder sichtbar als Apple-Sub-Display */
+    .hero-h1-line.m-hero-accent {
+        display: block !important;
+        font-family: -apple-system, BlinkMacSystemFont,
+                     'SF Pro Display', 'Inter', sans-serif !important;
+        font-size: 24px !important;
+        line-height: 1.25 !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.015em !important;
+        font-style: normal !important;
+        margin-top: 12px !important;
+    }
+}
+
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    .hero-headline,
+    .hero-headline .hero-h1-line,
+    .hero-h1-line,
+    .hero-h1-line.m-hero-accent,
+    section h2,
+    .m-demo-swiper-section-title,
+    .m-demo-swiper-title,
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title,
+    .m-persona-headline,
+    .m-mag-tool-name {
+        color: #FFFFFF !important;
+    }
+    .m-persona-name,
+    .m-hero-trust-list li:nth-child(1) .m-hero-trust-body strong,
+    .m-mag-tool-num {
+        color: #F5F5F7 !important;
+    }
+    .m-persona-body,
+    .m-mag-tool-case,
+    .m-siegel-body,
+    .m-mag-eyebrow,
+    .m-siegel-eyebrow,
+    .m-demo-swiper-section-eyebrow,
+    .hero-folio-eyebrow,
+    .m-demo-swiper-eyebrow,
+    .m-demo-swiper-caption {
+        color: #A1A1A6 !important;
+    }
+}
