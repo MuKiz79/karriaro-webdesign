@@ -4283,3 +4283,108 @@
         --color-gold-hover: #E5B584;
     }
 }
+
+/* ============================================================
+ * Sprint 149.6 — Atelier Noir Theme-Switch
+ *
+ * User: „Luxury aber alle Bilder drinlassen — nur Schrift,
+ * Schriftfarben und Hintergrund."
+ *
+ * Theme-Switch zur Luxury-Direction (Loro-Piana / The-Row / Hermès):
+ * Warm-Black BG, Warm-Ivory Text, Antikgold Akzent, Source Serif 4
+ * Variable für Display + Italic-Sub. Layout/Spacing/Cards/Bilder
+ * komplett unberührt.
+ * ============================================================ */
+@media (max-width: 1023px) {
+    :root {
+        /* Backgrounds: Off-White → Warm-Black */
+        --color-cream:      #1A1814;
+        --color-cream-soft: #221F1A;
+        --color-bone:       #221F1A;
+        --m-bg-hero:        #1A1814;
+        --m-bg-demos:       #221F1A;
+        --m-bg-personas:    #1A1814;
+        --m-bg-tools:       #221F1A;
+        --m-bg-siegel:      #1A1814;
+        --m-bg-kontakt:     #221F1A;
+
+        /* Text: Black-Stack → Warm-Ivory-Stack */
+        --color-ink:           #F5F1E8;
+        --color-indigo-strong: #F5F1E8;
+        --color-graphite:      #C8C0AE;
+        --color-graphite-soft: #8A8170;
+
+        /* Akzent: Holz-Ocker → gedämpftes Antikgold (Loro-Piana) */
+        --color-gold:       #A8956D;
+        --color-gold-hover: #B5A079;
+    }
+
+    /* Display + Section-Headlines: Source Serif 4 Variable
+     * (Adobe Originals, opsz-axis, modern-Editorial-Serif). */
+    .hero-headline,
+    .hero-headline *,
+    section h2,
+    .m-demo-swiper-section-title,
+    .m-mag-personas-title,
+    .m-mag-tools-title,
+    .m-siegel-title {
+        font-family: 'Source Serif 4', 'Source Serif Pro',
+                     Georgia, 'Times New Roman', serif !important;
+        font-weight: 400 !important;
+        letter-spacing: -0.02em !important;
+    }
+    .hero-headline {
+        font-weight: 400 !important;
+    }
+
+    /* Hero-Italic-Sub: Source Serif Italic (Editorial-Wärme als
+     * zweite Stimme). Sprint 149.0 hat das auf normal+graphite
+     * gesetzt — jetzt zurück zu italic-serif für Atelier-Charakter. */
+    .hero-h1-line.m-hero-accent {
+        font-family: 'Source Serif 4', Georgia, serif !important;
+        font-style: italic !important;
+        font-size: 22px !important;
+        line-height: 1.3 !important;
+        letter-spacing: -0.005em !important;
+        font-weight: 400 !important;
+        color: var(--color-graphite, #C8C0AE) !important;
+        margin-top: 16px !important;
+    }
+
+    /* Card-Backgrounds anpassen damit nicht hellweiß auf dark-BG */
+    .m-persona-tile {
+        background: rgba(245, 241, 232, 0.04) !important;
+        border-color: rgba(245, 241, 232, 0.10) !important;
+    }
+    .m-persona-tile:active,
+    .m-persona-tile:focus-visible {
+        background: rgba(245, 241, 232, 0.07) !important;
+        border-color: var(--color-gold, #A8956D) !important;
+    }
+    .m-hero-trust-list li {
+        background: rgba(245, 241, 232, 0.04) !important;
+        border-color: rgba(245, 241, 232, 0.10) !important;
+    }
+
+    /* Hairline-Borders + Section-Trenner auf Dark anpassen */
+    .m-mag-tools-list li {
+        border-top-color: rgba(245, 241, 232, 0.10) !important;
+    }
+    .m-hero-demos-tease {
+        border-top-color: rgba(245, 241, 232, 0.10) !important;
+        border-bottom-color: rgba(245, 241, 232, 0.10) !important;
+    }
+
+    /* Footer mit Dark-BG */
+    .kr-footer-card {
+        background: var(--m-bg-kontakt, #221F1A) !important;
+        color: var(--color-graphite, #C8C0AE) !important;
+    }
+    .kr-footer-card a {
+        color: var(--color-ink, #F5F1E8) !important;
+    }
+    .kr-footer-card a:hover,
+    .kr-footer-card a:focus-visible {
+        color: var(--color-gold, #A8956D) !important;
+    }
+}
