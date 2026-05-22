@@ -4156,3 +4156,101 @@
         gap: 16px !important;
     }
 }
+
+/* ============================================================
+ * Sprint 149.4 — Coherence-Pass (P0 + P1).
+ * 3-Designer-Audit-Konsens: Dark-Mode, Body-Komfort, Touch-Targets,
+ * Grid-Brüche, Hero-Demo-Übergang, Italic-Relikt.
+ * ============================================================ */
+
+/* A2 — Dark-Mode Mobile-Tokens (Apple-Stripe-Dark) */
+@media (max-width: 1023px) and (prefers-color-scheme: dark) {
+    :root {
+        --color-cream:      #0A0A0B;
+        --color-cream-soft: #14181F;
+        --color-ink:        #F5F3EE;
+        --color-graphite:   #A1A1AA;
+        --color-graphite-soft: #71717A;
+        --color-gold:       #4D8BF5;
+        --color-gold-hover: #6BA0FF;
+        --m-bg-hero:        #0A0A0B;
+        --m-bg-demos:       #14181F;
+        --m-bg-personas:    #0A0A0B;
+        --m-bg-tools:       #14181F;
+        --m-bg-siegel:      #0A0A0B;
+        --m-bg-kontakt:     #14181F;
+    }
+}
+
+/* A3 — Chrome-URL hardcoded HEX → Token (Sprint 148.13-Fix verstärken) */
+@media (max-width: 1023px) {
+    .m-poster-chrome-url {
+        color: var(--color-graphite, #52525B) !important;
+    }
+}
+
+/* A4 — FAQ-Section + andere `background: #fff`-Inline-Stellen */
+@media (max-width: 1023px) {
+    section.faq,
+    [aria-label="FAQ"],
+    [aria-label="Häufige Fragen"],
+    [aria-label="Haeufige Fragen"] {
+        background: var(--m-bg-kontakt, #F0F0EE) !important;
+    }
+}
+
+/* B — Body-Text-Komfort (WCAG-AAA für Section-Body-Paragraphen) */
+@media (max-width: 1023px) {
+    section p:not(.hero-folio-eyebrow):not(.subhead):not(.m-mag-eyebrow):not(.m-demo-swiper-section-eyebrow):not(.m-demo-swiper-section-hint):not(.m-siegel-eyebrow):not(.m-siegel-year),
+    section li:not(.m-hero-trust-list li):not(.m-mag-tools-list li):not(.branche-tab):not(.m-demo-swiper-slide):not(.m-persona-tile),
+    [aria-label="Mini-Audit"] p,
+    [aria-label="Mini-Audit"] li {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+        color: var(--color-graphite, #52525B) !important;
+    }
+}
+
+/* C1 — Persona-Tile Padding + Grid-Gap normalisieren */
+@media (max-width: 1023px) {
+    .m-mag-personas-grid {
+        gap: 12px !important;
+    }
+    .m-persona-tile {
+        padding: 16px 16px !important;
+        gap: 8px !important;
+    }
+    .m-persona-icon {
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
+/* C2 — Trust-Num min-width normalisieren */
+@media (max-width: 1023px) {
+    .m-hero-trust-list li:nth-child(n+2) .m-hero-trust-num {
+        min-width: 32px !important;
+    }
+}
+
+/* C3 — Specs row-gap normalisieren (18 → 20) */
+@media (max-width: 1023px) {
+    .m-hero-specs,
+    .m-mag-specs {
+        row-gap: 20px !important;
+    }
+}
+
+/* D — Hero→Demo-Übergang enger + Italic-Relikt entfernen */
+@media (max-width: 1023px) {
+    .hero-with-photo {
+        padding: 56px 0 32px !important;
+    }
+    .m-demo-swiper-mobile {
+        padding-top: clamp(40px, 5vh, 48px) !important;
+    }
+    .m-hero-tools-list,
+    .m-hero-tools-list * {
+        font-style: normal !important;
+    }
+}
