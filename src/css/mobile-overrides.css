@@ -4897,6 +4897,36 @@
 }
 
 /* ============================================================
+ * Sprint 150.6 — Hero-H1-Spans font-weight 700 (Blass-Fix)
+ *
+ * User-Report: „Die Farbe ist zu blass." Color ist #000000 verifiziert,
+ * ABER: Sprint 149.6 (Atelier-Theme) hat `.hero-headline *` auf
+ * font-weight 400 (regular) gesetzt mit !important + Specificity
+ * (0,1,1). Sprint 150.0 hat zwar `.hero-headline` selber auf 700
+ * gesetzt, ABER die <span class="hero-h1-line">-Children erben weight
+ * 400 — kein späterer Block überschreibt das.
+ *
+ * Schwarz #000000 in weight 400 bei 56-72px wirkt optisch blass —
+ * Apple-Hero-H1-Standard ist weight 700 (Bold). Fix: explicit weight
+ * 700 auf alle Hero-H1-Span-Variants (höhere Specificity + !important
+ * für Sicherheit gegen `.hero-headline *`-Override).
+ * ============================================================ */
+@media (max-width: 1023px) {
+    .hero-headline,
+    .hero-headline *,
+    .hero-headline .hero-h1-line,
+    .hero-h1-line {
+        font-weight: 700 !important;
+    }
+
+    /* Italic-Sub-Zeile bleibt weight 500 (Apple Sub-Display) */
+    .hero-headline .hero-h1-line.m-hero-accent,
+    .hero-h1-line.m-hero-accent {
+        font-weight: 500 !important;
+    }
+}
+
+/* ============================================================
  * Sprint 150.5 — Section-Reveal disablen (Transparent-Bug-Fix)
  *
  * User-Report: „Die Schrift ist zwar schwarz aber transparent."
