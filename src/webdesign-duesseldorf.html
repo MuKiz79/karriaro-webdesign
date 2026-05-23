@@ -28,7 +28,24 @@
         "description": "Webdesign für lokale Unternehmen in Düsseldorf.",
         "url": "https://karriaro-webdesign.de/webdesign-duesseldorf.html",
         "email": "kontakt@karriaro.de",
-        "areaServed": { "@type": "City", "name": "Düsseldorf" },
+        "areaServed": {
+            "@type": "City",
+            "name": "Düsseldorf",
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 51.2277,
+                "longitude": 6.7735
+            }
+        },
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": 51.2277,
+                "longitude": 6.7735
+            },
+            "geoRadius": "50000"
+        },
         "address": { "@type": "PostalAddress", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
         "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".subhead", "h2"] },
         "hasOfferCatalog": {

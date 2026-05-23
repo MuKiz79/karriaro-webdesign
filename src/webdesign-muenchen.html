@@ -28,7 +28,24 @@
         "description": "Webdesign für lokale Unternehmen in München.",
         "url": "https://karriaro-webdesign.de/webdesign-muenchen.html",
         "email": "kontakt@karriaro.de",
-        "areaServed": { "@type": "City", "name": "München" },
+        "areaServed": {
+            "@type": "City",
+            "name": "München",
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 48.1351,
+                "longitude": 11.582
+            }
+        },
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": 48.1351,
+                "longitude": 11.582
+            },
+            "geoRadius": "50000"
+        },
         "address": { "@type": "PostalAddress", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
         "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".subhead", "h2"] },
         "hasOfferCatalog": {

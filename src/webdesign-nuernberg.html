@@ -28,7 +28,24 @@
         "description": "Webdesign für lokale Unternehmen in Nürnberg.",
         "url": "https://karriaro-webdesign.de/webdesign-nuernberg.html",
         "email": "kontakt@karriaro.de",
-        "areaServed": { "@type": "City", "name": "Nürnberg" },
+        "areaServed": {
+            "@type": "City",
+            "name": "Nürnberg",
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 49.4521,
+                "longitude": 11.0767
+            }
+        },
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": 49.4521,
+                "longitude": 11.0767
+            },
+            "geoRadius": "50000"
+        },
         "address": { "@type": "PostalAddress", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
         "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".subhead", "h2"] },
         "hasOfferCatalog": {

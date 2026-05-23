@@ -55,7 +55,24 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         "description": "Webdesign für lokale Unternehmen in Berlin.",
         "url": "https://karriaro-webdesign.de/webdesign-berlin.html",
         "email": "kontakt@karriaro.de",
-        "areaServed": { "@type": "City", "name": "Berlin" },
+        "areaServed": {
+            "@type": "City",
+            "name": "Berlin",
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 52.52,
+                "longitude": 13.405
+            }
+        },
+        "serviceArea": {
+            "@type": "GeoCircle",
+            "geoMidpoint": {
+                "@type": "GeoCoordinates",
+                "latitude": 52.52,
+                "longitude": 13.405
+            },
+            "geoRadius": "50000"
+        },
         "address": { "@type": "PostalAddress", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
         "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1", ".subhead", "h2"] },
         "hasOfferCatalog": {

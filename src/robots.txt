@@ -1,16 +1,117 @@
-# Karriaro Webdesign - robots.txt
+# Karriaro Webdesign — robots.txt
 # https://karriaro-webdesign.de
+
+# ─────────────────────────────────────────────────────────────
+# Klassische Suchmaschinen — alle erlaubt
+# ─────────────────────────────────────────────────────────────
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# ─────────────────────────────────────────────────────────────
+# KI-Crawler explizit erlaubt (Sprint 113 Trust-Voice:
+# "SEO, GEO, AEO, LLMO" — wir wollen in KI-Antworten zitiert werden)
+# ─────────────────────────────────────────────────────────────
+
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Google AI (SGE, Gemini, Bard)
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon Alexa / Q
+User-agent: Amazonbot
+Allow: /
+
+# Common Crawl (Trainingsdaten für viele LLMs)
+User-agent: CCBot
+Allow: /
+
+# Meta AI
+User-agent: FacebookBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Microsoft Bing AI / Copilot
+User-agent: MSNBot
+Allow: /
+
+# Mistral AI
+User-agent: MistralAI-User
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# DeepSeek
+User-agent: DeepSeekBot
+Allow: /
+
+# You.com
+User-agent: YouBot
+Allow: /
+
+# ─────────────────────────────────────────────────────────────
+# Default — alle anderen Crawler erlaubt
+# ─────────────────────────────────────────────────────────────
 
 User-agent: *
 Allow: /
-
-# Sitemap location
-Sitemap: https://karriaro-webdesign.de/sitemap.xml
-
-# Crawl-delay for polite crawling (optional)
 Crawl-delay: 1
 
 # Block common bot traps
 Disallow: /api/
 Disallow: /*.json$
 Disallow: /admin/
+
+# ─────────────────────────────────────────────────────────────
+# Sitemaps
+# ─────────────────────────────────────────────────────────────
+
+Sitemap: https://karriaro-webdesign.de/sitemap.xml
+
+# LLM-Knowledge-Base (Sprint 157)
+# https://llmstxt.org/ Standard
+# https://karriaro-webdesign.de/llms.txt
+# https://karriaro-webdesign.de/llms-full.txt
