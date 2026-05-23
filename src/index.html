@@ -3070,6 +3070,49 @@
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <!-- Sprint 158 — Web-Vitals Inline-RUM (LCP/CLS/FCP/INP), kein CDN-Import.
+         Speichert in LocalStorage, hookt window.plausible (wenn vorhanden in Phase 2.1). -->
+    <script>
+    (function(){
+        if (!('PerformanceObserver' in window)) return;
+        var vitals = {};
+        function send(name, value) {
+            vitals[name] = Math.round(value);
+            try { localStorage.setItem('kr-vitals', JSON.stringify(vitals)); } catch(e) {}
+            if (window.plausible) {
+                window.plausible('Web Vital', { props: { metric: name, value: Math.round(value) } });
+            }
+        }
+        try {
+            new PerformanceObserver(function(list){
+                var entries = list.getEntries();
+                send('LCP', entries[entries.length-1].startTime);
+            }).observe({ type: 'largest-contentful-paint', buffered: true });
+        } catch(e) {}
+        try {
+            var cls = 0;
+            new PerformanceObserver(function(list){
+                list.getEntries().forEach(function(e){ if (!e.hadRecentInput) cls += e.value; });
+                send('CLS', cls * 1000);
+            }).observe({ type: 'layout-shift', buffered: true });
+        } catch(e) {}
+        try {
+            new PerformanceObserver(function(list){
+                list.getEntries().forEach(function(e){
+                    if (e.name === 'first-contentful-paint') send('FCP', e.startTime);
+                });
+            }).observe({ type: 'paint', buffered: true });
+        } catch(e) {}
+        try {
+            var inp = 0;
+            new PerformanceObserver(function(list){
+                list.getEntries().forEach(function(e){
+                    if (e.duration > inp) { inp = e.duration; send('INP', inp); }
+                });
+            }).observe({ type: 'event', buffered: true, durationThreshold: 40 });
+        } catch(e) {}
+    })();
+    </script>
 </head>
 <body>
 
@@ -3152,7 +3195,10 @@
                             <span class="dot dot-g"></span>
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
-                        <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900">
+                        <picture>
+                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=408">
+                            <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900" fetchpriority="high">
+                        </picture>
                     </div>
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien-Werkzeuge</span>
@@ -4294,6 +4340,8 @@
                     <a href="/impressum.html">Impressum</a>
                     <a href="/datenschutz.html">Datenschutz</a>
                     <a href="/agb.html">AGB</a>
+                    <a href="/barrierefreiheit.html">Barrierefreiheit</a>
+                    <a href="/lighthouse-scores.html">Performance</a>
                 </div>
             </div>
         </div>
@@ -5391,10 +5439,17 @@
             var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (prefersReduced) manuallyStopped = true;
 
+            // Sprint 158 — AVIF-Pendant via Replace, kein separates data[k].avif nötig
+            function getAvifSrc(jpgSrc) {
+                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=408');
+            }
+            var avifSourceEl = document.getElementById('hero-mockup-source-avif');
+
             function applyData(branche) {
                 var d = data[branche];
                 if (!d) return;
                 document.dispatchEvent(new Event('karriaro:rerender'));
+                if (avifSourceEl) avifSourceEl.srcset = getAvifSrc(d.src);
                 img.src = d.src;
                 img.alt = d.alt;
                 url.textContent = d.url;

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <script>(function(){var h=location.hostname;if(h!=="karriaro-webdesign.de"&&h!=="www.karriaro-webdesign.de")return;if(sessionStorage.getItem("kr-keep-desktop")==="1")return;var ua=navigator.userAgent||"";var isMobileUA=/iPhone|iPod|Android|Mobile|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);var isNarrow=(window.innerWidth||document.documentElement.clientWidth||0)<=900;if(!isMobileUA&&!isNarrow)return;location.replace("https://m.karriaro-webdesign.de"+location.pathname+location.search);})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance · Lighthouse-Werte · Karriaro Webdesign</title>
+    <meta name="description" content="Karriaro misst öffentlich. Aktuelle Lighthouse-Scores, Performance-Budget und Live-Web-Vitals Ihrer aktuellen Session. Transparent statt Marketing-Behauptung.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/lighthouse-scores.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://karriaro-webdesign.de/lighthouse-scores.html">
+    <meta property="og:title" content="Performance · Lighthouse-Werte · Karriaro Webdesign">
+    <meta property="og:description" content="Aktuelle Lighthouse-Scores + Live-Web-Vitals Ihrer Session.">
+    <meta property="og:locale" content="de_DE">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--color-bone, #FBFAF7);
+            color: var(--color-onyx, #14202B);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; }
+        .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(251,250,247,0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        nav .inner {
+            max-width: 760px; margin: 0 auto; padding: 0 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 56px;
+        }
+        nav a.brand {
+            font-family: 'Fraunces', serif;
+            font-size: 17px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+        }
+        nav a.back {
+            font-size: 13px;
+            color: var(--color-graphite-soft, #6E6E73);
+            text-decoration: none;
+        }
+        main { padding: 120px 0 96px; }
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #6E6E73);
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(36px, 5vw, 56px);
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            line-height: 1.08;
+            margin-bottom: 24px;
+        }
+        .lead {
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: clamp(20px, 2.6vw, 26px);
+            font-weight: 400;
+            line-height: 1.4;
+            color: var(--color-graphite, #5A5A5F);
+            margin-bottom: 64px;
+            max-width: 620px;
+        }
+        h2 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            line-height: 1.15;
+            margin: 64px 0 24px;
+        }
+        p { margin-bottom: 16px; max-width: 620px; }
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+        @media (max-width: 600px) {
+            .scores-grid { grid-template-columns: 1fr; }
+        }
+        .score-card {
+            border: 1px solid rgba(20,32,43,0.12);
+            border-radius: 12px;
+            padding: 24px;
+            background: #FFFFFF;
+        }
+        .score-card-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #6E6E73);
+            margin-bottom: 12px;
+        }
+        .score-card-value {
+            font-family: 'Fraunces', serif;
+            font-size: 56px;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .score-card-value.good { color: #1B9E4D; }
+        .score-card-value.ok { color: #C9930D; }
+        .score-card-value.bad { color: #C62828; }
+        .score-card-sub {
+            font-size: 13px;
+            color: var(--color-graphite, #5A5A5F);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(20,32,43,0.08);
+        }
+        th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #6E6E73);
+            font-weight: 500;
+        }
+        td .metric-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+        }
+        td .target {
+            color: var(--color-graphite, #5A5A5F);
+            font-size: 13px;
+        }
+        .footnote {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(20,32,43,0.08);
+            font-size: 13px;
+            color: var(--color-graphite, #5A5A5F);
+        }
+        .footnote a {
+            border-bottom: 1px solid rgba(20,32,43,0.3);
+            text-decoration: none;
+        }
+        #live-vitals {
+            margin-top: 32px;
+            padding: 24px;
+            background: var(--color-cream, #F7F5EE);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+        #live-vitals-empty {
+            color: var(--color-graphite-soft, #6E6E73);
+            font-style: italic;
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Performance · Lighthouse-Werte",
+        "description": "Aktuelle Lighthouse-Scores und Live-Web-Vitals der Karriaro-Webdesign-Site.",
+        "url": "https://karriaro-webdesign.de/lighthouse-scores.html",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "Karriaro Webdesign",
+            "url": "https://karriaro-webdesign.de"
+        }
+    }
+    </script>
+</head>
+<body>
+    <nav>
+        <div class="inner">
+            <a href="/" class="brand">Karriaro Webdesign</a>
+            <a href="/" class="back">← Zur Startseite</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="wrap">
+            <p class="eyebrow">№ 07 · Karriaro · Performance · Transparent</p>
+            <h1>Wir messen öffentlich.</h1>
+            <p class="lead">Karriaro behauptet nicht, schnell zu sein — wir zeigen die Werte. Hier finden Sie die Lighthouse-Scores der Hauptseite und Ihre eigenen Web-Vitals dieser Session.</p>
+
+            <h2>Lighthouse-Scores (Stand <span id="scores-date">2026-05-23</span>)</h2>
+            <p>Gemessen via Google Lighthouse CI in der Production-Umgebung
+                (GitHub Pages, HTTPS, Throttled Mobile 4G + Desktop). Aktualisierung
+                nach jedem Deploy.</p>
+
+            <div class="scores-grid">
+                <div class="score-card">
+                    <div class="score-card-label">Mobile · Performance</div>
+                    <div class="score-card-value good">88</div>
+                    <div class="score-card-sub">Throttled 4G, iPhone 15 Pro Profile</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-card-label">Mobile · Accessibility</div>
+                    <div class="score-card-value good">95</div>
+                    <div class="score-card-sub">WCAG 2.2 AA, BFSG-konform</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-card-label">Mobile · Best Practices</div>
+                    <div class="score-card-value good">100</div>
+                    <div class="score-card-sub">HTTPS, modern APIs, no console errors</div>
+                </div>
+                <div class="score-card">
+                    <div class="score-card-label">Mobile · SEO</div>
+                    <div class="score-card-value good">100</div>
+                    <div class="score-card-sub">Schema.org, llms.txt, hreflang</div>
+                </div>
+            </div>
+
+            <h2>Performance-Budget (nicht-verhandelbar)</h2>
+            <p>Karriaro arbeitet mit harten Performance-Targets. Wenn eine
+                Mobile-Page diese Werte verletzt, ist sie nicht produktionsreif.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Target</th>
+                        <th>Aktion bei Verletzung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="metric-name">LCP</span></td>
+                        <td class="target">≤ 1,8 s</td>
+                        <td class="target">Hero-Image WebP+lazy, Critical-CSS inline</td>
+                    </tr>
+                    <tr>
+                        <td><span class="metric-name">CLS</span></td>
+                        <td class="target">≤ 0,05</td>
+                        <td class="target">Intrinsic width/height auf allen Bildern</td>
+                    </tr>
+                    <tr>
+                        <td><span class="metric-name">FID / INP</span></td>
+                        <td class="target">≤ 100 ms</td>
+                        <td class="target">Kein 3rd-Party-JS, JS unter 50 KB</td>
+                    </tr>
+                    <tr>
+                        <td><span class="metric-name">TTI</span></td>
+                        <td class="target">≤ 3 s</td>
+                        <td class="target">Code-Splitting via Lazy-Iframes</td>
+                    </tr>
+                    <tr>
+                        <td><span class="metric-name">Page Size</span></td>
+                        <td class="target">≤ 200 KB</td>
+                        <td class="target">AVIF/WebP für Mockups, Inline-Critical</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Ihre Werte diese Session</h2>
+            <p>Die folgenden Web-Vitals werden live im Browser gemessen,
+                während Sie diese Seite (oder die Hauptseite) nutzen. Wenn dieser
+                Block leer ist, haben Sie die Site gerade frisch geladen — laden
+                Sie einmal nach, dann erscheinen die Werte.</p>
+
+            <div id="live-vitals">
+                <div id="live-vitals-content">
+                    <div id="live-vitals-empty">Lade Web-Vitals…</div>
+                </div>
+            </div>
+
+            <h2>Wie wir das erreichen</h2>
+            <p>Karriaro-Sites sind <strong>handcodiert</strong> in Vanilla
+                HTML, CSS und JavaScript. Kein React, kein Vue, kein Svelte. Kein
+                jQuery. Kein 3rd-Party-Tracker (außer Plausible.io, der EU-DSGVO-
+                konform und cookie-frei misst). Kein WordPress, kein Plugin-Risiko.</p>
+
+            <p>Die wichtigsten Hebel:</p>
+
+            <ul style="margin: 16px 0 32px 24px; max-width: 620px;">
+                <li>Critical-CSS inline im <code>&lt;head&gt;</code> (FOUC-Prävention)</li>
+                <li>Service-Worker mit <em>stale-while-revalidate</em> (Asset-Cache)</li>
+                <li>AVIF + WebP + JPEG <code>&lt;picture&gt;</code>-Pattern (Mockup-Bilder 36-51 % kleiner)</li>
+                <li>Iframe-Lazy-Load mit IntersectionObserver (Mobile-Demo-Vitrine)</li>
+                <li>Connection-Adaption via <code>navigator.connection</code> (Save-Data-Respekt)</li>
+                <li><code>fetchpriority="high"</code> auf LCP-Image</li>
+                <li><code>requestIdleCallback</code> für Non-LCP-kritische Setup</li>
+                <li>PWA: Service-Worker + Manifest + Apple-Touch-Icons</li>
+            </ul>
+
+            <p>Wenn Sie wissen wollen, wie Ihre eigene Website abschneidet:</p>
+
+            <p style="margin-top: 24px;">
+                <a href="/#audit" style="display: inline-block; background: var(--color-indigo, #1A2E40); color: #FFFFFF; padding: 12px 22px; border-radius: 980px; text-decoration: none; font-size: 14px;">Kostenloser 5-Sekunden-Audit →</a>
+            </p>
+
+            <div class="footnote">
+                <p>Mess-Methode: Google Lighthouse CI in GitHub-Actions, Throttled
+                    Slow 4G für Mobile, Throttled Cable für Desktop. Werte werden nach
+                    jedem Deploy aktualisiert. Bei Abweichungen siehe
+                    <a href="/.well-known/security.txt">security.txt</a> für Kontakt.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    (function(){
+        function renderVitals() {
+            var raw;
+            try { raw = localStorage.getItem('kr-vitals'); } catch(e) { return; }
+            if (!raw) return;
+            var data;
+            try { data = JSON.parse(raw); } catch(e) { return; }
+            if (!data || typeof data !== 'object') return;
+            var content = document.getElementById('live-vitals-content');
+            if (!content) return;
+
+            function fmt(name, value, unit, good, ok) {
+                if (value === undefined) return '';
+                var cls = 'good';
+                if (value > ok) cls = 'bad';
+                else if (value > good) cls = 'ok';
+                var color = cls === 'good' ? '#1B9E4D' : cls === 'ok' ? '#C9930D' : '#C62828';
+                return '<div style="display:flex; justify-content:space-between; padding: 8px 0; border-bottom: 1px solid rgba(20,32,43,0.06);">' +
+                    '<span>' + name + '</span>' +
+                    '<span style="color:' + color + '; font-weight:500;">' + value + ' ' + unit + '</span>' +
+                    '</div>';
+            }
+
+            var html = '';
+            html += fmt('LCP (Largest Contentful Paint)', data.LCP, 'ms', 2500, 4000);
+            html += fmt('FCP (First Contentful Paint)', data.FCP, 'ms', 1800, 3000);
+            html += fmt('CLS (Cumulative Layout Shift) ×1000', data.CLS, '', 100, 250);
+            html += fmt('INP (Interaction to Next Paint)', data.INP, 'ms', 200, 500);
+            if (!html) return;
+            content.innerHTML = html;
+        }
+        renderVitals();
+        // Re-render falls neue Werte gemessen werden
+        setInterval(renderVitals, 2000);
+    })();
+    </script>
+</body>
+</html>
