@@ -1,0 +1,4 @@
+Contact: mailto:kontakt@karriaro.de
+Expires: 2027-05-23T00:00:00.000Z
+Preferred-Languages: de, en
+Canonical: https://karriaro-webdesign.de/.well-known/security.txt

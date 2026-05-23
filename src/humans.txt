@@ -1,0 +1,24 @@
+/* TEAM */
+
+Gründer:     Muammer Kızılaslan
+Profil:      https://muammerkizilaslan.com
+LinkedIn:    https://www.linkedin.com/in/muammerkizilaslan
+From:        Schwarzwald, Deutschland
+
+
+/* SITE */
+
+Last update: 2026-05-23
+Doctype:     HTML5
+Stack:       Vanilla HTML, CSS, JavaScript — kein Framework
+Standards:   WCAG 2.2 AA, BFSG, DSGVO, Schema.org, PWA
+Components:  Fraunces Variable, Inter, JetBrains Mono, Cormorant Garamond
+Performance: Mobile LCP < 1.8s, Total Page Size < 200KB
+Hosting:     GitHub Pages
+Build:       Manual + scripts/build-mobile-pages.mjs
+
+
+/* MANUFAKTUR */
+
+Karriaro ist eine Schwarzwald-Manufaktur für handcodierte Websites.
+Wenn Ihr Name draufsteht, steht unserer dahinter.

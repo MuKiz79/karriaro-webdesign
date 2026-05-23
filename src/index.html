@@ -52,7 +52,32 @@
             "postalCode": "77761",
             "addressCountry": "DE"
         },
-        "priceRange": "€€",
+        "areaServed": [
+            { "@type": "Country", "name": "Germany" },
+            { "@type": "Country", "name": "Austria" },
+            { "@type": "Country", "name": "Switzerland" }
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "kontakt@karriaro.de",
+            "availableLanguage": ["German", "English"]
+        },
+        "founder": {
+            "@type": "Person",
+            "name": "Muammer Kızılaslan",
+            "jobTitle": "Gründer Karriaro",
+            "url": "https://karriaro-webdesign.de/gruender.html",
+            "sameAs": [
+                "https://muammerkizilaslan.com",
+                "https://www.linkedin.com/in/muammerkizilaslan"
+            ]
+        },
+        "sameAs": [
+            "https://muammerkizilaslan.com",
+            "https://www.linkedin.com/in/muammerkizilaslan"
+        ],
+        "priceRange": "€€€",
         "speakable": {
             "@type": "SpeakableSpecification",
             "cssSelector": ["h1", ".subhead", "h2"]
@@ -1617,6 +1642,34 @@
         .hero-audit-link span { color: var(--color-indigo); text-decoration: underline; text-decoration-color: rgba(26,46,64,0.3); text-underline-offset: 3px; transition: text-decoration-color 0.2s ease; }
         .hero-audit-link:hover { color: var(--color-onyx); }
         .hero-audit-link:hover span { text-decoration-color: var(--color-indigo); }
+
+        /* Sprint 156 — Founder-Trust-Strip unter Hero-CTA (Authority + Compliance) */
+        .hero-trust-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 8px 12px;
+            margin: 28px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(20, 32, 43, 0.12);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            max-width: 520px;
+            line-height: 1.6;
+        }
+        .hero-trust-strip a {
+            color: var(--color-onyx);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(20, 32, 43, 0.3);
+            padding-bottom: 1px;
+            transition: border-color 0.2s ease;
+        }
+        .hero-trust-strip a:hover { border-bottom-color: var(--color-indigo); }
+        .hero-trust-strip .dot { opacity: 0.4; }
         /* Audit-Pricing-Exit-Card (Sprint 7b K3) */
         .audit-pricing-exit { margin-top: 32px; padding: 28px 32px; background: linear-gradient(135deg, #f0f5ff, #fff); border: 1px solid #d6e3ff; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .audit-pricing-exit.is-revealed { opacity: 1; transform: translateY(0); }
@@ -3081,6 +3134,13 @@
                 <a href="#audit" class="hero-audit-link" data-audit-bridge>
                     Schon eine Website? <span>Lassen Sie sie kostenlos prüfen →</span>
                 </a>
+                <p class="hero-trust-strip" aria-label="Vertrauenssignale">
+                    <span>Gegründet von <a href="/gruender.html">Muammer Kızılaslan</a></span>
+                    <span class="dot" aria-hidden="true">·</span>
+                    <span>Schwarzwald</span>
+                    <span class="dot" aria-hidden="true">·</span>
+                    <span>BFSG · DSGVO</span>
+                </p>
             </div>
 
             <div class="hero-mockup-block">
