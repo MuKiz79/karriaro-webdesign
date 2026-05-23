@@ -148,7 +148,14 @@ function normalizeUrl(s) {
     } catch { return null; }
 }
 
-async function sendAuditMail(to, name, slug, domain) {
+async function sendAuditMail(to, name, slug, domain, attribution = {}) {
+    if (attribution.reportSlug) {
+        logger.info("requestAudit attribution", {
+            fn: "requestAudit", slug, domain,
+            reportSlug: attribution.reportSlug,
+            refHash: attribution.refHash || null
+        });
+    }
     const transporter = nodemailer.createTransport({
         host: SMTP_HOST.value(),
         port: 587,
@@ -208,12 +215,19 @@ exports.requestAudit = onRequest(
         if (await enforceRateLimit(db, req, res, "requestAudit", 3, 3600,
             "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
 
-        const { url, name, email, consent, company } = req.body || {};
+        const { url, name, email, consent, company, reportSlug, refHash } = req.body || {};
 
         // Honeypot — wenn ausgefüllt: stilles Erfolgs-Signal an den Bot
         if (company && String(company).trim().length > 0) {
             return res.status(200).json({ ok: true, slug: "honeypot-noop" });
         }
+
+        // Sprint 143 — Attribution: nur sanitisierte Slugs/Hashes akzeptieren,
+        // damit kein Free-Text in Firestore landet.
+        const SLUG_RE  = /^[a-z0-9][a-z0-9-]{1,63}$/;
+        const HASH_RE  = /^[A-Z]-\d{3}$/;
+        const safeReportSlug = typeof reportSlug === "string" && SLUG_RE.test(reportSlug) ? reportSlug : null;
+        const safeRefHash    = typeof refHash    === "string" && HASH_RE.test(refHash)    ? refHash    : null;
 
         if (!consent) return res.status(400).json({ error: "DSGVO-Zustimmung fehlt" });
         const auditUrl = normalizeUrl(url);
@@ -306,13 +320,18 @@ exports.requestAudit = onRequest(
             competitors,
             visitCount: 0,
             ctaClicks: 0,
-            source: "inbound_form"
+            source: safeReportSlug ? "report-inbound" : "inbound_form",
+            reportSlug: safeReportSlug,
+            refHash: safeRefHash
         };
         await db.collection("auditRequests").doc(slug).set(auditDoc);
 
         // Mail senden (best effort — wenn fehlschlägt, Fehler protokollieren, aber Slug zurückgeben)
         try {
-            await sendAuditMail(email, safeName, slug, domain);
+            await sendAuditMail(email, safeName, slug, domain, {
+                reportSlug: safeReportSlug,
+                refHash: safeRefHash
+            });
         } catch (err) {
             logger.error("requestAudit mail send failed", {
                 fn: "requestAudit", slug, domain, error: err.message

@@ -220,6 +220,16 @@
             if (nameField) nameField.focus();
         }
 
+        // Sprint 143 — Attribution aus URL-Params (?report=<slug>&ref=<F-073>)
+        // wird vor Submit gelesen, sanitisiert und ans Backend übergeben.
+        // Beispiel: /audit?report=friseure-koeln&ref=F-073
+        const REPORT_SLUG_RE = /^[a-z0-9][a-z0-9-]{1,63}$/;
+        const REF_HASH_RE = /^[A-Z]-\d{3}$/;
+        const reportSlugParam = params.get('report');
+        const refHashParam = params.get('ref');
+        const safeReportSlug = reportSlugParam && REPORT_SLUG_RE.test(reportSlugParam) ? reportSlugParam : null;
+        const safeRefHash = refHashParam && REF_HASH_RE.test(refHashParam) ? refHashParam : null;
+
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             alertArea.innerHTML = '';
@@ -231,6 +241,8 @@
                 consent: document.getElementById('f-consent').checked,
                 company: document.getElementById('f-company').value.trim()  // Honeypot
             };
+            if (safeReportSlug) data.reportSlug = safeReportSlug;
+            if (safeRefHash) data.refHash = safeRefHash;
 
             if (!data.consent) {
                 showAlert('error', 'Bitte stimmen Sie der Verarbeitung Ihrer Daten zu.');

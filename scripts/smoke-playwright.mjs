@@ -74,7 +74,9 @@ const PAGES = [
     { path: '/webdesign-leipzig.html', name: 'City · Leipzig' },
     { path: '/webdesign-muenchen.html', name: 'City · Muenchen' },
     { path: '/webdesign-nuernberg.html', name: 'City · Nuernberg' },
-    { path: '/webdesign-stuttgart.html', name: 'City · Stuttgart' }
+    { path: '/webdesign-stuttgart.html', name: 'City · Stuttgart' },
+    // Web-Index — Branchen-Reports (Sprint 143)
+    { path: '/audit/friseure-koeln-preview/', name: 'Web-Index · Friseure Köln (Preview)' }
 ];
 
 // === Sprint 63 — Output-Correctness-Cases ===

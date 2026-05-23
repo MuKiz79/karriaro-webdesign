@@ -1,0 +1,587 @@
+{
+  "brancheKey": "hair_salon",
+  "brancheSlug": "friseure",
+  "brancheName": "Friseure",
+  "stadtName": "Köln",
+  "stadtSlug": "koeln",
+  "slug": "friseure-koeln",
+  "erhebungDate": "2026-05-23",
+  "erhebungMonth": "2026-05",
+  "n": 47,
+  "leads": [
+    {
+      "id": "F-312",
+      "scoreBucket": "30-39",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": false,
+      "hasMobileViewport": false
+    },
+    {
+      "id": "F-331",
+      "scoreBucket": "40-49",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-442",
+      "scoreBucket": "60-69",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-925",
+      "scoreBucket": "80-89",
+      "perfBucket": "60-69",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-284",
+      "scoreBucket": "30-39",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-487",
+      "scoreBucket": "50-59",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-814",
+      "scoreBucket": "70-79",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-561",
+      "scoreBucket": "80-89",
+      "perfBucket": "40-49",
+      "cms": "Jimdo",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-280",
+      "scoreBucket": "40-49",
+      "perfBucket": "50-59",
+      "cms": "Wix",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-082",
+      "scoreBucket": "60-69",
+      "perfBucket": "60-69",
+      "cms": "IONOS",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-827",
+      "scoreBucket": "80-89",
+      "perfBucket": "80-89",
+      "cms": "Static",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-048",
+      "scoreBucket": "30-39",
+      "perfBucket": "30-39",
+      "cms": "Squarespace",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-057",
+      "scoreBucket": "50-59",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-270",
+      "scoreBucket": "70-79",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-327",
+      "scoreBucket": "80-89",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": false,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-828",
+      "scoreBucket": "40-49",
+      "perfBucket": "60-69",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-573",
+      "scoreBucket": "60-69",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-274",
+      "scoreBucket": "70-79",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-899",
+      "scoreBucket": "30-39",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-039",
+      "scoreBucket": "50-59",
+      "perfBucket": "60-69",
+      "cms": "Jimdo",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-294",
+      "scoreBucket": "70-79",
+      "perfBucket": "30-39",
+      "cms": "Wix",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-941",
+      "scoreBucket": "80-89",
+      "perfBucket": "30-39",
+      "cms": "IONOS",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-804",
+      "scoreBucket": "40-49",
+      "perfBucket": "80-89",
+      "cms": "Static",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": false
+    },
+    {
+      "id": "F-435",
+      "scoreBucket": "60-69",
+      "perfBucket": "50-59",
+      "cms": "Squarespace",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-338",
+      "scoreBucket": "70-79",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-553",
+      "scoreBucket": "30-39",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-184",
+      "scoreBucket": "50-59",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-951",
+      "scoreBucket": "60-69",
+      "perfBucket": "60-69",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-550",
+      "scoreBucket": "80-89",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": false,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-344",
+      "scoreBucket": "40-49",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-657",
+      "scoreBucket": "60-69",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-738",
+      "scoreBucket": "70-79",
+      "perfBucket": "30-39",
+      "cms": "Jimdo",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-067",
+      "scoreBucket": "30-39",
+      "perfBucket": "40-49",
+      "cms": "Wix",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-316",
+      "scoreBucket": "50-59",
+      "perfBucket": "50-59",
+      "cms": "IONOS",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-165",
+      "scoreBucket": "60-69",
+      "perfBucket": "90-99",
+      "cms": "Static",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-534",
+      "scoreBucket": "80-89",
+      "perfBucket": "30-39",
+      "cms": "Squarespace",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-591",
+      "scoreBucket": "40-49",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-336",
+      "scoreBucket": "50-59",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-345",
+      "scoreBucket": "70-79",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-181",
+      "scoreBucket": "30-39",
+      "perfBucket": "60-69",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-628",
+      "scoreBucket": "50-59",
+      "perfBucket": "20-29",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-607",
+      "scoreBucket": "60-69",
+      "perfBucket": "30-39",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-550",
+      "scoreBucket": "80-89",
+      "perfBucket": "50-59",
+      "cms": "WordPress",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": false,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-969",
+      "scoreBucket": "40-49",
+      "perfBucket": "50-59",
+      "cms": "Jimdo",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-360",
+      "scoreBucket": "50-59",
+      "perfBucket": "60-69",
+      "cms": "Wix",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": false
+    },
+    {
+      "id": "F-379",
+      "scoreBucket": "70-79",
+      "perfBucket": "30-39",
+      "cms": "IONOS",
+      "isBaukasten": true,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    },
+    {
+      "id": "F-050",
+      "scoreBucket": "30-39",
+      "perfBucket": "80-89",
+      "cms": "Static",
+      "isBaukasten": false,
+      "hasReviews": true,
+      "hasSsl": true,
+      "hasMobileViewport": true
+    }
+  ],
+  "stats": {
+    "perf": {
+      "n": 47,
+      "median": 46,
+      "p25": 39,
+      "p75": 53,
+      "mean": 47.4,
+      "min": 28,
+      "max": 94
+    },
+    "seo": {
+      "n": 47,
+      "median": 73,
+      "p25": 64,
+      "p75": 83.5,
+      "mean": 73.9,
+      "min": 55,
+      "max": 94
+    },
+    "a11y": {
+      "n": 47,
+      "median": 71,
+      "p25": 60.5,
+      "p75": 82.5,
+      "mean": 71.3,
+      "min": 50,
+      "max": 94
+    },
+    "leadScore": {
+      "n": 47,
+      "median": 60,
+      "p25": 44.5,
+      "p75": 75.5,
+      "mean": 59.7,
+      "min": 30,
+      "max": 89
+    }
+  },
+  "techStack": {
+    "WordPress": {
+      "count": 28,
+      "share": 0.596
+    },
+    "Jimdo": {
+      "count": 4,
+      "share": 0.085
+    },
+    "Wix": {
+      "count": 4,
+      "share": 0.085
+    },
+    "IONOS": {
+      "count": 4,
+      "share": 0.085
+    },
+    "Static": {
+      "count": 4,
+      "share": 0.085
+    },
+    "Squarespace": {
+      "count": 3,
+      "share": 0.064
+    }
+  },
+  "baukasten": {
+    "count": 15,
+    "share": 0.319
+  },
+  "ssl": {
+    "missingCount": 4,
+    "missingShare": 0.085
+  },
+  "mobile": {
+    "missingCount": 3,
+    "missingShare": 0.064
+  },
+  "tests": [
+    {
+      "kind": "mann-whitney",
+      "label": "Baukasten vs. eigener Tech-Stack (PageSpeed Performance)",
+      "groupA": {
+        "label": "Baukasten",
+        "n": 15,
+        "median": 46
+      },
+      "groupB": {
+        "label": "Eigener Stack",
+        "n": 32,
+        "median": 44.5
+      },
+      "u": 220,
+      "z": 0.456,
+      "p": 0.648,
+      "verdict": "Kein signifikanter Unterschied (p=0.648)."
+    }
+  ],
+  "methodology": {
+    "source": "Google Places API + PageSpeed Insights + Tech-Detect-Heuristik",
+    "filter": "≥ 5 öffentliche Bewertungen, OPERATIONAL, eigene Website, keine Enterprise-Domain",
+    "minSampleSize": 30,
+    "instrumentation": "Karriaro Lead-Intelligence v2",
+    "anonymization": "FNV-1a-Hash über Domain, Branche-Präfix + 3-stellige Nummer",
+    "license": "CC BY 4.0 — Quellenangabe karriaro-webdesign.de"
+  }
+}
