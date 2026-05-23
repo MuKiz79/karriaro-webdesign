@@ -381,7 +381,10 @@
             if (sheetLoader) sheetLoader.classList.remove('is-hidden');
             clearLoadTimer();
             if (sheetFrame) {
-                sheetFrame.setAttribute('src', href);
+                // Sprint 155 — ?embed=hero-Mode für saubere Branchen-Demo-Vorschau
+                // (versteckt Karriaro-Nav/Audit/Lighthouse/Kontakt/Footer im iframe).
+                var separator = href.indexOf('?') === -1 ? '?' : '&';
+                sheetFrame.setAttribute('src', href + separator + 'embed=hero');
                 sheetFrame.style.opacity = '0';
                 loadTimer = setTimeout(showLoadError, 8000);
             }
