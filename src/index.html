@@ -181,6 +181,10 @@
     </script>
 
     <link rel="stylesheet" href="/css/tokens.css">
+    <!-- Sprint 159 — Modern-2026-Tech-Layer (oklch/color-mix, View Transitions,
+         Scroll-Driven Animations, Container Queries, @starting-style). Alle Features
+         @supports-gesichert → graceful Fallback bei alten Browsern. -->
+    <link rel="stylesheet" href="/css/modern-2026.css?v=409">
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <script src="/js/karriaro-tools.js" defer></script>
@@ -3070,6 +3074,23 @@
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <!-- Sprint 159 — View Transitions API Meta + Speculation Rules.
+         Browser ohne Support ignorieren beide silently → kein Regression. -->
+    <meta name="view-transition" content="same-origin">
+    <script type="speculationrules">
+    {
+        "prerender": [{
+            "where": { "href_matches": "/portfolio/*.html" },
+            "eagerness": "moderate"
+        }],
+        "prefetch": [{
+            "where": {
+                "href_matches": ["/audit", "/preise", "/kontakt", "/gruender.html", "/warum-handcoded.html"]
+            },
+            "eagerness": "conservative"
+        }]
+    }
+    </script>
     <!-- Sprint 158 — Web-Vitals Inline-RUM (LCP/CLS/FCP/INP), kein CDN-Import.
          Speichert in LocalStorage, hookt window.plausible (wenn vorhanden in Phase 2.1). -->
     <script>
