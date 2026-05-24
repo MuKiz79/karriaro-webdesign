@@ -104,6 +104,14 @@
         .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; }
         .badge-red { background: #ffe8e8; color: #c00; }
         .badge-green { background: #e3f7e8; color: #1f6b34; }
+        /* Sprint 162 — Quick-Score Teaser */
+        .quick-score { background: #f5f5f7; border-radius: 10px; padding: 14px 16px; margin: 12px 0 0; font-size: 14px; line-height: 1.5; }
+        .quick-score-head { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #86868b; margin-bottom: 6px; }
+        .quick-score-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+        .quick-score-chip { background: #fff; border-radius: 6px; padding: 4px 10px; font-variant-numeric: tabular-nums; font-weight: 500; }
+        .quick-score-chip strong { font-size: 16px; }
+        .quick-score-hint { color: #5a5a5a; font-size: 13px; margin-top: 8px; }
+        .quick-score-loading { color: #86868b; font-style: italic; }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>
@@ -154,6 +162,12 @@
                 Datenschutzerklärung: <a href="/datenschutz.html">karriaro-webdesign.de/datenschutz</a>.
             </label>
         </div>
+
+        <!-- Sprint 162 — Sofort-Mini-Score via quickAudit (PSI-light), zeigt
+             Performance + BFSG-Risiko sobald URL valide ist. Erhöht die
+             Submission-Completion: User sieht echte Daten, bevor er Name+Mail
+             eingibt. -->
+        <div id="quick-score" class="quick-score" hidden></div>
 
         <button type="submit" id="f-submit">Audit anfordern</button>
     </form>
@@ -229,6 +243,95 @@
         const refHashParam = params.get('ref');
         const safeReportSlug = reportSlugParam && REPORT_SLUG_RE.test(reportSlugParam) ? reportSlugParam : null;
         const safeRefHash = refHashParam && REF_HASH_RE.test(refHashParam) ? refHashParam : null;
+
+        // Sprint 162 — Sofort-Mini-Score via quickAudit.
+        // Triggert sobald URL valide ist (blur + 600ms-debounced input).
+        // Pro Session max 1 Call pro URL (Cache im Speicher).
+        const urlField = document.getElementById('f-url');
+        const quickEl = document.getElementById('quick-score');
+        const quickCache = new Map();
+        let quickAbort = null;
+        let quickDebounce = null;
+
+        function normalizeUrlForQuick(raw) {
+            const trimmed = String(raw || '').trim();
+            if (!trimmed) return null;
+            const withScheme = /^https?:\/\//i.test(trimmed) ? trimmed : 'https://' + trimmed;
+            try {
+                const u = new URL(withScheme);
+                if (!u.hostname.includes('.')) return null;
+                return u.origin + u.pathname.replace(/\/$/, '');
+            } catch { return null; }
+        }
+
+        function renderQuickScore(data) {
+            const perf = data && data.performance && data.performance.score;
+            const bfsg = data && data.bfsg && data.bfsg.complianceScore;
+            const summary = data && data.summary;
+            const chips = [];
+            if (perf != null) {
+                chips.push('<span class="quick-score-chip">Performance <strong>' + perf + '</strong>/100</span>');
+            }
+            if (bfsg != null) {
+                chips.push('<span class="quick-score-chip">BFSG <strong>' + bfsg + '</strong>/100</span>');
+            }
+            const branche = data && data.branch && data.branch.name;
+            if (branche) {
+                chips.push('<span class="quick-score-chip">Branche <strong>' + branche + '</strong></span>');
+            }
+            const hint = summary
+                ? '<div class="quick-score-hint">' + summary + ' Im Komplettaudit erhalten Sie eine detaillierte Auswertung mit konkreten Empfehlungen.</div>'
+                : '<div class="quick-score-hint">Im Komplettaudit erhalten Sie eine detaillierte Auswertung mit konkreten Empfehlungen.</div>';
+            if (!chips.length) {
+                quickEl.innerHTML = '<div class="quick-score-head">Erste Einschätzung</div>' + hint;
+            } else {
+                quickEl.innerHTML = '<div class="quick-score-head">Erste Einschätzung</div>'
+                    + '<div class="quick-score-row">' + chips.join('') + '</div>'
+                    + hint;
+            }
+            quickEl.hidden = false;
+        }
+
+        async function runQuickAudit(url) {
+            if (quickCache.has(url)) {
+                renderQuickScore(quickCache.get(url));
+                return;
+            }
+            if (quickAbort) quickAbort.abort();
+            quickAbort = new AbortController();
+            quickEl.hidden = false;
+            quickEl.innerHTML = '<div class="quick-score-head">Erste Einschätzung</div><div class="quick-score-loading">Ihre Site wird kurz angesehen…</div>';
+            try {
+                const res = await fetch(FN_BASE + '/quickAudit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: quickAbort.signal,
+                    body: JSON.stringify({ url: url, hp: '' })
+                });
+                if (!res.ok) throw new Error('Quick-Audit nicht verfügbar');
+                const data = await res.json();
+                quickCache.set(url, data);
+                renderQuickScore(data);
+            } catch (err) {
+                if (err.name === 'AbortError') return;
+                quickEl.hidden = true;
+                quickEl.innerHTML = '';
+            }
+        }
+
+        function triggerQuickAudit() {
+            const normalized = normalizeUrlForQuick(urlField.value);
+            if (!normalized) return;
+            runQuickAudit(normalized);
+        }
+
+        urlField.addEventListener('blur', triggerQuickAudit);
+        urlField.addEventListener('input', function () {
+            if (quickDebounce) clearTimeout(quickDebounce);
+            quickDebounce = setTimeout(triggerQuickAudit, 800);
+        });
+        // Wenn Pre-Fill vorhanden, sofort einmal triggern
+        if (urlField.value) triggerQuickAudit();
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();

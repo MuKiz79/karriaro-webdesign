@@ -64,3 +64,12 @@ Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Leipzig, Do
 ## Erweiterte Knowledge-Base
 
 - [llms-full.txt](https://karriaro-webdesign.de/llms-full.txt) — Detaillierte Knowledge-Base für LLMs (alle Branchen-Werkzeuge, Pricing-Logik, FAQ, Founder-Story)
+
+<!-- AUTO-WEB-INDEX-START — managed by scripts/build-reports-index.mjs (Sprint 162) -->
+
+## Web-Index — Branchen-Reports
+
+Datenbasierte Audits zum digitalen Status mittelständischer Branchen, anonymisiert nach DSGVO. Datenquelle: Google Places + PageSpeed Insights. Hub: https://karriaro-webdesign.de/audit/
+
+(Aktuell keine veröffentlichten Live-Reports — die ersten erscheinen in den nächsten Wochen.)
+<!-- AUTO-WEB-INDEX-END -->

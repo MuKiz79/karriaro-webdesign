@@ -22,7 +22,7 @@ import { generateReport } from '../lead-intelligence/src/reports/branchen-stadt-
 import { buildReportHtml } from '../lead-intelligence/src/reports/static-html-builder.js';
 import { buildLlmsIndexEntry } from '../lead-intelligence/src/reports/llmo-layer.js';
 import { buildFriseureKoelnFixture } from '../lead-intelligence/src/reports/fixtures/friseure-koeln-demo.js';
-import { buildHubHtml, reportToHubCard } from '../lead-intelligence/src/reports/hub-builder.js';
+import { rebuildAllIndexes } from './lib/reports-indexer.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
@@ -84,26 +84,9 @@ function processSpec(spec) {
     return { slug, isDemo, report };
 }
 
-function rebuildHub() {
-    const auditDir = resolve(repoRoot, 'src', 'audit');
-    if (!existsSync(auditDir)) return;
-    const dirs = readdirSync(auditDir)
-        .filter(name => {
-            try { return statSync(resolve(auditDir, name)).isDirectory(); } catch { return false; }
-        })
-        .map(name => ({ name, dir: resolve(auditDir, name) }))
-        .filter(({ dir }) => existsSync(resolve(dir, 'report.json')));
-    const cards = dirs.map(({ name, dir }) => {
-        try {
-            const json = JSON.parse(readFileSync(resolve(dir, 'report.json'), 'utf8'));
-            return reportToHubCard(json, name);
-        } catch { return null; }
-    }).filter(Boolean);
-    const html = buildHubHtml(cards);
-    writeFileSync(resolve(auditDir, 'index.html'), html, 'utf8');
-    const live = cards.filter(c => !c.isDemo).length;
-    console.log(`✓ Hub neu gerendert: ${cards.length} Reports (${live} live)`);
-}
+// rebuildAllIndexes (Hub + sitemap.xml + llms.txt) wird aus
+// scripts/lib/reports-indexer.mjs importiert — gemeinsame Implementierung
+// mit build-reports-index.mjs.
 
 async function main() {
     const args = parseArgs(process.argv);
@@ -133,7 +116,7 @@ async function main() {
     console.log(`\n▶ Ergebnis: ${ok} OK, ${fail} Fehler\n`);
 
     if (args.rebuildHub) {
-        rebuildHub();
+        rebuildAllIndexes();
     }
 }
 

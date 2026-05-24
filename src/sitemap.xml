@@ -60,4 +60,8 @@
     <url><loc>https://karriaro-webdesign.de/datenschutz.html</loc><lastmod>2026-05-15</lastmod><priority>0.3</priority></url>
     <url><loc>https://karriaro-webdesign.de/agb.html</loc><lastmod>2026-05-15</lastmod><priority>0.3</priority></url>
 
+    <!-- AUTO-WEB-INDEX-START — managed by scripts/build-reports-index.mjs (Sprint 162) -->
+    <url><loc>https://karriaro-webdesign.de/audit/</loc><lastmod>2026-05-24</lastmod><priority>0.7</priority></url>
+    <!-- AUTO-WEB-INDEX-END -->
+
 </urlset>
