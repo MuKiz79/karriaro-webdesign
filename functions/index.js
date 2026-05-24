@@ -148,6 +148,54 @@ function normalizeUrl(s) {
     } catch { return null; }
 }
 
+// Sprint 161 — Founder-Notification, wenn der Inbound-Lead aus einem
+// veröffentlichten Branchen-Report kam (reportSlug + refHash gesetzt).
+// Geht NUR an AUDIT_REPLY_TO (kontakt@karriaro.de), nicht an den Lead.
+async function notifyFounderOnReportInbound(payload) {
+    const transporter = nodemailer.createTransport({
+        host: SMTP_HOST.value(),
+        port: 587,
+        secure: false,
+        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() }
+    });
+    const subject = `Web-Index-Lead: ${payload.domain} (Report ${payload.reportSlug})`;
+    const text = `Inbound aus Branchen-Report.
+
+Domain:        ${payload.domain}
+Lead-Name:     ${payload.name || "—"}
+Lead-Email:    ${payload.email}
+Kam von:       /audit/${payload.reportSlug}/${payload.refHash ? "  (Kennung " + payload.refHash + ")" : ""}
+Audit-Slug:    ${payload.slug}
+Lead-Score:    ${payload.leadScore ?? "—"}
+Erstellt:      ${new Date().toISOString()}
+
+Founder-Antwort: einfach auf diese Mail antworten (Reply-To zeigt auf den Lead).
+
+— Karriaro Backend (requestAudit → notifyFounderOnReportInbound)`;
+
+    const html = `<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:580px;margin:0 auto;color:#1d1d1f;line-height:1.55">
+        <h2 style="font-size:18px;margin:0 0 16px">Web-Index-Lead</h2>
+        <p style="margin:0 0 16px">Ein Lead aus dem öffentlichen Branchen-Report <strong>/audit/${payload.reportSlug}/</strong>${payload.refHash ? ` (Kennung <code>${payload.refHash}</code>)` : ""} hat sich identifiziert und einen Detail-Audit angefordert.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b;width:130px">Domain</td><td style="padding:6px 0;font-weight:500">${payload.domain}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Name</td><td style="padding:6px 0">${payload.name || "—"}</td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Email</td><td style="padding:6px 0"><a href="mailto:${payload.email}" style="color:#0071e3">${payload.email}</a></td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Audit-Slug</td><td style="padding:6px 0"><a href="https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(payload.slug)}" style="color:#0071e3">${payload.slug}</a></td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Score</td><td style="padding:6px 0">${payload.leadScore ?? "—"}</td></tr>
+        </table>
+        <p style="margin:24px 0 0;color:#86868b;font-size:12px">Reply-To zeigt auf den Lead — antworten Sie direkt.</p>
+    </div>`;
+
+    await transporter.sendMail({
+        from: AUDIT_FROM,
+        replyTo: payload.email,
+        to: AUDIT_REPLY_TO,
+        subject,
+        text,
+        html
+    });
+}
+
 async function sendAuditMail(to, name, slug, domain, attribution = {}) {
     if (attribution.reportSlug) {
         logger.info("requestAudit attribution", {
@@ -325,6 +373,26 @@ exports.requestAudit = onRequest(
             refHash: safeRefHash
         };
         await db.collection("auditRequests").doc(slug).set(auditDoc);
+
+        // Sprint 161 — Founder-Notification bei Inbound aus Branchen-Report.
+        // Best-effort, separate Mail an kontakt@karriaro.de.
+        if (safeReportSlug) {
+            try {
+                await notifyFounderOnReportInbound({
+                    domain,
+                    name: safeName,
+                    email,
+                    slug,
+                    reportSlug: safeReportSlug,
+                    refHash: safeRefHash,
+                    leadScore: pipelineResult?.leadScore ?? null
+                });
+            } catch (err) {
+                logger.warn("notifyFounderOnReportInbound failed (non-fatal)", {
+                    fn: "requestAudit", slug, reportSlug: safeReportSlug, error: err.message
+                });
+            }
+        }
 
         // Mail senden (best effort — wenn fehlschlägt, Fehler protokollieren, aber Slug zurückgeben)
         try {
