@@ -11,16 +11,16 @@
    dann die neue (siehe Sprint-148-Befund "andere Sicht zuerst").
 */
 
-const CACHE = 'karriaro-mobile-v409';
+const CACHE = 'karriaro-mobile-v410';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
     '/',
     '/offline.html',
     '/css/mobile.css',
-    '/css/mobile-overrides.css?v=409',
+    '/css/mobile-overrides.css?v=410',
     '/css/tokens.css',
-    '/css/modern-2026.css?v=409',
-    '/js/m-interactions.js?v=409',
+    '/css/modern-2026.css?v=410',
+    '/js/m-interactions.js?v=410',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/apple-touch-icon.png',
@@ -81,6 +81,23 @@ function networkFirstWithOfflineFallback(request) {
         });
 }
 
+// Sprint 160 — Cache-First für Lean-Embed-Previews.
+// /-embed.html-Pages sind immutable (rebuild via build-embed-hero.mjs +
+// Cache-Bust v=410 invalidiert). Sheet-Modal-Open lädt sie idealerweise
+// aus Cache → instant <100ms statt 800-1200ms network roundtrip.
+function cacheFirst(request) {
+    return caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((res) => {
+            if (res && res.status === 200) {
+                const copy = res.clone();
+                caches.open(CACHE).then((c) => c.put(request, copy)).catch(() => {});
+            }
+            return res;
+        });
+    });
+}
+
 self.addEventListener('fetch', (e) => {
     const req = e.request;
     if (req.method !== 'GET') return;
@@ -88,6 +105,11 @@ self.addEventListener('fetch', (e) => {
     // Nur same-origin handlen (kein 3rd-party)
     if (url.origin !== location.origin) return;
 
+    // Sprint 160 — Lean-Embed-Previews: Cache-First (immutable, schnell)
+    if (url.pathname.endsWith('-embed.html')) {
+        e.respondWith(cacheFirst(req));
+        return;
+    }
     // HTML navigate-requests → network-first + Offline-Fallback
     if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
         e.respondWith(networkFirstWithOfflineFallback(req));

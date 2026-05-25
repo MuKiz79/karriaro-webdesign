@@ -211,7 +211,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <!-- Sprint 159 — Modern-2026-Tech-Layer (oklch/color-mix, View Transitions,
          Scroll-Driven Animations, Container Queries, @starting-style). Alle Features
          @supports-gesichert → graceful Fallback bei alten Browsern. -->
-    <link rel="stylesheet" href="/css/modern-2026.css?v=409">
+    <link rel="preload" as="style" href="/css/modern-2026.css?v=410">
+    <link rel="stylesheet" href="/css/modern-2026.css?v=410" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=410"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <script src="/js/karriaro-tools.js" defer></script>
@@ -3108,7 +3110,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     {
         "prerender": [{
             "where": { "href_matches": "/portfolio/*.html" },
-            "eagerness": "moderate"
+            "eagerness": "conservative"
         }],
         "prefetch": [{
             "where": {
@@ -3161,7 +3163,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         } catch(e) {}
     })();
     </script>
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=409">
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=410">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=410" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=410"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
@@ -6259,6 +6263,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </script>
 
 
-<script src="/js/m-interactions.js?v=409" defer></script>
+<script src="/js/m-interactions.js?v=410" defer></script>
 </body>
 </html>

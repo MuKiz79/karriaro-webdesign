@@ -381,10 +381,12 @@
             if (sheetLoader) sheetLoader.classList.remove('is-hidden');
             clearLoadTimer();
             if (sheetFrame) {
-                // Sprint 155 — ?embed=hero-Mode für saubere Branchen-Demo-Vorschau
-                // (versteckt Karriaro-Nav/Audit/Lighthouse/Kontakt/Footer im iframe).
-                var separator = href.indexOf('?') === -1 ? '?' : '&';
-                sheetFrame.setAttribute('src', href + separator + 'embed=hero');
+                // Sprint 160 — Lean-Embed-HTML (build-embed-hero.mjs) statt ?embed=hero.
+                // Source: 53-154 KB pro Portfolio-Page → Lean: 23-62 KB (-60%).
+                // Eliminiert Webfonts, Scripts, External-CSS, Schema, Footer, Nav.
+                // Fallback bei /<slug>.html → /<slug>-embed.html-Pattern.
+                var leanSrc = href.replace(/\.html(\?.*)?$/, '-embed.html');
+                sheetFrame.setAttribute('src', leanSrc);
                 sheetFrame.style.opacity = '0';
                 loadTimer = setTimeout(showLoadError, 8000);
             }
