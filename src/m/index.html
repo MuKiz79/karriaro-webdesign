@@ -217,6 +217,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <script src="/js/karriaro-tools.js" defer></script>
+    <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
+    <script src="/js/audit-magic-moment.js?v=418" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3133,6 +3135,348 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @media (max-width: 720px) { .kr-cta-float { bottom: 16px; right: 16px; padding: 12px 16px; font-size: 13px; } .kr-cta-float-sub { display: none; } }
         /* Sprint 38 — Floating-CTA nur auf Mobile (Desktop hat genug CTA-Density) */
         @media (min-width: 769px) { .kr-cta-float { display: none !important; } }
+
+        /* ============================================================
+           Sprint 168 — Audit Magic-Moment (Editorial-stille Section)
+           ============================================================ */
+        .kr-audit-magic {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: clamp(72px, 10vw, 112px) 24px clamp(48px, 8vw, 80px);
+            text-align: center;
+            color: var(--color-ink, #14202B);
+            background: var(--color-cream-soft, #F5F3EE);
+        }
+        .kr-audit-magic-folio {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #5C6470);
+            margin: 0 0 24px;
+        }
+        .kr-audit-magic-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: clamp(28px, 4.4vw, 44px);
+            line-height: 1.12;
+            letter-spacing: -0.01em;
+            margin: 0 0 16px;
+        }
+        .kr-audit-magic-title em {
+            font-style: italic;
+            color: var(--color-gold, #8A7B5C);
+        }
+        .kr-audit-magic-lede {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            font-size: clamp(15px, 1.6vw, 17px);
+            line-height: 1.55;
+            color: var(--color-graphite, #3A434E);
+            max-width: 540px;
+            margin: 0 auto 36px;
+        }
+        .kr-audit-magic-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 8px;
+            max-width: 520px;
+            margin: 0 auto 8px;
+            transition: opacity 200ms ease;
+        }
+        .kr-audit-magic-sr {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+        .kr-audit-magic-hp {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .kr-audit-magic-form input[type="url"] {
+            flex: 1 1 280px;
+            min-width: 0;
+            padding: 14px 18px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 16px;
+            line-height: 1.4;
+            color: var(--color-ink, #14202B);
+            background: #fff;
+            border: 1px solid rgba(20, 32, 43, 0.18);
+            border-radius: 2px;
+            transition: border-color 180ms ease, box-shadow 180ms ease;
+        }
+        .kr-audit-magic-form input[type="url"]:focus {
+            outline: none;
+            border-color: var(--color-ink, #14202B);
+            box-shadow: 0 0 0 3px rgba(20, 32, 43, 0.08);
+        }
+        .kr-audit-magic-form input[type="url"]::placeholder {
+            color: rgba(20, 32, 43, 0.35);
+        }
+        .kr-audit-magic-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            color: #fff;
+            background: var(--color-ink, #14202B);
+            border: 1px solid var(--color-ink, #14202B);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background-color 180ms ease, transform 180ms ease;
+        }
+        .kr-audit-magic-submit:hover {
+            background: var(--color-indigo, #1A2E40);
+        }
+        .kr-audit-magic-submit:active { transform: translateY(1px); }
+        .kr-audit-magic-submit-arrow {
+            display: inline-block;
+            transition: transform 220ms ease;
+        }
+        .kr-audit-magic-submit:hover .kr-audit-magic-submit-arrow {
+            transform: translateX(3px);
+        }
+        .kr-audit-magic-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 24px 0 12px;
+            opacity: 0;
+            transition: opacity 300ms ease;
+            min-height: 200px;
+        }
+        .kr-audit-magic-stage[hidden] { display: none; }
+        .kr-audit-magic-seal {
+            color: var(--color-gold, #8A7B5C);
+            opacity: 0.92;
+        }
+        @keyframes kr-audit-seal-spin {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+        @keyframes kr-audit-seal-pulse {
+            0%, 100% { opacity: 0.55; }
+            50%      { opacity: 1; }
+        }
+        .kr-audit-magic-seal--spin {
+            animation: kr-audit-seal-spin 8s linear infinite;
+            transform-origin: 50% 50%;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .kr-audit-magic-seal--spin {
+                animation: kr-audit-seal-pulse 4s ease-in-out infinite;
+            }
+        }
+        .kr-audit-magic-status {
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            font-size: clamp(17px, 1.8vw, 20px);
+            line-height: 1.4;
+            color: var(--color-graphite, #3A434E);
+            margin: 0;
+            transition: opacity 240ms ease;
+            min-height: 1.4em;
+        }
+        .kr-audit-magic-status--error {
+            color: var(--color-ink, #14202B);
+            font-style: normal;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            max-width: 360px;
+        }
+        .kr-audit-magic-caption {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: lowercase;
+            color: rgba(20, 32, 43, 0.32);
+            margin: 36px 0 0;
+        }
+        /* ─── Result-Panel (inline-Reveal nach Scan) ─── */
+        .kr-audit-result-host {
+            margin: 24px auto 0;
+            max-width: 640px;
+            view-transition-name: audit-result;
+        }
+        .kr-audit-result-host[hidden] { display: none; }
+        .kr-audit-result {
+            background: #fff;
+            border: 1px solid rgba(20, 32, 43, 0.08);
+            padding: clamp(28px, 4vw, 48px);
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(20, 32, 43, 0.04), 0 24px 48px -28px rgba(20, 32, 43, 0.18);
+        }
+        .kr-audit-result-folio {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #5C6470);
+            margin: 0 0 12px;
+        }
+        .kr-audit-result-domain {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(22px, 3vw, 30px);
+            line-height: 1.18;
+            color: var(--color-ink, #14202B);
+            margin: 0 0 24px;
+        }
+        .kr-audit-result-domain em { font-style: italic; color: var(--color-gold, #8A7B5C); }
+        .kr-audit-result-verdict {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(20, 32, 43, 0.08);
+            border-bottom: 1px solid rgba(20, 32, 43, 0.08);
+            margin: 0 0 28px;
+        }
+        .kr-audit-result-verdict-label {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(20px, 2.4vw, 26px);
+            font-weight: 500;
+            color: var(--color-ink, #14202B);
+        }
+        .kr-audit-result-verdict[data-verdict="stark"] .kr-audit-result-verdict-label { color: #2C5F4A; }
+        .kr-audit-result-verdict[data-verdict="ausbaufaehig"] .kr-audit-result-verdict-label { color: #8A4A2C; }
+        .kr-audit-result-verdict-detail {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            color: var(--color-graphite, #3A434E);
+            line-height: 1.5;
+        }
+        .kr-audit-result-branch {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            color: var(--color-graphite-soft, #5C6470);
+            margin: 0 0 20px;
+        }
+        .kr-audit-result-branch em {
+            font-style: italic;
+            color: var(--color-ink, #14202B);
+        }
+        .kr-audit-result-findings {
+            list-style: none;
+            counter-reset: finding;
+            padding: 0;
+            margin: 0 0 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .kr-audit-result-finding {
+            counter-increment: finding;
+            display: grid;
+            grid-template-columns: 28px 1fr;
+            gap: 12px;
+            align-items: baseline;
+        }
+        .kr-audit-result-finding::before {
+            content: counter(finding, decimal-leading-zero);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            color: var(--color-gold, #8A7B5C);
+            padding-top: 2px;
+        }
+        .kr-audit-result-finding-label {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(16px, 1.8vw, 19px);
+            font-weight: 500;
+            line-height: 1.3;
+            color: var(--color-ink, #14202B);
+            margin: 0 0 6px;
+        }
+        .kr-audit-result-finding-detail {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            line-height: 1.55;
+            color: var(--color-graphite, #3A434E);
+            margin: 0;
+        }
+        .kr-audit-result-note {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            line-height: 1.55;
+            color: var(--color-graphite-soft, #5C6470);
+            border-top: 1px solid rgba(20, 32, 43, 0.08);
+            padding-top: 20px;
+            margin: 0 0 24px;
+        }
+        .kr-audit-result-cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin: 0 0 12px;
+        }
+        .kr-audit-result-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            background: var(--color-ink, #14202B);
+            border-radius: 2px;
+            text-decoration: none;
+            transition: background-color 180ms ease;
+        }
+        .kr-audit-result-cta:hover {
+            background: var(--color-indigo, #1A2E40);
+        }
+        .kr-audit-result-reset {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            color: var(--color-graphite-soft, #5C6470);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px 4px;
+            text-decoration: underline;
+            text-decoration-color: rgba(20, 32, 43, 0.18);
+            text-underline-offset: 4px;
+        }
+        .kr-audit-result-reset:hover {
+            color: var(--color-ink, #14202B);
+            text-decoration-color: var(--color-ink, #14202B);
+        }
+        .kr-audit-result-trust {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #5C6470);
+            margin: 0;
+        }
+        @media (max-width: 600px) {
+            .kr-audit-magic { padding: 64px 20px 48px; }
+            .kr-audit-magic-form { flex-direction: column; }
+            .kr-audit-magic-submit { width: 100%; }
+            .kr-audit-result { padding: 24px 22px; }
+            .kr-audit-result-cta-row { flex-direction: column; align-items: stretch; }
+            .kr-audit-result-cta { justify-content: center; }
+        }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <!-- Sprint 159 — View Transitions API Meta + Speculation Rules.
@@ -3195,9 +3539,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         } catch(e) {}
     })();
     </script>
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=417">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=417" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=417"></noscript>
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=418">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=418" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=418"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
@@ -3366,6 +3710,54 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
         </div>
         <div class="hero-folio-marker" aria-hidden="true"></div>
+    </section>
+
+
+    <!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
+    <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung">
+        <p class="kr-audit-magic-folio">№&nbsp;02 · Erste Einschätzung</p>
+        <h2 id="audit-magic-title" class="kr-audit-magic-title">
+            Ihre Site, in fünf Sekunden <em>gesehen</em>.
+        </h2>
+        <p class="kr-audit-magic-lede">
+            Substanz, BFSG-Konformität und Auffindbarkeit — kurz geprüft.
+            Keine Anmeldung. Keine Speicherung ohne Zustimmung.
+        </p>
+        <form class="kr-audit-magic-form" data-audit-magic novalidate>
+            <label for="kr-audit-magic-url" class="kr-audit-magic-sr">Ihre Website-Adresse</label>
+            <input id="kr-audit-magic-url" name="url" type="url" inputmode="url"
+                   autocomplete="url" autocapitalize="none" spellcheck="false"
+                   placeholder="ihre-webseite.de" required data-audit-magic-input />
+            <input type="text" name="hp" tabindex="-1" autocomplete="off"
+                   aria-hidden="true" class="kr-audit-magic-hp" />
+            <button type="submit" class="kr-audit-magic-submit" data-audit-magic-submit>
+                <span>Prüfen</span>
+                <span class="kr-audit-magic-submit-arrow" aria-hidden="true">→</span>
+            </button>
+        </form>
+        <div class="kr-audit-magic-stage" data-audit-magic-stage hidden>
+            <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="120" height="120" aria-hidden="true">
+                <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+                <circle cx="55.31" cy="42.20" r="1.5" fill="#8A7B5C"/>
+                <circle cx="36.04" cy="44.04" r="1.5" fill="#8A7B5C"/>
+                <circle cx="52.84" cy="60.84" r="1.5" fill="#8A7B5C"/>
+                <circle cx="29.10" cy="34.79" r="1.5" fill="#8A7B5C"/>
+                <circle cx="60.20" cy="29.05" r="1.5" fill="#8A7B5C"/>
+                <circle cx="29.49" cy="58.39" r="1.5" fill="#8A7B5C"/>
+                <circle cx="42.49" cy="22.46" r="1.5" fill="#8A7B5C"/>
+                <circle cx="64.55" cy="51.39" r="1.5" fill="#8A7B5C"/>
+                <circle cx="32.30" cy="69.78" r="1.5" fill="#8A7B5C"/>
+                <circle cx="22.20" cy="48.74" r="1.5" fill="#8A7B5C"/>
+                <circle cx="45.84" cy="20.42" r="1.5" fill="#8A7B5C"/>
+                <circle cx="64.07" cy="65.49" r="1.5" fill="#8A7B5C"/>
+                <circle cx="48.85" cy="73.74" r="1.5" fill="#8A7B5C"/>
+            </svg>
+            <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
+        </div>
+        <p class="kr-audit-magic-caption" aria-hidden="true">θ = 137,5° · n = 13</p>
     </section>
 
 
@@ -6307,6 +6699,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </script>
 
 
-<script src="/js/m-interactions.js?v=417" defer></script>
+<script src="/js/m-interactions.js?v=418" defer></script>
+<script src="/js/audit-magic-moment.js?v=418" defer></script>
 </body>
 </html>

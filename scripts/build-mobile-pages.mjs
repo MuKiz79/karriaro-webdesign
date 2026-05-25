@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=417">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=417" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=417"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=418">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=418" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=418"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -163,7 +163,7 @@ function addMainContentAnchor(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=417" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=418" defer></script>\n<script src="/js/audit-magic-moment.js?v=418" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -747,6 +747,59 @@ const BRAND_COLOR_MAP = {
     'handwerk-mueller':       '#B47045', // Copper
 };
 
+// ────────────────────────────────────────────────────────────────
+// Sprint 168 — Audit-Magic-Moment-Section
+// Editorial-stille URL-Eingabe + Phyllotaxis-Scan + Result-Sheet.
+// Wird zwischen Hero und Demo-Swiper injiziert.
+// ────────────────────────────────────────────────────────────────
+
+function buildAuditMagicSection() {
+    const dots = buildPhyllotaxisDots();
+    return `
+<!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
+<section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung">
+    <p class="kr-audit-magic-folio">№&nbsp;02 · Erste Einschätzung</p>
+    <h2 id="audit-magic-title" class="kr-audit-magic-title">
+        Ihre Site, in fünf Sekunden <em>gesehen</em>.
+    </h2>
+    <p class="kr-audit-magic-lede">
+        Substanz, BFSG-Konformität und Auffindbarkeit — kurz geprüft.
+        Keine Anmeldung. Keine Speicherung ohne Zustimmung.
+    </p>
+    <form class="kr-audit-magic-form" data-audit-magic novalidate>
+        <label for="kr-audit-magic-url" class="kr-audit-magic-sr">Ihre Website-Adresse</label>
+        <input id="kr-audit-magic-url" name="url" type="url" inputmode="url"
+               autocomplete="url" autocapitalize="none" spellcheck="false"
+               placeholder="ihre-webseite.de" required data-audit-magic-input />
+        <input type="text" name="hp" tabindex="-1" autocomplete="off"
+               aria-hidden="true" class="kr-audit-magic-hp" />
+        <button type="submit" class="kr-audit-magic-submit" data-audit-magic-submit>
+            <span>Prüfen</span>
+            <span class="kr-audit-magic-submit-arrow" aria-hidden="true">→</span>
+        </button>
+    </form>
+    <div class="kr-audit-magic-stage" data-audit-magic-stage hidden>
+        <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="120" height="120" aria-hidden="true">
+            <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+            <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+            <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+            <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
+            ${dots}
+        </svg>
+        <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
+    </div>
+    <p class="kr-audit-magic-caption" aria-hidden="true">θ = 137,5° · n = 13</p>
+</section>
+`;
+}
+
+function injectAuditMagic(html) {
+    if (html.includes('kr-audit-magic')) return html;
+    const anchor = /<section id="audit"/;
+    if (!anchor.test(html)) return html;
+    return html.replace(anchor, buildAuditMagicSection() + '\n    <section id="audit"');
+}
+
 function buildDemoSwiperHtml() {
     // Sprint 126: Natürliche Hero-Höhe via Playwright-Capture.
     // Sprint 127: aspect-ratio 1/2 fixed (fit-one-screen), object-fit:contain.
@@ -922,8 +975,11 @@ function buildPage(relPath) {
         // Sprint 129 — Folio-Marker zu "№ 01 · 2026 · EDITORIAL" (Cover-Position)
         html = rewriteFolioMarker(html);
         // Sprint 129 — Information-Architecture: Hero → Demos → Personas → Tools → Siegel → Audit → Kontakt
-        // Alle 4 Inject-Funktionen nutzen audit-anchor und prependen DIREKT
-        // vor dem aktuellen Anker-Position. Reihenfolge = Render-Reihenfolge.
+        // Sprint 168 — Audit-Magic-Moment ergänzt zwischen Hero und Demos.
+        // Alle Inject-Funktionen nutzen den audit-anchor und prependen DIREKT
+        // vor der aktuellen Anker-Position. Erst-injizierte landet AM WEITESTEN
+        // LINKS (Hero-nah) — daher injectAuditMagic ZUERST.
+        html = injectAuditMagic(html);
         html = injectDemoSwiper(html);
         html = injectPersonaSection(html);
         html = injectToolsSection(html);
