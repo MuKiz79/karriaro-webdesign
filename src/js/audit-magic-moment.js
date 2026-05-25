@@ -437,6 +437,16 @@
                             : 'Diese Seite lässt sich gerade nicht prüfen.';
                         throw new Error('backend:' + msg);
                     }
+                    // Sprint 168.4 — Backend setzt degraded:true wenn die Seite
+                    // nicht abrufbar war (Typo, DNS, Timeout). result.ok bleibt true,
+                    // aber alle Sub-Metriken sind leer. Editorialer Fehler statt
+                    // irreführendem "Substanziell solide"-Fallback.
+                    if (result && result.degraded === true) {
+                        var degradedMsg = (result.error && typeof result.error === 'string')
+                            ? result.error + ' Bitte Schreibweise prüfen oder Domain neu eingeben.'
+                            : 'Diese Adresse konnten wir nicht abrufen. Bitte Schreibweise prüfen.';
+                        throw new Error('backend:' + degradedMsg);
+                    }
                     done = true;
                     var elapsed = Date.now() - scanStart;
                     var wait = Math.max(0, MIN_SCAN_MS - elapsed);
