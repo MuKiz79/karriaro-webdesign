@@ -508,13 +508,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <link rel="stylesheet" href="/css/karriaro-tools.css">
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=415">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=415" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=415"></noscript>
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=416">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=416" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=416"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+    <!-- Sprint 166 — Preconnect zu karriaro-webdesign.de (Cross-Origin-Bilder
+         in Lean-Embed-iframes brauchen DNS+TLS-Handshake). Spart 200-400ms. -->
+    <link rel="preconnect" href="https://karriaro-webdesign.de" crossorigin>
+    <link rel="dns-prefetch" href="https://karriaro-webdesign.de">
     <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
     <link rel="prefetch" href="/portfolio/immobilien-makler-embed-desktop.html">
     <link rel="prefetch" href="/portfolio/coaching-lehmann-embed-desktop.html">
@@ -1660,6 +1664,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </script>
     <script src="/js/karriaro-tools.js"></script>
 
-<script src="/js/m-interactions.js?v=415" defer></script>
+<script src="/js/m-interactions.js?v=416" defer></script>
 </body>
 </html>

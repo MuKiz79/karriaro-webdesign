@@ -27,7 +27,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const PORTFOLIO_DIR = join(ROOT, 'src', 'portfolio');
 
-const CACHE_VERSION = 'v=415';
+const CACHE_VERSION = 'v=416';
 
 // ────────────────────────────────────────────────────────────────
 // Helpers
@@ -78,6 +78,10 @@ function generateLeanHtml({ title, description, themeColor, embedStyle, pageStyl
     <meta name="theme-color" content="${themeColor}">
     <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/${slug}.html">
+    <!-- Sprint 166 — Preconnect zu karriaro-webdesign.de für AVIF/JPG-Source
+         (Cross-Origin vom Mobile-Subdomain karriaro-webdesign-mobile → Desktop). -->
+    <link rel="preconnect" href="https://karriaro-webdesign.de" crossorigin>
+    <link rel="dns-prefetch" href="https://karriaro-webdesign.de">
     <!-- ${sprintNote} NO Webfonts, NO Scripts, NO external CSS.
          Generated von scripts/build-embed-hero.mjs. Cache-Bust ${CACHE_VERSION}. -->
     <style>

@@ -107,13 +107,16 @@
         color: var(--apple-graphite);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 240ms 8000ms var(--apple-ease-reveal);
+        /* Sprint 166 — Fallback-Delay 8s → 15s. User-Report: 8s zu kurz,
+           bei 8 parallelen iframes + Cross-Origin-Load triggert vorzeitig.
+           15s gibt Browser-Connection-Pool + slow-4G genug Zeit. */
+        transition: opacity 240ms 15000ms var(--apple-ease-reveal);
     }
     .m-poster-fallback a {
         color: var(--apple-blue);
         font-weight: 500;
     }
-    /* :has()-Selector: wenn iframe nicht .is-loaded ist, Fallback nach 8s */
+    /* :has()-Selector: wenn iframe nicht .is-loaded ist, Fallback nach 15s (Sprint 166) */
     .m-poster:not(:has(.m-poster-frame.is-loaded)) .m-poster-fallback {
         opacity: 1;
         pointer-events: auto;
