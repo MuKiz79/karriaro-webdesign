@@ -525,6 +525,48 @@ function safeSecretValue(secretRef) {
     catch { return ""; }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 169 — Karriaro MCP-Server (Public-API für Claude/Cursor/v0).
+// Eigener Endpoint mit no-auth CORS und separatem Rate-Limit (20/h pro IP).
+// Tools: audit_site, extract_voice, generate_brand_mockup, phyllotaxis_signature.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const mcpServer = require("./mcp/index.js");
+
+exports.mcpHandler = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [PLACES_KEY, CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        // MCP-Handler hat eigene CORS-Logik (* erlaubt, da MCP-Clients
+        // unterschiedliche Origins haben). Rate-Limit verteidigt gegen Abuse.
+        if (req.method !== "OPTIONS" && req.method !== "GET") {
+            if (await enforceRateLimit(db, req, res, "mcpHandler", 20, 3600,
+                "Stündliches Limit erreicht. Bitte später erneut.")) return;
+        }
+        var ctx = {
+            placesKey: safeSecretValue(PLACES_KEY),
+            claudeKey: safeSecretValue(CLAUDE_API_KEY)
+        };
+        try {
+            await mcpServer.handleHttp(req, res, ctx);
+        } catch (err) {
+            console.error("mcpHandler unhandled error:", err);
+            if (!res.headersSent) {
+                res.status(500).json({
+                    jsonrpc: "2.0",
+                    error: { code: -32603, message: "Internal error: " + (err && err.message ? err.message : String(err)) },
+                    id: null
+                });
+            }
+        }
+    }
+);
+
 exports.quickAudit = onRequest(
     {
         region: "europe-west1",

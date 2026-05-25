@@ -30,6 +30,15 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (5
 
 - [Kostenloser Sofort-Audit](https://karriaro-webdesign.de/#audit): URL eingeben, in 5 Sekunden BFSG-Compliance + SEO + GEO (KI-Lesbarkeit) + Branchen-Standards + Pain-Points (Security/Mobile/Social) als Bericht. Auch ohne Buchung nutzbar.
 
+## MCP-Server (für KI-Agenten)
+
+- [Karriaro MCP-Server Dokumentation](https://karriaro-webdesign.de/api/mcp.html): Public MCP-Server der Karriaro Webdesign-Manufaktur. Endpoint `https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler`. Vier Tools für KI-Agenten (Claude Desktop, Cursor, OpenAI Codex, v0):
+  - `karriaro_audit_site(url)`: Substanz, BFSG, SEO, KI-Auffindbarkeit, Branchen-Standards
+  - `karriaro_extract_voice(url)`: Brand-Voice-Analyse nach Aesop/Hermès/Manufactum-Codex
+  - `karriaro_generate_brand_mockup(branche)`: Hero-SVG für 8 Branchen
+  - `karriaro_phyllotaxis_signature(name)`: Deterministisches Goldener-Winkel-Siegel
+  - Public, no-auth, 20 Aufrufe/h/IP, MCP-Protokoll 2025-06-18. npm: `@karriaro/webdesign-mcp` für stdio-Variante.
+
 ## Gründer & Manufaktur-Prinzip
 
 - [Über Muammer Kızılaslan](https://karriaro-webdesign.de/gruender.html): Hintergrund (15 Jahre Enterprise-IT), Founder-POV, Manufaktur-Siegel mit Fibonacci-Phyllotaxis (13 Punkte, Goldener Winkel 137,5°).

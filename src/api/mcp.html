@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karriaro MCP-Server — Webdesign-Manufaktur als Werkzeug für Ihren KI-Agent</title>
+    <meta name="description" content="Karriaro stellt vier Tools als Public MCP-Server bereit: Site-Audit, Brand-Voice-Analyse, Branchen-Mockup, Phyllotaxis-Signatur. Für Claude Desktop, Cursor, OpenAI Codex und jeden MCP-kompatiblen KI-Agent.">
+    <link rel="canonical" href="https://karriaro-webdesign.de/api/mcp.html">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1A2E40">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Karriaro MCP-Server — Manufaktur als KI-Werkzeug">
+    <meta property="og:description" content="Vier MCP-Tools für Site-Audit, Voice-Analyse, Brand-Mockup, Phyllotaxis-Signatur. Erste DACH-Webdesign-Manufaktur als Public MCP-Server.">
+    <meta property="og:url" content="https://karriaro-webdesign.de/api/mcp.html">
+    <meta property="og:image" content="https://karriaro-webdesign.de/og-image.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Karriaro Webdesign MCP-Server",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-Platform (Node.js 18+ oder HTTP-Client)",
+      "url": "https://karriaro-webdesign.de/api/mcp.html",
+      "description": "Public MCP-Server der Karriaro Webdesign-Manufaktur mit vier Tools: Site-Audit, Brand-Voice-Analyse, Branchen-Mockup, Phyllotaxis-Signatur.",
+      "softwareVersion": "0.1.0",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Karriaro Webdesign-Manufaktur",
+        "url": "https://karriaro-webdesign.de"
+      },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+      "downloadUrl": "https://www.npmjs.com/package/@karriaro/webdesign-mcp"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebAPI",
+      "name": "Karriaro MCP-Server",
+      "documentation": "https://karriaro-webdesign.de/api/mcp.html",
+      "termsOfService": "https://karriaro-webdesign.de/datenschutz.html",
+      "endpointURL": "https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler",
+      "provider": { "@type": "Organization", "name": "Karriaro Webdesign-Manufaktur" }
+    }
+    </script>
+    <style>
+        :root {
+            --ink: #14202B;
+            --graphite: #3A434E;
+            --graphite-soft: #5C6470;
+            --gold: #8A7B5C;
+            --indigo: #1A2E40;
+            --cream: #F5F3EE;
+            --bg: #FBFAF7;
+            --hairline: rgba(20, 32, 43, 0.12);
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            color: var(--graphite);
+            background: var(--bg);
+            margin: 0;
+            line-height: 1.55;
+            font-size: 16px;
+        }
+        a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--hairline); text-underline-offset: 3px; }
+        a:hover { text-decoration-color: var(--ink); }
+        code, pre, .mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        pre {
+            background: var(--cream);
+            padding: 18px 22px;
+            border-radius: 2px;
+            overflow-x: auto;
+            font-size: 12.5px;
+            line-height: 1.55;
+            color: var(--ink);
+            border: 1px solid var(--hairline);
+        }
+        code { font-size: 0.92em; background: rgba(20,32,43,0.06); padding: 1px 5px; border-radius: 2px; }
+        pre code { background: transparent; padding: 0; }
+        nav {
+            padding: 24px clamp(20px, 5vw, 48px);
+            border-bottom: 1px solid var(--hairline);
+            background: var(--bg);
+        }
+        nav .brand {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: 20px;
+            color: var(--ink);
+            text-decoration: none;
+        }
+        nav .back {
+            float: right;
+            font-size: 13px;
+            color: var(--graphite-soft);
+            text-decoration: none;
+        }
+        nav .back:hover { color: var(--ink); }
+        main {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: clamp(48px, 8vw, 96px) clamp(20px, 5vw, 32px);
+        }
+        .folio {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--graphite-soft);
+            margin: 0 0 24px;
+        }
+        h1 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: clamp(32px, 5.5vw, 52px);
+            line-height: 1.08;
+            letter-spacing: -0.015em;
+            color: var(--ink);
+            margin: 0 0 28px;
+        }
+        h1 em { font-style: italic; color: var(--gold); }
+        h2 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: clamp(22px, 3.2vw, 28px);
+            line-height: 1.2;
+            color: var(--ink);
+            margin: 64px 0 20px;
+            padding-top: 24px;
+            border-top: 1px solid var(--hairline);
+        }
+        h3 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: 19px;
+            line-height: 1.3;
+            color: var(--ink);
+            margin: 28px 0 12px;
+        }
+        .lede {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(18px, 2vw, 22px);
+            font-style: italic;
+            line-height: 1.45;
+            color: var(--graphite);
+            margin: 0 0 40px;
+            max-width: 620px;
+        }
+        p { margin: 0 0 16px; }
+        ul { padding-left: 20px; }
+        li { margin: 6px 0; }
+        .tools-grid {
+            display: grid;
+            gap: 18px;
+            margin: 28px 0 0;
+        }
+        @media (min-width: 720px) {
+            .tools-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .tool-card {
+            background: #fff;
+            border: 1px solid var(--hairline);
+            padding: 22px 24px;
+            border-radius: 2px;
+        }
+        .tool-card .tool-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--ink);
+            font-weight: 500;
+            margin: 0 0 8px;
+        }
+        .tool-card .tool-desc {
+            font-size: 14px;
+            color: var(--graphite);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 20px 0 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--graphite-soft);
+        }
+        .badge {
+            padding: 4px 10px;
+            border: 1px solid var(--hairline);
+            border-radius: 2px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .signature {
+            margin: 80px 0 0;
+            padding: 24px 0;
+            border-top: 1px solid var(--hairline);
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            color: var(--graphite-soft);
+            font-size: 15px;
+        }
+        footer {
+            padding: 32px clamp(20px, 5vw, 48px);
+            border-top: 1px solid var(--hairline);
+            background: var(--cream);
+            text-align: center;
+            font-size: 13px;
+            color: var(--graphite-soft);
+        }
+        footer a { color: var(--ink); }
+        .caption {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            color: var(--graphite-soft);
+            text-transform: lowercase;
+            margin: 12px 0 0;
+        }
+        .example {
+            background: var(--ink);
+            color: var(--cream);
+            padding: 22px;
+            border-radius: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin: 0 0 24px;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #14202B;
+                --ink: #F5F3EE;
+                --graphite: #b8bcc3;
+                --graphite-soft: #8a8e96;
+                --cream: #1a242f;
+                --hairline: rgba(245, 243, 238, 0.12);
+            }
+            .tool-card { background: #1a242f; }
+            .example { background: #0f1217; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="https://karriaro-webdesign.de" class="brand">Karriaro</a>
+        <a href="https://karriaro-webdesign.de" class="back">← Zur Manufaktur</a>
+    </nav>
+    <main>
+        <p class="folio">№ 09 · MCP-Server · v0.1.0</p>
+        <h1>Eine Manufaktur als <em>Werkzeug</em><br>für Ihren KI-Agent.</h1>
+        <p class="lede">
+            Vier Tools, die Claude Desktop, Cursor und jeder MCP-kompatible
+            KI-Agent direkt aufrufen können. Site-Audit, Brand-Voice-Analyse,
+            Branchen-Mockup, Phyllotaxis-Signatur — alle Antworten im
+            Editorial-Stil mit Karriaro-Signatur.
+        </p>
+
+        <div class="badge-row">
+            <span class="badge">Public · No-Auth</span>
+            <span class="badge">20 Calls / h / IP</span>
+            <span class="badge">europe-west1</span>
+            <span class="badge">MCP-Protokoll 2025-06-18</span>
+        </div>
+
+        <h2>Die vier Werkzeuge</h2>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <p class="tool-name">karriaro_audit_site</p>
+                <p class="tool-desc">Prüft eine Website auf Substanz, BFSG-Konformität, SEO und KI-Auffindbarkeit. Qualitatives Verdict („Stark", „Solide", „Ausbaufähig") + Top-Findings. Latenz 3-5 s.</p>
+            </div>
+            <div class="tool-card">
+                <p class="tool-name">karriaro_extract_voice</p>
+                <p class="tool-desc">Analysiert den Brand-Voice nach Karriaro-Codex (Aesop/Hermès/Manufactum-Editorial vs. SaaS-Filler vs. Werkstatt-Klischee). 3 Stärken, 3 Verbesserungen.</p>
+            </div>
+            <div class="tool-card">
+                <p class="tool-name">karriaro_generate_brand_mockup</p>
+                <p class="tool-desc">Generiert eine Hero-Mockup-SVG (480 × 320 px) für eine von acht Branchen. Folio-Eyebrow, Fraunces-Italic-Headline, Phyllotaxis-Siegel, Branchen-Farbpalette.</p>
+            </div>
+            <div class="tool-card">
+                <p class="tool-name">karriaro_phyllotaxis_signature</p>
+                <p class="tool-desc">Erzeugt ein deterministisches Phyllotaxis-Siegel (Goldener Winkel θ = 137,5°) für einen Namen. Variation in Punkt-Anzahl, Farbe, Rotation — gleicher Name liefert gleiches Siegel.</p>
+            </div>
+        </div>
+
+        <h2>Installation</h2>
+        <p>Zwei Wege — beide ohne Kosten, ohne Anmeldung, ohne Cookie.</p>
+
+        <h3>A · Direkt über HTTP (empfohlen)</h3>
+        <p>Wenn Ihr MCP-Client HTTP-Transport unterstützt (Claude Desktop ab v0.7,
+        Cursor, OpenAI Codex):</p>
+<pre><code>{
+  "mcpServers": {
+    "karriaro": {
+      "url": "https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler"
+    }
+  }
+}</code></pre>
+
+        <h3>B · Lokal via npm-Package</h3>
+        <p>Wenn Sie stdio bevorzugen (Air-Gap, lokale Isolation):</p>
+<pre><code>npm install -g @karriaro/webdesign-mcp</code></pre>
+        <p>In <code>claude_desktop_config.json</code>:</p>
+<pre><code>{
+  "mcpServers": {
+    "karriaro": {
+      "command": "karriaro-mcp"
+    }
+  }
+}</code></pre>
+
+        <h2>Beispiel</h2>
+        <p>Sie fragen Ihren KI-Agent:</p>
+        <p><em>„Prüfe meine Website example.de mit Karriaro."</em></p>
+        <p>Der Agent ruft <code>karriaro_audit_site</code> auf und erhält:</p>
+<div class="example">════════════════════════════════════════════════════════════
+KARRIARO · ERSTE EINSCHÄTZUNG
+════════════════════════════════════════════════════════════
+
+Domain:    example.de
+Verdict:   Solide (Score 62/100)
+           Tragfähige Basis, mit feinen Hebeln im Detail.
+
+Branche:   Lokales Unternehmen
+
+TOP-FINDINGS
+1. 5 Security-Header fehlen: hsts, xFrameOptions, ...
+2. SEO-Signale unvollständig (3 von 6 Pflicht-Elementen vorhanden)
+3. KI-Auffindbarkeit dünn (FAQ-Schema, Breadcrumb fehlen teilweise)
+
+Ein Detail-Brief geht tiefer: Web Vitals im Detail,
+BFSG-Audit, branchen-spezifische Empfehlungen.
+Anfrage: https://karriaro-webdesign.de/?prefill=...
+
+— Audit by Karriaro Webdesign-Manufaktur · Schwarzwald
+  https://karriaro-webdesign.de</div>
+
+        <h2>Direkter Endpoint-Test</h2>
+        <p>Ohne MCP-Client:</p>
+<pre><code>curl -X POST https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'</code></pre>
+
+        <h2>Warum?</h2>
+        <p>Karriaro ist eine Schwarzwald-Manufaktur für handcodierte
+        Premium-Websites. Wir glauben: Wenn ein Werkzeug wirklich
+        substantiell ist, sollte es nicht hinter einem Login liegen.</p>
+        <p>Jeder Aufruf trägt unsere Signatur — das ist unser Marketing.
+        Jeder Endkunde, dem ein KI-Agent unsere Diagnose zeigt, lernt
+        unseren Ton kennen. Pull statt Push.</p>
+        <p>Pre-Customer, Pre-Launch. Founder-as-Demo. <a href="https://karriaro-webdesign.de">Schwarzwald-Manufaktur</a>.</p>
+
+        <h2>Rate-Limit, Datenschutz, Code</h2>
+        <ul>
+            <li><strong>Rate-Limit:</strong> 20 Aufrufe pro Stunde pro IP. Cache-Hits zählen als 0.</li>
+            <li><strong>Datenschutz:</strong> Wir speichern keine personenbezogenen Daten. Audit-Cache (24 h fresh, 7 Tage retention) speichert nur die analysierte URL + Audit-Result.</li>
+            <li><strong>Quellcode:</strong> <a href="https://github.com/MuKiz79/karriaro-webdesign">github.com/MuKiz79/karriaro-webdesign</a> · npm: <a href="https://www.npmjs.com/package/@karriaro/webdesign-mcp">@karriaro/webdesign-mcp</a></li>
+            <li><strong>Privater Endpoint:</strong> Für höhere Limits oder Enterprise-Bedarf: <a href="mailto:kontakt@karriaro.de">kontakt@karriaro.de</a></li>
+        </ul>
+
+        <p class="signature">
+            „Wenn Ihr Name draufsteht, steht unserer dahinter."<br>
+            — Karriaro Webdesign-Manufaktur, Schwarzwald.
+        </p>
+
+        <p class="caption">θ = 137,5° · n = 13 · v0.1.0 · 2026</p>
+    </main>
+    <footer>
+        <p>Karriaro Webdesign-Manufaktur · <a href="https://karriaro-webdesign.de">karriaro-webdesign.de</a> · <a href="https://karriaro-webdesign.de/impressum.html">Impressum</a> · <a href="https://karriaro-webdesign.de/datenschutz.html">Datenschutz</a></p>
+    </footer>
+</body>
+</html>

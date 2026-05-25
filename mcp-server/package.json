@@ -1,0 +1,45 @@
+{
+  "name": "@karriaro/webdesign-mcp",
+  "version": "0.1.0",
+  "description": "Karriaro Webdesign-Manufaktur — MCP-Server (stdio) für Claude Desktop, Cursor, OpenAI Codex. Proxiert zum public HTTP-Endpoint mit 4 Tools: audit_site, extract_voice, generate_brand_mockup, phyllotaxis_signature.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "webdesign",
+    "audit",
+    "karriaro",
+    "lighthouse",
+    "bfsg",
+    "anthropic",
+    "claude"
+  ],
+  "homepage": "https://karriaro-webdesign.de/api/mcp.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuKiz79/karriaro-webdesign.git",
+    "directory": "mcp-server"
+  },
+  "bugs": "https://github.com/MuKiz79/karriaro-webdesign/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Muammer Kızılaslan",
+    "email": "kontakt@karriaro.de",
+    "url": "https://karriaro-webdesign.de"
+  },
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "karriaro-mcp": "index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ]
+}
