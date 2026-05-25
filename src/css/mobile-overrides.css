@@ -529,33 +529,35 @@
  * 6. DEMO-SWIPER (§ 02) — iframe-Boundary respektiert
  * ============================================================================ */
 @media (max-width: 1023px) {
+    /* Sprint 162 — Compact Section-Header (Above-Card 188px → ~120px)
+       für Full-Screen-Card-Above-Fold. */
     .m-demo-swiper-mobile {
-        padding: var(--apple-section-pad-y) 0;
+        padding: clamp(48px, 8svh, 64px) 0;
         background: var(--apple-fog);
     }
 
     .m-demo-swiper-section-eyebrow {
-        margin: 0 var(--apple-section-pad-x) 12px;
+        margin: 0 var(--apple-section-pad-x) 8px;
         font-family: var(--apple-font-text);
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--apple-graphite);
     }
     .m-demo-swiper-section-title {
-        margin: 0 var(--apple-section-pad-x) 16px;
+        margin: 0 var(--apple-section-pad-x) 12px;
         font-family: var(--apple-font-display);
-        font-size: 32px;
+        font-size: 28px;
         line-height: 1.12;
         letter-spacing: -0.02em;
         font-weight: 700;
         color: var(--apple-ink);
     }
     .m-demo-swiper-section-hint {
-        margin: 0 var(--apple-section-pad-x) 32px;
+        margin: 0 var(--apple-section-pad-x) 20px;
         font-family: var(--apple-font-text);
-        font-size: 14px;
+        font-size: 13px;
         color: var(--apple-platinum);
     }
 
@@ -576,13 +578,15 @@
         display: none;
     }
 
+    /* Sprint 162 — Full-Screen-Snap Cards (User-Wunsch "auf einen
+       Bildschirm passen"). 94vw + scroll-snap-align center. */
     .m-demo-swiper-slide {
         flex: 0 0 auto;
-        width: min(88vw, 420px);
-        scroll-snap-align: start;
+        width: min(94vw, 480px);
+        scroll-snap-align: center;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 12px;
     }
 
     /* Card-Container — Apple-Card-Style (white surface, soft shadow, 18px radius) */
@@ -641,12 +645,13 @@
         text-overflow: ellipsis;
     }
 
-    /* Iframe-Stage — aspect-ratio matcht iframe-native 1280×1024 (5:4).
-       Sprint-150.6-Stand übernommen (Greenfield hat das versehentlich
-       auf 16/10 + height 800px geändert → Bug). */
+    /* Sprint 162 — Aspect-Ratio 4:3 für "monumentale" Card-Höhe
+       (Multi-Designer-Konsens: Magazin-Style impact). iframe-Scaling
+       passt sich automatisch an (m-interactions.js setIframeScale
+       Formel: stage.clientWidth / 1280, neue Card 94vw → Scale ~0.288). */
     .m-poster-stage {
         position: relative;
-        aspect-ratio: 1280 / 1024;
+        aspect-ratio: 4 / 3;
         overflow: hidden;
         background: var(--apple-fog);
     }
@@ -724,11 +729,14 @@
         justify-content: center;
         cursor: pointer;
     }
+    /* Sprint 162 — Visual-Dot 8px → 12px (User-Feedback "Dots zu großer
+       Abstand": 8px Visual war nur 18% der 44×44 Hit-Area, jetzt 27%).
+       Hit-Area + Gap unverändert (WCAG 2.5.5). */
     .m-demo-swiper-dot::before {
         content: '';
         display: block;
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background: rgba(0, 0, 0, 0.22);
         transition: background 200ms var(--apple-ease-reveal),

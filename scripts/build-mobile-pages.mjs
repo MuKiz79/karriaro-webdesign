@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=411">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=411" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=411"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=412">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=412" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=412"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -72,8 +72,8 @@ const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
     <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
-    <link rel="prefetch" href="/portfolio/immobilien-makler.html?embed=desktop">
-    <link rel="prefetch" href="/portfolio/coaching-lehmann.html?embed=desktop">
+    <link rel="prefetch" href="/portfolio/immobilien-makler-embed-desktop.html">
+    <link rel="prefetch" href="/portfolio/coaching-lehmann-embed-desktop.html">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="color-scheme" content="light">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -159,7 +159,7 @@ function addMainContentAnchor(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=411" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=412" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -774,7 +774,7 @@ function buildDemoSwiperHtml() {
                     <span class="m-poster-chrome-url">${domain}</span>
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
-                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="eager" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="high" data-m-poster-eager></iframe>
+                    <iframe class="m-poster-frame" data-m-poster-src="${href.replace(/\.html$/, '-embed-desktop.html')}" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="eager" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="high" data-m-poster-eager></iframe>
                     <div class="m-poster-fallback" role="status" aria-live="polite">
                         <p>Vorschau lädt nicht — <a href="${href}">direkt zur Demo →</a></p>
                     </div>

@@ -11,16 +11,16 @@
    dann die neue (siehe Sprint-148-Befund "andere Sicht zuerst").
 */
 
-const CACHE = 'karriaro-mobile-v411';
+const CACHE = 'karriaro-mobile-v412';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
     '/',
     '/offline.html',
     '/css/mobile.css',
-    '/css/mobile-overrides.css?v=411',
+    '/css/mobile-overrides.css?v=412',
     '/css/tokens.css',
-    '/css/modern-2026.css?v=411',
-    '/js/m-interactions.js?v=411',
+    '/css/modern-2026.css?v=412',
+    '/js/m-interactions.js?v=412',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/apple-touch-icon.png',
@@ -83,7 +83,7 @@ function networkFirstWithOfflineFallback(request) {
 
 // Sprint 160 — Cache-First für Lean-Embed-Previews.
 // /-embed.html-Pages sind immutable (rebuild via build-embed-hero.mjs +
-// Cache-Bust v=411 invalidiert). Sheet-Modal-Open lädt sie idealerweise
+// Cache-Bust v=412 invalidiert). Sheet-Modal-Open lädt sie idealerweise
 // aus Cache → instant <100ms statt 800-1200ms network roundtrip.
 function cacheFirst(request) {
     return caches.match(request).then((cached) => {
@@ -105,8 +105,9 @@ self.addEventListener('fetch', (e) => {
     // Nur same-origin handlen (kein 3rd-party)
     if (url.origin !== location.origin) return;
 
-    // Sprint 160 — Lean-Embed-Previews: Cache-First (immutable, schnell)
-    if (url.pathname.endsWith('-embed.html')) {
+    // Sprint 160/162 — Lean-Embed-Previews: Cache-First (immutable, schnell)
+    // -embed.html für Sheet-Modal (Mobile), -embed-desktop.html für Demo-Cards
+    if (url.pathname.endsWith('-embed.html') || url.pathname.endsWith('-embed-desktop.html')) {
         e.respondWith(cacheFirst(req));
         return;
     }
