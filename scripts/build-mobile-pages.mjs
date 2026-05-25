@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=412">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=412" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=412"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=413">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=413" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=413"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -159,7 +159,7 @@ function addMainContentAnchor(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=412" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=413" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -784,7 +784,7 @@ function buildDemoSwiperHtml() {
                 <span class="m-demo-swiper-eyebrow">${eyebrow}</span>
                 <h3 class="m-demo-swiper-title">${title}</h3>
                 <p class="m-demo-swiper-persona-context">${personaContext}</p>
-                <span class="m-demo-swiper-cta" aria-hidden="true">Live ansehen →</span>
+                <a href="${href}" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="${title} Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>`;
     }).join('');
