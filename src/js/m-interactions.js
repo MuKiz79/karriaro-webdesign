@@ -273,19 +273,22 @@
             }, { passive: true });
         }
 
-        // Sprint 161 — Alle iframes sofort laden (User-Wunsch: "Beispielseiten
-        // sollen sofort sichtbar sein"). Sprint 154 OPT-1+2+4 (Connection-
-        // Adaption + IntersectionObserver + rootMargin-Tuning) entfernt.
-        // Save-Data wird bewusst NICHT respected — UX-Priorität.
-        var frames = rail.querySelectorAll('.m-poster-frame[data-m-poster-src]');
-        function loadFrame(frame) {
-            if (frame.src && frame.src !== 'about:blank') return;
-            frame.src = frame.getAttribute('data-m-poster-src');
+        // Sprint 167 — iframe-src nun nativ im HTML (Sprint 161 data-m-poster-src
+        // hatte Bug: Browser löst leeres src auf parent-URL auf → Early-Return
+        // verhindert JS-Setup). Browser lädt jetzt iframe nativ.
+        // markLoaded ist nur noch is-loaded-Class-Subscriber für CSS-Effekte
+        // (z.B. opacity-Fade-In). Kein src-Setting mehr.
+        var frames = rail.querySelectorAll('.m-poster-frame');
+        function markLoaded(frame) {
+            if (frame.contentDocument && frame.contentDocument.readyState === 'complete') {
+                frame.classList.add('is-loaded');
+                return;
+            }
             frame.addEventListener('load', function () {
                 frame.classList.add('is-loaded');
             }, { once: true });
         }
-        frames.forEach(loadFrame);
+        frames.forEach(markLoaded);
 
         slides.forEach(function (_, i) {
             var b = document.createElement('button');

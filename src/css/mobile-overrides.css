@@ -88,40 +88,14 @@
 }
 
 /* ============================================================================
- * Sprint 152 — Iframe-Network-Fallback (Pure CSS, kein JS-Touch)
- * Sichtbar nach 8s wenn iframe nicht .is-loaded ist. :has() iOS 15.4+.
+ * Sprint 152 Iframe-Network-Fallback ENTFERNT (Sprint 167).
+ * Grund: User-Report "Vorschau lädt nicht" wurde fälschlicherweise gezeigt
+ * weil Sprint 161 data-m-poster-src JS-Setup buggy war (Browser löst leeres
+ * iframe-src auf parent-URL auf → JS Early-Return verhindert src-Setting).
+ * Sprint 167 hat iframe-src nativ ins HTML gepackt — Fallback nicht mehr nötig.
+ * Wenn iframe doch nicht lädt: leere Card statt verwirrender Fehlertext.
+ * "Live ansehen ↗"-Link (Sprint 163) bleibt funktional.
  * ============================================================================ */
-@media (max-width: 1023px) {
-    .m-poster-fallback {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        background: var(--apple-fog);
-        text-align: center;
-        font-family: var(--apple-font-text);
-        font-size: 14px;
-        line-height: 1.43;
-        color: var(--apple-graphite);
-        opacity: 0;
-        pointer-events: none;
-        /* Sprint 166 — Fallback-Delay 8s → 15s. User-Report: 8s zu kurz,
-           bei 8 parallelen iframes + Cross-Origin-Load triggert vorzeitig.
-           15s gibt Browser-Connection-Pool + slow-4G genug Zeit. */
-        transition: opacity 240ms 15000ms var(--apple-ease-reveal);
-    }
-    .m-poster-fallback a {
-        color: var(--apple-blue);
-        font-weight: 500;
-    }
-    /* :has()-Selector: wenn iframe nicht .is-loaded ist, Fallback nach 15s (Sprint 166) */
-    .m-poster:not(:has(.m-poster-frame.is-loaded)) .m-poster-fallback {
-        opacity: 1;
-        pointer-events: auto;
-    }
-}
 
 /* ============================================================================
  * 2. BASE-RESET (Mobile)
