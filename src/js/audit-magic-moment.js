@@ -93,34 +93,57 @@
     }
 
     function pickTopFindings(result) {
+        // Sprint 168.3 — Schema des echten quickAudit-Backends:
+        // painPoints ist ein OBJECT mit Keys (socialMeta/securityHeaders/...),
+        // jeder Eintrag hat { ok: bool, label: string }.
+        // bfsg.complianceScore (0-100), seoGeo.seo.{found,total},
+        // seoGeo.geo.{found,total}, branch.{foundCount,totalCount,pitchArg}.
         var pool = [];
-        if (result && Array.isArray(result.painPoints)) {
-            result.painPoints.forEach(function (p) {
-                if (!p) return;
-                if (typeof p === 'string') {
-                    pool.push({ label: p, detail: '' });
-                } else if (typeof p === 'object') {
-                    var label = p.label || p.title || p.summary || p.id || '';
-                    var detail = p.why || p.detail || p.evidence || p.pitch || '';
-                    if (label) pool.push({ label: String(label), detail: String(detail) });
+        if (result && result.painPoints && typeof result.painPoints === 'object') {
+            Object.keys(result.painPoints).forEach(function (k) {
+                var item = result.painPoints[k];
+                if (item && item.ok === false && item.label) {
+                    pool.push({ label: String(item.label), detail: '' });
                 }
             });
         }
-        if (result && result.bfsg && typeof result.bfsg === 'object') {
-            if (result.bfsg.score != null && result.bfsg.score < 80) {
+        if (result && result.bfsg && typeof result.bfsg.complianceScore === 'number') {
+            if (result.bfsg.complianceScore < 80) {
                 pool.push({
                     label: 'BFSG-Konformität mit Lücken',
                     detail: 'Einige Pflicht-Signale (Sprache, Labels, Skip-Link) fehlen oder sind unvollständig.'
                 });
             }
         }
-        if (result && result.seoGeo && typeof result.seoGeo === 'object') {
-            if (result.seoGeo.geoScore != null && result.seoGeo.geoScore < 50) {
+        if (result && result.seoGeo) {
+            var sg = result.seoGeo;
+            if (sg.seo && sg.seo.total && sg.seo.found / sg.seo.total < 0.7) {
                 pool.push({
-                    label: 'KI-Auffindbarkeit dünn',
-                    detail: 'ChatGPT, Perplexity und Gemini finden zu wenige strukturierte Signale.'
+                    label: 'SEO-Signale unvollständig',
+                    detail: sg.seo.found + ' von ' + sg.seo.total + ' Pflicht-Elementen vorhanden (Schema, Canonical, Meta-Description, Title, robots.txt, sitemap).'
                 });
             }
+            if (sg.geo && sg.geo.total && sg.geo.found / sg.geo.total < 0.7) {
+                pool.push({
+                    label: 'KI-Auffindbarkeit dünn',
+                    detail: 'Für ChatGPT, Perplexity und Gemini fehlen strukturierte Signale (FAQ-Schema, Breadcrumb-Schema, llms.txt).'
+                });
+            }
+        }
+        if (result && result.branch && typeof result.branch.foundCount === 'number') {
+            var missing = (result.branch.totalCount || 0) - result.branch.foundCount;
+            if (missing > 0) {
+                pool.push({
+                    label: 'Branchen-Standards: ' + missing + ' von ' + result.branch.totalCount + ' fehlen',
+                    detail: result.branch.pitchArg || 'Branchen-typische Inhalte (Leistungen, Adresse, Öffnungszeiten) sind unvollständig.'
+                });
+            }
+        }
+        if (result && result.techAge && typeof result.techAge.severity === 'number' && result.techAge.severity >= 2) {
+            pool.push({
+                label: result.techAge.headline || 'Technische Basis veraltet',
+                detail: result.techAge.composite || ''
+            });
         }
         var seen = {}, out = [];
         pool.forEach(function (item) {
@@ -138,11 +161,44 @@
         return out.slice(0, 3);
     }
 
+    function deriveCompositeScore(result) {
+        // Sprint 168.3 — quickAudit liefert keinen einzelnen Score-Wert;
+        // wir bilden einen Mittelwert aus den verfügbaren Sub-Metriken.
+        if (!result) return null;
+        var components = [];
+        if (result.bfsg && typeof result.bfsg.complianceScore === 'number') {
+            components.push(result.bfsg.complianceScore);
+        }
+        if (result.painPoints && typeof result.painPoints === 'object') {
+            var keys = Object.keys(result.painPoints);
+            if (keys.length) {
+                var okCount = 0;
+                keys.forEach(function (k) {
+                    if (result.painPoints[k] && result.painPoints[k].ok === true) okCount++;
+                });
+                components.push(Math.round(okCount / keys.length * 100));
+            }
+        }
+        if (result.seoGeo) {
+            if (result.seoGeo.seo && result.seoGeo.seo.total) {
+                components.push(Math.round(result.seoGeo.seo.found / result.seoGeo.seo.total * 100));
+            }
+            if (result.seoGeo.geo && result.seoGeo.geo.total) {
+                components.push(Math.round(result.seoGeo.geo.found / result.seoGeo.geo.total * 100));
+            }
+        }
+        if (result.branch && typeof result.branch.foundCount === 'number' && result.branch.totalCount) {
+            components.push(Math.round(result.branch.foundCount / result.branch.totalCount * 100));
+        }
+        if (!components.length) return null;
+        var sum = 0;
+        components.forEach(function (c) { sum += c; });
+        return Math.round(sum / components.length);
+    }
+
     function renderResultHtml(result, url) {
         var domain = (result && result.domain) || deriveDomain(url) || (url || '');
-        var rawScore = (result && result.light && typeof result.light.score === 'number')
-            ? result.light.score
-            : (result && typeof result.score === 'number' ? result.score : null);
+        var rawScore = deriveCompositeScore(result);
         var verdict = scoreVerdict(rawScore);
         var findings = pickTopFindings(result);
         var branchHint = '';
@@ -386,11 +442,7 @@
                     var wait = Math.max(0, MIN_SCAN_MS - elapsed);
                     setTimeout(function () {
                         clearInterval(phaseTimer);
-                        var verdict = scoreVerdict(
-                            (result && result.light && typeof result.light.score === 'number')
-                                ? result.light.score
-                                : (result && typeof result.score === 'number' ? result.score : null)
-                        );
+                        var verdict = scoreVerdict(deriveCompositeScore(result));
                         track('Magic Audit Completed', {
                             domain: (result && result.domain) || domain,
                             branch: (result && result.branch && result.branch.name) || '',

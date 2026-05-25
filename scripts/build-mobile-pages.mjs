@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=419">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=419" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=419"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=420">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=420" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=420"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -167,7 +167,7 @@ function addMainContentAnchor(html) {
 // bereits geladen (`<script>`-Tag in src/index.html). Hier nicht
 // doppelt injizieren, sonst läuft die IIFE 2× und bindet Submit-
 // Handler doppelt.
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=419" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=420" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
