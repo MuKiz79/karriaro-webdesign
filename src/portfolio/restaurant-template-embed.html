@@ -8,8 +8,8 @@
     <meta name="theme-color" content="#1A2E40">
     <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/restaurant-template.html">
-    <!-- Sprint 160 — Lean-Embed-Page. NO Webfonts, NO Scripts, NO external CSS.
-         Generated von scripts/build-embed-hero.mjs. Cache-Bust v=410. -->
+    <!-- Sprint 160 — Lean-Mobile-Embed fuer Sheet-Modal. NO Webfonts, NO Scripts, NO external CSS.
+         Generated von scripts/build-embed-hero.mjs. Cache-Bust v=414. -->
     <style>
 /* System-Font-Stack (Apple-HIG-Fallback, kein Webfont-Download) */
 html, body {
@@ -21,7 +21,7 @@ html, body {
 img { max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 
-/* Embed-Hero-CSS aus Source (Sprint 140-Mode) */
+/* Embed-CSS aus Source (beide embed-hero + embed-desktop Regeln) */
 html.embed-hero{overflow:hidden;background:#fff}
 html.embed-desktop{overflow:hidden;background:#fff}html.embed-desktop body{background:#fff;margin:0}html.embed-desktop .topbar,html.embed-desktop header,html.embed-desktop nav,html.embed-desktop footer,html.embed-desktop main>*:not(.hero),html.embed-desktop .kr-footer-card,html.embed-desktop .kr-strip{display:none!important}
 html.embed-hero body{background:#fff;margin:0}
@@ -500,7 +500,10 @@ html.embed-hero .hero-h1-line{display:block}
                         <p class="hero-marginalia-anchor"><strong>Slow Food seit 1987.</strong> Damals ohne Etikett, heute mit.</p>
                     </div>
                     <div class="hero-mockup">
-                        <img class="hero-portrait-img hero-portrait-img--editorial" src="/images/restaurant/persona.jpg" alt="Andreas Bauer, Küchenchef Goldener Hirsch" loading="eager" width="800" height="1000">
+                        <picture>
+                            <source type="image/avif" srcset="/images/restaurant/persona.avif">
+                            <img class="hero-portrait-img hero-portrait-img--editorial" src="/images/restaurant/persona.jpg" alt="Andreas Bauer, Küchenchef Goldener Hirsch" loading="eager" width="800" height="1000">
+                        </picture>
                         <div class="mockup-caption">
                             <span class="hero-portrait-caption">Andreas Bauer <span class="sep">·</span> Küchenchef <span class="sep">·</span> Slow Food</span>
                         </div>

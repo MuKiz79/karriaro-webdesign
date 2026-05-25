@@ -222,8 +222,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Sprint 82 — Preload des CSS senkt LCP um ~250ms, da Browser nicht
          erst auf Render-Discovery wartet. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+    <!-- Sprint 164 — Inter raus, System-Font-Stack für Body (-Apple-System, BlinkMac, SF Pro Text).
+         Fraunces (Display) + JetBrains Mono (Eyebrows) + Cormorant Garamond (Italic-Akzent) bleiben.
+         Ersparnis: ~30-40 KB Webfont-Download. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         /* Sprint 39 — Karriaro Design-Tokens (Brand-Codification für Designaward-Submission) */
         :root {
@@ -1703,6 +1706,35 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .hero-trust-strip a:hover { border-bottom-color: var(--color-indigo); }
         .hero-trust-strip .dot { opacity: 0.4; }
+
+        /* Sprint 164 — Phyllotaxis-Manufaktursiegel (CLAUDE.md Brand-Anker) */
+        .kr-seal-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 36px auto 0;
+            color: var(--color-graphite-soft, #6E6E73);
+        }
+        .kr-seal {
+            animation: kr-seal-pulse 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+        .kr-seal-caption {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft, #6E6E73);
+            margin: 0;
+        }
+        @keyframes kr-seal-pulse {
+            0%, 100% { opacity: 0.55; }
+            50% { opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .kr-seal { animation: none; opacity: 0.7; }
+        }
         /* Audit-Pricing-Exit-Card (Sprint 7b K3) */
         .audit-pricing-exit { margin-top: 32px; padding: 28px 32px; background: linear-gradient(135deg, #f0f5ff, #fff); border: 1px solid #d6e3ff; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; opacity: 0; transform: translateY(8px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .audit-pricing-exit.is-revealed { opacity: 1; transform: translateY(0); }
@@ -3163,9 +3195,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         } catch(e) {}
     })();
     </script>
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=413">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=413" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=413"></noscript>
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=414">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=414" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=414"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
@@ -3246,6 +3278,36 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <span class="dot" aria-hidden="true">·</span>
                     <span>BFSG · DSGVO</span>
                 </p>
+                <!-- Sprint 164 — Phyllotaxis-Manufaktursiegel (Goldener Winkel 137,5° · 13 Punkte).
+                     CLAUDE.md fordert das als Brand-Anker. Pulsiert subtil (prefers-reduced-motion respected). -->
+                <div class="kr-seal-block" aria-hidden="true">
+                    <svg class="kr-seal" width="72" height="72" viewBox="0 0 90 90">
+                        <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <g class="kr-seal-dots"></g>
+                    </svg>
+                    <p class="kr-seal-caption">θ = 137,5° · n = 13</p>
+                </div>
+                <script>
+                    (function() {
+                        var goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+                        var g = document.querySelector('.kr-seal-dots');
+                        if (!g) return;
+                        var svgNS = 'http://www.w3.org/2000/svg';
+                        for (var n = 1; n <= 13; n++) {
+                            var r = Math.sqrt(n) * 8;
+                            var theta = n * goldenAngle;
+                            var c = document.createElementNS(svgNS, 'circle');
+                            c.setAttribute('cx', (45 + r * Math.cos(theta)).toFixed(2));
+                            c.setAttribute('cy', (45 + r * Math.sin(theta)).toFixed(2));
+                            c.setAttribute('r', '1.5');
+                            c.setAttribute('fill', 'currentColor');
+                            g.appendChild(c);
+                        }
+                    })();
+                </script>
             </div>
 
             <div class="hero-mockup-block">
@@ -3307,7 +3369,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     
 <!-- Mobile Demo-Swiper (Sprint 129 — Editorial-Page № 02, show-don't-tell) -->
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">Acht Branchen · Live</p>
+    <p class="m-demo-swiper-section-eyebrow">№&nbsp;02 · Acht Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">↓ scrollen ·  tippen zum Öffnen</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>
@@ -3537,7 +3599,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     
 <!-- Sprint 103 — Persona-Tile-Grid (zwischen Tools und Demo-Swiper) -->
 <section class="m-mag-personas" id="branchen" aria-label="Branchenpassung">
-    <p class="m-mag-eyebrow">Branchenpassung</p>
+    <p class="m-mag-eyebrow">№&nbsp;03 · Branchenpassung</p>
     <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
     <div class="m-mag-personas-grid">
         <button type="button" class="m-persona-tile" data-m-persona-target="0" aria-label="Immobilien: Eigener Marktauftritt — Demo öffnen">
@@ -3601,7 +3663,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     
 <!-- Sprint 129 — Tools-Annotation (№ 04) -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">Werkzeuge</p>
+    <p class="m-mag-eyebrow">№&nbsp;04 · Werkzeuge</p>
     <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
         <li>
@@ -3635,7 +3697,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     
 <!-- Sprint 151 — Brand-Versprechen (Phyllotaxis-SVG + № 05-Notation entfernt) -->
 <section class="m-mag-siegel" aria-label="Unser Versprechen">
-    <p class="m-siegel-eyebrow">Unser Versprechen</p>
+    <p class="m-siegel-eyebrow">№&nbsp;05 · Unser Versprechen</p>
     <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
     <p class="m-siegel-body">Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stück — der juristische Beweis: dieser Meister steht für dieses Stück. Wir schlagen unseres in jeden Code.</p>
     <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
@@ -4548,6 +4610,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
 
                 <header class="kr-letter-head">
+                    <p class="m-mag-eyebrow m-mag-eyebrow--kontakt">№&nbsp;06 · Kontakt</p>
                     <h2 class="kr-letter-headline">Lassen Sie uns sprechen.</h2>
                     <p class="kr-letter-meta">Stuttgart · <span data-kr-date></span></p>
                 </header>
@@ -4738,6 +4801,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <a href="/agb.html">AGB</a>
                     <a href="/barrierefreiheit.html">Barrierefreiheit</a>
                     <a href="/lighthouse-scores.html">Performance</a>
+                    <a href="/api/audit.md">API</a>
                 </div>
             </div>
         </div>
@@ -6263,6 +6327,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </script>
 
 
-<script src="/js/m-interactions.js?v=413" defer></script>
+<script src="/js/m-interactions.js?v=414" defer></script>
 </body>
 </html>

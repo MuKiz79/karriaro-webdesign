@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=413">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=413" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=413"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=414">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=414" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=414"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -159,7 +159,7 @@ function addMainContentAnchor(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=413" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=414" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -526,7 +526,7 @@ ${buildPhyllotaxisDots()}
 const TOOLS_SECTION_HTML = `
 <!-- Sprint 129 — Tools-Annotation (№ 04) -->
 <section class="m-mag-tools" aria-label="Branchen-Funktionen">
-    <p class="m-mag-eyebrow">Werkzeuge</p>
+    <p class="m-mag-eyebrow">№&nbsp;04 · Werkzeuge</p>
     <h2 class="m-mag-tools-title">Werkzeuge die verkaufen.</h2>
     <ol class="m-mag-tools-list">
         <li>
@@ -561,7 +561,7 @@ const TOOLS_SECTION_HTML = `
 const SIEGEL_SECTION_HTML = `
 <!-- Sprint 151 — Brand-Versprechen (Phyllotaxis-SVG + № 05-Notation entfernt) -->
 <section class="m-mag-siegel" aria-label="Unser Versprechen">
-    <p class="m-siegel-eyebrow">Unser Versprechen</p>
+    <p class="m-siegel-eyebrow">№&nbsp;05 · Unser Versprechen</p>
     <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
     <p class="m-siegel-body">Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stück — der juristische Beweis: dieser Meister steht für dieses Stück. Wir schlagen unseres in jeden Code.</p>
     <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
@@ -591,8 +591,12 @@ function injectSiegelSection(html) {
 // Sprint 129 — Kontakt-Section bekommt Eyebrow "№ 06 · Kontakt" als Magazine-
 // Pacing-Schluss. Mobile-only via .m-mag-eyebrow--kontakt (Desktop hidden).
 function injectKontaktNumbering(html) {
-    // Sprint 151 — № 06 · Kontakt-Eyebrow entfernt (radikal-Apple).
-    return html;
+    // Sprint 164 — № 06 · Kontakt-Eyebrow REAKTIVIERT (User-Wunsch Folio-Voice
+    // Apple-Pure-Style subtle). Eyebrow vor kr-letter-headline einfügen.
+    var pattern = '<header class="kr-letter-head">\n                    <h2 class="kr-letter-headline">';
+    if (html.indexOf(pattern) === -1) return html;
+    var replacement = '<header class="kr-letter-head">\n                    <p class="m-mag-eyebrow m-mag-eyebrow--kontakt">№&nbsp;06 · Kontakt</p>\n                    <h2 class="kr-letter-headline">';
+    return html.replace(pattern, replacement);
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -643,7 +647,7 @@ function buildPersonaSectionHtml() {
     return `
 <!-- Sprint 103 — Persona-Tile-Grid (zwischen Tools und Demo-Swiper) -->
 <section class="m-mag-personas" id="branchen" aria-label="Branchenpassung">
-    <p class="m-mag-eyebrow">Branchenpassung</p>
+    <p class="m-mag-eyebrow">№&nbsp;03 · Branchenpassung</p>
     <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
     <div class="m-mag-personas-grid">${tiles}
         ${wideTile}
@@ -792,7 +796,7 @@ function buildDemoSwiperHtml() {
     return `
 <!-- Mobile Demo-Swiper (Sprint 129 — Editorial-Page № 02, show-don't-tell) -->
 <section class="m-demo-swiper-mobile" id="demos" aria-label="Branchen-Demos">
-    <p class="m-demo-swiper-section-eyebrow">Acht Branchen · Live</p>
+    <p class="m-demo-swiper-section-eyebrow">№&nbsp;02 · Acht Branchen · Live</p>
     <h2 class="m-demo-swiper-section-title">Eine Manufaktur,<br>acht echte Demos.</h2>
     <p class="m-demo-swiper-section-hint" aria-hidden="true">↓ scrollen ·  tippen zum Öffnen</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>${slides}

@@ -331,7 +331,7 @@
             }
             if (loadErrorEl) loadErrorEl.style.display = 'flex';
         }
-        function openSheet(href, title, domain) {
+        function openSheetInternal(href, title, domain) {
             lastFocus = document.activeElement;
             if (sheetTitle) sheetTitle.textContent = title;
             if (sheetEyebrow) sheetEyebrow.textContent = domain;
@@ -340,9 +340,6 @@
             clearLoadTimer();
             if (sheetFrame) {
                 // Sprint 160 — Lean-Embed-HTML (build-embed-hero.mjs) statt ?embed=hero.
-                // Source: 53-154 KB pro Portfolio-Page → Lean: 23-62 KB (-60%).
-                // Eliminiert Webfonts, Scripts, External-CSS, Schema, Footer, Nav.
-                // Fallback bei /<slug>.html → /<slug>-embed.html-Pattern.
                 var leanSrc = href.replace(/\.html(\?.*)?$/, '-embed.html');
                 sheetFrame.setAttribute('src', leanSrc);
                 sheetFrame.style.opacity = '0';
@@ -351,6 +348,17 @@
             sheet.classList.add('is-open');
             sheet.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+        }
+        function openSheet(href, title, domain) {
+            // Sprint 164 — View Transitions API für smoothes Sheet-Open
+            // (Chrome 111+, Safari 18+). Graceful Fallback bei alten Browsern.
+            if (document.startViewTransition) {
+                document.startViewTransition(function() {
+                    openSheetInternal(href, title, domain);
+                });
+            } else {
+                openSheetInternal(href, title, domain);
+            }
         }
         function closeSheet() {
             clearLoadTimer();
