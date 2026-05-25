@@ -17,7 +17,17 @@
 
     var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
     var MIN_SCAN_MS = 2500;
-    var MAX_SCAN_MS = 6000;
+    var MAX_SCAN_MS = 18000;
+    var LOG = function () {
+        if (typeof console === 'undefined' || !console.log) return;
+        var args = ['[audit-magic]'].concat(Array.prototype.slice.call(arguments));
+        console.log.apply(console, args);
+    };
+    var ERR = function () {
+        if (typeof console === 'undefined' || !console.error) return;
+        var args = ['[audit-magic]'].concat(Array.prototype.slice.call(arguments));
+        console.error.apply(console, args);
+    };
     var PHASE_PHRASES = [
         'Wird geprüft …',
         'Lese Struktur und Konformität …',
@@ -213,6 +223,8 @@
             status.textContent = PHASE_PHRASES[0];
             status.classList.remove('kr-audit-magic-status--error');
         }
+        var retryBtn = stage.querySelector('[data-audit-magic-retry]');
+        if (retryBtn) retryBtn.parentNode.removeChild(retryBtn);
     }
 
     function resetSection(section, form, stage, resultHost) {
@@ -235,7 +247,7 @@
         }, PHASE_INTERVAL_MS);
     }
 
-    function showInlineError(stage, message) {
+    function showInlineError(stage, message, onRetry) {
         var status = stage.querySelector('[data-audit-magic-status]');
         if (status) {
             status.textContent = message;
@@ -243,6 +255,19 @@
         }
         var seal = stage.querySelector('.kr-audit-magic-seal');
         if (seal) seal.classList.remove('kr-audit-magic-seal--spin');
+        // Sprint 168.2 — persistenter "Wieder versuchen"-Button (kein Auto-Reset)
+        var existingRetry = stage.querySelector('[data-audit-magic-retry]');
+        if (existingRetry) existingRetry.parentNode.removeChild(existingRetry);
+        var retryBtn = document.createElement('button');
+        retryBtn.type = 'button';
+        retryBtn.setAttribute('data-audit-magic-retry', '');
+        retryBtn.className = 'kr-audit-magic-retry';
+        retryBtn.textContent = 'Wieder versuchen';
+        retryBtn.style.cssText = 'margin-top:12px;padding:10px 18px;font-family:Inter,system-ui,sans-serif;font-size:13px;color:#14202B;background:transparent;border:1px solid #14202B;border-radius:2px;cursor:pointer;';
+        retryBtn.addEventListener('click', function () {
+            if (typeof onRetry === 'function') onRetry();
+        });
+        stage.appendChild(retryBtn);
     }
 
     function ensureResultHost(section, stage) {
@@ -293,6 +318,7 @@
 
     function init() {
         var forms = document.querySelectorAll('form[data-audit-magic]');
+        LOG('init, found forms:', forms.length);
         if (!forms.length) return;
 
         forms.forEach(function (form) {
@@ -300,13 +326,20 @@
             var stage = section.querySelector('[data-audit-magic-stage]');
             var input = form.querySelector('[data-audit-magic-input]');
             var hp    = form.querySelector('input[name="hp"]');
-            if (!stage || !input) return;
+            if (!stage || !input) {
+                ERR('init bail: stage or input missing', { stage: !!stage, input: !!input });
+                return;
+            }
             var resultHost = ensureResultHost(section, stage);
+            // Sprint 168.2 — Bind-Guard verhindert doppelte Submit-Handler
+            // (falls Script versehentlich mehrfach geladen wird).
+            if (form.dataset.auditMagicBound === '1') {
+                LOG('form already bound, skipping');
+                return;
+            }
+            form.dataset.auditMagicBound = '1';
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                if (hp && hp.value) return;
-
+            function runAudit() {
                 var url = normalizeUrl(input.value);
                 if (!url) {
                     input.setCustomValidity('Bitte eine gültige Adresse angeben.');
@@ -315,6 +348,7 @@
                 }
                 input.setCustomValidity('');
                 var domain = deriveDomain(url);
+                LOG('submit', { url: url, domain: domain });
                 track('Magic Audit Submitted', { domain: domain });
 
                 showStage(form, stage);
@@ -327,6 +361,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: url, hp: '' })
                 }).then(function (res) {
+                    LOG('fetch response', { status: res.status, ok: res.ok });
                     if (res.status === 429) { var e1 = new Error('rate_limited'); e1.code = 429; throw e1; }
                     if (!res.ok)            { var e2 = new Error('http_' + res.status); e2.code = res.status; throw e2; }
                     return res.json();
@@ -338,6 +373,14 @@
 
                 Promise.race([fetchPromise, timeoutPromise]).then(function (result) {
                     if (done) return;
+                    LOG('result received', result);
+                    // Sprint 168.2 — Backend kann {ok:false, error:...} returnen
+                    if (result && result.ok === false) {
+                        var msg = (result.error && typeof result.error === 'string')
+                            ? result.error
+                            : 'Diese Seite lässt sich gerade nicht prüfen.';
+                        throw new Error('backend:' + msg);
+                    }
                     done = true;
                     var elapsed = Date.now() - scanStart;
                     var wait = Math.max(0, MIN_SCAN_MS - elapsed);
@@ -359,24 +402,36 @@
                     if (done) return;
                     done = true;
                     clearInterval(phaseTimer);
+                    ERR('error', err);
                     var message;
                     var reason;
                     if (err && err.code === 429) {
                         message = 'Bereits geprüft — bitte in einer Stunde erneut.';
                         reason = 'rate_limited';
                     } else if (err && err.message === 'timeout') {
-                        message = 'Diese Seite lässt sich gerade nicht öffnen. Versuchen Sie es in einer Minute erneut.';
+                        message = 'Die Prüfung dauert ungewöhnlich lange. Bitte erneut versuchen.';
                         reason = 'timeout';
+                    } else if (err && err.message && err.message.indexOf('backend:') === 0) {
+                        message = err.message.slice(8);
+                        reason = 'backend_error';
                     } else {
-                        message = 'Etwas ist schiefgegangen. Versuchen Sie es in einer Minute erneut.';
+                        message = 'Etwas ist schiefgegangen. Bitte erneut versuchen.';
                         reason = (err && err.message) || 'unknown';
                     }
                     track('Magic Audit Failed', { reason: reason, domain: domain });
-                    showInlineError(stage, message);
-                    setTimeout(function () {
+                    // Sprint 168.2 — persistente Fehler-Anzeige + Retry-Button
+                    showInlineError(stage, message, function () {
                         resetSection(section, form, stage, resultHost);
-                    }, 4500);
+                        // Re-trigger the audit with the same URL after a brief tick
+                        setTimeout(runAudit, 100);
+                    });
                 });
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (hp && hp.value) return;
+                runAudit();
             });
         });
     }
