@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=410">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=410" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=410"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=411">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=411" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=411"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
@@ -159,7 +159,7 @@ function addMainContentAnchor(html) {
 // Sprint 143 — Cache-Bust v=134 → v=143 (Senior-Review C-1/C-4/C-5/C-7/C-8/C-9:
 // Sticky-CTA-Bar entfernt, :focus-visible global, iframe-Fail-Timeout 8s,
 // Hamburger Focus-Trap+Escape, Pin-Spy responsive top, Critical-CSS inline).
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=410" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=411" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;
@@ -749,7 +749,7 @@ function buildDemoSwiperHtml() {
         const eager = i === 0;
         const dims = readMockupDims(slug);
         const brandColor = BRAND_COLOR_MAP[slug] || 'var(--color-cream-soft, #f5f3ee)';
-        const eagerFrame = i <= 1; // Sprint 140 — Stadtmakler + Lehmann eager-load iframe
+        const eagerFrame = true; // Sprint 161 — Alle iframes eager (User-Wunsch sofort sichtbar)
         // Sprint 148 — Premium-Vitrine (Sprint 145 polieren, nicht entkernen).
         // Card schwebt auf Brand-Color-Bühne (Sprint-131-Pattern reaktiviert).
         // Editorial-Caption (Eyebrow/Title/Sub/CTA) wandert UNTER die Card,
@@ -774,7 +774,7 @@ function buildDemoSwiperHtml() {
                     <span class="m-poster-chrome-url">${domain}</span>
                 </div>
                 <div class="m-poster-stage" data-m-poster-stage>
-                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="lazy" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="${eagerFrame ? 'high' : 'low'}"${eagerFrame ? ' data-m-poster-eager' : ''}></iframe>
+                    <iframe class="m-poster-frame" data-m-poster-src="${href}?embed=desktop" title="${title} Desktop-Hero-Vorschau" width="1280" height="1024" loading="eager" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="high" data-m-poster-eager></iframe>
                     <div class="m-poster-fallback" role="status" aria-live="polite">
                         <p>Vorschau lädt nicht — <a href="${href}">direkt zur Demo →</a></p>
                     </div>

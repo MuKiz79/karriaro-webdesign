@@ -273,26 +273,10 @@
             }, { passive: true });
         }
 
-        // iframe-Lazy-Load (Sprint 140 / 148.5 / 154 Performance-Audit):
-        //   - Sprint 154 OPT-1: navigator.connection adaption — saveData/3G → 0 eager
-        //   - Sprint 154 OPT-2: dynamic rootMargin nach effectiveType (3G=300, 4G=150)
-        //   - Sprint 154 OPT-2: threshold 0.1 → 0.25 (Horizontal-Rail braucht aktiveres Intent)
-        //   - Sprint 154 OPT-4: requestIdleCallback für Lazy-Observer-Registration
-        var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        var isSlow = conn && (
-            conn.effectiveType === 'slow-2g' ||
-            conn.effectiveType === '2g' ||
-            conn.effectiveType === '3g' ||
-            conn.saveData === true
-        );
-        var rootMarginValue = '200px 0px';
-        if (conn) {
-            if (conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g' || conn.effectiveType === '3g') {
-                rootMarginValue = '300px 0px';
-            } else if (conn.effectiveType === '4g') {
-                rootMarginValue = '150px 0px';
-            }
-        }
+        // Sprint 161 — Alle iframes sofort laden (User-Wunsch: "Beispielseiten
+        // sollen sofort sichtbar sein"). Sprint 154 OPT-1+2+4 (Connection-
+        // Adaption + IntersectionObserver + rootMargin-Tuning) entfernt.
+        // Save-Data wird bewusst NICHT respected — UX-Priorität.
         var frames = rail.querySelectorAll('.m-poster-frame[data-m-poster-src]');
         function loadFrame(frame) {
             if (frame.src && frame.src !== 'about:blank') return;
@@ -301,33 +285,7 @@
                 frame.classList.add('is-loaded');
             }, { once: true });
         }
-        var eagerLimit = isSlow ? 0 : 2;
-        var eagerCount = 0;
-        frames.forEach(function (f) {
-            if (f.hasAttribute('data-m-poster-eager') && eagerCount < eagerLimit) {
-                loadFrame(f);
-                eagerCount++;
-            }
-        });
-        if ('IntersectionObserver' in window) {
-            var frameIo = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                    if (e.isIntersecting) { loadFrame(e.target); frameIo.unobserve(e.target); }
-                });
-            }, { rootMargin: rootMarginValue, threshold: 0.25 });
-            var registerLazy = function () {
-                frames.forEach(function (f) {
-                    if (!f.hasAttribute('data-m-poster-eager')) frameIo.observe(f);
-                });
-            };
-            if ('requestIdleCallback' in window) {
-                requestIdleCallback(registerLazy, { timeout: 2000 });
-            } else {
-                registerLazy();
-            }
-        } else {
-            frames.forEach(loadFrame);
-        }
+        frames.forEach(loadFrame);
 
         slides.forEach(function (_, i) {
             var b = document.createElement('button');
