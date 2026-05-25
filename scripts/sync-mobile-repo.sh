@@ -54,13 +54,17 @@ cp "$MAIN_REPO"/src/m/sw.js . 2>/dev/null || true
 cp "$MAIN_REPO"/src/m/icons/*.png icons/ 2>/dev/null || true
 
 echo "→ Pfad-Rewrite: /images/ → https://karriaro-webdesign.de/images/"
+# Sprint 165 — srcset= ergänzt (Sprint 164 AVIF-<picture><source srcset="">-Fix).
+# Vorher: nur src= + href= rewritten, srcset im <source>-Tag blieb relativ → 404 + Broken-Image.
 find . -name "*.html" -print0 | xargs -0 sed -i '' \
     -e 's|src="/images/|src="https://karriaro-webdesign.de/images/|g' \
+    -e 's|srcset="/images/|srcset="https://karriaro-webdesign.de/images/|g' \
     -e 's|href="/images/|href="https://karriaro-webdesign.de/images/|g'
 
 echo "→ Pfad-Rewrite UNDO: mockups-opt lokal (Mobile-Repo hat eigene Kopie, Sprint 103)"
 find . -name "*.html" -print0 | xargs -0 sed -i '' \
     -e 's|src="https://karriaro-webdesign.de/images/mockups-opt/|src="/images/mockups-opt/|g' \
+    -e 's|srcset="https://karriaro-webdesign.de/images/mockups-opt/|srcset="/images/mockups-opt/|g' \
     -e 's|href="https://karriaro-webdesign.de/images/mockups-opt/|href="/images/mockups-opt/|g'
 
 echo "→ Pfad-Rewrite: /m/ → /"

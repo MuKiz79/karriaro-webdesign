@@ -27,7 +27,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const PORTFOLIO_DIR = join(ROOT, 'src', 'portfolio');
 
-const CACHE_VERSION = 'v=414';
+const CACHE_VERSION = 'v=415';
 
 // ────────────────────────────────────────────────────────────────
 // Helpers
