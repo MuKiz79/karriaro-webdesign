@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "apex-executive"
-  }
+  },
+  "targets": {
+    "apex-executive": {
+      "hosting": {
+        "karriaro-webdesign": [
+          "karriaro-webdesign"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

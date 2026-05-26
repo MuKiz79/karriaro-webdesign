@@ -68,6 +68,8 @@
     }
 
     function scoreVerdict(score) {
+        // Sprint 171 — Skala härter geeicht (war 80/55). "Stark" muss eine
+        // Aussage sein, kein Trostpreis.
         if (typeof score !== 'number') {
             return {
                 label: 'Auf den ersten Blick',
@@ -75,12 +77,12 @@
                 tag: 'unbekannt'
             };
         }
-        if (score >= 80) return {
+        if (score >= 90) return {
             label: 'Stark',
             detail: 'Substanz auf der Höhe der Manufaktur-Klasse.',
             tag: 'stark'
         };
-        if (score >= 55) return {
+        if (score >= 70) return {
             label: 'Solide',
             detail: 'Tragfähige Basis, mit feinen Hebeln im Detail.',
             tag: 'solide'

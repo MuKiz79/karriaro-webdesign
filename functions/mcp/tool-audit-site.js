@@ -37,9 +37,11 @@ function normalizeUrl(raw) {
 }
 
 function scoreLabel(score) {
+    // Sprint 171 — Skala härter geeicht (war 80/55). Verdient eine ehrlichere
+    // Bewertung: "Stark" ist eine Aussage, kein Trostpreis.
     if (typeof score !== 'number') return ['Auf den ersten Blick', 'Eine Tiefenmessung folgt im Detail-Brief.'];
-    if (score >= 80) return ['Stark', 'Substanz auf der Höhe der Manufaktur-Klasse.'];
-    if (score >= 55) return ['Solide', 'Tragfähige Basis, mit feinen Hebeln im Detail.'];
+    if (score >= 90) return ['Stark', 'Substanz auf der Höhe der Manufaktur-Klasse.'];
+    if (score >= 70) return ['Solide', 'Tragfähige Basis, mit feinen Hebeln im Detail.'];
     return ['Ausbaufähig', 'Die Substanz trägt, der Auftritt verdient mehr.'];
 }
 
@@ -155,6 +157,19 @@ function formatResult(domain, result, lighthouseScore) {
     lines.push('Ein Detail-Brief geht tiefer: Web Vitals im Detail,');
     lines.push('BFSG-Audit, branchen-spezifische Empfehlungen.');
     lines.push('Anfrage: https://karriaro-webdesign.de/?prefill=' + encodeURIComponent('https://' + domain) + '#kontakt');
+    // Sprint 171 — Self-Critique bei Karriaro-Self-Audit. Brand-Trust statt
+    // Selbstbeweihräucherung. Wenn Karriaro sich selbst prüft, wird das
+    // explizit als Mess-Methode reflektiert.
+    if (typeof domain === 'string' && domain.toLowerCase().indexOf('karriaro-webdesign') !== -1) {
+        lines.push('');
+        lines.push('ZUR EHRLICHKEIT — KARRIARO PRÜFT SICH SELBST');
+        lines.push('Wir bewerten uns nicht besser als wir sind. Skala neu geeicht:');
+        lines.push('  ab 90 → "Stark", 70-89 → "Solide", < 70 → "Ausbaufähig".');
+        lines.push('Bekannte Lücken:');
+        lines.push('  - Security-Header in Migration zu Firebase-Hosting (Sprint 171)');
+        lines.push('  - BFSG-Vollaudit quartalsweise extern verifiziert');
+        lines.push('Eine Manufaktur, die andere prüft, sollte sich selbst prüfen lassen.');
+    }
     return withSignature(lines.join('\n'));
 }
 

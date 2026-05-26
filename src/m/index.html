@@ -5124,6 +5124,173 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </section>
 
 
+    <!-- Sprint 171 — "Wir prüfen uns selbst" (Trust-Sprint, Brand-Ehrlichkeit) -->
+    <style>
+        .kr-selbst-audit {
+            background: #FBFAF7;
+            padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
+            text-align: center;
+        }
+        .kr-selbst-folio {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #5C6470;
+            margin: 0 0 24px;
+        }
+        .kr-selbst-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: clamp(28px, 4.4vw, 44px);
+            line-height: 1.12;
+            letter-spacing: -0.01em;
+            color: #14202B;
+            margin: 0 auto 24px;
+            max-width: 680px;
+        }
+        .kr-selbst-title em { font-style: italic; color: #8A4A2C; }
+        .kr-selbst-lede {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(17px, 1.8vw, 20px);
+            font-style: italic;
+            line-height: 1.5;
+            color: #3A434E;
+            max-width: 580px;
+            margin: 0 auto 48px;
+        }
+        .kr-selbst-card {
+            background: #fff;
+            border: 1px solid rgba(20, 32, 43, 0.12);
+            padding: clamp(28px, 4vw, 48px);
+            max-width: 560px;
+            margin: 0 auto 32px;
+            text-align: left;
+        }
+        .kr-selbst-loading {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #5C6470;
+            text-align: center;
+            margin: 0;
+            padding: 20px 0;
+        }
+        .kr-selbst-result {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.85;
+            color: #14202B;
+            margin: 0;
+        }
+        .kr-selbst-result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px dotted rgba(20, 32, 43, 0.12);
+            padding: 4px 0;
+        }
+        .kr-selbst-result-row:last-child { border-bottom: 0; }
+        .kr-selbst-result-row.is-total {
+            border-top: 1px solid rgba(20, 32, 43, 0.18);
+            margin-top: 8px;
+            padding-top: 12px;
+            font-weight: 600;
+        }
+        .kr-selbst-result-verdict {
+            font-family: 'Fraunces', Georgia, serif;
+            font-style: italic;
+            font-size: 17px;
+            color: #14202B;
+        }
+        .kr-selbst-result-verdict[data-verdict="stark"] { color: #2C5F4A; }
+        .kr-selbst-result-verdict[data-verdict="ausbaufaehig"] { color: #8A4A2C; }
+        .kr-selbst-foot {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #8A8E96;
+            margin: 0;
+        }
+        .kr-selbst-foot a { color: #5C6470; text-decoration: underline; text-decoration-color: rgba(20, 32, 43, 0.18); text-underline-offset: 3px; }
+    </style>
+    <section class="kr-selbst-audit" aria-labelledby="kr-selbst-title">
+        <p class="kr-selbst-folio">№&nbsp;10 · Wir prüfen uns selbst</p>
+        <h2 id="kr-selbst-title">Was unsere eigene Site aktuell <em>nicht</em> kann.</h2>
+        <p class="kr-selbst-lede">
+            Eine Manufaktur, die andere bewertet, sollte sich selbst
+            bewerten lassen. Dies ist der Live-Score unserer Hauptseite —
+            ungeschönt, automatisch gemessen, ohne Filter.
+        </p>
+        <div class="kr-selbst-card" data-self-audit-host>
+            <p class="kr-selbst-loading">Lade Live-Audit von Karriaro Lighthouse …</p>
+        </div>
+        <p class="kr-selbst-foot">
+            Quelle: <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener">Karriaro Lighthouse</a>
+            · gemessen bei Page-Load
+        </p>
+    </section>
+    <script>
+    (function () {
+        var host = document.querySelector('[data-self-audit-host]');
+        if (!host) return;
+        var loaded = false;
+        function escapeHtml(s) {
+            return String(s == null ? '' : s).replace(/[<>&"']/g, function (c) {
+                return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+        function verdictFor(score) {
+            if (typeof score !== 'number') return { label: 'Unbekannt', tag: 'unbekannt' };
+            if (score >= 90) return { label: 'Stark', tag: 'stark' };
+            if (score >= 70) return { label: 'Solide', tag: 'solide' };
+            return { label: 'Ausbaufähig', tag: 'ausbaufaehig' };
+        }
+        function renderResult(data) {
+            var dims = Array.isArray(data.dimensions) ? data.dimensions : [];
+            var rows = dims.map(function (d) {
+                var label = String(d.name || '').charAt(0).toUpperCase() + String(d.name || '').slice(1);
+                var sc = typeof d.score === 'number' ? d.score : '–';
+                return '<div class="kr-selbst-result-row"><span>' + escapeHtml(label) + '</span><span>' + sc + ' / 25</span></div>';
+            }).join('');
+            var v = verdictFor(data.totalScore);
+            var totalRow =
+                '<div class="kr-selbst-result-row is-total"><span>Gesamt</span><span>' +
+                (typeof data.totalScore === 'number' ? data.totalScore : '–') + ' / 100 · ' +
+                '<span class="kr-selbst-result-verdict" data-verdict="' + v.tag + '">' + v.label + '</span></span></div>';
+            host.innerHTML = '<div class="kr-selbst-result">' + rows + totalRow + '</div>';
+        }
+        function fetchScore() {
+            if (loaded) return;
+            loaded = true;
+            fetch('https://lighthouse.karriaro.de/api/public/lighthouse-score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: 'https://karriaro-webdesign.de' })
+            }).then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (j) {
+                  if (j && j.success && j.data) renderResult(j.data);
+                  else host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:#14202B;">Direkt zu Lighthouse</a></p>';
+              })
+              .catch(function () {
+                  host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:#14202B;">Direkt zu Lighthouse</a></p>';
+              });
+        }
+        if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { fetchScore(); io.disconnect(); }
+                });
+            }, { rootMargin: '200px' });
+            io.observe(host);
+        } else {
+            // Fallback: direkt laden
+            fetchScore();
+        }
+    })();
+    </script>
+
+
     <!-- Sprint 41 — Kontakt als Stempel-Briefkarte + Founder-Letter -->
     <section id="kontakt" aria-label="Kontakt" class="fade-in kr-letter-section">
         <div class="wrap" style="max-width: 760px;">
