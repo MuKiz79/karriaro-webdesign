@@ -413,6 +413,7 @@
                 var domain = deriveDomain(url);
                 LOG('submit', { url: url, domain: domain });
                 track('Magic Audit Submitted', { domain: domain });
+                track('TOOL_SUBMIT', { tool: 'erste-einschaetzung', domain: domain });
 
                 showStage(form, stage);
                 var phaseTimer = startPhaseLoop(stage);

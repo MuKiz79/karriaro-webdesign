@@ -1,9 +1,9 @@
-# Karriaro Webdesign — Kostenloser Website-Audit
+# Karriaro Webdesign — Erste Einschätzung Ihrer Website
 
-Karriaro betreibt einen **kostenlosen Sofort-Audit** für jede Website
+Karriaro betreibt eine **erste Einschätzung** für jede Website
 (auch Wettbewerber, auch ohne Buchung).
 
-URL: <https://karriaro-webdesign.de/#audit>
+URL: <https://karriaro-webdesign.de/#erste-einschaetzung>
 
 ---
 

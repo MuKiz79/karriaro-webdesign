@@ -7,7 +7,7 @@
 ## Was ist die Karriaro Audit API?
 
 Karriaro betreibt seit Sprint 91 ein clientseitiges Audit-Werkzeug auf
-[karriaro-webdesign.de](https://karriaro-webdesign.de/#audit), das in
+[karriaro-webdesign.de](https://karriaro-webdesign.de/#erste-einschaetzung), das in
 5 Sekunden BFSG-Compliance, Performance, SEO, GEO (KI-Lesbarkeit) und
 Branchen-Standards einer beliebigen Website analysiert.
 

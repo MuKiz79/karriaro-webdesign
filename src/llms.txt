@@ -28,7 +28,7 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (5
 
 ## Audit-Tool
 
-- [Kostenloser Sofort-Audit](https://karriaro-webdesign.de/#audit): URL eingeben, in 5 Sekunden BFSG-Compliance + SEO + GEO (KI-Lesbarkeit) + Branchen-Standards + Pain-Points (Security/Mobile/Social) als Bericht. Auch ohne Buchung nutzbar.
+- [Erste Einschätzung](https://karriaro-webdesign.de/#erste-einschaetzung): URL eingeben, Bericht über BFSG-Konformität, SEO, KI-Auffindbarkeit, Branchen-Standards und Pain-Points (Security/Mobile/Social). Keine Anmeldung, keine Speicherung ohne Zustimmung.
 
 ## MCP-Server (für KI-Agenten)
 
