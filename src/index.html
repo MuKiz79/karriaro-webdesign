@@ -3422,6 +3422,25 @@
         .kr-audit-result-cta:hover {
             background: #1A2E40;
         }
+        .kr-audit-result-cta-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 22px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #14202B;
+            background: transparent;
+            border: 1px solid rgba(20, 32, 43, 0.25);
+            border-radius: 2px;
+            text-decoration: none;
+            transition: border-color 180ms ease, background-color 180ms ease;
+        }
+        .kr-audit-result-cta-secondary:hover {
+            border-color: #14202B;
+            background: rgba(20, 32, 43, 0.04);
+        }
         .kr-audit-result-reset {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;
@@ -3597,6 +3616,8 @@
                     <span>BFSG · DSGVO</span>
                     <span class="dot" aria-hidden="true">·</span>
                     <span><a href="https://karriaro-webdesign.de/api/mcp.html">MCP-Server für Claude, Cursor, v0 ↗</a></span>
+                    <span class="dot" aria-hidden="true">·</span>
+                    <span><a href="https://lighthouse.karriaro.de">Lighthouse · Live-Analytics ↗</a></span>
                 </p>
                 <!-- Sprint 164 — Phyllotaxis-Manufaktursiegel (Goldener Winkel 137,5° · 13 Punkte).
                      CLAUDE.md fordert das als Brand-Anker. Pulsiert subtil (prefers-reduced-motion respected). -->
@@ -4624,6 +4645,129 @@
                 Noch eine Frage? <a href="#kontakt" style="color: var(--color-indigo); text-decoration: underline;">Direkt fragen — Antwort innerhalb 24 Stunden.</a>
             </p>
         </div>
+    </section>
+
+
+    <!-- Sprint 170 — Karriaro-Suite (Cross-Promotion zu Lighthouse) -->
+    <style>
+        .kr-suite {
+            background: #F5F3EE;
+            padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
+            text-align: center;
+        }
+        .kr-suite-folio {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #5C6470;
+            margin: 0 0 24px;
+        }
+        .kr-suite-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 500;
+            font-size: clamp(28px, 4.4vw, 44px);
+            line-height: 1.12;
+            letter-spacing: -0.01em;
+            color: #14202B;
+            margin: 0 auto 48px;
+            max-width: 720px;
+        }
+        .kr-suite-title em { font-style: italic; color: #8A7B5C; }
+        .kr-suite-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 28px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        @media (min-width: 720px) {
+            .kr-suite-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .kr-suite-card {
+            background: #fff;
+            border: 1px solid rgba(20, 32, 43, 0.08);
+            padding: clamp(28px, 4vw, 40px);
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+        }
+        .kr-suite-card-folio {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: #8A7B5C;
+            margin: 0 0 12px;
+        }
+        .kr-suite-card h3 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(22px, 2.6vw, 26px);
+            font-weight: 500;
+            line-height: 1.2;
+            color: #14202B;
+            margin: 0 0 16px;
+        }
+        .kr-suite-card p {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.55;
+            color: #3A434E;
+            margin: 0 0 24px;
+            flex: 1 1 auto;
+        }
+        .kr-suite-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #14202B;
+            text-decoration: underline;
+            text-decoration-color: rgba(20, 32, 43, 0.25);
+            text-underline-offset: 4px;
+            align-self: flex-start;
+        }
+        .kr-suite-card a:hover {
+            text-decoration-color: #14202B;
+        }
+        .kr-suite-caption {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: lowercase;
+            color: rgba(20, 32, 43, 0.45);
+            margin: 36px 0 0;
+        }
+    </style>
+    <section class="kr-suite" aria-labelledby="kr-suite-title">
+        <p class="kr-suite-folio">№&nbsp;09 · Karriaro-Werkzeuge</p>
+        <h2 id="kr-suite-title">Zwei Werkzeuge, ein <em>Manufaktur-Geist</em>.</h2>
+        <div class="kr-suite-grid">
+            <article class="kr-suite-card">
+                <p class="kr-suite-card-folio">I · Manufaktur</p>
+                <h3>Karriaro Webdesign-Manufaktur</h3>
+                <p>
+                    Handcodierte Premium-Websites für den deutschen Mittelstand.
+                    Festpreis 1.290–3.990 € einmalig. Maximal fünf Pilot-Plätze
+                    pro Quartal. Lighthouse 99/100 als Mindeststandard.
+                </p>
+                <a href="#kontakt">Erstgespräch anfragen →</a>
+            </article>
+            <article class="kr-suite-card">
+                <p class="kr-suite-card-folio">II · Cockpit</p>
+                <h3>Karriaro Lighthouse</h3>
+                <p>
+                    Visitor- und Lead-Intelligence. Privacy-first, AI-gestützt,
+                    Session-Replay, Sales-Workflow. Für Sites, die wirklich
+                    messen wollen — und für KI-Agenten via MCP-Server abrufbar.
+                </p>
+                <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener">Lighthouse ansehen ↗</a>
+            </article>
+        </div>
+        <p class="kr-suite-caption" aria-hidden="true">eine Brand · ein Schwarzwald</p>
     </section>
 
 

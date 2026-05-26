@@ -236,6 +236,11 @@
                     'data-audit-detail-link data-audit-domain="' + escapeHtml(domain) + '">' +
                     '30-Minuten-Brief anfragen — wir gehen tief →' +
                 '</a>' +
+                '<a class="kr-audit-result-cta-secondary" ' +
+                    'href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" ' +
+                    'data-audit-lighthouse-cta>' +
+                    'Auch Live-Verkehr messen? → Lighthouse' +
+                '</a>' +
                 '<button type="button" class="kr-audit-result-reset" data-audit-result-reset>' +
                     'Eine weitere Adresse prüfen' +
                 '</button>' +

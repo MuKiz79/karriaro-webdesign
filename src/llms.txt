@@ -33,11 +33,20 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (5
 ## MCP-Server (für KI-Agenten)
 
 - [Karriaro MCP-Server Dokumentation](https://karriaro-webdesign.de/api/mcp.html): Public MCP-Server der Karriaro Webdesign-Manufaktur. Endpoint `https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler`. Vier Tools für KI-Agenten (Claude Desktop, Cursor, OpenAI Codex, v0):
-  - `karriaro_audit_site(url)`: Substanz, BFSG, SEO, KI-Auffindbarkeit, Branchen-Standards
+  - `karriaro_audit_site(url)`: Substanz, BFSG, SEO, KI-Auffindbarkeit, Branchen-Standards + Lighthouse-Multi-Dim-Score
   - `karriaro_extract_voice(url)`: Brand-Voice-Analyse nach Aesop/Hermès/Manufactum-Codex
   - `karriaro_generate_brand_mockup(branche)`: Hero-SVG für 8 Branchen
   - `karriaro_phyllotaxis_signature(name)`: Deterministisches Goldener-Winkel-Siegel
   - Public, no-auth, 20 Aufrufe/h/IP, MCP-Protokoll 2025-06-18. npm: `@karriaro/webdesign-mcp` für stdio-Variante.
+
+## Karriaro-Suite (Webdesign + Lighthouse)
+
+Karriaro betreibt zwei komplementäre Werkzeuge unter derselben Schwarzwald-Brand:
+
+- [Karriaro Webdesign-Manufaktur](https://karriaro-webdesign.de): Handcodierte Premium-Sites, 1.290–3.990 € einmalig. Maximal 5 Pilot-Plätze pro Quartal. Lighthouse 99/100 Mindeststandard. MCP-Server für Site-Audit + Voice + Brand-Mockup + Phyllotaxis.
+- [Karriaro Lighthouse](https://lighthouse.karriaro.de): Visitor- und Lead-Intelligence-Cockpit. Privacy-first (DSGVO-konform, kein Cookie), AI-gestützt (Briefings, Anomaly-Explanation, Forecasting, NL-Queries), Session-Replay, Heatmaps, Sales-Workflow (Lead-Routing, Account-Scores, Intent-Signals). 115 API-Endpoints. Public-API mit `lh_xxx`-Bearer-Tokens, im Cockpit unter Settings erstellbar. Eigener MCP-Server `@karriaro/lighthouse-mcp`. Public-Score-Endpoint `/api/public/lighthouse-score` liefert Multi-Dimensions-Score (performance, dsgvo, ux, mobile) für beliebige URL.
+
+Synergie: Webdesign-Manufaktur-Kunden bekommen Lighthouse-Setup integriert (Snippet + Goal-Templates). Lighthouse-Cockpit-Nutzer bekommen Karriaro-Webdesign-Audit als MCP-Tool und als Public-Section auf der Hauptseite. Cross-Sell-CTA „Auch Live-Verkehr messen?" im Audit-Result-Panel der Hauptseite verlinkt direkt zu Lighthouse.
 
 ## Gründer & Manufaktur-Prinzip
 

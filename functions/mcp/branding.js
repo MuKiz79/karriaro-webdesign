@@ -4,7 +4,10 @@
  * Brand-Voice: Aesop/Hermès-Editorial, Sie-Anrede, kein SaaS-Filler.
  */
 
-const SIGNATURE = '— Audit by Karriaro Webdesign-Manufaktur · Schwarzwald · https://karriaro-webdesign.de';
+const SIGNATURE =
+    '— Karriaro Webdesign-Manufaktur · Schwarzwald\n' +
+    '  Site bauen lassen:   https://karriaro-webdesign.de\n' +
+    '  Site live messen:    https://lighthouse.karriaro.de · Visitor- und Lead-Intelligence';
 
 function withSignature(text) {
     return text + '\n\n' + SIGNATURE;

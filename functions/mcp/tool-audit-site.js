@@ -5,6 +5,7 @@
 
 const { runLightAudit } = require('../lib/light-audit.js');
 const { header, withSignature } = require('./branding.js');
+const { fetchLighthouseScore } = require('./lighthouse-score-fetch.js');
 
 const DEFINITION = {
     name: 'karriaro_audit_site',
@@ -106,7 +107,7 @@ function pickFindings(result) {
     return out.slice(0, 3);
 }
 
-function formatResult(domain, result) {
+function formatResult(domain, result, lighthouseScore) {
     if (result && result.degraded === true) {
         return withSignature(header('Karriaro · Erste Einschätzung') +
             '\n\nDomain:    ' + domain +
@@ -131,6 +132,21 @@ function formatResult(domain, result) {
         lines.push('Branche:   ' + result.branch.name);
         lines.push('');
     }
+    // Sprint 170 — Lighthouse-Public-Score (Multi-Dimensions-Profil)
+    if (lighthouseScore && Array.isArray(lighthouseScore.dimensions) && lighthouseScore.dimensions.length) {
+        lines.push('LIGHTHOUSE-PROFIL');
+        lighthouseScore.dimensions.forEach(function (d) {
+            if (!d || typeof d.name !== 'string') return;
+            var label = String(d.name).charAt(0).toUpperCase() + String(d.name).slice(1);
+            var scoreStr = typeof d.score === 'number' ? d.score + '/25' : '–';
+            lines.push('  ' + label.padEnd(14) + scoreStr);
+        });
+        if (typeof lighthouseScore.totalScore === 'number') {
+            lines.push('  ' + 'Gesamt'.padEnd(14) + lighthouseScore.totalScore + '/100');
+        }
+        lines.push('  (gemessen von Karriaro Lighthouse · lighthouse.karriaro.de)');
+        lines.push('');
+    }
     lines.push('TOP-FINDINGS');
     findings.forEach(function (f, i) {
         lines.push((i + 1) + '. ' + f);
@@ -152,14 +168,13 @@ async function execute(args, ctx) {
     catch (e) { throw new Error('Ungültige URL.'); }
 
     var placesKey = ctx && ctx.placesKey ? ctx.placesKey : '';
-    var result;
-    try {
-        result = await runLightAudit(auditUrl, placesKey);
-    } catch (err) {
+    // Sprint 170 — Lighthouse-Score parallel anfragen (4s-Timeout intern).
+    // Bei Erfolg wird Multi-Dim-Profil ins Output gemerged, bei Fehler null.
+    var auditPromise = runLightAudit(auditUrl, placesKey).catch(function (err) {
         var lower = String(err.message || '').toLowerCase();
         var isUnreachable = lower.includes('http ') || lower.includes('abort') ||
             lower.includes('fetch') || lower.includes('ssrf');
-        result = {
+        return {
             ok: true,
             degraded: true,
             domain: domain,
@@ -167,8 +182,10 @@ async function execute(args, ctx) {
                 ? 'Wir konnten Ihre Seite gerade nicht erreichen.'
                 : 'Wir konnten Ihre Seite gerade nicht analysieren.'
         };
-    }
-    return formatResult(domain, result);
+    });
+    var lighthousePromise = fetchLighthouseScore(auditUrl);
+    var both = await Promise.all([auditPromise, lighthousePromise]);
+    return formatResult(domain, both[0], both[1]);
 }
 
 module.exports = { DEFINITION, execute };
