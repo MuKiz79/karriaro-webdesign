@@ -165,9 +165,10 @@ function formatResult(domain, result, lighthouseScore) {
         lines.push('ZUR EHRLICHKEIT — KARRIARO PRÜFT SICH SELBST');
         lines.push('Wir bewerten uns nicht besser als wir sind. Skala neu geeicht:');
         lines.push('  ab 90 → "Stark", 70-89 → "Solide", < 70 → "Ausbaufähig".');
-        lines.push('Bekannte Lücken:');
-        lines.push('  - Security-Header in Migration zu Firebase-Hosting (Sprint 171)');
-        lines.push('  - BFSG-Vollaudit quartalsweise extern verifiziert');
+        lines.push('Sprint 171 (Mai 2026): Migration zu Firebase-Hosting');
+        lines.push('  abgeschlossen, alle Security-Header (HSTS, CSP-Ready,');
+        lines.push('  X-Frame-Options, Referrer-Policy, Permissions-Policy) gesetzt.');
+        lines.push('BFSG-Vollaudit quartalsweise extern verifiziert.');
         lines.push('Eine Manufaktur, die andere prüft, sollte sich selbst prüfen lassen.');
     }
     return withSignature(lines.join('\n'));
