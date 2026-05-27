@@ -576,11 +576,16 @@ const SIEGEL_SECTION_HTML = `
 </section>
 `;
 
+// Sprint 172.1 — Lookahead-Pattern, das die existierende Sektion nicht
+// konsumiert. Original war /<section id="audit"/ + Re-Insert; nach Sprint
+// 172 ist der Anker <section class="kr-audit-magic" ... id="erste-
+// einschaetzung"> — id steht nicht als erstes Attribut, daher Lookahead.
+const INJECT_ANCHOR = /(?=<section[^>]*\bid="erste-einschaetzung")/;
+
 function injectToolsSection(html) {
     if (html.includes('m-mag-tools-title')) return html;
-    const auditAnchor = /<section id="audit"/;
-    if (auditAnchor.test(html)) {
-        return html.replace(auditAnchor, TOOLS_SECTION_HTML + '\n    <section id="audit"');
+    if (INJECT_ANCHOR.test(html)) {
+        return html.replace(INJECT_ANCHOR, TOOLS_SECTION_HTML + '\n    ');
     }
     console.warn('  ⚠ kein Anker für Tools-Section gefunden');
     return html;
@@ -588,9 +593,8 @@ function injectToolsSection(html) {
 
 function injectSiegelSection(html) {
     if (html.includes('m-mag-siegel')) return html;
-    const auditAnchor = /<section id="audit"/;
-    if (auditAnchor.test(html)) {
-        return html.replace(auditAnchor, SIEGEL_SECTION_HTML + '\n    <section id="audit"');
+    if (INJECT_ANCHOR.test(html)) {
+        return html.replace(INJECT_ANCHOR, SIEGEL_SECTION_HTML + '\n    ');
     }
     console.warn('  ⚠ kein Anker für Siegel-Section gefunden');
     return html;
@@ -667,11 +671,10 @@ function buildPersonaSectionHtml() {
 
 function injectPersonaSection(html) {
     if (html.includes('m-mag-personas-grid')) return html;
-    // Sprint 129 — Anker auf audit umgestellt; in Reverse-Inject-Order landet
-    // Persona zwischen Demos und Tools.
-    const auditAnchor = /<section id="audit"/;
-    if (auditAnchor.test(html)) {
-        return html.replace(auditAnchor, buildPersonaSectionHtml() + '\n    <section id="audit"');
+    // Sprint 172.1 — Lookahead-Anker (Sektion-id steht nicht first). In
+    // Reverse-Inject-Order landet Persona zwischen Demos und Tools.
+    if (INJECT_ANCHOR.test(html)) {
+        return html.replace(INJECT_ANCHOR, buildPersonaSectionHtml() + '\n    ');
     }
     console.warn('  ⚠ kein Anker für Persona-Section gefunden');
     return html;
@@ -894,15 +897,14 @@ function buildDemoSwiperHtml() {
 
 function injectDemoSwiper(html) {
     if (html.includes('m-demo-swiper-mobile')) return html;
-    // Sprint 96 — Anker ist <section id="audit" (zwischen Hero und Audit-Sektion).
-    // Vorher: <div id="arbeiten"> — das lag INNERHALB hero-with-photo und brach das Layout.
-    // Jetzt: nach Hero-Schluss, vor Audit-Schluss. Saubere standalone-Section.
-    const anchor = /<section id="audit"/;
-    if (!anchor.test(html)) {
-        console.warn('  ⚠ <section id="audit" nicht gefunden — Demo-Swiper nicht injiziert');
+    // Sprint 172.1 — Lookahead-Anker (Sprint 172 hat die WERKZEUG-Sektion
+    // entfernt, die alte Audit-Position wird jetzt von der Magic-Moment-
+    // Sektion belegt — id steht aber nicht als erstes Attribut).
+    if (!INJECT_ANCHOR.test(html)) {
+        console.warn('  ⚠ <section ... id="erste-einschaetzung" nicht gefunden — Demo-Swiper nicht injiziert');
         return html;
     }
-    return html.replace(anchor, buildDemoSwiperHtml() + '\n    <section id="audit"');
+    return html.replace(INJECT_ANCHOR, buildDemoSwiperHtml() + '\n    ');
 }
 
 // ────────────────────────────────────────────────────────────────
