@@ -1,4 +1,15 @@
-name: Deploy to GitHub Pages
+name: Deploy to Firebase Hosting
+
+# Ersetzt den alten GitHub-Pages-Deploy. Die DNS von karriaro-webdesign.de
+# zeigt seit Sprint 171 auf Firebase Hosting — das GitHub-Pages-Artefakt wurde
+# nicht mehr ausgeliefert (Deploy-Gap). Dieser Workflow deployt src/ direkt nach
+# Firebase Hosting (Target karriaro-webdesign, Projekt apex-executive).
+#
+# AKTIVIERUNG: GitHub-Secret FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE setzen
+# (firebase init hosting:github ODER manuell: GCP-Service-Account mit Rolle
+# "Firebase Hosting Admin" → JSON-Key → Repo-Settings → Secrets → Actions).
+# Solange das Secret fehlt, überspringt der Job den Deploy mit einer Warnung
+# (grüner Run), statt zu failen.
 
 on:
   push:
@@ -8,31 +19,32 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: "firebase-hosting"
   cancel-in-progress: false
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      FIREBASE_SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Hinweis bei fehlendem Service-Account
+        if: env.FIREBASE_SA == ''
+        run: |
+          echo "::warning::FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE ist nicht gesetzt — Firebase-Deploy wird übersprungen."
+          echo "::warning::Secret hinterlegen, um Auto-Deploy zu aktivieren (siehe Kommentar in deploy.yml)."
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy nach Firebase Hosting (live)
+        if: env.FIREBASE_SA != ''
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          path: 'src'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE }}
+          channelId: live
+          projectId: apex-executive
+          target: karriaro-webdesign
