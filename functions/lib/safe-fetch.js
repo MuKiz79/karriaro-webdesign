@@ -1,16 +1,24 @@
 /**
- * SSRF-sicherer fetch()-Wrapper.
+ * SSRF-sicherer fetch()-Wrapper — mit IP-Pinning (Sprint 179).
  *
- * Schuetzt quickAudit/requestAudit/deepResearch davor, dass ein Angreifer
- * via User-URL interne Targets erreicht (Loopback, RFC1918, Link-Local
- * inkl. AWS-Metadata 169.254.169.254, IPv6-Loopback, etc.).
+ * Schuetzt quickAudit/requestAudit/deepResearch/securityAudit/extract_voice
+ * davor, dass ein Angreifer via User-URL interne Targets erreicht (Loopback,
+ * RFC1918, Link-Local inkl. AWS/GCP-Metadata 169.254.169.254, IPv6-Loopback,
+ * CGNAT, Multicast, ...).
  *
- * Validiert Protokoll + DNS-resolvte IP vor jedem Hop, folgt Redirects
- * manuell mit max. 3 Hops, prueft jeden neuen Host wieder.
+ * Sprint 179 — DNS-Rebinding / TOCTOU geschlossen: Vorher validierte
+ * assertPublicHost() die aufgeloeste IP, danach loeste das globale fetch() den
+ * Hostnamen ERNEUT auf — ein Angreifer mit TTL=0-DNS konnte zwischen Pruefung
+ * und Verbindung auf eine private IP umschalten. Jetzt wird die validierte IP
+ * via undici-Agent (connect.lookup) fuer die tatsaechliche Verbindung GEPINNT;
+ * Validierung und Connect nutzen dieselbe IP. SNI/Host bleibt der Hostname.
+ *
+ * Validiert Protokoll + IP pro Redirect-Hop (manuell, max. 3 Hops).
  */
 
 const dns = require('node:dns').promises;
 const net = require('node:net');
+const { fetch: undiciFetch, Agent } = require('undici');
 
 const ALLOWED_PROTOCOLS = new Set(['http:', 'https:']);
 const MAX_REDIRECTS = 3;
@@ -41,15 +49,22 @@ function isPrivateIPv6(ip) {
     return false;
 }
 
-async function assertPublicHost(hostname) {
+/**
+ * Resolved + validiert einen Host und liefert die zu PINNENDE Public-IP.
+ * Literale IPs werden direkt geprueft; Hostnamen aufgeloest — ALLE Records
+ * muessen public sein (strikt), gepinnt wird der erste Record.
+ * Wirft `SSRF blocked: …` bei privatem/ungueltigem/unaufloesbarem Host.
+ * @returns {Promise<{address: string, family: 4|6}>}
+ */
+async function resolvePublicAddress(hostname) {
     if (!hostname) throw new Error('SSRF blocked: empty hostname');
     if (net.isIPv4(hostname)) {
         if (isPrivateIPv4(hostname)) throw new Error(`SSRF blocked: private IPv4 ${hostname}`);
-        return;
+        return { address: hostname, family: 4 };
     }
     if (net.isIPv6(hostname)) {
         if (isPrivateIPv6(hostname)) throw new Error(`SSRF blocked: private IPv6 ${hostname}`);
-        return;
+        return { address: hostname, family: 6 };
     }
     let records;
     try {
@@ -57,6 +72,7 @@ async function assertPublicHost(hostname) {
     } catch (_err) {
         throw new Error(`SSRF blocked: DNS resolution failed for ${hostname}`);
     }
+    if (!records || !records.length) throw new Error(`SSRF blocked: no DNS records for ${hostname}`);
     for (const r of records) {
         if (r.family === 4 && isPrivateIPv4(r.address)) {
             throw new Error(`SSRF blocked: ${hostname} resolves to private IPv4 ${r.address}`);
@@ -65,12 +81,31 @@ async function assertPublicHost(hostname) {
             throw new Error(`SSRF blocked: ${hostname} resolves to private IPv6 ${r.address}`);
         }
     }
+    return { address: records[0].address, family: records[0].family };
+}
+
+/** Backwards-kompatibel: wirft bei privatem/ungueltigem Host, sonst void. */
+async function assertPublicHost(hostname) {
+    await resolvePublicAddress(hostname);
 }
 
 /**
- * Drop-in fuer fetch() mit SSRF-Guard + manuellem Redirect-Follow.
+ * undici-konformer lookup, der IMMER die vorvalidierte IP liefert (kein
+ * Re-Resolve → kein Rebinding). undicis Connector ruft lookup mit { all: true }
+ * → Array-Form erforderlich; sonst (err, address, family).
+ */
+function pinnedLookup(address, family) {
+    return function (hostname, options, callback) {
+        if (options && options.all) callback(null, [{ address, family }]);
+        else callback(null, address, family);
+    };
+}
+
+/**
+ * Drop-in fuer fetch() mit SSRF-Guard + IP-Pinning + manuellem Redirect-Follow.
  * @param {string} url
  * @param {(RequestInit & { timeoutMs?: number })} [options]
+ * @returns {Promise<Response>} WHATWG-Response (undici)
  */
 async function safeFetch(url, options = {}) {
     const { timeoutMs = 8000, signal: externalSignal, ...rest } = options;
@@ -82,15 +117,26 @@ async function safeFetch(url, options = {}) {
         if (!ALLOWED_PROTOCOLS.has(parsed.protocol)) {
             throw new Error(`SSRF blocked: protocol ${parsed.protocol} not allowed`);
         }
-        await assertPublicHost(parsed.hostname);
+        // Validieren UND die zu nutzende IP ermitteln — dieselbe IP fuer Check
+        // und Connect (kein Re-Resolve zwischen beidem → kein DNS-Rebinding).
+        const { address, family } = await resolvePublicAddress(parsed.hostname);
 
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
         const signal = externalSignal || controller.signal;
+        // Per-Hop-Agent mit gepinnter IP. Single-Use (keepAlive minimal), wird
+        // nach dem Response-Lifecycle von undici/GC abgeraeumt.
+        const agent = new Agent({
+            connect: { lookup: pinnedLookup(address, family), timeout: timeoutMs },
+            connections: 1,
+            pipelining: 0,
+            keepAliveTimeout: 10,
+            keepAliveMaxTimeout: 10
+        });
 
         let response;
         try {
-            response = await fetch(currentUrl, { ...rest, redirect: 'manual', signal });
+            response = await undiciFetch(currentUrl, { ...rest, redirect: 'manual', signal, dispatcher: agent });
         } finally {
             clearTimeout(timer);
         }
@@ -98,6 +144,7 @@ async function safeFetch(url, options = {}) {
         if (response.status >= 300 && response.status < 400) {
             const location = response.headers.get('location');
             if (!location) return response;
+            // Naechster Hop: neuer Host wird erneut validiert + gepinnt.
             currentUrl = new URL(location, currentUrl).toString();
             continue;
         }
@@ -106,4 +153,4 @@ async function safeFetch(url, options = {}) {
     throw new Error('SSRF blocked: too many redirects');
 }
 
-module.exports = { safeFetch, assertPublicHost, isPrivateIPv4, isPrivateIPv6 };
+module.exports = { safeFetch, assertPublicHost, resolvePublicAddress, isPrivateIPv4, isPrivateIPv6 };

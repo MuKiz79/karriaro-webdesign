@@ -11,6 +11,7 @@ const assert = require('node:assert/strict');
 const {
     safeFetch,
     assertPublicHost,
+    resolvePublicAddress,
     isPrivateIPv4,
     isPrivateIPv6
 } = require('../lib/safe-fetch.js');
@@ -170,4 +171,27 @@ test('safeFetch: rejects http://10.0.0.1', async () => {
 test('safeFetch: rejects host that resolves to private IP', async () => {
     // localhost resolves to 127.0.0.1 via OS hosts-file
     await assert.rejects(() => safeFetch('http://localhost/'), /SSRF/);
+});
+
+// ────────────────────────────────────────────────────────────────
+// resolvePublicAddress (Sprint 179 — liefert die zu PINNENDE IP)
+// ────────────────────────────────────────────────────────────────
+
+test('resolvePublicAddress: literale public IPv4 → {address, family:4}', async () => {
+    assert.deepEqual(await resolvePublicAddress('8.8.8.8'), { address: '8.8.8.8', family: 4 });
+});
+
+test('resolvePublicAddress: private/link-local literal → SSRF', async () => {
+    await assert.rejects(() => resolvePublicAddress('127.0.0.1'), /SSRF/);
+    await assert.rejects(() => resolvePublicAddress('169.254.169.254'), /SSRF/);
+    await assert.rejects(() => resolvePublicAddress('10.0.0.1'), /SSRF/);
+    await assert.rejects(() => resolvePublicAddress('::1'), /SSRF/);
+});
+
+test('resolvePublicAddress: empty hostname → SSRF', async () => {
+    await assert.rejects(() => resolvePublicAddress(''), /SSRF/);
+});
+
+test('resolvePublicAddress: host der auf private IP aufloest → SSRF (localhost)', async () => {
+    await assert.rejects(() => resolvePublicAddress('localhost'), /SSRF/);
 });
