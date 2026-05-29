@@ -157,19 +157,19 @@ function formatResult(domain, result, lighthouseScore) {
     lines.push('Ein Detail-Brief geht tiefer: Web Vitals im Detail,');
     lines.push('BFSG-Audit, branchen-spezifische Empfehlungen.');
     lines.push('Anfrage: https://karriaro-webdesign.de/?prefill=' + encodeURIComponent('https://' + domain) + '#kontakt');
-    // Sprint 171 — Self-Critique bei Karriaro-Self-Audit. Brand-Trust statt
-    // Selbstbeweihräucherung. Wenn Karriaro sich selbst prüft, wird das
-    // explizit als Mess-Methode reflektiert.
+    // Sprint 173 — Trust-Iteration. Self-Audit verweist auf EXTERN nachprüfbare
+    // Quellen statt Selbstaussagen (Verifizierbarkeit > Bekenntnis). Ersetzt den
+    // Sprint-171-Block, den ein Review als selbstreferenzielle Marketing-
+    // Botschaft markiert hatte.
     if (typeof domain === 'string' && domain.toLowerCase().indexOf('karriaro-webdesign') !== -1) {
         lines.push('');
-        lines.push('ZUR EHRLICHKEIT — KARRIARO PRÜFT SICH SELBST');
-        lines.push('Wir bewerten uns nicht besser als wir sind. Skala neu geeicht:');
-        lines.push('  ab 90 → "Stark", 70-89 → "Solide", < 70 → "Ausbaufähig".');
-        lines.push('Sprint 171 (Mai 2026): Migration zu Firebase-Hosting');
-        lines.push('  abgeschlossen, alle Security-Header (HSTS, CSP-Ready,');
-        lines.push('  X-Frame-Options, Referrer-Policy, Permissions-Policy) gesetzt.');
-        lines.push('BFSG-Vollaudit quartalsweise extern verifiziert.');
-        lines.push('Eine Manufaktur, die andere prüft, sollte sich selbst prüfen lassen.');
+        lines.push('ZUR EHRLICHKEIT — PRÜFEN SIE UNS NACH');
+        lines.push('Wir behaupten nichts, was Sie nicht selbst nachmessen können.');
+        lines.push('Drei unabhängige Stellen:');
+        lines.push('  ' + 'Security-Header'.padEnd(18) + 'https://securityheaders.com/?q=karriaro-webdesign.de');
+        lines.push('  ' + 'Sicherheitsprofil'.padEnd(18) + 'https://developer.mozilla.org/en-US/observatory/analyze?host=karriaro-webdesign.de');
+        lines.push('  ' + 'Quelltext & Trail'.padEnd(18) + 'https://github.com/MuKiz79/karriaro-webdesign/commits/main');
+        lines.push('Eine Manufaktur, die andere prüft, gehört selbst auf den Prüfstand.');
     }
     return withSignature(lines.join('\n'));
 }
