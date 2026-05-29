@@ -15,6 +15,7 @@ const { checkFreshness, analyzeTechAge } = require('./audit-pipeline.js');
 const { extractSubPages, htmlToText } = require('./deep-research.js');
 const { checkBranchStandards, BRANCH_STANDARDS } = require('./branch-standards.js');
 const { safeFetch } = require('./safe-fetch.js');
+const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
@@ -136,11 +137,9 @@ function bfsgHeuristic(html) {
 
     score = Math.max(0, Math.min(100, score));
 
-    let risk, fine;
-    if (score < 50) { risk = 'kritisch'; fine = '100.000 €'; }
-    else if (score < 70) { risk = 'hoch'; fine = '50.000 €'; }
-    else if (score < 85) { risk = 'mittel'; fine = '10.000 €'; }
-    else { risk = 'niedrig'; fine = 'kein Risiko erkennbar'; }
+    // Sprint 180 — Single-Source via bfsg-risk.js. Heuristik bewusst milder (mittel <85),
+    // da die HTML-Heuristik gröber ist als die PSI-Vollanalyse (<90).
+    const { risk, fine } = bfsgRiskTier(score, { mittelBelow: 85 });
 
     const pitchArg = (risk === 'kritisch' || risk === 'hoch')
         ? `Heuristik-Score ${score}% — Ihre Seite weist sichtbare Barrierefreiheits-Luecken auf. BFSG ist seit Juni 2025 Pflicht, Bussgelder bis ${fine}.`

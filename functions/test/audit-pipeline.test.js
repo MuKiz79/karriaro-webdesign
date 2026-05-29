@@ -23,6 +23,7 @@ const {
 const { BRANCH_STANDARDS, checkBranchStandards } = require('../lib/branch-standards.js');
 const { getCrossSell, CROSS_SELL } = require('../lib/karriaro-cross-sell.js');
 const { formatResult } = require('../mcp/tool-audit-site.js');
+const { bfsgRiskTier } = require('../lib/bfsg-risk.js');
 
 // ────────────────────────────────────────────────────────────────
 // normalizePlacesType — Sprint 70
@@ -647,4 +648,26 @@ test('brand-voice: Pitch-Texte ohne Transliteration (Oeffnung/Gaeste/erfuel/...)
             assert.doesNotMatch(p, /Oeffnung|Gaeste|erfuel|Reisebuero|Baeckerei|\bBuero\b|naechste|faellt/, `transliterierter Pitch: ${p}`);
         }
     }
+});
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 180 — BFSG-Risk-Tier (Single-Source bfsg-risk.js)
+// ────────────────────────────────────────────────────────────────
+
+test('bfsgRiskTier: Tier-Grenzen + Bußgeld-Beträge', () => {
+    assert.deepEqual(bfsgRiskTier(40), { risk: 'kritisch', fine: '100.000 €' });
+    assert.deepEqual(bfsgRiskTier(60), { risk: 'hoch', fine: '50.000 €' });
+    assert.deepEqual(bfsgRiskTier(80), { risk: 'mittel', fine: '10.000 €' });
+    assert.deepEqual(bfsgRiskTier(95), { risk: 'niedrig', fine: 'kein Risiko erkennbar' });
+});
+
+test('bfsgRiskTier: mittelBelow parametrisiert — beide Pipeline-Verhalten exakt erhalten', () => {
+    // Vollanalyse (Default 90): 87 → mittel ; Heuristik (85): 87 → niedrig (milder)
+    assert.equal(bfsgRiskTier(87).risk, 'mittel');
+    assert.equal(bfsgRiskTier(87, { mittelBelow: 85 }).risk, 'niedrig');
+    // Grenzen exakt (untere Grenze inklusive niedrig)
+    assert.equal(bfsgRiskTier(85, { mittelBelow: 85 }).risk, 'niedrig');
+    assert.equal(bfsgRiskTier(84, { mittelBelow: 85 }).risk, 'mittel');
+    assert.equal(bfsgRiskTier(89).risk, 'mittel');
+    assert.equal(bfsgRiskTier(90).risk, 'niedrig');
 });

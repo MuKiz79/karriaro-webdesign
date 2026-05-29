@@ -14,6 +14,7 @@
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
+const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
 
 function detectTech(psiData) {
     const lh = psiData?.lighthouseResult || {};
@@ -231,11 +232,8 @@ function checkBFSGCompliance(psiData) {
     }
     const complianceScore = total > 0 ? Math.round(passed / total * 100) : a11yScore;
 
-    let risk, fine;
-    if (complianceScore < 50) { risk = 'kritisch'; fine = '100.000 €'; }
-    else if (complianceScore < 70) { risk = 'hoch'; fine = '50.000 €'; }
-    else if (complianceScore < 90) { risk = 'mittel'; fine = '10.000 €'; }
-    else { risk = 'niedrig'; fine = 'kein Risiko erkennbar'; }
+    // Sprint 180 — Single-Source via bfsg-risk.js. PSI-Vollanalyse: mittel <90 (Default).
+    const { risk, fine } = bfsgRiskTier(complianceScore);
 
     const pitchArg = (risk === 'kritisch' || risk === 'hoch')
         ? `Ihre Website erfüllt nur ${complianceScore}% der BFSG-Anforderungen. Das Gesetz gilt seit Juni 2025 — Bußgelder bis ${fine}.`
