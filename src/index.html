@@ -790,9 +790,7 @@
             position: relative;
             background: #fff;
             color: var(--color-onyx);
-            height: 100vh;
-            min-height: 640px;
-            max-height: 1080px;
+            min-height: max(100vh, 640px);
             display: flex;
             /* Sprint 137 — zurück auf center: mit Above-Fold-Mockups (16:10,
                img 715×447 + chrome 28 + caption ~226 = ~700 total) passt der
@@ -1189,7 +1187,7 @@
         .hero-marginalia {
             position: absolute;
             top: -8px;
-            right: -88px;
+            right: 0;
             width: 144px;
             transform: rotate(4deg);
             pointer-events: none;
@@ -1208,7 +1206,7 @@
             line-height: 1.3;
         }
         @media (max-width: 1200px) {
-            .hero-marginalia { right: -64px; width: 120px; }
+            .hero-marginalia { right: 0; width: 120px; }
             .hero-marginalia svg { width: 72px; }
             .hero-marginalia-note { font-size: 13px; }
         }
@@ -1972,7 +1970,17 @@
             bottom: 0;
             background: linear-gradient(90deg, var(--color-gold) 0%, #b4a173 100%);
             border-radius: var(--radius-md);
-            transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            /* Sprint 186 — Balken wachsen beim Reinscrollen (scaleX innerhalb der Inline-width). */
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .kr-perf-chart.is-revealed .kr-perf-bar-fill { transform: scaleX(1); }
+        .kr-perf-chart.is-revealed .kr-perf-bar:nth-child(2) .kr-perf-bar-fill { transition-delay: 0.12s; }
+        .kr-perf-chart.is-revealed .kr-perf-bar:nth-child(3) .kr-perf-bar-fill { transition-delay: 0.24s; }
+        .kr-perf-chart.is-revealed .kr-perf-bar:nth-child(4) .kr-perf-bar-fill { transition-delay: 0.36s; }
+        @media (prefers-reduced-motion: reduce) {
+            .kr-perf-bar-fill { transform: scaleX(1); transition: none; }
         }
         .kr-perf-bar-fill--neutral {
             background: linear-gradient(90deg, var(--color-graphite-light) 0%, var(--color-graphite-soft) 100%);
