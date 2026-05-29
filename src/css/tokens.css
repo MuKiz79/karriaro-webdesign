@@ -103,6 +103,10 @@
   --color-graphite: var(--kr-grey);
   --color-graphite-soft: var(--kr-grey-soft);
   --color-gold: var(--kr-gold);
+  /* Sprint 184 — accessibler Gold-Ton NUR für Kleintext (Eyebrows/Labels/Marker).
+     #6E5F3F = 5,97:1 auf bone — WCAG-AA-Normaltext. --color-gold (#8A7B5C) bleibt
+     für Großtext/Dekor (Folio-Ziffern, Pull-Quote-Ornament, SVG) = 3:1-Großtext-pass. */
+  --color-gold-text: #6E5F3F;
   --color-ink: var(--kr-ink);
   --color-border: var(--kr-border);
 
@@ -139,6 +143,7 @@
     --color-indigo-deep: #1a1e25;
     --color-graphite-soft: #8a8e96;
     --color-gold: #B59F75;
+    --color-gold-text: #B59F75;
     --color-ink: #f5f3ee;
     --color-border: rgba(245, 243, 238, 0.08);
 

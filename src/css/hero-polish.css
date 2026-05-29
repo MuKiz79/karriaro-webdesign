@@ -13,7 +13,7 @@
     font-size: 10px;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--color-gold);
+    color: var(--color-gold-text);
     margin-bottom: clamp(24px, 4vh, 40px);
     display: inline-flex;
     align-items: center;
@@ -47,7 +47,7 @@
     font-size: 18px;
     letter-spacing: 0.04em;
     text-transform: none;
-    color: var(--color-gold);
+    color: var(--color-gold-text);
     line-height: 1;
 }
 @media (max-width: 760px) {

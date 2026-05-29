@@ -206,7 +206,8 @@
             --color-indigo: #1A2E40;          /* Manufaktur-Tinte — primärer Brand-Akzent */
             --color-indigo-deep: #0F1F2E;     /* dunkler — Hover / aktiv */
             --color-indigo-strong: #061320;   /* tiefst — Headings auf Light-BG */
-            --color-gold: #8A7B5C;            /* Werkstatt-Gold — sekundärer Akzent (Zahlen, Italic) */
+            --color-gold: #8A7B5C;
+            --color-gold-text: #6E5F3F;            /* Werkstatt-Gold — sekundärer Akzent (Zahlen, Italic) */
             --color-cream: #F8F4ED;           /* Skizzen-Papier — wärmster Hellton */
             --color-cream-soft: #F0EAE0;      /* dazwischen — Sektion-Wechsel */
             --color-bone: #FBFAF7;            /* fast weiß, warm */
@@ -378,7 +379,7 @@
             font-style: italic;
             font-size: 22px;
             font-weight: 500;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             line-height: 1;
         }
         .kr-faq-item:hover { border-color: var(--color-indigo); background: var(--color-cream); }
@@ -1113,7 +1114,7 @@
             font-size: 10px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             margin-bottom: clamp(24px, 4vh, 40px);
             display: inline-flex;
             align-items: center;
@@ -1146,7 +1147,7 @@
             font-size: 18px;
             letter-spacing: 0.04em;
             text-transform: none;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             line-height: 1;
         }
         @media (max-width: 760px) {
@@ -1712,7 +1713,7 @@
             gap: 6px;
         }
         .kr-letter-field--full { grid-column: 1 / -1; }
-        .kr-letter-field--gold span { color: var(--color-gold); }
+        .kr-letter-field--gold span { color: var(--color-gold-text); }
         .kr-letter-field--gold em { font-style: normal; color: var(--color-graphite-soft); font-weight: 400; }
         .kr-letter-field > span {
             font-family: var(--font-mono);
@@ -1764,7 +1765,7 @@
             align-self: flex-start;
         }
         .kr-letter-submit:hover { background: var(--color-indigo-deep); }
-        .kr-letter-submit-stamp { color: var(--color-gold); display: inline-flex; }
+        .kr-letter-submit-stamp { color: var(--color-gold-text); display: inline-flex; }
 
         /* Sprint 41 — Footer-Colophon */
         .kr-colophon {
@@ -1852,7 +1853,7 @@
             padding-bottom: 14px;
             border-bottom: 1px solid var(--color-line);
         }
-        .kr-manuskript-label--hand { color: var(--color-gold); }
+        .kr-manuskript-label--hand { color: var(--color-gold-text); }
         .kr-manuskript-list {
             list-style: none;
             padding: 0;
@@ -1887,7 +1888,7 @@
         }
         .kr-manuskript-list--hand li:nth-child(odd) { transform: rotate(-0.4deg); }
         .kr-manuskript-list--hand li:nth-child(even) { transform: rotate(0.3deg); }
-        .kr-manuskript-list--hand li::before { color: var(--color-gold); font-style: normal; }
+        .kr-manuskript-list--hand li::before { color: var(--color-gold-text); font-style: normal; }
         /* Druck-Spalte: sauberer Setzstil (Inter, regular) */
         .kr-manuskript-list--druck li {
             font-family: var(--font-body);
@@ -1919,7 +1920,7 @@
             font-size: 9px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             white-space: nowrap;
         }
 
@@ -2024,7 +2025,7 @@
             height: 56px;
             border-radius: 50%;
             background: rgba(248,244,237,0.08);
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2037,7 +2038,7 @@
             font-size: 10px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             margin-bottom: 6px;
         }
         .kr-lighthouse-title {
@@ -2116,7 +2117,7 @@
             border-radius: 50%;
             background: var(--color-cream);
             border: 1.5px solid var(--color-gold);
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -2314,7 +2315,7 @@
             font-size: 11px;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--color-gold);
+            color: var(--color-gold-text);
             margin-bottom: 12px;
         }
         .kr-tool-title {
@@ -3040,7 +3041,7 @@
             color: #14202B;
             margin: 0 0 24px;
         }
-        .kr-audit-result-domain em { font-style: italic; color: #8A7B5C; }
+        .kr-audit-result-domain em { font-style: italic; color: var(--color-gold-text); }
         .kr-audit-result-verdict {
             display: flex;
             flex-direction: column;
@@ -3095,7 +3096,7 @@
             font-family: 'JetBrains Mono', ui-monospace, monospace;
             font-size: 11px;
             letter-spacing: 0.12em;
-            color: #8A7B5C;
+            color: var(--color-gold-text);
             padding-top: 2px;
         }
         .kr-audit-result-finding-label {
@@ -3415,15 +3416,15 @@
                 </aside>
                 <div id="arbeiten" class="branche-switcher-wrap">
                     <div class="branche-switcher-label">Branche wählen</div>
-                <div class="branche-switcher" role="tablist" aria-label="Branche wechseln">
-                    <button type="button" class="branche-tab is-active" data-branche="immobilien" role="tab" aria-selected="true" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="immobilien">Immobilien</button>
-                    <button type="button" class="branche-tab" data-branche="coaching" role="tab" aria-selected="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="coaching">Coaching</button>
-                    <button type="button" class="branche-tab" data-branche="praxis" role="tab" aria-selected="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="praxis">Praxis</button>
-                    <button type="button" class="branche-tab" data-branche="friseur" role="tab" aria-selected="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="friseur">Friseur</button>
-                    <button type="button" class="branche-tab" data-branche="dachdecker" role="tab" aria-selected="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="dachdecker">Dachdecker</button>
-                    <button type="button" class="branche-tab" data-branche="gastro" role="tab" aria-selected="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="gastro">Gastronomie</button>
-                    <button type="button" class="branche-tab" data-branche="logistik" role="tab" aria-selected="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="logistik">Logistik</button>
-                    <button type="button" class="branche-tab" data-branche="handwerk" role="tab" aria-selected="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="handwerk">Handwerk</button>
+                <div class="branche-switcher" role="group" aria-label="Branche wählen — wechselt die Vorschau">
+                    <button type="button" class="branche-tab is-active" data-branche="immobilien" aria-pressed="true" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="immobilien">Immobilien</button>
+                    <button type="button" class="branche-tab" data-branche="coaching" aria-pressed="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="coaching">Coaching</button>
+                    <button type="button" class="branche-tab" data-branche="praxis" aria-pressed="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="praxis">Praxis</button>
+                    <button type="button" class="branche-tab" data-branche="friseur" aria-pressed="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="friseur">Friseur</button>
+                    <button type="button" class="branche-tab" data-branche="dachdecker" aria-pressed="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="dachdecker">Dachdecker</button>
+                    <button type="button" class="branche-tab" data-branche="gastro" aria-pressed="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="gastro">Gastronomie</button>
+                    <button type="button" class="branche-tab" data-branche="logistik" aria-pressed="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="logistik">Logistik</button>
+                    <button type="button" class="branche-tab" data-branche="handwerk" aria-pressed="false" data-extra data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="handwerk">Handwerk</button>
                     <button type="button" class="branche-more-btn" id="branche-more-btn" aria-label="Weitere Branchen anzeigen">+ 3 weitere</button>
                     <a href="#kontakt" class="branche-andere" data-paket="Andere Branche — Beratung gewünscht">Andere Branche →</a>
                 </div>
@@ -4373,7 +4374,7 @@
             font-size: 11px;
             letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: #8A7B5C;
+            color: var(--color-gold-text);
             margin: 0 0 12px;
         }
         .kr-suite-card h3 {
@@ -4550,6 +4551,12 @@
         <p class="kr-selbst-foot">
             Quelle: <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener">Karriaro Lighthouse</a>
             · gemessen bei Page-Load
+        </p>
+        <p class="kr-selbst-foot kr-selbst-verify">
+            Unabhängig nachprüfbar:
+            <a href="https://securityheaders.com/?q=https%3A%2F%2Fkarriaro-webdesign.de&amp;followRedirects=on" target="_blank" rel="noopener">Security-Header</a> ·
+            <a href="https://developer.mozilla.org/en-US/observatory/analyze?host=karriaro-webdesign.de" target="_blank" rel="noopener">HTTP-Observatory</a> ·
+            <a href="https://github.com/MuKiz79/karriaro-webdesign/commits/main" target="_blank" rel="noopener">Commit-Verlauf</a>
         </p>
     </section>
     <script>
@@ -5138,7 +5145,7 @@
                 allTabs.forEach(function (t) {
                     var match = t.dataset.branche === branche;
                     t.classList.toggle('is-active', match);
-                    t.setAttribute('aria-selected', match ? 'true' : 'false');
+                    t.setAttribute('aria-pressed', match ? 'true' : 'false');
                 });
             }
 
