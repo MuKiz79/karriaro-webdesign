@@ -47,7 +47,7 @@ function detectTech(psiData) {
         result.signals.push('Subdomain eines Baukastens');
     }
 
-    if (!result.cms) result.cms = 'Nicht erkannt (moeglicherweise handcodiert)';
+    if (!result.cms) result.cms = 'Nicht erkannt (möglicherweise handcodiert)';
     return result;
 }
 
@@ -156,7 +156,7 @@ function analyzeTechAge(tech, wayback) {
             techStackVerdict = `${cmsName} ${major}.x — aktuelle Major-Version`;
             techSeverity = 0;
         }
-    } else if (cmsName && cmsName !== 'Nicht erkannt (moeglicherweise handcodiert)') {
+    } else if (cmsName && cmsName !== 'Nicht erkannt (möglicherweise handcodiert)') {
         techStackVerdict = `${cmsName} erkannt`;
         techSeverity = 1;
     } else {

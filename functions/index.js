@@ -272,7 +272,7 @@ exports.requestAudit = onRequest(
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
         // IP-Limit 3/h + (weiter unten) Per-Email-Limit 5/Tag schuetzen Mail-Spam.
         if (await enforceRateLimit(db, req, res, "requestAudit", 3, 3600,
-            "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
+            "Sie haben das stündliche Limit erreicht. Bitte später erneut.")) return;
 
         const { url, name, email, consent, company, reportSlug, refHash } = req.body || {};
 
@@ -312,7 +312,8 @@ exports.requestAudit = onRequest(
             logger.error("requestAudit pipeline failed", {
                 fn: "requestAudit", domain, error: err.message
             });
-            return res.status(502).json({ error: "Audit-Pipeline fehlgeschlagen", details: err.message });
+            // Sprint 177 — generische Meldung: reflektiert keinen SSRF-Grund ("SSRF blocked: private IPv4 …") an den Client.
+            return res.status(502).json({ error: "Audit-Pipeline fehlgeschlagen", details: "Die Seite konnte nicht analysiert werden." });
         }
 
         // Konkurrenz optional via Places-Search (best effort)
@@ -593,7 +594,7 @@ exports.quickAudit = onRequest(
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
         if (await enforceRateLimit(db, req, res, "quickAudit", 5, 3600,
-            "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
+            "Sie haben das stündliche Limit erreicht. Bitte später erneut.")) return;
 
         const { url, hp } = req.body || {};
 
@@ -1082,7 +1083,8 @@ exports.deepResearch = onRequest(
 
             const homepage = await homepageFetch;
             if (!homepage.ok || !homepage.html) {
-                return res.status(502).json({ error: "Homepage konnte nicht geladen werden", details: homepage.error || `HTTP ${homepage.status}` });
+                // Sprint 177 — generisch: kein SSRF-Grund/interne IP an den Client.
+                return res.status(502).json({ error: "Homepage konnte nicht geladen werden", details: "Die Zielseite war nicht erreichbar." });
             }
 
             const homepageText = htmlToText(homepage.html, 2200);

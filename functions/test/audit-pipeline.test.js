@@ -626,3 +626,25 @@ test('formatResult: Sprint-173 Verify-Links-Block nur bei Self-Audit-Domain', ()
     const foreign = formatResult('example.com', SYNTH_RESULT, null);
     assert.doesNotMatch(foreign, /PRÜFEN SIE UNS NACH/);       // Fremd-Domain: kein Block
 });
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 177 — Brand-Voice: echte Umlaute in Lead-sichtbaren Display-Strings
+// ────────────────────────────────────────────────────────────────
+
+test('brand-voice: Branchennamen mit echten Umlauten (kein ae/oe/ue)', () => {
+    const names = Object.values(BRANCH_STANDARDS).map(b => b.name);
+    for (const expected of ['Bäckerei', 'Reisebüro', 'Sanitär-/Heizungs-Betrieb', 'Architekturbüro']) {
+        assert.ok(names.includes(expected), `erwarteter Name fehlt: ${expected}`);
+    }
+    for (const n of names) {
+        assert.doesNotMatch(n, /Baeckerei|Reisebuero|Sanitaer|Buero|buero/, `transliterierter Name: ${n}`);
+    }
+});
+
+test('brand-voice: Pitch-Texte ohne Transliteration (Oeffnung/Gaeste/erfuel/...)', () => {
+    for (const b of Object.values(BRANCH_STANDARDS)) {
+        for (const p of [b.pitchMissing, b.pitchAllOk]) {
+            assert.doesNotMatch(p, /Oeffnung|Gaeste|erfuel|Reisebuero|Baeckerei|\bBuero\b|naechste|faellt/, `transliterierter Pitch: ${p}`);
+        }
+    }
+});

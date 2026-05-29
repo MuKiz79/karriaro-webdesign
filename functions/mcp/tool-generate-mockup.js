@@ -31,12 +31,12 @@ const DEFINITION = {
 };
 
 const BRANCHEN = {
-    friseur:     { color: '#B07B5E', label: 'Beauty & Friseur',   default: 'Salon Mueller',         folio: '№ 01 · BEAUTY' },
+    friseur:     { color: '#B07B5E', label: 'Beauty & Friseur',   default: 'Salon Müller',          folio: '№ 01 · BEAUTY' },
     praxis:      { color: '#6A8266', label: 'Praxis & Medizin',   default: 'Praxis Dr. Weber',       folio: '№ 02 · MEDIZIN' },
     anwalt:      { color: '#1A2E40', label: 'Recht & Beratung',   default: 'Kanzlei Schmidt',        folio: '№ 03 · RECHT' },
     coaching:    { color: '#2C2C2C', label: 'Coaching & Mentor',  default: 'Lehmann Coaching',       folio: '№ 04 · COACHING' },
     immobilien:  { color: '#1A2E40', label: 'Immobilien',         default: 'Stadtmakler Stuttgart',  folio: '№ 05 · IMMOBILIEN' },
-    handwerk:    { color: '#B47045', label: 'Handwerk',           default: 'Meisterbetrieb Mueller', folio: '№ 06 · HANDWERK' },
+    handwerk:    { color: '#B47045', label: 'Handwerk',           default: 'Meisterbetrieb Müller', folio: '№ 06 · HANDWERK' },
     gastro:      { color: '#5C1F1F', label: 'Gastronomie',        default: 'Restaurant Hirsch',      folio: '№ 07 · GASTRO' },
     dachdecker:  { color: '#4A5D4F', label: 'Dachdecker & Bau',   default: 'Meisterbetrieb Dach',    folio: '№ 08 · DACH' }
 };

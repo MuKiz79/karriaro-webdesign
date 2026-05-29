@@ -28,7 +28,7 @@ const BRANCH_STANDARDS = {
             { id: 'termin-online', label: 'Online-Terminbuchung', detect: { body: /termin.*online|online.*termin|calendly|terminland|kanzlei.*buchung/i } }
         ],
         pitchMissing: 'Mandanten erwarten heute, dass eine Kanzlei online entscheidbar wird — Fachgebiete, Anwaelte und Honorare transparent.',
-        pitchAllOk: 'Ihre Site erfuellt die zentralen Kanzlei-Standards.'
+        pitchAllOk: 'Ihre Site erfüllt die zentralen Kanzlei-Standards.'
     },
     'dentist': {
         name: 'Zahnarztpraxis',
@@ -99,7 +99,7 @@ const BRANCH_STANDARDS = {
             { id: 'direkt-buchen', label: 'Direkt-Buchen-Button', detect: { body: /direkt.*buchen|jetzt.*buchen|verfuegbarkeit|verfügbarkeit/i } },
             { id: 'wellness', label: 'Wellness-/Spa-Bereich', detect: { subPage: /wellness|spa|sauna/i } }
         ],
-        pitchMissing: 'Gaeste vergleichen Bilder, Preise und Lage in 30 Sekunden — alles drei muss sofort sichtbar sein.',
+        pitchMissing: 'Gäste vergleichen Bilder, Preise und Lage in 30 Sekunden — alles drei muss sofort sichtbar sein.',
         pitchAllOk: 'Ihre Hotel-Seite liefert die drei Entscheidungs-Faktoren.'
     },
     'restaurant': {
@@ -120,7 +120,7 @@ const BRANCH_STANDARDS = {
             { id: 'wein-pairing', label: 'Weinkarte / Sommelier-Empfehlung', detect: { body: /weinkarte|weinempfehlung|sommelier|wein.*pairing/i } },
             { id: 'bewertungen', label: 'Google-/TripAdvisor-Bewertungen sichtbar', detect: { body: /google.*bewert|tripadvisor|sterne.*bewertung|trustpilot/i } }
         ],
-        pitchMissing: 'Speisekarte, Oeffnungszeiten und Reservierung sind die drei Klicks, nach denen Gaeste suchen — fehlt einer, gehen sie nebenan essen.',
+        pitchMissing: 'Speisekarte, Öffnungszeiten und Reservierung sind die drei Klicks, nach denen Gäste suchen — fehlt einer, gehen sie nebenan essen.',
         pitchAllOk: 'Ihre Restaurant-Seite liefert die drei Entscheidungs-Klicks.'
     },
     'hair_salon': {
@@ -180,7 +180,7 @@ const BRANCH_STANDARDS = {
         pitchAllOk: 'Ihre Praxis ist online auffindbar.'
     },
     'plumber': {
-        name: 'Sanitaer-/Heizungs-Betrieb',
+        name: 'Sanitär-/Heizungs-Betrieb',
         mustHave: [
             // Sprint 70 — body-Fallback fuer Leistungs-Keywords (hwoe.de hatte "Leistungen" 14x sichtbar, war false)
             { id: 'leistungen', label: 'Leistungs-Liste', detect: { subPage: /leistung|service|angebot/i, body: /\b(leistungen|unsere leistungen|services?|leistungsspektrum|unser angebot|wir bieten|heizungsbau|sanitaer|sanitär|bad(planung|sanierung)?)\b/i } },
@@ -218,7 +218,7 @@ const BRANCH_STANDARDS = {
             { id: 'anfrage-formular', label: 'Online-Anfrage-Formular', detect: { subPage: /anfrage|kontaktformular/i, body: /anfrage.*formular|jetzt.*anfragen|kostenloses.*angebot/i } },
             { id: 'innung', label: 'Elektro-Innung / HWK-Mitgliedschaft', detect: { body: /innung|handwerkskammer|\bHWK\b|fachverband|elektro.*meister/i } }
         ],
-        pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, faellt aus dem Suchergebnis.',
+        pitchMissing: 'Privatkunden googeln Wallbox + PV — wer die Leistungen nicht zeigt, fällt aus dem Suchergebnis.',
         pitchAllOk: 'Ihr Betrieb ist online direkt anrufbar.'
     },
     'painter': {
@@ -299,7 +299,7 @@ const BRANCH_STANDARDS = {
         pitchAllOk: 'Ihr Geschaeft ist online auffindbar und entscheidbar.'
     },
     'bakery': {
-        name: 'Baeckerei',
+        name: 'Bäckerei',
         mustHave: [
             { id: 'sortiment', label: 'Sortiment (Brot/Kuchen/Snacks)', detect: { subPage: /sortiment|produkte|brote|backwaren/i, body: /\b(brot(sorten)?|kuchen|toerten|torten|backwaren|brötchen|broetchen|gebäck|gebaeck|snack)\b/i } },
             { id: 'frische', label: 'Frische- / Regionalitäts-Hinweis', detect: { body: /\b(taeglich frisch|täglich frisch|frisch gebacken|regional|biobaeckerei|biobäckerei|handwerksbaeckerei|handwerksbäckerei|familienbaeckerei|familienbäckerei|traditionsbaeckerei|traditionsbäckerei)\b/i } },
@@ -312,7 +312,7 @@ const BRANCH_STANDARDS = {
             { id: 'bio-glutenfrei', label: 'Bio- / Glutenfrei-Angebot', detect: { body: /\bbio\b|biozertifik|glutenfrei|laktosefrei|vegan|dinkelvollkorn/i } }
         ],
         pitchMissing: 'Stammkunden bestellen Sonntags-Brötchen + Geburtstagstorten online — wer kein Vorbestell-Formular hat, verschenkt Familien-Aufträge.',
-        pitchAllOk: 'Ihre Baeckerei ist online erreichbar.'
+        pitchAllOk: 'Ihre Bäckerei ist online erreichbar.'
     },
     'funeral_home': {
         name: 'Bestattungsinstitut',
@@ -330,7 +330,7 @@ const BRANCH_STANDARDS = {
         pitchAllOk: 'Ihr Institut ist online jederzeit erreichbar.'
     },
     'travel_agency': {
-        name: 'Reisebuero',
+        name: 'Reisebüro',
         mustHave: [
             { id: 'leistungen', label: 'Reise-Angebote (Pauschal/Individual/Gruppen)', detect: { subPage: /leistung|angebot|reise|pauschal|individual/i, body: /\b(pauschalreise|individualreise|gruppenreise|familienreise|kreuzfahrt|busreise|fernreise|städtereise|staedtereise|aktivreise)\b/i } },
             { id: 'team', label: 'Reiseberater-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /reisefachfrau|reisefachmann|reiseberater(in)?|reiseverkehrskauffrau|reiseverkehrskaufmann|inhaber(in)?/i } },
@@ -342,7 +342,7 @@ const BRANCH_STANDARDS = {
             { id: 'notfall-hotline', label: 'Reise-Notfall-Hotline', detect: { body: /reise.?notfall|24h.?hotline|notfall.?nummer|reise.?notdienst/i } }
         ],
         pitchMissing: 'Reisende googeln Last-Minute + Frühbucher 2026 — wer keine aktuellen Saisonangebote zeigt, ist im Vergleich unsichtbar.',
-        pitchAllOk: 'Ihr Reisebuero ist online entscheidbar.'
+        pitchAllOk: 'Ihr Reisebüro ist online entscheidbar.'
     },
     'pharmacy': {
         name: 'Apotheke',
@@ -357,7 +357,7 @@ const BRANCH_STANDARDS = {
             { id: 'bestand-online', label: 'Medikamenten-Verfuegbarkeit / Online-Bestellung', detect: { body: /verfuegbarkeit|verfügbarkeit|vorbestell|reservier|online[- ]?bestell|abhol/i } },
             { id: 'team', label: 'Apotheker-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /\b(apotheker|pta|inhaber(in)?|unser team)\b/i } }
         ],
-        pitchMissing: 'Patienten googeln "Notdienst Apotheke" + e-Rezept — wer Notdienst-Live + Foto-Rezept nicht zeigt, verliert sie an die naechste.',
+        pitchMissing: 'Patienten googeln "Notdienst Apotheke" + e-Rezept — wer Notdienst-Live + Foto-Rezept nicht zeigt, verliert sie an die nächste.',
         pitchAllOk: 'Ihre Apotheke ist online auffindbar und entscheidbar.'
     },
     'veterinary_care': {
@@ -391,7 +391,7 @@ const BRANCH_STANDARDS = {
         pitchAllOk: 'Ihre Kanzlei ist online entscheidbar.'
     },
     'architect': {
-        name: 'Architekturbuero',
+        name: 'Architekturbüro',
         mustHave: [
             { id: 'portfolio', label: 'Projekt-Portfolio mit Bildern', detect: { subPage: /portfolio|projekt|referenz|werke|galerie/i, body: /\b(projekte|projektliste|referenzprojekte|werkschau|portfolio)\b/i } },
             { id: 'leistungen', label: 'Leistungen (Planung/Bauleitung/HOAI)', detect: { subPage: /leistung|planung/i, body: /\b(planung|entwurfsplanung|bauleitung|baugenehmigung|\bhoai\b|leistungsphasen)\b/i } },
@@ -403,7 +403,7 @@ const BRANCH_STANDARDS = {
             { id: 'kosten-rechner', label: 'HOAI-Rechner / Honorarbeispiele', detect: { body: /honorar.?beispiel|\bhoai\b.*rechner|kostenschaetzung|kostenschätzung|kostenrahmen|honorarrechner/i } }
         ],
         pitchMissing: 'Bauherren googeln Portfolio + HOAI-Schaetzung vor dem Erstgespraech — wer nichts zeigt, ist nicht im Bewerber-Pool.',
-        pitchAllOk: 'Ihr Buero ist online entscheidbar.'
+        pitchAllOk: 'Ihr Büro ist online entscheidbar.'
     },
     'auto_repair': {
         name: 'Kfz-Werkstatt',
@@ -450,8 +450,8 @@ const BRANCH_STANDARDS = {
         shouldHave: [
             { id: 'team', label: 'Team-/Ueber-uns-Seite', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns|about/i } }
         ],
-        pitchMissing: 'Auch ohne Branchen-Spezifika erwarten Besucher Leistungen, Adresse und Oeffnungszeiten.',
-        pitchAllOk: 'Die Standard-Erwartungen sind erfuellt.'
+        pitchMissing: 'Auch ohne Branchen-Spezifika erwarten Besucher Leistungen, Adresse und Öffnungszeiten.',
+        pitchAllOk: 'Die Standard-Erwartungen sind erfüllt.'
     }
 };
 
