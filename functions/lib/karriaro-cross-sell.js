@@ -216,6 +216,15 @@ const CROSS_SELL = {
             { id: 'galerie', name: 'Zimmer-/Suiten-Galerie mit 360°', demoUrl: '/portfolio/restaurant-template.html' }
         ],
         trend: 'Hotel-Trend 2026: Direkt-Buchen spart 15 % Provision — wer das prominent zeigt, gewinnt Stammgäste zurück.'
+    },
+    // Sprint 176 — Digital-/Kreativagentur (Sprint-174-Branche, jetzt vollständig verdrahtet).
+    'creative_agency': {
+        tools: [
+            { id: 'case-showcase', aliasFor: 'referenzen', name: 'Interaktive Case-/Portfolio-Galerie (Filter nach Branche)', demoUrl: '/portfolio/immobilien-makler.html' },
+            { id: 'projekt-cockpit', aliasFor: 'prozess', name: 'Projekt-Cockpit (Phasen, Termine, Freigaben)', demoUrl: '/portfolio/coaching-lehmann.html' },
+            { id: 'sichtbarkeits-check', aliasFor: 'leistungen', name: 'Live-Sichtbarkeits-/SEO-Check als Lead-Magnet', demoUrl: '/portfolio/coaching-lehmann.html#klarheits-score' }
+        ],
+        trend: 'Agentur-Trend 2026: Auftraggeber sichten Cases und Arbeitsweise vor der ersten Mail — wer Portfolio und Prozess sichtbar macht, gewinnt das Pitch-Gespräch.'
     }
 };
 

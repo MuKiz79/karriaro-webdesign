@@ -218,6 +218,11 @@ function guessBranchFromUrl(url) {
             { re: /(zahnarzt|dental|kieferorthop|implantolog)/i, type: 'dentist' },
             { re: /(hausarzt|praxis[-_]?dr|dr[-_]|praxis-|hno|orthop|gyn|augenarzt|kinderarzt|allgemeinmed|hautarzt)/i, type: 'doctor' },
             { re: /(physio|krankengymnastik|reha[-_])/i, type: 'physiotherapist' },
+            // Sprint 176 — Digital-/Kreativagentur VOR restaurant: Agentur-Compound-Tokens sind
+            // spezifischer als die bloßen Nachnamen (adler/hirsch/krone/loewe) in der restaurant-Regel,
+            // die sonst "designagentur-adler.de" o.ä. fälschlich als restaurant klassifiziert.
+            // Bewusst kein bloßes "design"/"studio"/"manufaktur" → False-Positive-Schutz.
+            { re: /(webdesign|web-design|webentwicklung|webagentur|onlineagentur|internetagentur|werbeagentur|marketingagentur|mediaagentur|kreativagentur|digitalagentur|designagentur|grafikdesign|mediengestaltung|seo[-_]?agentur|webstudio)/i, type: 'creative_agency' },
             { re: /(restaurant|gasthof|gasthaus|trattoria|osteria|pizzeria|brauerei|wirtshaus|brasserie|sattlerei|steak|hirsch|krone|adler|loewe|löwe)/i, type: 'restaurant' },
             { re: /(hotel|pension|gaeste|gäste|herberge)/i, type: 'hotel' },
             { re: /(friseur|hairdesign|hairstudio|barber|coiffeur|salon)/i, type: 'hair_salon' },
@@ -237,10 +242,7 @@ function guessBranchFromUrl(url) {
             { re: /(gartenbau|landschaftsbau|baumpflege|gartengestaltung|gartenservice)/i, type: 'landscaper' },
             { re: /(bauunternehmen|bauunternehmer|hochbau|tiefbau|baufirma)/i, type: 'general_contractor' },
             { re: /(schreiner|tischler|holzbau|moebelbau|möbelbau|innenausbau)/i, type: 'carpenter' },
-            { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ },
-            // Sprint 174 — Digital-/Kreativagentur. Bewusst nur Compound-Tokens (kein bloßes
-            // "design"/"studio"/"manufaktur") → False-Positive-Schutz gegen Möbel-/Nageldesign etc.
-            { re: /(webdesign|web-design|webentwicklung|webagentur|onlineagentur|internetagentur|werbeagentur|marketingagentur|mediaagentur|kreativagentur|digitalagentur|designagentur|grafikdesign|mediengestaltung|seo[-_]?agentur|webstudio)/i, type: 'creative_agency' }
+            { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
         ];
         for (var i = 0; i < rules.length; i++) {
             if (rules[i].re.test(host)) return rules[i].type;

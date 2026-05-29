@@ -56,13 +56,13 @@ function detectTech(psiData) {
 async function checkFreshness(url) {
     try {
         const ts = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 14);
-        const res = await fetch(`https://archive.org/wayback/available?url=${encodeURIComponent(url)}&timestamp=${ts}`);
+        const res = await fetch(`https://archive.org/wayback/available?url=${encodeURIComponent(url)}&timestamp=${ts}`, { signal: AbortSignal.timeout(4000) });
         if (!res.ok) return { available: false };
         const data = await res.json();
         const snapshot = data.archived_snapshots?.closest;
         if (!snapshot?.timestamp) return { available: false };
 
-        const oldRes = await fetch(`https://archive.org/wayback/available?url=${encodeURIComponent(url)}&timestamp=20000101`);
+        const oldRes = await fetch(`https://archive.org/wayback/available?url=${encodeURIComponent(url)}&timestamp=20000101`, { signal: AbortSignal.timeout(4000) });
         const oldData = await oldRes.json();
         const oldest = oldData.archived_snapshots?.closest;
 
@@ -249,7 +249,9 @@ function checkBFSGCompliance(psiData) {
 async function runAuditPipeline(url, psiKey) {
     const psiUrl = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=mobile&category=performance&category=accessibility&category=best-practices&category=seo${psiKey ? '&key=' + psiKey : ''}`;
     const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 55000);
+    // Sprint 176 — 55s→35s: lässt im 60s-Function-Ceiling Budget für Downstream
+    // (Wayback/Places/Mail), die seriell nach PSI laufen. Verhindert Hard-Kill-Lead-Verlust.
+    const timeout = setTimeout(() => ctrl.abort(), 35000);
     let psiData;
     try {
         const res = await fetch(psiUrl, { signal: ctrl.signal });

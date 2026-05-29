@@ -22,6 +22,7 @@ const {
 } = require('../lib/light-audit.js');
 const { BRANCH_STANDARDS, checkBranchStandards } = require('../lib/branch-standards.js');
 const { getCrossSell, CROSS_SELL } = require('../lib/karriaro-cross-sell.js');
+const { formatResult } = require('../mcp/tool-audit-site.js');
 
 // ────────────────────────────────────────────────────────────────
 // normalizePlacesType — Sprint 70
@@ -544,4 +545,84 @@ test('integrity: alle BRANCH_STANDARDS-Branchen haben pitchMissing + pitchAllOk'
         assert.ok(typeof def.pitchMissing === 'string' && def.pitchMissing.length > 10, `${branch} missing pitchMissing`);
         assert.ok(typeof def.pitchAllOk === 'string' && def.pitchAllOk.length > 10, `${branch} missing pitchAllOk`);
     }
+});
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 174/176 — creative_agency Branch-Detection (Regression)
+// ────────────────────────────────────────────────────────────────
+
+test('guessBranchFromUrl: agency compound-tokens → creative_agency', () => {
+    for (const h of [
+        'https://karriaro-webdesign.de',
+        'https://meine-werbeagentur.de',
+        'https://kreativagentur-nord.de',
+        'https://webentwicklung-mueller.de',
+        'https://grafikdesign-studio.de'
+    ]) {
+        assert.equal(guessBranchFromUrl(h), 'creative_agency', `${h} should be creative_agency`);
+    }
+});
+
+test('guessBranchFromUrl: agency-Regel schlägt restaurant-Nachnamen (Sprint-176 shadow-fix)', () => {
+    // adler/hirsch/krone/loewe stehen in der restaurant-Regel; die creative_agency-Regel
+    // muss DAVOR greifen, sonst werden Agentur-Domains fälschlich restaurant.
+    assert.equal(guessBranchFromUrl('https://designagentur-adler.de'), 'creative_agency');
+    assert.equal(guessBranchFromUrl('https://webstudio-krone.de'), 'creative_agency');
+    assert.equal(guessBranchFromUrl('https://internetagentur-hirsch.de'), 'creative_agency');
+});
+
+test('guessBranchFromUrl: false-positive guards (kein bloßes design/studio/manufaktur)', () => {
+    assert.equal(guessBranchFromUrl('https://moebel-manufaktur.de'), null);   // Möbel, keine Agentur
+    assert.equal(guessBranchFromUrl('https://nageldesign-mueller.de'), 'beauty_salon');
+    assert.equal(guessBranchFromUrl('https://hairstudio-koeln.de'), 'hair_salon');
+    assert.equal(guessBranchFromUrl('https://gasthof-krone.de'), 'restaurant');   // echtes Restaurant bleibt
+});
+
+test('normalizePlacesType: agency place-types → creative_agency', () => {
+    for (const t of ['marketing_agency', 'advertising_agency', 'graphic_designer', 'website_designer', 'web_design_company', 'internet_marketing_service']) {
+        assert.equal(normalizePlacesType(t), 'creative_agency', `${t} should normalize to creative_agency`);
+    }
+});
+
+test('checkBranchStandards: creative_agency liefert Namen unter .branch + erkennt Agentur-Site', () => {
+    const ctx = {
+        subPages: [
+            { slot: 'portfolio', url: '/portfolio', anchorText: 'Portfolio' },
+            { slot: 'about', url: '/gruender', anchorText: 'Gründer' },
+            { slot: 'contact', url: '/#kontakt', anchorText: 'Kontakt' },
+            { slot: 'blog', url: '/blog', anchorText: 'Journal' },
+            { slot: 'pricing', url: '/pricing', anchorText: 'Pakete' }
+        ],
+        body: 'Webdesign-Manufaktur. Wir bieten Webdesign und Webentwicklung. Über uns: gegründet von Muammer. Unser Portfolio zeigt ausgewählte Projekte. So arbeiten wir in 5 Schritten. Pakete ab 1.290 €.'
+    };
+    const r = checkBranchStandards('creative_agency', ctx);
+    assert.equal(r.branch, 'Digital-/Kreativagentur');   // Name unter .branch (NICHT .name)
+    assert.equal(r.usedDefault, false);
+    assert.ok(r.foundCount >= 5, `erwartet >=5 erfüllt, war ${r.foundCount}/${r.totalCount}`);
+});
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 173/174 — MCP formatResult (Self-Audit-Block + .branch-Feldfix)
+// ────────────────────────────────────────────────────────────────
+
+const SYNTH_RESULT = {
+    branch: { branch: 'Digital-/Kreativagentur', primaryType: 'creative_agency', foundCount: 6, totalCount: 7, mustHave: [], shouldHave: [] },
+    painPoints: {}, bfsg: {}, seoGeo: null
+};
+
+test('formatResult: zeigt Branchennamen (Sprint-174 .branch-Feldfix), nicht "(allgemein)"', () => {
+    const out = formatResult('example.com', SYNTH_RESULT, null);
+    assert.match(out, /Branche:\s+Digital-\/Kreativagentur/);
+    assert.doesNotMatch(out, /\(allgemein\)/);
+});
+
+test('formatResult: Sprint-173 Verify-Links-Block nur bei Self-Audit-Domain', () => {
+    const self = formatResult('karriaro-webdesign.de', SYNTH_RESULT, null);
+    assert.match(self, /PRÜFEN SIE UNS NACH/);
+    assert.match(self, /securityheaders\.com/);
+    assert.match(self, /developer\.mozilla\.org\/en-US\/observatory/);
+    assert.doesNotMatch(self, /KARRIARO PRÜFT SICH SELBST/);   // alter Block ist weg
+
+    const foreign = formatResult('example.com', SYNTH_RESULT, null);
+    assert.doesNotMatch(foreign, /PRÜFEN SIE UNS NACH/);       // Fremd-Domain: kein Block
 });

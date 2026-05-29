@@ -204,4 +204,5 @@ async function execute(args, ctx) {
     return formatResult(domain, both[0], both[1]);
 }
 
-module.exports = { DEFINITION, execute };
+// formatResult exportiert für Regressionstests (Sprint 176).
+module.exports = { DEFINITION, execute, formatResult };

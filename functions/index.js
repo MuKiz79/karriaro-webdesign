@@ -157,7 +157,12 @@ async function notifyFounderOnReportInbound(payload) {
         host: SMTP_HOST.value(),
         port: 587,
         secure: false,
-        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() }
+        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() },
+        // Sprint 176 — gebundene SMTP-Timeouts, damit ein hängender Mailserver
+        // nicht das 60s-Function-Budget aufzehrt.
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 12000
     });
     const subject = `Web-Index-Lead: ${payload.domain} (Report ${payload.reportSlug})`;
     const text = `Inbound aus Branchen-Report.
@@ -209,7 +214,12 @@ async function sendAuditMail(to, name, slug, domain, attribution = {}) {
         host: SMTP_HOST.value(),
         port: 587,
         secure: false,
-        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() }
+        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() },
+        // Sprint 176 — gebundene SMTP-Timeouts, damit ein hängender Mailserver
+        // nicht das 60s-Function-Budget aufzehrt.
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 12000
     });
     const link = `https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(slug)}`;
     const greeting = name ? `Hallo ${name},` : "Guten Tag,";
@@ -255,7 +265,7 @@ exports.requestAudit = onRequest(
         memory: "512MiB",
         timeoutSeconds: 60,
         cors: false,
-        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS, PLACES_KEY]
+        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS, PLACES_KEY, PSI_API_KEY]
     },
     async (req, res) => {
         if (cors(req, res)) return;
@@ -296,7 +306,8 @@ exports.requestAudit = onRequest(
         // Aber: im 60s-Timeout läuft alles, wir warten doch — vereinfacht den Mail-Versand.
         let pipelineResult;
         try {
-            pipelineResult = await runAuditPipeline(auditUrl, "");
+            // Sprint 176 — PSI mit API-Key (vorher ""): authentifizierte Quota, kein 429→502.
+            pipelineResult = await runAuditPipeline(auditUrl, safeSecretValue(PSI_API_KEY));
         } catch (err) {
             logger.error("requestAudit pipeline failed", {
                 fn: "requestAudit", domain, error: err.message
@@ -309,6 +320,7 @@ exports.requestAudit = onRequest(
         try {
             const placesRes = await fetch(`${PLACES_BASE}:searchText`, {
                 method: "POST",
+                signal: AbortSignal.timeout(8000),
                 headers: {
                     "Content-Type": "application/json",
                     "X-Goog-Api-Key": PLACES_KEY.value(),
@@ -321,6 +333,7 @@ exports.requestAudit = onRequest(
             if (place?.location && place?.primaryType) {
                 const nearby = await fetch(`${PLACES_BASE}:searchNearby`, {
                     method: "POST",
+                    signal: AbortSignal.timeout(8000),
                     headers: {
                         "Content-Type": "application/json",
                         "X-Goog-Api-Key": PLACES_KEY.value(),
@@ -756,7 +769,12 @@ async function sendPackageRequestMail(payload) {
         host: SMTP_HOST.value(),
         port: 587,
         secure: false,
-        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() }
+        auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() },
+        // Sprint 176 — gebundene SMTP-Timeouts, damit ein hängender Mailserver
+        // nicht das 60s-Function-Budget aufzehrt.
+        connectionTimeout: 8000,
+        greetingTimeout: 8000,
+        socketTimeout: 12000
     });
     const industryLabel = PACKAGE_INDUSTRY_LABEL[payload.industry] || payload.industry;
     const pkgLabel = PACKAGE_TIER_LABEL[payload.pkg] || payload.pkg;
