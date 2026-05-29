@@ -197,6 +197,8 @@ function normalizePlacesType(t) {
     if (['landscape_designer', 'lawn_care_service', 'tree_service'].includes(t)) return 'landscaper';
     if (['construction_company', 'building_contractor'].includes(t)) return 'general_contractor';
     if (['cabinet_maker', 'woodworker'].includes(t)) return 'carpenter';
+    // Sprint 174 — Digital-/Kreativagenturen (B2B-Dienstleister, oft nicht in Places gelistet)
+    if (['marketing_agency', 'advertising_agency', 'graphic_designer', 'website_designer', 'web_design_company', 'internet_marketing_service'].includes(t)) return 'creative_agency';
     return t;
 }
 
@@ -235,7 +237,10 @@ function guessBranchFromUrl(url) {
             { re: /(gartenbau|landschaftsbau|baumpflege|gartengestaltung|gartenservice)/i, type: 'landscaper' },
             { re: /(bauunternehmen|bauunternehmer|hochbau|tiefbau|baufirma)/i, type: 'general_contractor' },
             { re: /(schreiner|tischler|holzbau|moebelbau|möbelbau|innenausbau)/i, type: 'carpenter' },
-            { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ }
+            { re: /(dachdecker|dachbau|zimmerer|spengler)/i, type: 'plumber' /* fallback handwerk-bucket */ },
+            // Sprint 174 — Digital-/Kreativagentur. Bewusst nur Compound-Tokens (kein bloßes
+            // "design"/"studio"/"manufaktur") → False-Positive-Schutz gegen Möbel-/Nageldesign etc.
+            { re: /(webdesign|web-design|webentwicklung|webagentur|onlineagentur|internetagentur|werbeagentur|marketingagentur|mediaagentur|kreativagentur|digitalagentur|designagentur|grafikdesign|mediengestaltung|seo[-_]?agentur|webstudio)/i, type: 'creative_agency' }
         ];
         for (var i = 0; i < rules.length; i++) {
             if (rules[i].re.test(host)) return rules[i].type;

@@ -95,7 +95,7 @@ function pickFindings(result) {
     if (result && result.branch && typeof result.branch.foundCount === 'number') {
         var missing = (result.branch.totalCount || 0) - result.branch.foundCount;
         if (missing > 0) {
-            pool.push('Branchen-Standards: ' + missing + ' von ' + result.branch.totalCount + ' fehlen (' + (result.branch.name || 'allgemein') + ').');
+            pool.push('Branchen-Standards: ' + missing + ' von ' + result.branch.totalCount + ' fehlen (' + (result.branch.branch || 'allgemein') + ').');
         }
     }
     var seen = {}, out = [];
@@ -130,8 +130,8 @@ function formatResult(domain, result, lighthouseScore) {
         '           ' + verdict[1],
         ''
     ];
-    if (result && result.branch && result.branch.name) {
-        lines.push('Branche:   ' + result.branch.name);
+    if (result && result.branch && result.branch.branch) {
+        lines.push('Branche:   ' + result.branch.branch);
         lines.push('');
     }
     // Sprint 170 — Lighthouse-Public-Score (Multi-Dimensions-Profil)

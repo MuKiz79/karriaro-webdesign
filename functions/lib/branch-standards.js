@@ -422,6 +422,23 @@ const BRANCH_STANDARDS = {
         pitchMissing: 'Autofahrer googeln "TUEV [Stadt]" — wer das nicht prominent zeigt, taucht in der Suche nicht auf.',
         pitchAllOk: 'Ihre Werkstatt ist online auffindbar.'
     },
+    'creative_agency': {
+        name: 'Digital-/Kreativagentur',
+        mustHave: [
+            // Sprint 174 — Digital-/Kreativagentur (B2B-Dienstleister). KEINE Öffnungszeiten-/Walk-in-Erwartung.
+            { id: 'leistungen', label: 'Leistungs-/Service-Seite', detect: { subPage: /leistung|service|angebot|webdesign|webentwicklung|kompetenz/i, body: /\b(webdesign|webentwicklung|webgestaltung|onlineshop|online[- ]?marketing|seo|suchmaschinen|branding|corporate[- ]?design|grafikdesign|app[- ]?entwicklung|softwareentwicklung|digitalisierung|markenauftritt)\b/i } },
+            { id: 'referenzen', label: 'Portfolio / Referenzen / Cases', detect: { subPage: /portfolio|referenz|case|projekt|arbeiten|kunden|werke/i, body: /\b(referenz|portfolio|case[- ]?stud|kundenprojekt|unsere arbeiten|ausgewählte projekte|projektgalerie|kundenstimme)\b/i } },
+            { id: 'team', label: 'Über-uns / Team / Gründer', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns|about|agentur|gruender|gründer|manufaktur/i, body: /\b(über uns|ueber uns|unser team|das team|wer wir sind|gegründet|gründer(in)?|inhaber(in)?|geschäftsführ|manufaktur)\b/i } },
+            { id: 'kontakt', label: 'Kontakt / Projektanfrage', detect: { subPage: /kontakt|anfrage|contact|projekt[- ]?start/i, body: /\b(kontakt|projektanfrage|jetzt anfragen|unverbindlich|schreiben sie uns|projekt besprechen)\b|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|\b\d{5}\s+[A-ZÄÖÜ][a-zäöüß]+/i } }
+        ],
+        shouldHave: [
+            { id: 'prozess', label: 'Arbeitsweise / Prozess transparent', detect: { subPage: /prozess|ablauf|vorgehen|so-arbeiten/i, body: /\b(unser prozess|so arbeiten wir|vorgehen|arbeitsweise|ablauf|methodik|in \d+ schritten)\b/i } },
+            { id: 'journal', label: 'Journal / Blog / Insights', detect: { subPage: /blog|journal|magazin|insights|wissen|ratgeber/i, body: /\b(blog|journal|magazin|insights|fachbeitrag|ratgeber)\b/i } },
+            { id: 'pakete', label: 'Pakete / Investitions-Transparenz', detect: { subPage: /preis|pakete|investition|leistungspaket/i, body: /\b(paket|festpreis|ab \d+ ?€|investition|preismodell|preisarchitektur)\b/i } }
+        ],
+        pitchMissing: 'Auftraggeber entscheiden anhand sichtbarer Arbeiten und klarer Leistungen — Portfolio, Referenzen und ein konkreter Kontaktweg sind die Substanz, nicht das Beiwerk.',
+        pitchAllOk: 'Ihr Auftritt zeigt, was eine Agentur ausmacht: Arbeiten, Leistungen, Haltung.'
+    },
     '_default': {
         name: 'Lokales Unternehmen',
         mustHave: [
