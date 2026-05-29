@@ -46,8 +46,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run audit-pipeline + safe-fetch + rate-limit tests
-        run: node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js
+      - name: Run audit-pipeline + safe-fetch + rate-limit + mcp tests
+        run: node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js functions/test/mcp.test.js
 
   unit:
     name: lead-intelligence Vitest (304 tests)

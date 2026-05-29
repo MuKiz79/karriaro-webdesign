@@ -6,6 +6,7 @@
 
 const { safeFetch } = require('../lib/safe-fetch.js');
 const { header, withSignature } = require('./branding.js');
+const { normalizeUrl } = require('../lib/url-utils.js');  // Sprint 178 — Single-Source
 
 const DEFINITION = {
     name: 'karriaro_extract_voice',
@@ -26,15 +27,7 @@ const DEFINITION = {
     }
 };
 
-function normalizeUrl(raw) {
-    var s = String(raw || '').trim();
-    if (!s) return null;
-    if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
-    try {
-        var u = new URL(s);
-        return u.origin + u.pathname.replace(/\/$/, '');
-    } catch (e) { return null; }
-}
+// normalizeUrl: Sprint 178 → ../lib/url-utils.js (Single-Source).
 
 function extractVoiceCorpus(html) {
     // Extrahiert relevante Text-Inhalte: Title, H1-H3, Hero-Paragraphs, CTAs.

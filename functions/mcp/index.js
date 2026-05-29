@@ -155,4 +155,5 @@ async function handleHttp(req, res, ctx) {
     res.json(response);
 }
 
-module.exports = { handleHttp, TOOLS, SERVER_NAME, SERVER_VERSION, PROTOCOL_VERSION };
+// dispatch exportiert für Protokoll-Tests (Sprint 178).
+module.exports = { handleHttp, dispatch, TOOLS, SERVER_NAME, SERVER_VERSION, PROTOCOL_VERSION };

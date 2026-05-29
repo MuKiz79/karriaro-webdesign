@@ -6,6 +6,7 @@
 const { runLightAudit } = require('../lib/light-audit.js');
 const { header, withSignature } = require('./branding.js');
 const { fetchLighthouseScore } = require('./lighthouse-score-fetch.js');
+const { normalizeUrl } = require('../lib/url-utils.js');  // Sprint 178 — Single-Source
 
 const DEFINITION = {
     name: 'karriaro_audit_site',
@@ -26,15 +27,7 @@ const DEFINITION = {
     }
 };
 
-function normalizeUrl(raw) {
-    var s = String(raw || '').trim();
-    if (!s) return null;
-    if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
-    try {
-        var u = new URL(s);
-        return u.origin + u.pathname.replace(/\/$/, '');
-    } catch (e) { return null; }
-}
+// normalizeUrl: Sprint 178 → ../lib/url-utils.js (Single-Source).
 
 function scoreLabel(score) {
     // Sprint 171 — Skala härter geeicht (war 80/55). Verdient eine ehrlichere

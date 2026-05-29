@@ -27,6 +27,7 @@ const { runSecurityAudit } = require("./lib/security-audit.js");
 const { safeFetch } = require("./lib/safe-fetch.js");
 // Sprint 82 — Firestore-backed Rate-Limit + Client-IP-Parser (X-Forwarded-For-aware).
 const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
+const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Single-Source
 const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
@@ -139,15 +140,7 @@ function generateSlug() {
 function isValidEmail(s) {
     return typeof s === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s) && s.length < 200;
 }
-function normalizeUrl(s) {
-    if (!s || typeof s !== "string") return null;
-    let u = s.trim();
-    if (!/^https?:\/\//.test(u)) u = "https://" + u;
-    try {
-        const url = new URL(u);
-        return url.origin + url.pathname.replace(/\/$/, "");
-    } catch { return null; }
-}
+// normalizeUrl: Sprint 178 → lib/url-utils.js (Single-Source, war hier dupliziert ohne i-Flag).
 
 // Sprint 161 — Founder-Notification, wenn der Inbound-Lead aus einem
 // veröffentlichten Branchen-Report kam (reportSlug + refHash gesetzt).
