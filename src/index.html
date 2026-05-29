@@ -1186,8 +1186,10 @@
         .hero-mockup-block { position: relative; }
         .hero-marginalia {
             position: absolute;
-            top: -8px;
-            right: 0;
+            /* Sprint 186 — über das Mockup gesetzt (statt rechts daneben): nutzt den leeren
+               Hero-Raum oberhalb des Browser-Frames → kein Overlap, kein overflow-Clip. */
+            bottom: calc(100% + 6px);
+            right: 8px;
             width: 144px;
             transform: rotate(4deg);
             pointer-events: none;
@@ -1206,7 +1208,7 @@
             line-height: 1.3;
         }
         @media (max-width: 1200px) {
-            .hero-marginalia { right: 0; width: 120px; }
+            .hero-marginalia { right: 4px; width: 120px; }
             .hero-marginalia svg { width: 72px; }
             .hero-marginalia-note { font-size: 13px; }
         }
