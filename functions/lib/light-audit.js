@@ -473,10 +473,8 @@ async function detectSeoGeo(html, baseUrl) {
     async function probe(path) {
         if (!origin) return false;
         try {
-            const ctrl = new AbortController();
-            const t = setTimeout(() => ctrl.abort(), 3000);
-            const res = await fetch(origin + path, { method: 'HEAD', signal: ctrl.signal, redirect: 'follow' });
-            clearTimeout(t);
+            // Sprint 175 — SSRF: safeFetch (per-Hop-Validierung) statt redirect:'follow'.
+            const res = await safeFetch(origin + path, { method: 'HEAD', timeoutMs: 3000 });
             return res.ok;
         } catch (_) { return false; }
     }

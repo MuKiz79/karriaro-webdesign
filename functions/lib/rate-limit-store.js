@@ -16,15 +16,21 @@ function hashKey(ip, key) {
 }
 
 /**
- * Extrahiert die Client-IP aus dem Request. X-Forwarded-For ist eine
- * Komma-Liste; das erste Element ist die echte Client-IP, alle weiteren
- * sind Proxy-IPs. Bisher wurde der gesamte Header gehasht (trivial bypass).
+ * Extrahiert die Client-IP aus dem Request.
+ *
+ * Sprint 175 — KORREKTUR: Auf GCP (GFE/Cloud Functions v2 / Cloud Run) hängt
+ * die Plattform die ECHTE Client-IP RECHTS an X-Forwarded-For an; alle vom
+ * Client gesendeten Werte stehen LINKS und sind frei wählbar (spoofbar).
+ * Empirisch verifiziert: Client sendet "22.22.22.22" → XFF "22.22.22.22,<echte-IP>",
+ * req.ip = leftmost = spoofbar. Daher das RECHTE (platform-angehängte) Element
+ * nehmen — das kann der Client nicht überschreiben. Vorher wurde leftmost genommen
+ * (trivialer Rate-Limit-Bypass via rotierendem Header).
  */
 function clientIp(req) {
     const xff = req.headers['x-forwarded-for'];
     if (xff) {
-        const first = String(xff).split(',')[0].trim();
-        if (first) return first;
+        const parts = String(xff).split(',').map(s => s.trim()).filter(Boolean);
+        if (parts.length) return parts[parts.length - 1];
     }
     return req.ip || 'unknown';
 }

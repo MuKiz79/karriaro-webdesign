@@ -16,6 +16,11 @@
  */
 
 const tls = require('tls');
+const net = require('node:net');
+const dns = require('node:dns').promises;
+// Sprint 175 — SSRF: Probes gegen User-URLs laufen über den safeFetch-Guard;
+// checkTls validiert + pinnt die aufgelöste IP.
+const { safeFetch, isPrivateIPv4, isPrivateIPv6, assertPublicHost } = require('./safe-fetch.js');
 
 const SENSITIVE_PATHS = [
     '/.git/config',
@@ -54,6 +59,11 @@ async function runSecurityAudit(url, psiData = null) {
     const startMs = Date.now();
     const u = new URL(url);
     const baseOrigin = u.origin;
+
+    // Sprint 175 — SSRF-Guard: blockt private/interne Targets (Loopback, RFC1918,
+    // 169.254-Metadata, ...) vor allen Probes. Generische Meldung, kein IP-Leak.
+    try { await assertPublicHost(u.hostname); }
+    catch { throw new Error('Diese Adresse kann nicht geprüft werden.'); }
 
     const [
         headerResult,
@@ -364,10 +374,10 @@ async function runSecurityAudit(url, psiData = null) {
 // ──────────────── Helpers ────────────────
 
 async function checkSecurityHeaders(origin) {
-    const res = await fetch(origin + '/', {
+    // Sprint 175 — safeFetch validiert jeden Redirect-Hop (kein redirect:'follow' in interne Hosts).
+    const res = await safeFetch(origin + '/', {
         method: 'HEAD',
-        redirect: 'follow',
-        signal: AbortSignal.timeout(HEAD_TIMEOUT_MS),
+        timeoutMs: HEAD_TIMEOUT_MS,
         headers: { 'User-Agent': 'Karriaro-SecurityBot/1.0' }
     });
     const headers = {};
@@ -375,10 +385,19 @@ async function checkSecurityHeaders(origin) {
     return { status: res.status, headers };
 }
 
-function checkTls(hostname) {
+async function checkTls(hostname) {
+    // Sprint 175 — SSRF: Hostname auflösen + private/interne IP ablehnen, dann zur
+    // validierten IP verbinden (servername bleibt für SNI/Cert-Match erhalten).
+    let address = hostname;
+    if (!net.isIP(hostname)) {
+        const r = await dns.lookup(hostname);
+        address = r.address;
+    }
+    const priv = (net.isIPv4(address) && isPrivateIPv4(address)) || (net.isIPv6(address) && isPrivateIPv6(address));
+    if (priv) return { error: 'blocked' };
     return new Promise((resolve) => {
         const socket = tls.connect({
-            host: hostname,
+            host: address,
             port: 443,
             servername: hostname,
             rejectUnauthorized: false,
@@ -515,10 +534,10 @@ async function dnsLookup(name, type) {
 }
 
 async function checkCookies(origin) {
-    const res = await fetch(origin + '/', {
+    // Sprint 175 — safeFetch statt redirect:'follow' (per-Hop-SSRF-Validierung).
+    const res = await safeFetch(origin + '/', {
         method: 'GET',
-        redirect: 'follow',
-        signal: AbortSignal.timeout(HEAD_TIMEOUT_MS),
+        timeoutMs: HEAD_TIMEOUT_MS,
         headers: { 'User-Agent': 'Karriaro-SecurityBot/1.0' }
     });
     // fetch konsolidiert Set-Cookie nicht in res.headers — wir nutzen getSetCookie wenn verfuegbar

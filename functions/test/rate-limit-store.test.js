@@ -14,14 +14,21 @@ const { clientIp, hashKey } = require('../lib/rate-limit-store.js');
 // clientIp — X-Forwarded-For-Parsing
 // ────────────────────────────────────────────────────────────────
 
-test('clientIp: returns first IP from X-Forwarded-For chain', () => {
-    const req = { headers: { 'x-forwarded-for': '203.0.113.1, 10.0.0.1, 172.16.0.1' } };
-    assert.equal(clientIp(req), '203.0.113.1');
+// Sprint 175 — die Plattform hängt die echte Client-IP RECHTS an; client-gesendete
+// (linke) Werte sind spoofbar. clientIp nimmt daher das rechte Element.
+test('clientIp: returns rightmost (platform-appended) IP from X-Forwarded-For chain', () => {
+    const req = { headers: { 'x-forwarded-for': '203.0.113.1, 10.0.0.1, 198.51.100.7' } };
+    assert.equal(clientIp(req), '198.51.100.7');
+});
+
+test('clientIp: ignores spoofed leftmost XFF entry', () => {
+    const req = { headers: { 'x-forwarded-for': '1.2.3.4, 203.0.113.99' } };
+    assert.equal(clientIp(req), '203.0.113.99');
 });
 
 test('clientIp: trims whitespace from XFF entries', () => {
-    const req = { headers: { 'x-forwarded-for': '   203.0.113.42   , 10.0.0.1' } };
-    assert.equal(clientIp(req), '203.0.113.42');
+    const req = { headers: { 'x-forwarded-for': '203.0.113.42 ,   10.0.0.1   ' } };
+    assert.equal(clientIp(req), '10.0.0.1');
 });
 
 test('clientIp: single IP in XFF', () => {
@@ -39,8 +46,8 @@ test('clientIp: returns "unknown" when nothing available', () => {
     assert.equal(clientIp(req), 'unknown');
 });
 
-test('clientIp: handles IPv6 in XFF', () => {
-    const req = { headers: { 'x-forwarded-for': '2001:db8::1, 10.0.0.1' } };
+test('clientIp: handles IPv6 as rightmost in XFF', () => {
+    const req = { headers: { 'x-forwarded-for': '10.0.0.1, 2001:db8::1' } };
     assert.equal(clientIp(req), '2001:db8::1');
 });
 

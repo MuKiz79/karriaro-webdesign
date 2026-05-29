@@ -24,6 +24,7 @@ const {
 } = require("./lib/deep-research.js");
 const mockupGenerator = require("./lib/mockup-generator.js");
 const { runSecurityAudit } = require("./lib/security-audit.js");
+const { safeFetch } = require("./lib/safe-fetch.js");
 // Sprint 82 — Firestore-backed Rate-Limit + Client-IP-Parser (X-Forwarded-For-aware).
 const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
 const logger = require("./lib/logger.js");
@@ -1054,10 +1055,10 @@ exports.deepResearch = onRequest(
 
         try {
             // 2) Homepage holen + Sub-Pages parallel
-            const homepageFetch = fetch(url, {
-                headers: { "User-Agent": "Karriaro-LeadBot/1.0", "Accept": "text/html,*/*" },
-                signal: AbortSignal.timeout(10000),
-                redirect: "follow"
+            // Sprint 175 — SSRF: Homepage über safeFetch (per-Hop-Validierung, manueller Redirect-Follow).
+            const homepageFetch = safeFetch(url, {
+                timeoutMs: 10000,
+                headers: { "User-Agent": "Karriaro-LeadBot/1.0", "Accept": "text/html,*/*" }
             }).then(async r => ({ ok: r.ok, status: r.status, html: r.ok ? await r.text() : "" }))
               .catch(err => ({ ok: false, status: 0, html: "", error: String(err?.message || err) }));
 
