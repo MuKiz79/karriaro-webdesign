@@ -292,8 +292,41 @@ exports.requestAudit = onRequest(
         if (await enforceRateLimit(db, { ip: emailHash, headers: {} }, res, "requestAudit:email", 5, 86400,
             "Diese E-Mail-Adresse hat das tägliche Limit erreicht. Bitte morgen erneut.")) return;
 
-        const slug = generateSlug();
         const domain = new URL(auditUrl).hostname.replace(/^www\./, "");
+        // Sprint 181 — deterministischer Slug (emailHash + domain + 10-Min-Bucket): ein
+        // Doppel-Klick/Retry im selben Fenster ergibt dieselbe Doc-ID → set({merge})
+        // überschreibt statt ein zweites Doc anzulegen. sha256-Hex passt auf die
+        // getAuditData-Slug-Regex /^[0-9a-z]+$/ (24 Zeichen). Index-frei (kein Query),
+        // gleiches Muster wie rate-limit-store.js (deterministische Doc-IDs).
+        const slugBucket = Math.floor(Date.now() / (10 * 60 * 1000));
+        const slug = crypto.createHash("sha256").update(`${emailHash}:${domain}:${slugBucket}`).digest("hex").slice(0, 24);
+
+        // Sprint 181 — Lead-Skelett SOFORT schreiben (vor der ~35s-Pipeline + Enrichment),
+        // damit ein Timeout den erfassten Lead-Kontakt nicht verliert. Best-effort; set({merge})
+        // legt das Voll-Doc nach der Pipeline drauf. (Seltene Kanten-Edge: ein Retry im selben
+        // Bucket nach einem View setzt visitCount zurück — analytischer Blip, kein Datenverlust.)
+        try {
+            await db.collection("auditRequests").doc(slug).set({
+                slug,
+                url: auditUrl,
+                domain,
+                name: safeName,
+                email,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                createdAtMs: Date.now(),
+                expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 90 * 86400000) / 1000), 0),
+                source: safeReportSlug ? "report-inbound" : "inbound_form",
+                reportSlug: safeReportSlug,
+                refHash: safeRefHash,
+                visitCount: 0,
+                ctaClicks: 0,
+                status: "pending"
+            }, { merge: true });
+        } catch (err) {
+            logger.warn("requestAudit skeleton write failed (non-fatal)", {
+                fn: "requestAudit", slug, domain, error: err.message
+            });
+        }
 
         // Light-Pipeline asynchron starten — Antwort nicht blockieren bis fertig.
         // Aber: im 60s-Timeout läuft alles, wir warten doch — vereinfacht den Mail-Versand.
@@ -305,6 +338,15 @@ exports.requestAudit = onRequest(
             logger.error("requestAudit pipeline failed", {
                 fn: "requestAudit", domain, error: err.message
             });
+            // Sprint 181 — Lead bleibt dank Skelett erhalten; als pipeline_failed markieren,
+            // damit das Team im Cockpit nachfassen kann. Eigenes try/catch, damit ein
+            // Firestore-Fehler die 502 nicht in eine 500 dreht.
+            try {
+                await db.collection("auditRequests").doc(slug).set(
+                    { status: "pipeline_failed", pipelineError: String(err.message || err).slice(0, 200) },
+                    { merge: true }
+                );
+            } catch (_) { /* non-fatal */ }
             // Sprint 177 — generische Meldung: reflektiert keinen SSRF-Grund ("SSRF blocked: private IPv4 …") an den Client.
             return res.status(502).json({ error: "Audit-Pipeline fehlgeschlagen", details: "Die Seite konnte nicht analysiert werden." });
         }
@@ -355,17 +397,11 @@ exports.requestAudit = onRequest(
             console.warn("Places competitors failed (non-fatal):", err.message);
         }
 
-        // Firestore-Insert
-        const auditDoc = {
-            slug,
-            url: auditUrl,
-            domain,
-            name: safeName,
-            email,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            createdAtMs: Date.now(),
-            // 90 Tage TTL — Firestore-TTL-Policy auf Feld `expiresAt`
-            expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 90 * 86400000) / 1000), 0),
+        // Sprint 181 — Pipeline-Ergebnis auf das Skelett mergen. Identität/PII, Timestamps,
+        // Zähler (visitCount/ctaClicks), source, reportSlug/refHash bleiben vom Skelett
+        // unberührt (kein Reset). set({merge}) statt update() → robust, falls das Skelett
+        // (selten) nicht geschrieben wurde.
+        await db.collection("auditRequests").doc(slug).set({
             techAge: pipelineResult.techAge,
             tech: pipelineResult.tech,
             wayback: pipelineResult.wayback,
@@ -374,13 +410,8 @@ exports.requestAudit = onRequest(
             leadScore: pipelineResult.leadScore,
             summary: pipelineResult.summary,
             competitors,
-            visitCount: 0,
-            ctaClicks: 0,
-            source: safeReportSlug ? "report-inbound" : "inbound_form",
-            reportSlug: safeReportSlug,
-            refHash: safeRefHash
-        };
-        await db.collection("auditRequests").doc(slug).set(auditDoc);
+            status: "completed"
+        }, { merge: true });
 
         // Sprint 161 — Founder-Notification bei Inbound aus Branchen-Report.
         // Best-effort, separate Mail an kontakt@karriaro.de.
