@@ -30,12 +30,12 @@ cd "$MOBILE_REPO"
 echo "→ Mobile-Repo refreshen"
 git pull origin main --rebase
 
-echo "→ Bestehende HTML + CSS + JS + Mockups-Opt + Icons loeschen (CNAME, README, .git bleiben)"
+echo "→ Bestehende HTML + CSS + JS + Fonts + Mockups-Opt + Icons loeschen (CNAME, README, .git bleiben)"
 find . -maxdepth 1 -name "*.html" -delete
 find . -maxdepth 1 -name "manifest.json" -delete
 find . -maxdepth 1 -name "sw.js" -delete
-rm -rf portfolio blog css js images/mockups-opt icons
-mkdir -p portfolio blog css js images/mockups-opt icons
+rm -rf portfolio blog css js fonts images/mockups-opt icons
+mkdir -p portfolio blog css js fonts images/mockups-opt icons
 
 echo "→ Files aus Haupt-Repo kopieren"
 cp "$MAIN_REPO"/src/m/*.html .
@@ -43,6 +43,8 @@ cp "$MAIN_REPO"/src/m/portfolio/*.html portfolio/
 cp "$MAIN_REPO"/src/m/blog/*.html blog/
 # Sprint 91: Generator-Output benoetigt alle Desktop-CSS-Files (tokens, karriaro-tools, mobile-overrides etc.)
 cp "$MAIN_REPO"/src/css/*.css css/ 2>/dev/null || true
+# Sprint 183: selbst-gehostete Fonts (DSGVO, kein Google-Fetch) — fonts.css/fonts-inter.css referenzieren /fonts/*.woff2
+cp "$MAIN_REPO"/src/fonts/*.woff2 fonts/ 2>/dev/null || true
 # Sprint 128: JS-Bundle inklusive m-interactions.js (Mobile-Interaktions-Module)
 cp "$MAIN_REPO"/src/js/*.js js/ 2>/dev/null || true
 # Sprint 103: Demo-Swiper-Mockup-Bilder optimiert (webp 480/800 + jpg-Fallback)

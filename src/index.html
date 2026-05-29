@@ -193,15 +193,12 @@
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
     <script src="/js/audit-magic-moment.js?v=421" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
     <!-- Sprint 82 — Preload des CSS senkt LCP um ~250ms, da Browser nicht
          erst auf Render-Discovery wartet. -->
     <!-- Sprint 164 — Inter raus, System-Font-Stack für Body (-Apple-System, BlinkMac, SF Pro Text).
          Fraunces (Display) + JetBrains Mono (Eyebrows) + Cormorant Garamond (Italic-Akzent) bleiben.
          Ersparnis: ~30-40 KB Webfont-Download. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         /* Sprint 39 — Karriaro Design-Tokens (Brand-Codification für Designaward-Submission) */
         :root {
@@ -4585,16 +4582,26 @@
                 '<span class="kr-selbst-result-verdict" data-verdict="' + v.tag + '">' + v.label + '</span></span></div>';
             host.innerHTML = '<div class="kr-selbst-result">' + rows + totalRow + '</div>';
         }
+        var CACHE_KEY = 'kr-selfaudit-v1';
+        var CACHE_TTL = 6 * 60 * 60 * 1000; // 6h — der Self-Score ändert sich selten; spart Re-Calls + schont das 3/h/IP-Limit
         function fetchScore() {
             if (loaded) return;
             loaded = true;
+            // Client-Cache: bei einem frischen Treffer kein erneuter Endpoint-Call (Rate-Limit + Kosten).
+            try {
+                var c = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+                if (c && c.data && c.ts && (Date.now() - c.ts) < CACHE_TTL) { renderResult(c.data); return; }
+            } catch (e) { /* localStorage nicht verfügbar → live laden */ }
             fetch('https://lighthouse.karriaro.de/api/public/lighthouse-score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: 'https://karriaro-webdesign.de' })
             }).then(function (r) { return r.ok ? r.json() : null; })
               .then(function (j) {
-                  if (j && j.success && j.data) renderResult(j.data);
+                  if (j && j.success && j.data) {
+                      renderResult(j.data);
+                      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: j.data, ts: Date.now() })); } catch (e) {}
+                  }
                   else host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:#14202B;">Direkt zu Lighthouse</a></p>';
               })
               .catch(function () {

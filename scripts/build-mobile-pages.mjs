@@ -266,15 +266,13 @@ function injectStickyCta(html) {
 }
 
 // Sprint 149.0 — Inter Variable als universelle Mobile-Schrift.
-// Apple-Stripe-Tech-Premium-Direction: eine Schrift, alle Weights via
-// Variable Font. preconnect minimiert Latency, display=swap verhindert FOIT.
+// Sprint 183 — Selbst-gehostet (DSGVO: kein Google-Fetch). fonts-inter.css enthält
+// Inter + Inter Tight + Source Serif 4 (latin/latin-ext/cyrillic, font-display:swap).
 const INTER_FONT_LINKS = `
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&display=swap" rel="stylesheet">`;
+<link rel="stylesheet" href="/css/fonts-inter.css?v=183">`;
 
 function injectInterFont(html) {
-    if (html.includes('fonts.googleapis.com/css2?family=Inter')) return html;
+    if (html.includes('/css/fonts-inter.css')) return html;
     const viewportMatch = html.match(/<meta\s+name="viewport"[^>]*>/i);
     if (viewportMatch) {
         const idx = html.indexOf(viewportMatch[0]) + viewportMatch[0].length;

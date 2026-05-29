@@ -2,7 +2,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Karriaro">
   <defs>
     <style type="text/css">
-      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&amp;display=swap');
       .bg { fill: #0A0A0A; }
       .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 700; font-size: 22px; fill: #FFFFFF; letter-spacing: -0.025em; }
       .bracket { fill: none; stroke: #FFFFFF; stroke-width: 1.4; }
