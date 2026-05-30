@@ -78,6 +78,22 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         footer a:hover { color: #14202B; }
         .back { color: #1A2E40; font-size: 14px; transition: color 0.3s; }
         .back:hover { text-decoration: underline; }
+        /* Sprint 192 — Dark-Mode (folgt OS-Setting) */
+        @media (prefers-color-scheme: dark) {
+            body { background: #0F1217; color: #F5F3EE; }
+            nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
+            nav a { color: #F5F3EE; }
+            nav .cta { background: #2C4257; color: #fff; }
+            .muted, p, li, .info { color: #B8BCC3; }
+            .info strong { color: #F5F3EE; }
+            footer { color: #9BA3AD; border-top-color: rgba(255,255,255,0.08); }
+            footer a { color: #B8BCC3; }
+            footer a:hover { color: #F5F3EE; }
+            .back { color: #8FB0C9; }
+            /* Inline-Styles aufhellen (überstimmen sonst den @media-Block) */
+            [style*="color: #1A2E40"] { color: #8FB0C9 !important; }
+            [style*="color: #14202B"] { color: #F5F3EE !important; }
+        }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=421">
