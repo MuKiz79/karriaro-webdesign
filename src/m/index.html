@@ -3259,6 +3259,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .kr-audit-result-cta-row { flex-direction: column; align-items: stretch; }
             .kr-audit-result-cta { justify-content: center; }
         }
+
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <!-- Sprint 159 — View Transitions API Meta + Speculation Rules.
@@ -4909,6 +4910,62 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             margin: 0;
         }
         .kr-selbst-foot a { color: #5C6470; text-decoration: underline; text-decoration-color: rgba(20, 32, 43, 0.18); text-underline-offset: 3px; }
+
+        /* Sprint 186 — Dark-Mode (folgt OS-Setting). Bewusst im LETZTEN <style>-Block am Ende:
+           index.html hat 3 <style>-Blöcke; nur hier gewinnen die Selektor-Overrides die Light-
+           Regeln aller Blöcke (Cascade = Dokument-Reihenfolge). Token-Flip via dark :root +
+           gezielte Flächen-Overrides; weißer Text auf dunklen Buttons, Mockup-Chrome, Akzente bleiben. */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-indigo: #6B8AA3;
+                --color-indigo-deep: #557390;
+                --color-indigo-strong: #cdd9e3;
+                --color-gold: #B59F75;
+                --color-gold-text: #C2AE86;
+                --color-cream: #161A20;
+                --color-cream-soft: #1A1E25;
+                --color-bone: #0F1217;
+                --color-graphite: #F5F3EE;
+                --color-graphite-soft: #B8BCC3;
+                --color-graphite-light: #8A8E96;
+                --color-line: rgba(245,243,238,0.10);
+                --color-line-strong: rgba(245,243,238,0.18);
+                /* onyx = tiefster Text (28× color:) → hell; onyx-FLÄCHEN unten dunkel gehalten. */
+                --color-onyx: #F5F3EE;
+            }
+            body { background: var(--color-bone); }
+            .hero-with-photo,
+            .arbeiten-section,
+            .kr-trust-hook,
+            .pricing-wartung,
+            .kr-suite,
+            .kr-selbst-audit,
+            .kr-suite-card,
+            .kr-selbst-card,
+            .kr-audit-magic,
+            .kr-audit-result { background: var(--color-cream); }
+            input[type="text"], input[type="email"], textarea,
+            .kr-audit-magic-form input[type="url"] {
+                background: var(--color-cream-soft);
+                color: var(--color-graphite);
+                border-color: var(--color-line-strong);
+            }
+            .footer-kontakt-link:hover { background: var(--color-cream-soft); }
+            /* Header: dunkler durchscheinender Grund + helle Links + helles Logo */
+            .kr-topbar, nav.is-scrolled, .mobile-menu { background: rgba(15,18,23,0.92); }
+            nav a { color: var(--color-graphite); }
+            .nav-logo img { filter: brightness(0) invert(0.92); }
+            /* onyx-FLÄCHEN explizit dunkel halten */
+            .price-card-active, .price-card-premium,
+            .branche-tab.is-active, .branche-tab.is-active:hover,
+            .btn-outline:hover,
+            .tool-tooltip, .tool-tooltip::before { background: #26333F; }
+            .price-card-active, .price-card-premium { border-color: #26333F; }
+            /* Stat-Karten + Tab-Hover + №10-Fußnoten-Link */
+            .kr-proof-counter { background: var(--color-cream-soft); }
+            .branche-tab:hover:not(:disabled) { background: var(--color-cream-soft); }
+            .kr-selbst-foot a { color: var(--color-graphite-soft); text-decoration-color: var(--color-line-strong); }
+        }
     </style>
     <section class="kr-selbst-audit" aria-labelledby="kr-selbst-title">
         <p class="kr-selbst-folio">№&nbsp;10 · Wir prüfen uns selbst</p>
