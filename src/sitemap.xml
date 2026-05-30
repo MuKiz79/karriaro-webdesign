@@ -36,6 +36,10 @@
     <!-- Founder-Story -->
     <url><loc>https://karriaro-webdesign.de/gruender</loc><lastmod>2026-05-30</lastmod><priority>0.5</priority></url>
 
+    <!-- Ratgeber / Pillar-Pages -->
+    <url><loc>https://karriaro-webdesign.de/bfsg-website-pflicht</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
+    <url><loc>https://karriaro-webdesign.de/website-kosten</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
+
     <!-- Blog -->
     <url><loc>https://karriaro-webdesign.de/blog</loc><lastmod>2026-05-30</lastmod><priority>0.6</priority></url>
     <url><loc>https://karriaro-webdesign.de/blog/core-web-vitals-erklaert</loc><lastmod>2026-04-06</lastmod><priority>0.6</priority></url>
