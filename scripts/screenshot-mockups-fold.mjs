@@ -41,7 +41,7 @@ const PORTFOLIOS = [
     { page: 'restaurant-template',        out: 'gastro-hirsch-mockup-fold.jpg' },
     { page: 'meisterbetrieb-mueller',     out: 'handwerk-mueller-mockup-fold.jpg' },
     { page: 'spedition-schwaben',         out: 'logistik-schwaben-mockup-fold.jpg' },
-    { page: 'coaching-lehmann',           out: 'coaching-lehmann-mockup-fold.jpg' },
+    { page: 'coaching-lehmann',           out: 'coaching-lehmann-mockup-fold.jpg', clipY: 64 },
 ];
 
 function startHttpServer() {
@@ -83,7 +83,10 @@ async function main() {
     });
 
     let count = 0;
-    for (const { page: slug, out } of PORTFOLIOS) {
+    // Optional CLI-Filter: `node screenshot-mockups-fold.mjs coaching-lehmann` schießt nur diese eine.
+    const ONLY = process.argv[2] || null;
+    const TARGETS = ONLY ? PORTFOLIOS.filter((p) => p.page === ONLY) : PORTFOLIOS;
+    for (const { page: slug, out, clipY = 0 } of TARGETS) {
         const page = await ctx.newPage();
         const url = `http://localhost:${PORT}/m/portfolio/${slug}.html?screenshot=1`;
         const outPath = join(OUT_DIR, out);
@@ -98,7 +101,7 @@ async function main() {
                 path: outPath,
                 type: 'jpeg',
                 quality: 92,
-                clip: { x: 0, y: 0, width: 1440, height: 900 },
+                clip: { x: 0, y: clipY, width: 1440, height: 900 },
             });
             count++;
             console.log(`${out} (${formatKb(bytes(outPath))})`);

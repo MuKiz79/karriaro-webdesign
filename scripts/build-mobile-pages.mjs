@@ -63,7 +63,8 @@ const SKIP = new Set([
 const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=421">
     <link rel="stylesheet" href="/css/mobile-overrides.css?v=421" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=421"></noscript>
-    <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>`;
+    <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
+    <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
 // Sprint 134 — PWA-Foundation + Apple-Mobile-Web-App-Meta.
 // Sprint 152 — Hero-Image-Preload (LCP-Boost) + SW eager-Registration.
