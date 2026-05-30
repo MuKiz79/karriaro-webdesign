@@ -935,6 +935,15 @@ function collectPages() {
         }
     }
 
+    // Sprint 191 — englische Seite(n) mirrorn. Bisher nicht erfasst → m./en lieferte 404.
+    const enDir = join(SRC, 'en');
+    if (existsSync(enDir)) {
+        for (const entry of readdirSync(enDir)) {
+            if (!entry.endsWith('.html')) continue;
+            pages.push(`en/${entry}`);
+        }
+    }
+
     return pages.sort();
 }
 
@@ -949,6 +958,20 @@ function buildPage(relPath) {
     let html = readFileSync(srcFile, 'utf8');
 
     html = stripAutoRedirect(html);
+
+    // Sprint 191 — en/ ist eine self-contained, bereits responsive Seite (eigener
+    // Viewport, 23 eigene @media-Queries, eigenes Inline-CSS + /css/fonts.css). Die
+    // auf die deutsche DOM getunte Mobile-Tooling (mobile-overrides.css/Critical-CSS
+    // auf .hero/.wrap/.subhead, Hero-Transforms, m-interactions.js) würde sie
+    // umstylen/stören. Daher nur Redirect-Strip + Marker; der Sync-Schritt
+    // absolutiert die /images/-Pfade. Macht m.karriaro-webdesign.de/en erreichbar.
+    if (relPath.startsWith('en/')) {
+        html = addGeneratorMarker(html, relPath);
+        mkdirSync(dirname(outFile), { recursive: true });
+        writeFileSync(outFile, html, 'utf8');
+        return { relPath, sellingCta: false, bytes: html.length };
+    }
+
     html = injectMobileCss(html);
     // Sprint 143 — Critical-CSS inline (Senior-Review C-9, LCP-Optimierung).
     html = injectCriticalCss(html);
