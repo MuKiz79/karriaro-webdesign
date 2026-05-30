@@ -111,6 +111,27 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             transition: color 0.3s;
         }
         .back:hover { text-decoration: underline; }
+            /* Sprint 193 — Dark-Mode (folgt OS-Setting) */
+        @media (prefers-color-scheme: dark) {
+            body { background: #0F1217; color: #F5F3EE; }
+            nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
+            nav a { color: #F5F3EE; }
+            nav .cta { background: #2C4257; color: #fff; }
+            nav .cta:hover { background: #38536B; }
+            .muted, .subhead { color: #9BA3AD; }
+            .btn, .cta-primary { background: #2C4257; }
+            .btn:hover, .cta-primary:hover { background: #38536B; }
+            .back, .link-arrow { color: #8FB0C9; }
+            input[type="text"], input[type="email"], input[type="url"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
+            footer { color: #9BA3AD; border-top-color: rgba(255,255,255,0.08); }
+            footer a { color: #B8BCC3; }
+            footer a:hover { color: #F5F3EE; }
+            [style*="color: #1A2E40"] { color: #8FB0C9 !important; }
+            [style*="color: #14202B"] { color: #F5F3EE !important; }
+            [style*="background: #f5f5f7"], [style*="background:#f5f5f7"] { background: #161A20 !important; }
+            .step { background: #161A20; }
+            .step p, .step-num { color: #B8BCC3; }
+        }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=421">

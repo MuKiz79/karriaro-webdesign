@@ -74,6 +74,29 @@
         footer a:hover { color: #14202B; }
         .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
+            /* Sprint 193 — Dark-Mode (folgt OS-Setting) */
+        @media (prefers-color-scheme: dark) {
+            body { background: #0F1217; color: #F5F3EE; }
+            nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
+            nav a { color: #F5F3EE; }
+            nav .cta { background: #2C4257; color: #fff; }
+            nav .cta:hover { background: #38536B; }
+            .muted, .subhead { color: #9BA3AD; }
+            .btn, .cta-primary { background: #2C4257; }
+            .btn:hover, .cta-primary:hover { background: #38536B; }
+            .back, .link-arrow { color: #8FB0C9; }
+            input[type="text"], input[type="email"], input[type="url"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
+            footer { color: #9BA3AD; border-top-color: rgba(255,255,255,0.08); }
+            footer a { color: #B8BCC3; }
+            footer a:hover { color: #F5F3EE; }
+            [style*="color: #1A2E40"] { color: #8FB0C9 !important; }
+            [style*="color: #14202B"] { color: #F5F3EE !important; }
+            [style*="background: #f5f5f7"], [style*="background:#f5f5f7"] { background: #161A20 !important; }
+            .card { background: #161A20; border-color: rgba(255,255,255,0.08); }
+            .card-img { background: #1A1E25; }
+            .card-body p { color: #B8BCC3; }
+            .card-meta { color: #9BA3AD; }
+        }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
 </head>

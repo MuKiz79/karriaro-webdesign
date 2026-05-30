@@ -217,6 +217,15 @@
         .status-kunde { color: var(--green); font-weight: 700; }
         .status-verloren { color: var(--red); }
         .crm-note { width: 100%; padding: 6px 10px; font-size: 12px; font-family: var(--font); border: 1px solid var(--border); border-radius: 6px; margin-top: 4px; }
+        /* Sprint 193 — Dark-Mode: Token-Flip (Seite nutzt durchweg var(--*)) */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0F1217; --text: #F5F3EE; --muted: #9BA3AD; --accent: #6B8AA3;
+                --card: #161A20; --border: rgba(255,255,255,0.12);
+            }
+            .btn-primary, .save-btn, .cta a, .crm-filter.active { background: #2C4257; }
+            [style*="background:var(--text)"] { background: #26333F !important; }
+        }
     </style>
     <!-- Firebase SDK -->
     <script type="module">

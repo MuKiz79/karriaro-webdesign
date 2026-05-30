@@ -71,6 +71,32 @@
 
         footer { padding: 32px 0; text-align: center; font-size: 12px; color: #6e6e73; border-top: 1px solid rgba(0,0,0,0.06); }
         footer a { color: #424245; }
+            /* Sprint 193 — Dark-Mode (folgt OS-Setting) */
+        @media (prefers-color-scheme: dark) {
+            body { background: #0F1217; color: #F5F3EE; }
+            nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
+            nav a { color: #F5F3EE; }
+            nav .cta { background: #2C4257; color: #fff; }
+            nav .cta:hover { background: #38536B; }
+            .muted, .subhead { color: #9BA3AD; }
+            .btn, .cta-primary { background: #2C4257; }
+            .btn:hover, .cta-primary:hover { background: #38536B; }
+            .back, .link-arrow { color: #8FB0C9; }
+            input[type="text"], input[type="email"], input[type="url"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
+            footer { color: #9BA3AD; border-top-color: rgba(255,255,255,0.08); }
+            footer a { color: #B8BCC3; }
+            footer a:hover { color: #F5F3EE; }
+            [style*="color: #1A2E40"] { color: #8FB0C9 !important; }
+            [style*="color: #14202B"] { color: #F5F3EE !important; }
+            [style*="background: #f5f5f7"], [style*="background:#f5f5f7"] { background: #161A20 !important; }
+            .hero .role, .signature .role { color: #9BA3AD; }
+            article p { color: #C2C7CD; }
+            article p.lead { color: #CDD2D8; }
+            .principle .label, .signature a { color: #8FB0C9; }
+            .principle p { color: #B8BCC3; }
+            .principles { background: #161A20; }
+            .cta-bar a { background: #2C4257; }
+        }
     </style>
 </head>
 <body>
