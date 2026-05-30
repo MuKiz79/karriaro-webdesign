@@ -243,6 +243,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             --color-line-strong: #B8AC97;     /* Strong-Divider */
             --color-white: #ffffff;
             --color-onyx: #14202B;            /* Tiefes Dunkel, ersetzt var(--color-onyx) */
+            /* Sprint 186 — bespoke Text-/Flächen-Literale tokenisiert (Light-Werte 1:1), damit der
+               Dark-Mode-Flip sie erfasst statt sie als hardcodierte Hex zu verfehlen. */
+            --color-ink-2: #5C6470;           /* Sekundär-Text (Folio/Meta) */
+            --color-ink-3: #3A434E;           /* Lede/Tertiär-Text */
+            --color-rust: #8A4A2C;            /* Akzent rost (Italic-em) */
+            --color-pine: #2C5F4A;            /* Akzent grün */
+            --color-surface-veil: #F5F3EE;    /* Panel-Hellton (Audit-Magic / Suite) */
 
             /* Type-System */
             --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
@@ -2894,15 +2901,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             margin: 0 auto;
             padding: clamp(72px, 10vw, 112px) 24px clamp(48px, 8vw, 80px);
             text-align: center;
-            color: #14202B;
-            background: #F5F3EE;
+            color: var(--color-graphite);
+            background: var(--color-surface-veil);
         }
         .kr-audit-magic-folio {
             font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
             font-size: 12px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0 0 24px;
         }
         .kr-audit-magic-title {
@@ -2915,13 +2922,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .kr-audit-magic-title em {
             font-style: italic;
-            color: #8A7B5C;
+            color: var(--color-gold);
         }
         .kr-audit-magic-lede {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             font-size: clamp(15px, 1.6vw, 17px);
             line-height: 1.55;
-            color: #3A434E;
+            color: var(--color-ink-3);
             max-width: 540px;
             margin: 0 auto 36px;
         }
@@ -2960,7 +2967,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 16px;
             line-height: 1.4;
-            color: #14202B;
+            color: var(--color-graphite);
             background: #fff;
             border: 1px solid rgba(20, 32, 43, 0.18);
             border-radius: 2px;
@@ -2968,7 +2975,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .kr-audit-magic-form input[type="url"]:focus {
             outline: none;
-            border-color: #14202B;
+            border-color: var(--color-graphite);
             box-shadow: 0 0 0 3px rgba(20, 32, 43, 0.08);
         }
         .kr-audit-magic-form input[type="url"]::placeholder {
@@ -3015,7 +3022,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .kr-audit-magic-stage[hidden] { display: none; }
         .kr-audit-magic-seal {
-            color: #8A7B5C;
+            color: var(--color-gold);
             opacity: 0.92;
         }
         @keyframes kr-audit-seal-spin {
@@ -3040,13 +3047,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-style: italic;
             font-size: clamp(17px, 1.8vw, 20px);
             line-height: 1.4;
-            color: #3A434E;
+            color: var(--color-ink-3);
             margin: 0;
             transition: opacity 240ms ease;
             min-height: 1.4em;
         }
         .kr-audit-magic-status--error {
-            color: #14202B;
+            color: var(--color-graphite);
             font-style: normal;
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
@@ -3079,14 +3086,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0 0 12px;
         }
         .kr-audit-result-domain {
             font-family: 'Fraunces', Georgia, serif;
             font-size: clamp(22px, 3vw, 30px);
             line-height: 1.18;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0 0 24px;
         }
         .kr-audit-result-domain em { font-style: italic; color: var(--color-gold-text); }
@@ -3103,25 +3110,25 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Fraunces', Georgia, serif;
             font-size: clamp(20px, 2.4vw, 26px);
             font-weight: 500;
-            color: #14202B;
+            color: var(--color-graphite);
         }
-        .kr-audit-result-verdict[data-verdict="stark"] .kr-audit-result-verdict-label { color: #2C5F4A; }
-        .kr-audit-result-verdict[data-verdict="ausbaufaehig"] .kr-audit-result-verdict-label { color: #8A4A2C; }
+        .kr-audit-result-verdict[data-verdict="stark"] .kr-audit-result-verdict-label { color: var(--color-pine); }
+        .kr-audit-result-verdict[data-verdict="ausbaufaehig"] .kr-audit-result-verdict-label { color: var(--color-rust); }
         .kr-audit-result-verdict-detail {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
-            color: #3A434E;
+            color: var(--color-ink-3);
             line-height: 1.5;
         }
         .kr-audit-result-branch {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0 0 20px;
         }
         .kr-audit-result-branch em {
             font-style: italic;
-            color: #14202B;
+            color: var(--color-graphite);
         }
         .kr-audit-result-findings {
             list-style: none;
@@ -3152,7 +3159,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: clamp(16px, 1.8vw, 19px);
             font-weight: 500;
             line-height: 1.3;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0 0 6px;
             grid-column: 2;
             min-width: 0;
@@ -3161,7 +3168,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
             line-height: 1.55;
-            color: #3A434E;
+            color: var(--color-ink-3);
             margin: 0;
             grid-column: 2;
             min-width: 0;
@@ -3170,7 +3177,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;
             line-height: 1.55;
-            color: #5C6470;
+            color: var(--color-ink-2);
             border-top: 1px solid rgba(20, 32, 43, 0.08);
             padding-top: 20px;
             margin: 0 0 24px;
@@ -3207,7 +3214,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
             font-weight: 500;
-            color: #14202B;
+            color: var(--color-graphite);
             background: transparent;
             border: 1px solid rgba(20, 32, 43, 0.25);
             border-radius: 2px;
@@ -3215,13 +3222,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             transition: border-color 180ms ease, background-color 180ms ease;
         }
         .kr-audit-result-cta-secondary:hover {
-            border-color: #14202B;
+            border-color: var(--color-graphite);
             background: rgba(20, 32, 43, 0.04);
         }
         .kr-audit-result-reset {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;
-            color: #5C6470;
+            color: var(--color-ink-2);
             background: transparent;
             border: none;
             cursor: pointer;
@@ -3231,15 +3238,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             text-underline-offset: 4px;
         }
         .kr-audit-result-reset:hover {
-            color: #14202B;
-            text-decoration-color: #14202B;
+            color: var(--color-graphite);
+            text-decoration-color: var(--color-graphite);
         }
         .kr-audit-result-trust {
             font-family: 'JetBrains Mono', ui-monospace, monospace;
             font-size: 11px;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0;
         }
         @media (max-width: 600px) {
@@ -4625,7 +4632,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
 
     <!-- 6c · FAQ — Sprint 38: hinter Pricing verschoben (Objection-Handling nach Decision-Anker) -->
-    <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: #ffffff;">
+    <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: var(--color-bone);">
         <div class="wrap" style="max-width: 760px;">
             <div style="text-align: center; margin-bottom: 48px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">Häufige Fragen</p>
@@ -4701,7 +4708,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <!-- Sprint 170 — Karriaro-Suite (Cross-Promotion zu Lighthouse) -->
     <style>
         .kr-suite {
-            background: #F5F3EE;
+            background: var(--color-surface-veil);
             padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
             text-align: center;
         }
@@ -4710,7 +4717,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: 12px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0 0 24px;
         }
         .kr-suite-title {
@@ -4719,11 +4726,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: clamp(28px, 4.4vw, 44px);
             line-height: 1.12;
             letter-spacing: -0.01em;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0 auto 48px;
             max-width: 720px;
         }
-        .kr-suite-title em { font-style: italic; color: #8A7B5C; }
+        .kr-suite-title em { font-style: italic; color: var(--color-gold); }
         .kr-suite-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -4756,14 +4763,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: clamp(22px, 2.6vw, 26px);
             font-weight: 500;
             line-height: 1.2;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0 0 16px;
         }
         .kr-suite-card p {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 15px;
             line-height: 1.55;
-            color: #3A434E;
+            color: var(--color-ink-3);
             margin: 0 0 24px;
             flex: 1 1 auto;
         }
@@ -4774,14 +4781,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
             font-weight: 500;
-            color: #14202B;
+            color: var(--color-graphite);
             text-decoration: underline;
             text-decoration-color: rgba(20, 32, 43, 0.25);
             text-underline-offset: 4px;
             align-self: flex-start;
         }
         .kr-suite-card a:hover {
-            text-decoration-color: #14202B;
+            text-decoration-color: var(--color-graphite);
         }
         .kr-suite-caption {
             font-family: 'JetBrains Mono', monospace;
@@ -4833,7 +4840,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: 12px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: #5C6470;
+            color: var(--color-ink-2);
             margin: 0 0 24px;
         }
         .kr-selbst-title {
@@ -4842,17 +4849,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-size: clamp(28px, 4.4vw, 44px);
             line-height: 1.12;
             letter-spacing: -0.01em;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0 auto 24px;
             max-width: 680px;
         }
-        .kr-selbst-title em { font-style: italic; color: #8A4A2C; }
+        .kr-selbst-title em { font-style: italic; color: var(--color-rust); }
         .kr-selbst-lede {
             font-family: 'Fraunces', Georgia, serif;
             font-size: clamp(17px, 1.8vw, 20px);
             font-style: italic;
             line-height: 1.5;
-            color: #3A434E;
+            color: var(--color-ink-3);
             max-width: 580px;
             margin: 0 auto 48px;
         }
@@ -4867,7 +4874,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .kr-selbst-loading {
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
-            color: #5C6470;
+            color: var(--color-ink-2);
             text-align: center;
             margin: 0;
             padding: 20px 0;
@@ -4876,7 +4883,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             line-height: 1.85;
-            color: #14202B;
+            color: var(--color-graphite);
             margin: 0;
         }
         .kr-selbst-result-row {
@@ -4897,19 +4904,19 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             font-family: 'Fraunces', Georgia, serif;
             font-style: italic;
             font-size: 17px;
-            color: #14202B;
+            color: var(--color-graphite);
         }
-        .kr-selbst-result-verdict[data-verdict="stark"] { color: #2C5F4A; }
-        .kr-selbst-result-verdict[data-verdict="ausbaufaehig"] { color: #8A4A2C; }
+        .kr-selbst-result-verdict[data-verdict="stark"] { color: var(--color-pine); }
+        .kr-selbst-result-verdict[data-verdict="ausbaufaehig"] { color: var(--color-rust); }
         .kr-selbst-foot {
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: #8A8E96;
+            color: var(--color-graphite-light);
             margin: 0;
         }
-        .kr-selbst-foot a { color: #5C6470; text-decoration: underline; text-decoration-color: rgba(20, 32, 43, 0.18); text-underline-offset: 3px; }
+        .kr-selbst-foot a { color: var(--color-ink-2); text-decoration: underline; text-decoration-color: rgba(20, 32, 43, 0.18); text-underline-offset: 3px; }
 
         /* Sprint 186 — Dark-Mode (folgt OS-Setting). Bewusst im LETZTEN <style>-Block am Ende:
            index.html hat 3 <style>-Blöcke; nur hier gewinnen die Selektor-Overrides die Light-
@@ -4932,6 +4939,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 --color-line-strong: rgba(245,243,238,0.18);
                 /* onyx = tiefster Text (28× color:) → hell; onyx-FLÄCHEN unten dunkel gehalten. */
                 --color-onyx: #F5F3EE;
+                /* Sprint 186 — tokenisierte bespoke Literale gespiegelt (Text hell, Akzente aufgehellt). */
+                --color-ink-2: #A2AAB4;
+                --color-ink-3: #BCC2CA;
+                --color-rust: #D89B79;
+                --color-pine: #76B89B;
+                /* indigo-strong bleibt hell (= Headings); die 4 elevated-Cards, die es als FLÄCHE
+                   nutzen, werden unten separat auf #243A4D re-gepinnt. */
+                --color-surface-veil: #161A20;
             }
             body { background: var(--color-bone); }
             .hero-with-photo,
@@ -4955,16 +4970,32 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .kr-topbar, nav.is-scrolled, .mobile-menu { background: rgba(15,18,23,0.92); }
             nav a { color: var(--color-graphite); }
             .nav-logo img { filter: brightness(0) invert(0.92); }
-            /* onyx-FLÄCHEN explizit dunkel halten */
+            /* onyx-FLÄCHEN (dunkle Chips/Tabs/Tooltip) explizit dunkel halten */
             .price-card-active, .price-card-premium,
             .branche-tab.is-active, .branche-tab.is-active:hover,
             .btn-outline:hover,
             .tool-tooltip, .tool-tooltip::before { background: #26333F; }
             .price-card-active, .price-card-premium { border-color: #26333F; }
-            /* Stat-Karten + Tab-Hover + №10-Fußnoten-Link */
-            .kr-proof-counter { background: var(--color-cream-soft); }
             .branche-tab:hover:not(:disabled) { background: var(--color-cream-soft); }
             .kr-selbst-foot a { color: var(--color-graphite-soft); text-decoration-color: var(--color-line-strong); }
+
+            /* ── Elevated-Cards: nutzen --color-indigo-strong als FLÄCHE (Light = tiefes Navy
+                 + helle Ink). Da der Token im Dark hell wird (= Headings), re-pinnen wir diese
+                 vier Karten auf ein dunkles Eleviert-Navy und ihre bone-Ink auf hell. */
+            .kr-code-counter, .kr-proof-counter,
+            .kr-lighthouse-pitch, .kr-tier.kr-tier--recommended { background: #243A4D; }
+            .kr-tier.kr-tier--recommended { border-color: #243A4D; }
+            .kr-code-counter, .kr-proof-counter,
+            .kr-lighthouse-pitch, .kr-lighthouse-title,
+            .kr-tier.kr-tier--recommended,
+            .kr-tier.kr-tier--recommended .kr-tier-price-num,
+            .kr-tier.kr-tier--recommended .kr-wartung-text strong,
+            .kr-lighthouse-pitch .btn-outline { color: var(--color-graphite); }
+            .kr-lighthouse-pitch .btn-outline { border-color: var(--color-graphite); }
+
+            /* "Erste Einschätzung" ist ein 720px-zentriertes Panel — im Light unsichtbar (creme
+               auf creme), im Dark sonst sichtbarer Rahmen ("Ränder"). Auf Body-Bone setzen → blendet. */
+            .kr-audit-magic { background: var(--color-bone); }
         }
     </style>
     <section class="kr-selbst-audit" aria-labelledby="kr-selbst-title">
@@ -5039,10 +5070,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                       renderResult(j.data);
                       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: j.data, ts: Date.now() })); } catch (e) {}
                   }
-                  else host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:#14202B;">Direkt zu Lighthouse</a></p>';
+                  else host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:var(--color-graphite);">Direkt zu Lighthouse</a></p>';
               })
               .catch(function () {
-                  host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:#14202B;">Direkt zu Lighthouse</a></p>';
+                  host.innerHTML = '<p class="kr-selbst-loading">Live-Audit gerade nicht verfügbar. <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener" style="color:var(--color-graphite);">Direkt zu Lighthouse</a></p>';
               });
         }
         if ('IntersectionObserver' in window) {
