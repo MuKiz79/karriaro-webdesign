@@ -21,19 +21,6 @@
     </url>
 
     <!-- City landing pages (14, alphabetisch) -->
-    <url><loc>https://karriaro-webdesign.de/webdesign-berlin</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-bremen</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-dortmund</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-dresden</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-duesseldorf</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-essen</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-frankfurt</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-hamburg</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-hannover</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-koeln</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-leipzig</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-muenchen</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
-    <url><loc>https://karriaro-webdesign.de/webdesign-nuernberg</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
     <url><loc>https://karriaro-webdesign.de/webdesign-stuttgart</loc><lastmod>2026-05-30</lastmod><priority>0.8</priority></url>
 
     <!-- Portfolio / Branchen-Demos (8, alphabetisch) — alle mit Live-Tool-Embeds seit Sprint 44 -->
