@@ -17,14 +17,14 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (5
 
 ## Branchen-Demos (Live-Beispiele)
 
-- [Immobilienmakler — Stadtmakler Stuttgart](https://karriaro-webdesign.de/portfolio/immobilien-makler.html): Online-Wertermittlung, Live-Filter-Suche, Verkäufer-Dashboard, Off-Market-Portfolio, Marktbarometer.
-- [Arztpraxis — Dr. Weber](https://karriaro-webdesign.de/portfolio/praxis-weber.html): KI-Symptom-Checker (Vor-Anamnese, keine Diagnose), Online-Slot-Buchung, Rezept-Bestellung.
-- [Restaurant](https://karriaro-webdesign.de/portfolio/restaurant-template.html): AI-Sommelier (Wein-Pairing), Saisonkarte mit Auto-Update, Online-Reservierung.
-- [Friseursalon — Müller](https://karriaro-webdesign.de/portfolio/friseur-salon.html): Style-Empfehlung (Gesichtsform + Anlass), Wunsch-Stylist-Direkt-Buchung, Foto-Galerie.
-- [Handwerk SHK — Müller Meisterbetrieb](https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller.html): Notdienst-Puls mit Anrückzeit, Foto-Festpreis-Anfrage, BAFA-Förder-Rechner.
-- [Dachdecker — Berger Meisterbetrieb](https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html): BAFA + KfW-Wärmepumpe-Rechner, Förder-Übersicht, Notfall-Hotline.
-- [Coaching — Lehmann Business-Coaching](https://karriaro-webdesign.de/portfolio/coaching-lehmann.html): Mandanten-Klarheits-Score, Fachgebiet-Filter, Erstgespräch-Slot.
-- [Spedition — Schwaben Logistik](https://karriaro-webdesign.de/portfolio/spedition-schwaben.html): TÜV-/HU-Slot-Live-Buchung, Online-Kostenvoranschlag, Frachtquote-Rechner.
+- [Immobilienmakler — Stadtmakler Stuttgart](https://karriaro-webdesign.de/portfolio/immobilien-makler): Online-Wertermittlung, Live-Filter-Suche, Verkäufer-Dashboard, Off-Market-Portfolio, Marktbarometer.
+- [Arztpraxis — Dr. Weber](https://karriaro-webdesign.de/portfolio/praxis-weber): KI-Symptom-Checker (Vor-Anamnese, keine Diagnose), Online-Slot-Buchung, Rezept-Bestellung.
+- [Restaurant](https://karriaro-webdesign.de/portfolio/restaurant-template): AI-Sommelier (Wein-Pairing), Saisonkarte mit Auto-Update, Online-Reservierung.
+- [Friseursalon — Müller](https://karriaro-webdesign.de/portfolio/friseur-salon): Style-Empfehlung (Gesichtsform + Anlass), Wunsch-Stylist-Direkt-Buchung, Foto-Galerie.
+- [Handwerk SHK — Müller Meisterbetrieb](https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller): Notdienst-Puls mit Anrückzeit, Foto-Festpreis-Anfrage, BAFA-Förder-Rechner.
+- [Dachdecker — Berger Meisterbetrieb](https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb): BAFA + KfW-Wärmepumpe-Rechner, Förder-Übersicht, Notfall-Hotline.
+- [Coaching — Lehmann Business-Coaching](https://karriaro-webdesign.de/portfolio/coaching-lehmann): Mandanten-Klarheits-Score, Fachgebiet-Filter, Erstgespräch-Slot.
+- [Spedition — Schwaben Logistik](https://karriaro-webdesign.de/portfolio/spedition-schwaben): TÜV-/HU-Slot-Live-Buchung, Online-Kostenvoranschlag, Frachtquote-Rechner.
 
 ## Audit-Tool
 
@@ -32,7 +32,7 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (5
 
 ## MCP-Server (für KI-Agenten)
 
-- [Karriaro MCP-Server Dokumentation](https://karriaro-webdesign.de/api/mcp.html): Public MCP-Server der Karriaro Webdesign-Manufaktur. Endpoint `https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler`. Vier Tools für KI-Agenten (Claude Desktop, Cursor, OpenAI Codex, v0):
+- [Karriaro MCP-Server Dokumentation](https://karriaro-webdesign.de/api/mcp): Public MCP-Server der Karriaro Webdesign-Manufaktur. Endpoint `https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler`. Vier Tools für KI-Agenten (Claude Desktop, Cursor, OpenAI Codex, v0):
   - `karriaro_audit_site(url)`: Substanz, BFSG, SEO, KI-Auffindbarkeit, Branchen-Standards + Lighthouse-Multi-Dim-Score
   - `karriaro_extract_voice(url)`: Brand-Voice-Analyse nach Aesop/Hermès/Manufactum-Codex
   - `karriaro_generate_brand_mockup(branche)`: Hero-SVG für 8 Branchen
@@ -50,13 +50,13 @@ Synergie: Webdesign-Manufaktur-Kunden bekommen Lighthouse-Setup integriert (Snip
 
 ## Gründer & Manufaktur-Prinzip
 
-- [Über Muammer Kızılaslan](https://karriaro-webdesign.de/gruender.html): Hintergrund (15 Jahre Enterprise-IT), Founder-POV, Manufaktur-Siegel mit Fibonacci-Phyllotaxis (13 Punkte, Goldener Winkel 137,5°).
+- [Über Muammer Kızılaslan](https://karriaro-webdesign.de/gruender): Hintergrund (15 Jahre Enterprise-IT), Founder-POV, Manufaktur-Siegel mit Fibonacci-Phyllotaxis (13 Punkte, Goldener Winkel 137,5°).
 - [Persönliche Profil-Seite](https://muammerkizilaslan.com): muammerkizilaslan.com.
 - [LinkedIn](https://www.linkedin.com/in/muammerkizilaslan)
 
 ## Warum handcodiert statt WordPress
 
-- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded.html): Performance (<0,5s Ladezeit), Sicherheit (kein Plugin-Risiko), Eigentum (Code gehört Ihnen), KI-Auffindbarkeit (Schema.org von Anfang an).
+- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded): Performance (<0,5s Ladezeit), Sicherheit (kein Plugin-Risiko), Eigentum (Code gehört Ihnen), KI-Auffindbarkeit (Schema.org von Anfang an).
 
 ## Standorte
 
@@ -73,10 +73,10 @@ Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Leipzig, Do
 
 ## Rechtliches
 
-- [Impressum](https://karriaro-webdesign.de/impressum.html)
-- [Datenschutz (DSGVO)](https://karriaro-webdesign.de/datenschutz.html)
-- [AGB](https://karriaro-webdesign.de/agb.html)
-- [Barrierefreiheits-Erklärung (BFSG 2025)](https://karriaro-webdesign.de/barrierefreiheit.html)
+- [Impressum](https://karriaro-webdesign.de/impressum)
+- [Datenschutz (DSGVO)](https://karriaro-webdesign.de/datenschutz)
+- [AGB](https://karriaro-webdesign.de/agb)
+- [Barrierefreiheits-Erklärung (BFSG 2025)](https://karriaro-webdesign.de/barrierefreiheit)
 - [Security](https://karriaro-webdesign.de/.well-known/security.txt)
 
 ## Erweiterte Knowledge-Base

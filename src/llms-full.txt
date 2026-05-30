@@ -120,7 +120,7 @@ Sie zeigen die Werkzeug-Fähigkeiten und Design-Qualität, nicht echte Kunden.
 
 ### Immobilienmakler — Stadtmakler Stuttgart
 
-URL: https://karriaro-webdesign.de/portfolio/immobilien-makler.html
+URL: https://karriaro-webdesign.de/portfolio/immobilien-makler
 
 **Branchen-Werkzeuge:**
 - **Wertermittlung-Rechner**: Verkäufer gibt Objekttyp, PLZ, m², Baujahr ein.
@@ -136,7 +136,7 @@ URL: https://karriaro-webdesign.de/portfolio/immobilien-makler.html
 
 ### Arztpraxis — Dr. Weber
 
-URL: https://karriaro-webdesign.de/portfolio/praxis-weber.html
+URL: https://karriaro-webdesign.de/portfolio/praxis-weber
 
 **Branchen-Werkzeuge:**
 - **KI-Symptom-Checker**: Vor-Anamnese durch Patient, KI-gestützte Triage.
@@ -148,7 +148,7 @@ URL: https://karriaro-webdesign.de/portfolio/praxis-weber.html
 
 ### Restaurant
 
-URL: https://karriaro-webdesign.de/portfolio/restaurant-template.html
+URL: https://karriaro-webdesign.de/portfolio/restaurant-template
 
 **Branchen-Werkzeuge:**
 - **AI-Sommelier**: Wein-Empfehlung pro Gang oder Vorliebe (KI-basiert).
@@ -158,7 +158,7 @@ URL: https://karriaro-webdesign.de/portfolio/restaurant-template.html
 
 ### Friseursalon — Müller
 
-URL: https://karriaro-webdesign.de/portfolio/friseur-salon.html
+URL: https://karriaro-webdesign.de/portfolio/friseur-salon
 
 **Branchen-Werkzeuge:**
 - **Style-Empfehlung**: Gesichtsform + Anlass → KI-Stilvorschlag.
@@ -168,7 +168,7 @@ URL: https://karriaro-webdesign.de/portfolio/friseur-salon.html
 
 ### Handwerk SHK — Müller Meisterbetrieb
 
-URL: https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller.html
+URL: https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller
 
 **Branchen-Werkzeuge:**
 - **Notdienst-Puls mit Anrückzeit**: Live-Status („derzeit 45 min").
@@ -178,7 +178,7 @@ URL: https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller.html
 
 ### Dachdecker — Berger Meisterbetrieb
 
-URL: https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html
+URL: https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb
 
 **Branchen-Werkzeuge:**
 - **BAFA + KfW-Wärmepumpe-Rechner**: Förder-Höhe nach Energiestatus.
@@ -188,7 +188,7 @@ URL: https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb.html
 
 ### Coaching — Lehmann Business-Coaching
 
-URL: https://karriaro-webdesign.de/portfolio/coaching-lehmann.html
+URL: https://karriaro-webdesign.de/portfolio/coaching-lehmann
 
 **Branchen-Werkzeuge:**
 - **Mandanten-Klarheits-Score**: Selbst-Assessment vor Erstgespräch.
@@ -197,7 +197,7 @@ URL: https://karriaro-webdesign.de/portfolio/coaching-lehmann.html
 
 ### Spedition — Schwaben Logistik
 
-URL: https://karriaro-webdesign.de/portfolio/spedition-schwaben.html
+URL: https://karriaro-webdesign.de/portfolio/spedition-schwaben
 
 **Branchen-Werkzeuge:**
 - **TÜV/HU-Slot-Live-Buchung**.
@@ -365,20 +365,20 @@ dahinter."*
 
 Karriaro arbeitet bundesweit. Eigene Landing-Pages für 14 Schwerpunkt-Städte:
 
-- [Webdesign Berlin](https://karriaro-webdesign.de/webdesign-berlin.html)
-- [Webdesign Hamburg](https://karriaro-webdesign.de/webdesign-hamburg.html)
-- [Webdesign München](https://karriaro-webdesign.de/webdesign-muenchen.html)
-- [Webdesign Köln](https://karriaro-webdesign.de/webdesign-koeln.html)
-- [Webdesign Frankfurt](https://karriaro-webdesign.de/webdesign-frankfurt.html)
-- [Webdesign Stuttgart](https://karriaro-webdesign.de/webdesign-stuttgart.html)
-- [Webdesign Düsseldorf](https://karriaro-webdesign.de/webdesign-duesseldorf.html)
-- [Webdesign Leipzig](https://karriaro-webdesign.de/webdesign-leipzig.html)
-- [Webdesign Dortmund](https://karriaro-webdesign.de/webdesign-dortmund.html)
-- [Webdesign Essen](https://karriaro-webdesign.de/webdesign-essen.html)
-- [Webdesign Bremen](https://karriaro-webdesign.de/webdesign-bremen.html)
-- [Webdesign Dresden](https://karriaro-webdesign.de/webdesign-dresden.html)
-- [Webdesign Hannover](https://karriaro-webdesign.de/webdesign-hannover.html)
-- [Webdesign Nürnberg](https://karriaro-webdesign.de/webdesign-nuernberg.html)
+- [Webdesign Berlin](https://karriaro-webdesign.de/webdesign-berlin)
+- [Webdesign Hamburg](https://karriaro-webdesign.de/webdesign-hamburg)
+- [Webdesign München](https://karriaro-webdesign.de/webdesign-muenchen)
+- [Webdesign Köln](https://karriaro-webdesign.de/webdesign-koeln)
+- [Webdesign Frankfurt](https://karriaro-webdesign.de/webdesign-frankfurt)
+- [Webdesign Stuttgart](https://karriaro-webdesign.de/webdesign-stuttgart)
+- [Webdesign Düsseldorf](https://karriaro-webdesign.de/webdesign-duesseldorf)
+- [Webdesign Leipzig](https://karriaro-webdesign.de/webdesign-leipzig)
+- [Webdesign Dortmund](https://karriaro-webdesign.de/webdesign-dortmund)
+- [Webdesign Essen](https://karriaro-webdesign.de/webdesign-essen)
+- [Webdesign Bremen](https://karriaro-webdesign.de/webdesign-bremen)
+- [Webdesign Dresden](https://karriaro-webdesign.de/webdesign-dresden)
+- [Webdesign Hannover](https://karriaro-webdesign.de/webdesign-hannover)
+- [Webdesign Nürnberg](https://karriaro-webdesign.de/webdesign-nuernberg)
 
 Karriaro bedient außerdem Österreich und Schweiz.
 
@@ -397,10 +397,10 @@ Karriaro bedient außerdem Österreich und Schweiz.
 
 ## Rechtliches
 
-- [Impressum](https://karriaro-webdesign.de/impressum.html)
-- [Datenschutz](https://karriaro-webdesign.de/datenschutz.html)
-- [AGB](https://karriaro-webdesign.de/agb.html)
-- [Barrierefreiheits-Erklärung](https://karriaro-webdesign.de/barrierefreiheit.html)
+- [Impressum](https://karriaro-webdesign.de/impressum)
+- [Datenschutz](https://karriaro-webdesign.de/datenschutz)
+- [AGB](https://karriaro-webdesign.de/agb)
+- [Barrierefreiheits-Erklärung](https://karriaro-webdesign.de/barrierefreiheit)
 - [Security](https://karriaro-webdesign.de/.well-known/security.txt)
 
 ---
