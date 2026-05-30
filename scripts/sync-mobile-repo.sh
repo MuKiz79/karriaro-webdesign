@@ -34,13 +34,15 @@ echo "→ Bestehende HTML + CSS + JS + Fonts + Mockups-Opt + Icons loeschen (CNA
 find . -maxdepth 1 -name "*.html" -delete
 find . -maxdepth 1 -name "manifest.json" -delete
 find . -maxdepth 1 -name "sw.js" -delete
-rm -rf portfolio blog css js fonts images/mockups-opt icons
-mkdir -p portfolio blog css js fonts images/mockups-opt icons
+rm -rf portfolio blog en css js fonts images/mockups-opt icons
+mkdir -p portfolio blog en css js fonts images/mockups-opt icons
 
 echo "→ Files aus Haupt-Repo kopieren"
 cp "$MAIN_REPO"/src/m/*.html .
 cp "$MAIN_REPO"/src/m/portfolio/*.html portfolio/
 cp "$MAIN_REPO"/src/m/blog/*.html blog/
+# Sprint 191 — englische Mobile-Seite mitkopieren (sonst m./en = 404)
+cp "$MAIN_REPO"/src/m/en/*.html en/ 2>/dev/null || true
 # Sprint 91: Generator-Output benoetigt alle Desktop-CSS-Files (tokens, karriaro-tools, mobile-overrides etc.)
 cp "$MAIN_REPO"/src/css/*.css css/ 2>/dev/null || true
 # Sprint 183: selbst-gehostete Fonts (DSGVO, kein Google-Fetch) — fonts.css/fonts-inter.css referenzieren /fonts/*.woff2
