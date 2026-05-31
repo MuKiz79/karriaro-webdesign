@@ -41,7 +41,7 @@ const PORTFOLIOS = [
     { page: 'restaurant-template',        out: 'gastro-hirsch-mockup-fold.jpg' },
     { page: 'meisterbetrieb-mueller',     out: 'handwerk-mueller-mockup-fold.jpg' },
     { page: 'spedition-schwaben',         out: 'logistik-schwaben-mockup-fold.jpg' },
-    { page: 'coaching-lehmann',           out: 'coaching-lehmann-mockup-fold.jpg', clipY: 64 },
+    { page: 'coaching-lehmann',           out: 'coaching-lehmann-mockup-fold.jpg' },
 ];
 
 function startHttpServer() {

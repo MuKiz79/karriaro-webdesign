@@ -797,14 +797,14 @@
             position: relative;
             background: #fff;
             color: var(--color-onyx);
-            min-height: max(100vh, 640px);
+            /* Sprint 197 — weiche, gedeckelte Höhe (svh schließt mobile
+               Browser-Chrome aus) statt hartem 100vh; Top-Anchor statt
+               Zentrierung, damit ein hoher Inhalt nicht oben/unten aus dem
+               Schirm läuft (Founder: „passt nicht auf den Bildschirm"). */
+            min-height: clamp(640px, 92svh, 940px);
             display: flex;
-            /* Sprint 137 — zurück auf center: mit Above-Fold-Mockups (16:10,
-               img 715×447 + chrome 28 + caption ~226 = ~700 total) passt der
-               Mockup-Block locker in die Hero-Section. Vertikale Zentrierung
-               wirkt visuell ausgewogen. */
-            align-items: center;
-            padding: 128px 0 64px;
+            align-items: start;
+            padding: clamp(96px, 12vh, 128px) 0 clamp(48px, 8vh, 64px);
             overflow: hidden;
         }
         /* Sprint 13 — Background-Bild entfernt, Hero ist Flat-White (Apple-Pure-Linie) */
@@ -816,7 +816,7 @@
             display: grid;
             grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
             gap: clamp(56px, 7vw, 104px);
-            align-items: center;
+            align-items: start;
             position: relative;
             z-index: 1;
         }
@@ -855,6 +855,65 @@
         .hero-with-photo .hero-cta-row {
             align-items: flex-start;
             margin-top: 36px;
+        }
+        /* Sprint 197 — Preis als selbstbewusste Mono-Spec-Zeile (Eyebrow-Register),
+           statt im Subline-Fließtext zu versinken. */
+        .hero-with-photo .hero-price-spec {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--color-gold-text);
+            margin: 14px 0 0;
+        }
+        /* Sprint 197 — Differenzierer-Trias: „mehr als eine Website" sichtbar
+           gemacht (war 11px-Kleingedrucktes im Trust-Streifen). */
+        .hero-with-photo .hero-value-list {
+            list-style: none;
+            margin: 30px 0 0;
+            padding: 0;
+            max-width: 470px;
+            display: grid;
+            gap: 10px;
+        }
+        .hero-with-photo .hero-value-list li {
+            position: relative;
+            padding-left: 24px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--color-indigo-strong);
+        }
+        .hero-with-photo .hero-value-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: var(--color-gold);
+        }
+        .hero-with-photo .hero-value-list a {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(20, 32, 43, 0.22);
+            transition: border-color 0.2s ease;
+        }
+        .hero-with-photo .hero-value-list a:hover { border-color: var(--color-gold); }
+        /* Sprint 197 — Compliance/Herkunft demoted: ruhige Mono-Zeile unter der Trias. */
+        .hero-with-photo .hero-provenance {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--color-graphite-soft);
+            margin: 26px 0 0;
+            padding-top: 18px;
+            border-top: 1px solid rgba(20, 32, 43, 0.12);
+            max-width: 470px;
+            line-height: 1.7;
+        }
+        .hero-with-photo .hero-provenance a {
+            color: var(--color-onyx);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(20, 32, 43, 0.25);
         }
 
         /* Hero-Mockup (Premium-Atelier) */
@@ -898,6 +957,9 @@
             max-width: 100%;
             height: auto;
             object-fit: cover;
+            /* Safety-Net: sollte je ein Source höher als 16:10 sein, fällt der
+               Crop auf die dekorative Fußzeile (S-Nr.), nie auf die CTAs. */
+            object-position: top;
             display: block;
         }
         .mockup-caption {
@@ -1325,6 +1387,10 @@
             .hero-eyebrow { text-align: center; }
             .hero-with-photo h1 { text-align: center; }
             .hero-with-photo .subhead { text-align: center; margin: 0 auto; }
+            .hero-with-photo .hero-price-spec { text-align: center; }
+            .hero-with-photo .hero-value-list { margin-left: auto; margin-right: auto; }
+            .hero-with-photo .hero-value-list li { text-align: left; }
+            .hero-with-photo .hero-provenance { margin-left: auto; margin-right: auto; text-align: center; }
             .hero-with-photo .hero-cta-row { align-items: center; }
             .hero-mockup-block { align-items: center; }
             .mockup-caption { padding-left: 0; align-items: center; text-align: center; }
@@ -2190,6 +2256,20 @@
             justify-content: center;
             padding: clamp(64px, 10vh, 120px) clamp(24px, 6vw, 88px);
             position: relative;
+        }
+        /* Sprint 197 — Manufaktursiegel als dezente Eck-Registriermarke, damit das
+           Pull-Quote dead-zentriert bleibt (statt Flex-Paar). Mobil: unter dem Zitat. */
+        .kr-quote-hero .kr-seal-block {
+            position: absolute;
+            right: clamp(20px, 5vw, 64px);
+            bottom: clamp(18px, 4vh, 44px);
+            margin: 0;
+        }
+        @media (max-width: 720px) {
+            .kr-quote-hero .kr-seal-block {
+                position: static;
+                margin: 28px auto 0;
+            }
         }
         .kr-pull-quote--hero {
             font-size: clamp(48px, 8.5vw, 132px) !important;
@@ -3431,57 +3511,27 @@
                     <span class="hero-h1-line">Handgemacht.</span>
                 </h1>
                 <p class="subhead">
-                    Erster Entwurf in 24 Stunden, fertige Website in 7–14 Tagen je nach Paket. Ab 1.290&nbsp;€ einmalig, Wartung inklusive ab 99 €/Mt.
+                    Handcodiert im Schwarzwald. Erster Entwurf in 24 Stunden, fertig in 7–14 Tagen.
                 </p>
+                <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt.</p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn" data-kr-magnetic>Erstgespräch buchen — Antwort in 24 h</a>
                 </div>
                 <a href="#erste-einschaetzung" class="hero-audit-link">
                     Schon eine Website? <span>Eine erste Einschätzung →</span>
                 </a>
-                <p class="hero-trust-strip" aria-label="Vertrauenssignale">
-                    <span>Gegründet von <a href="/gruender">Muammer Kızılaslan</a></span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span>Schwarzwald</span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span>BFSG · DSGVO</span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span>Quellcode gehört Ihnen</span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span><a href="https://karriaro-webdesign.de/api/mcp">MCP-Server für Claude, Cursor, v0 ↗</a></span>
-                    <span class="dot" aria-hidden="true">·</span>
-                    <span><a href="https://lighthouse.karriaro.de">Lighthouse · Live-Analytics ↗</a></span>
+                <!-- Sprint 197 — Differenzierer von 11px-Kleingedrucktem zu sichtbarer
+                     Editorial-Trias: „man bekommt viel mehr als eine Website". -->
+                <ul class="hero-value-list" aria-label="Was Sie bekommen">
+                    <li>Der Quellcode gehört Ihnen — keine Abhängigkeit, kein Lock-in.</li>
+                    <li>Eigene KI-Werkzeuge: <a href="https://karriaro-webdesign.de/api/mcp">MCP-Server für Claude, Cursor &amp; v0 ↗</a></li>
+                    <li><a href="https://lighthouse.karriaro.de">Lighthouse-Performance &amp; Live-Analytics ↗</a> — messbar, transparent.</li>
+                </ul>
+                <p class="hero-provenance">
+                    Gegründet von <a href="/gruender">Muammer Kızılaslan</a> · Schwarzwald · BFSG · DSGVO
                 </p>
-                <!-- Sprint 164 — Phyllotaxis-Manufaktursiegel (Goldener Winkel 137,5° · 13 Punkte).
-                     CLAUDE.md fordert das als Brand-Anker. Pulsiert subtil (prefers-reduced-motion respected). -->
-                <div class="kr-seal-block" aria-hidden="true">
-                    <svg class="kr-seal" width="72" height="72" viewBox="0 0 90 90">
-                        <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <g class="kr-seal-dots"></g>
-                    </svg>
-                    <p class="kr-seal-caption">θ = 137,5° · n = 13</p>
-                </div>
-                <script>
-                    (function() {
-                        var goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
-                        var g = document.querySelector('.kr-seal-dots');
-                        if (!g) return;
-                        var svgNS = 'http://www.w3.org/2000/svg';
-                        for (var n = 1; n <= 13; n++) {
-                            var r = Math.sqrt(n) * 8;
-                            var theta = n * goldenAngle;
-                            var c = document.createElementNS(svgNS, 'circle');
-                            c.setAttribute('cx', (45 + r * Math.cos(theta)).toFixed(2));
-                            c.setAttribute('cy', (45 + r * Math.sin(theta)).toFixed(2));
-                            c.setAttribute('r', '1.5');
-                            c.setAttribute('fill', 'currentColor');
-                            g.appendChild(c);
-                        }
-                    })();
-                </script>
+                <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel verschoben in die
+                     „Über uns"-Section (Codex-Heimat „Deep-Moment"); entlastet den Hero. -->
             </div>
 
             <div class="hero-mockup-block">
@@ -3494,7 +3544,7 @@
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
                         <picture>
-                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=408">
+                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=409">
                             <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900" fetchpriority="high">
                         </picture>
                     </div>
@@ -3512,7 +3562,7 @@
                     </div>
                 </a>
                 <div id="arbeiten" class="branche-switcher-wrap">
-                    <div class="branche-switcher-label">Branche wählen</div>
+                    <div class="branche-switcher-label">Live-Demo · Branche wählen</div>
                 <div class="branche-switcher" role="group" aria-label="Branche wählen — wechselt die Vorschau">
                     <button type="button" class="branche-tab is-active" data-branche="immobilien" aria-pressed="true" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="immobilien">Immobilien</button>
                     <button type="button" class="branche-tab" data-branche="coaching" aria-pressed="false" data-track-event="TAB_CHANGE" data-track-tab-group="branche" data-track-to="coaching">Coaching</button>
@@ -3751,6 +3801,37 @@
                 <p>Wenn Ihr Name draufsteht, steht unserer dahinter.</p>
                 <cite>— Karriaro-Versprechen</cite>
             </blockquote>
+            <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel (Goldener Winkel 137,5° · 13 Punkte),
+                 aus dem Hero hierher verschoben: Codex-Heimat „Deep-Moment". Pulsiert subtil
+                 (prefers-reduced-motion respected). -->
+            <div class="kr-seal-block" aria-hidden="true">
+                <svg class="kr-seal" width="72" height="72" viewBox="0 0 90 90">
+                    <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                    <g class="kr-seal-dots"></g>
+                </svg>
+                <p class="kr-seal-caption">θ = 137,5° · n = 13</p>
+            </div>
+            <script>
+                (function() {
+                    var goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+                    var g = document.querySelector('.kr-seal-dots');
+                    if (!g) return;
+                    var svgNS = 'http://www.w3.org/2000/svg';
+                    for (var n = 1; n <= 13; n++) {
+                        var r = Math.sqrt(n) * 8;
+                        var theta = n * goldenAngle;
+                        var c = document.createElementNS(svgNS, 'circle');
+                        c.setAttribute('cx', (45 + r * Math.cos(theta)).toFixed(2));
+                        c.setAttribute('cy', (45 + r * Math.sin(theta)).toFixed(2));
+                        c.setAttribute('r', '1.5');
+                        c.setAttribute('fill', 'currentColor');
+                        g.appendChild(c);
+                    }
+                })();
+            </script>
         </div>
 
         <!-- Founder-POV 40/60-Split mit Skizzen-SVG + 5 Prinzipien als Marginalia -->
@@ -5163,7 +5244,7 @@
                     href: '/portfolio/immobilien-makler.html'
                 },
                 coaching: {
-                    src: '/images/coaching-lehmann-mockup-fold.jpg?v=186',
+                    src: '/images/coaching-lehmann-mockup-fold.jpg?v=409',
                     alt: 'Vorschau-Bild für Business-Coach Sarah Lehmann — Coaching & Beratung',
                     url: 'coach-lehmann.de',
                     label: 'Coach Lehmann · Coaching-Werkzeuge',
@@ -5297,7 +5378,7 @@
 
             // Sprint 158 — AVIF-Pendant via Replace, kein separates data[k].avif nötig
             function getAvifSrc(jpgSrc) {
-                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=408');
+                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=409');
             }
             var avifSourceEl = document.getElementById('hero-mockup-source-avif');
 
