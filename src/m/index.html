@@ -2171,6 +2171,91 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .kr-lighthouse-pitch .btn-outline:hover { background: var(--color-bone); color: var(--color-indigo-strong); }
 
+        /* Sprint 198 — Live-Cockpit-Mock: Lighthouse „in Bewegung" (Besucher-Feed
+           tickt rein, KI-Next-Step ploppt). LITERALE Hex — kein Token-Flip im
+           OS-Dunkel (bleibt konsistent dunkles Produkt-UI, Lehre Sprint 191). */
+        .kr-cockpit { max-width: 880px; margin: 56px auto 0; }
+        .kr-cockpit-frame {
+            background: #0E1A26;
+            border: 1px solid rgba(251,250,247,0.10);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(6,19,32,0.28);
+        }
+        .kr-cockpit-bar {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 18px;
+            background: rgba(251,250,247,0.04);
+            border-bottom: 1px solid rgba(251,250,247,0.08);
+        }
+        .kr-cockpit-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #4FB477;
+            animation: kr-cockpit-pulse 2.4s ease-out infinite;
+        }
+        @keyframes kr-cockpit-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(79,180,119,0.5); }
+            70%  { box-shadow: 0 0 0 7px rgba(79,180,119,0); }
+            100% { box-shadow: 0 0 0 0 rgba(79,180,119,0); }
+        }
+        .kr-cockpit-name {
+            font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+            text-transform: uppercase; color: #FBFAF7;
+        }
+        .kr-cockpit-live {
+            margin-left: auto; font-family: var(--font-mono); font-size: 9px;
+            letter-spacing: 0.2em; color: #4FB477;
+            border: 1px solid rgba(79,180,119,0.4); border-radius: 4px; padding: 2px 6px;
+        }
+        .kr-cockpit-body { padding: 18px; }
+        .kr-cockpit-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kr-cockpit-metric { background: rgba(251,250,247,0.04); border-radius: 8px; padding: 12px 14px; }
+        .kr-cockpit-metric-num {
+            display: block; font-family: var(--font-display); font-size: 26px;
+            font-weight: 500; color: #C8B086; line-height: 1;
+        }
+        .kr-cockpit-metric-lbl {
+            display: block; margin-top: 6px; font-family: var(--font-mono); font-size: 9px;
+            letter-spacing: 0.12em; text-transform: uppercase; color: rgba(251,250,247,0.55);
+        }
+        .kr-cockpit-feed { list-style: none; margin: 0; padding: 0; min-height: 156px; }
+        .kr-cockpit-feed li {
+            display: flex; align-items: center; gap: 10px; padding: 9px 4px;
+            border-bottom: 1px solid rgba(251,250,247,0.06);
+            font-family: var(--font-body); font-size: 13px; color: rgba(251,250,247,0.82);
+            animation: kr-cockpit-row-in 0.5s cubic-bezier(0.16,1,0.3,1) both;
+        }
+        @keyframes kr-cockpit-row-in {
+            from { opacity: 0; transform: translateY(-9px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .kr-cockpit-city { font-weight: 500; color: #FBFAF7; }
+        .kr-cockpit-src { color: rgba(251,250,247,0.55); }
+        .kr-cockpit-time { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: rgba(251,250,247,0.42); white-space: nowrap; }
+        .kr-cockpit-ai {
+            margin-top: 14px; display: flex; align-items: baseline; gap: 10px;
+            padding: 12px 14px; background: rgba(200,176,134,0.09);
+            border-left: 2px solid #C8B086; border-radius: 0 8px 8px 0;
+            font-family: var(--font-body); font-size: 13px; line-height: 1.45; color: rgba(251,250,247,0.92);
+        }
+        .kr-cockpit-ai-tag {
+            font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.16em; color: #C8B086;
+            border: 1px solid rgba(200,176,134,0.4); border-radius: 4px; padding: 2px 6px; flex-shrink: 0;
+        }
+        .kr-cockpit-cap {
+            margin: 12px 0 0; text-align: center; font-family: var(--font-mono);
+            font-size: 10px; letter-spacing: 0.08em; color: var(--color-graphite-soft);
+        }
+        @media (max-width: 640px) {
+            .kr-cockpit-metrics { gap: 8px; }
+            .kr-cockpit-metric { padding: 10px; }
+            .kr-cockpit-metric-num { font-size: 21px; }
+            .kr-cockpit-metric-lbl { font-size: 8px; letter-spacing: 0.08em; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .kr-cockpit-dot { animation: none; }
+            .kr-cockpit-feed li { animation: none; }
+        }
+
         /* Sprint 41 — Werkstatt-Scrollytelling (5 Akte, vertikale Timeline) */
         .kr-werkstatt-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--color-bone); }
         .kr-werkstatt-timeline {
@@ -4048,6 +4133,93 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </div>
                 <p style="margin-top: 28px;"><a href="/portfolio/friseur-salon" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
             </div>
+
+            <!-- Sprint 198 — Live-Cockpit-Mock: zeigt das Lighthouse-Besucher-Cockpit
+                 „in Bewegung" (synthetische Beispiel-Ansicht, ehrlich beschriftet). -->
+            <figure class="kr-cockpit" aria-label="Beispiel-Ansicht des Lighthouse-Besucher-Cockpits">
+                <div class="kr-cockpit-frame">
+                    <div class="kr-cockpit-bar">
+                        <span class="kr-cockpit-dot" aria-hidden="true"></span>
+                        <span class="kr-cockpit-name">Lighthouse · Besucher-Cockpit</span>
+                        <span class="kr-cockpit-live">LIVE</span>
+                    </div>
+                    <div class="kr-cockpit-body">
+                        <div class="kr-cockpit-metrics">
+                            <div class="kr-cockpit-metric"><span class="kr-cockpit-metric-num" data-kr-visitors>47</span><span class="kr-cockpit-metric-lbl">Besucher heute</span></div>
+                            <div class="kr-cockpit-metric"><span class="kr-cockpit-metric-num" data-kr-live-now>3</span><span class="kr-cockpit-metric-lbl">Gerade live</span></div>
+                            <div class="kr-cockpit-metric"><span class="kr-cockpit-metric-num">2:14</span><span class="kr-cockpit-metric-lbl">Ø Verweildauer</span></div>
+                        </div>
+                        <ul class="kr-cockpit-feed" data-kr-feed aria-hidden="true"></ul>
+                        <p class="kr-cockpit-ai"><span class="kr-cockpit-ai-tag">KI</span><span data-kr-ai-text>Besucher aus Stuttgart war 3× auf der Preis-Seite — Follow-up vorschlagen.</span></p>
+                    </div>
+                </div>
+                <figcaption class="kr-cockpit-cap">Beispiel-Ansicht — Ihr Cockpit zeigt die echten Besucher Ihrer Seite.</figcaption>
+            </figure>
+            <script>
+                (function () {
+                    var feed = document.querySelector('[data-kr-feed]');
+                    if (!feed) return;
+                    var aiText = document.querySelector('[data-kr-ai-text]');
+                    var visEl = document.querySelector('[data-kr-visitors]');
+                    var liveEl = document.querySelector('[data-kr-live-now]');
+                    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    var visitors = [
+                        { city: 'Stuttgart', src: 'Google-Suche' },
+                        { city: 'München', src: 'Direkt' },
+                        { city: 'Freiburg', src: 'LinkedIn' },
+                        { city: 'Karlsruhe', src: 'Google-Suche' },
+                        { city: 'Frankfurt', src: 'Empfehlung' },
+                        { city: 'Basel', src: 'Google Maps' },
+                        { city: 'Offenburg', src: 'Direkt' },
+                        { city: 'Konstanz', src: 'Google-Suche' }
+                    ];
+                    var ai = [
+                        'Besucher aus Stuttgart war 3× auf der Preis-Seite — Follow-up vorschlagen.',
+                        'Zulauf über LinkedIn — der Beitrag von gestern wirkt. Dranbleiben.',
+                        'Mobil-Anteil heute 64 % — Buchungs-Button mobil prominent halten.',
+                        'Wiederkehrer aus München, 2:40 min Verweildauer — heißer Lead.'
+                    ];
+                    var ages = ['gerade eben', 'vor 24 s', 'vor 1 min', 'vor 4 min'];
+                    function row(v, age) {
+                        var li = document.createElement('li');
+                        li.innerHTML = '<span class="kr-cockpit-city">' + v.city + '</span>' +
+                            '<span class="kr-cockpit-src">· ' + v.src + '</span>' +
+                            '<span class="kr-cockpit-time">' + age + '</span>';
+                        return li;
+                    }
+                    var idx = 3, aiIdx = 0, count = 47, timer = null;
+                    // Seed 4 rows (neueste oben)
+                    for (var i = 0; i < 4; i++) feed.appendChild(row(visitors[i], ages[i]));
+                    function relabel() {
+                        var rows = feed.children;
+                        for (var i = 0; i < rows.length; i++) {
+                            var t = rows[i].querySelector('.kr-cockpit-time');
+                            if (t) t.textContent = ages[i] || ('vor ' + (i * 2) + ' min');
+                        }
+                    }
+                    function tick() {
+                        idx = (idx + 1) % visitors.length;
+                        feed.insertBefore(row(visitors[idx], 'gerade eben'), feed.firstChild);
+                        while (feed.children.length > 4) feed.removeChild(feed.lastChild);
+                        relabel();
+                        count++;
+                        if (visEl) visEl.textContent = count;
+                        if (liveEl) liveEl.textContent = 2 + Math.floor(Math.random() * 4);
+                        if (aiText && Math.random() < 0.5) { aiIdx = (aiIdx + 1) % ai.length; aiText.textContent = ai[aiIdx]; }
+                    }
+                    if (reduced) return; // statischer, befüllter Zustand
+                    var running = false;
+                    function start() { if (running) return; running = true; timer = setInterval(tick, 2600); }
+                    function stop() { running = false; if (timer) { clearInterval(timer); timer = null; } }
+                    if ('IntersectionObserver' in window) {
+                        var io = new IntersectionObserver(function (es) {
+                            es.forEach(function (e) { e.isIntersecting && !document.hidden ? start() : stop(); });
+                        }, { threshold: 0.25 });
+                        io.observe(feed.closest('.kr-cockpit'));
+                    } else { start(); }
+                    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); });
+                })();
+            </script>
 
             <!-- Lighthouse-Pitch (Tag-along Karriaro-Eigen-Tool) -->
             <aside class="kr-lighthouse-pitch">
