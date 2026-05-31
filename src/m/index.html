@@ -3225,6 +3225,77 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             border-color: var(--color-graphite);
             background: rgba(20, 32, 43, 0.04);
         }
+        /* Sprint 192 — Detail-Brief E-Mail-Gate (Lead-Capture) */
+        .kr-audit-result-leadform {
+            border-top: 1px solid rgba(20, 32, 43, 0.08);
+            padding-top: 20px;
+            margin: 0 0 24px;
+            position: relative;
+        }
+        .kr-audit-result-leadform-label {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #14202B;
+            margin: 0 0 12px;
+        }
+        .kr-audit-result-leadform-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: stretch;
+            margin: 0 0 10px;
+        }
+        .kr-audit-result-leadform-input {
+            flex: 1 1 220px;
+            min-width: 0;
+            padding: 13px 16px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            color: #14202B;
+            background: #fff;
+            border: 1px solid rgba(20, 32, 43, 0.25);
+            border-radius: 2px;
+        }
+        .kr-audit-result-leadform-input:focus {
+            outline: none;
+            border-color: #14202B;
+        }
+        .kr-audit-result-leadform .kr-audit-result-cta {
+            flex: 0 0 auto;
+            cursor: pointer;
+            border: none;
+        }
+        .kr-audit-result-leadform .kr-audit-result-cta[disabled] {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .kr-audit-result-leadform-consent {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: var(--color-ink-2);
+        }
+        .kr-audit-result-leadform-consent input { margin-top: 2px; flex: 0 0 auto; }
+        .kr-audit-result-leadform-consent a { color: var(--color-graphite); }
+        .kr-audit-result-leadform-hp {
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+        .kr-audit-result-leadform-msg {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 10px 0 0;
+        }
+        .kr-audit-result-leadform-msg--ok { color: var(--color-pine); }
+        .kr-audit-result-leadform-msg--error { color: var(--color-rust); }
         .kr-audit-result-reset {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;

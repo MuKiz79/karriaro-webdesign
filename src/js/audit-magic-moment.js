@@ -233,6 +233,28 @@
                 'Ein Detail-Brief geht tiefer: Web Vitals im Detail, BFSG-Audit, ' +
                 'branchen-spezifische Empfehlungen.' +
             '</p>' +
+            '<form class="kr-audit-result-leadform" data-audit-leadform novalidate>' +
+                '<p class="kr-audit-result-leadform-label">' +
+                    'Den ausführlichen Bericht — Web&nbsp;Vitals, BFSG-Audit und branchen-spezifische Hebel — ' +
+                    'senden wir Ihnen per E-Mail:' +
+                '</p>' +
+                '<div class="kr-audit-result-leadform-row">' +
+                    '<input type="email" name="email" required autocomplete="email" ' +
+                        'placeholder="ihre@firma.de" class="kr-audit-result-leadform-input" ' +
+                        'aria-label="Ihre E-Mail-Adresse" data-audit-lead-email>' +
+                    '<button type="submit" class="kr-audit-result-cta" data-audit-lead-submit>' +
+                        'Bericht anfordern' +
+                    '</button>' +
+                '</div>' +
+                '<label class="kr-audit-result-leadform-consent">' +
+                    '<input type="checkbox" name="consent" required data-audit-lead-consent>' +
+                    '<span>Ich stimme der Verarbeitung meiner Angaben zur Erstellung des Berichts zu ' +
+                    '(<a href="/datenschutz">Datenschutz</a>). Kein Newsletter.</span>' +
+                '</label>' +
+                '<input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" ' +
+                    'class="kr-audit-result-leadform-hp" data-audit-lead-hp>' +
+                '<p class="kr-audit-result-leadform-msg" data-audit-lead-msg hidden></p>' +
+            '</form>' +
             '<div class="kr-audit-result-cta-row">' +
                 '<a class="kr-audit-result-cta" href="/?prefill=' + prefill + '#kontakt" ' +
                     'data-audit-detail-link data-audit-domain="' + escapeHtml(domain) + '">' +
@@ -344,6 +366,54 @@
         return host;
     }
 
+    function wireLeadForm(form, url, result) {
+        var emailEl = form.querySelector('[data-audit-lead-email]');
+        var consentEl = form.querySelector('[data-audit-lead-consent]');
+        var hpEl = form.querySelector('[data-audit-lead-hp]');
+        var submitEl = form.querySelector('[data-audit-lead-submit]');
+        var msgEl = form.querySelector('[data-audit-lead-msg]');
+        var domain = (result && result.domain) || deriveDomain(url) || '';
+        function showMsg(kind, html) {
+            if (!msgEl) return;
+            msgEl.hidden = false;
+            msgEl.className = 'kr-audit-result-leadform-msg kr-audit-result-leadform-msg--' + kind;
+            msgEl.innerHTML = html;
+        }
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (hpEl && hpEl.value) return; // Honeypot — Bot
+            var email = emailEl ? emailEl.value.trim() : '';
+            if (!email) { if (emailEl) emailEl.reportValidity(); return; }
+            if (consentEl && !consentEl.checked) {
+                showMsg('error', 'Bitte stimmen Sie der Verarbeitung zu.');
+                return;
+            }
+            if (submitEl) { submitEl.disabled = true; submitEl.textContent = 'Wird gesendet …'; }
+            track('Magic Audit Lead', { domain: domain });
+            fetch(FN_BASE + '/requestAudit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url, name: '', email: email, consent: true, company: '' })
+            }).then(function (res) {
+                return res.json().then(function (j) { return { ok: res.ok, j: j }; });
+            }).then(function (r) {
+                if (!r.ok) throw new Error((r.j && r.j.error) || 'Anfrage fehlgeschlagen');
+                var slug = r.j && r.j.slug;
+                var link = slug
+                    ? ' <a href="/audit?slug=' + encodeURIComponent(slug) + '">Bericht direkt öffnen →</a>'
+                    : '';
+                form.innerHTML = '<p class="kr-audit-result-leadform-msg kr-audit-result-leadform-msg--ok">' +
+                    'Der ausführliche Bericht ist unterwegs an <em>' + escapeHtml(email) + '</em>.' + link +
+                    '</p>';
+                track('Magic Audit Lead Sent', { domain: domain });
+            }).catch(function () {
+                if (submitEl) { submitEl.disabled = false; submitEl.textContent = 'Bericht anfordern'; }
+                showMsg('error', 'Es klemmt gerade — bitte später erneut oder direkt an ' +
+                    '<a href="mailto:kontakt@karriaro.de">kontakt@karriaro.de</a>.');
+            });
+        });
+    }
+
     function commitResult(section, form, stage, resultHost, result, url) {
         function apply() {
             hideStage(stage);
@@ -365,6 +435,10 @@
                     });
                 });
             }
+            // Sprint 192 — Detail-Brief E-Mail-Gate: erfasst den Lead + triggert den
+            // vollständigen Bericht via /requestAudit (gleicher Endpoint wie audit.html).
+            var leadForm = resultHost.querySelector('[data-audit-leadform]');
+            if (leadForm) wireLeadForm(leadForm, url, result);
             // Scroll result into comfortable view (not the very top — keep section header visible)
             requestAnimationFrame(function () {
                 if (resultHost.scrollIntoView) {
