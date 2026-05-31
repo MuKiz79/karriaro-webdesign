@@ -1936,6 +1936,8 @@
 
         /* Sprint 41 — Split-Manuskript: Hand vs Druck */
         .kr-manuskript-section { padding: clamp(80px, 12vh, 140px) 0; }
+        /* Sprint 201 — Lighthouse-Cockpit als eigene Sektion (Farbrhythmus-Trennung). */
+        .kr-cockpit-section { padding: clamp(80px, 12vh, 140px) 0; }
         .kr-manuskript-split {
             display: grid;
             grid-template-columns: 1fr 40px 1fr;
@@ -3818,6 +3820,19 @@
                 </div>
                 <p style="margin-top: 28px;"><a href="/portfolio/friseur-salon" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
             </div>
+        </div>
+    </section>
+
+
+    <!-- Sprint 201 — Lighthouse-Cockpit in EIGENE Sektion (Farbrhythmus: Veil ≠ cream-soft der
+         Performance-Section). Trennt das Produkt-Cockpit sichtbar vom Performance-Beweis (Founder-Befund:
+         beide teilten denselben Hintergrund → wirkten wie ein Block). -->
+    <section aria-label="Besucher-Cockpit" class="fade-in kr-cockpit-section" style="background: var(--color-surface-veil);">
+        <div class="wrap" style="max-width: 1100px;">
+            <div style="text-align: center; margin-bottom: 48px;">
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">Lighthouse · Besucher-Cockpit</p>
+                <h2 style="font-size: clamp(28px, 4vw, 48px); max-width: 760px; margin-left: auto; margin-right: auto;">Sehen Sie, wer Ihre Seite besucht.</h2>
+            </div>
 
             <!-- Sprint 198 — Live-Cockpit-Mock: zeigt das Lighthouse-Besucher-Cockpit
                  „in Bewegung" (synthetische Beispiel-Ansicht, ehrlich beschriftet). -->
@@ -4422,7 +4437,7 @@
 
 
     <!-- Sprint 41 — Beitrag/Übernahme als Split-Manuskript (Hand vs Druck) -->
-    <section aria-label="Was Sie beisteuern" class="fade-in kr-manuskript-section" style="background: var(--color-bone);">
+    <section aria-label="Was Sie beisteuern" class="fade-in kr-manuskript-section" style="background: var(--color-cream-soft);">
         <div class="wrap" style="max-width: 1100px;">
             <div style="text-align: center; max-width: 720px; margin: 0 auto 64px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">2–3 Stunden Eigenarbeit insgesamt</p>
@@ -4862,7 +4877,7 @@
     <!-- Sprint 171 — "Wir prüfen uns selbst" (Trust-Sprint, Brand-Ehrlichkeit) -->
     <style>
         .kr-selbst-audit {
-            background: #FBFAF7;
+            background: var(--color-bone);
             padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
             text-align: center;
         }
