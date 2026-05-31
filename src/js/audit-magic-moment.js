@@ -410,7 +410,7 @@
                 if (!r.ok) throw new Error((r.j && r.j.error) || 'Anfrage fehlgeschlagen');
                 var slug = r.j && r.j.slug;
                 var link = slug
-                    ? ' <a href="/audit?slug=' + encodeURIComponent(slug) + '">Bericht direkt öffnen →</a>'
+                    ? ' <a href="/website-pruefen?slug=' + encodeURIComponent(slug) + '">Bericht direkt öffnen →</a>'
                     : '';
                 form.innerHTML = '<p class="kr-audit-result-leadform-msg kr-audit-result-leadform-msg--ok">' +
                     'Der ausführliche Bericht ist unterwegs an <em>' + escapeHtml(email) + '</em>.' + link +

@@ -179,7 +179,7 @@ Founder-Antwort: einfach auf diese Mail antworten (Reply-To zeigt auf den Lead).
             <tr><td style="padding:6px 12px 6px 0;color:#86868b;width:130px">Domain</td><td style="padding:6px 0;font-weight:500">${payload.domain}</td></tr>
             <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Name</td><td style="padding:6px 0">${payload.name || "—"}</td></tr>
             <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Email</td><td style="padding:6px 0"><a href="mailto:${payload.email}" style="color:#0071e3">${payload.email}</a></td></tr>
-            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Audit-Slug</td><td style="padding:6px 0"><a href="https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(payload.slug)}" style="color:#0071e3">${payload.slug}</a></td></tr>
+            <tr><td style="padding:6px 12px 6px 0;color:#86868b">Audit-Slug</td><td style="padding:6px 0"><a href="https://karriaro-webdesign.de/website-pruefen?slug=${encodeURIComponent(payload.slug)}" style="color:#0071e3">${payload.slug}</a></td></tr>
             <tr><td style="padding:6px 12px 6px 0;color:#86868b">Lead-Score</td><td style="padding:6px 0">${payload.leadScore ?? "—"}</td></tr>
         </table>
         <p style="margin:24px 0 0;color:#86868b;font-size:12px">Reply-To zeigt auf den Lead — antworten Sie direkt.</p>
@@ -214,7 +214,7 @@ async function sendAuditMail(to, name, slug, domain, attribution = {}) {
         greetingTimeout: 8000,
         socketTimeout: 12000
     });
-    const link = `https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(slug)}`;
+    const link = `https://karriaro-webdesign.de/website-pruefen?slug=${encodeURIComponent(slug)}`;
     const greeting = name ? `Hallo ${name},` : "Guten Tag,";
     const subject = `Ihr Mini-Audit für ${domain} ist bereit`;
     const text = `${greeting}

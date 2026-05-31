@@ -38,7 +38,7 @@ const OUT = join(SRC, 'm');
 const SELLING_TOP = new Set([
     'index.html',
     'preise.html',
-    'audit.html',
+    'website-pruefen.html',
     'website-check.html',
 ]);
 
