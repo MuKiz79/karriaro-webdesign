@@ -267,7 +267,8 @@ exports.requestAudit = onRequest(
         if (await enforceRateLimit(db, req, res, "requestAudit", 3, 3600,
             "Sie haben das stündliche Limit erreicht. Bitte später erneut.")) return;
 
-        const { url, name, email, consent, company, reportSlug, refHash } = req.body || {};
+        const { url, name, email, consent, company, reportSlug, refHash,
+            utm_source, utm_medium, utm_campaign, utm_term, utm_content, gclid, referrer, landing } = req.body || {};
 
         // Honeypot — wenn ausgefüllt: stilles Erfolgs-Signal an den Bot
         if (company && String(company).trim().length > 0) {
@@ -280,6 +281,21 @@ exports.requestAudit = onRequest(
         const HASH_RE  = /^[A-Z]-\d{3}$/;
         const safeReportSlug = typeof reportSlug === "string" && SLUG_RE.test(reportSlug) ? reportSlug : null;
         const safeRefHash    = typeof refHash    === "string" && HASH_RE.test(refHash)    ? refHash    : null;
+
+        // Sprint 199 — Ad-Attribution (cookiefrei, vom Client gesammelt): nur längen-
+        // begrenzt + Angle-Brackets raus (kein Stored-XSS); leeres Objekt → nicht schreiben.
+        const capAttr = (v, n) => (typeof v === "string" && v ? v.replace(/[<>]/g, "").slice(0, n) : null);
+        const attribution = {
+            utmSource:   capAttr(utm_source, 120),
+            utmMedium:   capAttr(utm_medium, 120),
+            utmCampaign: capAttr(utm_campaign, 150),
+            utmTerm:     capAttr(utm_term, 150),
+            utmContent:  capAttr(utm_content, 150),
+            gclid:       capAttr(gclid, 200),
+            referrer:    capAttr(referrer, 300),
+            landing:     capAttr(landing, 300)
+        };
+        const hasAttribution = Object.values(attribution).some((v) => v);
 
         if (!consent) return res.status(400).json({ error: "DSGVO-Zustimmung fehlt" });
         const auditUrl = normalizeUrl(url);
@@ -318,6 +334,7 @@ exports.requestAudit = onRequest(
                 source: safeReportSlug ? "report-inbound" : "inbound_form",
                 reportSlug: safeReportSlug,
                 refHash: safeRefHash,
+                ...(hasAttribution ? { attribution } : {}),
                 visitCount: 0,
                 ctaClicks: 0,
                 status: "pending"
