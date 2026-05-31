@@ -1678,6 +1678,41 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .kr-pull-quote { padding-left: 1em; }
             .kr-pull-quote::before { font-size: 96px; top: -0.1em; }
         }
+        /* Sprint 200 — Echte Google-Kundenbewertung (Editorial, unter dem Marken-Versprechen).
+           Adaptive Tokens → flippt korrekt im OS-Dunkel (Text auf Sektion-BG, kein Fix-Panel). */
+        .kr-review {
+            max-width: 720px;
+            margin: clamp(24px, 5vh, 56px) auto clamp(40px, 7vh, 80px);
+            padding: 0 24px;
+            text-align: center;
+        }
+        .kr-review-stars { display: inline-flex; gap: 5px; margin-bottom: 18px; }
+        .kr-review-stars svg { width: 19px; height: 19px; fill: var(--color-gold); display: block; }
+        .kr-review-quote { margin: 0; padding: 0; border: 0; }
+        .kr-review-quote p {
+            margin: 0;
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-weight: 500;
+            font-size: clamp(20px, 2.6vw, 30px);
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+            color: var(--color-indigo-strong);
+            text-wrap: balance;
+        }
+        .kr-review-cite { display: flex; flex-direction: column; align-items: center; gap: 5px; margin-top: 24px; }
+        .kr-review-name { font-family: var(--font-body); font-size: 15px; font-weight: 600; color: var(--color-onyx); }
+        .kr-review-meta {
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--color-graphite-soft);
+        }
+        .kr-review-link {
+            margin-top: 9px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+            color: var(--color-graphite-soft); text-decoration: none;
+            border-bottom: 1px solid rgba(20, 32, 43, 0.22); padding-bottom: 1px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+        .kr-review-link:hover { color: var(--color-indigo-strong); border-color: var(--color-gold); }
         /* "Was Sie beisteuern" 2-Spalten-Liste (Sprint 7e M2) */
         .contribute-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; max-width: 980px; margin: 0 auto; }
         .contribute-label { font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-graphite-soft); margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); }
@@ -4359,6 +4394,28 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 })();
             </script>
         </div>
+
+        <!-- Sprint 200 — Echte Google-Kundenbewertung (Ilyas Kablan) als Social Proof,
+             direkt unter dem Marken-Versprechen (Versprechen → Beweis). BEWUSST KEIN
+             aggregateRating/Review-JSON-LD: bei 1 Bewertung auf junger Domain =
+             Google-Manual-Action-Risiko + SEO-Nullwert (GBP kennt sie). Ab ~5–10 nachrüsten. -->
+        <figure class="kr-review" aria-label="Kundenbewertung auf Google">
+            <div class="kr-review-stars" role="img" aria-label="5 von 5 Sternen">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </div>
+            <blockquote class="kr-review-quote">
+                <p>Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!</p>
+            </blockquote>
+            <figcaption class="kr-review-cite">
+                <span class="kr-review-name">Ilyas Kablan</span>
+                <span class="kr-review-meta">Google Local Guide · 58 Bewertungen</span>
+                <a class="kr-review-link" href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener">Auf Google ansehen ↗</a>
+            </figcaption>
+        </figure>
 
         <!-- Founder-POV 40/60-Split mit Skizzen-SVG + 5 Prinzipien als Marginalia -->
         <div class="wrap kr-founder-pov">
