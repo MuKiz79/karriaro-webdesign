@@ -137,7 +137,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 "name": "Wie lange dauert es, bis meine Website fertig ist?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Sie erhalten einen Entwurf innerhalb von 24 Stunden. Die fertige Website ist in 7 bis 14 Tagen online — je nach Paket. Sie zahlen erst bei Zufriedenheit."
+                    "text": "Sie erhalten einen ersten Entwurf innerhalb von 24 Stunden nach dem Kurz-Briefing. Die fertige Website ist in 7 bis 14 Tagen online — je nach Paket und Zuarbeit. Sie zahlen erst bei Zufriedenheit."
                 }
             },
             {
@@ -214,9 +214,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=410"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
+    <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
+    <script src="/js/attribution.js?v=199" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
-    <script src="/js/audit-magic-moment.js?v=421" defer></script>
+    <script src="/js/audit-magic-moment.js?v=422" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <link rel="stylesheet" href="/css/fonts.css?v=183">
     <!-- Sprint 82 — Preload des CSS senkt LCP um ~250ms, da Browser nicht
@@ -4986,7 +4988,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         Wie lange dauert es, bis meine Website fertig ist?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Sie erhalten einen ersten Entwurf innerhalb von 24 Stunden. Die fertige Website ist in 7 bis 14 Tagen online — je nach Paket. Sie zahlen erst bei Zufriedenheit.</p>
+                    <p>Sie erhalten einen ersten Entwurf innerhalb von 24 Stunden nach dem Kurz-Briefing. Die fertige Website ist in 7 bis 14 Tagen online — je nach Paket und Zuarbeit. Sie zahlen erst bei Zufriedenheit.</p>
                 </details>
 
                 <details class="kr-faq-item" data-track-event="FAQ_EXPAND" data-track-question-id="branchen-werkzeuge">
@@ -5647,9 +5649,24 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             var btn = form.querySelector('button');
             btn.textContent = 'Wird gesendet…';
             btn.disabled = true;
+            // Sprint 199 — Attribution an den Lead hängen (landet in der Formspree-Mail)
+            // + cookiefreies Conversion-Signal feuern. Beides best-effort.
+            var fd = new FormData(form);
+            try {
+                if (window.krAttributionFlat) {
+                    var attr = window.krAttributionFlat();
+                    Object.keys(attr).forEach(function (k) { fd.append(k, attr[k]); });
+                }
+            } catch (err) {}
+            try {
+                if (window.krTrack) {
+                    var paketEl = form.querySelector('[name="paket"]');
+                    window.krTrack('Lead Kontakt', { paket: (paketEl && paketEl.value) || '' });
+                }
+            } catch (err) {}
             fetch('https://formspree.io/f/mjggbdre', {
                 method: 'POST',
-                body: new FormData(form),
+                body: fd,
                 headers: { 'Accept': 'application/json' }
             }).then(function(response) {
                 if (response.ok) {

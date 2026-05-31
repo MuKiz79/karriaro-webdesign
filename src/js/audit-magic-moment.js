@@ -56,6 +56,16 @@
         if (typeof window.plausible === 'function') {
             try { window.plausible(event, { props: props || {} }); } catch (e) {}
         }
+        // Sprint 199 — cookiefreier Track-Bridge (Lighthouse/CustomEvent) + Attribution
+        if (typeof window.krTrack === 'function') {
+            try { window.krTrack(event, props || {}); } catch (e) {}
+        }
+    }
+
+    // Sprint 199 — First-Touch-Attribution für Lead-Payloads (utm/gclid/referrer/landing)
+    function attribution() {
+        try { return (window.krAttributionFlat && window.krAttributionFlat()) || {}; }
+        catch (e) { return {}; }
     }
 
     function escapeHtml(s) {
@@ -393,7 +403,7 @@
             fetch(FN_BASE + '/requestAudit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: url, name: '', email: email, consent: true, company: '' })
+                body: JSON.stringify(Object.assign({ url: url, name: '', email: email, consent: true, company: '' }, attribution()))
             }).then(function (res) {
                 return res.json().then(function (j) { return { ok: res.ok, j: j }; });
             }).then(function (r) {
@@ -497,7 +507,7 @@
                 var fetchPromise = fetch(FN_BASE + '/quickAudit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url, hp: '' })
+                    body: JSON.stringify(Object.assign({ url: url, hp: '' }, attribution()))
                 }).then(function (res) {
                     LOG('fetch response', { status: res.status, ok: res.ok });
                     if (res.status === 429) { var e1 = new Error('rate_limited'); e1.code = 429; throw e1; }
