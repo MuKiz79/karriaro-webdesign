@@ -112,7 +112,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .back:hover { text-decoration: underline; }
             /* Sprint 193 — Dark-Mode (folgt OS-Setting) */
-        @media (prefers-color-scheme: dark) {
+        @media (prefers-color-scheme: dark) and (min-width: 1024px) {
             body { background: #0F1217; color: #F5F3EE; }
             nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
             nav a { color: #F5F3EE; }

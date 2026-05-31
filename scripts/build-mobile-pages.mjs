@@ -194,6 +194,18 @@ function stripAutoRedirect(html) {
     return html.replace(pattern, '');
 }
 
+// Sprint 194 — Mobile bleibt IMMER hell (Apple-Ästhetik, color-scheme:light only).
+// Die von der Desktop-Quelle geerbten Inline-Dark-Blöcke (@media prefers-color-scheme:dark)
+// würden auf Mobile bei OS-Dunkel trotzdem greifen (color-scheme:light unterdrückt die
+// Query NICHT) → halb-dunkler, unlesbarer Mix. Daher die Blöcke auf Desktop-Breite scopen,
+// sodass sie auf Phones (<1024px) nie matchen. Negative-Lookahead = idempotent bei Re-Builds.
+function scopeDarkToDesktop(html) {
+    return html.replace(
+        /@media \(prefers-color-scheme: dark\)(?! and \(min-width)/g,
+        '@media (prefers-color-scheme: dark) and (min-width: 1024px)'
+    );
+}
+
 function injectMobileCss(html) {
     if (html.includes('mobile-overrides.css')) return html;
     const closeHeadIdx = html.lastIndexOf('</head>');
@@ -972,6 +984,8 @@ function buildPage(relPath) {
         return { relPath, sellingCta: false, bytes: html.length };
     }
 
+    // Sprint 194 — geerbte Desktop-Dark-Blöcke auf Desktop-Breite scopen (Mobile bleibt hell).
+    html = scopeDarkToDesktop(html);
     html = injectMobileCss(html);
     // Sprint 143 — Critical-CSS inline (Senior-Review C-9, LCP-Optimierung).
     html = injectCriticalCss(html);

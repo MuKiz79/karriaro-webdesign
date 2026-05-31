@@ -4993,7 +4993,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
            index.html hat 3 <style>-Blöcke; nur hier gewinnen die Selektor-Overrides die Light-
            Regeln aller Blöcke (Cascade = Dokument-Reihenfolge). Token-Flip via dark :root +
            gezielte Flächen-Overrides; weißer Text auf dunklen Buttons, Mockup-Chrome, Akzente bleiben. */
-        @media (prefers-color-scheme: dark) {
+        @media (prefers-color-scheme: dark) and (min-width: 1024px) {
             :root {
                 --color-indigo: #6B8AA3;
                 --color-indigo-deep: #557390;
