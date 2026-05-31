@@ -88,7 +88,7 @@ steht unserer dahinter."
 
 **Links**
 
-- MCP-Server-Dokumentation: https://karriaro-webdesign.de/api/mcp.html
+- MCP-Server-Dokumentation: https://karriaro-webdesign.de/api/mcp
 - Karriaro Webdesign: https://karriaro-webdesign.de
 - Gründer-Profil: https://karriaro-webdesign.de/gruender.html
 - Quellcode: https://github.com/MuKiz79/karriaro-webdesign

@@ -101,6 +101,8 @@ Allow: /
 Crawl-delay: 1
 
 # Block common bot traps
+# (MCP-Doku-Landingpage bleibt crawlbar — spezifischere Allow-Regel gewinnt)
+Allow: /api/mcp
 Disallow: /api/
 Disallow: /*.json$
 Disallow: /admin/

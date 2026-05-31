@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karriaro MCP-Server — Webdesign-Manufaktur als Werkzeug für Ihren KI-Agent</title>
-    <meta name="description" content="Karriaro stellt vier Tools als Public MCP-Server bereit: Site-Audit, Brand-Voice-Analyse, Branchen-Mockup, Phyllotaxis-Signatur. Für Claude Desktop, Cursor, OpenAI Codex und jeden MCP-kompatiblen KI-Agent.">
+    <meta name="description" content="Karriaro stellt vier Tools als öffentlichen Model-Context-Protocol-(MCP-)Server bereit: Website-Audit (BFSG, SEO, KI-Auffindbarkeit), Brand-Voice-Analyse, Branchen-Mockup, Phyllotaxis-Signatur. Für Claude Desktop, Cursor, OpenAI Codex und jeden MCP-kompatiblen KI-Agent. No-Auth, kostenlos.">
     <link rel="canonical" href="https://karriaro-webdesign.de/api/mcp">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#1A2E40">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Karriaro MCP-Server — Manufaktur als KI-Werkzeug">
-    <meta property="og:description" content="Vier MCP-Tools für Site-Audit, Voice-Analyse, Brand-Mockup, Phyllotaxis-Signatur. Erste DACH-Webdesign-Manufaktur als Public MCP-Server.">
+    <meta property="og:description" content="Vier MCP-Tools für Website-Audit, Voice-Analyse, Brand-Mockup, Phyllotaxis-Signatur. Eine Schwarzwald-Webdesign-Manufaktur als öffentlicher Model-Context-Protocol-Server.">
     <meta property="og:url" content="https://karriaro-webdesign.de/api/mcp">
-    <meta property="og:image" content="https://karriaro-webdesign.de/og-image.jpg">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
     <link rel="stylesheet" href="/css/fonts.css?v=183">
     <link rel="stylesheet" href="/css/fonts-inter.css?v=183">
     <script type="application/ld+json">
@@ -31,7 +31,13 @@
         "url": "https://karriaro-webdesign.de"
       },
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
-      "downloadUrl": "https://www.npmjs.com/package/@karriaro/webdesign-mcp"
+      "downloadUrl": "https://www.npmjs.com/package/@karriaro/webdesign-mcp",
+      "featureList": [
+        "karriaro_audit_site — Website-Audit: Substanz, BFSG-Konformität, SEO, KI-Auffindbarkeit",
+        "karriaro_extract_voice — Brand-Voice-Analyse nach Editorial-Codex",
+        "karriaro_generate_brand_mockup — Branchen-Hero-Mockup als SVG",
+        "karriaro_phyllotaxis_signature — deterministisches Goldener-Winkel-Siegel"
+      ]
     }
     </script>
     <script type="application/ld+json">
@@ -43,6 +49,40 @@
       "termsOfService": "https://karriaro-webdesign.de/datenschutz",
       "endpointURL": "https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler",
       "provider": { "@type": "Organization", "name": "Karriaro Webdesign-Manufaktur" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Karriaro Webdesign", "item": "https://karriaro-webdesign.de/" },
+        { "@type": "ListItem", "position": 2, "name": "MCP-Server", "item": "https://karriaro-webdesign.de/api/mcp" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "Karriaro MCP-Server in einem KI-Client einrichten",
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Per HTTP (empfohlen)", "text": "Den MCP-Client (Claude Desktop ab v0.7, Cursor, OpenAI Codex) auf den HTTP-Endpoint https://europe-west1-apex-executive.cloudfunctions.net/mcpHandler richten. Keine Anmeldung, kein Schlüssel.", "url": "https://karriaro-webdesign.de/api/mcp" },
+        { "@type": "HowToStep", "position": 2, "name": "Per npm (stdio)", "text": "Das Paket @karriaro/webdesign-mcp installieren und als stdio-Server in der MCP-Client-Konfiguration eintragen.", "url": "https://karriaro-webdesign.de/api/mcp" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Was kostet der Karriaro MCP-Server?", "acceptedAnswer": { "@type": "Answer", "text": "Nichts. Der Model-Context-Protocol-Server ist öffentlich, ohne Anmeldung und ohne Cookie nutzbar — limitiert auf 20 Aufrufe pro Stunde und IP." } },
+        { "@type": "Question", "name": "Welche KI-Clients werden unterstützt?", "acceptedAnswer": { "@type": "Answer", "text": "Jeder zum Model Context Protocol (MCP) kompatible Client: Claude Desktop, Cursor, OpenAI Codex und andere — per HTTP-Transport oder als npm-stdio-Paket @karriaro/webdesign-mcp." } },
+        { "@type": "Question", "name": "Braucht der MCP-Server einen API-Schlüssel?", "acceptedAnswer": { "@type": "Answer", "text": "Nein. Der HTTP-Endpoint ist no-auth. Es gilt ein Rate-Limit von 20 Aufrufen pro Stunde und IP." } },
+        { "@type": "Question", "name": "Welche Werkzeuge bietet der Server?", "acceptedAnswer": { "@type": "Answer", "text": "Vier: karriaro_audit_site (Website-Audit zu BFSG, SEO, KI-Auffindbarkeit), karriaro_extract_voice (Brand-Voice-Analyse), karriaro_generate_brand_mockup (Branchen-Hero-SVG) und karriaro_phyllotaxis_signature (deterministisches Siegel)." } },
+        { "@type": "Question", "name": "Werden meine Daten gespeichert?", "acceptedAnswer": { "@type": "Answer", "text": "Die Aufrufe werden nicht zu Profilzwecken protokolliert, es gibt kein Tracking und keine Cookies. Details in der Datenschutzerklärung." } }
+      ]
     }
     </script>
     <style>
@@ -258,8 +298,9 @@
         <p class="folio">№ 09 · MCP-Server · v0.1.0</p>
         <h1>Eine Manufaktur als <em>Werkzeug</em><br>für Ihren KI-Agent.</h1>
         <p class="lede">
-            Vier Tools, die Claude Desktop, Cursor und jeder MCP-kompatible
-            KI-Agent direkt aufrufen können. Site-Audit, Brand-Voice-Analyse,
+            Vier Tools, die Claude Desktop, Cursor und jeder zum
+            <em>Model Context Protocol (MCP)</em> kompatible KI-Agent direkt
+            aufrufen können. Website-Audit, Brand-Voice-Analyse,
             Branchen-Mockup, Phyllotaxis-Signatur — alle Antworten im
             Editorial-Stil mit Karriaro-Signatur.
         </p>

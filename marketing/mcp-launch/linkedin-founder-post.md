@@ -18,7 +18,7 @@ für mobile Lesbarkeit, plus „mehr anzeigen"-Erweiterung.
 > Jede Inferenz ist Marketing.
 > Pull statt Push.
 >
-> https://karriaro-webdesign.de/api/mcp.html
+> https://karriaro-webdesign.de/api/mcp
 
 ---
 
@@ -44,7 +44,7 @@ für mobile Lesbarkeit, plus „mehr anzeigen"-Erweiterung.
 > Pre-Customer, pre-launch. Aus dem Schwarzwald.
 >
 > Endpoint + Dokumentation:
-> https://karriaro-webdesign.de/api/mcp.html
+> https://karriaro-webdesign.de/api/mcp
 >
 > #MCP #ModelContextProtocol #Webdesign #Schwarzwald
 

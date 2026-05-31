@@ -1,6 +1,6 @@
 # Hacker News „Show HN"-Submission — Karriaro MCP-Server
 
-**Submission-URL:** https://karriaro-webdesign.de/api/mcp.html
+**Submission-URL:** https://karriaro-webdesign.de/api/mcp
 
 **Title:** (max 80 chars, no emoji)
 
