@@ -816,7 +816,7 @@
             margin: 0 auto;
             padding: 0 24px 0 clamp(40px, 6vw, 120px);
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
             gap: clamp(56px, 7vw, 104px);
             align-items: start;
             position: relative;
@@ -836,12 +836,13 @@
         .hero-with-photo h1 {
             font-family: var(--font-display);
             text-align: left;
-            /* Sprint 203 — kleiner als 104px: die längere zweite Zeile „Ein Unikat,
-               das mitarbeitet." soll sauber umbrechen (war 4 Zeilen mit Waise „das"). */
-            font-size: clamp(40px, 5vw, 66px);
+            /* Sprint 204 — wieder größer (Trias entfernt → Platz). Breitere Text-
+               spalte (1.2fr Mockup) lässt „Ein Unikat, das mitarbeitet." bei großer
+               Schrift sauber in 2 balancierte Zeilen umbrechen. */
+            font-size: clamp(44px, 5.8vw, 82px);
             font-weight: 500;
-            line-height: 1.05;
-            letter-spacing: -0.025em;
+            line-height: 1.04;
+            letter-spacing: -0.028em;
             font-variation-settings: "opsz" 144;
             color: var(--color-indigo-strong);
         }
@@ -3637,7 +3638,7 @@
                     <span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>
                 </h1>
                 <p class="subhead">
-                    Handcodiert im Schwarzwald. Erster Entwurf in 24 Stunden, fertig in 7–14 Tagen.
+                    Handcodiert für Ihre Branche — mit eingebauten Werkzeugen, Besucher-Cockpit und KI.
                 </p>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt.</p>
                 <div class="hero-cta-row">
@@ -3646,15 +3647,11 @@
                 <a href="#erste-einschaetzung" class="hero-audit-link">
                     Schon eine Website? <span>Eine erste Einschätzung →</span>
                 </a>
-                <!-- Sprint 197 — Differenzierer von 11px-Kleingedrucktem zu sichtbarer
-                     Editorial-Trias: „man bekommt viel mehr als eine Website". -->
-                <ul class="hero-value-list" aria-label="Was Sie bekommen">
-                    <li>Der Quellcode gehört Ihnen — keine Abhängigkeit, kein Lock-in.</li>
-                    <li>Eigene KI-Werkzeuge: <a href="https://karriaro-webdesign.de/api/mcp">MCP-Server für Claude, Cursor &amp; v0 ↗</a></li>
-                    <li><a href="https://lighthouse.karriaro.de">Lighthouse-Performance &amp; Live-Analytics ↗</a> — messbar, transparent.</li>
-                </ul>
+                <!-- Sprint 204 — Trias entfernt (Dopplung mit neuer Subline „Werkzeuge,
+                     Cockpit, KI"). Weniger Text → H1 darf groß sein; Vielfalt trägt die
+                     Subline + das interaktive Demo. „Quellcode gehört Ihnen" in die Provenance. -->
                 <p class="hero-provenance">
-                    Gegründet von <a href="/gruender">Muammer Kızılaslan</a> · Schwarzwald · BFSG · DSGVO
+                    Gegründet von <a href="/gruender">Muammer Kızılaslan</a> · Schwarzwald · BFSG · DSGVO · Quellcode gehört Ihnen
                 </p>
                 <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel verschoben in die
                      „Über uns"-Section (Codex-Heimat „Deep-Moment"); entlastet den Hero. -->
