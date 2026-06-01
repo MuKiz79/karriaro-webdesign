@@ -219,10 +219,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <link rel="stylesheet" href="/css/modern-2026.css?v=410" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=410"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
-    <!-- Performance — Below-fold-CSS nicht render-blockierend laden (Muster wie modern-2026.css). -->
-    <link rel="preload" as="style" href="/css/karriaro-tools.css">
-    <link rel="stylesheet" href="/css/karriaro-tools.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/karriaro-tools.css"></noscript>
+    <link rel="stylesheet" href="/css/karriaro-tools.css">
     <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
     <script src="/js/attribution.js?v=199" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
@@ -6204,7 +6201,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <!-- Sprint 39 — Lenis Smooth-Scroll (Award-Foundation). Self-hosted + defer (kein unpkg-
          Blocking-Request mehr; heilt zudem den Footer-Claim „0 externe Plugins"). -->
-    <script src="/js/lenis.min.js?v=1" defer></script>
+    <script src="/js/lenis.min.js?v=1"></script>
     <script>
         // Sprint 39 — Lenis + Reading-Progress + Stagger-Reveal + Counter + Magnetic-CTA + Type-On + LCP-Counter
         (function () {
