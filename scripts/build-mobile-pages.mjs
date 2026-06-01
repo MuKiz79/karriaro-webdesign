@@ -313,14 +313,13 @@ function isIndex(relPath) {
 }
 
 function rewriteHeroHeadline(html) {
-    // Sprint 151 — H1 ohne Stagger-Animation (radikal-Apple). Drei Zeilen
-    // bleiben strukturell: zwei Identity-Lines + Italic-Sub-Accent.
+    // Sprint 203 — Mobile-H1 an Desktop angeglichen (war „Webdesign./Manufaktur./…",
+    // löst die Hero-Divergenz). Ohne Stagger-Animation (radikal-Apple).
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line">Webdesign.</span>' +
-        '<span class="hero-h1-line">Manufaktur.</span>' +
-        '<span class="hero-h1-line m-hero-accent">Jede Seite handcodiert ein Unikat.</span>' +
+        '<span class="hero-h1-line">Ihre Website.</span>' +
+        '<span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>' +
         '</h1>'
     );
 }

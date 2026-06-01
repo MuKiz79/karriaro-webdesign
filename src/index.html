@@ -836,10 +836,12 @@
         .hero-with-photo h1 {
             font-family: var(--font-display);
             text-align: left;
-            font-size: clamp(48px, 7.2vw, 104px);
+            /* Sprint 203 — kleiner als 104px: die längere zweite Zeile „Ein Unikat,
+               das mitarbeitet." soll sauber umbrechen (war 4 Zeilen mit Waise „das"). */
+            font-size: clamp(40px, 5vw, 66px);
             font-weight: 500;
-            line-height: 1.0;
-            letter-spacing: -0.03em;
+            line-height: 1.05;
+            letter-spacing: -0.025em;
             font-variation-settings: "opsz" 144;
             color: var(--color-indigo-strong);
         }
@@ -3632,7 +3634,7 @@
                 </p>
                 <h1 class="hero-headline">
                     <span class="hero-h1-line"><span class="hero-dropcap">I</span>hre Website.</span>
-                    <span class="hero-h1-line">Handgemacht.</span>
+                    <span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>
                 </h1>
                 <p class="subhead">
                     Handcodiert im Schwarzwald. Erster Entwurf in 24 Stunden, fertig in 7–14 Tagen.
