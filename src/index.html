@@ -23,6 +23,12 @@
     <link rel="alternate" hreflang="en" href="https://karriaro-webdesign.de/en">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=3">
 
+    <!-- Performance — LCP-Preloads: Hero-Bild (AVIF) + H1-Display-Schrift, so früh wie möglich,
+         damit sie nicht erst bei Render-Discovery / hinter render-blockierendem CSS starten. -->
+    <link rel="preconnect" href="https://lighthouse.karriaro.de" crossorigin>
+    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.avif?v=410" type="image/avif" fetchpriority="high">
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin.woff2" crossorigin>
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -188,13 +194,18 @@
     <link rel="stylesheet" href="/css/modern-2026.css?v=410" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=410"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
-    <link rel="stylesheet" href="/css/karriaro-tools.css">
+    <!-- Performance — Below-fold-CSS nicht render-blockierend laden (Muster wie modern-2026.css). -->
+    <link rel="preload" as="style" href="/css/karriaro-tools.css">
+    <link rel="stylesheet" href="/css/karriaro-tools.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/karriaro-tools.css"></noscript>
     <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
     <script src="/js/attribution.js?v=199" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
     <script src="/js/audit-magic-moment.js?v=422" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
+    <!-- Performance — blockierend: definiert @font-face für die Above-fold-Typografie (Fraunces H1);
+         der Font selbst ist im <head> vorgeladen. -->
     <link rel="stylesheet" href="/css/fonts.css?v=183">
     <!-- Sprint 82 — Preload des CSS senkt LCP um ~250ms, da Browser nicht
          erst auf Render-Discovery wartet. -->
@@ -3669,7 +3680,7 @@
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
                         <picture>
-                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=409">
+                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=410">
                             <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900" fetchpriority="high">
                         </picture>
                     </div>
@@ -5643,7 +5654,7 @@
 
             // Sprint 158 — AVIF-Pendant via Replace, kein separates data[k].avif nötig
             function getAvifSrc(jpgSrc) {
-                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=409');
+                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=410');
             }
             var avifSourceEl = document.getElementById('hero-mockup-source-avif');
 
@@ -5838,15 +5849,18 @@
         })();
     </script>
 
-    <!-- Sprint 39 — Lenis Smooth-Scroll (Award-Foundation, Industry-Standard 2025) -->
-    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <!-- Sprint 39 — Lenis Smooth-Scroll (Award-Foundation). Self-hosted + defer (kein unpkg-
+         Blocking-Request mehr; heilt zudem den Footer-Claim „0 externe Plugins"). -->
+    <script src="/js/lenis.min.js?v=1" defer></script>
     <script>
         // Sprint 39 — Lenis + Reading-Progress + Stagger-Reveal + Counter + Magnetic-CTA + Type-On + LCP-Counter
         (function () {
             var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // 1) Lenis Smooth-Scroll (disabled wenn reduced-motion)
-            if (!prefersReducedMotion && window.Lenis) {
+            // 1) Lenis Smooth-Scroll (disabled wenn reduced-motion) — lädt jetzt defer (self-hosted);
+            //    daher Init über DOMContentLoaded, falls window.Lenis zur IIFE-Zeit noch nicht da ist.
+            function krInitLenis() {
+                if (prefersReducedMotion || !window.Lenis || window.lenis) return;
                 var lenis = new window.Lenis({
                     duration: 1.05,
                     easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
@@ -5856,6 +5870,8 @@
                 requestAnimationFrame(raf);
                 window.lenis = lenis;
             }
+            if (window.Lenis) krInitLenis();
+            else document.addEventListener('DOMContentLoaded', krInitLenis);
 
             // 2) Reading-Progress-Bar
             var progressEl = document.querySelector('.kr-reading-progress');
