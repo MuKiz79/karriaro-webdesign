@@ -861,10 +861,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .hero-with-photo h1 {
             font-family: var(--font-display);
             text-align: left;
-            font-size: clamp(48px, 7.2vw, 104px);
+            /* Sprint 203 — kleiner als 104px: die längere zweite Zeile „Ein Unikat,
+               das mitarbeitet." soll sauber umbrechen (war 4 Zeilen mit Waise „das"). */
+            font-size: clamp(40px, 5vw, 66px);
             font-weight: 500;
-            line-height: 1.0;
-            letter-spacing: -0.03em;
+            line-height: 1.05;
+            letter-spacing: -0.025em;
             font-variation-settings: "opsz" 144;
             color: var(--color-indigo-strong);
         }
