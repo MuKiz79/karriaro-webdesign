@@ -4436,7 +4436,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <div class="wrap kr-founder-pov">
             <div class="kr-founder-pov-grid">
                 <!-- Linke Spalte (40%): Skizzen-SVG (handgezeichneter Wireframe als Inline-SVG) -->
-                <figure class="kr-founder-sketch" aria-label="Handgezeichnete Konzept-Skizze einer Karriaro-Website">
+                <figure class="kr-founder-sketch" role="img" aria-label="Handgezeichnete Konzept-Skizze einer Karriaro-Website">
                     <svg viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" role="img">
                         <!-- Skizzen-Stift-Look: warmer Ton, leicht unregelmäßige Linien -->
                         <g fill="none" stroke="var(--color-indigo-strong)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
@@ -5440,7 +5440,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             var rows = dims.map(function (d) {
                 var label = String(d.name || '').charAt(0).toUpperCase() + String(d.name || '').slice(1);
                 var sc = typeof d.score === 'number' ? d.score : '–';
-                return '<div class="kr-selbst-result-row"><span>' + escapeHtml(label) + '</span><span>' + sc + ' / 25</span></div>';
+                return '<div class="kr-selbst-result-row"><span>' + escapeHtml(label) + '</span><span>' + sc + ' / 20</span></div>';
             }).join('');
             var v = verdictFor(data.totalScore);
             var totalRow =
@@ -5583,7 +5583,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <div class="footer-kontakt-row">
                 <div class="footer-kontakt-brand">
                     <p class="footer-kontakt-eyebrow">Karriaro · Webdesign-Manufaktur</p>
-                    <p class="footer-kontakt-tagline">Webdesign-Manufaktur aus Deutschland.<br><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr> · DSGVO · Hosting in DE/EU · Deutsches Vertragsrecht.</p>
+                    <p class="footer-kontakt-tagline">Webdesign-Manufaktur aus Deutschland.<br><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht für Unternehmens-Websites">BFSG</abbr> · DSGVO · Hosting in DE/EU · Deutsches Vertragsrecht.<br>Keine Tracking-Cookies · kein Google- oder Meta-Tracking · First-Party-Analytics.</p>
                 </div>
                 <div class="footer-kontakt-list">
                     <a href="tel:+491742796784" class="footer-kontakt-link">
