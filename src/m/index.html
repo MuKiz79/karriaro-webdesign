@@ -46,7 +46,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-image-mobile.jpg">
     <link rel="alternate" hreflang="de" href="https://karriaro-webdesign.de/">
     <link rel="alternate" hreflang="en" href="https://karriaro-webdesign.de/en">
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=3">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=4">
 
     <!-- Performance — LCP-Preloads: Hero-Bild (AVIF) + H1-Display-Schrift, so früh wie möglich,
          damit sie nicht erst bei Render-Discovery / hinter render-blockierendem CSS starten. -->
@@ -4122,7 +4122,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </svg>
             <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
         </div>
-        <p class="kr-audit-magic-caption" aria-hidden="true">θ = 137,5° · n = 13</p>
+        <p class="kr-audit-magic-caption" aria-hidden="true">φ-Spirale · 13 Schritte</p>
     </section>
 
 
@@ -4846,22 +4846,40 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none"/>
                     <g class="kr-seal-dots"></g>
                 </svg>
-                <p class="kr-seal-caption">θ = 137,5° · n = 13</p>
+                <p class="kr-seal-caption">φ-Spirale · 13 Schritte</p>
             </div>
             <script>
                 (function() {
-                    var goldenAngle = (3 - Math.sqrt(5)) * Math.PI;
+                    // Sprint 213 — φ-Wachstumsspirale statt Vogel-Phyllotaxis: r=r0·e^(bθ) mit
+                    // b=ln φ/(π/2). Der Goldene Schnitt jetzt als WACHSTUM (jeder Schritt φ-fach
+                    // weiter) statt als Packung — die 13 Punkte spiralen nach außen, der Gold-Punkt
+                    // (k=12) ist die „Ankunft"/der Erfolg. = Logo-Mark „Erfolg".
                     var g = document.querySelector('.kr-seal-dots');
                     if (!g) return;
                     var svgNS = 'http://www.w3.org/2000/svg';
-                    for (var n = 1; n <= 13; n++) {
-                        var r = Math.sqrt(n) * 8;
-                        var theta = n * goldenAngle;
+                    var b = Math.log((1 + Math.sqrt(5)) / 2) / (Math.PI / 2); // ≈ 0,3063
+                    var PH = -2.05, CX = 45, CY = 47, R = 32, r0 = R / 11;
+                    // dünne Leitlinie entlang der Spirale (verbindet Wachstum → Gold-Ankunft)
+                    var d = '';
+                    for (var t = 0; t <= 7.83; t += 0.1) {
+                        var rr = r0 * Math.exp(b * t);
+                        d += (d ? 'L ' : 'M ') + (CX + rr * Math.cos(t + PH)).toFixed(2) + ' ' + (CY + rr * Math.sin(t + PH)).toFixed(2) + ' ';
+                    }
+                    var path = document.createElementNS(svgNS, 'path');
+                    path.setAttribute('d', d);
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke', 'currentColor');
+                    path.setAttribute('stroke-width', '0.7');
+                    path.setAttribute('opacity', '0.22');
+                    g.appendChild(path);
+                    for (var k = 0; k <= 12; k++) {
+                        var theta = 0.652 * k;
+                        var r = r0 * Math.exp(b * theta);
                         var c = document.createElementNS(svgNS, 'circle');
-                        c.setAttribute('cx', (45 + r * Math.cos(theta)).toFixed(2));
-                        c.setAttribute('cy', (45 + r * Math.sin(theta)).toFixed(2));
-                        c.setAttribute('r', '1.5');
-                        c.setAttribute('fill', 'currentColor');
+                        c.setAttribute('cx', (CX + r * Math.cos(theta + PH)).toFixed(2));
+                        c.setAttribute('cy', (CY + r * Math.sin(theta + PH)).toFixed(2));
+                        c.setAttribute('r', (0.9 + 1.7 * (k / 12)).toFixed(2));
+                        c.setAttribute('fill', k === 12 ? 'var(--color-gold)' : 'currentColor');
                         g.appendChild(c);
                     }
                 })();

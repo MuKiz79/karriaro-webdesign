@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Karriaro">
-  <defs>
-    <style type="text/css">
-      .bg { fill: #0A0A0A; }
-      .letter { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 700; font-size: 22px; fill: #FFFFFF; letter-spacing: -0.025em; }
-      .bracket { fill: none; stroke: #FFFFFF; stroke-width: 1.4; }
-    </style>
-  </defs>
-  <rect class="bg" x="0" y="0" width="32" height="32" rx="4"/>
-  <path class="bracket" d="M 8 7 L 4 7 L 4 25 L 8 25"/>
-  <path class="bracket" d="M 24 7 L 28 7 L 28 25 L 24 25"/>
-  <text class="letter" x="16" y="23" text-anchor="middle">K</text>
+  <rect x="0" y="0" width="32" height="32" rx="5" fill="#1A2E40"/>
+  <path d="M 14.98 15.99 L 15.07 15.91 L 15.17 15.84 L 15.28 15.77 L 15.40 15.72 L 15.53 15.68 L 15.66 15.64 L 15.81 15.63 L 15.96 15.62 L 16.11 15.63 L 16.27 15.66 L 16.43 15.71 L 16.58 15.77 L 16.74 15.85 L 16.89 15.94 L 17.03 16.06 L 17.17 16.19 L 17.30 16.34 L 17.41 16.51 L 17.51 16.70 L 17.59 16.90 L 17.66 17.11 L 17.70 17.33 L 17.73 17.57 L 17.73 17.81 L 17.70 18.06 L 17.65 18.32 L 17.57 18.57 L 17.46 18.83 L 17.32 19.08 L 17.16 19.32 L 16.96 19.55 L 16.74 19.76 L 16.48 19.96 L 16.21 20.14 L 15.90 20.30 L 15.57 20.42 L 15.22 20.52 L 14.85 20.58 L 14.47 20.61 L 14.07 20.59 L 13.66 20.54 L 13.25 20.44 L 12.84 20.30 L 12.43 20.11 L 12.03 19.88 L 11.64 19.59 L 11.27 19.26 L 10.93 18.89 L 10.62 18.47 L 10.34 18.00 L 10.10 17.50 L 9.91 16.95 L 9.77 16.38 L 9.69 15.77 L 9.66 15.14 L 9.70 14.49 L 9.81 13.83 L 9.99 13.16 L 10.24 12.49 L 10.57 11.84 L 10.97 11.19 L 11.45 10.58 L 12.01 9.99 L 12.64 9.45 L 13.34 8.96 L 14.11 8.53 L 14.95 8.17 L 15.84 7.88 L 16.79 7.68 L 17.78 7.57 L 18.81 7.56 L 19.87 7.66 L 20.95 7.86 L 22.03 8.19 L 23.10 8.63 L 24.16 9.20 L 25.19 9.89 L 26.18 10.70" fill="none" stroke="#EFE7D6" stroke-width="0.45" opacity="0.28"/>
+  <circle cx="14.98" cy="15.99" r="0.60" fill="#EFE7D6"/><circle cx="15.74" cy="15.63" r="0.67" fill="#EFE7D6"/><circle cx="16.74" cy="15.85" r="0.74" fill="#EFE7D6"/><circle cx="17.56" cy="16.81" r="0.81" fill="#EFE7D6"/><circle cx="17.64" cy="18.34" r="0.88" fill="#EFE7D6"/><circle cx="16.59" cy="19.89" r="0.95" fill="#EFE7D6"/><circle cx="14.42" cy="20.61" r="1.02" fill="#EFE7D6"/><circle cx="11.78" cy="19.70" r="1.10" fill="#EFE7D6"/><circle cx="9.88" cy="16.86" r="1.17" fill="#EFE7D6"/><circle cx="10.15" cy="12.71" r="1.24" fill="#EFE7D6"/><circle cx="13.49" cy="8.87" r="1.31" fill="#EFE7D6"/><circle cx="19.57" cy="7.62" r="1.38" fill="#EFE7D6"/><circle cx="26.40" cy="10.91" r="1.45" fill="#C9A86A"/>
 </svg>
