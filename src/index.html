@@ -21,7 +21,7 @@
     <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
     <link rel="alternate" hreflang="de" href="https://karriaro-webdesign.de/">
     <link rel="alternate" hreflang="en" href="https://karriaro-webdesign.de/en">
-    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=4">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=5">
 
     <!-- Performance — LCP-Preloads: Hero-Bild (AVIF) + H1-Display-Schrift, so früh wie möglich,
          damit sie nicht erst bei Render-Discovery / hinter render-blockierendem CSS starten. -->
@@ -592,6 +592,11 @@
         }
         nav a { font-size: 12px; color: var(--color-onyx); opacity: 0.8; transition: opacity 0.3s; }
         nav a:hover { opacity: 1; }
+        /* Sprint 214 — Logo = Phyllotaxis-Blüte (Inline-SVG, currentColor → theme-adaptiv) + Wortmarke.
+           KEINE eigene color-Regel: erbt die themed nav-a-Farbe (onyx hell / graphite dunkel). */
+        nav .nav-logo { display: inline-flex; align-items: center; gap: 9px; opacity: 1; }
+        nav .nav-mark { height: 30px; width: 30px; display: block; flex-shrink: 0; }
+        nav .nav-wordmark { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-weight: 500; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1; }
         nav .links { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 28px; }
         /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
@@ -612,7 +617,8 @@
             /* Logo + CTA + Hamburger müssen in 360–390px passen: Logo (inline height:46px = ~316px breit)
                verkleinern + CTA kompakt + nicht schrumpfen lassen → „Erstgespräch" wird nicht abgeschnitten. */
             nav .inner { padding: 0 16px; gap: 10px; }
-            nav .nav-logo img { height: 30px !important; }
+            nav .nav-mark { height: 26px !important; width: 26px; }
+            nav .nav-wordmark { font-size: 15px; letter-spacing: 0.12em; }
             nav .cta { padding: 5px 11px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
         }
 
@@ -3610,7 +3616,7 @@
 
     <nav>
         <div class="inner">
-            <a href="/" class="nav-logo" aria-label="Karriaro Webdesign-Manufaktur · Startseite"><img src="/images/karriaro-logo-nav.svg?v=2" alt="Karriaro Webdesign-Manufaktur" width="316" height="46" style="display: block; height: 46px; width: auto;"></a>
+            <a href="/" class="nav-logo" aria-label="Karriaro · Startseite"><svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false"><circle cx="17.85" cy="21.97" r="1.05" fill="currentColor"/><circle cx="20.36" cy="15.89" r="1.05" fill="currentColor"/><circle cx="23.07" cy="24.01" r="1.05" fill="currentColor"/><circle cx="14.26" cy="18.98" r="1.05" fill="currentColor"/><circle cx="25.50" cy="16.50" r="1.05" fill="currentColor"/><circle cx="18.15" cy="26.90" r="1.05" fill="currentColor"/><circle cx="16.44" cy="13.15" r="1.05" fill="currentColor"/><circle cx="27.75" cy="22.83" r="1.05" fill="#C9A14A"/><circle cx="11.92" cy="23.34" r="1.05" fill="currentColor"/><circle cx="23.91" cy="11.65" r="1.05" fill="currentColor"/><circle cx="22.89" cy="29.23" r="1.05" fill="currentColor"/><circle cx="11.26" cy="14.94" r="1.05" fill="currentColor"/><circle cx="30.27" cy="17.74" r="1.05" fill="currentColor"/><circle cx="13.73" cy="28.92" r="1.05" fill="currentColor"/><circle cx="18.55" cy="8.80" r="1.05" fill="currentColor"/><circle cx="28.92" cy="27.52" r="1.05" fill="#C9A14A"/><circle cx="7.99" cy="20.50" r="1.05" fill="currentColor"/><circle cx="28.77" cy="11.27" r="1.05" fill="currentColor"/><circle cx="19.41" cy="32.69" r="1.05" fill="#C9A14A"/><circle cx="11.65" cy="9.99" r="1.05" fill="currentColor"/><circle cx="33.24" cy="21.78" r="1.05" fill="currentColor"/><circle cx="8.77" cy="27.81" r="1.05" fill="currentColor"/><circle cx="23.07" cy="6.36" r="1.05" fill="currentColor"/><circle cx="27.10" cy="32.39" r="1.05" fill="currentColor"/><circle cx="6.11" cy="15.57" r="1.05" fill="currentColor"/><circle cx="33.50" cy="13.76" r="1.05" fill="currentColor"/><circle cx="14.15" cy="33.97" r="1.05" fill="#C9A14A"/><circle cx="14.78" cy="5.48" r="1.05" fill="currentColor"/><circle cx="33.90" cy="27.30" r="1.05" fill="currentColor"/><circle cx="4.56" cy="24.07" r="1.05" fill="#C9A14A"/><circle cx="28.78" cy="6.35" r="1.05" fill="currentColor"/><circle cx="22.79" cy="36.25" r="1.05" fill="currentColor"/><circle cx="6.76" cy="9.75" r="1.05" fill="currentColor"/><circle cx="36.94" cy="18.60" r="1.05" fill="currentColor"/></svg><span class="nav-wordmark">Karriaro</span></a>
             <div class="links">
                 <a href="#faq">FAQ</a>
                 <a href="#preis">Preis</a>
@@ -3769,7 +3775,7 @@
             </svg>
             <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
         </div>
-        <p class="kr-audit-magic-caption" aria-hidden="true">φ-Spirale · 13 Schritte</p>
+        <p class="kr-audit-magic-caption" aria-hidden="true">Goldener Winkel · 137,5°</p>
     </section>
 
 
@@ -4493,41 +4499,26 @@
                     <path d="M 72 85 L 85 85 L 85 72" stroke="currentColor" stroke-width="1.5" fill="none"/>
                     <g class="kr-seal-dots"></g>
                 </svg>
-                <p class="kr-seal-caption">φ-Spirale · 13 Schritte</p>
+                <p class="kr-seal-caption">Goldener Winkel · 137,5°</p>
             </div>
             <script>
                 (function() {
-                    // Sprint 213 — φ-Wachstumsspirale statt Vogel-Phyllotaxis: r=r0·e^(bθ) mit
-                    // b=ln φ/(π/2). Der Goldene Schnitt jetzt als WACHSTUM (jeder Schritt φ-fach
-                    // weiter) statt als Packung — die 13 Punkte spiralen nach außen, der Gold-Punkt
-                    // (k=12) ist die „Ankunft"/der Erfolg. = Logo-Mark „Erfolg".
+                    // Sprint 214 — Phyllotaxis-Blüte = das neue Karriaro-Logo-Mark. Vogel-Modell
+                    // r=c·√n, θ=n·137,5° (Goldener Winkel); Gold-Akzente gleichmäßig via Hash.
+                    // 110 Punkte; currentColor (dark-safe) + Gold. (löst die Sprint-213-Spirale ab)
                     var g = document.querySelector('.kr-seal-dots');
                     if (!g) return;
                     var svgNS = 'http://www.w3.org/2000/svg';
-                    var b = Math.log((1 + Math.sqrt(5)) / 2) / (Math.PI / 2); // ≈ 0,3063
-                    var PH = -2.05, CX = 45, CY = 47, R = 32, r0 = R / 11;
-                    // dünne Leitlinie entlang der Spirale (verbindet Wachstum → Gold-Ankunft)
-                    var d = '';
-                    for (var t = 0; t <= 7.83; t += 0.1) {
-                        var rr = r0 * Math.exp(b * t);
-                        d += (d ? 'L ' : 'M ') + (CX + rr * Math.cos(t + PH)).toFixed(2) + ' ' + (CY + rr * Math.sin(t + PH)).toFixed(2) + ' ';
-                    }
-                    var path = document.createElementNS(svgNS, 'path');
-                    path.setAttribute('d', d);
-                    path.setAttribute('fill', 'none');
-                    path.setAttribute('stroke', 'currentColor');
-                    path.setAttribute('stroke-width', '0.7');
-                    path.setAttribute('opacity', '0.22');
-                    g.appendChild(path);
-                    for (var k = 0; k <= 12; k++) {
-                        var theta = 0.652 * k;
-                        var r = r0 * Math.exp(b * theta);
-                        var c = document.createElementNS(svgNS, 'circle');
-                        c.setAttribute('cx', (CX + r * Math.cos(theta + PH)).toFixed(2));
-                        c.setAttribute('cy', (CY + r * Math.sin(theta + PH)).toFixed(2));
-                        c.setAttribute('r', (0.9 + 1.7 * (k / 12)).toFixed(2));
-                        c.setAttribute('fill', k === 12 ? 'var(--color-gold)' : 'currentColor');
-                        g.appendChild(c);
+                    var gA = (3 - Math.sqrt(5)) * Math.PI, N = 110, R = 36, c = R / Math.sqrt(N);
+                    for (var n = 1; n <= N; n++) {
+                        var r = c * Math.sqrt(n), t = n * gA;
+                        var gold = (((n * 2654435761) >>> 0) % 100) < 14;
+                        var circ = document.createElementNS(svgNS, 'circle');
+                        circ.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
+                        circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
+                        circ.setAttribute('r', (c * 0.34).toFixed(2));
+                        circ.setAttribute('fill', gold ? 'var(--color-gold)' : 'currentColor');
+                        g.appendChild(circ);
                     }
                 })();
             </script>
@@ -5050,7 +5041,7 @@
             /* Header: dunkler durchscheinender Grund + helle Links + helles Logo */
             .kr-topbar, nav.is-scrolled, .mobile-menu { background: rgba(15,18,23,0.92); }
             nav a { color: var(--color-graphite); }
-            .nav-logo img { filter: brightness(0) invert(0.92); }
+            /* Nav-Logo ist jetzt Inline-SVG mit currentColor → erbt die helle nav-a-Farbe, kein Filter nötig. */
             /* onyx-FLÄCHEN (dunkle Chips/Tabs/Tooltip) explizit dunkel halten */
             .price-card-active, .price-card-premium,
             .branche-tab.is-active, .branche-tab.is-active:hover,
