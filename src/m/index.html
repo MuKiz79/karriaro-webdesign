@@ -631,7 +631,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
         .mobile-menu.open { display: flex; flex-direction: column; gap: 20px; }
         .mobile-menu a { font-size: 17px; color: var(--color-onyx); font-weight: 500; }
-        @media (max-width: 640px) { nav .links { display: none; } nav .menu-toggle { display: block; } }
+        @media (max-width: 640px) {
+            nav .links { display: none; }
+            nav .menu-toggle { display: block; }
+            /* Logo + CTA + Hamburger müssen in 360–390px passen: Logo (inline height:46px = ~316px breit)
+               verkleinern + CTA kompakt + nicht schrumpfen lassen → „Erstgespräch" wird nicht abgeschnitten. */
+            nav .inner { padding: 0 16px; gap: 10px; }
+            nav .nav-logo img { height: 30px !important; }
+            nav .cta { padding: 5px 11px; font-size: 11px; white-space: nowrap; flex-shrink: 0; }
+        }
 
         /* Sprint 11c M1 — mehr Atemraum zwischen Sektionen (war 160px, jetzt 200px) */
         section { padding: 200px 0; }
@@ -4060,6 +4068,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <span class="m-mag-tool-case">Hausbesitzer schickt Bad-Foto, Karriaro nennt Festpreis — Müller Sanitär spart 6 Erstgespräche pro Tag.</span>
         </li>
     </ol>
+    <p class="m-mag-tools-more">Und viele weitere — für jede Branche das passende Werkzeug, das für Sie mitarbeitet.</p>
 </section>
 
     
@@ -4122,7 +4131,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <div class="wrap" style="max-width: 1100px;">
             <div style="text-align: center; margin-bottom: 56px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;03 · Performance-Beweis</p>
-                <h2 style="font-size: clamp(28px, 4vw, 48px); max-width: 880px; margin-left: auto; margin-right: auto;">Diese Seite läuft schneller als 95 % der DACH-Sites. Beweisen wir live.</h2>
+                <h2 style="font-size: clamp(28px, 4vw, 48px); max-width: 880px; margin-left: auto; margin-right: auto;">Diese Seite läuft spürbar schneller als typische DACH-Sites. Beweisen wir live.</h2>
                 <p class="subhead">Largest-Contentful-Paint (LCP) — die wichtigste Performance-Metrik für Google-Ranking und Conversion.</p>
             </div>
 
@@ -4715,7 +4724,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                     <div class="kr-werkstatt-body">
                         <h3 class="kr-werkstatt-title">Skizze</h3>
-                        <p>Erster Entwurf binnen 24 Stunden — handgezeichnet, dann digital. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe.</p>
+                        <p>Erster Entwurf binnen 24 Stunden. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe.</p>
                     </div>
                 </li>
                 <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="3">
@@ -4739,7 +4748,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                     <div class="kr-werkstatt-body">
                         <h3 class="kr-werkstatt-title">Audit</h3>
-                        <p>BFSG-Check. Performance &lt; 0,5 s LCP. Schema.org-Validator. Mobile-Lighthouse 95+ (Lab-Mode bei Auslieferung). Wir liefern erst, wenn die Site die eigenen Maßstäbe besteht — kein „später korrigieren wir das".</p>
+                        <p>BFSG-Check. Schema.org-Validator. Performance- und Mobil-Audit. Wir liefern erst, wenn die Site unsere Qualitäts-Checks besteht — kein „später korrigieren wir das".</p>
                     </div>
                 </li>
                 <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="5">
@@ -5151,7 +5160,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <p>50 % nach Entwurf-Freigabe · 50 % bei Fertigstellung · Schriftlich zugesichert</p>
                 </div>
                 <p class="kr-payment-guarantee">
-                    <strong>Qualitäts-Versprechen:</strong> Ihre Seite erreicht vor dem Launch Lighthouse&nbsp;≥&nbsp;95 und BFSG-Konformität — messbar. Verfehlen wir das, bessern wir kostenfrei nach. Denselben Standard messen wir live an unserer eigenen Seite (№&nbsp;11).
+                    <strong>Qualitäts-Versprechen:</strong> Ihre Seite erfüllt vor dem Launch unsere Qualitäts-Standards: BFSG-Konformität, sauberes Schema.org, geprüfte Performance — messbar. Verfehlen wir das, bessern wir kostenfrei nach.
                 </p>
                 <p class="kr-pricing-footer-cta">
                     <a href="#arbeiten" class="link-arrow">Sieben Branchen-Demos ansehen — Förderrechner, Hypothek, Try-On &amp; Co. live &rarr;</a>
@@ -5524,7 +5533,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </header>
 
                 <div class="kr-letter-body">
-                    <p class="kr-letter-greeting">Liebe Geschäftsführerin, lieber Geschäftsführer,</p>
+                    <p class="kr-letter-greeting">Schön, dass Sie hier sind,</p>
                     <p>
                         Ihre Anfrage landet direkt bei uns — nicht in einem Ticket-System, nicht bei einem Account-Manager-Karussell.
                         Wir antworten binnen 24 Stunden mit <strong>konkreten Vorschlägen</strong> statt einer Discovery-Call-Einladung in drei Wochen.

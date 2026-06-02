@@ -888,6 +888,16 @@
         color: var(--apple-graphite);
         margin-top: 4px;
     }
+    .m-mag-tools-more {
+        font-family: var(--apple-font-text);
+        font-size: 14px;
+        font-style: italic;
+        line-height: 1.5;
+        color: var(--apple-graphite);
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(0,0,0,0.08);
+    }
 }
 
 /* ============================================================================

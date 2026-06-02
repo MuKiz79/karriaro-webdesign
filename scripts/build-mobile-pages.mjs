@@ -573,6 +573,7 @@ const TOOLS_SECTION_HTML = `
             <span class="m-mag-tool-case">Hausbesitzer schickt Bad-Foto, Karriaro nennt Festpreis — Müller Sanitär spart 6 Erstgespräche pro Tag.</span>
         </li>
     </ol>
+    <p class="m-mag-tools-more">Und viele weitere — für jede Branche das passende Werkzeug, das für Sie mitarbeitet.</p>
 </section>
 `;
 
