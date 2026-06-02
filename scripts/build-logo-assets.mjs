@@ -20,16 +20,19 @@ function dots(cx, cy, Rmax, N, base, gold, dotScale = 0.34) {
   return s;
 }
 
-// ---- favicon.svg (Kompakt-Mark N=34 im dunklen Rounded-Square) ----
+// Compact-Mark (kleine Größen): wenige + kräftige Punkte → bei Nav/Favicon erkennbar.
+const COMPACT_N = 28, COMPACT_S = 0.45;
+
+// ---- favicon.svg (Compact-Mark im dunklen Rounded-Square) ----
 const favicon = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Karriaro">
   <rect width="32" height="32" rx="5" fill="${INDIGO}"/>
-  ${dots(16, 16, 13, 34, CREAM, GOLD, 0.38)}
+  ${dots(16, 16, 13, COMPACT_N, CREAM, GOLD, COMPACT_S)}
 </svg>`;
 writeFileSync('src/images/favicon.svg', favicon);
 
-// ---- Nav-Inline-Mark (N=34, currentColor → theme-adaptiv; Gold fest) ----
-const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${dots(20, 20, 17, 34, 'currentColor', GOLD, 0.36)}</svg>`;
+// ---- Nav-Inline-Mark (Compact, currentColor → theme-adaptiv; Gold fest) ----
+const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${dots(20, 20, 17, COMPACT_N, 'currentColor', GOLD, COMPACT_S)}</svg>`;
 writeFileSync('/tmp/nav-mark.svg', navMark);
 
 // ---- Render-Helpers (SVG → PNG/JPG via Playwright, vektor = scharf) ----
