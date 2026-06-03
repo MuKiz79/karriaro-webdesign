@@ -24,8 +24,10 @@ function dots(cx, cy, Rmax, N, base, gold, dotScale = 0.34) {
   return s;
 }
 
-// Compact-Mark (kleine Größen): wenige + kräftige Punkte → bei Nav/Favicon erkennbar.
+// Favicon (16-32px): wenige + kräftige Punkte, sonst Matsch.
 const COMPACT_N = 28, COMPACT_S = 0.45;
+// Nav (~48px): dicht wie das Voll-Logo (Founder „zu wenige Punkte"), aber noch sauber. 89 = Fibonacci.
+const NAV_N = 89, NAV_S = 0.38;
 
 // ---- favicon.svg (Compact-Mark im dunklen Rounded-Square) ----
 const favicon = `<?xml version="1.0" encoding="UTF-8"?>
@@ -36,7 +38,7 @@ const favicon = `<?xml version="1.0" encoding="UTF-8"?>
 writeFileSync('src/images/favicon.svg', favicon);
 
 // ---- Nav-Inline-Mark (Compact, currentColor → theme-adaptiv; Gold fest) ----
-const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${dots(20, 20, 17, COMPACT_N, 'currentColor', GOLD, COMPACT_S)}</svg>`;
+const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${dots(20, 20, 17, NAV_N, 'currentColor', GOLD, NAV_S)}</svg>`;
 writeFileSync('/tmp/nav-mark.svg', navMark);
 
 // ---- Render-Helpers (SVG → PNG/JPG via Playwright, vektor = scharf) ----
