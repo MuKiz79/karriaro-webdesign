@@ -7,7 +7,11 @@ import { writeFileSync, readFileSync } from 'node:fs';
 
 const gA = (3 - Math.sqrt(5)) * Math.PI;
 const CREAM = '#ECE5D6', GOLD = '#C9A14A', INDIGO = '#1A2E40';
-const isGold = (n) => (((n * 2654435761) >>> 0) % 100) < 14;
+// Gold = Fibonacci-Indizes → die Gold-Punkte liegen auf EINER Spirale (aufeinanderfolgende
+// Fibonacci-Samen einer Phyllotaxis bilden einen Spiralarm) = ein goldener Faden durch die Blüte.
+// Dieselbe Goldener-Schnitt-DNA wie die Anordnung, zweimal ausgedrückt. (Goldschmied-Meisterzeichen.)
+const FIB = new Set([1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233]);
+const isGold = (n) => FIB.has(n);
 
 // Punkte einer Phyllotaxis-Blüte um (cx,cy), Außenradius Rmax, N Punkte.
 function dots(cx, cy, Rmax, N, base, gold, dotScale = 0.34) {
@@ -58,7 +62,7 @@ async function render(svg, w, h, path, type = 'png') {
   await pg.evaluate(() => document.fonts && document.fonts.ready);
   await pg.waitForTimeout(250);
   const opts = { path, clip: { x: 0, y: 0, width: w, height: h } };
-  if (type === 'jpeg') { opts.type = 'jpeg'; opts.quality = 88; }
+  if (type === 'jpeg') { opts.type = 'jpeg'; opts.quality = 95; } // hoch: kaum Artefakte auf der Flächengrafik
   await pg.screenshot(opts);
   await pg.close();
   console.log('  ✓', path);
