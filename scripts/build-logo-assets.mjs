@@ -6,7 +6,8 @@ import { chromium } from 'playwright';
 import { writeFileSync, readFileSync } from 'node:fs';
 
 const gA = (3 - Math.sqrt(5)) * Math.PI;
-const CREAM = '#ECE5D6', GOLD = '#C9A14A', INDIGO = '#1A2E40';
+// Marken-Palette (identisch zu LinkedIn, Sprint Brand-Konsistenz): Navy / Creme / Messing.
+const CREAM = '#F1EFE7', GOLD = '#C9A24B', INDIGO = '#16202C';
 // Gold = Fibonacci-Indizes → die Gold-Punkte liegen auf EINER Spirale (aufeinanderfolgende
 // Fibonacci-Samen einer Phyllotaxis bilden einen Spiralarm) = ein goldener Faden durch die Blüte.
 // Dieselbe Goldener-Schnitt-DNA wie die Anordnung, zweimal ausgedrückt. (Goldschmied-Meisterzeichen.)
@@ -54,11 +55,11 @@ const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40
 writeFileSync('/tmp/nav-mark.svg', navMark);
 
 // ---- Render-Helpers (SVG → PNG/JPG via Playwright, vektor = scharf) ----
-const cormorant = (() => {
-  try { return readFileSync('src/fonts/cormorant-garamond-latin.woff2').toString('base64'); } catch { return null; }
+const fraunces = (() => {
+  try { return readFileSync('src/fonts/fraunces-latin.woff2').toString('base64'); } catch { return null; }
 })();
-const fontFace = cormorant
-  ? `@font-face{font-family:'Cormorant Garamond';src:url(data:font/woff2;base64,${cormorant}) format('woff2');font-weight:500;}`
+const fontFace = fraunces
+  ? `@font-face{font-family:'Fraunces';src:url(data:font/woff2;base64,${fraunces}) format('woff2');font-weight:500;}`
   : '';
 
 function iconSVG(size, N) {
@@ -66,7 +67,7 @@ function iconSVG(size, N) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${r}" fill="${INDIGO}"/>${dots(size/2, size/2, size*0.40, N, CREAM, GOLD, 0.38)}</svg>`;
 }
 function ogSVG(W, H) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${INDIGO}"/>${frame(W/2, H*0.40, H*0.30*1.12, CREAM, 3.5)}${dots(W/2, H*0.40, H*0.30, 120, CREAM, GOLD, 0.34)}<text x="${W/2}" y="${H*0.86}" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-weight="500" font-size="${H*0.105}" letter-spacing="${H*0.024}" fill="${CREAM}">KARRIARO</text></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${INDIGO}"/>${frame(W/2, H*0.40, H*0.30*1.12, CREAM, 3.5)}${dots(W/2, H*0.40, H*0.30, 120, CREAM, GOLD, 0.34)}<text x="${W/2}" y="${H*0.86}" text-anchor="middle" font-family="'Fraunces',Georgia,serif" font-weight="500" font-size="${H*0.105}" letter-spacing="${H*0.024}" fill="${CREAM}">KARRIARO</text></svg>`;
 }
 
 const browser = await chromium.launch();
