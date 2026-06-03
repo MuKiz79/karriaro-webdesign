@@ -24,6 +24,18 @@ function dots(cx, cy, Rmax, N, base, gold, dotScale = 0.34) {
   return s;
 }
 
+// Eck-Klammern (Rahmen wie beim in-page Siegel / Goldschmied-Meisterzeichen) — fester Bestandteil des Logos.
+function frame(cx, cy, s, stroke, w) {
+  const L = s * 0.33; // Arm-Länge ~ wie im Siegel (13/40)
+  const arms = [
+    `M ${(cx-s).toFixed(2)} ${(cy-s+L).toFixed(2)} L ${(cx-s).toFixed(2)} ${(cy-s).toFixed(2)} L ${(cx-s+L).toFixed(2)} ${(cy-s).toFixed(2)}`,
+    `M ${(cx+s-L).toFixed(2)} ${(cy-s).toFixed(2)} L ${(cx+s).toFixed(2)} ${(cy-s).toFixed(2)} L ${(cx+s).toFixed(2)} ${(cy-s+L).toFixed(2)}`,
+    `M ${(cx-s).toFixed(2)} ${(cy+s-L).toFixed(2)} L ${(cx-s).toFixed(2)} ${(cy+s).toFixed(2)} L ${(cx-s+L).toFixed(2)} ${(cy+s).toFixed(2)}`,
+    `M ${(cx+s-L).toFixed(2)} ${(cy+s).toFixed(2)} L ${(cx+s).toFixed(2)} ${(cy+s).toFixed(2)} L ${(cx+s).toFixed(2)} ${(cy+s-L).toFixed(2)}`,
+  ];
+  return arms.map(d => `<path d="${d}" stroke="${stroke}" stroke-width="${w}" fill="none"/>`).join('');
+}
+
 // Favicon (16-32px): wenige + kräftige Punkte, sonst Matsch.
 const COMPACT_N = 28, COMPACT_S = 0.45;
 // Nav (~48px): dicht wie das Voll-Logo (Founder „zu wenige Punkte"), aber noch sauber. 89 = Fibonacci.
@@ -38,7 +50,7 @@ const favicon = `<?xml version="1.0" encoding="UTF-8"?>
 writeFileSync('src/images/favicon.svg', favicon);
 
 // ---- Nav-Inline-Mark (Compact, currentColor → theme-adaptiv; Gold fest) ----
-const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${dots(20, 20, 17, NAV_N, 'currentColor', GOLD, NAV_S)}</svg>`;
+const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${frame(20, 20, 18.5, 'currentColor', 1)}${dots(20, 20, 16.5, NAV_N, 'currentColor', GOLD, NAV_S)}</svg>`;
 writeFileSync('/tmp/nav-mark.svg', navMark);
 
 // ---- Render-Helpers (SVG → PNG/JPG via Playwright, vektor = scharf) ----
@@ -54,7 +66,7 @@ function iconSVG(size, N) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${r}" fill="${INDIGO}"/>${dots(size/2, size/2, size*0.40, N, CREAM, GOLD, 0.38)}</svg>`;
 }
 function ogSVG(W, H) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${INDIGO}"/>${dots(W/2, H*0.40, H*0.30, 120, CREAM, GOLD, 0.34)}<text x="${W/2}" y="${H*0.86}" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-weight="500" font-size="${H*0.105}" letter-spacing="${H*0.024}" fill="${CREAM}">KARRIARO</text></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${INDIGO}"/>${frame(W/2, H*0.40, H*0.30*1.12, CREAM, 3.5)}${dots(W/2, H*0.40, H*0.30, 120, CREAM, GOLD, 0.34)}<text x="${W/2}" y="${H*0.86}" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-weight="500" font-size="${H*0.105}" letter-spacing="${H*0.024}" fill="${CREAM}">KARRIARO</text></svg>`;
 }
 
 const browser = await chromium.launch();
