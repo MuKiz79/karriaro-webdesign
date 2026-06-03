@@ -52,7 +52,7 @@ export function boxPlot(stats, options = {}) {
 
     const ticks = [domain[0], domain[1] / 2, domain[1]];
 
-    return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
+    return `<svg viewBox="0 0 ${width} ${height}" width="100%" style="height:auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${width}" height="${height}" fill="${PAPER}"/>
   ${label ? `<text x="${margin.left}" y="20" fill="${INK}" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" letter-spacing="0.12em" text-transform="uppercase">${escapeXml(label.toUpperCase())}</text>` : ''}
   <line x1="${margin.left}" y1="${yMid}" x2="${width - margin.right}" y2="${yMid}" stroke="${MUTED}" stroke-width="0.5"/>
@@ -98,7 +98,7 @@ export function histogramChart(bins, options = {}) {
         return `<text x="${x}" y="${height - margin.bottom + 16}" fill="${MUTED}" font-family="JetBrains Mono, ui-monospace, monospace" font-size="9" text-anchor="middle">${b.lo}${unit}</text>`;
     }).join('');
 
-    return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
+    return `<svg viewBox="0 0 ${width} ${height}" width="100%" style="height:auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${width}" height="${height}" fill="${PAPER}"/>
   ${label ? `<text x="${margin.left}" y="20" fill="${INK}" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" letter-spacing="0.12em">${escapeXml(label.toUpperCase())}</text>` : ''}
   <line x1="${margin.left}" y1="${margin.top + H}" x2="${width - margin.right}" y2="${margin.top + H}" stroke="${MUTED}" stroke-width="0.5"/>
@@ -135,7 +135,7 @@ export function donutChart(distribution, options = {}) {
     const top = entries[0];
     const a11yLabel = `Donut-Chart ${label}: ${entries.length} Kategorien, Spitzenreiter ${top[0]} mit ${(top[1].share * 100).toFixed(1)} Prozent.`;
 
-    return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
+    return `<svg viewBox="0 0 ${width} ${height}" width="100%" style="height:auto" role="img" aria-label="${escapeXml(a11yLabel)}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${width}" height="${height}" fill="${PAPER}"/>
   ${label ? `<text x="${width / 2}" y="22" fill="${INK}" font-family="JetBrains Mono, ui-monospace, monospace" font-size="10" letter-spacing="0.12em" text-anchor="middle">${escapeXml(label.toUpperCase())}</text>` : ''}
   ${slices}
@@ -181,7 +181,7 @@ function paletteFromAccent(accent, n) {
 }
 
 function emptyChart(width, height, text) {
-    return `<svg viewBox="0 0 ${width} ${height}" width="100%" height="auto" role="img" aria-label="${escapeXml(text)}" xmlns="http://www.w3.org/2000/svg">
+    return `<svg viewBox="0 0 ${width} ${height}" width="100%" style="height:auto" role="img" aria-label="${escapeXml(text)}" xmlns="http://www.w3.org/2000/svg">
   <rect width="${width}" height="${height}" fill="${PAPER}"/>
   <text x="${width / 2}" y="${height / 2}" fill="${MUTED}" font-family="JetBrains Mono, ui-monospace, monospace" font-size="11" text-anchor="middle">${escapeXml(text)}</text>
 </svg>`;

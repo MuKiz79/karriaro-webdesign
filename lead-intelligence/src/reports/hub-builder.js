@@ -126,8 +126,8 @@ function hubStyles() {
 }
 
 function fontFace() {
-    return '@font-face{font-family:Fraunces;font-style:normal;font-weight:300 700;src:local("Fraunces"),url(/fonts/fraunces-variable.woff2) format("woff2");font-display:swap}' +
-        '@font-face{font-family:Fraunces;font-style:italic;font-weight:300 700;src:local("Fraunces Italic"),url(/fonts/fraunces-italic-variable.woff2) format("woff2");font-display:swap}';
+    return '@font-face{font-family:Fraunces;font-style:normal;font-weight:300 700;src:local("Fraunces"),url(/fonts/fraunces-latin.woff2) format("woff2");font-display:swap}' +
+        '@font-face{font-family:Fraunces;font-style:italic;font-weight:300 700;src:local("Fraunces Italic"),url(/fonts/fraunces-latin.woff2) format("woff2");font-display:swap}';
 }
 
 function liveCollection(cards) {
@@ -186,6 +186,7 @@ export function buildHubHtml(allCards, options) {
         '<head>',
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width,initial-scale=1">',
+        '<link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=8">',
         '<title>Web-Index. Karriaro Webdesign-Manufaktur.' + CLOSE_TITLE,
         '<meta name="description" content="Datenbasierte Branchen-Audits zum digitalen Status mittelständischer Unternehmen in deutschen Städten. PageSpeed, Tech-Stack, BFSG-Compliance, anonymisiert nach DSGVO.">',
         '<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">',

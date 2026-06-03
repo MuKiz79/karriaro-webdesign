@@ -141,8 +141,8 @@ em,i{font-family:Fraunces,Georgia,serif;font-style:italic;font-feature-settings:
 }
 
 function fontFace() {
-    return `@font-face{font-family:Fraunces;font-style:normal;font-weight:300 700;src:local("Fraunces"),url(/fonts/fraunces-variable.woff2) format("woff2");font-display:swap}
-@font-face{font-family:Fraunces;font-style:italic;font-weight:300 700;src:local("Fraunces Italic"),url(/fonts/fraunces-italic-variable.woff2) format("woff2");font-display:swap}`;
+    return `@font-face{font-family:Fraunces;font-style:normal;font-weight:300 700;src:local("Fraunces"),url(/fonts/fraunces-latin.woff2) format("woff2");font-display:swap}
+@font-face{font-family:Fraunces;font-style:italic;font-weight:300 700;src:local("Fraunces Italic"),url(/fonts/fraunces-latin.woff2) format("woff2");font-display:swap}`;
 }
 
 export function buildReportHtml(report, options = {}) {
@@ -188,6 +188,7 @@ export function buildReportHtml(report, options = {}) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=8">
 <title>${noindex ? '[DEMO] ' : ''}Web-Index ${escapeHtml(report.brancheName)} ${escapeHtml(report.stadtName)} ${escapeHtml(report.erhebungDate.slice(0, 4))} — Karriaro</title>
 <meta name="description" content="${escapeHtml(metaDescription)}">
 ${robotsMeta}
