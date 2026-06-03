@@ -3,7 +3,7 @@
 Karriaro arbeitet mit **vier Festpreis-Paketen** — einmalig zahlbar, keine
 Abo-Bindung, keine versteckten Kosten.
 
-> **Zahlungsbedingungen:** 50 % nach Entwurf (innerhalb 24 h), 50 % bei
+> **Zahlungsbedingungen:** 50 % nach Entwurf-Freigabe, 50 % bei
 > Fertigstellung. Sie zahlen erst, wenn Sie mit dem ersten Entwurf zufrieden
 > sind — kein Risiko vorab.
 
