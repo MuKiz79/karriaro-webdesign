@@ -33,7 +33,7 @@ jobs:
         run: npm run smoke
 
   audit-tests:
-    name: Cloud-Function Unit-Tests (96 tests)
+    name: Cloud-Function Unit-Tests (126 tests)
     runs-on: ubuntu-latest
     timeout-minutes: 3
 
@@ -45,6 +45,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: functions/package-lock.json
+
+      - name: Install function dependencies
+        run: cd functions && npm ci
 
       - name: Run audit-pipeline + safe-fetch + rate-limit + mcp tests
         run: node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js functions/test/mcp.test.js
