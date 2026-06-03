@@ -1,6 +1,6 @@
 # Karriaro Webdesign — Über den Gründer
 
-**Muammer Kızılaslan**, Gründer Karriaro · Schwarzwald
+**Muammer Kızılaslan**, Gründer Karriaro · Köln
 
 [muammerkizilaslan.com](https://muammerkizilaslan.com) · [LinkedIn](https://www.linkedin.com/in/muammerkizilaslan)
 
@@ -124,6 +124,6 @@ mit uns.
 
 *Muammer Kızılaslan*
 *Gründer Karriaro*
-*Schwarzwald · Schiltach*
+*Köln · Legal-Sitz Schiltach*
 
 [Zurück zur Hauptseite (HTML)](https://karriaro-webdesign.de/) | [Pakete & Preise](https://karriaro-webdesign.de/pricing.md) | [Portfolio](https://karriaro-webdesign.de/portfolio.md)

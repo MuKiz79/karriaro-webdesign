@@ -63,7 +63,7 @@ async function dispatch(message, ctx) {
                 tools: { listChanged: false }
             },
             instructions:
-                'Karriaro ist eine Schwarzwald-Manufaktur für handcodierte ' +
+                'Karriaro ist eine Kölner Manufaktur für handcodierte ' +
                 'Premium-Websites. Diese 4 Tools liefern Site-Audits, ' +
                 'Voice-Analysen, Brand-Mockups und Phyllotaxis-Signaturen ' +
                 'im Editorial-Stil. Jeder Output ist mit Karriaro-Signatur ' +

@@ -2,7 +2,7 @@
 
 **Project:** karriaro-webdesign.de — Brand-Site & Productized-Service-Plattform
 **Year:** 2026
-**Founder & Designer:** Muammer Kızılaslan, Stuttgart
+**Founder & Designer:** Muammer Kızılaslan, Köln
 **Stack:** Vanilla HTML / CSS / JS · Fraunces · Inter · JetBrains Mono · Cormorant Garamond · Lenis · GitHub Pages
 **Live:** https://karriaro-webdesign.de
 **Repo:** https://github.com/MuKiz79/karriaro-webdesign
@@ -51,8 +51,8 @@ Custom Type-System (Fraunces Variable Display + Inter Body + JetBrains Mono Eyeb
 - **Manufaktur-Palette codifiziert** in CSS-Tokens (`:root` Layer + `src/css/tokens.css` shared)
 - **A11y first:** `:focus-visible` mit 3px Indigo-Outline, vollständiger `prefers-reduced-motion`-Branch (Lenis, Stagger-Reveal, Bar-Animations disabled), WCAG-konform
 - **Lenis Smooth-Scroll** + Reading-Progress-Bar + Stagger-Reveal-Observer + Magnetic-CTA auf Pointer-Devices
-- **Footer-Colophon „This page made of":** Type-Stack-Specimen mit jeder Font in eigener Schrift gerendert, Palette-Swatches als Kreise, Live-LCP-Wert, Manufaktur-Stand-Counter, „Made in Stuttgart"
-- **Stadt-Karte Deutschland** im Footer als abstrakter SVG-Punkte-Cluster (14 Städte mit Title-Tooltips, Berlin + Stuttgart als Gold-Marker)
+- **Footer-Colophon „This page made of":** Type-Stack-Specimen mit jeder Font in eigener Schrift gerendert, Palette-Swatches als Kreise, Live-LCP-Wert, Manufaktur-Stand-Counter, „Made in Köln"
+- **Stadt-Karte Deutschland** im Footer als abstrakter SVG-Punkte-Cluster (14 Städte mit Title-Tooltips, Berlin + Köln als Gold-Marker)
 
 ## 05 · Architecture
 

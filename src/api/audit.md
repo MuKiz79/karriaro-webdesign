@@ -15,7 +15,7 @@ Die **Audit-API** macht diese Funktion als JSON-Endpoint für Drittsysteme
 verfügbar: CRMs, eigene Dashboards, Wettbewerber-Audits, AI-Agenten,
 Bulk-Reports.
 
-**Pre-Customer-Hinweis:** Karriaro launched 2026 als Schwarzwald-Manufaktur.
+**Pre-Customer-Hinweis:** Karriaro launched 2026 als Kölner Manufaktur.
 API-Endpoint wird Q3 2026 produktiv aktiviert. Aktuelle Live-UI-Version
 ist clientseitig nutzbar.
 

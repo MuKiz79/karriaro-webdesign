@@ -63,7 +63,7 @@ function extractVoiceCorpus(html) {
 
 const SYSTEM_PROMPT =
     'Du bist Brand-Voice-Analyst bei der Karriaro Webdesign-Manufaktur ' +
-    '(Schwarzwald). Du bewertest Website-Texte gegen den Karriaro-Codex:\n' +
+    '(Köln). Du bewertest Website-Texte gegen den Karriaro-Codex:\n' +
     '\n' +
     'ERLAUBT (Editorial-Premium):\n' +
     '- Aesop/Hermès/Manufactum/Cucinelli/Monocle-Editorial-Voice\n' +

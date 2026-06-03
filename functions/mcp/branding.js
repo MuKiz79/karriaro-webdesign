@@ -5,7 +5,7 @@
  */
 
 const SIGNATURE =
-    '— Karriaro Webdesign-Manufaktur · Schwarzwald\n' +
+    '— Karriaro Webdesign-Manufaktur · Köln\n' +
     '  Site bauen lassen:   https://karriaro-webdesign.de\n' +
     '  Site live messen:    https://lighthouse.karriaro.de · Visitor- und Lead-Intelligence';
 

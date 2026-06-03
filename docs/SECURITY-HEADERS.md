@@ -1,33 +1,43 @@
-# Security-Headers fuer karriaro-webdesign.de
+# Security-Headers für karriaro-webdesign.de
 
-Sprint 82 — Sicherheitsheader-Konfiguration. GitHub Pages setzt keine
-Custom-Header, deshalb wird die Konfiguration **per Cloudflare-Transform-Rule**
-gesetzt (Domain liegt hinter Cloudflare-Proxy).
+Die Domain liegt auf **Firebase Hosting** (Projekt `apex-executive`, Target
+`karriaro-webdesign`). Security- und Cache-Header werden direkt im
+`headers`-Block von **`firebase.json`** gesetzt — kein Cloudflare, keine
+GitHub-Pages-Workarounds. Änderungen gehen mit dem nächsten Push live
+(Auto-Deploy via `.github/workflows/deploy.yml`).
 
-## Empfohlene Header
+## Tatsächlich gesetzte Header (Quelle: `firebase.json`, `source: "**"`)
 
 ```
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-X-Content-Type-Options: nosniff
-X-Frame-Options: DENY
-Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://lighthouse.karriaro.de https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://*.cloudfunctions.net https://formspree.io https://lighthouse.karriaro.de; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://formspree.io
+X-Content-Type-Options:     nosniff
+X-Frame-Options:            SAMEORIGIN
+Referrer-Policy:            strict-origin-when-cross-origin
+Permissions-Policy:         camera=(), microphone=(), geolocation=(), interest-cohort=()
 ```
 
-`'unsafe-inline'` fuer `script-src` ist **interim noetig**, weil src/index.html
-mehrere inline-`<script>`-Bloecke hat (Audit-Renderer, Lenis-Init,
-Reading-Progress). Diese muessen schrittweise zu externen Dateien mit
-Nonces extrahiert werden — als Folge-Sprint.
+Zusätzlich setzt `firebase.json` Cache-Control je Dateityp: Bilder/Fonts
+`max-age=31536000, immutable`, CSS/JS `max-age=2592000`, HTML
+`max-age=300, must-revalidate`.
 
-## Setup in Cloudflare
+## Content-Security-Policy — aktuell NICHT gesetzt
 
-1. Login: https://dash.cloudflare.com → `karriaro-webdesign.de`
-2. Rules → Transform Rules → "Modify Response Header"
-3. Rule-Name: `karriaro-security-headers`
-4. When incoming requests match: `(http.host eq "karriaro-webdesign.de" or http.host eq "www.karriaro-webdesign.de")`
-5. Then: Set static — fuege jeden der Header oben einzeln hinzu
-6. Deploy
+Es ist **kein `Content-Security-Policy`-Header konfiguriert**. Grund: die
+Seiten (v.a. `src/index.html`) enthalten mehrere Inline-`<script>`- und
+`<style>`-Blöcke (Audit-Renderer, Lenis-Init, Reading-Progress,
+Critical-CSS). Eine CSP ohne `'unsafe-inline'` würde diese brechen; eine
+CSP mit `'unsafe-inline'` bringt kaum Schutz.
+
+### Künftige Härtung (offenes To-do, eigener Sprint)
+1. Inline-Scripts/Styles schrittweise in externe Dateien auslagern bzw. mit
+   Nonces/Hashes versehen.
+2. `X-Frame-Options` von `SAMEORIGIN` auf `DENY` ziehen (die Seite wird
+   nirgends absichtlich same-origin geframed — vorher Demo-Embed-iframes auf
+   `/portfolio/*-embed*.html` prüfen, die intern eingebettet werden).
+3. Dann eine restriktive CSP nachrüsten (Richtwert):
+   `default-src 'self'; script-src 'self' <nonce>; connect-src 'self'
+   https://*.cloudfunctions.net https://formspree.io https://lighthouse.karriaro.de;
+   frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://formspree.io`.
 
 ## Verifikation
 
@@ -35,15 +45,11 @@ Nonces extrahiert werden — als Folge-Sprint.
 curl -sI https://karriaro-webdesign.de/ | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy'
 ```
 
-Oder online: https://securityheaders.com/?q=karriaro-webdesign.de
-
-Zielnote nach Setup: **B oder hoeher** (A waere nur ohne `'unsafe-inline'` machbar).
+Oder online: https://securityheaders.com/?q=karriaro-webdesign.de — Self-Audit
+(Section № 11) verlinkt diesen Check öffentlich als Verifizierbarkeits-Beleg.
 
 ## Cookies
 
-Aktuell setzt karriaro-webdesign.de keine Cookies. Falls Cookies eingefuehrt
-werden (z.B. Calendly-Embed), zusaetzlich:
-
-```
-Set-Cookie: ...; Secure; HttpOnly; SameSite=Lax
-```
+Aktuell setzt karriaro-webdesign.de keine Cookies (cookiefreies First-Party-
+Tracking via Lighthouse `t.js`). Falls Cookies eingeführt werden (z. B.
+Calendly-Embed), zusätzlich: `Set-Cookie: …; Secure; HttpOnly; SameSite=Lax`.

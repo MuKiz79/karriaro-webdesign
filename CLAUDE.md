@@ -1,4 +1,4 @@
-# Karriaro-Webdesign — Projekt-Kodex (Sprint 141)
+# Karriaro-Webdesign — Projekt-Kodex (Stand 2026-06)
 
 Dieser Kodex wird bei jeder Claude-Code-Session als Context-Header geladen.
 Brand-Voice, Award-Criteria und Performance-Budget sind nicht-verhandelbar
@@ -6,15 +6,18 @@ und überschreiben generische Defaults.
 
 ## Geschäftsmodell (kurz)
 
-Karriaro = Schwarzwald-Manufaktur für handcodierte Premium-Websites.
-Preisarchitektur 1.290–3.990 € einmalig (Essential / Professional /
-Premium / Premium+). Zielgruppe: lokaler Mittelstand DACH (Handwerk,
-Beauty, Immobilien, Gastronomie, Medizin, Recht). USP:
+Karriaro = Kölner Webdesign-Manufaktur für handcodierte Premium-Websites
+(Legal-Sitz Schiltach). Preisarchitektur 1.290–3.990 € einmalig (Essential /
+Professional / Premium / Premium+). Zielgruppe: lokaler Mittelstand DACH
+(Handwerk, Beauty, Immobilien, Gastronomie, Medizin, Recht). Kern-Tagline:
 
-> **„Wenn Ihr Name draufsteht, steht unserer dahinter."**
+> **„Handcodierte Unikate mit eingebauten Werkzeugen, die mitarbeiten und
+> für die KI-Auffindbarkeit optimiert sind."**
 
-Pre-Launch (Stand 2026-05-21, keine zahlenden Kunden). Showcase ist
-Founder-as-Demo; Testimonials = [].
+Sekundäres Motto: „Wenn Ihr Name draufsteht, steht unserer dahinter."
+Marken-H1: „Ihre Website. Ein Unikat, das mitarbeitet." Early-Stage
+(Stand 2026-06, ≥1 zahlender Kunde — echte Google-Review Ilyas Kablan).
+Showcase überwiegend Founder-as-Demo.
 
 ## Brand-Voice-Codex
 
@@ -23,22 +26,25 @@ Cucinelli, Monocle Magazine. **Nicht**: Apple-Clean (zu kalt),
 Werkstatt-Klischee, generic SaaS-Hero.
 
 ### Erlaubte Voice-Patterns
-- Editorial-Magazine-Codex: Folio-Nummern (№ 01–06), Pentagram-Print-
+- Editorial-Magazine-Codex: Folio-Nummern (№ 01–11), Pentagram-Print-
   Marginalia (Side-Notes mit ₁/₂/₃), JetBrains-Mono-Eyebrows in `uppercase
   letter-spacing: 0.16em`, Fraunces-Serif (opsz + WONK) für Headlines,
   Inter für Body.
 - Sie-Anrede durchgängig (Executive-Audience).
 - Sparringspartner als Kernterm (positiv konnotiert).
-- Manufaktur-Siegel: Fibonacci-Phyllotaxis-SVG (Goldener Winkel 137.5°,
-  13 Punkte), pulsiert in Deep-Moment-Section.
+- Manufaktur-Siegel & Logo: dichte Phyllotaxis-Blüte (Goldener Winkel
+  137.5°, ~110–120 Punkte; Gold = Fibonacci-Indizes). Single-Source-
+  Generator `scripts/build-logo-assets.mjs` (favicon/PWA/og/Nav-SVG).
+  Palette Navy #16202C / Creme #F1EFE7 / Messing #C9A24B, Wortmarke
+  Fraunces. Pulsiert in Deep-Moment-Section.
 
 ### Verbotene Worte / Phrasen
-- **„Handgemacht"** als isolierter Hero-Term (Werkstatt-Klischee). Erlaubt
-  nur in Pull-Quote-Kontext mit Editorial-Framing.
+- **„Handgemacht"** ist komplett raus (auch SEO/Meta → „handcodiert").
+  Marken-Begriff ist durchgängig „handcodiert".
 - **„Werkstatt"**, **„Werkbank"** als visuelle Sprache (kein Holz-Stock-
   Photo, kein Schurz-Hammer-Aesthetic).
-- **„Handcodiert"** alleine ist OK, aber nicht als USP-Anker — der ist die
-  Promise „Wenn Ihr Name draufsteht…".
+- **„Handcodiert"** ist der durchgängige Marken-Anker (auch Hero/Subline);
+  „Wenn Ihr Name draufsteht…" ist nur noch sekundäres Motto.
 - SaaS-Filler: „keine Kreditkarte nötig", „kostenlos starten", „in unter
   60 Sekunden" als billige Reduktion. Erlaubt: konkrete Demo-Werte mit
   Editorial-Voice („Wertermittlung in 60 Sekunden, diskret begleitet").
@@ -78,7 +84,7 @@ Critical-CSS inline im `<head>` der Mobile-Hauptseiten.
 
 ## Test- + Build-Conventions
 
-- **Smoke-Tests**: `npm run smoke` → 83/83 ✓ als Pre-Commit-Gate.
+- **Smoke-Tests**: `npm run smoke` → 83/2 (83 pass / 2 known-fail) als Pre-Commit-Gate.
 - **Mobile-Build**: `node scripts/build-mobile-pages.mjs` (generiert
   `src/m/*` aus `src/*`, propagiert Embed-Snippet via Sprint-140-Regex).
 - **Mobile-Repo-Sync**: `bash scripts/sync-mobile-repo.sh` (interaktiv,
@@ -120,10 +126,15 @@ Fix, Verifikation, Lessons-Learned, Stand.
 ## Deploy-Workflow (immer zusammen)
 
 Bei jeder Code-Änderung: build + commit + push + (mobile-)sync. Nicht
-separat (siehe feedback_deploy_workflow.md). GitHub-Pages-Deploy für
-beide Repos:
-- Desktop: `MuKiz79/karriaro-webdesign` → `karriaro-webdesign.de`
-- Mobile: `MuKiz79/karriaro-webdesign-mobile` → `m.karriaro-webdesign.de`
+separat (siehe feedback_deploy_workflow.md). **Firebase-Hosting**-Auto-Deploy
+bei Push auf `main` via `.github/workflows/deploy.yml`
+(`FirebaseExtended/action-hosting-deploy`, Secret
+`FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE`, Projekt `apex-executive`, Target
+`karriaro-webdesign`). Security-Header + Cache-Control liegen in
+`firebase.json` (nicht Cloudflare/GitHub-Pages):
+- Desktop: Repo `MuKiz79/karriaro-webdesign` → `karriaro-webdesign.de`
+- Mobile: Repo `MuKiz79/karriaro-webdesign-mobile` → `m.karriaro-webdesign.de`
+  (separater Sync via `scripts/sync-mobile-repo.sh`)
 
 ## Plan-Mode + Auto-Mode
 

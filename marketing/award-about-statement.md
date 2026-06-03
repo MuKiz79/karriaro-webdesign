@@ -6,7 +6,7 @@ Karriaro ist eine deutsche Webdesign-Manufaktur, die lokalen Unternehmen handcod
 
 ## Standard (≈170 Wörter, für German Design Award / iF Communication)
 
-Karriaro Webdesign ist eine deutsche Webdesign-Manufaktur, gegründet 2026 in Stuttgart von Muammer Kızılaslan. Sie liefert lokalen Unternehmen — Handwerk, Praxen, Kanzleien, Makler-Büros — handcodierte Websites mit branchen-spezifischen Live-Tools. BFSG-konform, Festpreis (1.290 € bis 3.990 € branchen-getrennt), Liefer-SLA 7–28 Tage, ohne Abo. Der Quellcode gehört dem Kunden.
+Karriaro Webdesign ist eine deutsche Webdesign-Manufaktur, gegründet 2026 in Köln von Muammer Kızılaslan. Sie liefert lokalen Unternehmen — Handwerk, Praxen, Kanzleien, Makler-Büros — handcodierte Websites mit branchen-spezifischen Live-Tools. BFSG-konform, Festpreis (1.290 € bis 3.990 € branchen-getrennt), Liefer-SLA 7–28 Tage, ohne Abo. Der Quellcode gehört dem Kunden.
 
 Die Brand-Site ist nicht Marketing-Material, sondern selbst-demonstrierendes Aushängeschild. 50+ interaktive Branchen-Werkzeuge auf sieben Demo-Sub-Pages (BAFA-Förderrechner, KI-Symptom-Checker, AI-Sommelier u. a.) lassen sich direkt ausprobieren. Ein SVG-Bar-Chart zeigt live den eigenen Largest-Contentful-Paint im Vergleich zu DACH-Median und WordPress. Custom Editorial-Type-System (Fraunces Variable Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Garamond Italic-Quote) trägt eine Manufaktur-Palette (Indigo · Werkstatt-Gold · Skizzen-Cream) anstatt der üblichen Apple-Klone.
 

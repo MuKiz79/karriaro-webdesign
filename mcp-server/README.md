@@ -1,6 +1,6 @@
 # @karriaro/webdesign-mcp
 
-> MCP-Server der Karriaro Webdesign-Manufaktur (Schwarzwald) für
+> MCP-Server der Karriaro Webdesign-Manufaktur (Köln) für
 > Claude Desktop, Cursor, OpenAI Codex und jeden MCP-kompatiblen Agent.
 
 Vier Tools — alle Outputs im Editorial-Stil mit Karriaro-Signatur:
@@ -93,7 +93,7 @@ Transport-Support den Endpoint direkt nutzen:
 > BFSG-Audit, branchen-spezifische Empfehlungen.
 > Anfrage: https://karriaro-webdesign.de/?prefill=...
 >
-> — Audit by Karriaro Webdesign-Manufaktur · Schwarzwald
+> — Audit by Karriaro Webdesign-Manufaktur · Köln
 >   https://karriaro-webdesign.de
 > ```
 
@@ -105,7 +105,7 @@ richten Ihnen einen privaten Endpoint ein.
 
 ## Über Karriaro
 
-Karriaro ist eine Schwarzwald-Manufaktur für handcodierte
+Karriaro ist eine Kölner Manufaktur für handcodierte
 Premium-Websites. Pre-Customer-Stage, Founder-as-Demo.
 
 > „Wenn Ihr Name draufsteht, steht unserer dahinter."
