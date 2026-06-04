@@ -1024,8 +1024,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-top: 18px;
-            padding-left: 4px;
+            margin-top: 16px;
+            /* Sprint 215 — getinteter Papierton-Card in der Branche-Signaturfarbe.
+               Default transparent → ohne JS unsichtbar (Fallback-sicher). */
+            background: var(--branche-wash, transparent);
+            border-radius: 12px;
+            padding: 15px 18px 17px;
+            transition: background-color 320ms ease;
         }
         .mockup-label {
             font-size: 11px;
@@ -1051,7 +1056,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             animation: bullet-reveal 0.4s ease both;
         }
         .mockup-features li::before {
-            content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--color-indigo); flex-shrink: 0;
+            content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--branche-accent, var(--color-indigo)); flex-shrink: 0;
             transition: box-shadow 0.25s ease, transform 0.25s ease;
         }
         .mockup-features li:hover::before {
@@ -1107,7 +1112,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .branche-switcher-wrap { margin-top: 20px; }
         .branche-switcher-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #86868b; margin-bottom: 10px; }
-        .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: var(--color-indigo); }
+        .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: var(--branche-accent, var(--color-indigo)); transition: background-color 320ms ease; }
         .branche-switcher {
             display: flex;
             gap: 8px;
@@ -1176,12 +1181,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
         .branche-tab.is-active {
-            background: var(--color-onyx);
+            background: var(--branche-accent-dark, var(--color-onyx));
             color: #fff;
-            border-color: var(--color-onyx);
+            border-color: var(--branche-accent-dark, var(--color-onyx));
             transform: none;
+            transition: background-color 280ms ease, border-color 280ms ease;
         }
-        .branche-tab.is-active:hover { background: var(--color-onyx); color: #fff; transform: none; box-shadow: none; }
+        .branche-tab.is-active:hover { background: var(--branche-accent-dark, var(--color-onyx)); color: #fff; transform: none; box-shadow: none; }
         .branche-tab:disabled {
             opacity: 0.4;
             cursor: not-allowed;
@@ -1194,7 +1200,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             right: 4px;
             bottom: -5px;
             height: 2px;
-            background: var(--color-onyx);
+            background: var(--branche-accent, var(--color-onyx));
             border-radius: 1px;
             transform: scaleX(0);
             transform-origin: left;
@@ -5912,6 +5918,27 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     href: '/portfolio/coaching-lehmann.html'
                 }
             };
+            // Sprint 215 — Pro-Branche-Signaturfarbe (Award Phase 2). Werte sind die
+            // ECHTEN --accent / --accent-dark / --accent-bg der jeweiligen Demo-Seite,
+            // damit der Hero-Switcher-Tint zur verlinkten Demo passt (kohärent, nicht erfunden).
+            // accentDark ist AA-sicher gegen weißen Text (aktive Pille).
+            var BRANCHE_ACCENT = {
+                immobilien: { accent: '#1A2E40', dark: '#0F1F2E', wash: '#F0EAE0' },
+                coaching:   { accent: '#2C2C2C', dark: '#1A1A1A', wash: '#F1ECE2' },
+                praxis:     { accent: '#6A8266', dark: '#4D6249', wash: '#EDF1E9' },
+                friseur:    { accent: '#B07B5E', dark: '#8A5B41', wash: '#F4ECE3' },
+                dachdecker: { accent: '#4A5D4F', dark: '#34433B', wash: '#EDEFEA' },
+                gastro:     { accent: '#5C1F1F', dark: '#3F1414', wash: '#F0E6DE' },
+                logistik:   { accent: '#0E1F33', dark: '#061320', wash: '#E8EDF3' },
+                handwerk:   { accent: '#B47045', dark: '#8C5530', wash: '#F3EBE2' }
+            };
+            Object.keys(BRANCHE_ACCENT).forEach(function (k) {
+                if (!data[k]) return;
+                data[k].accent = BRANCHE_ACCENT[k].accent;
+                data[k].accentDark = BRANCHE_ACCENT[k].dark;
+                data[k].wash = BRANCHE_ACCENT[k].wash;
+            });
+
             // Sprint 66 — Export für Hero-Audit-Werkzeug-Card (renderToolsCard liest features[]).
             window.__krBrancheData = data;
 
@@ -6025,6 +6052,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 }
             });
 
+            // Sprint 215 — initial aktive Branche (immobilien) gleich tinten, sonst
+            // greift die Signaturfarbe erst nach dem ersten Switch.
+            var initialActive = (allTabs.filter(function (t) { return t.classList.contains('is-active'); })[0] || {}).dataset;
+            applyAccent(initialActive && initialActive.branche ? initialActive.branche : (enabledOrder[0] || 'immobilien'));
+
             var currentIdx = 0;
             var timer = null;
             var hoverPaused = false;
@@ -6040,9 +6072,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             }
             var avifSourceEl = document.getElementById('hero-mockup-source-avif');
 
+            // Sprint 215 — Signaturfarbe der Branche auf den Mockup-Block setzen.
+            // .hero-mockup-block umschließt Mockup UND Tabs → CSS-Vars kaskadieren auf beide.
+            function applyAccent(branche) {
+                var d = data[branche];
+                if (!d || !d.accent) return;
+                mockupBlock.style.setProperty('--branche-accent', d.accent);
+                mockupBlock.style.setProperty('--branche-accent-dark', d.accentDark || d.accent);
+                mockupBlock.style.setProperty('--branche-wash', d.wash || 'transparent');
+            }
+
             function applyData(branche) {
                 var d = data[branche];
                 if (!d) return;
+                applyAccent(branche);
                 document.dispatchEvent(new Event('karriaro:rerender'));
                 if (avifSourceEl) avifSourceEl.srcset = getAvifSrc(d.src);
                 img.src = d.src;
