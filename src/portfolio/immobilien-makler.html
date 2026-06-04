@@ -1638,6 +1638,13 @@ html.embed-hero .hero-h1-line{display:block}
         </div>
     </div>
 
+    <!-- QA 2026-06-04: Chat-Opener fehlte komplett (nur .chat-trigger-CSS + #chat-panel existierten,
+         toggleChat() warf an getElementById('chat-trigger')=null). Button ergänzt → Panel öffenbar. -->
+    <button type="button" class="chat-trigger" id="chat-trigger" onclick="toggleChat()" aria-label="Chat öffnen — Frage zur Immobilie">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="chat-label">Frage zur Immobilie?</span>
+    </button>
+
     <div class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" style="display:none">
         <div class="chat-head">
             <div>

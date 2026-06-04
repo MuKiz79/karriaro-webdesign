@@ -71,6 +71,17 @@ find . -name "*.html" -print0 | xargs -0 sed -i '' \
     -e 's|"https://karriaro-webdesign.de/images/mockups-opt/|"/images/mockups-opt/|g' \
     -e "s|'https://karriaro-webdesign.de/images/mockups-opt/|'/images/mockups-opt/|g"
 
+# QA 2026-06-04 — JS-injizierte Bilder (z.B. Friseur-Style-Vorschau in karriaro-tools.js
+# '<img src="/images/friseur/'+bild) blieben relativ → 404 auf m-Host (Verzeichnis nicht
+# deployt). JS-Dateien GENAUSO auf absolut umschreiben (mockups-opt wieder lokal).
+echo "→ Pfad-Rewrite in JS: /images/ → absolut (JS-injizierte Demo-Bilder)"
+find js -name "*.js" -print0 2>/dev/null | xargs -0 sed -i '' \
+    -e 's|"/images/|"https://karriaro-webdesign.de/images/|g' \
+    -e "s|'/images/|'https://karriaro-webdesign.de/images/|g" 2>/dev/null || true
+find js -name "*.js" -print0 2>/dev/null | xargs -0 sed -i '' \
+    -e 's|"https://karriaro-webdesign.de/images/mockups-opt/|"/images/mockups-opt/|g' \
+    -e "s|'https://karriaro-webdesign.de/images/mockups-opt/|'/images/mockups-opt/|g" 2>/dev/null || true
+
 echo "→ Pfad-Rewrite: /m/ → /"
 find . -name "*.html" -print0 | xargs -0 sed -i '' 's|href="/m/|href="/|g'
 

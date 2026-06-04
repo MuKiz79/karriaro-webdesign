@@ -1355,43 +1355,64 @@ html.embed-hero .hero-h1-line{display:block}
             });
         });
 
-        // Mini-Kalender (Mai 2026, 31 Tage, 1. Mai = Freitag)
+        // Mini-Kalender — QA 2026-06-04: Monats-Pfeile ‹ › waren ohne Handler (No-Op).
+        // Jetzt generischer Monats-Renderer mit echter prev/next-Navigation. Basis-Monat
+        // (offset 0) behält den kuratierten Demo-Zustand (11. ausgewählt, 8. heute, <8 vergangen);
+        // andere Monate rendern alle Werktage buchbar; prev am Basis-Monat gesperrt.
         (function () {
             var cal = document.getElementById('calendar');
             if (!cal) return;
-            ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach(function (l) {
-                var el = document.createElement('div');
-                el.className = 'termin-cal-day-label';
-                el.textContent = l;
-                cal.appendChild(el);
-            });
-            // 1. Mai 2026 = Freitag → 4 leere Spalten vorne (Mo-Do)
-            for (var i = 0; i < 4; i++) {
-                var e = document.createElement('div');
-                e.className = 'termin-cal-day is-empty';
-                cal.appendChild(e);
-            }
-            for (var d = 1; d <= 31; d++) {
-                var day = document.createElement('button');
-                day.type = 'button';
-                day.className = 'termin-cal-day';
-                day.textContent = d;
-                if (d === 11) day.classList.add('is-selected');
-                if (d === 8) day.classList.add('is-today');
-                if (d < 8) day.classList.add('is-disabled');
-                // Wochenenden disablen
-                var dow = (i + d - 1) % 7;
-                if (dow >= 5) day.classList.add('is-disabled');
-                if (!day.classList.contains('is-disabled')) {
-                    (function (b) {
-                        b.addEventListener('click', function () {
-                            cal.querySelectorAll('.termin-cal-day').forEach(function (x) { x.classList.remove('is-selected'); });
-                            b.classList.add('is-selected');
-                        });
-                    })(day);
+            var monthLabel = document.querySelector('.termin-cal-head .month');
+            var nav = document.querySelectorAll('.termin-cal-nav button');
+            var MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+            var BASE_Y = 2026, BASE_M = 4; // Mai 2026 (0-indexiert)
+            var offset = 0;
+            function render() {
+                cal.innerHTML = '';
+                ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach(function (l) {
+                    var el = document.createElement('div');
+                    el.className = 'termin-cal-day-label';
+                    el.textContent = l;
+                    cal.appendChild(el);
+                });
+                var y = BASE_Y, m = BASE_M + offset;
+                while (m > 11) { m -= 12; y++; }
+                while (m < 0) { m += 12; y--; }
+                if (monthLabel) monthLabel.textContent = MONTHS[m] + ' ' + y;
+                var firstDow = (new Date(y, m, 1).getDay() + 6) % 7; // Mo=0 … So=6
+                for (var i = 0; i < firstDow; i++) {
+                    var e = document.createElement('div');
+                    e.className = 'termin-cal-day is-empty';
+                    cal.appendChild(e);
                 }
-                cal.appendChild(day);
+                var daysInMonth = new Date(y, m + 1, 0).getDate();
+                for (var d = 1; d <= daysInMonth; d++) {
+                    var day = document.createElement('button');
+                    day.type = 'button';
+                    day.className = 'termin-cal-day';
+                    day.textContent = d;
+                    if (offset === 0) {
+                        if (d === 11) day.classList.add('is-selected');
+                        if (d === 8) day.classList.add('is-today');
+                        if (d < 8) day.classList.add('is-disabled');
+                    }
+                    var dow = (new Date(y, m, d).getDay() + 6) % 7;
+                    if (dow === 5 || dow === 6) day.classList.add('is-disabled'); // Sa/So
+                    if (!day.classList.contains('is-disabled')) {
+                        (function (b) {
+                            b.addEventListener('click', function () {
+                                cal.querySelectorAll('.termin-cal-day').forEach(function (x) { x.classList.remove('is-selected'); });
+                                b.classList.add('is-selected');
+                            });
+                        })(day);
+                    }
+                    cal.appendChild(day);
+                }
+                if (nav[0]) nav[0].disabled = (offset <= 0);
             }
+            if (nav[0]) nav[0].addEventListener('click', function () { if (offset > 0) { offset--; render(); } });
+            if (nav[1]) nav[1].addEventListener('click', function () { if (offset < 12) { offset++; render(); } });
+            render();
         })();
 
         // FAQ — accordions are <details>/<summary>, native, no JS needed.
