@@ -730,7 +730,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </footer>
 
-    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-coaching-demo"></script>
+    <!-- data-site konsistent karriaro-webdesign (wie die 7 anderen Demos); 'karriaro-coaching-demo'
+         war ein unregistrierter Ausreißer-Slug → 404 auf /api/track/pageview, sobald die Demo im
+         Mobil-Swiper geladen wird. Alle Demos tracken jetzt unter der registrierten Marketing-Site. -->
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <script src="/js/karriaro-tools.js"></script>
 
 <script src="/js/m-interactions.js?v=425" defer></script>
