@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=425">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=425" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=425"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=426">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=426" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=426"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -589,11 +589,38 @@ const TOOLS_SECTION_HTML = `
 </section>
 `;
 
+// 2026-06-04 — Phyllotaxis-Siegel zurück in die mobile Versprechen-Sektion (Founder:
+// „wo ist der Wow"). Das Signatur-Siegel war auf Mobil unsichtbar (Desktop-Siegel im
+// .kr-quote-hero = display:none, mobile Sektion hatte das SVG seit Sprint 151 entfernt)
+// → der Phyllotaxis-Bloom (das stärkste Wow-Element) konnte mobil nie zünden.
+// Dots tragen kr-seal-dot/--i/kr-seal-dot--gold + die SVG kr-seal-bloom → das bereits
+// im <head> mitgelieferte Bloom-CSS + der End-of-Body-IntersectionObserver zünden es
+// beim Reinscrollen (Punkte erblühen von innen, Gold-Fibonacci zündet nach). reduced-motion-safe.
+function buildSiegelSealSvg() {
+    const gA = (3 - Math.sqrt(5)) * Math.PI, N = 89, R = 36, c = R / Math.sqrt(N);
+    const FIB = { 1: 1, 2: 1, 3: 1, 5: 1, 8: 1, 13: 1, 21: 1, 34: 1, 55: 1, 89: 1 };
+    let dots = '';
+    for (let n = 1; n <= N; n++) {
+        const r = c * Math.sqrt(n), t = n * gA;
+        const x = (45 + r * Math.cos(t)).toFixed(2);
+        const y = (45 + r * Math.sin(t)).toFixed(2);
+        const gold = FIB[n] === 1;
+        dots += `<circle cx="${x}" cy="${y}" r="${(c * 0.34).toFixed(2)}" fill="${gold ? '#C9A24B' : 'currentColor'}" class="kr-seal-dot${gold ? ' kr-seal-dot--gold' : ''}" style="--i:${n}"/>`;
+    }
+    return `<svg class="m-siegel-svg kr-seal-bloom" viewBox="0 0 90 90" aria-hidden="true">`
+        + `<path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>`
+        + `<path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>`
+        + `<path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>`
+        + `<path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>`
+        + dots + `</svg>`;
+}
+
 const SIEGEL_SECTION_HTML = `
-<!-- Sprint 151 — Brand-Versprechen (Phyllotaxis-SVG + № 05-Notation entfernt) -->
+<!-- Brand-Versprechen (№ 05) — mit blühendem Phyllotaxis-Signatur-Siegel (2026-06-04). -->
 <section class="m-mag-siegel" aria-label="Unser Versprechen">
+    ${buildSiegelSealSvg()}
     <p class="m-siegel-eyebrow">№&nbsp;05 · Unser Versprechen</p>
-    <h2 class="m-siegel-title">Wenn Ihr Name draufsteht,<br>steht unserer dahinter.</h2>
+    <h2 class="m-siegel-title">Wenn Ihr Name draufsteht, steht unserer dahinter.</h2>
     <p class="m-siegel-body">Goldschmiede schlagen seit dem 14. Jahrhundert ihr Siegel in jedes Stück — der juristische Beweis: dieser Meister steht für dieses Stück. Wir schlagen unseres in jeden Code.</p>
     <a class="m-siegel-link" href="/gruender.html#siegel">Die ganze Geschichte →</a>
 </section>

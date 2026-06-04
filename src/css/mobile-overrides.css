@@ -1006,6 +1006,15 @@
         background: var(--apple-fog);
         text-align: center;
     }
+    /* 2026-06-04 — bluehendes Phyllotaxis-Signatur-Siegel als Crest oben in der Sektion.
+       color = Ton der Nicht-Gold-Punkte (Gold-Fibonacci sind #C9A24B). */
+    .m-siegel-svg {
+        display: block;
+        width: 108px;
+        height: 108px;
+        margin: 0 auto 26px;
+        color: #2A3340;
+    }
 
     .m-siegel-eyebrow {
         font-family: var(--apple-font-text);
