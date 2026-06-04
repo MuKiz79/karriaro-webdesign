@@ -8,6 +8,7 @@
     var BRANCHE = (script && script.getAttribute('data-branche')) || '';
     var BIZ = (script && script.getAttribute('data-name')) || 'unser Team';
     var ACCENT = (script && script.getAttribute('data-accent')) || '#1A2E40';
+    var POSITION = (script && script.getAttribute('data-position')) === 'left' ? 'left' : 'right';
     var GREETING = (script && script.getAttribute('data-greeting')) ||
         ('Hallo! Ich bin der digitale Assistent von ' + BIZ + '. Wie kann ich Ihnen helfen?');
     var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
@@ -49,6 +50,7 @@
         '.krc-send{flex:0 0 auto;width:40px;border:none;border-radius:10px;background:' + ACCENT + ';color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}' +
         '.krc-send:disabled{opacity:.4;cursor:default}.krc-send svg{width:18px;height:18px}' +
         '.krc-foot{font-size:10px;text-align:center;color:#9a9a9f;padding:0 12px 9px;background:#fff;letter-spacing:.03em}' +
+        '.krc-fab.krc-left{left:24px;right:auto}.krc-panel.krc-left{left:24px;right:auto}' +
         '@media (prefers-reduced-motion:reduce){.krc-panel.krc-open{animation:none}.krc-typing span{animation:none}.krc-fab{transition:none}}';
     var styleEl = document.createElement('style');
     styleEl.textContent = css;
@@ -79,6 +81,7 @@
         '<button type="submit" class="krc-send" aria-label="Senden">' + ICON_SEND + '</button></form>' +
         '<div class="krc-foot">KI-Assistent · kann Fehler machen</div>';
 
+    if (POSITION === 'left') { fab.classList.add('krc-left'); panel.classList.add('krc-left'); }
     document.body.appendChild(fab);
     document.body.appendChild(panel);
 
