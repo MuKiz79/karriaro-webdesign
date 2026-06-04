@@ -308,8 +308,8 @@
     .mobile-menu a {
         position: relative;
         color: #F1EFE7;
-        font-family: var(--font-display);
-        font-size: clamp(34px, 9vw, 46px);
+        font-family: var(--apple-font-display); /* SF Pro — konsistent mit dem Hero (Founder-Wunsch) */
+        font-size: clamp(32px, 8.4vw, 42px);
         font-weight: 400;
         line-height: 1.06;
         letter-spacing: -0.012em;
@@ -452,7 +452,10 @@
         align-items: center;
         gap: 8px;
         margin: 8px 0 28px;
-        color: var(--apple-blue);
+        color: #6E5F3F; /* warmes Gold-Text (AA 5,97:1) statt iOS-Blau — passt zur Palette */
+        text-decoration: underline;
+        text-decoration-color: rgba(110, 95, 63, 0.4);
+        text-underline-offset: 4px;
         font-family: var(--apple-font-text);
         font-size: 17px;
         font-weight: 500;
