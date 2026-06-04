@@ -410,23 +410,37 @@
         toggle.onclick = null;
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-controls', 'mobile-menu');
-        // Scrim (abgedunkelter Hintergrund unter dem angedockten Panel) — Tap schliesst.
-        var scrim = document.querySelector('.m-menu-scrim');
-        if (!scrim) {
-            scrim = document.createElement('div');
-            scrim.className = 'm-menu-scrim';
-            scrim.setAttribute('aria-hidden', 'true');
-            document.body.appendChild(scrim);
+        // Phyllotaxis-Gold-Siegel als Editorial-Akzent ins Menü einhängen
+        // (Vogel-Spirale, goldener Winkel 137,5°; Fibonacci-Indizes = Gold).
+        if (!menu.querySelector('.m-menu-seal')) {
+            var sealWrap = document.createElement('div');
+            sealWrap.className = 'm-menu-seal';
+            sealWrap.setAttribute('aria-hidden', 'true');
+            var NS = 'http://www.w3.org/2000/svg';
+            var svg = document.createElementNS(NS, 'svg');
+            svg.setAttribute('viewBox', '0 0 90 90');
+            var gA = (3 - Math.sqrt(5)) * Math.PI, N = 89, R = 38, c = R / Math.sqrt(N);
+            var FIB = { 1:1, 2:1, 3:1, 5:1, 8:1, 13:1, 21:1, 34:1, 55:1, 89:1 };
+            for (var s = 1; s <= N; s++) {
+                var sr = c * Math.sqrt(s), st = s * gA;
+                var circ = document.createElementNS(NS, 'circle');
+                circ.setAttribute('cx', (45 + sr * Math.cos(st)).toFixed(2));
+                circ.setAttribute('cy', (45 + sr * Math.sin(st)).toFixed(2));
+                circ.setAttribute('r', (c * 0.34).toFixed(2));
+                circ.setAttribute('fill', FIB[s] ? '#C9A24B' : 'currentColor');
+                svg.appendChild(circ);
+            }
+            sealWrap.appendChild(svg);
+            menu.appendChild(sealWrap);
         }
-        scrim.addEventListener('click', function () { closeMenu(); });
         function isOpen() { return menu.classList.contains('open'); }
         function focusables() {
             return menu.querySelectorAll('a[href], button:not([disabled])');
         }
         function openMenu() {
             menu.classList.add('open');
-            scrim.classList.add('show');
-            document.body.style.overflow = 'hidden'; // Scroll-Lock während Menü offen
+            document.body.classList.add('m-menu-open'); // Nav hell schalten (dunkles Menü)
+            document.body.style.overflow = 'hidden';    // Scroll-Lock während Menü offen
             toggle.setAttribute('aria-expanded', 'true');
             toggle.setAttribute('aria-label', 'Menü schließen');
             var first = focusables()[0];
@@ -434,7 +448,7 @@
         }
         function closeMenu(returnFocus) {
             menu.classList.remove('open');
-            scrim.classList.remove('show');
+            document.body.classList.remove('m-menu-open');
             document.body.style.overflow = '';
             toggle.setAttribute('aria-expanded', 'false');
             toggle.setAttribute('aria-label', 'Menü öffnen');

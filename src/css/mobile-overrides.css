@@ -275,73 +275,109 @@
        injizierte „№ 05 · Unser Versprechen"-Sektion (build-mobile-pages.mjs) */
     .kr-quote-hero { display: none; }
 
-    /* Angedocktes Menü-Panel (statt Vollbild) — frosted Marken-Creme (#FBFAF7),
-       dockt unter der 56px-Nav an, nur so hoch wie nötig; dahinter der Scrim
-       (.m-menu-scrim, via m-interactions.js eingehängt) → Seite scheint abgedunkelt durch. */
+    /* ── Award-Menü „Dunkles Editorial-Drama" ──────────────────────────────
+       Voll-immersives dunkles Navy-Takeover, das per Vorhang (clip-path) von
+       oben aufzieht. Große Fraunces-Creme-Links mit Gold-Folio-Nummern,
+       gestaffelt eingeblendet; Phyllotaxis-Gold-Siegel als Akzent. */
     .mobile-menu {
         position: fixed;
-        top: 56px;
-        left: 0;
-        right: 0;
-        bottom: auto;
+        inset: 0;
         z-index: 70;
         display: flex;
         flex-direction: column;
-        gap: 2px;
-        padding: 14px 24px 22px;
-        background: rgba(251, 250, 247, 0.92);
-        -webkit-backdrop-filter: blur(22px) saturate(180%);
-        backdrop-filter: blur(22px) saturate(180%);
-        border-bottom: 1px solid var(--apple-hairline);
-        box-shadow: 0 16px 36px rgba(22, 32, 44, 0.14);
+        justify-content: center;
+        gap: clamp(4px, 1.4vh, 14px);
+        padding: 88px 32px 40px;
+        background: linear-gradient(165deg, #16202C 0%, #111A24 100%);
         visibility: hidden;
         opacity: 0;
-        transform: translateY(-10px);
+        clip-path: inset(0 0 100% 0);
         pointer-events: none;
-        transition: opacity 220ms var(--apple-ease-reveal),
-                    transform 220ms var(--apple-ease-reveal),
-                    visibility 220ms;
+        transition: clip-path 480ms cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 280ms ease,
+                    visibility 480ms;
+        counter-reset: mnav;
     }
     .mobile-menu.open,
     .mobile-menu.is-open {
         visibility: visible;
         opacity: 1;
-        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
         pointer-events: auto;
     }
     .mobile-menu a {
-        color: var(--apple-ink);
-        font-family: var(--apple-font-display);
-        font-size: 20px;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        padding: 13px 2px;
-        border-bottom: 1px solid var(--apple-hairline);
+        position: relative;
+        color: #F1EFE7;
+        font-family: var(--font-display);
+        font-size: clamp(34px, 9vw, 46px);
+        font-weight: 400;
+        line-height: 1.06;
+        letter-spacing: -0.012em;
+        padding: clamp(6px, 1.2vh, 12px) 0;
+        border: none;
+        counter-increment: mnav;
     }
-    .mobile-menu a:last-child { border-bottom: none; }
+    /* Gold-Folio-Nummer (№ 01 …) via CSS-Counter — kein HTML-Change */
+    .mobile-menu a::before {
+        content: "№ 0" counter(mnav);
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        color: #C9A24B;
+        opacity: 0.92;
+        margin-bottom: 3px;
+    }
+    /* „Erstgespräch" (letzter Link — :last-of-type, da das Siegel-Div das
+       letzte Kind ist; Inline-Indigo wäre auf Navy unsichtbar) → Gold-CTA */
+    .mobile-menu a:last-of-type {
+        color: #C9A24B !important;
+        font-style: italic;
+    }
+    .mobile-menu a:last-of-type::before { color: #F1EFE7; opacity: 0.6; }
 
-    /* Scrim unter dem Panel — abgedunkelt + leichter Blur, Tap schließt
-       (Element + Click-Listener werden in m-interactions.js erzeugt) */
-    .m-menu-scrim {
-        position: fixed;
-        top: 56px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(22, 32, 44, 0.34);
-        -webkit-backdrop-filter: blur(2px);
-        backdrop-filter: blur(2px);
-        z-index: 69;
-        opacity: 0;
-        visibility: hidden;
+    /* Gestaffelter Item-Reveal nach dem Vorhang */
+    @keyframes m-menu-item-in {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: none; }
+    }
+    .mobile-menu.open a {
+        animation: m-menu-item-in 540ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .mobile-menu.open a:nth-child(1) { animation-delay: 130ms; }
+    .mobile-menu.open a:nth-child(2) { animation-delay: 200ms; }
+    .mobile-menu.open a:nth-child(3) { animation-delay: 270ms; }
+    .mobile-menu.open a:nth-child(4) { animation-delay: 340ms; }
+    .mobile-menu.open a:nth-child(5) { animation-delay: 410ms; }
+
+    /* Phyllotaxis-Gold-Siegel (per m-interactions.js eingehängt) */
+    .m-menu-seal {
+        position: absolute;
+        bottom: 34px;
+        right: 26px;
+        width: 84px;
+        height: 84px;
+        color: rgba(241, 239, 231, 0.5);
         pointer-events: none;
-        transition: opacity 220ms ease, visibility 220ms;
+        animation: m-menu-seal-pulse 8s ease-in-out infinite;
     }
-    .m-menu-scrim.show {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
+    .m-menu-seal svg { display: block; width: 100%; height: 100%; }
+    @keyframes m-menu-seal-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.95; } }
+
+    /* Nav im offenen Zustand transparent + helle Marke/X auf dunklem Menü */
+    body.m-menu-open nav {
+        background: transparent;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        border-bottom-color: transparent;
     }
+    body.m-menu-open .nav-logo,
+    body.m-menu-open .nav-wordmark { color: #F1EFE7; }
+    body.m-menu-open .menu-toggle span { background: #F1EFE7; }
+
+    /* Scrim entfällt bei der dunklen Vollbild-Variante */
+    .m-menu-scrim { display: none; }
 }
 
 /* ============================================================================
@@ -380,11 +416,15 @@
     /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
        respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
     .hero-headline {
-        font-family: var(--apple-font-display);
-        font-size: clamp(48px, 13vw, 56px);
-        line-height: 1.07;
-        letter-spacing: -0.025em;
-        font-weight: 700;
+        /* Apple SF Pro statt Fraunces-Serif + größer. !important gegen die
+           verschachtelte Multi-Datei-Kaskade (hero-couture .hero-single-column
+           .hero-headline (0,2,0) + hero-polish/modern-2026/--font-display). */
+        font-family: var(--apple-font-display) !important;
+        font-size: clamp(50px, 14vw, 60px) !important;
+        font-weight: 700 !important;
+        font-variation-settings: normal;
+        line-height: 1.04;
+        letter-spacing: -0.028em;
         color: var(--apple-ink);
         margin: 0 0 24px;
     }
