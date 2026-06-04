@@ -610,6 +610,20 @@ html.embed-hero .hero-h1-line{display:block}
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <link rel="stylesheet" href="/css/karriaro-tools.css">
+    <!-- View-Transitions (2026-06-04): sanfter Cross-Document-Uebergang Card<->Demo-Seite.
+         Beide Seiten muessen opt-in; Homepage via modern-2026.css. Progressive Enhancement. -->
+    <style>
+    @supports (view-transition-name: none) {
+        @view-transition { navigation: auto; }
+        ::view-transition-old(root) { animation: 240ms cubic-bezier(0.22, 1, 0.36, 1) both kr-vt-out; }
+        ::view-transition-new(root) { animation: 240ms cubic-bezier(0.22, 1, 0.36, 1) both kr-vt-in; }
+        @keyframes kr-vt-out { from { opacity: 1; } to { opacity: 0; } }
+        @keyframes kr-vt-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) {
+            ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.01ms !important; }
+        }
+    }
+    </style>
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>
