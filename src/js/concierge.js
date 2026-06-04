@@ -4,6 +4,10 @@
  * Spricht den Cloud-Function-Endpoint /concierge (Claude Haiku, Branchen-Persona) an. */
 (function () {
     'use strict';
+    // Code-Review-Fix: nicht in eingebetteten Demo-Previews (iframe) initialisieren — sonst
+    // schwebt der FAB/das Panel über jeder Vorschau-Kachel der Startseite. Im iframe (egal ob
+    // ?embed=hero, same- oder cross-origin) → raus.
+    try { if (window.self !== window.top) return; } catch (e) { return; }
     var script = document.currentScript;
     var BRANCHE = (script && script.getAttribute('data-branche')) || '';
     var BIZ = (script && script.getAttribute('data-name')) || 'unser Team';
@@ -163,6 +167,10 @@
         }).catch(function (err) {
             clearTimeout(to);
             typing.remove();
+            // Code-Review-Fix: fehlgeschlagenen user-Turn aus der History entfernen — sonst bleibt
+            // ein unbeantworteter user-Turn stehen, die nächste Nachricht erzeugt zwei user-Rollen
+            // in Folge → Anthropic-API 400 → Chat tot bis Reload.
+            history.pop();
             var msg = err && err.message === 'rate'
                 ? 'Gerade sind sehr viele Anfragen unterwegs — bitte versuchen Sie es in einer Stunde erneut, oder nutzen Sie das Kontaktformular.'
                 : 'Verbindung gerade nicht möglich. Bitte versuchen Sie es erneut oder nutzen Sie das Kontaktformular.';

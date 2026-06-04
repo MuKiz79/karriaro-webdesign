@@ -1522,19 +1522,32 @@ exports.kiVisibility = onRequest(
         // 1) Faktische GEO-Signale prüfen (ohne LLM, keine Halluzination)
         const signals = { reachable: null, hasSchema: null, hasLocalBusinessSchema: null, hasMetaDescription: null, hasLlmsTxt: null };
         let homepageExcerpt = "";
-        // Globales fetch() + resolvePublicAddress-SSRF-Guard für die Signal-Checks.
-        // (Der custom-undici-Agent aus safeFetch warf eine AssertionError aus seinem
-        // async-Socket-Teardown, die dem catch entkam → 500 + headers-already-sent.
-        // Globales fetch ohne custom Agent vermeidet das; resolvePublicAddress hält SSRF.)
+        // SSRF-sicherer GET OHNE den custom-undici-Agent aus safeFetch (dessen h1-Parser-Teardown
+        // wirft async eine AssertionError, die dem .catch entkommt → 500/headers-sent; Logs:
+        // undici client-h1.js:302 Parser.finish). Stattdessen globales fetch mit redirect:"manual"
+        // + Per-Hop-resolvePublicAddress-Validierung → blockiert den Hauptvektor (Redirect auf
+        // 169.254.169.254 / 127.0.0.1 / interne IPs). Restrisiko: DNS-Rebinding-TOCTOU (kein IP-Pinning
+        // ohne custom Agent) — für einen reinen GEO-Signal-Check öffentlicher Sites akzeptiert.
         async function safeGet(target, ms) {
-            const u = new URL(target);
-            if (!["http:", "https:"].includes(u.protocol)) throw new Error("bad protocol");
-            await resolvePublicAddress(u.hostname); // wirft bei privater/nicht-auflösbarer IP
-            return fetch(target, {
-                redirect: "follow",
-                headers: { "User-Agent": "Karriaro-KIVisBot/1.0", "Accept": "text/html,*/*" },
-                signal: AbortSignal.timeout(ms)
-            });
+            let current = target;
+            for (let hop = 0; hop <= 3; hop++) {
+                const u = new URL(current);
+                if (!["http:", "https:"].includes(u.protocol)) throw new Error("bad protocol");
+                await resolvePublicAddress(u.hostname); // pro Hop: wirft bei privater/nicht-auflösbarer IP
+                const r = await fetch(current, {
+                    redirect: "manual",
+                    headers: { "User-Agent": "Karriaro-KIVisBot/1.0", "Accept": "text/html,*/*" },
+                    signal: AbortSignal.timeout(ms)
+                });
+                if (r.status >= 300 && r.status < 400) {
+                    const loc = r.headers.get("location");
+                    if (!loc) return r;
+                    current = new URL(loc, current).toString(); // nächster Hop wird oben re-validiert
+                    continue;
+                }
+                return r;
+            }
+            throw new Error("too many redirects");
         }
         if (domain) {
             const url = /^https?:\/\//i.test(domain) ? domain : "https://" + domain;
@@ -1544,17 +1557,20 @@ exports.kiVisibility = onRequest(
                     const html = (await r.text()).slice(0, 400000);
                     signals.reachable = true;
                     signals.hasSchema = /application\/ld\+json/i.test(html);
-                    signals.hasLocalBusinessSchema = /"@type"\s*:\s*"[^"]*(LocalBusiness|Organization|Restaurant|Store|Dentist|Physician|MedicalBusiness|Lawyer|LegalService|HairSalon|BeautySalon|RoofingContractor|HomeAndConstructionBusiness|Plumber|MovingCompany|RealEstateAgent)[^"]*"/i.test(html);
+                    // 'Organization' bewusst NICHT als LocalBusiness werten — zu generisch (Code-Review-Fund).
+                    signals.hasLocalBusinessSchema = /"@type"\s*:\s*"[^"]*(LocalBusiness|Restaurant|Store|Dentist|Physician|MedicalBusiness|Lawyer|LegalService|HairSalon|BeautySalon|RoofingContractor|HomeAndConstructionBusiness|Plumber|MovingCompany|RealEstateAgent)[^"]*"/i.test(html);
                     signals.hasMetaDescription = /<meta[^>]+name=["']description["']/i.test(html);
                     homepageExcerpt = (typeof htmlToText === "function") ? htmlToText(html, 1400) : "";
                 } else {
                     signals.reachable = false;
                 }
             } catch { signals.reachable = false; }
+            // llms.txt nur als vorhanden werten, wenn 2xx UND NICHT HTML (Soft-404-Schutz: viele Hosts
+            // liefern 200 + HTML-Fehlerseite oder leiten auf die Startseite um — Code-Review-Fund).
             try {
-                const base = url.replace(/\/+$/, "");
-                const rl = await safeGet(base + "/llms.txt", 5000);
-                signals.hasLlmsTxt = !!rl.ok;
+                const r = await safeGet(url.replace(/\/+$/, "") + "/llms.txt", 5000);
+                const ct = (r.headers.get("content-type") || "").toLowerCase();
+                signals.hasLlmsTxt = r.ok && !/text\/html/.test(ct);
             } catch { signals.hasLlmsTxt = false; }
         }
 
@@ -1650,11 +1666,20 @@ exports.concierge = onRequest(
             return res.status(400).json({ error: "messages erforderlich" });
         }
         // Validieren + säubern (max 12 Turns, je 800 Zeichen, nur user/assistant)
-        const clean = messages
+        const raw = messages
             .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
             .slice(-12)
             .map(m => ({ role: m.role, content: m.content.trim().slice(0, 800) }))
             .filter(m => m.content.length > 0);
+        // Rollen für die Anthropic-API normalisieren (Code-Review-Härtung): muss mit user starten
+        // und alternieren. Führende assistant-Turns (Slice-Grenze) droppen; aufeinanderfolgende
+        // gleiche Rollen (z.B. Client-Doppel-User nach Fehler) zur letzten kollabieren.
+        const clean = [];
+        for (const m of raw) {
+            if (clean.length === 0 && m.role !== "user") continue;
+            if (clean.length && clean[clean.length - 1].role === m.role) { clean[clean.length - 1] = m; continue; }
+            clean.push(m);
+        }
         if (clean.length === 0 || clean[clean.length - 1].role !== "user") {
             return res.status(400).json({ error: "letzte Nachricht muss vom Nutzer sein" });
         }

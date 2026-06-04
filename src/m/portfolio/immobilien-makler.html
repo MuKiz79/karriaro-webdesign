@@ -389,26 +389,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .modal h3 { font-size: 22px; margin-bottom: 12px; }
         .modal p { color: var(--text-soft); margin-bottom: 22px; font-size: 15px; }
 
-        /* KI-Chat-Widget (Sticky, Premium deep-navy) */
-        .chat-trigger { position: fixed; bottom: 24px; right: 24px; background: var(--accent); color: #fff; padding: 12px 22px; border-radius: 999px; box-shadow: 0 12px 32px rgba(20,40,60,0.3); z-index: 90; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
-        .chat-trigger:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 16px 36px rgba(20,40,60,0.36); }
-        .chat-trigger svg { width: 18px; height: 18px; }
-        .chat-trigger .chat-label { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
-        .chat-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; max-width: calc(100vw - 32px); background: var(--bg); border-radius: var(--p-radius-lg); box-shadow: 0 24px 60px rgba(20,40,60,0.22); z-index: 100; display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--border); }
-        .chat-panel.is-open { display: flex; }
-        .chat-head { background: var(--accent); color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .chat-head h4 { font-size: 15px; font-weight: 600; margin: 0; }
-        .chat-head p { font-size: 12px; opacity: 0.85; margin: 2px 0 0; }
-        .chat-close { color: #fff; opacity: 0.8; font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
-        .chat-close:hover { opacity: 1; }
-        .chat-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 60vh; overflow-y: auto; }
-        .chat-msg { background: var(--bg-soft); padding: 12px 14px; border-radius: 12px; font-size: 13px; color: var(--text); line-height: 1.5; }
-        .chat-msg.is-user { background: var(--accent-bg); align-self: flex-end; max-width: 80%; }
-        .chat-form { padding: 12px 16px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
-        .chat-form label { font-size: 11px; font-weight: 600; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.06em; }
-        .chat-form select, .chat-form input, .chat-form textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border-strong); border-radius: 6px; font-size: 13px; font-family: inherit; background: var(--bg-soft); }
-        .chat-form button { background: var(--accent); color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .chat-form button:hover { background: var(--accent-dark); }
+        /* Code-Review-Fix: tote .chat-*-Regeln (alter Demo-Stub-Chat) entfernt — ersetzt durch concierge.js. */
 
         /* Interessent-Matching-Block */
         .matching { background: var(--accent-bg); padding: 80px 0; }
@@ -555,7 +536,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .leistungen-grid, .stimmen-grid, .portfolio-grid { grid-template-columns: 1fr; }
             .matching-grid { grid-template-columns: 1fr; }
             .newsletter-card { grid-template-columns: 1fr; padding: 28px; gap: 24px; }
-            .chat-panel { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
             .financing-grid { grid-template-columns: 1fr; gap: 28px; }
             .financing-card { padding: 28px 24px; }
             .process-step { grid-template-columns: 48px 1fr; gap: 16px; }
@@ -1685,53 +1665,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </div>
 
-    <!-- 2026-06-04: Der Demo-Stub-Chat (#chat-trigger/#chat-panel, openModal) wurde durch den
-         echten Branchen-KI-Concierge ersetzt (siehe concierge.js am Body-Ende). Das alte Panel
-         bleibt versteckt (kein Trigger mehr) — der Concierge stellt seinen eigenen FAB. -->
-    <div class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" style="display:none">
-        <div class="chat-head">
-            <div>
-                <h4 id="chat-title">Stadtmakler · Erst-Kontakt</h4>
-                <p>Antwort von Andreas Hofmann persönlich, binnen 24 h</p>
-            </div>
-            <span class="chat-close" onclick="toggleChat()" role="button" aria-label="Schließen">×</span>
-        </div>
-        <div class="chat-body">
-            <div class="chat-msg">Guten Tag. Drei kurze Fragen — ich melde mich persönlich mit einer passenden Vorgehensweise zurück.</div>
-            <div class="chat-msg">Welche Lage und welches Anliegen liegt vor?</div>
-        </div>
-        <form class="chat-form" onsubmit="event.preventDefault(); toggleChat(); openModal('chat');">
-            <div>
-                <label for="chat-lage">Lage / Interesse</label>
-                <select id="chat-lage" required>
-                    <option value="">Auswählen …</option>
-                    <option>Stuttgart-West (Verkauf)</option>
-                    <option>Stuttgart-Mitte (Verkauf)</option>
-                    <option>Stuttgart-Süd / Degerloch (Verkauf)</option>
-                    <option>Käufer-Suche eintragen</option>
-                    <option>Wertermittlung / Gutachten</option>
-                    <option>Off-Market / Diskret</option>
-                </select>
-            </div>
-            <div>
-                <label for="chat-budget">Budget / Wert-Spanne</label>
-                <select id="chat-budget" required>
-                    <option value="">Auswählen …</option>
-                    <option>unter 700.000 €</option>
-                    <option>700k – 1,0 Mio €</option>
-                    <option>1,0 – 1,5 Mio €</option>
-                    <option>1,5 – 2,5 Mio €</option>
-                    <option>über 2,5 Mio €</option>
-                </select>
-            </div>
-            <div>
-                <label for="chat-note">Kurz zur Sache (optional)</label>
-                <textarea id="chat-note" rows="2" placeholder="z. B. Zeithorizont, besondere Umstände …"></textarea>
-            </div>
-            <button type="submit">Diskret anfragen →</button>
-            <p style="font-size: 11px; color: var(--text-light); text-align: center; margin: 4px 0 0;">BFSG-konform. Antwort persönlich, nicht automatisiert.</p>
-        </form>
-    </div>
+    <!-- Code-Review-Fix 2026-06-04: Der tote Demo-Stub-Chat (#chat-panel/.chat-trigger/toggleChat,
+         seit dem Concierge-Wechsel ohne Trigger) komplett entfernt — Markup, JS und CSS. Der echte
+         Branchen-KI-Concierge (concierge.js am Body-Ende) ersetzt ihn vollständig. -->
 
     <script>
         document.querySelectorAll('.mobile-menu a').forEach(function (a) {
@@ -1886,16 +1822,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             document.getElementById('tour-modal').classList.add('is-open');
         }
         function closeTour() { document.getElementById('tour-modal').classList.remove('is-open'); }
-        function toggleChat() {
-            var panel = document.getElementById('chat-panel');
-            var trigger = document.getElementById('chat-trigger');
-            var isOpen = panel.classList.toggle('is-open');
-            trigger.style.display = isOpen ? 'none' : 'inline-flex';
-        }
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeModal(); closeTour(); closeEnergy();
-                if (document.getElementById('chat-panel').classList.contains('is-open')) toggleChat();
             }
         });
     </script>
