@@ -24,7 +24,7 @@ const {
 } = require("./lib/deep-research.js");
 const mockupGenerator = require("./lib/mockup-generator.js");
 const { runSecurityAudit } = require("./lib/security-audit.js");
-const { safeFetch } = require("./lib/safe-fetch.js");
+const { safeFetch, resolvePublicAddress } = require("./lib/safe-fetch.js");
 // Sprint 82 — Firestore-backed Rate-Limit + Client-IP-Parser (X-Forwarded-For-aware).
 const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
 const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Single-Source
@@ -1455,6 +1455,154 @@ exports.securityAudit = onRequest(
         } catch (err) {
             console.error("securityAudit failed:", err);
             res.status(500).json({ error: "Security-Audit fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// KI-Sichtbarkeits-Spiegel (2026-06-04) — "So sieht KI Ihr Unternehmen".
+// Zeigt ehrlich, was ChatGPT/Perplexity/AI-Overviews über einen lokalen Betrieb
+// "wissen" (meist wenig) + warum + konkrete GEO-Fixes. Lead-Magnet + Innovations-
+// beweis für Karriaros Kern-Versprechen "für KI-Auffindbarkeit optimiert".
+// ════════════════════════════════════════════════════════════════════════════
+const KI_VIS_SYSTEM = `Du bist ein nüchterner KI-Sichtbarkeits-Analyst für lokale Unternehmen im DACH-Raum. Du bewertest, wie generative KI-Suchen (ChatGPT, Perplexity, Google AI Overviews) ein Unternehmen "sehen".
+
+Kern-Wahrheit, die du ehrlich vertrittst: Für die allermeisten lokalen KMU hat ein KI-Modell aus dem Training KAUM bis KEIN belastbares Wissen. Das ist der entscheidende Befund — kein Vorwurf, sondern die Chance, die geschlossen werden muss.
+
+Regeln:
+- Halluziniere NIEMALS Fakten über das Unternehmen. Weißt du nichts Belastbares, sag das klar im Feld aiKnows ("Ich habe kaum belastbare Informationen über …").
+- aiKnows = ehrliche Simulation der ChatGPT-Antwort auf "Was weißt du über [Unternehmen]?". Erfinde keine Adressen, Leistungen, Bewertungen.
+- visibilityScore (0-100) misst, wie gut KI-Suchen das Unternehmen heute auffinden/verstehen — auf Basis deines Trainingswissens UND der gelieferten technischen Signale (Schema, llms.txt, Meta-Description, Struktur). Kein Trainingswissen + fehlende Signale → niedriger Score (oft 5-25).
+- gaps erklären, WARUM die KI das Unternehmen schlecht sieht (z.B. "keine strukturierten Daten → KI kann Leistungen/Öffnungszeiten nicht extrahieren").
+- fixes sind konkret, priorisiert, branchenspezifisch (z.B. "LocalBusiness- + FAQ-Schema ergänzen", "llms.txt mit Leistungen/Standort", "Antwort-Blöcke mit klaren H2 für KI-Extraktion").
+- Ton: sachlich, präzise, deutsch, kein Marketing-Geschwurbel. Antworte ausschließlich über das Tool.`;
+
+const KI_VIS_TOOL = {
+    name: "ki_sichtbarkeit",
+    description: "Strukturierte, ehrliche Bewertung der KI-Sichtbarkeit eines lokalen Unternehmens in generativen Suchen.",
+    input_schema: {
+        type: "object",
+        properties: {
+            aiKnows: { type: "string", description: "Ehrliche Simulation der ChatGPT-Antwort auf 'Was weißt du über [Unternehmen]?'. Bei lokalen Betrieben meist: kaum/nichts Belastbares. Keine Fakten erfinden." },
+            knowledgeLevel: { type: "string", enum: ["keine", "vage", "solide"] },
+            visibilityScore: { type: "integer", description: "0-100 KI-Sichtbarkeit" },
+            scoreLabel: { type: "string", description: "Kurzes Verdikt, z.B. 'Für KI praktisch unsichtbar'" },
+            knownFacts: { type: "array", items: { type: "string" }, description: "Was die KI tatsächlich belegbar sagen kann (oft leer/wenig)" },
+            gaps: { type: "array", items: { type: "object", properties: { gap: { type: "string" }, why: { type: "string" } }, required: ["gap", "why"] } },
+            fixes: { type: "array", items: { type: "object", properties: { fix: { type: "string" }, impact: { type: "string" } }, required: ["fix", "impact"] } }
+        },
+        required: ["aiKnows", "knowledgeLevel", "visibilityScore", "scoreLabel", "knownFacts", "gaps", "fixes"]
+    }
+};
+
+// ─── kiVisibility ─── POST { business, domain?, branche?, ort? }
+exports.kiVisibility = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Claude-Calls = $$$ → strenges Limit 5/h
+        if (await enforceRateLimit(db, req, res, "kiVisibility", 5, 3600)) return;
+
+        let { business, domain = "", branche = "", ort = "" } = req.body || {};
+        if (!business || typeof business !== "string" || business.trim().length < 2) {
+            return res.status(400).json({ error: "Unternehmensname erforderlich" });
+        }
+        business = business.trim().slice(0, 120);
+        domain = String(domain || "").trim().slice(0, 120);
+        branche = String(branche || "").trim().slice(0, 80);
+        ort = String(ort || "").trim().slice(0, 80);
+
+        // 1) Faktische GEO-Signale prüfen (ohne LLM, keine Halluzination)
+        const signals = { reachable: null, hasSchema: null, hasLocalBusinessSchema: null, hasMetaDescription: null, hasLlmsTxt: null };
+        let homepageExcerpt = "";
+        // Globales fetch() + resolvePublicAddress-SSRF-Guard für die Signal-Checks.
+        // (Der custom-undici-Agent aus safeFetch warf eine AssertionError aus seinem
+        // async-Socket-Teardown, die dem catch entkam → 500 + headers-already-sent.
+        // Globales fetch ohne custom Agent vermeidet das; resolvePublicAddress hält SSRF.)
+        async function safeGet(target, ms) {
+            const u = new URL(target);
+            if (!["http:", "https:"].includes(u.protocol)) throw new Error("bad protocol");
+            await resolvePublicAddress(u.hostname); // wirft bei privater/nicht-auflösbarer IP
+            return fetch(target, {
+                redirect: "follow",
+                headers: { "User-Agent": "Karriaro-KIVisBot/1.0", "Accept": "text/html,*/*" },
+                signal: AbortSignal.timeout(ms)
+            });
+        }
+        if (domain) {
+            const url = /^https?:\/\//i.test(domain) ? domain : "https://" + domain;
+            try {
+                const r = await safeGet(url, 8000);
+                if (r.ok) {
+                    const html = (await r.text()).slice(0, 400000);
+                    signals.reachable = true;
+                    signals.hasSchema = /application\/ld\+json/i.test(html);
+                    signals.hasLocalBusinessSchema = /"@type"\s*:\s*"[^"]*(LocalBusiness|Organization|Restaurant|Store|Dentist|Physician|MedicalBusiness|Lawyer|LegalService|HairSalon|BeautySalon|RoofingContractor|HomeAndConstructionBusiness|Plumber|MovingCompany|RealEstateAgent)[^"]*"/i.test(html);
+                    signals.hasMetaDescription = /<meta[^>]+name=["']description["']/i.test(html);
+                    homepageExcerpt = (typeof htmlToText === "function") ? htmlToText(html, 1400) : "";
+                } else {
+                    signals.reachable = false;
+                }
+            } catch { signals.reachable = false; }
+            try {
+                const base = url.replace(/\/+$/, "");
+                const rl = await safeGet(base + "/llms.txt", 5000);
+                signals.hasLlmsTxt = !!rl.ok;
+            } catch { signals.hasLlmsTxt = false; }
+        }
+
+        const userPrompt =
+`Unternehmen: ${business}
+Domain: ${domain || "(keine angegeben)"}
+Branche: ${branche || "(unbekannt)"}
+Ort: ${ort || "(unbekannt)"}
+
+Faktisch geprüfte technische Signale der Website:
+- erreichbar: ${signals.reachable}
+- JSON-LD Schema vorhanden: ${signals.hasSchema}
+- LocalBusiness/Organization-Schema: ${signals.hasLocalBusinessSchema}
+- Meta-Description: ${signals.hasMetaDescription}
+- llms.txt vorhanden: ${signals.hasLlmsTxt}${homepageExcerpt ? `\n\nHomepage-Auszug (gekürzt):\n${homepageExcerpt}` : ""}
+
+Bewerte die KI-Sichtbarkeit dieses Unternehmens ehrlich und liefere konkrete, branchenspezifische Fixes.`;
+
+        try {
+            const body = {
+                model: DEEP_RESEARCH_MODEL,
+                max_tokens: 2048,
+                system: [{ type: "text", text: KI_VIS_SYSTEM, cache_control: { type: "ephemeral" } }],
+                tools: [KI_VIS_TOOL],
+                tool_choice: { type: "tool", name: KI_VIS_TOOL.name },
+                messages: [{ role: "user", content: userPrompt }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": CLAUDE_API_KEY.value(),
+                    "anthropic-version": "2023-06-01"
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(45000)
+            });
+            if (!r.ok) {
+                const t = await r.text().catch(() => "");
+                throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+            }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === KI_VIS_TOOL.name);
+            if (!tu?.input) throw new Error("Claude lieferte kein tool_use-Payload");
+            return res.json({ ok: true, business, domain, signals, result: tu.input });
+        } catch (err) {
+            console.error("kiVisibility failed:", err);
+            return res.status(502).json({ error: "KI-Analyse fehlgeschlagen", details: String(err?.message || err).slice(0, 160) });
         }
     }
 );

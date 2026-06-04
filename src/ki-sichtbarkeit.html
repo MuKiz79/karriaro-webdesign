@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Sichtbarkeits-Spiegel — Was weiß die KI über Ihr Unternehmen? · Karriaro Webdesign</title>
+    <meta name="description" content="Sehen Sie live, was ChatGPT, Perplexity und Google-AI-Overviews über Ihr Unternehmen wissen — und wie Sie für die KI-Suche auffindbar werden.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/ki-sichtbarkeit">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Was weiß die KI über Ihr Unternehmen?">
+    <meta property="og:description" content="Der KI-Sichtbarkeits-Spiegel von Karriaro — live, ehrlich, mit konkreten Fixes für die generative Suche.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
+    <link rel="stylesheet" href="/css/fonts-inter.css?v=183">
+    <link rel="stylesheet" href="/css/tokens.css">
+    <style>
+        :root {
+            --kv-bg: #FBFAF7;
+            --kv-ink: #16202C;
+            --kv-navy: #1A2E40;
+            --kv-graphite: #515154;
+            --kv-gold: #C9A24B;
+            --kv-gold-text: #6E5F3F;
+            --kv-border: rgba(20, 32, 43, 0.14);
+            --kv-serif: 'Fraunces', Georgia, serif;
+            --kv-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --kv-mono: 'JetBrains Mono', ui-monospace, monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+        body { font-family: var(--kv-sans); color: var(--kv-graphite); background: var(--kv-bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+        a { color: var(--kv-gold-text); text-decoration: none; }
+        .kv-wrap { max-width: 760px; margin: 0 auto; padding: clamp(48px, 9vh, 96px) 24px 96px; }
+        .kv-eyebrow { font-family: var(--kv-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--kv-graphite); display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+        .kv-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--kv-gold); }
+        h1 { font-family: var(--kv-serif); font-weight: 400; font-size: clamp(34px, 6vw, 60px); line-height: 1.04; letter-spacing: -0.01em; color: var(--kv-ink); margin-bottom: 18px; }
+        h1 em { font-style: italic; color: var(--kv-gold-text); }
+        .kv-lede { font-size: clamp(16px, 2.4vw, 19px); color: var(--kv-graphite); max-width: 60ch; margin-bottom: 38px; }
+        /* Form */
+        .kv-form { display: grid; gap: 14px; margin-bottom: 8px; }
+        .kv-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 560px) { .kv-row { grid-template-columns: 1fr; } }
+        .kv-field label { display: block; font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--kv-graphite); margin-bottom: 6px; }
+        .kv-field input, .kv-field select { width: 100%; padding: 15px 16px; font-family: var(--kv-sans); font-size: 16px; color: var(--kv-ink); background: #fff; border: 1px solid rgba(20, 32, 43, 0.22); border-radius: 2px; transition: border-color 180ms ease, box-shadow 180ms ease; }
+        .kv-field input:focus, .kv-field select:focus { outline: none; border-color: var(--kv-gold); box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.18); }
+        .kv-field input::placeholder { color: rgba(20, 32, 43, 0.34); }
+        .kv-submit { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 28px; margin-top: 6px; font-family: var(--kv-sans); font-size: 16px; font-weight: 500; color: #fff; background: var(--kv-navy); border: 1px solid var(--kv-navy); border-radius: 2px; cursor: pointer; transition: background-color 180ms ease, transform 120ms ease; }
+        .kv-submit:hover { background: var(--kv-ink); }
+        .kv-submit:active { transform: translateY(1px); }
+        .kv-submit:disabled { opacity: 0.5; cursor: progress; }
+        .kv-submit .arrow { transition: transform 200ms ease; }
+        .kv-submit:hover .arrow { transform: translateX(3px); }
+        .kv-hint { font-size: 13px; color: var(--kv-graphite); margin-top: 12px; }
+        .kv-hint strong { color: var(--kv-gold-text); font-weight: 600; }
+        /* Loading */
+        .kv-stage { margin-top: 40px; display: none; }
+        .kv-stage.is-on { display: block; }
+        .kv-loading { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 40px 0; text-align: center; }
+        .kv-seal { width: 64px; height: 64px; color: var(--kv-navy); animation: kv-pulse 2.4s ease-in-out infinite; }
+        @keyframes kv-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        .kv-loading-text { font-family: var(--kv-serif); font-style: italic; font-size: 20px; color: var(--kv-navy); }
+        .kv-loading-sub { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); }
+        /* Result */
+        .kv-result { display: none; }
+        .kv-result.is-on { display: block; animation: kv-fade 600ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes kv-fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .kv-score-block { display: flex; align-items: baseline; gap: 18px; padding: 28px 0 22px; border-top: 2px solid var(--kv-ink); }
+        .kv-score-num { font-family: var(--kv-serif); font-weight: 400; font-size: clamp(56px, 14vw, 96px); line-height: 0.9; color: var(--kv-ink); }
+        .kv-score-num span { font-size: 0.4em; color: var(--kv-graphite); }
+        .kv-score-meta .kv-score-label { font-family: var(--kv-serif); font-style: italic; font-size: clamp(20px, 3.6vw, 28px); color: var(--kv-navy); line-height: 1.1; }
+        .kv-score-meta .kv-score-for { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); margin-top: 8px; }
+        .kv-card { background: #fff; border: 1px solid var(--kv-border); border-radius: 6px; padding: 24px 26px; margin-top: 22px; }
+        .kv-card-eyebrow { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); margin-bottom: 12px; }
+        .kv-aiknows { font-family: var(--kv-serif); font-size: clamp(18px, 2.8vw, 22px); line-height: 1.5; color: var(--kv-ink); font-style: italic; }
+        .kv-list { list-style: none; display: grid; gap: 14px; margin-top: 4px; }
+        .kv-list li { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+        .kv-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--kv-gold); margin-top: 9px; }
+        .kv-list .kv-li-title { font-weight: 600; color: var(--kv-ink); }
+        .kv-list .kv-li-why { color: var(--kv-graphite); font-size: 15px; }
+        .kv-signals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+        .kv-sig { font-family: var(--kv-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--kv-border); }
+        .kv-sig.ok { color: #2f6b4f; border-color: rgba(47, 107, 79, 0.4); }
+        .kv-sig.no { color: #8a3a33; border-color: rgba(138, 58, 51, 0.4); }
+        .kv-cta { margin-top: 30px; padding: 28px; background: var(--kv-navy); border-radius: 8px; color: #F1EFE7; text-align: center; }
+        .kv-cta h3 { font-family: var(--kv-serif); font-weight: 400; font-size: clamp(22px, 3.6vw, 30px); color: #fff; margin-bottom: 8px; }
+        .kv-cta p { color: rgba(241, 239, 231, 0.8); max-width: 48ch; margin: 0 auto 18px; font-size: 15px; }
+        .kv-cta a { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; background: var(--kv-gold); color: #16202C; font-weight: 600; border-radius: 2px; }
+        .kv-error { margin-top: 30px; padding: 20px 24px; border: 1px solid rgba(138, 58, 51, 0.4); border-radius: 6px; color: #8a3a33; background: rgba(138, 58, 51, 0.04); display: none; }
+        .kv-error.is-on { display: block; }
+        .kv-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--kv-border); font-size: 13px; color: var(--kv-graphite); }
+        .kv-foot a { text-decoration: underline; text-underline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) { .kv-seal { animation: none; opacity: 0.8; } .kv-result.is-on { animation: none; } }
+    </style>
+</head>
+<body>
+    <main class="kv-wrap">
+        <p class="kv-eyebrow">Karriaro · KI-Sichtbarkeit</p>
+        <h1>Was weiß die KI <em>wirklich</em> über Ihr Unternehmen?</h1>
+        <p class="kv-lede">Ihre Kunden fragen heute ChatGPT, Perplexity und Google-AI: „Wer macht das in meiner Stadt?" Sehen Sie live, wie die KI Ihr Unternehmen heute beschreibt — ehrlich, ungeschönt, mit konkreten Schritten zur KI-Auffindbarkeit.</p>
+
+        <form class="kv-form" id="kv-form" novalidate>
+            <div class="kv-field">
+                <label for="kv-business">Unternehmen *</label>
+                <input id="kv-business" name="business" type="text" placeholder="z. B. Salon Müller" required autocomplete="organization" />
+            </div>
+            <div class="kv-row">
+                <div class="kv-field">
+                    <label for="kv-domain">Website (optional)</label>
+                    <input id="kv-domain" name="domain" type="text" placeholder="ihre-webseite.de" autocomplete="url" autocapitalize="none" spellcheck="false" />
+                </div>
+                <div class="kv-field">
+                    <label for="kv-ort">Ort (optional)</label>
+                    <input id="kv-ort" name="ort" type="text" placeholder="z. B. Köln" autocomplete="address-level2" />
+                </div>
+            </div>
+            <div class="kv-field">
+                <label for="kv-branche">Branche (optional)</label>
+                <select id="kv-branche" name="branche">
+                    <option value="">— wählen —</option>
+                    <option>Friseur / Beauty</option>
+                    <option>Immobilien</option>
+                    <option>Arztpraxis / Medizin</option>
+                    <option>Gastronomie</option>
+                    <option>Handwerk / Sanitär</option>
+                    <option>Dachdecker / Bau</option>
+                    <option>Spedition / Logistik</option>
+                    <option>Coaching / Beratung</option>
+                    <option>Recht / Kanzlei</option>
+                    <option>Sonstige</option>
+                </select>
+            </div>
+            <button type="submit" class="kv-submit" id="kv-submit">
+                <span>KI-Spiegel zeigen</span>
+                <span class="arrow" aria-hidden="true">→</span>
+            </button>
+            <p class="kv-hint"><strong>Live-KI-Analyse.</strong> Keine Anmeldung. Wir speichern nichts ohne Ihre Zustimmung. Begrenzt auf wenige Abfragen pro Stunde (echte KI-Calls).</p>
+        </form>
+
+        <div class="kv-error" id="kv-error"></div>
+
+        <div class="kv-stage" id="kv-stage">
+            <div class="kv-loading" id="kv-loading">
+                <svg class="kv-seal" viewBox="0 0 90 90" aria-hidden="true" id="kv-seal-svg">
+                    <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
+                    <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
+                    <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
+                    <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
+                    <g id="kv-seal-dots"></g>
+                </svg>
+                <div class="kv-loading-text">Die KI schaut auf Ihr Unternehmen …</div>
+                <div class="kv-loading-sub">ChatGPT · Perplexity · AI-Overviews</div>
+            </div>
+
+            <div class="kv-result" id="kv-result">
+                <div class="kv-score-block">
+                    <div class="kv-score-num"><span id="kv-score-val">0</span><span>/100</span></div>
+                    <div class="kv-score-meta">
+                        <div class="kv-score-label" id="kv-score-label">—</div>
+                        <div class="kv-score-for" id="kv-score-for">KI-Sichtbarkeit</div>
+                    </div>
+                </div>
+
+                <div class="kv-signals" id="kv-signals"></div>
+
+                <div class="kv-card">
+                    <p class="kv-card-eyebrow">So beschreibt die KI Sie heute</p>
+                    <p class="kv-aiknows" id="kv-aiknows">—</p>
+                </div>
+
+                <div class="kv-card" id="kv-gaps-card">
+                    <p class="kv-card-eyebrow">Warum die KI Sie kaum findet</p>
+                    <ul class="kv-list" id="kv-gaps"></ul>
+                </div>
+
+                <div class="kv-card" id="kv-fixes-card">
+                    <p class="kv-card-eyebrow">So machen wir Sie KI-sichtbar</p>
+                    <ul class="kv-list" id="kv-fixes"></ul>
+                </div>
+
+                <div class="kv-cta">
+                    <h3>Soll Ihre Seite für die KI-Suche gebaut werden?</h3>
+                    <p>Genau das macht Karriaro: handcodierte Seiten mit strukturierten Daten, llms.txt und Antwort-Architektur — damit die KI Sie empfiehlt.</p>
+                    <a href="/#kontakt">Erstgespräch buchen →</a>
+                </div>
+            </div>
+        </div>
+
+        <p class="kv-foot">Der KI-Spiegel simuliert, wie generative Suchmaschinen ein Unternehmen anhand öffentlichen Wissens und technischer Signale (Schema, llms.txt, Struktur) einschätzen. Er erfindet keine Fakten. Zurück zu <a href="/">Karriaro Webdesign</a>.</p>
+    </main>
+
+    <script>
+        (function () {
+            var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+
+            // Phyllotaxis-Siegel (Lade-Animation) — dieselbe Marken-Blüte wie auf der Hauptseite
+            (function () {
+                var g = document.getElementById('kv-seal-dots');
+                if (!g) return;
+                var ns = 'http://www.w3.org/2000/svg';
+                var gA = (3 - Math.sqrt(5)) * Math.PI, N = 70, R = 34, c = R / Math.sqrt(N);
+                var FIB = { 1: 1, 2: 1, 3: 1, 5: 1, 8: 1, 13: 1, 21: 1, 34: 1, 55: 1 };
+                for (var n = 1; n <= N; n++) {
+                    var r = c * Math.sqrt(n), t = n * gA;
+                    var circ = document.createElementNS(ns, 'circle');
+                    circ.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
+                    circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
+                    circ.setAttribute('r', (c * 0.34).toFixed(2));
+                    circ.setAttribute('fill', FIB[n] ? '#C9A24B' : 'currentColor');
+                    g.appendChild(circ);
+                }
+            })();
+
+            var form = document.getElementById('kv-form');
+            var submit = document.getElementById('kv-submit');
+            var stage = document.getElementById('kv-stage');
+            var loading = document.getElementById('kv-loading');
+            var result = document.getElementById('kv-result');
+            var errBox = document.getElementById('kv-error');
+
+            function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]; }); }
+
+            function showError(msg) {
+                errBox.textContent = msg;
+                errBox.classList.add('is-on');
+                stage.classList.remove('is-on');
+                submit.disabled = false;
+                submit.querySelector('span').textContent = 'KI-Spiegel zeigen';
+            }
+
+            function countUp(el, target) {
+                var start = performance.now(), dur = 1400;
+                function tick(now) {
+                    var p = Math.min(1, (now - start) / dur);
+                    var eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(target * eased);
+                    if (p < 1) requestAnimationFrame(tick); else el.textContent = target;
+                }
+                requestAnimationFrame(tick);
+            }
+
+            function renderSignals(sig) {
+                if (!sig) return '';
+                var defs = [
+                    ['hasSchema', 'Schema'],
+                    ['hasLocalBusinessSchema', 'LocalBusiness'],
+                    ['hasMetaDescription', 'Meta-Description'],
+                    ['hasLlmsTxt', 'llms.txt']
+                ];
+                var html = '';
+                defs.forEach(function (d) {
+                    var v = sig[d[0]];
+                    if (v === null || v === undefined) return;
+                    html += '<span class="kv-sig ' + (v ? 'ok' : 'no') + '">' + (v ? '✓ ' : '✗ ') + d[1] + '</span>';
+                });
+                return html;
+            }
+
+            function renderList(el, items, titleKey, whyKey) {
+                el.innerHTML = (items || []).map(function (it) {
+                    if (typeof it === 'string') return '<li><span class="kv-li-why">' + esc(it) + '</span></li>';
+                    return '<li><span><span class="kv-li-title">' + esc(it[titleKey]) + '</span><br><span class="kv-li-why">' + esc(it[whyKey]) + '</span></span></li>';
+                }).join('');
+            }
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                errBox.classList.remove('is-on');
+                var business = document.getElementById('kv-business').value.trim();
+                if (business.length < 2) { document.getElementById('kv-business').focus(); return; }
+                var payload = {
+                    business: business,
+                    domain: document.getElementById('kv-domain').value.trim(),
+                    ort: document.getElementById('kv-ort').value.trim(),
+                    branche: document.getElementById('kv-branche').value
+                };
+                submit.disabled = true;
+                submit.querySelector('span').textContent = 'Analysiert …';
+                stage.classList.add('is-on');
+                loading.style.display = 'flex';
+                result.classList.remove('is-on');
+
+                var ctrl = new AbortController();
+                var to = setTimeout(function () { ctrl.abort(); }, 55000);
+
+                fetch(FN_BASE + '/kiVisibility', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                    signal: ctrl.signal
+                }).then(function (r) {
+                    clearTimeout(to);
+                    if (r.status === 429) throw new Error('Zu viele Abfragen — bitte in einer Stunde erneut (echte KI-Calls sind begrenzt).');
+                    return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Analyse fehlgeschlagen.'); return j; });
+                }).then(function (j) {
+                    var res = j.result || {};
+                    loading.style.display = 'none';
+                    document.getElementById('kv-aiknows').textContent = res.aiKnows || '—';
+                    document.getElementById('kv-score-label').textContent = res.scoreLabel || '—';
+                    document.getElementById('kv-signals').innerHTML = renderSignals(j.signals);
+                    renderList(document.getElementById('kv-gaps'), res.gaps, 'gap', 'why');
+                    renderList(document.getElementById('kv-fixes'), res.fixes, 'fix', 'impact');
+                    document.getElementById('kv-gaps-card').style.display = (res.gaps && res.gaps.length) ? '' : 'none';
+                    document.getElementById('kv-fixes-card').style.display = (res.fixes && res.fixes.length) ? '' : 'none';
+                    result.classList.add('is-on');
+                    countUp(document.getElementById('kv-score-val'), Math.max(0, Math.min(100, parseInt(res.visibilityScore, 10) || 0)));
+                    submit.disabled = false;
+                    submit.querySelector('span').textContent = 'Erneut prüfen';
+                    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }).catch(function (err) {
+                    clearTimeout(to);
+                    loading.style.display = 'none';
+                    showError(err.name === 'AbortError' ? 'Zeitüberschreitung — die KI-Analyse hat zu lange gedauert. Bitte erneut versuchen.' : (err.message || 'Analyse fehlgeschlagen.'));
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
