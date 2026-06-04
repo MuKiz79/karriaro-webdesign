@@ -185,13 +185,13 @@ function injectMInteractionsScript(html) {
 // Transformationen
 // ────────────────────────────────────────────────────────────────
 
-// Lighthouse-Tracker (t.js) auf Mobil entfernen. Der m-Origin ist im Lighthouse-
-// Produkt (noch) NICHT freigegeben → /api/track/* liefert 403/404 = 0 Daten +
-// ~27 Konsolen-Fehler (Awwwards-Blocker: Jury öffnet DevTools). Reversibel, sobald
-// m.karriaro-webdesign.de in Lighthouse als Origin registriert ist. Der separate
-// /api/public/lighthouse-score-Fetch (Self-Audit §11) bleibt unangetastet.
+// Lighthouse-Tracker (t.js) auf Mobil: jetzt AKTIV (No-Op). Der m-Origin
+// (m.karriaro-webdesign.de) ist seit 2026-06-04 in der Lighthouse-CORS-Allowlist
+// registriert (Site.origins, Lighthouse-Commit e09bd9c) → /api/track/* + t.js (ACAO:*)
+// funktionieren vom m-Origin, keine Konsolen-Fehler mehr → Mobil-Analytics zurück.
+// Funktion + Call-Site bleiben als 1-Zeilen-Kill-Switch falls je wieder nötig.
 function stripTracker(html) {
-    return html.replace(/<script[^>]*lighthouse\.karriaro\.de\/t\.js[^>]*><\/script>\s*/g, '');
+    return html; // war: Tracker entfernen, solange m-Origin nicht freigegeben war
 }
 
 function stripAutoRedirect(html) {
