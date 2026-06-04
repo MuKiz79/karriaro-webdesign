@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=422">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=422" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=422"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=423">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=423" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=423"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -168,7 +168,7 @@ function addMainContentAnchor(html) {
 // bereits geladen (`<script>`-Tag in src/index.html). Hier nicht
 // doppelt injizieren, sonst läuft die IIFE 2× und bindet Submit-
 // Handler doppelt.
-const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=422" defer></script>\n`;
+const M_INTERACTIONS_SCRIPT = `\n<script src="/js/m-interactions.js?v=423" defer></script>\n`;
 
 function injectMInteractionsScript(html) {
     if (html.includes('m-interactions.js')) return html;

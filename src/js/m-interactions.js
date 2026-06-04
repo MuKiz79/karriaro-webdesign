@@ -410,12 +410,22 @@
         toggle.onclick = null;
         toggle.setAttribute('aria-expanded', 'false');
         toggle.setAttribute('aria-controls', 'mobile-menu');
+        // Scrim (abgedunkelter Hintergrund unter dem angedockten Panel) — Tap schliesst.
+        var scrim = document.querySelector('.m-menu-scrim');
+        if (!scrim) {
+            scrim = document.createElement('div');
+            scrim.className = 'm-menu-scrim';
+            scrim.setAttribute('aria-hidden', 'true');
+            document.body.appendChild(scrim);
+        }
+        scrim.addEventListener('click', function () { closeMenu(); });
         function isOpen() { return menu.classList.contains('open'); }
         function focusables() {
             return menu.querySelectorAll('a[href], button:not([disabled])');
         }
         function openMenu() {
             menu.classList.add('open');
+            scrim.classList.add('show');
             document.body.style.overflow = 'hidden'; // Scroll-Lock während Menü offen
             toggle.setAttribute('aria-expanded', 'true');
             toggle.setAttribute('aria-label', 'Menü schließen');
@@ -424,6 +434,7 @@
         }
         function closeMenu(returnFocus) {
             menu.classList.remove('open');
+            scrim.classList.remove('show');
             document.body.style.overflow = '';
             toggle.setAttribute('aria-expanded', 'false');
             toggle.setAttribute('aria-label', 'Menü öffnen');
