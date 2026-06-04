@@ -3206,20 +3206,23 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .kr-audit-magic-form input[type="url"] {
             flex: 1 1 280px;
             min-width: 0;
-            padding: 14px 18px;
+            padding: 16px 18px 16px 46px;
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 16px;
             line-height: 1.4;
             color: var(--color-graphite);
-            background: #fff;
-            border: 1px solid rgba(20, 32, 43, 0.18);
+            /* Globe-Icon (Gold-Text) als „Ihre Website"-Affordance, links im Feld */
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236E5F3F' stroke-width='1.6' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='8.5'/%3E%3Cpath d='M3.5 12h17'/%3E%3Cpath d='M12 3.5c2.8 2.4 2.8 14.6 0 17'/%3E%3Cpath d='M12 3.5c-2.8 2.4-2.8 14.6 0 17'/%3E%3C/svg%3E") no-repeat 17px center;
+            background-size: 19px 19px;
+            border: 1px solid rgba(20, 32, 43, 0.22);
             border-radius: 2px;
             transition: border-color 180ms ease, box-shadow 180ms ease;
         }
         .kr-audit-magic-form input[type="url"]:focus {
             outline: none;
-            border-color: var(--color-graphite);
-            box-shadow: 0 0 0 3px rgba(20, 32, 43, 0.08);
+            /* Gold-Fokus (Messing) statt Navy — Premium-Signal */
+            border-color: #C9A24B;
+            box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.18);
         }
         .kr-audit-magic-form input[type="url"]::placeholder {
             color: rgba(20, 32, 43, 0.35);
