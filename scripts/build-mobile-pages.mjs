@@ -421,10 +421,13 @@ function compactHeroEyebrow(html) {
     // Sprint 151 — Folio-Numbering "№ 01" raus (radikal-Apple).
     // Voice-Polish bleibt: Word-Doppelung MANUFAKTUR raus,
     // „Frühjahr 2026" → „Ein Atelier".
+    // 2026-06-04 — „Karriaro" raus (Founder): die mobile Eyebrow soll nur noch
+    // „Für jede Profession · Ein Atelier" zeigen.
     return html.replace(
         /<p class="hero-folio-eyebrow[^"]*"[^>]*>[\s\S]*?<\/p>/,
         (match) => match
             .replace(/<span>№[\s&nbsp;]*01<\/span>\s*<span class="dot">·<\/span>\s*/i, '')
+            .replace(/<span>Karriaro<\/span>\s*<span class="dot">·<\/span>\s*/i, '')
             .replace(/>Webdesign-Manufaktur</gi, '>Für jede Profession<')
             .replace(/>Frühjahr\s+2026</gi, '>Ein Atelier<')
     );
