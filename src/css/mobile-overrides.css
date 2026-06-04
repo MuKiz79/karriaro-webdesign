@@ -33,8 +33,12 @@
         --apple-platinum: #6E6E73;      /* tertiary text — Sprint 152: 4.7:1 AA-konform */
         --apple-snow: #FFFFFF;          /* white surfaces */
         --apple-fog: #F5F5F7;           /* light-grey card-section bg */
-        --apple-blue: #0071E3;          /* system-blue CTA */
-        --apple-blue-hover: #0077ED;    /* :active state */
+        /* 2026-06-04 — iOS-System-Blau raus (klatschte gegen die warme Marke). Buttons/Focus/
+           Border = Marken-Navy; Text-Links = warmer Gold-Text (--kr-link-warm), vom dunklen
+           Fließtext unterscheidbar. */
+        --apple-blue: #1A2E40;          /* Marken-Navy (Buttons/Focus/Border/Spinner) */
+        --apple-blue-hover: #0F1F2E;    /* :active — dunkleres Navy */
+        --kr-link-warm: #6E5F3F;        /* Text-Link-Akzent (AA 5.97:1 auf Creme) */
         --apple-hairline: rgba(0, 0, 0, 0.12);    /* Sprint 152: 0.08→0.12 WCAG-Divider */
         /* Sprint 152 — 3-Stufen-Card-Shadow-System */
         --apple-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -124,7 +128,7 @@
     }
 
     a {
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
         text-decoration: none;
     }
 
@@ -781,7 +785,7 @@
         font-family: var(--apple-font-text);
         font-size: 14px;
         font-weight: 500;
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
         margin-top: 6px;
     }
 
@@ -885,7 +889,7 @@
     .m-persona-icon {
         width: 32px;
         height: 32px;
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
         margin-bottom: 4px;
     }
     .m-persona-name {
@@ -1049,7 +1053,7 @@
         font-family: var(--apple-font-text);
         font-size: 17px;
         font-weight: 500;
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
     }
     .m-siegel-link:hover {
         text-decoration: underline;
@@ -1105,7 +1109,7 @@
         margin: 4px;
     }
     .kr-perf-pill strong {
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
         font-weight: 700;
     }
 }
@@ -1194,7 +1198,7 @@
     #kontakt textarea:focus,
     .kr-letter-form input:focus,
     .kr-letter-form textarea:focus {
-        border-color: var(--apple-blue);
+        border-color: var(--kr-link-warm);
     }
     #kontakt button[type="submit"],
     .kr-letter-form button[type="submit"],
@@ -1366,7 +1370,7 @@
         width: 32px;
         height: 32px;
         border: 3px solid var(--apple-hairline);
-        border-top-color: var(--apple-blue);
+        border-top-color: var(--kr-link-warm);
         border-radius: 50%;
         animation: m-spin 0.9s linear infinite;
     }
@@ -1389,7 +1393,7 @@
         font-family: var(--apple-font-text);
         font-size: 15px;
         font-weight: 500;
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
     }
 }
 
@@ -1448,7 +1452,7 @@
         color: var(--apple-graphite);
     }
     footer a:hover {
-        color: var(--apple-blue);
+        color: var(--kr-link-warm);
     }
     footer ul {
         list-style: none;
