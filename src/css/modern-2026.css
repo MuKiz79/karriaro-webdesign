@@ -125,11 +125,27 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* Section-Headlines auf der Page faden in wenn sichtbar */
+        /* Section-Headlines: Line-Mask-Reveal — der Titel wischt beim Reinscrollen
+         * aus einer Clip-Maske nach oben auf (Award-Editorial-Type-Reveal, Sprint 215).
+         * Scroll-driven (kein JS), reduced-motion unten neutralisiert. */
         section h2 {
-            animation: kr-rise-fade linear both;
+            animation: kr-mask-rise linear both;
             animation-timeline: view();
-            animation-range: entry 0% entry 60%;
+            animation-range: entry 5% entry 55%;
+        }
+
+        @keyframes kr-mask-rise {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+                clip-path: inset(0 0 100% 0);
+            }
+            60% { opacity: 1; }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                clip-path: inset(0 0 -10% 0);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {

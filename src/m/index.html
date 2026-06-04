@@ -217,9 +217,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <!-- Sprint 159 — Modern-2026-Tech-Layer (oklch/color-mix, View Transitions,
          Scroll-Driven Animations, Container Queries, @starting-style). Alle Features
          @supports-gesichert → graceful Fallback bei alten Browsern. -->
-    <link rel="preload" as="style" href="/css/modern-2026.css?v=410">
-    <link rel="stylesheet" href="/css/modern-2026.css?v=410" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=410"></noscript>
+    <link rel="preload" as="style" href="/css/modern-2026.css?v=426">
+    <link rel="stylesheet" href="/css/modern-2026.css?v=426" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=426"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
@@ -3642,6 +3642,54 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         } catch(e) {}
     })();
     </script>
+    <!-- Sprint 215 — JS-Flag: Reveal-States NUR aktiv wenn JS läuft (ohne JS voll sichtbar, kein FOUC). -->
+    <script>document.documentElement.classList.add('kr-js');</script>
+    <style>
+        /* Sprint 215 — Signatur-Motion (Award Phase 2): Editorial-Reveal + Phyllotaxis-Siegel-Bloom.
+           Alles unter .kr-js → ohne JS voll sichtbar; reduced-motion = statisch. Dezent getunt. */
+        @media (prefers-reduced-motion: no-preference) {
+            /* (1) Headline-Line-Mask: wird NICHT hier gemacht — es existiert bereits ein
+               natives scroll-driven Reveal (animation-timeline: view()) auf `section h2`
+               in modern-2026.css. Dort zu kr-mask-rise aufgewertet (ein kohärentes System
+               statt zweier konkurrierender). Hier nur Folio-Rise + Siegel-Bloom. */
+            /* (2) Folio-Rise — Eyebrow-Folios steigen sanft ein (zero layout-shift) */
+            .kr-js .kr-rv-folio {
+                opacity: 0;
+                transform: translateY(7px);
+                transition: opacity 560ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .kr-js .kr-rv-folio.kr-rv-in { opacity: 1; transform: translateY(0); }
+
+            /* (3) Phyllotaxis-Siegel-Bloom — Punkte erblühen von innen nach außen (Delay ∝ n) */
+            .kr-js .kr-seal-dot {
+                opacity: 0;
+                transform: scale(0);
+                transform-box: fill-box;
+                transform-origin: center;
+                transition: transform 560ms cubic-bezier(0.16, 1, 0.3, 1), opacity 360ms ease;
+                transition-delay: calc(var(--i, 0) * 7ms);
+            }
+            .kr-js .kr-seal-bloom.kr-rv-in .kr-seal-dot { opacity: 1; transform: scale(1); }
+            /* Gold-Fibonacci-Punkte zünden mit kurzem Glanz, nachdem ihr Punkt erblüht ist */
+            .kr-js .kr-seal-bloom.kr-rv-in .kr-seal-dot--gold {
+                animation: kr-gold-spark 1000ms ease-out calc(640ms + var(--i, 0) * 7ms) 1;
+            }
+            @keyframes kr-gold-spark {
+                0%   { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
+                42%  { filter: drop-shadow(0 0 3px rgba(201, 162, 75, 0.85)); }
+                100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
+            }
+            /* (4) Bestehenden Section-Reveal edler timen (Premium-Ease statt ease) */
+            .fade-in {
+                transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                            transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .kr-seal-dot { opacity: 1 !important; transform: none !important; }
+            .fade-in { transform: none !important; }
+        }
+    </style>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=425">
     <link rel="stylesheet" href="/css/mobile-overrides.css?v=425" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=425"></noscript>
@@ -4864,7 +4912,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                  aus dem Hero hierher verschoben: Codex-Heimat „Deep-Moment". Pulsiert subtil
                  (prefers-reduced-motion respected). -->
             <div class="kr-seal-block" aria-hidden="true">
-                <svg class="kr-seal" width="72" height="72" viewBox="0 0 90 90">
+                <svg class="kr-seal kr-seal-bloom" width="72" height="72" viewBox="0 0 90 90">
                     <path d="M 5 18 L 5 5 L 18 5" stroke="currentColor" stroke-width="1.5" fill="none"/>
                     <path d="M 72 5 L 85 5 L 85 18" stroke="currentColor" stroke-width="1.5" fill="none"/>
                     <path d="M 5 72 L 5 85 L 18 85" stroke="currentColor" stroke-width="1.5" fill="none"/>
@@ -4891,6 +4939,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
                         circ.setAttribute('r', (c * 0.34).toFixed(2));
                         circ.setAttribute('fill', gold ? '#C9A24B' : 'currentColor');
+                        // Sprint 215 — Bloom-Hooks: Klasse + Index (n ist radius-geordnet → Bloom von innen)
+                        circ.setAttribute('class', gold ? 'kr-seal-dot kr-seal-dot--gold' : 'kr-seal-dot');
+                        circ.style.setProperty('--i', n);
                         g.appendChild(circ);
                     }
                 })();
@@ -6471,6 +6522,36 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     tiltHost.addEventListener('mouseleave', function () { tiltRect = null; tiltFrame.style.transform = ''; });
                 }
             }
+        })();
+    </script>
+
+    <!-- Sprint 215 — Signatur-Motion-Verdrahtung (Award Phase 2). Reduced-motion + no-IO = no-op
+         (Elemente bleiben voll sichtbar, da Reveal-States nur via .kr-rv-in + .kr-js greifen). -->
+    <script>
+        (function () {
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            if (!('IntersectionObserver' in window)) return;
+
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('kr-rv-in');
+                        io.unobserve(e.target);
+                    }
+                });
+            }, { threshold: 0.2, rootMargin: '0px 0px -8% 0px' });
+
+            // (1) Headline-Line-Mask: läuft nativ (animation-timeline) in modern-2026.css
+            //     (section h2 → kr-mask-rise). KEIN JS-Mask hier — würde kollidieren.
+            // (2) Folio-Rise auf die Sektions-Eyebrows (№ 0X) — nativ NICHT abgedeckt, daher JS
+            document.querySelectorAll('.hero-eyebrow').forEach(function (el) {
+                el.classList.add('kr-rv-folio');
+                io.observe(el);
+            });
+            // (3) Phyllotaxis-Siegel-Bloom (Dots tragen Klasse/--i aus der Seal-Generierung)
+            document.querySelectorAll('.kr-seal-bloom').forEach(function (el) {
+                io.observe(el);
+            });
         })();
     </script>
 
