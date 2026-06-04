@@ -217,7 +217,7 @@
         -webkit-backdrop-filter: blur(20px) saturate(180%);
         backdrop-filter: blur(20px) saturate(180%);
         border-bottom: 1px solid var(--apple-hairline);
-        z-index: 60;
+        z-index: 80; /* über .mobile-menu (z-index 70) → Burger/X bleibt tappbar, wenn Menü offen */
         display: flex;
         align-items: center;
         padding: 0 var(--apple-section-pad-x);
@@ -257,6 +257,13 @@
         color: var(--apple-ink);
         cursor: pointer;
     }
+
+    /* Header reduziert auf Logo + Burger — „Erstgespräch" lebt im Menü + Hero/Kontakt */
+    nav .cta { display: none; }
+
+    /* Pull-Quote-Interlude nur Desktop — das Motto trägt auf Mobil die
+       injizierte „№ 05 · Unser Versprechen"-Sektion (build-mobile-pages.mjs) */
+    .kr-quote-hero { display: none; }
 
     /* Mobile-Overlay-Menu */
     .mobile-menu {

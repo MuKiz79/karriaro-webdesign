@@ -610,6 +610,10 @@
         nav .cta:hover { background: var(--color-indigo); color: #fff; }
         nav .menu-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
         nav .menu-toggle span { display: block; width: 18px; height: 2px; background: var(--color-onyx); margin: 4px 0; transition: all 0.3s; }
+        /* Burger → X, sobald geöffnet (via aria-expanded, das beim Öffnen gesetzt wird) */
+        nav .menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        nav .menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+        nav .menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
         .mobile-menu { display: none; position: fixed; top: 72px; left: 0; right: 0; background: rgba(251,251,253,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 24px; border-bottom: 1px solid rgba(0,0,0,0.06); z-index: 49; }
         .mobile-menu.open { display: flex; flex-direction: column; gap: 20px; }
         .mobile-menu a { font-size: 17px; color: var(--color-onyx); font-weight: 500; }
@@ -2423,14 +2427,14 @@
             }
         }
         .kr-pull-quote--hero {
-            font-size: clamp(48px, 8.5vw, 132px) !important;
-            line-height: 0.98 !important;
-            letter-spacing: -0.028em !important;
-            max-width: 1280px !important;
+            font-size: clamp(40px, 6vw, 92px) !important;
+            line-height: 1.02 !important;
+            letter-spacing: -0.022em !important;
+            max-width: 1100px !important;
         }
         .kr-pull-quote--hero::before {
-            font-size: clamp(180px, 22vw, 320px) !important;
-            top: -0.22em !important;
+            font-size: clamp(120px, 14vw, 200px) !important;
+            top: -0.20em !important;
         }
         .kr-founder-pov { max-width: 1200px; padding: 0 24px; }
         .kr-founder-pov-grid {
@@ -4495,8 +4499,8 @@
         <!-- 60vh Pull-Quote-Hero -->
         <div class="kr-quote-hero">
             <blockquote class="kr-pull-quote kr-pull-quote--hero">
-                <p>Handcodierte Unikate mit eingebauten Werkzeugen, die mitarbeiten und für die KI-Auffindbarkeit optimiert sind.</p>
-                <cite>Wenn Ihr Name draufsteht, steht unserer dahinter. — Karriaro-Versprechen</cite>
+                <p>Wenn Ihr Name draufsteht, steht unserer dahinter.</p>
+                <cite>Karriaro-Versprechen</cite>
             </blockquote>
             <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel (Goldener Winkel 137,5° · 13 Punkte),
                  aus dem Hero hierher verschoben: Codex-Heimat „Deep-Moment". Pulsiert subtil

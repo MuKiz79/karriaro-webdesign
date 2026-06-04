@@ -416,6 +416,7 @@
         }
         function openMenu() {
             menu.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Scroll-Lock während Menü offen
             toggle.setAttribute('aria-expanded', 'true');
             toggle.setAttribute('aria-label', 'Menü schließen');
             var first = focusables()[0];
@@ -423,6 +424,7 @@
         }
         function closeMenu(returnFocus) {
             menu.classList.remove('open');
+            document.body.style.overflow = '';
             toggle.setAttribute('aria-expanded', 'false');
             toggle.setAttribute('aria-label', 'Menü öffnen');
             if (returnFocus !== false) toggle.focus();
@@ -430,6 +432,10 @@
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             if (isOpen()) closeMenu(); else openMenu();
+        });
+        // Tap auf den leeren Menü-Hintergrund (nicht auf einen Link) schliesst
+        menu.addEventListener('click', function (e) {
+            if (e.target === menu) closeMenu();
         });
         // Link-Click im Menu schliesst es (Navigation passiert sowieso)
         menu.querySelectorAll('a').forEach(function (a) {
