@@ -185,6 +185,15 @@ function injectMInteractionsScript(html) {
 // Transformationen
 // ────────────────────────────────────────────────────────────────
 
+// Lighthouse-Tracker (t.js) auf Mobil entfernen. Der m-Origin ist im Lighthouse-
+// Produkt (noch) NICHT freigegeben → /api/track/* liefert 403/404 = 0 Daten +
+// ~27 Konsolen-Fehler (Awwwards-Blocker: Jury öffnet DevTools). Reversibel, sobald
+// m.karriaro-webdesign.de in Lighthouse als Origin registriert ist. Der separate
+// /api/public/lighthouse-score-Fetch (Self-Audit §11) bleibt unangetastet.
+function stripTracker(html) {
+    return html.replace(/<script[^>]*lighthouse\.karriaro\.de\/t\.js[^>]*><\/script>\s*/g, '');
+}
+
 function stripAutoRedirect(html) {
     // Greift jeden inline-<script>-Block, der "m.karriaro-webdesign.de" enthält.
     // Sprint 140 — Negative-Lookahead gegen </script>, damit der Regex NICHT
@@ -970,6 +979,7 @@ function buildPage(relPath) {
     let html = readFileSync(srcFile, 'utf8');
 
     html = stripAutoRedirect(html);
+    html = stripTracker(html);
 
     // Sprint 191 — en/ ist eine self-contained, bereits responsive Seite (eigener
     // Viewport, 23 eigene @media-Queries, eigenes Inline-CSS + /css/fonts.css). Die
