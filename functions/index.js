@@ -1606,3 +1606,87 @@ Bewerte die KI-Sichtbarkeit dieses Unternehmens ehrlich und liefere konkrete, br
         }
     }
 );
+
+// ════════════════════════════════════════════════════════════════════════════
+// Branchen-KI-Concierge (2026-06-04) — KI-Werkzeug #2. Echter LLM-Assistent pro
+// Branche: kennt die Leistungen des Betriebs, beantwortet Besucherfragen frei,
+// qualifiziert + routet zur passenden Aktion (Termin/Wertermittlung/Anfrage).
+// "Werkzeuge, die mitarbeiten" — wörtlich. Multi-Turn, Claude Haiku (günstig/schnell).
+// ════════════════════════════════════════════════════════════════════════════
+const CONCIERGE_MODEL = "claude-haiku-4-5-20251001";
+const CONCIERGE_BASE = `Du bist der digitale Concierge auf der Website eines lokalen Betriebs (Demo von Karriaro Webdesign). Antworte kurz (2-4 Sätze), freundlich, auf Deutsch, mit Sie-Anrede. Beantworte die Frage konkret aus dem Leistungs-Kontext und leite den Besucher sanft zur passenden nächsten Aktion (z.B. Termin buchen, Anfrage senden, Rechner nutzen). Erfinde KEINE Preise/Termine/Fakten, die nicht im Kontext stehen — bei Unsicherheit biete an, eine Anfrage weiterzuleiten. Dies ist eine Demo: bei einer echten Buchung sag freundlich, dass in der Live-Version direkt gebucht/angefragt würde. Kein Markdown, keine Aufzählungszeichen, reiner Fließtext.`;
+const CONCIERGE_PERSONAS = {
+    immobilien: `Betrieb: Stadtmakler Stuttgart (Immobilienmakler, Stuttgart). Leistungen: kostenlose Wertermittlung in 60 Sekunden (Objekttyp/PLZ/m²/Baujahr), Live-Filter-Suche, Off-Market-Portfolio für eingeloggte Käufer, Verkäufer-Dashboard, Marktbarometer, IVD-Mitglied + HypZert-Sachverständige. Typische Aktionen: „Wertermittlung starten", „Erstgespräch vereinbaren", „Suche mit Live-Filter".`,
+    friseur: `Betrieb: Salon Müller (Aveda Concept Salon, Düsseldorf). Leistungen: Online-Buchung 24/7, Wunsch-Stylist (Laura/Mara/Tim), Schnitt/Coloration/Strähnen/Brautstyling, Kopfhautanalyse, Late-Night-Slots Do/Fr, KI-Stilberatung. Typische Aktionen: „Termin online buchen", „Stil finden".`,
+    praxis: `Betrieb: Hausarztpraxis Dr. Weber (München). Leistungen: Online-Terminbuchung, E-Rezept-Anfrage, Symptom-Checker (routet zur richtigen Sprechstunde), Telemedizin, BFSG-konform. Ärzte: Dr. Weber, Dr. Klein. Wichtig: KEINE medizinische Diagnose/Beratung geben — bei Beschwerden zur Terminbuchung oder zum Symptom-Checker leiten, im Notfall auf 112 hinweisen.`,
+    restaurant: `Betrieb: Goldener Hirsch (saisonale Küche, Bio-zertifiziert, Slow-Food, München-Schwabing, seit 1987). Leistungen: Online-Tisch-Reservierung, Speisekarte mit Allergen-/Diät-Filter, KI-Sommelier (Weinempfehlung zum Gericht), Saisonkarte, Veranstaltungs-Anfragen. Typische Aktionen: „Tisch reservieren", „Veranstaltung anfragen".`,
+    dachdecker: `Betrieb: Dachdecker Berger (Meisterbetrieb). Leistungen: Foto-Upload zur Anfrage → Festpreis in 48 Stunden, Sanierungs-Konfigurator mit BAFA/KfW-Förderrechner, Sturm-Notdienst, Material-Auswahl (PREFA/BRAAS/Eternit/ZinCo), Innungs-Zertifikat. Typische Aktionen: „PDF-Report anfordern", „Förderung berechnen", „Termin reservieren".`,
+    spedition: `Betrieb: Schwaben Logistik (Spedition). Leistungen: Tarif-Rechner (PLZ+Gewicht → Frachtkosten+ETA), Frachtanfrage-Formular, Sendungs-Tracking, Compliance-Dokumente (GDP/ADR/IFS/ISO), Flotten-Auslastung, Schadensmeldung. Typische Aktionen: „Frachtkosten berechnen", „Angebot anfordern", „Sendung verfolgen".`,
+    handwerk: `Betrieb: Meisterbetrieb Müller (Sanitär & Heizung). Leistungen: Festpreis-/Förderrechner (Bad-Sanierung/Heizungstausch/Solar), Foto-zu-Festpreis, Notdienst-Status, Projekt-Galerie, Innungs-Mitglied. Typische Aktionen: „Förderung berechnen", „Anfrage senden".`,
+    coaching: `Betrieb: Coach Lehmann (Business-Coaching für C-Level, Frankfurt). Leistungen: kostenloses 30-Min-Online-Erstgespräch (Calendly), Methoden-Übersicht, Klarheits-Score-Selbsttest, Referenzen, Blog. Typische Aktionen: „Erstgespräch buchen", „Score berechnen".`
+};
+
+// ─── concierge ─── POST { branche, messages:[{role,content}] }
+exports.concierge = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 30,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Konversationell → großzügiger, aber gedeckelt (Haiku ist günstig)
+        if (await enforceRateLimit(db, req, res, "concierge", 40, 3600)) return;
+
+        let { branche = "", messages = [] } = req.body || {};
+        branche = String(branche || "").trim().toLowerCase().slice(0, 40);
+        if (!Array.isArray(messages) || messages.length === 0) {
+            return res.status(400).json({ error: "messages erforderlich" });
+        }
+        // Validieren + säubern (max 12 Turns, je 800 Zeichen, nur user/assistant)
+        const clean = messages
+            .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+            .slice(-12)
+            .map(m => ({ role: m.role, content: m.content.trim().slice(0, 800) }))
+            .filter(m => m.content.length > 0);
+        if (clean.length === 0 || clean[clean.length - 1].role !== "user") {
+            return res.status(400).json({ error: "letzte Nachricht muss vom Nutzer sein" });
+        }
+
+        const persona = CONCIERGE_PERSONAS[branche] || `Betrieb: ein lokaler Dienstleister. Leite Besucher freundlich zur Kontaktaufnahme/Anfrage.`;
+        const system = CONCIERGE_BASE + "\n\nKONTEXT DIESES BETRIEBS:\n" + persona;
+
+        try {
+            const body = {
+                model: CONCIERGE_MODEL,
+                max_tokens: 400,
+                system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+                messages: clean
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": CLAUDE_API_KEY.value(),
+                    "anthropic-version": "2023-06-01"
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(25000)
+            });
+            if (!r.ok) {
+                const t = await r.text().catch(() => "");
+                throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+            }
+            const data = await r.json();
+            const reply = (data.content || []).filter(c => c.type === "text").map(c => c.text).join(" ").trim();
+            if (!reply) throw new Error("leere Antwort");
+            return res.json({ ok: true, reply });
+        } catch (err) {
+            console.error("concierge failed:", err);
+            return res.status(502).json({ error: "Concierge nicht erreichbar", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
