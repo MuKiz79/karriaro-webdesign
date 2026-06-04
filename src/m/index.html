@@ -217,9 +217,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <!-- Sprint 159 — Modern-2026-Tech-Layer (oklch/color-mix, View Transitions,
          Scroll-Driven Animations, Container Queries, @starting-style). Alle Features
          @supports-gesichert → graceful Fallback bei alten Browsern. -->
-    <link rel="preload" as="style" href="/css/modern-2026.css?v=426">
-    <link rel="stylesheet" href="/css/modern-2026.css?v=426" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=426"></noscript>
+    <link rel="preload" as="style" href="/css/modern-2026.css?v=427">
+    <link rel="stylesheet" href="/css/modern-2026.css?v=427" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/modern-2026.css?v=427"></noscript>
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
@@ -3653,31 +3653,44 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                natives scroll-driven Reveal (animation-timeline: view()) auf `section h2`
                in modern-2026.css. Dort zu kr-mask-rise aufgewertet (ein kohärentes System
                statt zweier konkurrierender). Hier nur Folio-Rise + Siegel-Bloom. */
-            /* (2) Folio-Rise — Eyebrow-Folios steigen sanft ein (zero layout-shift) */
+            /* (2) Folio-Rise — Eyebrow-Folios steigen ein + Fokus-in (Blur → scharf) */
             .kr-js .kr-rv-folio {
                 opacity: 0;
-                transform: translateY(7px);
-                transition: opacity 560ms ease, transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+                transform: translateY(15px);
+                filter: blur(4px);
+                transition: opacity 620ms ease, transform 760ms cubic-bezier(0.16, 1, 0.3, 1), filter 620ms ease;
             }
-            .kr-js .kr-rv-folio.kr-rv-in { opacity: 1; transform: translateY(0); }
+            .kr-js .kr-rv-folio.kr-rv-in { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-            /* (3) Phyllotaxis-Siegel-Bloom — Punkte erblühen von innen nach außen (Delay ∝ n) */
+            /* (3) Phyllotaxis-Siegel-Bloom — das Siegel ENTROLLT sich (Rotation + Scale rein),
+               die Punkte ploppen von innen nach außen mit Overshoot, Gold-Fibonacci zündet nach. */
+            .kr-js .kr-seal-bloom {
+                transform: rotate(-16deg) scale(0.86);
+                transition: transform 1050ms cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .kr-js .kr-seal-bloom.kr-rv-in { transform: rotate(0) scale(1); }
             .kr-js .kr-seal-dot {
                 opacity: 0;
                 transform: scale(0);
                 transform-box: fill-box;
                 transform-origin: center;
-                transition: transform 560ms cubic-bezier(0.16, 1, 0.3, 1), opacity 360ms ease;
-                transition-delay: calc(var(--i, 0) * 7ms);
             }
-            .kr-js .kr-seal-bloom.kr-rv-in .kr-seal-dot { opacity: 1; transform: scale(1); }
-            /* Gold-Fibonacci-Punkte zünden mit kurzem Glanz, nachdem ihr Punkt erblüht ist */
+            .kr-js .kr-seal-bloom.kr-rv-in .kr-seal-dot {
+                animation: kr-dot-pop 640ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 12ms) both;
+            }
+            @keyframes kr-dot-pop {
+                0%   { opacity: 0; transform: scale(0); }
+                65%  { opacity: 1; transform: scale(1.18); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+            /* Gold-Fibonacci-Punkte: gleicher Pop + danach ein deutlicher Glanz-Funke */
             .kr-js .kr-seal-bloom.kr-rv-in .kr-seal-dot--gold {
-                animation: kr-gold-spark 1000ms ease-out calc(640ms + var(--i, 0) * 7ms) 1;
+                animation: kr-dot-pop 640ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 12ms) both,
+                           kr-gold-spark 1100ms ease-out calc(560ms + var(--i, 0) * 12ms) 1;
             }
             @keyframes kr-gold-spark {
                 0%   { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
-                42%  { filter: drop-shadow(0 0 3px rgba(201, 162, 75, 0.85)); }
+                40%  { filter: drop-shadow(0 0 5px rgba(201, 162, 75, 1)); }
                 100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
             }
             /* (4) Bestehenden Section-Reveal edler timen (Premium-Ease statt ease) */
@@ -3687,7 +3700,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             }
         }
         @media (prefers-reduced-motion: reduce) {
-            .kr-seal-dot { opacity: 1 !important; transform: none !important; }
+            .kr-seal-bloom { transform: none !important; }
+            .kr-seal-dot { opacity: 1 !important; transform: none !important; animation: none !important; }
+            .kr-rv-folio { filter: none !important; transform: none !important; }
             .fade-in { transform: none !important; }
         }
     </style>

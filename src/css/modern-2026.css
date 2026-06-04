@@ -131,16 +131,16 @@
         section h2 {
             animation: kr-mask-rise linear both;
             animation-timeline: view();
-            animation-range: entry 5% entry 55%;
+            animation-range: entry 0% entry 62%;
         }
 
         @keyframes kr-mask-rise {
             from {
                 opacity: 0;
-                transform: translateY(14px);
+                transform: translateY(34px);
                 clip-path: inset(0 0 100% 0);
             }
-            60% { opacity: 1; }
+            55% { opacity: 1; }
             to {
                 opacity: 1;
                 transform: translateY(0);
