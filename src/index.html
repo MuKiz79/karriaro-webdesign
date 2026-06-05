@@ -1280,7 +1280,15 @@
         .hero-dropcap {
             position: relative;
             display: inline-block;
-            transform-origin: 50% 100%;
+        }
+        /* Sprint 220 - Hero-Signatur "Saat -> Erde -> das I waechst -> Logo als i-Punkt".
+           Am Start ist das "I" NICHT da. Die sichtbare Gold-Saat holt aus, huepft im Bogen
+           und VERSINKT in der Erde (Boden-Linie). Daraus WAECHST das "I" empor; oben
+           entfaltet sich das Karriaro-Logo (Phyllotaxis) als i-Punkt. Pixar-Prinzipien:
+           Anticipation, Bogen, Squash, Gewicht, Follow-Through, Reaktion. reduced-motion
+           -> I sofort da, Logo statisch. */
+        .hero-i-glyph {
+            display: inline-block;
             font-family: var(--font-pull-quote);
             font-style: italic;
             font-weight: 500;
@@ -1289,57 +1297,67 @@
             line-height: 0.86;
             padding-right: 0.04em;
             margin-left: -0.04em;
-            animation: hero-I-give 340ms cubic-bezier(0.34, 1.4, 0.64, 1) 905ms both;
+            transform-origin: 50% 100%;
+            clip-path: inset(100% 0 -10% 0);
+            scale: 1 0.72;
+            animation: hero-i-grow 800ms cubic-bezier(0.16, 1, 0.3, 1) 1180ms both;
         }
-        @keyframes hero-I-give {
-            0%   { transform: scaleY(1); }
-            40%  { transform: scaleX(1.035) scaleY(0.9); }
-            100% { transform: scaleX(1) scaleY(1); }
+        @keyframes hero-i-grow {
+            0%   { clip-path: inset(100% 0 -10% 0); scale: 1 0.72; }
+            62%  { clip-path: inset(0 0 -10% 0);    scale: 1 1.05; }
+            100% { clip-path: inset(0 0 -10% 0);    scale: 1 1; }
         }
-        /* Sprint 219 — Hero-Signatur "Huepfende Saat": Pixar-Prinzipien an EINER Figur.
-           Die Gold-Saat holt aus (Anticipation), huepft im Bogen aufs "I", landet mit
-           Gewicht (Squash + das I gibt nach), federt aus (Follow-Through) und blueht als
-           Reaktions-Beat zur Phyllotaxis-Bluete (Logo-DNA). reduced-motion -> statisch. */
-        .hero-keim {
+        .hero-grow { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+        .hero-seed2 {
             position: absolute;
-            left: 50%;
-            bottom: 0.52em;
-            width: 0.42em;
-            height: 0.42em;
-            transform: translateX(-24%);
-            overflow: visible;
-            pointer-events: none;
-        }
-        .hero-keim-bloom { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-        .hero-keim-seed {
-            position: absolute;
-            left: 50%; top: 50%;
-            width: 0.066em; height: 0.066em;
-            margin: -0.033em 0 0 -0.033em;
+            left: 50%; bottom: 0.02em;
+            width: 0.15em; height: 0.15em;
+            margin-left: -0.075em;
             border-radius: 50%;
-            background: #C9A24B;
-            translate: -0.62em -0.42em;
-            scale: 0.55 0.55;
+            background: radial-gradient(circle at 36% 30%, #E8C778, #C9A24B 68%);
+            translate: -0.6em -0.62em;
+            scale: 0.62 0.62;
             opacity: 0;
-            animation: hero-seed-hop 1000ms cubic-bezier(0.4, 0, 0.5, 1) 300ms both;
+            animation: hero-seed-plant 1180ms cubic-bezier(0.42, 0, 0.5, 1) 300ms both;
         }
-        @keyframes hero-seed-hop {
-            0%   { translate: -0.62em -0.42em; scale: 0.55 0.55; opacity: 0; }
-            9%   { translate: -0.62em -0.36em; scale: 0.98 0.68; opacity: 1; }
-            16%  { translate: -0.60em -0.47em; scale: 0.68 1.28; opacity: 1; }
-            46%  { translate: -0.26em -0.67em; scale: 0.8 1.16;  opacity: 1; }
-            66%  { translate: 0 0.07em;        scale: 1.55 0.5;  opacity: 1; }
-            78%  { translate: 0 -0.06em;       scale: 0.8 1.18;  opacity: 1; }
-            89%  { translate: 0 0.018em;       scale: 1.1 0.92;  opacity: 1; }
-            100% { translate: 0 0;             scale: 1 1;       opacity: 1; }
+        @keyframes hero-seed-plant {
+            0%   { translate: -0.6em -0.62em;  scale: 0.6 0.6;   opacity: 0; }
+            10%  { translate: -0.6em -0.56em;  scale: 0.96 0.7;  opacity: 1; }
+            17%  { translate: -0.58em -0.66em; scale: 0.68 1.26; opacity: 1; }
+            52%  { translate: -0.16em -0.86em; scale: 0.82 1.13; opacity: 1; }
+            75%  { translate: 0 0.0em;         scale: 1.5 0.6;   opacity: 1; }
+            88%  { translate: 0 0.05em;        scale: 1.55 0.32; opacity: 0.6; }
+            100% { translate: 0 0.1em;         scale: 1.25 0.06; opacity: 0; }
         }
-        .hero-keim-bloom .hero-bloom-dot {
+        .hero-ground {
+            position: absolute;
+            left: 50%; bottom: 0.04em;
+            width: 0.52em; height: 1.5px;
+            margin-left: -0.26em;
+            background: linear-gradient(90deg, transparent, #C9A24B 30%, #C9A24B 70%, transparent);
+            transform: scaleX(0); transform-origin: center;
+            opacity: 0;
+            animation: hero-ground 780ms ease-out 1120ms both;
+        }
+        @keyframes hero-ground {
+            0%   { transform: scaleX(0);   opacity: 0; }
+            26%  { transform: scaleX(1);   opacity: 0.85; }
+            100% { transform: scaleX(0.7); opacity: 0; }
+        }
+        .hero-tittle {
+            position: absolute;
+            left: 50%; top: -0.3em;
+            width: 0.4em; height: 0.4em;
+            margin-left: -0.16em;
+            overflow: visible;
+        }
+        .hero-tittle .hero-bloom-dot {
             transform-box: fill-box; transform-origin: center; opacity: 0;
-            animation: hero-bloom-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) calc(1290ms + var(--i, 0) * 22ms) both;
+            animation: hero-bloom-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) calc(2000ms + var(--i, 0) * 22ms) both;
         }
-        .hero-keim-bloom .hero-bloom-dot--gold {
-            animation: hero-bloom-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) calc(1290ms + var(--i, 0) * 22ms) both,
-                       hero-bloom-spark 1000ms ease-out calc(1690ms + var(--i, 0) * 22ms) 1;
+        .hero-tittle .hero-bloom-dot--gold {
+            animation: hero-bloom-pop 520ms cubic-bezier(0.22, 1, 0.36, 1) calc(2000ms + var(--i, 0) * 22ms) both,
+                       hero-bloom-spark 1000ms ease-out calc(2400ms + var(--i, 0) * 22ms) 1;
         }
         @keyframes hero-bloom-pop {
             0%   { opacity: 0; transform: scale(0); }
@@ -1352,12 +1370,10 @@
             100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
         }
         @media (prefers-reduced-motion: reduce) {
-            .hero-dropcap { animation: none; }
-            .hero-keim-seed { translate: 0 0; scale: 1 1; opacity: 1; animation: none; }
-            .hero-keim-bloom .hero-bloom-dot,
-            .hero-keim-bloom .hero-bloom-dot--gold {
-                opacity: 1; transform: none; animation: none; filter: none;
-            }
+            .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
+            .hero-seed2, .hero-ground { display: none; }
+            .hero-tittle .hero-bloom-dot,
+            .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-headline {
@@ -3747,7 +3763,7 @@
                     <span>Handcodiert in Köln</span>
                 </p>
                 <h1 class="hero-headline">
-                    <span class="hero-h1-line"><span class="hero-dropcap">I<span class="hero-keim" aria-hidden="true"><svg class="hero-keim-bloom" viewBox="0 0 44 44"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="18.87" cy="24.87" r="2.12" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="22.52" cy="16.02" r="2.12" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.47" cy="27.83" r="2.12" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="13.64" cy="20.52" r="2.12" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.00" cy="16.91" r="2.12" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="19.30" cy="32.04" r="2.12" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="16.83" cy="12.04" r="2.12" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="33.27" cy="26.12" r="2.12" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="10.24" cy="26.86" r="2.12" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="27.69" cy="9.85" r="2.12" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="26.21" cy="35.43" r="2.12" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="9.28" cy="14.63" r="2.12" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="36.94" cy="18.72" r="2.12" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="12.87" cy="34.99" r="2.12" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="19.89" cy="5.70" r="2.12" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="34.98" cy="32.94" r="2.12" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="4.52" cy="22.72" r="2.12" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="34.76" cy="9.30" r="2.12" fill="#B89968" style="--i:18"/></svg><span class="hero-keim-seed"></span></span></span>hre Website.</span>
+                    <span class="hero-h1-line"><span class="hero-dropcap"><span class="hero-i-glyph">I</span><span class="hero-grow" aria-hidden="true"><span class="hero-ground"></span><span class="hero-seed2"></span><svg class="hero-tittle" viewBox="0 0 44 44"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="18.87" cy="24.87" r="2.12" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="22.52" cy="16.02" r="2.12" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.47" cy="27.83" r="2.12" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="13.64" cy="20.52" r="2.12" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.00" cy="16.91" r="2.12" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="19.30" cy="32.04" r="2.12" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="16.83" cy="12.04" r="2.12" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="33.27" cy="26.12" r="2.12" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="10.24" cy="26.86" r="2.12" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="27.69" cy="9.85" r="2.12" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="26.21" cy="35.43" r="2.12" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="9.28" cy="14.63" r="2.12" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="36.94" cy="18.72" r="2.12" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="12.87" cy="34.99" r="2.12" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="19.89" cy="5.70" r="2.12" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="34.98" cy="32.94" r="2.12" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="4.52" cy="22.72" r="2.12" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="34.76" cy="9.30" r="2.12" fill="#B89968" style="--i:18"/></svg></span></span>hre Website.</span>
                     <span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>
                 </h1>
                 <p class="subhead">
