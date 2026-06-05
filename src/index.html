@@ -221,7 +221,9 @@
             --color-gold: #8A7B5C;
             --color-gold-text: #6E5F3F;            /* Werkstatt-Gold — sekundärer Akzent (Zahlen, Italic) */
             --color-cream: #F8F4ED;           /* Skizzen-Papier — wärmster Hellton */
-            --color-cream-soft: #F0EAE0;      /* dazwischen — Sektion-Wechsel */
+            --color-cream-soft: #F0EAE0;
+            --surface: #FDFCFA;
+            --surface-warm: #F0E6D6;      /* dazwischen — Sektion-Wechsel */
             --color-bone: #FBFAF7;            /* fast weiß, warm */
             --color-graphite: #14202B;        /* Body-Text */
             --color-graphite-soft: #525E6B;   /* Sekundär-Text */
@@ -319,7 +321,7 @@
 
         body {
             font-family: var(--font-body);
-            background: var(--color-cream);
+            background: var(--surface);
             color: var(--color-graphite);
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
@@ -401,8 +403,8 @@
             color: var(--color-gold-text);
             line-height: 1;
         }
-        .kr-faq-item:hover { border-color: var(--color-indigo); background: var(--color-cream); }
-        .kr-faq-item[open] { border-color: var(--color-indigo); background: var(--color-cream); }
+        .kr-faq-item:hover { border-color: var(--color-indigo); background: var(--surface); }
+        .kr-faq-item[open] { border-color: var(--color-indigo); background: var(--surface); }
         .kr-faq-item summary {
             font-family: var(--font-body);
             font-size: 17px;
@@ -829,7 +831,7 @@
         /* Hero — Premium-Atelier-Stil B: 1 großes Mockup mit Story-Caption */
         .hero-with-photo {
             position: relative;
-            background: #fff;
+            background: var(--surface);
             color: var(--color-onyx);
             /* Sprint 197 — weiche, gedeckelte Höhe (svh schließt mobile
                Browser-Chrome aus) statt hartem 100vh; Top-Anchor statt
@@ -858,10 +860,10 @@
             text-align: left;
         }
         .hero-eyebrow {
-            font-size: 12px;
+            font-family: var(--font-mono); font-size: 11px;
             font-weight: 500;
             color: var(--color-graphite-soft);
-            letter-spacing: 0.12em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             margin-bottom: 22px;
         }
@@ -1221,8 +1223,8 @@
         /* Sprint 54 — Hero Award-Polish: Eyebrow/Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt + Marginalia */
         .hero-folio-eyebrow {
             font-family: var(--font-mono);
-            font-size: 10px;
-            letter-spacing: 0.22em;
+            font-size: 11px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--color-gold-text);
             margin-bottom: clamp(24px, 4vh, 40px);
@@ -1791,7 +1793,7 @@
         /* Sprint 11b H1 — Pricing 3 Karten + Wartung als Footnote-Card */
         .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; text-align: left; align-items: stretch; }
         /* Sprint 41 — Kontakt als Stempel-Briefkarte + Footer-Colophon */
-        .kr-letter-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--color-cream-soft); }
+        .kr-letter-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--surface); }
         .kr-letter-card {
             position: relative;
             background: var(--color-bone);
@@ -1870,7 +1872,7 @@
             gap: 18px;
         }
         .kr-letter-paket-badge {
-            background: var(--color-cream);
+            background: var(--surface);
             border: 1px solid var(--color-gold);
             border-radius: var(--radius-md);
             padding: 12px 16px;
@@ -1884,7 +1886,7 @@
             align-items: center;
             gap: 10px;
             padding: 12px 16px;
-            background: var(--color-cream);
+            background: var(--surface);
             border-radius: var(--radius-md);
             cursor: pointer;
             font-family: var(--font-body);
@@ -2251,7 +2253,7 @@
         }
 
         /* Sprint 41 — Werkstatt-Scrollytelling (5 Akte, vertikale Timeline) */
-        .kr-werkstatt-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--color-bone); }
+        .kr-werkstatt-section { padding: clamp(80px, 12vh, 140px) 0; background: var(--surface-warm); }
         .kr-werkstatt-timeline {
             list-style: none;
             padding: 0;
@@ -2302,7 +2304,7 @@
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: var(--color-cream);
+            background: var(--surface);
             border: 1.5px solid var(--color-gold);
             color: var(--color-gold-text);
             display: inline-flex;
@@ -2338,7 +2340,7 @@
             margin-left: auto;
             margin-right: auto;
             padding: 28px 32px;
-            background: var(--color-cream);
+            background: var(--surface);
             border: 1px solid var(--color-line);
             border-left: 4px solid var(--color-gold);
             border-radius: var(--radius-lg);
@@ -2401,7 +2403,7 @@
             margin: 0;
             position: sticky;
             top: 80px;
-            background: var(--color-cream);
+            background: var(--surface);
             padding: 28px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
@@ -2494,7 +2496,7 @@
             border-color: var(--color-indigo);
         }
         .kr-tools-stage {
-            background: var(--color-cream);
+            background: var(--surface);
             border: 1px solid var(--color-line);
             border-radius: var(--radius-xl);
             padding: clamp(28px, 4vw, 56px);
@@ -2787,7 +2789,7 @@
         .kr-tier.kr-tier--recommended .kr-wartung-text { color: rgba(248,244,237,0.88); }
         .kr-tier.kr-tier--recommended .kr-tier-price-num,
         .kr-tier.kr-tier--recommended .kr-wartung-text strong { color: var(--color-bone); }
-        .kr-tier.kr-tier--pilot { border-color: var(--color-gold); background: var(--color-cream); }
+        .kr-tier.kr-tier--pilot { border-color: var(--color-gold); background: var(--surface); }
 
         .kr-tier-badge {
             position: absolute;
@@ -2945,7 +2947,7 @@
             align-items: flex-start;
             gap: 16px;
             padding: 20px;
-            background: var(--color-cream);
+            background: var(--surface);
             border: 1px solid var(--color-line);
             border-radius: var(--radius-lg);
             text-align: left;
@@ -3066,7 +3068,7 @@
         }
         .kr-audit-magic-folio {
             font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--color-ink-2);
@@ -3788,7 +3790,7 @@
 
 
     <!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
-    <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung">
+    <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung" style="background: var(--surface-warm);">
         <p class="kr-audit-magic-folio">№&nbsp;02 · Erste Einschätzung</p>
         <h2 id="audit-magic-title" class="kr-audit-magic-title">
             Sie haben schon eine Website?
@@ -3847,10 +3849,10 @@
     <!-- KI-Sichtbarkeits-Spiegel — Lead-Magnet + Innovationsbeweis (2026-06-04). Unnummerierte
          Feature-Sektion (themed Eyebrow, kein Folio — № 01–10 bleiben lückenlos). Verlinkt /ki-sichtbarkeit. -->
     <style>
-        .kr-kispiegel { padding: clamp(72px, 11vh, 120px) 24px; background: #fff; border-top: 1px solid rgba(20,32,43,0.08); }
+        .kr-kispiegel { padding: clamp(72px, 11vh, 120px) 24px; background: var(--surface); border-top: 1px solid rgba(20,32,43,0.08); }
         .kr-kispiegel-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 6vw, 72px); align-items: center; }
         @media (max-width: 860px) { .kr-kispiegel-inner { grid-template-columns: 1fr; gap: 40px; } }
-        .kr-kispiegel-eyebrow { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6E5F3F; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .kr-kispiegel-eyebrow { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #6E5F3F; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .kr-kispiegel-eyebrow::before { content: ''; width: 16px; height: 1px; background: #C9A24B; }
         .kr-kispiegel-title { font-family: var(--font-display, 'Fraunces', Georgia, serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 50px); line-height: 1.05; letter-spacing: -0.024em; font-variation-settings: "opsz" 96; color: var(--color-indigo-strong); margin: 0 0 18px; }
         .kr-kispiegel-lede { font-size: clamp(16px, 2vw, 18px); color: #515154; max-width: 46ch; margin: 0 0 28px; line-height: 1.55; }
@@ -3892,7 +3894,7 @@
 
 
     <!-- Sprint 41 — Performance-Layer: SVG-Bar-Chart vs DACH-Median + Lighthouse-Pitch -->
-    <section aria-label="Performance-Beweis" class="fade-in kr-perf-section" style="background: var(--color-cream-soft);">
+    <section aria-label="Performance-Beweis" class="fade-in kr-perf-section" style="background: var(--surface-warm);">
         <div class="wrap" style="max-width: 1100px;">
             <div style="text-align: center; margin-bottom: 56px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;03 · Performance-Beweis</p>
@@ -3960,7 +3962,7 @@
     <!-- Sprint 201 — Lighthouse-Cockpit in EIGENE Sektion (Farbrhythmus: Veil ≠ cream-soft der
          Performance-Section). Trennt das Produkt-Cockpit sichtbar vom Performance-Beweis (Founder-Befund:
          beide teilten denselben Hintergrund → wirkten wie ein Block). -->
-    <section aria-label="Besucher-Cockpit" class="fade-in kr-cockpit-section" style="background: var(--color-surface-veil);">
+    <section aria-label="Besucher-Cockpit" class="fade-in kr-cockpit-section" style="background: var(--surface);">
         <div class="wrap" style="max-width: 1100px;">
             <div style="text-align: center; margin-bottom: 48px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;04 · Besucher-Cockpit</p>
@@ -4072,7 +4074,7 @@
 
     <!-- 6c · Branchen-Werkzeuge — Sektion 1.7 Site-Konsistenz-Audit (Beschluss 2026-05-14) -->
     <!-- Sprint 40 — Branchen-Live-Tool-Bühne: Tab-Selector + Live-Tool je Branche + Wir-Beweisen-Counter -->
-    <section aria-label="Branchen-Werkzeuge" class="fade-in kr-tools-section" style="background: var(--color-bone);">
+    <section aria-label="Branchen-Werkzeuge" class="fade-in kr-tools-section" style="background: var(--surface-warm);">
         <div class="wrap" style="max-width: 1200px;">
             <div style="text-align: center; margin-bottom: 40px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;05 · Branchen-Werkzeuge</p>
@@ -4345,13 +4347,13 @@
     <!-- Sprint 170 — Karriaro-Suite (Cross-Promotion zu Lighthouse) -->
     <style>
         .kr-suite {
-            background: var(--color-surface-veil);
+            background: var(--surface);
             padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
             text-align: center;
         }
         .kr-suite-folio {
             font-family: 'JetBrains Mono', ui-monospace, monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--color-ink-2);
@@ -4362,7 +4364,7 @@
             font-weight: 500;
             font-size: clamp(28px, 4.4vw, 44px);
             line-height: 1.12;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.024em; font-variation-settings: "opsz" 96;
             color: var(--color-graphite);
             margin: 0 auto 48px;
             max-width: 720px;
@@ -4549,7 +4551,7 @@
 
 
     <!-- Sprint 41 — Manufaktur Pull-Quote-Hero (60vh) + Founder-POV (40/60-Split mit Skizzen-SVG) -->
-    <section aria-label="Über uns" class="fade-in kr-manufaktur-section" style="background: var(--color-cream-soft);">
+    <section aria-label="Über uns" class="fade-in kr-manufaktur-section" style="background: var(--surface);">
         <!-- 60vh Pull-Quote-Hero -->
         <div class="kr-quote-hero">
             <blockquote class="kr-pull-quote kr-pull-quote--hero">
@@ -4713,7 +4715,7 @@
 
     <!-- 7 · Preis (Sprint 38: FAQ ist jetzt darunter; Pricing-Visual umgekehrt: Business Dark, Premium Light) -->
     <!-- Sprint 40 — Pricing 4-Tier mit Branchen-Selector + Wartung-Default-Coupling + Cross-Sell + Empfehlung -->
-    <section id="preis" aria-label="Preise" class="fade-in">
+    <section id="preis" aria-label="Preise" class="fade-in" style="background: var(--surface-warm);">
         <div class="wrap" style="max-width: 1200px; text-align: center;">
             <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;08 · Investition</p>
             <h2 style="font-size: clamp(36px, 6vw, 64px); margin-bottom: 14px;">Ein Preis pro Branche.<br>Einmal zahlen, kein Abo.</h2>
@@ -4888,7 +4890,7 @@
 
 
     <!-- 6c · FAQ — Sprint 38: hinter Pricing verschoben (Objection-Handling nach Decision-Anker) -->
-    <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: var(--color-cream-soft);">
+    <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: var(--surface);">
         <div class="wrap" style="max-width: 760px;">
             <div style="text-align: center; margin-bottom: 48px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;09 · Häufige Fragen</p>
@@ -4964,13 +4966,13 @@
     <!-- Sprint 171 — "Wir prüfen uns selbst" (Trust-Sprint, Brand-Ehrlichkeit) -->
     <style>
         .kr-selbst-audit {
-            background: var(--color-bone);
+            background: var(--surface-warm);
             padding: clamp(72px, 10vw, 112px) clamp(20px, 5vw, 32px);
             text-align: center;
         }
         .kr-selbst-folio {
             font-family: 'JetBrains Mono', ui-monospace, monospace;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--color-ink-2);
@@ -4981,7 +4983,7 @@
             font-weight: 500;
             font-size: clamp(28px, 4.4vw, 44px);
             line-height: 1.12;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.024em; font-variation-settings: "opsz" 96;
             color: var(--color-graphite);
             margin: 0 auto 24px;
             max-width: 680px;
@@ -5091,7 +5093,7 @@
             .kr-suite-card,
             .kr-selbst-card,
             .kr-audit-magic,
-            .kr-audit-result { background: var(--color-cream); }
+            .kr-audit-result { background: var(--surface); }
             input[type="text"], input[type="email"], textarea,
             .kr-audit-magic-form input[type="url"] {
                 background: var(--color-cream-soft);
@@ -5128,7 +5130,7 @@
 
             /* "Erste Einschätzung" ist ein 720px-zentriertes Panel — im Light unsichtbar (creme
                auf creme), im Dark sonst sichtbarer Rahmen ("Ränder"). Auf Body-Bone setzen → blendet. */
-            .kr-audit-magic { background: var(--color-bone); }
+            .kr-audit-magic { background: var(--surface-warm); }
         }
     </style>
     <section class="kr-selbst-audit" aria-labelledby="kr-selbst-title">
@@ -5412,7 +5414,7 @@
                     <p class="kr-colophon-swatches">
                         <span class="kr-colophon-swatch" style="background: var(--color-indigo);" title="Manufaktur-Indigo #1A2E40"></span>
                         <span class="kr-colophon-swatch" style="background: var(--color-gold);" title="Werkstatt-Gold #8A7B5C"></span>
-                        <span class="kr-colophon-swatch" style="background: var(--color-cream);" title="Skizzen-Cream #F8F4ED"></span>
+                        <span class="kr-colophon-swatch" style="background: var(--surface);" title="Skizzen-Cream #F8F4ED"></span>
                         <span class="kr-colophon-swatch" style="background: var(--color-onyx);" title="Onyx #14202B"></span>
                     </p>
                 </div>
