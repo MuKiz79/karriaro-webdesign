@@ -1291,7 +1291,14 @@
             font-family: var(--font-pull-quote);
             font-style: italic;
             font-weight: 500;
-            color: var(--color-gold);
+            /* Sprint 222 - Premium: gebuerstetes Messing-Foil statt flachem Oliv-Gold.
+               Solider Fallback ZUERST (traegt Selektion + Browser ohne background-clip:text);
+               background-clip:text + 177deg-Verlauf = diagonale Glanzkante am Kursiv-Stamm. */
+            color: #B68A38;
+            background: linear-gradient(177deg, #E7C878 0%, #C9A24B 40%, #9A7836 74%, #C9A24B 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 1px 0 rgba(231, 200, 120, 0.28), 0 -0.5px 0 rgba(92, 68, 19, 0.20);
             font-size: 1.18em;
             line-height: 0.86;
             padding-right: 0.04em;
@@ -1301,6 +1308,10 @@
             scale: 1 0.7;
             animation: hero-i-grow 600ms cubic-bezier(0.16, 1, 0.3, 1) 1280ms both;
         }
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            .hero-i-glyph { -webkit-text-fill-color: transparent; color: transparent; }
+        }
+        .hero-i-glyph::selection { -webkit-text-fill-color: var(--color-indigo-strong); color: var(--color-indigo-strong); background: rgba(201, 162, 75, 0.22); }
         @keyframes hero-i-grow {
             0%   { clip-path: inset(100% 0 -10% 0); scale: 1 0.7; }
             70%  { clip-path: inset(0 0 -10% 0);    scale: 1 1.04; }
@@ -1313,8 +1324,8 @@
             width: 0.22em; height: 0.22em;
             margin-left: -0.11em;
             border-radius: 50%;
-            background: radial-gradient(circle at 34% 28%, #F2D896 0%, #D9AE52 44%, #B9892F 100%);
-            box-shadow: 0 0.015em 0.06em rgba(120, 86, 20, 0.45), inset 0 -0.02em 0.03em rgba(110, 80, 20, 0.35);
+            background: radial-gradient(circle at 34% 28%, #F4E0A8 0%, #C9A24B 46%, #9A7836 100%);
+            box-shadow: 0 0.02em 0.07em rgba(92, 68, 19, 0.42), inset 0 0.03em 0.04em rgba(231, 200, 120, 0.55), inset 0 -0.025em 0.035em rgba(92, 68, 19, 0.40);
             translate: -0.62em -0.18em;
             scale: 0.5 0.5;
             opacity: 0;
@@ -1334,32 +1345,42 @@
         }
         .hero-tittle {
             position: absolute;
-            left: 50%; top: -0.34em;
+            left: 50%; top: -0.42em;
             width: 0.55em; height: 0.55em;
-            margin-left: -0.275em;
+            margin-left: -0.255em;
+            transform: translateX(0.03em);
             overflow: visible;
+            animation: hero-bloom-settle 1400ms ease-out 2910ms 1 both;
         }
         .hero-tittle .hero-bloom-dot {
             transform-box: fill-box; transform-origin: center; opacity: 0;
-            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 13ms) both;
+            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both;
         }
         .hero-tittle .hero-bloom-dot--gold {
-            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 13ms) both,
-                       hero-bloom-spark 1000ms ease-out calc(2260ms + var(--i, 0) * 13ms) 1;
+            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both,
+                       hero-bloom-spark 1000ms ease-out calc(2260ms + var(--i, 0) * 15ms) 1;
         }
         @keyframes hero-bloom-pop {
             0%   { opacity: 0; transform: scale(0); }
-            70%  { opacity: 1; transform: scale(1.28); }
+            70%  { opacity: 1; transform: scale(1.18); }
             100% { opacity: 1; transform: scale(1); }
         }
         @keyframes hero-bloom-spark {
-            0%   { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
-            45%  { filter: drop-shadow(0 0 2px rgba(201, 162, 75, 0.95)); }
+            0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+            45%  { filter: drop-shadow(0 0 4px rgba(231, 200, 120, 0.55)); }
+            100% { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+        }
+        /* Sprint 222 - einmaliger, langsamer Schluss-Glanz ueber dem fertigen Messing-Logo
+           (kein Loop, klarer Ausklang zu 0 statt Dauer-Halo). */
+        @keyframes hero-bloom-settle {
+            0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+            45%  { filter: drop-shadow(0 0 5px rgba(231, 200, 120, 0.28)); }
             100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
             .hero-seed2 { display: none; }
+            .hero-tittle { animation: none; filter: none; }
             .hero-tittle .hero-bloom-dot,
             .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
         }
