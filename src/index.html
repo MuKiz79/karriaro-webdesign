@@ -1300,7 +1300,7 @@
             transform-origin: 50% 100%;
             clip-path: inset(100% 0 -10% 0);
             scale: 1 0.72;
-            animation: hero-i-grow 800ms cubic-bezier(0.16, 1, 0.3, 1) 1180ms both;
+            animation: hero-i-grow 820ms cubic-bezier(0.16, 1, 0.3, 1) 1320ms both;
         }
         @keyframes hero-i-grow {
             0%   { clip-path: inset(100% 0 -10% 0); scale: 1 0.72; }
@@ -1311,14 +1311,15 @@
         .hero-seed2 {
             position: absolute;
             left: 50%; bottom: 0.02em;
-            width: 0.15em; height: 0.15em;
-            margin-left: -0.075em;
+            width: 0.2em; height: 0.2em;
+            margin-left: -0.1em;
             border-radius: 50%;
-            background: radial-gradient(circle at 36% 30%, #E8C778, #C9A24B 68%);
-            translate: -0.6em -0.62em;
+            background: radial-gradient(circle at 36% 30%, #ECCB7E, #C9A24B 66%);
+            box-shadow: 0 0 0.06em rgba(201,162,75,0.5);
+            translate: -0.62em -0.64em;
             scale: 0.62 0.62;
             opacity: 0;
-            animation: hero-seed-plant 1180ms cubic-bezier(0.42, 0, 0.5, 1) 300ms both;
+            animation: hero-seed-plant 1300ms cubic-bezier(0.42, 0, 0.5, 1) 300ms both;
         }
         @keyframes hero-seed-plant {
             0%   { translate: -0.6em -0.62em;  scale: 0.6 0.6;   opacity: 0; }
@@ -1329,21 +1330,57 @@
             88%  { translate: 0 0.05em;        scale: 1.55 0.32; opacity: 0.6; }
             100% { translate: 0 0.1em;         scale: 1.25 0.06; opacity: 0; }
         }
+        /* Erd-Huegel (Boden), aus dem das I waechst */
+        .hero-mound {
+            position: absolute;
+            left: 50%; bottom: -0.005em;
+            width: 0.5em; height: 0.14em;
+            margin-left: -0.25em;
+            background: radial-gradient(ellipse at 50% 8%, #9A8862 0%, #6E5F3F 72%, transparent 100%);
+            border-radius: 46% 46% 44% 44% / 92% 92% 60% 60%;
+            transform: scaleX(0) scaleY(0.4); transform-origin: center bottom;
+            opacity: 0;
+            animation: hero-mound 1000ms cubic-bezier(0.22, 1, 0.36, 1) 1090ms both;
+        }
+        @keyframes hero-mound {
+            0%   { transform: scaleX(0) scaleY(0.4);   opacity: 0; }
+            22%  { transform: scaleX(1.12) scaleY(1.18); opacity: 1; }
+            40%  { transform: scaleX(1) scaleY(1);     opacity: 1; }
+            100% { transform: scaleX(1) scaleY(1);     opacity: 0.95; }
+        }
         .hero-ground {
             position: absolute;
-            left: 50%; bottom: 0.04em;
-            width: 0.52em; height: 1.5px;
-            margin-left: -0.26em;
-            background: linear-gradient(90deg, transparent, #C9A24B 30%, #C9A24B 70%, transparent);
+            left: 50%; bottom: 0.05em;
+            width: 0.54em; height: 1.5px;
+            margin-left: -0.27em;
+            background: linear-gradient(90deg, transparent, #C9A24B 28%, #C9A24B 72%, transparent);
             transform: scaleX(0); transform-origin: center;
             opacity: 0;
-            animation: hero-ground 780ms ease-out 1120ms both;
+            animation: hero-ground 820ms ease-out 1110ms both;
         }
         @keyframes hero-ground {
             0%   { transform: scaleX(0);   opacity: 0; }
-            26%  { transform: scaleX(1);   opacity: 0.85; }
-            100% { transform: scaleX(0.7); opacity: 0; }
+            26%  { transform: scaleX(1);   opacity: 0.9; }
+            100% { transform: scaleX(0.8); opacity: 0.5; }
         }
+        /* Staub beim Aufprall — die Saat schlaegt in die Erde ein */
+        .hero-dust {
+            position: absolute;
+            left: 50%; bottom: 0.05em;
+            width: 0.04em; height: 0.04em;
+            margin-left: -0.02em;
+            border-radius: 50%;
+            background: #C9A24B;
+            opacity: 0;
+        }
+        .hero-dust--1 { animation: hero-dust-a 660ms cubic-bezier(0.2, 0.75, 0.35, 1) 1150ms both; }
+        .hero-dust--2 { animation: hero-dust-b 660ms cubic-bezier(0.2, 0.75, 0.35, 1) 1160ms both; }
+        .hero-dust--3 { animation: hero-dust-c 620ms cubic-bezier(0.2, 0.75, 0.35, 1) 1170ms both; }
+        .hero-dust--4 { animation: hero-dust-d 620ms cubic-bezier(0.2, 0.75, 0.35, 1) 1145ms both; }
+        @keyframes hero-dust-a { 0%{translate:0 0;opacity:0;scale:1} 20%{opacity:1} 100%{translate:-0.38em -0.18em;opacity:0;scale:0.35} }
+        @keyframes hero-dust-b { 0%{translate:0 0;opacity:0;scale:1} 20%{opacity:1} 100%{translate:0.38em -0.15em;opacity:0;scale:0.35} }
+        @keyframes hero-dust-c { 0%{translate:0 0;opacity:0;scale:1} 20%{opacity:1} 100%{translate:-0.2em -0.3em;opacity:0;scale:0.3} }
+        @keyframes hero-dust-d { 0%{translate:0 0;opacity:0;scale:1} 20%{opacity:1} 100%{translate:0.22em -0.28em;opacity:0;scale:0.3} }
         .hero-tittle {
             position: absolute;
             left: 50%; top: -0.3em;
@@ -1371,7 +1408,7 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
-            .hero-seed2, .hero-ground { display: none; }
+            .hero-seed2, .hero-ground, .hero-mound, .hero-dust { display: none; }
             .hero-tittle .hero-bloom-dot,
             .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
         }
@@ -3763,7 +3800,7 @@
                     <span>Handcodiert in Köln</span>
                 </p>
                 <h1 class="hero-headline">
-                    <span class="hero-h1-line"><span class="hero-dropcap"><span class="hero-i-glyph">I</span><span class="hero-grow" aria-hidden="true"><span class="hero-ground"></span><span class="hero-seed2"></span><svg class="hero-tittle" viewBox="0 0 44 44"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="18.87" cy="24.87" r="2.12" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="22.52" cy="16.02" r="2.12" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.47" cy="27.83" r="2.12" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="13.64" cy="20.52" r="2.12" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.00" cy="16.91" r="2.12" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="19.30" cy="32.04" r="2.12" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="16.83" cy="12.04" r="2.12" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="33.27" cy="26.12" r="2.12" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="10.24" cy="26.86" r="2.12" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="27.69" cy="9.85" r="2.12" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="26.21" cy="35.43" r="2.12" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="9.28" cy="14.63" r="2.12" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="36.94" cy="18.72" r="2.12" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="12.87" cy="34.99" r="2.12" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="19.89" cy="5.70" r="2.12" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="34.98" cy="32.94" r="2.12" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="4.52" cy="22.72" r="2.12" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="34.76" cy="9.30" r="2.12" fill="#B89968" style="--i:18"/></svg></span></span>hre Website.</span>
+                    <span class="hero-h1-line"><span class="hero-dropcap"><span class="hero-i-glyph">I</span><span class="hero-grow" aria-hidden="true"><span class="hero-mound"></span><span class="hero-ground"></span><span class="hero-seed2"></span><span class="hero-dust hero-dust--1"></span><span class="hero-dust hero-dust--2"></span><span class="hero-dust hero-dust--3"></span><span class="hero-dust hero-dust--4"></span><svg class="hero-tittle" viewBox="0 0 44 44"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="18.87" cy="24.87" r="2.12" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="22.52" cy="16.02" r="2.12" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.47" cy="27.83" r="2.12" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="13.64" cy="20.52" r="2.12" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.00" cy="16.91" r="2.12" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="19.30" cy="32.04" r="2.12" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="16.83" cy="12.04" r="2.12" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="33.27" cy="26.12" r="2.12" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="10.24" cy="26.86" r="2.12" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="27.69" cy="9.85" r="2.12" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="26.21" cy="35.43" r="2.12" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="9.28" cy="14.63" r="2.12" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="36.94" cy="18.72" r="2.12" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="12.87" cy="34.99" r="2.12" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="19.89" cy="5.70" r="2.12" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="34.98" cy="32.94" r="2.12" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="4.52" cy="22.72" r="2.12" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="34.76" cy="9.30" r="2.12" fill="#B89968" style="--i:18"/></svg></span></span>hre Website.</span>
                     <span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>
                 </h1>
                 <p class="subhead">
