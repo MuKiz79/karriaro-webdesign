@@ -453,6 +453,9 @@ async function detectSeoGeo(html, baseUrl) {
     // Sprint 76 — neue Subtypen: Pharmacy, VeterinaryCare, AccountingService, Architect
     // Sprint 81 — Bau-Handwerk: HousePainter, GeneralContractor (Schema.org); für carpenter/landscaper kein dedizierter Schema-Type, ProfessionalService (Sprint 70) fängt das ab.
     const LOCAL_BUSINESS_TYPES = ['LocalBusiness', 'RealEstateAgent', 'Restaurant', 'FoodEstablishment', 'HealthAndBeautyBusiness', 'Dentist', 'DentalClinic', 'Physician', 'MedicalClinic', 'AutoRepair', 'Plumber', 'Electrician', 'LegalService', 'HairSalon', 'BeautySalon', 'Store', 'ProfessionalService', 'WebDesignAgency', 'Pharmacy', 'VeterinaryCare', 'AccountingService', 'Architect', 'Optician', 'Bakery', 'FuneralHome', 'TravelAgency', 'HousePainter', 'GeneralContractor'];
+    // Hinweis (Sprint 216): reiner Oberflächen-Check (Schema-TYP vorhanden ja/nein) —
+    // ein Betrieb kann Fake-/Spam-Schema einbetten, um ihn zu „bestehen". Bewusst keine
+    // Echtheitsprüfung; die Detail-Auswertung im Komplettaudit ordnet das ein.
     const hasLocalBusiness = LOCAL_BUSINESS_TYPES.some(t => schemaTypes.has(t));
 
     // Canonical

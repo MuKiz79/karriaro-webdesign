@@ -229,7 +229,7 @@
         } else {
             verdict = scoreVerdict(deriveCompositeScore(result));
             findings = pickTopFindings(result);
-            noteText = 'Erste Einschätzung auf öffentlich sichtbaren Signalen. ' +
+            noteText = 'Erste Einschätzung auf den öffentlich sichtbaren Signalen, die Ihr Server unserem Prüfer liefert. ' +
                 'Ein Detail-Brief geht tiefer: Web Vitals im Detail, BFSG-Audit, ' +
                 'branchen-spezifische Empfehlungen.';
             leadIntro = 'Den ausführlichen Bericht — Web&nbsp;Vitals, BFSG-Audit und branchen-spezifische Hebel — ' +
