@@ -1378,7 +1378,6 @@
         @media (prefers-reduced-motion: reduce) {
             .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
             .hero-seed2 { display: none; }
-            .hero-tittle { animation: none; filter: none; }
             .hero-tittle .hero-bloom-dot,
             .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
         }
@@ -1665,13 +1664,6 @@
         .kr-check-item { display: flex; gap: 10px; }
         .kr-check-mark { color: var(--color-indigo); font-weight: 600; flex-shrink: 0; }
         .kr-check-mark-top { color: var(--color-indigo); font-weight: 600; flex-shrink: 0; margin-top: 2px; }
-        /* Sektion 1.7 Add-on — Tool-Info-Button + Tooltip (klick-basiert, mobile-safe) */
-        .tool-info { margin-left: 6px; width: 14px; height: 14px; min-width: 14px; border-radius: 50%; border: 1px solid #d2d2d7; background: transparent; color: #86868b; font-size: 10px; font-weight: 600; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; transition: border-color 0.18s, color 0.18s, background 0.18s; vertical-align: middle; align-self: center; flex-shrink: 0; opacity: 0.7; }
-        .tool-info:hover, .tool-info:focus { border-color: var(--color-indigo); color: var(--color-indigo); opacity: 1; outline: none; }
-        .tool-info[aria-expanded="true"] { border-color: var(--color-indigo); background: var(--color-indigo); color: #fff; opacity: 1; }
-        .tool-tooltip { position: absolute; z-index: 1000; max-width: 280px; background: var(--color-onyx); color: var(--color-cream-soft); padding: 12px 14px; border-radius: 10px; font-size: 13px; line-height: 1.5; box-shadow: 0 8px 28px rgba(0,0,0,0.18); opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
-        .tool-tooltip.visible { opacity: 1; pointer-events: auto; }
-        .tool-tooltip::before { content: ''; position: absolute; top: -5px; left: 16px; width: 10px; height: 10px; background: var(--color-onyx); transform: rotate(45deg); }
         /* Sprint 9c Welle 2 — weitere Patterns */
         .kr-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 14px; font-size: 16px; color: #424245; line-height: 1.55; }
         .kr-list-pricing { list-style: none; padding: 0; font-size: 15px; color: var(--color-onyx); display: flex; flex-direction: column; gap: 14px; }
@@ -5182,7 +5174,6 @@
             .price-card-active, .price-card-premium,
             .branche-tab.is-active, .branche-tab.is-active:hover,
             .btn-outline:hover,
-            .tool-tooltip, .tool-tooltip::before { background: #26333F; }
             .price-card-active, .price-card-premium { border-color: #26333F; }
             .branche-tab:hover:not(:disabled) { background: var(--color-cream-soft); }
             .kr-selbst-foot a { color: var(--color-graphite-soft); text-decoration-color: var(--color-line-strong); }
@@ -5704,63 +5695,6 @@
             // Sprint 66 — Export für Hero-Audit-Werkzeug-Card (renderToolsCard liest features[]).
             window.__krBrancheData = data;
 
-            // Sektion 1.7 — Feature-Erklärungen für die i-Buttons (alle 48 Werkzeuge, Duplikate teilen sich den Eintrag)
-            var FEATURE_INFO = {
-                // Praxis
-                'Online-Terminbuchung': 'Patient sieht freie Slots der nächsten 14 Tage live und bucht ohne Anruf. Reduziert MFA-Telefonzeit deutlich.',
-                'Rezept-Anfrage digital': 'Eingeloggte Stammpatienten klicken Wiederholungsrezept. System prüft DMP-Status und schickt die Anfrage an die MFA.',
-                'Sprechzeiten transparent': 'Aktuelle Öffnungs- und Sprechzeiten plus Vertretungs-Hinweise — kein „wir-rufen-Sie-an"-Modal.',
-                'Telemedizin-Link': 'Direkter Video-Sprechstunden-Link für eingeloggte Patienten. Bestätigung in 30 Min, Video startet automatisch.',
-                'Patienten-Aufnahme online': 'Neue Patienten füllen Anamnese und Stammdaten vor dem Termin online aus — Wartezimmer-Stau weg.',
-                'BFSG-konform': 'Barrierefreiheitsstärkungsgesetz seit Juni 2025 Pflicht. Demo erfüllt WCAG 2.1 AA inkl. Tastatur-Navigation und Screenreader.',
-                // Handwerk
-                'Anfrage-Formular statt Telefon': 'Strukturiertes Formular mit Foto-Upload und Beschreibung. Inhaber sieht alles morgens auf einen Blick — keine Telefon-Zettelwirtschaft.',
-                'Notdienst-Status sichtbar': 'Realtime-Anzeige der Erreichbarkeit und Anrückzeit pro Region. Kein statisches „24/7" — echte Live-Verfügbarkeit.',
-                'Projekt-Galerie': 'Vorher-Nachher-Galerie eigener Projekte mit Filter nach Gewerk und Region. Stärkster Trust-Anker vor der Anfrage.',
-                'Festpreis-Rechner': 'Kunde wählt Leistung, Quadratmeter und Material — Demo zeigt Preis-Korridor. Statt „kommt drauf an" ein konkreter Rahmen.',
-                'Innungs-Mitgliedschaft': 'Innungs-Zertifikat klickbar mit Verifizierungs-Link. B2B-Einkäufer und Versicherer akzeptieren das als Qualitäts-Anker.',
-                // Gastro
-                'Tisch-Reservierung online': 'Datum → Personenzahl → Uhrzeit-Slots mit Live-Verfügbarkeit. Kein OpenTable-Aufschlag, kein Drittanbieter-Datenleck.',
-                'Speisekarte mit Filter': 'Gast filtert nach vegetarisch, vegan, glutenfrei oder Allergenen. Reduziert MFA-Nachfragen am Tisch.',
-                'AI-Sommelier': 'Gast wählt das Hauptgericht. AI empfiehlt drei Weine aus der Karte mit Begründung. Wein-Umsatz im DACH-Schnitt um 14 % gestiegen.',
-                'Google-Bewertungen live': 'Aktuelle Sterne und Reviews direkt im Hero — wirkt stärker als statisches „Bei uns wird gut gegessen".',
-                'Saisonkarte': 'Monatlich rotierende Spezialitäten-Sektion. CMS-pflegbar in zwei Klicks ohne Webdesigner-Eingriff.',
-                'Veranstaltungs-Anfragen': 'Anfrage-Formular für Feiern, Hochzeiten, Firmen-Events mit Personenzahl, Datum und Wunsch-Menü.',
-                // Logistik
-                'Quote-Calc Tarif-Rechner': 'Versender füllt vier Felder (Abhol-PLZ, Ziel-PLZ, Sendungsart, Gewicht). Sofort Frachtkosten + ETA + Fahrzeug-Klasse.',
-                'Frachtanfrage-Formular': 'Strukturierte B2B-Anfrage mit Ladungs-Details, Wunsch-Zeitfenster und ADR-Klassen. Disponent muss nichts zurückfragen.',
-                'Sendungs-Tracking': 'Versender und Empfänger sehen den Status live: abgeholt, in Transit, zugestellt — eigene Track-Page, keine Drittanbieter-Cookies.',
-                'Compliance-Dokumente': 'Alle Zertifikate (GDP, ADR, IFS, ISO, SQAS) in einem Click-Panel. Kein Mail-Anhang-Pingpong — B2B-Einkäufer prüft selbst.',
-                'Flotte-Auslastung': 'Echtzeit-Anzeige der Kapazität: „Heute frei: 12 Wechselbrücken, 4 Sprinter". Kunde sieht selbst, ob Kapazität da ist.',
-                'Damage-Reporting': 'Empfänger meldet Transportschäden mit Foto und Kommentar direkt aus der Sendungs-Übersicht. Reduziert Versicherungs-Reibung.',
-                // Friseur
-                'Wunsch-Stylist wählbar': 'Stammkundinnen sehen Foto und Buchungs-Slots ihres Lieblings-Stylisten direkt. Kein „wer-hat-Zeit"-Modus.',
-                'Online-Buchung 24/7': 'Buchung jederzeit, auch nach Salon-Schluss. Bestätigung sofort, Push-Erinnerung 24 h vor Termin.',
-                'Late-Night-Slots Do/Fr': 'Verlängerte Öffnungszeiten Donnerstag und Freitag explizit in der Verfügbarkeits-Anzeige — passt für Berufstätige.',
-                'Live-Verfügbarkeit': 'Banner zeigt Realtime: „Noch 2 Slots heute frei, 14 in dieser Woche". Direkt buchbar ohne Sprachmailbox.',
-                'Service-Galerie': 'Vorher-Nachher-Fotos pro Service mit Stylist-Tag und Preis. Senkt Beratungs-Aufwand vor der Behandlung.',
-                'Aveda Concept Salon': 'Aveda-Zertifizierung mit Hersteller-Logo. Trust-Anker für Bio- und Premium-Kunden, kein generisches Marken-Marketing.',
-                // Dachdecker
-                'Foto-Upload zur Anfrage': 'Kunde fotografiert das Dach mit dem Handy. Meister antwortet mit Festpreis-PDF — keine Vor-Ort-Begehung nötig.',
-                'Festpreis in 48 Stunden': 'SLA-Versprechen sichtbar. Statt „Angebot in zwei Wochen" bekommt der Kunde binnen 48 h einen konkreten Preis.',
-                'Sturm-Notdienst': 'Realtime-Status der Notdienst-Erreichbarkeit plus Anrückzeit pro Region. Verlässlicher als „24/7 erreichbar".',
-                'Sanierungs-Konfigurator': 'Eigentümer wählt Dachtyp, Material und Dämmung — Demo liefert Förder-Korridor BAFA + KfW plus Termin-Vorschlag.',
-                'Innungs-Zertifikat': 'Klickbares Zertifikat mit Verifizierungs-Link. Versicherer und Bauherrn akzeptieren das als Qualitäts-Anker.',
-                // Immobilien
-                'Wertermittlung-Rechner': 'Verkäufer gibt Objekttyp, PLZ, m² und Baujahr ein. Demo zeigt eine Live-Spanne (z. B. 685.000–745.000 €). Sofort Antwort statt „wir melden uns".',
-                'Live-Filter-Suche': 'Käufer filtert nach PLZ, Preis, m², Zimmer. Ergebnisse refreshen live — kein Seiten-Reload, keine „leider keine Treffer"-Sackgasse.',
-                'Verkäufer-Dashboard': 'Eingeloggter Eigentümer sieht Aktivitäten zu seinem Objekt: Anfragen, Besichtigungs-Termine, Marketing-Status. Maklerin spart Mail-Reports.',
-                'Off-Market-Portfolio': 'Eingeloggte Käufer sehen exklusive Objekte vor der öffentlichen Listung. Vertrauens-Anker für Premium-Klientel.',
-                'Marktbarometer': 'Aktuelle PLZ-Preisentwicklung, Angebots-Dauer und Trend. Verkäufer sieht, wann der Zeitpunkt passt.',
-                'IVD + HypZert': 'Klickbare Mitgliedschaft im Immobilienverband Deutschland und HypZert-Zertifizierung. Qualitäts-Anker für Verkäufer und Banken.',
-                // Coaching
-                'Calendly-Integration': 'Erstgespräch direkt aus der Site buchbar, mit Vor-Bestätigung und Push-Reminder. Reduziert No-Show-Rate.',
-                'Online-Erstgespräch': 'Kostenloses 30-Min-Video-Erstgespräch buchbar. Eingebetteter Zoom-Link, keine E-Mail-Pingpong-Schleife.',
-                'Methoden-Übersicht': 'Coach erklärt drei bis fünf zentrale Methoden mit Praxis-Beispiel. Senkt Lead-Reibung, weil Interessent weiß, was kommt.',
-                'Newsletter-Magnet': '1-Klick-Anmeldung mit Whitepaper- oder Workbook-Download als Lead-Magnet. Double-Opt-In DSGVO-konform.',
-                'Referenzen-Galerie': 'Klientel-Logos, kurze Case-Beschreibung und Zitat mit Foto. Senkt Vertrauens-Schwelle vor dem Erstgespräch.',
-                'Blog & Insights': 'Eigene Artikel als Long-Tail-SEO-Anker. Senkt CPL über Google, baut Autorität in der Nische auf.'
-            };
 
             function buildFeatureLi(name, delay) {
                 // Sprint 223 — Hero aufgeräumt: keine „i"-Info-Buttons mehr im Demo-Mockup (Founder-Wunsch).
@@ -5980,55 +5914,6 @@
         })();
     </script>
 
-    <!-- Sektion 1.7 Add-on — Tool-Info-Tooltip (klick-basiert, mobile-safe) -->
-    <script>
-        (function () {
-            var tooltip = document.createElement('div');
-            tooltip.className = 'tool-tooltip';
-            tooltip.setAttribute('role', 'tooltip');
-            document.body.appendChild(tooltip);
-            var activeBtn = null;
-
-            function showTooltip(btn) {
-                var text = btn.getAttribute('data-tool-info');
-                if (!text) return;
-                tooltip.textContent = text;
-                var rect = btn.getBoundingClientRect();
-                var scrollX = window.scrollX || window.pageXOffset;
-                var scrollY = window.scrollY || window.pageYOffset;
-                var viewportWidth = document.documentElement.clientWidth;
-                var maxW = 280;
-                var left = rect.left + scrollX - 8;
-                if (left + maxW + 16 > viewportWidth + scrollX) left = viewportWidth + scrollX - maxW - 16;
-                if (left < 12) left = 12;
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = (rect.bottom + scrollY + 10) + 'px';
-                tooltip.classList.add('visible');
-                btn.setAttribute('aria-expanded', 'true');
-                activeBtn = btn;
-            }
-            function hideTooltip() {
-                tooltip.classList.remove('visible');
-                if (activeBtn) { activeBtn.setAttribute('aria-expanded', 'false'); activeBtn = null; }
-            }
-            document.addEventListener('click', function (e) {
-                var btn = e.target.closest && e.target.closest('.tool-info');
-                if (btn) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (activeBtn === btn) hideTooltip();
-                    else { if (activeBtn) hideTooltip(); showTooltip(btn); }
-                } else if (!e.target.closest || !e.target.closest('.tool-tooltip')) {
-                    hideTooltip();
-                }
-            });
-            document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTooltip(); });
-            window.addEventListener('scroll', function () { if (activeBtn) hideTooltip(); }, { passive: true });
-            window.addEventListener('resize', hideTooltip);
-            // Re-Render im Hero-Switcher: aktiven Tooltip schließen, sonst Orphan-Reference
-            document.addEventListener('karriaro:rerender', hideTooltip);
-        })();
-    </script>
 
     <!-- Sprint 39 — Lenis Smooth-Scroll (Award-Foundation). Self-hosted + defer (kein unpkg-
          Blocking-Request mehr; heilt zudem den Footer-Claim „0 externe Plugins"). -->
