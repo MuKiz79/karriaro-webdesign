@@ -223,7 +223,7 @@
             --color-cream: #F8F4ED;           /* Skizzen-Papier — wärmster Hellton */
             --color-cream-soft: #F0EAE0;
             --surface: #FDFCFA;
-            --surface-warm: #F0E6D6;      /* dazwischen — Sektion-Wechsel */
+            --surface-warm: #F4F1EA;      /* dazwischen — Sektion-Wechsel (Sprint 223: Porzellan statt zu kräftigem Tan) */
             --color-bone: #FBFAF7;            /* fast weiß, warm */
             --color-graphite: #14202B;        /* Body-Text */
             --color-graphite-soft: #525E6B;   /* Sekundär-Text */
@@ -604,7 +604,7 @@
         /* Sprint 217 — Linien-Klarheit: KARRIARO ist die Dachmarke, „Webdesign" grenzt diese Linie
            gegen andere ab (z.B. Karriaro-Profilgenerator). Mono-Subzeile unter der Wortmarke. */
         nav .nav-wordmark-group { display: inline-flex; flex-direction: column; justify-content: center; }
-        nav .nav-wordmark-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--color-gold-text); line-height: 1; margin-top: 4px; opacity: 0.85; }
+        nav .nav-wordmark-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.26em; text-indent: 0.26em; text-align: center; text-transform: uppercase; color: var(--color-gold-text); line-height: 1; margin-top: 4px; opacity: 0.85; }
         nav .links { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 28px; }
         /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
@@ -3115,13 +3115,17 @@
         /* ============================================================
            Sprint 168 — Audit Magic-Moment (Editorial-stille Section)
            ============================================================ */
+        /* Sprint 223 — Hintergrund full-bleed: Sektion volle Breite, Inhalt im 720px-Inner zentriert
+           (vorher hatte die Sektion selbst max-width:720px → Creme nur in der Mittelspalte, Ränder weiß). */
         .kr-audit-magic {
-            max-width: 720px;
-            margin: 0 auto;
             padding: clamp(72px, 10vw, 112px) 24px clamp(48px, 8vw, 80px);
             text-align: center;
             color: var(--color-graphite);
             background: var(--color-surface-veil);
+        }
+        .kr-audit-magic-inner {
+            max-width: 720px;
+            margin: 0 auto;
         }
         .kr-audit-magic-folio {
             font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -3812,12 +3816,12 @@
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien-Werkzeuge</span>
                         <ul class="mockup-features" id="hero-mockup-features">
-                            <li style="animation-delay:0ms">Wertermittlung-Rechner<button type="button" class="tool-info" aria-label="Mehr Infos: Wertermittlung-Rechner" aria-expanded="false" data-tool-info="Verkäufer gibt Objekttyp, PLZ, m² und Baujahr ein. Demo zeigt eine Live-Spanne (z. B. 685.000–745.000 €). Sofort Antwort statt „wir melden uns"." data-track-event="TOOL_INFO_OPEN" data-track-tool="wertermittlung-rechner">i</button></li>
-                            <li style="animation-delay:80ms">Live-Filter-Suche<button type="button" class="tool-info" aria-label="Mehr Infos: Live-Filter-Suche" aria-expanded="false" data-tool-info="Käufer filtert nach PLZ, Preis, m², Zimmer. Ergebnisse refreshen live — kein Seiten-Reload, keine „leider keine Treffer"-Sackgasse." data-track-event="TOOL_INFO_OPEN" data-track-tool="live-filter-suche">i</button></li>
-                            <li style="animation-delay:160ms">Verkäufer-Dashboard<button type="button" class="tool-info" aria-label="Mehr Infos: Verkäufer-Dashboard" aria-expanded="false" data-tool-info="Eingeloggter Eigentümer sieht Aktivitäten zu seinem Objekt: Anfragen, Besichtigungs-Termine, Marketing-Status. Maklerin spart Mail-Reports." data-track-event="TOOL_INFO_OPEN" data-track-tool="verkaeufer-dashboard">i</button></li>
-                            <li style="animation-delay:240ms">Off-Market-Portfolio<button type="button" class="tool-info" aria-label="Mehr Infos: Off-Market-Portfolio" aria-expanded="false" data-tool-info="Eingeloggte Käufer sehen exklusive Objekte vor der öffentlichen Listung. Vertrauens-Anker für Premium-Klientel." data-track-event="TOOL_INFO_OPEN" data-track-tool="off-market-portfolio">i</button></li>
-                            <li style="animation-delay:320ms">Marktbarometer<button type="button" class="tool-info" aria-label="Mehr Infos: Marktbarometer" aria-expanded="false" data-tool-info="Aktuelle PLZ-Preisentwicklung, Angebots-Dauer und Trend. Verkäufer sieht, wann der Zeitpunkt passt." data-track-event="TOOL_INFO_OPEN" data-track-tool="marktbarometer">i</button></li>
-                            <li style="animation-delay:400ms">IVD + HypZert<button type="button" class="tool-info" aria-label="Mehr Infos: IVD + HypZert" aria-expanded="false" data-tool-info="Klickbare Mitgliedschaft im Immobilienverband Deutschland und HypZert-Zertifizierung. Qualitäts-Anker für Verkäufer und Banken." data-track-event="TOOL_INFO_OPEN" data-track-tool="ivd-hypzert">i</button></li>
+                            <li style="animation-delay:0ms">Wertermittlung-Rechner</li>
+                            <li style="animation-delay:80ms">Live-Filter-Suche</li>
+                            <li style="animation-delay:160ms">Verkäufer-Dashboard</li>
+                            <li style="animation-delay:240ms">Off-Market-Portfolio</li>
+                            <li style="animation-delay:320ms">Marktbarometer</li>
+                            <li style="animation-delay:400ms">IVD + HypZert</li>
                         </ul>
                         <span class="mockup-meta" id="hero-mockup-meta">Premium · ca. 3–4 Wochen</span>
                     </div>
@@ -3848,6 +3852,7 @@
 
     <!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
     <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung" style="background: var(--surface-warm);">
+        <div class="kr-audit-magic-inner">
         <p class="kr-audit-magic-folio">№&nbsp;02 · Erste Einschätzung</p>
         <h2 id="audit-magic-title" class="kr-audit-magic-title">
             Sie haben schon eine Website?
@@ -3900,6 +3905,7 @@
             <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
         </div>
         <p class="kr-audit-magic-caption" aria-hidden="true">Goldener Winkel · 137,5°</p>
+        </div>
     </section>
 
 
@@ -4900,7 +4906,7 @@
                         <li>Alles aus Premium</li>
                         <li>Mandantenportal mit verschlüsseltem Upload</li>
                         <li>DSGVO-Compliance-Audit quartalsweise</li>
-                        <li>Quartals-Call · 24-h-Reaktionszeit</li>
+                        <li>Rechtstext-Updates bei Gesetzesänderungen</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -5747,14 +5753,8 @@
             };
 
             function buildFeatureLi(name, delay) {
-                var info = FEATURE_INFO[name];
-                var btn = '';
-                if (info) {
-                    var safe = info.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-                    var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    btn = '<button type="button" class="tool-info" aria-label="Mehr Infos: ' + name + '" aria-expanded="false" data-tool-info="' + safe + '" data-track-event="TOOL_INFO_OPEN" data-track-tool="' + slug + '">i</button>';
-                }
-                return '<li style="animation-delay:' + delay + 'ms">' + name + btn + '</li>';
+                // Sprint 223 — Hero aufgeräumt: keine „i"-Info-Buttons mehr im Demo-Mockup (Founder-Wunsch).
+                return '<li style="animation-delay:' + delay + 'ms">' + name + '</li>';
             }
 
             // Fallback-Pfad für noch-nicht-generierte Mockup-Bilder

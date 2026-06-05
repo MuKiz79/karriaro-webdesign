@@ -248,7 +248,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             --color-cream: #F8F4ED;           /* Skizzen-Papier — wärmster Hellton */
             --color-cream-soft: #F0EAE0;
             --surface: #FDFCFA;
-            --surface-warm: #F0E6D6;      /* dazwischen — Sektion-Wechsel */
+            --surface-warm: #F4F1EA;      /* dazwischen — Sektion-Wechsel (Sprint 223: Porzellan statt zu kräftigem Tan) */
             --color-bone: #FBFAF7;            /* fast weiß, warm */
             --color-graphite: #14202B;        /* Body-Text */
             --color-graphite-soft: #525E6B;   /* Sekundär-Text */
@@ -626,8 +626,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         nav .nav-logo { display: inline-flex; align-items: center; gap: 9px; opacity: 1; }
         nav .nav-mark { height: 48px; width: 48px; display: block; flex-shrink: 0; }
         nav .nav-wordmark { font-family: 'Fraunces', 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1; }
+        /* Sprint 217 — Linien-Klarheit: KARRIARO ist die Dachmarke, „Webdesign" grenzt diese Linie
+           gegen andere ab (z.B. Karriaro-Profilgenerator). Mono-Subzeile unter der Wortmarke. */
         nav .nav-wordmark-group { display: inline-flex; flex-direction: column; justify-content: center; }
-        nav .nav-wordmark-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--color-gold-text); line-height: 1; margin-top: 4px; opacity: 0.85; }
+        nav .nav-wordmark-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.26em; text-indent: 0.26em; text-align: center; text-transform: uppercase; color: var(--color-gold-text); line-height: 1; margin-top: 4px; opacity: 0.85; }
         nav .links { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 28px; }
         /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
@@ -854,7 +856,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         /* Hero — Premium-Atelier-Stil B: 1 großes Mockup mit Story-Caption */
         .hero-with-photo {
             position: relative;
-            background: #fff;
+            background: var(--surface);
             color: var(--color-onyx);
             /* Sprint 197 — weiche, gedeckelte Höhe (svh schließt mobile
                Browser-Chrome aus) statt hartem 100vh; Top-Anchor statt
@@ -1246,8 +1248,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         /* Sprint 54 — Hero Award-Polish: Eyebrow/Folio + Drop-Cap + opsz-Reveal + Mockup-Tilt + Marginalia */
         .hero-folio-eyebrow {
             font-family: var(--font-mono);
-            font-size: 10px;
-            letter-spacing: 0.22em;
+            font-size: 11px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--color-gold-text);
             margin-bottom: clamp(24px, 4vh, 40px);
@@ -1301,14 +1303,111 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         .hero-h1-line { display: block; }
         .hero-dropcap {
+            position: relative;
+            display: inline-block;
+        }
+        /* Sprint 221 - Hero-Signatur "Saat -> das I waechst -> volles Logo als i-Punkt".
+           Kein "I" am Start. Eine klar erkennbare Gold-Saat huepft im Bogen herein
+           (Anticipation/Gewicht), landet, und WAECHST als Knospe mit dem emporwachsenden
+           "I" nach oben; oben angekommen ENTFALTET sie sich zur vollen Phyllotaxis-Bluete
+           (= Karriaro-Logo) als i-Punkt. Keine Erde. reduced-motion -> I+Logo sofort da. */
+        .hero-i-glyph {
+            display: inline-block;
             font-family: var(--font-pull-quote);
             font-style: italic;
             font-weight: 500;
-            color: var(--color-gold);
+            /* Sprint 222 - Premium: gebuerstetes Messing-Foil statt flachem Oliv-Gold.
+               Solider Fallback ZUERST (traegt Selektion + Browser ohne background-clip:text);
+               background-clip:text + 177deg-Verlauf = diagonale Glanzkante am Kursiv-Stamm. */
+            color: #B68A38;
+            background: linear-gradient(177deg, #E7C878 0%, #C9A24B 40%, #9A7836 74%, #C9A24B 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 1px 0 rgba(231, 200, 120, 0.28), 0 -0.5px 0 rgba(92, 68, 19, 0.20);
             font-size: 1.18em;
             line-height: 0.86;
             padding-right: 0.04em;
             margin-left: -0.04em;
+            transform-origin: 50% 100%;
+            clip-path: inset(100% 0 -10% 0);
+            scale: 1 0.7;
+            animation: hero-i-grow 600ms cubic-bezier(0.16, 1, 0.3, 1) 1280ms both;
+        }
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            .hero-i-glyph { -webkit-text-fill-color: transparent; color: transparent; }
+        }
+        .hero-i-glyph::selection { -webkit-text-fill-color: var(--color-indigo-strong); color: var(--color-indigo-strong); background: rgba(201, 162, 75, 0.22); }
+        @keyframes hero-i-grow {
+            0%   { clip-path: inset(100% 0 -10% 0); scale: 1 0.7; }
+            70%  { clip-path: inset(0 0 -10% 0);    scale: 1 1.04; }
+            100% { clip-path: inset(0 0 -10% 0);    scale: 1 1; }
+        }
+        .hero-grow { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+        .hero-seed2 {
+            position: absolute;
+            left: 50%; top: -0.06em;
+            width: 0.22em; height: 0.22em;
+            margin-left: -0.11em;
+            border-radius: 50%;
+            background: radial-gradient(circle at 34% 28%, #F4E0A8 0%, #C9A24B 46%, #9A7836 100%);
+            box-shadow: 0 0.02em 0.07em rgba(92, 68, 19, 0.42), inset 0 0.03em 0.04em rgba(231, 200, 120, 0.55), inset 0 -0.025em 0.035em rgba(92, 68, 19, 0.40);
+            translate: -0.62em -0.18em;
+            scale: 0.5 0.5;
+            opacity: 0;
+            animation: hero-seed-journey 1750ms cubic-bezier(0.42, 0, 0.5, 1) 300ms both;
+        }
+        @keyframes hero-seed-journey {
+            0%   { translate: -0.62em -0.18em; scale: 0.5 0.5;   opacity: 0; }
+            4%   { translate: -0.62em -0.13em; scale: 0.96 0.72; opacity: 1; }
+            9%   { translate: -0.6em -0.24em;  scale: 0.68 1.26; opacity: 1; }
+            30%  { translate: -0.24em -0.44em; scale: 0.82 1.14; opacity: 1; }
+            48%  { translate: 0 0.95em;        scale: 1.5 0.55;  opacity: 1; }
+            53%  { translate: 0 0.87em;        scale: 0.86 1.12; opacity: 1; }
+            57%  { translate: 0 0.92em;        scale: 1.05 0.96; opacity: 1; }
+            88%  { translate: 0 0;             scale: 1 1;       opacity: 1; }
+            94%  { translate: 0 -0.02em;       scale: 1.4 1.4;   opacity: 1; }
+            100% { translate: 0 0;             scale: 0.4 0.4;   opacity: 0; }
+        }
+        .hero-tittle {
+            position: absolute;
+            left: 50%; top: -0.42em;
+            width: 0.55em; height: 0.55em;
+            margin-left: -0.255em;
+            transform: translateX(0.03em);
+            overflow: visible;
+            animation: hero-bloom-settle 1400ms ease-out 2910ms 1 both;
+        }
+        .hero-tittle .hero-bloom-dot {
+            transform-box: fill-box; transform-origin: center; opacity: 0;
+            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both;
+        }
+        .hero-tittle .hero-bloom-dot--gold {
+            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both,
+                       hero-bloom-spark 1000ms ease-out calc(2260ms + var(--i, 0) * 15ms) 1;
+        }
+        @keyframes hero-bloom-pop {
+            0%   { opacity: 0; transform: scale(0); }
+            70%  { opacity: 1; transform: scale(1.18); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes hero-bloom-spark {
+            0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+            45%  { filter: drop-shadow(0 0 4px rgba(231, 200, 120, 0.55)); }
+            100% { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+        }
+        /* Sprint 222 - einmaliger, langsamer Schluss-Glanz ueber dem fertigen Messing-Logo
+           (kein Loop, klarer Ausklang zu 0 statt Dauer-Halo). */
+        @keyframes hero-bloom-settle {
+            0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
+            45%  { filter: drop-shadow(0 0 5px rgba(231, 200, 120, 0.28)); }
+            100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
+            .hero-seed2 { display: none; }
+            .hero-tittle { animation: none; filter: none; }
+            .hero-tittle .hero-bloom-dot,
+            .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-headline {
@@ -3041,13 +3140,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         /* ============================================================
            Sprint 168 — Audit Magic-Moment (Editorial-stille Section)
            ============================================================ */
+        /* Sprint 223 — Hintergrund full-bleed: Sektion volle Breite, Inhalt im 720px-Inner zentriert
+           (vorher hatte die Sektion selbst max-width:720px → Creme nur in der Mittelspalte, Ränder weiß). */
         .kr-audit-magic {
-            max-width: 720px;
-            margin: 0 auto;
             padding: clamp(72px, 10vw, 112px) 24px clamp(48px, 8vw, 80px);
             text-align: center;
             color: var(--color-graphite);
             background: var(--color-surface-veil);
+        }
+        .kr-audit-magic-inner {
+            max-width: 720px;
+            margin: 0 auto;
         }
         .kr-audit-magic-folio {
             font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -3714,11 +3817,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <section aria-label="Einleitung" class="hero-with-photo" id="main-content">
         <div class="hero-inner">
             <div class="hero-text-block">
-                <p class="hero-folio-eyebrow">
-                    <span>Für jede Profession</span>
-                    <span class="dot">·</span>
-                    <span>Ein Atelier</span>
-                </p>
+                <p class="hero-folio-eyebrow"><span>Für jede Profession</span><span class="dot">·</span><span>Ein Atelier</span></p>
                 <h1 class="hero-headline"><span class="hero-h1-line">Ihre Website.</span><span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span></h1><a href="#demos" class="m-hero-demos-tease" data-track-event="HERO_DEMO_TEASE"><span class="m-hero-demos-tease-text">Acht Branchen, acht echte Demos. <em>Eine Wischgeste entfernt.</em></span><span class="m-hero-demos-tease-arrow" aria-hidden="true">↓</span></a>
                 <p class="subhead">Handcodiert, BFSG-konform, für die KI-Ära gemacht.</p>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt.</p>
@@ -3755,12 +3854,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <div class="mockup-caption">
                         <span class="mockup-label" id="hero-mockup-label">Stadtmakler Stuttgart · Immobilien-Werkzeuge</span>
                         <ul class="mockup-features" id="hero-mockup-features">
-                            <li style="animation-delay:0ms">Wertermittlung-Rechner<button type="button" class="tool-info" aria-label="Mehr Infos: Wertermittlung-Rechner" aria-expanded="false" data-tool-info="Verkäufer gibt Objekttyp, PLZ, m² und Baujahr ein. Demo zeigt eine Live-Spanne (z. B. 685.000–745.000 €). Sofort Antwort statt „wir melden uns"." data-track-event="TOOL_INFO_OPEN" data-track-tool="wertermittlung-rechner">i</button></li>
-                            <li style="animation-delay:80ms">Live-Filter-Suche<button type="button" class="tool-info" aria-label="Mehr Infos: Live-Filter-Suche" aria-expanded="false" data-tool-info="Käufer filtert nach PLZ, Preis, m², Zimmer. Ergebnisse refreshen live — kein Seiten-Reload, keine „leider keine Treffer"-Sackgasse." data-track-event="TOOL_INFO_OPEN" data-track-tool="live-filter-suche">i</button></li>
-                            <li style="animation-delay:160ms">Verkäufer-Dashboard<button type="button" class="tool-info" aria-label="Mehr Infos: Verkäufer-Dashboard" aria-expanded="false" data-tool-info="Eingeloggter Eigentümer sieht Aktivitäten zu seinem Objekt: Anfragen, Besichtigungs-Termine, Marketing-Status. Maklerin spart Mail-Reports." data-track-event="TOOL_INFO_OPEN" data-track-tool="verkaeufer-dashboard">i</button></li>
-                            <li style="animation-delay:240ms">Off-Market-Portfolio<button type="button" class="tool-info" aria-label="Mehr Infos: Off-Market-Portfolio" aria-expanded="false" data-tool-info="Eingeloggte Käufer sehen exklusive Objekte vor der öffentlichen Listung. Vertrauens-Anker für Premium-Klientel." data-track-event="TOOL_INFO_OPEN" data-track-tool="off-market-portfolio">i</button></li>
-                            <li style="animation-delay:320ms">Marktbarometer<button type="button" class="tool-info" aria-label="Mehr Infos: Marktbarometer" aria-expanded="false" data-tool-info="Aktuelle PLZ-Preisentwicklung, Angebots-Dauer und Trend. Verkäufer sieht, wann der Zeitpunkt passt." data-track-event="TOOL_INFO_OPEN" data-track-tool="marktbarometer">i</button></li>
-                            <li style="animation-delay:400ms">IVD + HypZert<button type="button" class="tool-info" aria-label="Mehr Infos: IVD + HypZert" aria-expanded="false" data-tool-info="Klickbare Mitgliedschaft im Immobilienverband Deutschland und HypZert-Zertifizierung. Qualitäts-Anker für Verkäufer und Banken." data-track-event="TOOL_INFO_OPEN" data-track-tool="ivd-hypzert">i</button></li>
+                            <li style="animation-delay:0ms">Wertermittlung-Rechner</li>
+                            <li style="animation-delay:80ms">Live-Filter-Suche</li>
+                            <li style="animation-delay:160ms">Verkäufer-Dashboard</li>
+                            <li style="animation-delay:240ms">Off-Market-Portfolio</li>
+                            <li style="animation-delay:320ms">Marktbarometer</li>
+                            <li style="animation-delay:400ms">IVD + HypZert</li>
                         </ul>
                         <span class="mockup-meta" id="hero-mockup-meta">Premium · ca. 3–4 Wochen</span>
                     </div>
@@ -4103,6 +4202,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </section>
 
     <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung" style="background: var(--surface-warm);">
+        <div class="kr-audit-magic-inner">
         <p class="kr-audit-magic-folio">№&nbsp;02 · Erste Einschätzung</p>
         <h2 id="audit-magic-title" class="kr-audit-magic-title">
             Sie haben schon eine Website?
@@ -4155,6 +4255,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
         </div>
         <p class="kr-audit-magic-caption" aria-hidden="true">Goldener Winkel · 137,5°</p>
+        </div>
     </section>
 
 
@@ -5155,7 +5256,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <li>Alles aus Premium</li>
                         <li>Mandantenportal mit verschlüsseltem Upload</li>
                         <li>DSGVO-Compliance-Audit quartalsweise</li>
-                        <li>Quartals-Call · 24-h-Reaktionszeit</li>
+                        <li>Rechtstext-Updates bei Gesetzesänderungen</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -6003,14 +6104,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             };
 
             function buildFeatureLi(name, delay) {
-                var info = FEATURE_INFO[name];
-                var btn = '';
-                if (info) {
-                    var safe = info.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-                    var slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    btn = '<button type="button" class="tool-info" aria-label="Mehr Infos: ' + name + '" aria-expanded="false" data-tool-info="' + safe + '" data-track-event="TOOL_INFO_OPEN" data-track-tool="' + slug + '">i</button>';
-                }
-                return '<li style="animation-delay:' + delay + 'ms">' + name + btn + '</li>';
+                // Sprint 223 — Hero aufgeräumt: keine „i"-Info-Buttons mehr im Demo-Mockup (Founder-Wunsch).
+                return '<li style="animation-delay:' + delay + 'ms">' + name + '</li>';
             }
 
             // Fallback-Pfad für noch-nicht-generierte Mockup-Bilder

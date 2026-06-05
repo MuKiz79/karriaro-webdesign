@@ -41,6 +41,9 @@
         if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
         try {
             var u = new URL(s);
+            // Sprint 223 — fehlende Endung (z. B. „kablan-immobilien" ohne .de) abfangen,
+            // sonst läuft die Prüfung wortlos ins Leere.
+            if (u.hostname.indexOf('.') === -1) return '';
             return u.origin + u.pathname.replace(/\/$/, '') + (u.search || '');
         } catch (e) {
             return '';
@@ -346,7 +349,9 @@
         form.style.display = '';
         form.style.opacity = '1';
         var input = form.querySelector('[data-audit-magic-input]');
-        if (input) input.focus();
+        // Sprint 223 — Wert vorselektieren: „Prüfen" wiederholt dieselbe Adresse,
+        // Tippen überschreibt sie direkt mit einer neuen.
+        if (input) { input.focus(); input.select(); }
     }
 
     function startPhaseLoop(stage) {
@@ -504,7 +509,7 @@
             function runAudit() {
                 var url = normalizeUrl(input.value);
                 if (!url) {
-                    input.setCustomValidity('Bitte eine gültige Adresse angeben.');
+                    input.setCustomValidity('Bitte die vollständige Adresse mit Endung eingeben (z. B. ihre-firma.de).');
                     input.reportValidity();
                     return;
                 }
@@ -606,9 +611,9 @@
                     track('Magic Audit Failed', { reason: reason, domain: domain });
                     // Sprint 168.2 — persistente Fehler-Anzeige + Retry-Button
                     showInlineError(stage, message, function () {
+                        // Sprint 223 — kein Auto-Resubmit derselben URL. resetSection zeigt das
+                        // Formular wieder und selektiert die Adresse vor (ändern oder erneut prüfen).
                         resetSection(section, form, stage, resultHost);
-                        // Re-trigger the audit with the same URL after a brief tick
-                        setTimeout(runAudit, 100);
                     });
                 });
             }

@@ -56,7 +56,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
         body { font-family: var(--kv-sans); color: var(--kv-graphite); background: var(--kv-bg); line-height: 1.55; -webkit-font-smoothing: antialiased; }
         a { color: var(--kv-gold-text); text-decoration: none; }
-        .kv-wrap { max-width: 760px; margin: 0 auto; padding: clamp(48px, 9vh, 96px) 24px 96px; }
+        /* Sprint 223 — Kopfzeile mit Heim-Link (vorher kam man nicht zur Hauptseite zurück). */
+        .kv-nav { position: sticky; top: 0; z-index: 20; background: rgba(251, 250, 247, 0.92); -webkit-backdrop-filter: saturate(1.4) blur(8px); backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid var(--kv-border); }
+        .kv-nav-inner { max-width: 760px; margin: 0 auto; padding: 13px 24px; }
+        .kv-nav-home { display: inline-flex; align-items: baseline; gap: 9px; text-decoration: none; color: var(--kv-ink); }
+        .kv-nav-back { align-self: center; font-size: 15px; line-height: 1; color: var(--kv-graphite); transition: transform 160ms ease; }
+        .kv-nav-mark { font-family: var(--kv-serif); font-weight: 500; font-size: 18px; letter-spacing: 0.04em; }
+        .kv-nav-sub { font-family: var(--kv-mono); font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--kv-gold-text); }
+        .kv-nav-home:hover .kv-nav-back { transform: translateX(-3px); }
+        .kv-nav-home:hover .kv-nav-mark { color: var(--kv-gold-text); }
+        .kv-field-hint { font-size: 12px; color: var(--kv-graphite); margin: 6px 0 0; line-height: 1.4; }
+        .kv-wrap { max-width: 760px; margin: 0 auto; padding: clamp(40px, 7vh, 72px) 24px 96px; }
         .kv-eyebrow { font-family: var(--kv-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--kv-graphite); display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
         .kv-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--kv-gold); }
         h1 { font-family: var(--kv-serif); font-weight: 400; font-size: clamp(34px, 6vw, 60px); line-height: 1.04; letter-spacing: -0.01em; color: var(--kv-ink); margin-bottom: 18px; }
@@ -143,6 +153,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </head>
 <body>
 <a href="#main-content" class="skip-link">Zum Hauptinhalt</a>
+    <header class="kv-nav">
+        <div class="kv-nav-inner">
+            <a href="/" class="kv-nav-home" aria-label="Zurück zur Karriaro-Startseite">
+                <span class="kv-nav-back" aria-hidden="true">←</span>
+                <span class="kv-nav-mark">Karriaro</span>
+                <span class="kv-nav-sub">Webdesign</span>
+            </a>
+        </div>
+    </header>
     <main class="kv-wrap">
         <p class="kv-eyebrow">Karriaro · KI-Sichtbarkeit</p>
         <h1>Was weiß die KI <em>wirklich</em> über Ihr Unternehmen?</h1>
@@ -155,8 +174,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
             <div class="kv-row">
                 <div class="kv-field">
-                    <label for="kv-domain">Website (optional)</label>
+                    <label for="kv-domain">Website (optional, empfohlen)</label>
                     <input id="kv-domain" name="domain" type="text" placeholder="ihre-webseite.de" autocomplete="url" autocapitalize="none" spellcheck="false" />
+                    <p class="kv-field-hint">Mit Domain prüfen wir echte technische Signale — die Analyse wird deutlich genauer.</p>
                 </div>
                 <div class="kv-field">
                     <label for="kv-ort">Ort (optional)</label>
@@ -324,9 +344,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 errBox.classList.remove('is-on');
                 var business = document.getElementById('kv-business').value.trim();
                 if (business.length < 2) { document.getElementById('kv-business').focus(); return; }
+                var domainRaw = document.getElementById('kv-domain').value.trim();
+                // Sprint 223 — dezenter Hinweis bei Domain ohne Endung (Backend degradiert sonst still).
+                if (domainRaw && domainRaw.replace(/^https?:\/\//i, '').split('/')[0].indexOf('.') === -1) {
+                    errBox.textContent = 'Bitte die Domain mit Endung eingeben (z. B. .de) — oder das Feld leer lassen.';
+                    errBox.classList.add('is-on');
+                    document.getElementById('kv-domain').focus();
+                    return;
+                }
                 var payload = {
                     business: business,
-                    domain: document.getElementById('kv-domain').value.trim(),
+                    domain: domainRaw,
                     ort: document.getElementById('kv-ort').value.trim(),
                     branche: document.getElementById('kv-branche').value
                 };

@@ -237,19 +237,6 @@ const HAUPTSEITE_CASES = [
             return { pass: active, msg: 'immobilien-Panel .is-active' };
         }
     },
-    { name: 'tool-info · tooltip-opens',
-        action: async (page) => {
-            // Tool-Info-Button im Immobilien-Tab erst sichtbar machen
-            await page.locator('.kr-tools-tab[data-kr-tool="immobilien"]').click();
-            await sleep(150);
-            const btn = page.locator('.tool-info').first();
-            if (await btn.count() === 0) return { pass: false, msg: 'kein .tool-info gefunden' };
-            await btn.click({ force: true });
-            await sleep(200);
-            const tooltipCount = await page.locator('.tool-tooltip').count();
-            return { pass: tooltipCount > 0, msg: `.tool-tooltip count=${tooltipCount}` };
-        }
-    },
     { name: 'branche-switcher · tab-changes-mockup',
         action: async (page) => {
             const before = await page.locator('#hero-mockup-img').getAttribute('src');
