@@ -90,18 +90,17 @@
     document.body.appendChild(fab);
     document.body.appendChild(panel);
 
-    // Auf schmalen Screens kollidiert der bottom-left-FAB mit der bottom-right
-    // „Erstgespräch buchen"-Float-CTA (.kr-cta-float) der Desktop-Site. Dann den FAB
-    // über die CTA heben — nur wenn die CTA wirklich sichtbar ist (auf m.* ist sie
-    // display:none → FAB bleibt unten) und der Screen schmal genug zum Überlappen ist.
+    // Der FAB (bottom-right) teilt sich die Ecke mit der „Erstgespräch buchen"-Float-CTA
+    // (.kr-cta-float — nur auf der Desktop-Site <769px sichtbar; auf m.* display:none).
+    // Solange die CTA eingeblendet ist, den FAB darüber stapeln, sonst überlappen sie.
     function syncFabPosition() {
-        if (POSITION !== 'left') return;
         var cta = document.querySelector('.kr-cta-float');
-        var ctaActive = !!cta && getComputedStyle(cta).display !== 'none';
-        fab.classList.toggle('krc-raised', ctaActive && window.innerWidth <= 420);
+        var ctaShown = !!cta && getComputedStyle(cta).display !== 'none' && cta.classList.contains('is-visible');
+        fab.classList.toggle('krc-raised', ctaShown);
     }
     syncFabPosition();
     window.addEventListener('resize', syncFabPosition, { passive: true });
+    window.addEventListener('scroll', syncFabPosition, { passive: true });
 
     var msgsEl = panel.querySelector('.krc-msgs');
     var formEl = panel.querySelector('.krc-form');
