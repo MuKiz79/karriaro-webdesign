@@ -418,18 +418,13 @@ function injectHeroEyebrowStagger(html) {
 }
 
 function compactHeroEyebrow(html) {
-    // Sprint 151 — Folio-Numbering "№ 01" raus (radikal-Apple).
-    // Voice-Polish bleibt: Word-Doppelung MANUFAKTUR raus,
-    // „Frühjahr 2026" → „Ein Atelier".
-    // 2026-06-04 — „Karriaro" raus (Founder): die mobile Eyebrow soll nur noch
-    // „Für jede Profession · Ein Atelier" zeigen.
+    // Sprint 217 — Mobile-Eyebrow robust komplett ersetzen, UNABHÄNGIG von den
+    // Desktop-Tokens (die Desktop-Eyebrow ist jetzt „№ 01 · Manufaktur · Handcodiert
+    // in Köln"; die token-spezifische Regex von früher würde nicht mehr greifen).
+    // Mobil zeigt bewusst nur „Für jede Profession · Ein Atelier" (Founder-Vorgabe).
     return html.replace(
-        /<p class="hero-folio-eyebrow[^"]*"[^>]*>[\s\S]*?<\/p>/,
-        (match) => match
-            .replace(/<span>№[\s&nbsp;]*01<\/span>\s*<span class="dot">·<\/span>\s*/i, '')
-            .replace(/<span>Karriaro<\/span>\s*<span class="dot">·<\/span>\s*/i, '')
-            .replace(/>Webdesign-Manufaktur</gi, '>Für jede Profession<')
-            .replace(/>Frühjahr\s+2026</gi, '>Ein Atelier<')
+        /(<p class="hero-folio-eyebrow[^"]*"[^>]*>)[\s\S]*?(<\/p>)/,
+        '$1<span>Für jede Profession</span><span class="dot">·</span><span>Ein Atelier</span>$2'
     );
 }
 

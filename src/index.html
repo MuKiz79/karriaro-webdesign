@@ -128,7 +128,7 @@
                 "name": "Warum handcodierte Websites statt WordPress?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren, der Quellcode gehört Ihnen."
+                    "text": "Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren."
                 }
             },
             {
@@ -599,6 +599,10 @@
         nav .nav-logo { display: inline-flex; align-items: center; gap: 9px; opacity: 1; }
         nav .nav-mark { height: 48px; width: 48px; display: block; flex-shrink: 0; }
         nav .nav-wordmark { font-family: 'Fraunces', 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1; }
+        /* Sprint 217 — Linien-Klarheit: KARRIARO ist die Dachmarke, „Webdesign" grenzt diese Linie
+           gegen andere ab (z.B. Karriaro-Profilgenerator). Mono-Subzeile unter der Wortmarke. */
+        nav .nav-wordmark-group { display: inline-flex; flex-direction: column; justify-content: center; }
+        nav .nav-wordmark-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--color-gold-text); line-height: 1; margin-top: 4px; opacity: 0.85; }
         nav .links { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; gap: 28px; }
         /* Sprint 13 — Nav-CTA Outline (entschärft Konkurrenz mit Hero-Primary) */
         nav .cta {
@@ -1972,107 +1976,6 @@
         .kr-footer-legal-links a:hover { color: var(--color-indigo); }
 
         /* Sprint 41 — Split-Manuskript: Hand vs Druck */
-        .kr-manuskript-section { padding: clamp(80px, 12vh, 140px) 0; }
-        /* Sprint 201 — Lighthouse-Cockpit als eigene Sektion (Farbrhythmus-Trennung). */
-        .kr-cockpit-section { padding: clamp(80px, 12vh, 140px) 0; }
-        .kr-manuskript-split {
-            display: grid;
-            grid-template-columns: 1fr 40px 1fr;
-            gap: 0;
-            align-items: stretch;
-            max-width: 1000px;
-            margin: 0 auto;
-            background: var(--color-cream);
-            border: 1px solid var(--color-line);
-            border-radius: var(--radius-xl);
-            padding: clamp(28px, 4vw, 56px);
-            box-shadow: var(--shadow-sm);
-        }
-        @media (max-width: 720px) {
-            .kr-manuskript-split { grid-template-columns: 1fr; padding: 24px; }
-        }
-        .kr-manuskript-hand, .kr-manuskript-druck { padding: 8px 24px; text-align: left; }
-        .kr-manuskript-label {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--color-graphite-soft);
-            margin-bottom: 24px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--color-line);
-        }
-        .kr-manuskript-label--hand { color: var(--color-gold-text); }
-        .kr-manuskript-list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            counter-reset: ms-counter;
-        }
-        .kr-manuskript-list li {
-            counter-increment: ms-counter;
-            position: relative;
-            padding-left: 32px;
-        }
-        .kr-manuskript-list li::before {
-            content: counter(ms-counter, decimal-leading-zero);
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            letter-spacing: 0.06em;
-            color: var(--color-graphite-soft);
-        }
-        /* Hand-Spalte: handschriftlich anmutender Stil (Cormorant Italic + leichte Rotation) */
-        .kr-manuskript-list--hand li {
-            font-family: var(--font-pull-quote);
-            font-style: italic;
-            font-size: clamp(18px, 2.2vw, 22px);
-            line-height: 1.45;
-            color: var(--color-indigo-strong);
-            letter-spacing: 0.005em;
-        }
-        .kr-manuskript-list--hand li:nth-child(odd) { transform: rotate(-0.4deg); }
-        .kr-manuskript-list--hand li:nth-child(even) { transform: rotate(0.3deg); }
-        .kr-manuskript-list--hand li::before { color: var(--color-gold-text); font-style: normal; }
-        /* Druck-Spalte: sauberer Setzstil (Inter, regular) */
-        .kr-manuskript-list--druck li {
-            font-family: var(--font-body);
-            font-size: 15px;
-            line-height: 1.65;
-            color: var(--color-graphite);
-        }
-        .kr-manuskript-list--druck li strong { color: var(--color-indigo-strong); font-weight: 600; }
-        /* Mittellinie / Übergabe-Marker */
-        .kr-manuskript-divider {
-            position: relative;
-            min-height: 320px;
-        }
-        @media (max-width: 720px) { .kr-manuskript-divider { display: none; } }
-        .kr-manuskript-divider svg {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 100%;
-            width: 40px;
-        }
-        .kr-manuskript-divider-label {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, 32px);
-            font-family: var(--font-mono);
-            font-size: 9px;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--color-gold-text);
-            white-space: nowrap;
-        }
-
         /* Sprint 41 — Performance-Layer: SVG-Bar-Chart vs DACH-Median + Lighthouse-Pitch */
         .kr-perf-section { padding: clamp(80px, 12vh, 140px) 0; }
         .kr-perf-chart {
@@ -3075,7 +2978,7 @@
             letter-spacing: 0.12em;
             color: var(--color-graphite-soft);
         }
-        /* Sprint 185 — Qualitäts-Versprechen (Risk-Reversal, stützt sich auf das Dogfooding/№11). */
+        /* Sprint 185 — Qualitäts-Versprechen (Risk-Reversal, stützt sich auf das Dogfooding/№10). */
         .kr-payment-guarantee {
             max-width: 520px;
             margin: 0 auto 24px;
@@ -3730,7 +3633,7 @@
 
     <nav>
         <div class="inner">
-            <a href="/" class="nav-logo" aria-label="Karriaro · Startseite"><svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false"><path d="M 1.50 7.61 L 1.50 1.50 L 7.61 1.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 1.50 L 38.50 1.50 L 38.50 7.61" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 1.50 32.39 L 1.50 38.50 L 7.61 38.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 38.50 L 38.50 38.50 L 38.50 32.39" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="18.71" cy="21.18" r="0.66" fill="#C9A24B"/><circle cx="20.22" cy="17.54" r="0.66" fill="#C9A24B"/><circle cx="21.84" cy="22.40" r="0.66" fill="#C9A24B"/><circle cx="16.56" cy="19.39" r="0.66" fill="currentColor"/><circle cx="23.30" cy="17.90" r="0.66" fill="#C9A24B"/><circle cx="18.89" cy="24.14" r="0.66" fill="currentColor"/><circle cx="17.87" cy="15.89" r="0.66" fill="currentColor"/><circle cx="24.65" cy="21.70" r="0.66" fill="#C9A24B"/><circle cx="15.15" cy="22.00" r="0.66" fill="currentColor"/><circle cx="22.34" cy="14.99" r="0.66" fill="currentColor"/><circle cx="21.74" cy="25.53" r="0.66" fill="currentColor"/><circle cx="14.76" cy="16.96" r="0.66" fill="currentColor"/><circle cx="26.16" cy="18.65" r="0.66" fill="#C9A24B"/><circle cx="16.24" cy="25.35" r="0.66" fill="currentColor"/><circle cx="19.13" cy="13.28" r="0.66" fill="currentColor"/><circle cx="25.35" cy="24.51" r="0.66" fill="currentColor"/><circle cx="12.79" cy="20.30" r="0.66" fill="currentColor"/><circle cx="25.26" cy="14.77" r="0.66" fill="currentColor"/><circle cx="19.65" cy="27.62" r="0.66" fill="currentColor"/><circle cx="14.99" cy="13.99" r="0.66" fill="currentColor"/><circle cx="27.94" cy="21.07" r="0.66" fill="#C9A24B"/><circle cx="13.27" cy="24.69" r="0.66" fill="currentColor"/><circle cx="21.84" cy="11.82" r="0.66" fill="currentColor"/><circle cx="24.26" cy="27.43" r="0.66" fill="currentColor"/><circle cx="11.67" cy="17.34" r="0.66" fill="currentColor"/><circle cx="28.10" cy="16.26" r="0.66" fill="currentColor"/><circle cx="16.49" cy="28.38" r="0.66" fill="currentColor"/><circle cx="16.87" cy="11.29" r="0.66" fill="currentColor"/><circle cx="28.34" cy="24.38" r="0.66" fill="currentColor"/><circle cx="10.74" cy="22.44" r="0.66" fill="currentColor"/><circle cx="25.27" cy="11.81" r="0.66" fill="currentColor"/><circle cx="21.68" cy="29.75" r="0.66" fill="currentColor"/><circle cx="12.06" cy="13.85" r="0.66" fill="currentColor"/><circle cx="30.16" cy="19.16" r="0.66" fill="#C9A24B"/><circle cx="12.97" cy="27.60" r="0.66" fill="currentColor"/><circle cx="20.05" cy="9.51" r="0.66" fill="currentColor"/><circle cx="27.15" cy="27.88" r="0.66" fill="currentColor"/><circle cx="9.26" cy="19.01" r="0.66" fill="currentColor"/><circle cx="28.70" cy="13.40" r="0.66" fill="currentColor"/><circle cx="18.02" cy="30.88" r="0.66" fill="currentColor"/><circle cx="14.04" cy="10.52" r="0.66" fill="currentColor"/><circle cx="30.93" cy="23.00" r="0.66" fill="currentColor"/><circle cx="9.80" cy="25.24" r="0.66" fill="currentColor"/><circle cx="24.03" cy="9.12" r="0.66" fill="currentColor"/><circle cx="24.42" cy="30.87" r="0.66" fill="currentColor"/><circle cx="9.28" cy="14.92" r="0.66" fill="currentColor"/><circle cx="31.46" cy="16.47" r="0.66" fill="currentColor"/><circle cx="13.87" cy="30.45" r="0.66" fill="currentColor"/><circle cx="17.43" cy="8.03" r="0.66" fill="currentColor"/><circle cx="30.08" cy="27.16" r="0.66" fill="currentColor"/><circle cx="7.61" cy="21.54" r="0.66" fill="currentColor"/><circle cx="28.17" cy="10.40" r="0.66" fill="currentColor"/><circle cx="20.46" cy="32.72" r="0.66" fill="currentColor"/><circle cx="10.98" cy="10.85" r="0.66" fill="currentColor"/><circle cx="32.95" cy="20.66" r="0.66" fill="#C9A24B"/><circle cx="9.91" cy="28.34" r="0.66" fill="currentColor"/><circle cx="21.82" cy="6.92" r="0.66" fill="currentColor"/><circle cx="27.55" cy="30.97" r="0.66" fill="currentColor"/><circle cx="6.91" cy="16.99" r="0.66" fill="currentColor"/><circle cx="31.79" cy="13.32" r="0.66" fill="currentColor"/><circle cx="15.78" cy="32.99" r="0.66" fill="currentColor"/><circle cx="14.28" cy="7.47" r="0.66" fill="currentColor"/><circle cx="32.78" cy="25.42" r="0.66" fill="currentColor"/><circle cx="6.81" cy="24.67" r="0.66" fill="currentColor"/><circle cx="26.62" cy="7.55" r="0.66" fill="currentColor"/><circle cx="23.55" cy="33.76" r="0.66" fill="currentColor"/><circle cx="8.00" cy="12.20" r="0.66" fill="currentColor"/><circle cx="34.23" cy="17.63" r="0.66" fill="currentColor"/><circle cx="11.05" cy="31.44" r="0.66" fill="currentColor"/><circle cx="18.86" cy="5.41" r="0.66" fill="currentColor"/><circle cx="30.77" cy="30.06" r="0.66" fill="currentColor"/><circle cx="5.16" cy="19.86" r="0.66" fill="currentColor"/><circle cx="31.12" cy="10.01" r="0.66" fill="currentColor"/><circle cx="18.54" cy="34.97" r="0.66" fill="currentColor"/><circle cx="10.90" cy="7.89" r="0.66" fill="currentColor"/><circle cx="34.99" cy="22.80" r="0.66" fill="currentColor"/><circle cx="6.97" cy="28.11" r="0.66" fill="currentColor"/><circle cx="24.16" cy="5.12" r="0.66" fill="currentColor"/><circle cx="27.03" cy="33.87" r="0.66" fill="currentColor"/><circle cx="5.36" cy="14.49" r="0.66" fill="currentColor"/><circle cx="34.61" cy="14.14" r="0.66" fill="currentColor"/><circle cx="13.15" cy="34.28" r="0.66" fill="currentColor"/><circle cx="15.38" cy="4.75" r="0.66" fill="currentColor"/><circle cx="33.79" cy="28.17" r="0.66" fill="currentColor"/><circle cx="4.22" cy="23.31" r="0.66" fill="currentColor"/><circle cx="29.46" cy="6.82" r="0.66" fill="currentColor"/><circle cx="21.94" cy="36.20" r="0.66" fill="currentColor"/><circle cx="7.56" cy="9.30" r="0.66" fill="currentColor"/><circle cx="36.49" cy="19.48" r="0.66" fill="#C9A24B"/></svg><span class="nav-wordmark">Karriaro</span></a>
+            <a href="/" class="nav-logo" aria-label="Karriaro · Startseite"><svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false"><path d="M 1.50 7.61 L 1.50 1.50 L 7.61 1.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 1.50 L 38.50 1.50 L 38.50 7.61" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 1.50 32.39 L 1.50 38.50 L 7.61 38.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 38.50 L 38.50 38.50 L 38.50 32.39" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="18.71" cy="21.18" r="0.66" fill="#C9A24B"/><circle cx="20.22" cy="17.54" r="0.66" fill="#C9A24B"/><circle cx="21.84" cy="22.40" r="0.66" fill="#C9A24B"/><circle cx="16.56" cy="19.39" r="0.66" fill="currentColor"/><circle cx="23.30" cy="17.90" r="0.66" fill="#C9A24B"/><circle cx="18.89" cy="24.14" r="0.66" fill="currentColor"/><circle cx="17.87" cy="15.89" r="0.66" fill="currentColor"/><circle cx="24.65" cy="21.70" r="0.66" fill="#C9A24B"/><circle cx="15.15" cy="22.00" r="0.66" fill="currentColor"/><circle cx="22.34" cy="14.99" r="0.66" fill="currentColor"/><circle cx="21.74" cy="25.53" r="0.66" fill="currentColor"/><circle cx="14.76" cy="16.96" r="0.66" fill="currentColor"/><circle cx="26.16" cy="18.65" r="0.66" fill="#C9A24B"/><circle cx="16.24" cy="25.35" r="0.66" fill="currentColor"/><circle cx="19.13" cy="13.28" r="0.66" fill="currentColor"/><circle cx="25.35" cy="24.51" r="0.66" fill="currentColor"/><circle cx="12.79" cy="20.30" r="0.66" fill="currentColor"/><circle cx="25.26" cy="14.77" r="0.66" fill="currentColor"/><circle cx="19.65" cy="27.62" r="0.66" fill="currentColor"/><circle cx="14.99" cy="13.99" r="0.66" fill="currentColor"/><circle cx="27.94" cy="21.07" r="0.66" fill="#C9A24B"/><circle cx="13.27" cy="24.69" r="0.66" fill="currentColor"/><circle cx="21.84" cy="11.82" r="0.66" fill="currentColor"/><circle cx="24.26" cy="27.43" r="0.66" fill="currentColor"/><circle cx="11.67" cy="17.34" r="0.66" fill="currentColor"/><circle cx="28.10" cy="16.26" r="0.66" fill="currentColor"/><circle cx="16.49" cy="28.38" r="0.66" fill="currentColor"/><circle cx="16.87" cy="11.29" r="0.66" fill="currentColor"/><circle cx="28.34" cy="24.38" r="0.66" fill="currentColor"/><circle cx="10.74" cy="22.44" r="0.66" fill="currentColor"/><circle cx="25.27" cy="11.81" r="0.66" fill="currentColor"/><circle cx="21.68" cy="29.75" r="0.66" fill="currentColor"/><circle cx="12.06" cy="13.85" r="0.66" fill="currentColor"/><circle cx="30.16" cy="19.16" r="0.66" fill="#C9A24B"/><circle cx="12.97" cy="27.60" r="0.66" fill="currentColor"/><circle cx="20.05" cy="9.51" r="0.66" fill="currentColor"/><circle cx="27.15" cy="27.88" r="0.66" fill="currentColor"/><circle cx="9.26" cy="19.01" r="0.66" fill="currentColor"/><circle cx="28.70" cy="13.40" r="0.66" fill="currentColor"/><circle cx="18.02" cy="30.88" r="0.66" fill="currentColor"/><circle cx="14.04" cy="10.52" r="0.66" fill="currentColor"/><circle cx="30.93" cy="23.00" r="0.66" fill="currentColor"/><circle cx="9.80" cy="25.24" r="0.66" fill="currentColor"/><circle cx="24.03" cy="9.12" r="0.66" fill="currentColor"/><circle cx="24.42" cy="30.87" r="0.66" fill="currentColor"/><circle cx="9.28" cy="14.92" r="0.66" fill="currentColor"/><circle cx="31.46" cy="16.47" r="0.66" fill="currentColor"/><circle cx="13.87" cy="30.45" r="0.66" fill="currentColor"/><circle cx="17.43" cy="8.03" r="0.66" fill="currentColor"/><circle cx="30.08" cy="27.16" r="0.66" fill="currentColor"/><circle cx="7.61" cy="21.54" r="0.66" fill="currentColor"/><circle cx="28.17" cy="10.40" r="0.66" fill="currentColor"/><circle cx="20.46" cy="32.72" r="0.66" fill="currentColor"/><circle cx="10.98" cy="10.85" r="0.66" fill="currentColor"/><circle cx="32.95" cy="20.66" r="0.66" fill="#C9A24B"/><circle cx="9.91" cy="28.34" r="0.66" fill="currentColor"/><circle cx="21.82" cy="6.92" r="0.66" fill="currentColor"/><circle cx="27.55" cy="30.97" r="0.66" fill="currentColor"/><circle cx="6.91" cy="16.99" r="0.66" fill="currentColor"/><circle cx="31.79" cy="13.32" r="0.66" fill="currentColor"/><circle cx="15.78" cy="32.99" r="0.66" fill="currentColor"/><circle cx="14.28" cy="7.47" r="0.66" fill="currentColor"/><circle cx="32.78" cy="25.42" r="0.66" fill="currentColor"/><circle cx="6.81" cy="24.67" r="0.66" fill="currentColor"/><circle cx="26.62" cy="7.55" r="0.66" fill="currentColor"/><circle cx="23.55" cy="33.76" r="0.66" fill="currentColor"/><circle cx="8.00" cy="12.20" r="0.66" fill="currentColor"/><circle cx="34.23" cy="17.63" r="0.66" fill="currentColor"/><circle cx="11.05" cy="31.44" r="0.66" fill="currentColor"/><circle cx="18.86" cy="5.41" r="0.66" fill="currentColor"/><circle cx="30.77" cy="30.06" r="0.66" fill="currentColor"/><circle cx="5.16" cy="19.86" r="0.66" fill="currentColor"/><circle cx="31.12" cy="10.01" r="0.66" fill="currentColor"/><circle cx="18.54" cy="34.97" r="0.66" fill="currentColor"/><circle cx="10.90" cy="7.89" r="0.66" fill="currentColor"/><circle cx="34.99" cy="22.80" r="0.66" fill="currentColor"/><circle cx="6.97" cy="28.11" r="0.66" fill="currentColor"/><circle cx="24.16" cy="5.12" r="0.66" fill="currentColor"/><circle cx="27.03" cy="33.87" r="0.66" fill="currentColor"/><circle cx="5.36" cy="14.49" r="0.66" fill="currentColor"/><circle cx="34.61" cy="14.14" r="0.66" fill="currentColor"/><circle cx="13.15" cy="34.28" r="0.66" fill="currentColor"/><circle cx="15.38" cy="4.75" r="0.66" fill="currentColor"/><circle cx="33.79" cy="28.17" r="0.66" fill="currentColor"/><circle cx="4.22" cy="23.31" r="0.66" fill="currentColor"/><circle cx="29.46" cy="6.82" r="0.66" fill="currentColor"/><circle cx="21.94" cy="36.20" r="0.66" fill="currentColor"/><circle cx="7.56" cy="9.30" r="0.66" fill="currentColor"/><circle cx="36.49" cy="19.48" r="0.66" fill="#C9A24B"/></svg><span class="nav-wordmark-group"><span class="nav-wordmark">Karriaro</span><span class="nav-wordmark-sub">Webdesign</span></span></a>
             <div class="links">
                 <a href="#faq">FAQ</a>
                 <a href="#preis">Preis</a>
@@ -3765,11 +3668,9 @@
                 <p class="hero-folio-eyebrow">
                     <span>№&nbsp;01</span>
                     <span class="dot">·</span>
-                    <span>Karriaro</span>
+                    <span>Manufaktur</span>
                     <span class="dot">·</span>
-                    <span>Webdesign-Manufaktur</span>
-                    <span class="dot">·</span>
-                    <span>Frühjahr 2026</span>
+                    <span>Handcodiert in Köln</span>
                 </p>
                 <h1 class="hero-headline">
                     <span class="hero-h1-line"><span class="hero-dropcap">I</span>hre Website.</span>
@@ -3787,9 +3688,9 @@
                 </a>
                 <!-- Sprint 204 — Trias entfernt (Dopplung mit neuer Subline „Werkzeuge,
                      Cockpit, KI"). Weniger Text → H1 darf groß sein; Vielfalt trägt die
-                     Subline + das interaktive Demo. „Quellcode gehört Ihnen" in die Provenance. -->
+                     Subline + das interaktive Demo. -->
                 <p class="hero-provenance">
-                    Gegründet von <a href="/gruender">Muammer Kızılaslan</a> · Köln · BFSG · DSGVO · Quellcode gehört Ihnen
+                    Gegründet von <a href="/gruender">Muammer Kızılaslan</a> · Köln · BFSG · DSGVO
                 </p>
                 <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel verschoben in die
                      „Über uns"-Section (Codex-Heimat „Deep-Moment"); entlastet den Hero. -->
@@ -3904,14 +3805,14 @@
 
 
     <!-- KI-Sichtbarkeits-Spiegel — Lead-Magnet + Innovationsbeweis (2026-06-04). Unnummerierte
-         Feature-Sektion (themed Eyebrow, kein Folio — № 01–11 bleiben lückenlos). Verlinkt /ki-sichtbarkeit. -->
+         Feature-Sektion (themed Eyebrow, kein Folio — № 01–10 bleiben lückenlos). Verlinkt /ki-sichtbarkeit. -->
     <style>
         .kr-kispiegel { padding: clamp(72px, 11vh, 120px) 24px; background: #fff; border-top: 1px solid rgba(20,32,43,0.08); }
         .kr-kispiegel-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(32px, 6vw, 72px); align-items: center; }
         @media (max-width: 860px) { .kr-kispiegel-inner { grid-template-columns: 1fr; gap: 40px; } }
         .kr-kispiegel-eyebrow { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #6E5F3F; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .kr-kispiegel-eyebrow::before { content: ''; width: 16px; height: 1px; background: #C9A24B; }
-        .kr-kispiegel-title { font-family: var(--font-display, 'Fraunces', Georgia, serif); font-weight: 400; font-size: clamp(30px, 4.4vw, 50px); line-height: 1.05; letter-spacing: -0.01em; color: #16202C; margin: 0 0 18px; }
+        .kr-kispiegel-title { font-family: var(--font-display, 'Fraunces', Georgia, serif); font-weight: 500; font-size: clamp(30px, 4.4vw, 50px); line-height: 1.05; letter-spacing: -0.024em; font-variation-settings: "opsz" 96; color: var(--color-indigo-strong); margin: 0 0 18px; }
         .kr-kispiegel-lede { font-size: clamp(16px, 2vw, 18px); color: #515154; max-width: 46ch; margin: 0 0 28px; line-height: 1.55; }
         .kr-kispiegel-cta { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; background: #1A2E40; color: #fff; font-weight: 500; font-size: 16px; border-radius: 2px; text-decoration: none; transition: background-color 180ms ease, transform 120ms ease; }
         .kr-kispiegel-cta span { transition: transform 200ms ease; }
@@ -4009,7 +3910,6 @@
                     <span class="kr-perf-pill"><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht. Kleinstunternehmen (<10 MA, <2 Mio. € Umsatz) bei reinen Info-Sites ausgenommen, bei Online-Buchung/Shop greift die Pflicht.">BFSG</abbr>-konform inklusive</span>
                     <span class="kr-perf-pill">DSGVO &amp; Hosting in DE/EU</span>
                     <span class="kr-perf-pill">Schema.org pro Branche</span>
-                    <span class="kr-perf-pill">Code gehört Ihnen</span>
                 </div>
                 <p style="margin-top: 28px;"><a href="/portfolio/friseur-salon" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
             </div>
@@ -4393,7 +4293,7 @@
             <div style="max-width: 720px; margin: 56px auto 0; padding-top: 48px; border-top: 1px solid var(--color-line); text-align: center;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">Atelier-Werkzeuge · auf Anfrage</p>
                 <h3 style="font-size: clamp(24px, 3.2vw, 34px); margin-bottom: 16px; letter-spacing: -0.01em;">Über 100 Werkzeuge im Atelier — neue bauen wir auf Anfrage.</h3>
-                <p style="font-size: 17px; line-height: 1.7; color: var(--color-graphite-soft); margin: 0 auto 16px; max-width: 620px;">Die acht oben sind eine Auswahl. Jedes Karriaro-Werkzeug entsteht handcodiert im Atelier — kein Plugin, kein Drittanbieter, kein Abo. Es gehört Ihnen und nimmt Ihnen Arbeit ab: rechnet, bucht, qualifiziert Anfragen, während Sie Ihrem Beruf nachgehen.</p>
+                <p style="font-size: 17px; line-height: 1.7; color: var(--color-graphite-soft); margin: 0 auto 16px; max-width: 620px;">Die acht oben sind eine Auswahl. Jedes Karriaro-Werkzeug entsteht handcodiert im Atelier — kein Plugin, kein Drittanbieter, kein Abo. Es nimmt Ihnen Arbeit ab: rechnet, bucht, qualifiziert Anfragen, während Sie Ihrem Beruf nachgehen.</p>
                 <p style="font-size: 17px; line-height: 1.7; color: var(--color-graphite-soft); margin: 0 auto 28px; max-width: 620px;">Für nahezu jede Branche liegt etwas bereit — vom Förderrechner über den Termin-Assistenten bis zum Frachtrechner. Braucht Ihre Branche etwas, das es noch nicht gibt? Sagen Sie uns, was es können soll — wir bauen es.</p>
                 <a href="#kontakt" class="btn" data-kr-magnetic>Werkzeug für Ihre Branche anfragen</a>
                 <p style="margin-top: 18px;"><a href="#arbeiten" class="link-arrow">Alle Demos durchstöbern &rarr;</a></p>
@@ -4606,57 +4506,6 @@
 
 
     <!-- Sprint 41 — Beitrag/Übernahme als Split-Manuskript (Hand vs Druck) -->
-    <section aria-label="Was Sie beisteuern" class="fade-in kr-manuskript-section" style="background: var(--color-surface-veil);">
-        <div class="wrap" style="max-width: 1100px;">
-            <div style="text-align: center; max-width: 720px; margin: 0 auto 64px;">
-                <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;08 · 2–3 Stunden Eigenarbeit</p>
-                <h2 style="font-size: clamp(28px, 4vw, 48px); margin-bottom: 14px;">Sie schreiben. Wir setzen es in Druck.</h2>
-                <p class="subhead">Aufgabenteilung wie in der echten Manufaktur: Sie liefern die Substanz, wir bringen sie in Form. Pünktlich-Live-Garantie.</p>
-            </div>
-
-            <div class="kr-manuskript-split">
-                <!-- Linke Spalte: Hand-Manuskript (Caveat-Font, leichte Rotation) -->
-                <div class="kr-manuskript-hand">
-                    <p class="kr-manuskript-label kr-manuskript-label--hand">Sie liefern · handschriftlich</p>
-                    <ol class="kr-manuskript-list kr-manuskript-list--hand">
-                        <li>Texte zu Ihren Leistungen</li>
-                        <li>3–6 Fotos vom Geschäft (Handy reicht)</li>
-                        <li>Logo &amp; Farben, falls vorhanden</li>
-                        <li>30 Min Kickoff-Gespräch</li>
-                        <li>Eine Freigabe-Runde nach Entwurf</li>
-                    </ol>
-                </div>
-
-                <!-- Trennlinie als animiertes SVG mit Übergabe-Marker -->
-                <div class="kr-manuskript-divider" aria-hidden="true">
-                    <svg viewBox="0 0 40 600" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="20" y1="20" x2="20" y2="580" stroke="var(--color-line-strong)" stroke-width="1.5" stroke-dasharray="4 6"/>
-                        <g transform="translate(20, 300)">
-                            <circle r="22" fill="var(--color-cream)" stroke="var(--color-gold)" stroke-width="1.5"/>
-                            <path d="M-7,-3 L0,4 L7,-3 M-7,3 L0,10 L7,3" fill="none" stroke="var(--color-gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90)"/>
-                        </g>
-                    </svg>
-                    <span class="kr-manuskript-divider-label">Übergabe</span>
-                </div>
-
-                <!-- Rechte Spalte: Druck-Setzkasten (Fraunces, gesetzt) -->
-                <div class="kr-manuskript-druck">
-                    <p class="kr-manuskript-label kr-manuskript-label--druck">Wir übernehmen · gesetzt</p>
-                    <ol class="kr-manuskript-list kr-manuskript-list--druck">
-                        <li><strong>Konzept &amp; Struktur</strong> — Hierarchie · Navigation · SEO-Architektur</li>
-                        <li><strong>Design &amp; Typografie</strong> — branchen-spezifisch · BFSG-konform</li>
-                        <li><strong>Programmierung &amp; Schema.org</strong> — HTML · CSS · Live-Tools</li>
-                        <li><strong>Hosting-Einrichtung</strong> — bei uns oder bei Ihrem Anbieter</li>
-                        <li><strong>Texte feinschleifen</strong> — Ihre Stimme bleibt, wir polieren</li>
-                    </ol>
-                </div>
-            </div>
-
-            <p style="text-align: center; margin-top: 56px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; color: var(--color-graphite-soft);">
-                Verteilt auf die Projektlaufzeit · Sie machen Pause · Wir machen weiter
-            </p>
-        </div>
-    </section>
 
 
     <!-- Sprint 41 — Manufaktur Pull-Quote-Hero (60vh) + Founder-POV (40/60-Split mit Skizzen-SVG) -->
@@ -4826,8 +4675,8 @@
     <!-- Sprint 40 — Pricing 4-Tier mit Branchen-Selector + Wartung-Default-Coupling + Cross-Sell + Empfehlung -->
     <section id="preis" aria-label="Preise" class="fade-in">
         <div class="wrap" style="max-width: 1200px; text-align: center;">
-            <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;09 · Investition</p>
-            <h2 style="font-size: clamp(36px, 6vw, 64px); margin-bottom: 14px;">Ein Preis pro Branche.<br>Einmal zahlen, Code gehört Ihnen.</h2>
+            <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;08 · Investition</p>
+            <h2 style="font-size: clamp(36px, 6vw, 64px); margin-bottom: 14px;">Ein Preis pro Branche.<br>Einmal zahlen, kein Abo.</h2>
             <p class="subhead" style="margin-bottom: 40px;">
                 Vier Tiers — branchen-getrennt zugeschnitten. Wartung inklusive, abwählbar. Keine versteckten Kosten.
             </p>
@@ -4878,7 +4727,7 @@
                         <li>Eine Seite, die alles zeigt</li>
                         <li>BFSG-konform · DSGVO · Schema.org</li>
                         <li>Kontaktformular &amp; Google Maps</li>
-                        <li>Quellcode gehört Ihnen</li>
+                        <li>Mobil-optimiert · lädt unter 0,5 s</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -4903,7 +4752,7 @@
                         <li>Bis 5 Unterseiten · lokale SEO</li>
                         <li>1 Branchen-Werkzeug inklusive (Termin · Rechner · Live-Status)</li>
                         <li>Google Maps · Kontaktformular</li>
-                        <li>BFSG · DSGVO · Schema.org · Code-Ownership</li>
+                        <li>BFSG · DSGVO · Schema.org</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -4927,7 +4776,7 @@
                         <li>Unbegrenzte Unterseiten · Editorial-Layout</li>
                         <li>Branchen-KI &amp; Rechner (Hypothek · KI-Symptom-Check · Mandantenportal)</li>
                         <li>Eigene Schrift &amp; Markenpalette</li>
-                        <li>Persönliche Begleitung — keine Hotline</li>
+                        <li>Direkter Draht zum Gründer</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -4952,7 +4801,7 @@
                         <li>Alles aus Premium</li>
                         <li>Mandantenportal mit verschlüsseltem Upload</li>
                         <li>DSGVO-Compliance-Audit quartalsweise</li>
-                        <li>Quartals-Call · 24h-SLA Premium-Plus</li>
+                        <li>Quartals-Call · 24-h-Reaktionszeit</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -5002,7 +4851,7 @@
     <section id="faq" aria-label="Häufige Fragen" class="fade-in" style="background: var(--color-cream-soft);">
         <div class="wrap" style="max-width: 760px;">
             <div style="text-align: center; margin-bottom: 48px;">
-                <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;10 · Häufige Fragen</p>
+                <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;09 · Häufige Fragen</p>
                 <h2 style="font-size: clamp(28px, 4vw, 40px); margin-bottom: 14px;">Was Sie wissen möchten.</h2>
                 <p class="subhead" style="max-width: 540px; margin: 0 auto;">Sieben Antworten, die im Erstgespräch ohnehin kommen.</p>
             </div>
@@ -5013,7 +4862,7 @@
                         Was kostet eine Website bei Karriaro?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Vier Tiers, branchen-getrennt zugeschnitten: <strong>Essential 1.290 €</strong> (Handwerk · Beauty · Café · Florist · Gym), <strong>Professional 1.990 €</strong> (Dachdecker · Spedition · Physio · Hotel · Autohaus), <strong>Premium 2.990 €</strong> (Zahnarzt · Arzt · Immobilien · Anwalt), <strong>Premium+ 3.990 €</strong> (Anwalt mit DSGVO-Compliance-Pflege, Pilot). Wartung inklusive ab 99 €/Mt (Care) bzw. 199 €/Mt (Care+). Quellcode gehört Ihnen — kein Vendor-Lock-In.</p>
+                    <p>Vier Tiers, branchen-getrennt zugeschnitten: <strong>Essential 1.290 €</strong> (Handwerk · Beauty · Café · Florist · Gym), <strong>Professional 1.990 €</strong> (Dachdecker · Spedition · Physio · Hotel · Autohaus), <strong>Premium 2.990 €</strong> (Zahnarzt · Arzt · Immobilien · Anwalt), <strong>Premium+ 3.990 €</strong> (Anwalt mit DSGVO-Compliance-Pflege, Pilot). Wartung inklusive ab 99 €/Mt (Care) bzw. 199 €/Mt (Care+). Kein Abo-Zwang, kein Vendor-Lock-in.</p>
                 </details>
 
                 <details class="kr-faq-item" data-track-event="FAQ_EXPAND" data-track-question-id="zahlung">
@@ -5045,7 +4894,7 @@
                         Warum handcodierte Websites statt WordPress?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren, der Quellcode gehört Ihnen.</p>
+                    <p>Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer, DSGVO-konform und werden von Google und KI-Assistenten bevorzugt. Kein Plugin-Risiko, keine Abo-Gebühren.</p>
                 </details>
 
                 <details class="kr-faq-item" data-track-event="FAQ_EXPAND" data-track-question-id="seo-ki">
@@ -5061,7 +4910,7 @@
                         Wer pflegt meine Website nach Lieferung?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Sie können selbst pflegen — der Quellcode gehört Ihnen und ist verständlich kommentiert. Oder Sie buchen Wartung &amp; Hosting für 99 €/Monat: Hosting, Backups, Text- und Bild-Änderungen, persönlicher Ansprechpartner. Jederzeit kündbar.</p>
+                    <p>Sie können selbst pflegen — wir übergeben alles verständlich dokumentiert. Oder Sie buchen Wartung &amp; Hosting für 99 €/Monat: Hosting, Backups, Text- und Bild-Änderungen, persönlicher Ansprechpartner. Jederzeit kündbar.</p>
                 </details>
             </div>
 
@@ -5243,7 +5092,7 @@
         }
     </style>
     <section class="kr-selbst-audit" aria-labelledby="kr-selbst-title">
-        <p class="kr-selbst-folio">№&nbsp;11 · Der eigene Maßstab</p>
+        <p class="kr-selbst-folio">№&nbsp;10 · Der eigene Maßstab</p>
         <h2 id="kr-selbst-title">Wir prüfen uns mit <em>demselben Werkzeug</em> wie Sie.</h2>
         <p class="kr-selbst-lede">
             Eine Manufaktur, die andere bewertet, sollte sich selbst
