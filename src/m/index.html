@@ -1329,8 +1329,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             padding-right: 0.04em;
             margin-left: -0.04em;
             transform-origin: 50% 100%;
-            clip-path: inset(100% 0 -10% 0);
-            scale: 1 0.7;
+            /* Sprint 224 — Ruhezustand SICHTBAR (clip none / scale 1): die Eintritts-
+               Animation liefert den geclippten Start via backwards-Fill, aber der
+               sichtbare Endzustand hängt NICHT mehr an animation-fill-mode (Safari
+               verwirft fill-mode auf SVG/Text gelegentlich → Logo verschwand). */
+            clip-path: none;
+            scale: 1 1;
             animation: hero-i-grow 600ms cubic-bezier(0.16, 1, 0.3, 1) 1280ms both;
         }
         @supports ((-webkit-background-clip: text) or (background-clip: text)) {
@@ -1375,10 +1379,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             margin-left: -0.255em;
             transform: translateX(0.03em);
             overflow: visible;
-            animation: hero-bloom-settle 1400ms ease-out 2910ms 1 both;
         }
         .hero-tittle .hero-bloom-dot {
-            transform-box: fill-box; transform-origin: center; opacity: 0;
+            /* Sprint 224 — Basis opacity:1 (sichtbarer Ruhezustand); der 0%-Keyframe
+               hält die Punkte via backwards-Fill bis zum Pop unsichtbar. */
+            transform-box: fill-box; transform-origin: center; opacity: 1;
             animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both;
         }
         .hero-tittle .hero-bloom-dot--gold {
@@ -1394,13 +1399,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
             45%  { filter: drop-shadow(0 0 4px rgba(231, 200, 120, 0.55)); }
             100% { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
-        }
-        /* Sprint 222 - einmaliger, langsamer Schluss-Glanz ueber dem fertigen Messing-Logo
-           (kein Loop, klarer Ausklang zu 0 statt Dauer-Halo). */
-        @keyframes hero-bloom-settle {
-            0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
-            45%  { filter: drop-shadow(0 0 5px rgba(231, 200, 120, 0.28)); }
-            100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
@@ -4208,7 +4206,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             Sie haben schon eine Website?
         </h2>
         <p class="kr-audit-magic-lede">
-            Erfüllt sie heutige Standards für Google und KI-Suche — und rechtliche Anforderungen wie DSGVO und BFSG? In fünf Sekunden <em>geprüft</em> — keine Anmeldung, keine Speicherung ohne Zustimmung.
+            Erfüllt sie heutige Standards für Google und KI-Suche — und die gesetzliche Barrierefreiheit (BFSG)? In fünf Sekunden <em>geprüft</em> — keine Anmeldung, keine Speicherung ohne Zustimmung.
         </p>
         <form class="kr-audit-magic-form" data-audit-magic novalidate>
             <label for="kr-audit-magic-url" class="kr-audit-magic-sr">Ihre Website-Adresse</label>
@@ -5229,9 +5227,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <p class="kr-tier-deliver">In ca. 3–4 Wochen online</p>
                     <ul class="kr-tier-list">
                         <li>Unbegrenzte Unterseiten · Editorial-Layout</li>
-                        <li>Branchen-KI &amp; Rechner (Hypothek · KI-Symptom-Check · Mandantenportal)</li>
-                        <li>Eigene Schrift &amp; Markenpalette</li>
-                        <li>Direkter Draht zum Gründer</li>
+                        <li>Branchen-Werkzeuge</li>
+                        <li>Erweiterte KI-Auffindbarkeit (llms.txt · FAQ-Schema)</li>
+                        <li>Performance- &amp; BFSG-Audit vor dem Launch</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
@@ -5256,7 +5254,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <li>Alles aus Premium</li>
                         <li>Mandantenportal mit verschlüsseltem Upload</li>
                         <li>DSGVO-Compliance-Audit quartalsweise</li>
-                        <li>Rechtstext-Updates bei Gesetzesänderungen</li>
+                        <li>Erweiterte Sicherheits-Header &amp; TLS-Härtung</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
