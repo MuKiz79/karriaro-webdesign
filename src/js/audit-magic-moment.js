@@ -534,9 +534,16 @@
                     // aber alle Sub-Metriken sind leer. Editorialer Fehler statt
                     // irreführendem "Substanziell solide"-Fallback.
                     if (result && result.degraded === true) {
-                        var degradedMsg = (result.error && typeof result.error === 'string')
-                            ? result.error + ' Bitte Schreibweise prüfen oder Domain neu eingeben.'
-                            : 'Diese Adresse konnten wir nicht abrufen. Bitte Schreibweise prüfen.';
+                        var degradedMsg;
+                        if (result.blocked === true && result.error) {
+                            // Sprint 215 — Bot-Wall/Consent-Wall: Adresse ist korrekt,
+                            // kein irreführender "Schreibweise prüfen"-Zusatz.
+                            degradedMsg = result.error;
+                        } else {
+                            degradedMsg = (result.error && typeof result.error === 'string')
+                                ? result.error + ' Bitte Schreibweise prüfen oder Domain neu eingeben.'
+                                : 'Diese Adresse konnten wir nicht abrufen. Bitte Schreibweise prüfen.';
+                        }
                         throw new Error('backend:' + degradedMsg);
                     }
                     done = true;

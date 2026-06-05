@@ -521,6 +521,47 @@ async function detectSeoGeo(html, baseUrl) {
     };
 }
 
+/**
+ * Sprint 215 — Bot-Wall-/Leerseiten-Erkennung.
+ *
+ * Grosse Sites (Akamai/Cloudflare/Imperva Bot-Manager, Consent-/Cookie-Gateways)
+ * beantworten den automatischen Abruf oft mit einem 200, der NICHT das echte HTML
+ * ist, sondern eine JS-Challenge-, Sensor- oder inhaltsleere Huelle. Ohne Erkennung
+ * deutet das Audit das als "alles fehlt" und faellt ein vernichtendes — und falsches —
+ * Urteil ("0 von 6 Pflicht-Elementen") ueber eine in Wahrheit gut gepflegte Seite.
+ * Konkreter Ausloeser: hansgrohe.com (AkamaiGHost) → vom Cloud-Vantage 200 ohne
+ * Title/Meta → Audit meldete fälschlich "Ausbaufähig / 0 von 6".
+ *
+ * @param {string} html      abgerufenes HTML (Status war bereits 2xx, sonst wirft fetchHtml)
+ * @param {object|null} seoGeo  Ergebnis von detectSeoGeo (seo/geo found-Counts)
+ * @returns {'challenge'|'opaque'|null}
+ */
+function detectBlockedResponse(html, seoGeo) {
+    const h = html || '';
+    // detectSeoGeo liest Title/Meta nur aus den ersten 30k Zeichen (head). Die
+    // Bot-Wall-Erkennung MUSS dasselbe Fenster nutzen, sonst widersprechen sich
+    // beide (Akamai-Sensor-Seite schiebt den <title> hinter einen >30k-JS-Blob:
+    // Audit sieht "kein Title", ein Voll-Scan faende ihn → opaque schaltet nie).
+    const head = h.slice(0, 30000);
+    // 1) Explizite Bot-Wall-/Challenge-Marker grosser WAF/CDN-Anbieter (inkl.
+    //    Akamai-Bot-Manager-Sensor-Token, die in der Challenge-Huelle stehen).
+    const CHALLENGE = /Access Denied|AkamaiGHost|you don't have permission to access|Just a moment\.\.\.|cf[-_]browser[-_]verification|Checking your browser before|cf-chl-|_Incapsula_|Incapsula incident|Request unsuccessful\. Incapsula|\/_?akam\/|bazadebezolkohpepadr|bm-verify|\bak_bmsc\b/i;
+    const CHALLENGE2 = /Pardon Our Interruption|Attention Required! \| Cloudflare|This process is automatic\. Your browser will redirect|enable JavaScript and cookies to continue/i;
+    if (CHALLENGE.test(head) || CHALLENGE2.test(head)) return 'challenge';
+    // 2) "200, aber inhaltsleer": alle 6 SEO-Basics fehlen (inkl. robots.txt UND
+    //    sitemap.xml beide unerreichbar), keine strukturierten Daten UND im
+    //    Audit-Fenster kein Title. Diese Kombination ist fuer eine echte,
+    //    indexierbare Website praktisch unmoeglich und entsteht typisch durch
+    //    eine JS-Challenge-/Sensor-Huelle.
+    if (seoGeo && seoGeo.seo && seoGeo.geo &&
+        seoGeo.seo.found === 0 && seoGeo.geo.found === 0) {
+        const titleMatch = head.match(/<title[^>]*>([^<]+)<\/title>/i);
+        const titleLen = titleMatch ? titleMatch[1].trim().length : 0;
+        if (titleLen === 0) return 'opaque';
+    }
+    return null;
+}
+
 async function runLightAudit(url, placesKey) {
     // Parallel: HTML + Wayback + Place-Lookup (Branchen-Detect)
     const [htmlResult, wayback, placesType] = await Promise.all([
@@ -554,6 +595,16 @@ async function runLightAudit(url, placesKey) {
     // Sprint 69 — SEO + GEO Detection (parallele HEAD-Requests fuer robots/sitemap/llms.txt).
     const seoGeo = await detectSeoGeo(html, finalUrl).catch(() => null);
 
+    // Sprint 215 — Bot-Wall/Consent-Gateway: liefert die Site auf den automatischen
+    // Abruf nur eine Challenge-/Leerseite (kein echtes HTML), ehrlich melden statt
+    // ein False-Negative-Urteil zu faellen. quickAudit faengt botWall ab.
+    const blockReason = detectBlockedResponse(html, seoGeo);
+    if (blockReason) {
+        const e = new Error(`BOT_WALL: ${blockReason}`);
+        e.botWall = blockReason;
+        throw e;
+    }
+
     // Sprint 69 — Karriaro-Cross-Sell Tools + Trend-Phrase pro Branche.
     const { getCrossSell } = require('./karriaro-cross-sell.js');
     const crossSell = getCrossSell(primaryType, branch);
@@ -584,5 +635,6 @@ module.exports = {
     guessBranchFromUrl,
     normalizePlacesType,
     detectPainPoints,
-    detectSeoGeo
+    detectSeoGeo,
+    detectBlockedResponse
 };

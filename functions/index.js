@@ -673,6 +673,20 @@ exports.quickAudit = onRequest(
         try {
             lightResult = await runLightAudit(auditUrl, placesKey);
         } catch (err) {
+            // Sprint 215 — Bot-Wall/Consent-Gateway (Akamai/Cloudflare/Imperva): die Seite
+            // liefert dem automatischen Abruf nur eine Challenge-/Leerseite. Ehrlich melden
+            // statt ein falsches "0 von 6"-Urteil zu faellen. blocked:true → Frontend laesst
+            // den "Schreibweise pruefen"-Zusatz weg (die Adresse ist korrekt).
+            if (err && err.botWall) {
+                logger.warn("quickAudit bot-wall", { fn: "quickAudit", domain, reason: err.botWall });
+                return res.json({
+                    ok: true,
+                    degraded: true,
+                    blocked: true,
+                    domain,
+                    error: "Diese Seite schützt sich gegen automatische Prüfungen (Bot-Schutz oder Cookie-/Consent-Wall) — wir konnten sie nicht zuverlässig auslesen. Für eine belastbare Einschätzung prüfen wir Ihre Seite gern persönlich."
+                });
+            }
             // SSRF-Errors als WARNING, alles andere als ERROR (Sprint 82 trennt Angriffe vom Infra-Bug).
             const isSsrf = String(err.message || "").startsWith("SSRF blocked");
             const sev = isSsrf ? "warn" : "error";

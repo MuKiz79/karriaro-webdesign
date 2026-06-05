@@ -383,6 +383,13 @@
         }
 
         function renderQuickScore(data) {
+            // Sprint 215 — Bot-Wall/Consent-Wall: ehrlicher Hinweis statt leerer Vorschau.
+            if (data && data.blocked === true && data.error) {
+                quickEl.innerHTML = '<div class="quick-score-head">Erste Einschätzung</div>'
+                    + '<div class="quick-score-hint">' + data.error + '</div>';
+                quickEl.hidden = false;
+                return;
+            }
             const perf = data && data.performance && data.performance.score;
             const bfsg = data && data.bfsg && data.bfsg.complianceScore;
             const summary = data && data.summary;

@@ -18,7 +18,8 @@ const assert = require('node:assert/strict');
 const {
     normalizePlacesType,
     guessBranchFromUrl,
-    detectPainPoints
+    detectPainPoints,
+    detectBlockedResponse
 } = require('../lib/light-audit.js');
 const { BRANCH_STANDARDS, checkBranchStandards } = require('../lib/branch-standards.js');
 const { getCrossSell, CROSS_SELL } = require('../lib/karriaro-cross-sell.js');
@@ -670,4 +671,51 @@ test('bfsgRiskTier: mittelBelow parametrisiert — beide Pipeline-Verhalten exak
     assert.equal(bfsgRiskTier(84, { mittelBelow: 85 }).risk, 'mittel');
     assert.equal(bfsgRiskTier(89).risk, 'mittel');
     assert.equal(bfsgRiskTier(90).risk, 'niedrig');
+});
+
+// ────────────────────────────────────────────────────────────────
+// detectBlockedResponse — Sprint 215 (Bot-Wall / Leerseiten-Schutz)
+// Verhindert vernichtende False-Negative-Urteile ("0 von 6") fuer
+// Seiten hinter Akamai/Cloudflare/Imperva oder Consent-Walls.
+// ────────────────────────────────────────────────────────────────
+
+const SEO_EMPTY = { seo: { found: 0, total: 6 }, geo: { found: 0, total: 4 } };
+const SEO_REAL = { seo: { found: 4, total: 6 }, geo: { found: 2, total: 4 } };
+
+test('detectBlockedResponse: Akamai Access-Denied → challenge', () => {
+    const html = '<HTML><HEAD><TITLE>Access Denied</TITLE></HEAD><BODY><H1>Access Denied</H1>You don\'t have permission to access this server.</BODY></HTML>';
+    assert.equal(detectBlockedResponse(html, SEO_EMPTY), 'challenge');
+});
+
+test('detectBlockedResponse: Cloudflare "Just a moment..." → challenge', () => {
+    const html = '<!DOCTYPE html><html><head><title>Just a moment...</title></head><body>Checking your browser before accessing. cf-chl-bypass</body></html>';
+    // Trotz vorhandenem Title als challenge erkannt (Marker schlaegt zu).
+    assert.equal(detectBlockedResponse(html, SEO_REAL), 'challenge');
+});
+
+test('detectBlockedResponse: Imperva/Incapsula → challenge', () => {
+    const html = '<html><body>Request unsuccessful. Incapsula incident ID: 0-12345</body></html>';
+    assert.equal(detectBlockedResponse(html, SEO_EMPTY), 'challenge');
+});
+
+test('detectBlockedResponse: 200 inhaltsleer (kein Title, 0/6 SEO, 0 GEO) → opaque', () => {
+    // hansgrohe.com-Fall: JS-Sensor-Huelle, kein Title, alle Signale fehlen.
+    const html = '<html><head></head><body><script>/* akamai sensor */</script></body></html>';
+    assert.equal(detectBlockedResponse(html, SEO_EMPTY), 'opaque');
+});
+
+test('detectBlockedResponse: echte Seite (Title + Signale vorhanden) → null', () => {
+    const html = '<html><head><title>Stadtmakler Stuttgart — Immobilien in bester Lage</title></head><body>...</body></html>';
+    assert.equal(detectBlockedResponse(html, SEO_REAL), null);
+});
+
+test('detectBlockedResponse: kleine echte Seite mit Title aber 0 SEO → NICHT geblockt (false-positive-Schutz)', () => {
+    // Title vorhanden → opaque-Zweig greift nicht, kein Challenge-Marker → null.
+    const html = '<html><head><title>Mein kleiner Friseursalon</title></head><body>Willkommen</body></html>';
+    assert.equal(detectBlockedResponse(html, SEO_EMPTY), null);
+});
+
+test('detectBlockedResponse: leeres/fehlendes seoGeo → kein opaque-Fehlalarm', () => {
+    const html = '<html><head><title>x</title></head><body>ok</body></html>';
+    assert.equal(detectBlockedResponse(html, null), null);
 });
