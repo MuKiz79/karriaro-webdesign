@@ -55,6 +55,7 @@
         '.krc-send:disabled{opacity:.4;cursor:default}.krc-send svg{width:18px;height:18px}' +
         '.krc-foot{font-size:10px;text-align:center;color:#9a9a9f;padding:0 12px 9px;background:#fff;letter-spacing:.03em}' +
         '.krc-fab.krc-left{left:24px;right:auto}.krc-panel.krc-left{left:24px;right:auto}' +
+        '.krc-fab.krc-raised{bottom:88px}' +
         '@media (prefers-reduced-motion:reduce){.krc-panel.krc-open{animation:none}.krc-typing span{animation:none}.krc-fab{transition:none}}';
     var styleEl = document.createElement('style');
     styleEl.textContent = css;
@@ -88,6 +89,19 @@
     if (POSITION === 'left') { fab.classList.add('krc-left'); panel.classList.add('krc-left'); }
     document.body.appendChild(fab);
     document.body.appendChild(panel);
+
+    // Auf schmalen Screens kollidiert der bottom-left-FAB mit der bottom-right
+    // „Erstgespräch buchen"-Float-CTA (.kr-cta-float) der Desktop-Site. Dann den FAB
+    // über die CTA heben — nur wenn die CTA wirklich sichtbar ist (auf m.* ist sie
+    // display:none → FAB bleibt unten) und der Screen schmal genug zum Überlappen ist.
+    function syncFabPosition() {
+        if (POSITION !== 'left') return;
+        var cta = document.querySelector('.kr-cta-float');
+        var ctaActive = !!cta && getComputedStyle(cta).display !== 'none';
+        fab.classList.toggle('krc-raised', ctaActive && window.innerWidth <= 420);
+    }
+    syncFabPosition();
+    window.addEventListener('resize', syncFabPosition, { passive: true });
 
     var msgsEl = panel.querySelector('.krc-msgs');
     var formEl = panel.querySelector('.krc-form');

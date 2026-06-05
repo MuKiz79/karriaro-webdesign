@@ -324,10 +324,15 @@ function isIndex(relPath) {
 function rewriteHeroHeadline(html) {
     // Sprint 203 — Mobile-H1 an Desktop angeglichen (war „Webdesign./Manufaktur./…",
     // löst die Hero-Divergenz). Ohne Stagger-Animation (radikal-Apple).
+    // Sprint 226 — die animierte „I"-Signatur (Gold-Foil-„I" + Phyllotaxis-Blüte als
+    // i-Punkt) auch auf Mobil: Dropcap-Markup 1:1 aus der Desktop-Quelle übernehmen
+    // (die Hero-Animations-CSS ist im Mobile-Build bereits enthalten). Fallback: schlichtes „I".
+    const dc = html.match(/<span class="hero-dropcap">[\s\S]*?<\/span>(?=hre Website\.)/);
+    const lead = dc ? dc[0] + 'hre Website.' : 'Ihre Website.';
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline">' +
-        '<span class="hero-h1-line">Ihre Website.</span>' +
+        '<span class="hero-h1-line">' + lead + '</span>' +
         '<span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>' +
         '</h1>'
     );
