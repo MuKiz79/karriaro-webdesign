@@ -210,9 +210,31 @@
 
     function renderResultHtml(result, url) {
         var domain = (result && result.domain) || deriveDomain(url) || (url || '');
-        var rawScore = deriveCompositeScore(result);
-        var verdict = scoreVerdict(rawScore);
-        var findings = pickTopFindings(result);
+        // Sprint 215 — Bot-Wall/Consent-Wall: gleiches Ergebnis-Format wie ein normales
+        // Audit (kein Fehler-Layout), nur mit ehrlichem "Geschützt"-Verdikt statt Score.
+        var blocked = !!(result && result.blocked === true);
+        var verdict, findings, noteText, leadIntro;
+        if (blocked) {
+            verdict = {
+                label: 'Geschützt',
+                detail: 'Diese Seite wehrt automatische Prüfungen ab — von außen nicht auslesbar.',
+                tag: 'geschuetzt'
+            };
+            findings = [{
+                label: 'Bot-Schutz oder Consent-Wall erkannt',
+                detail: 'Hinter Diensten wie Akamai oder Cloudflare ist die Startseite für automatische Prüfwerkzeuge gesperrt. Das ist kein Mangel Ihrer Seite — eine Ferndiagnose greift hier schlicht nicht.'
+            }];
+            noteText = 'Für eine belastbare Einschätzung sehen wir uns Ihre Seite persönlich an — mit dem Blick, den ein Werkzeug von außen nicht bekommt.';
+            leadIntro = 'Wir prüfen Ihre Seite persönlich und melden uns mit einer Einschätzung per E-Mail:';
+        } else {
+            verdict = scoreVerdict(deriveCompositeScore(result));
+            findings = pickTopFindings(result);
+            noteText = 'Erste Einschätzung auf öffentlich sichtbaren Signalen. ' +
+                'Ein Detail-Brief geht tiefer: Web Vitals im Detail, BFSG-Audit, ' +
+                'branchen-spezifische Empfehlungen.';
+            leadIntro = 'Den ausführlichen Bericht — Web&nbsp;Vitals, BFSG-Audit und branchen-spezifische Hebel — ' +
+                'senden wir Ihnen per E-Mail:';
+        }
         var branchHint = '';
         if (result && result.branch && result.branch.name) {
             branchHint = '<p class="kr-audit-result-branch">Branchen-Bezug: <em>'
@@ -238,16 +260,9 @@
             '</div>' +
             branchHint +
             '<ol class="kr-audit-result-findings">' + findingsHtml + '</ol>' +
-            '<p class="kr-audit-result-note">' +
-                'Erste Einschätzung auf öffentlich sichtbaren Signalen. ' +
-                'Ein Detail-Brief geht tiefer: Web Vitals im Detail, BFSG-Audit, ' +
-                'branchen-spezifische Empfehlungen.' +
-            '</p>' +
+            '<p class="kr-audit-result-note">' + noteText + '</p>' +
             '<form class="kr-audit-result-leadform" data-audit-leadform novalidate>' +
-                '<p class="kr-audit-result-leadform-label">' +
-                    'Den ausführlichen Bericht — Web&nbsp;Vitals, BFSG-Audit und branchen-spezifische Hebel — ' +
-                    'senden wir Ihnen per E-Mail:' +
-                '</p>' +
+                '<p class="kr-audit-result-leadform-label">' + leadIntro + '</p>' +
                 '<div class="kr-audit-result-leadform-row">' +
                     '<input type="email" name="email" required autocomplete="email" ' +
                         'placeholder="ihre@firma.de" class="kr-audit-result-leadform-input" ' +
@@ -529,21 +544,30 @@
                             : 'Diese Seite lässt sich gerade nicht prüfen.';
                         throw new Error('backend:' + msg);
                     }
-                    // Sprint 168.4 — Backend setzt degraded:true wenn die Seite
-                    // nicht abrufbar war (Typo, DNS, Timeout). result.ok bleibt true,
-                    // aber alle Sub-Metriken sind leer. Editorialer Fehler statt
-                    // irreführendem "Substanziell solide"-Fallback.
+                    // Sprint 215 — Bot-Wall/Consent-Wall: KEIN Fehler. Die Seite schützt
+                    // sich nur — im NORMALEN Ergebnis-Format zeigen (commitResult), mit
+                    // ehrlichem "Geschützt"-Verdikt statt der "Wieder versuchen"-Fehlerkarte.
+                    if (result && result.degraded === true && result.blocked === true) {
+                        done = true;
+                        var elapsedB = Date.now() - scanStart;
+                        var waitB = Math.max(0, MIN_SCAN_MS - elapsedB);
+                        setTimeout(function () {
+                            clearInterval(phaseTimer);
+                            track('Magic Audit Completed', {
+                                domain: (result && result.domain) || domain,
+                                branch: '',
+                                scoreLabel: 'geschuetzt'
+                            });
+                            commitResult(section, form, stage, resultHost, result, url);
+                        }, waitB);
+                        return;
+                    }
+                    // Sprint 168.4 — andere degraded-Fälle (Typo, DNS, Timeout): echter
+                    // Fehler, alle Sub-Metriken leer → editoriale Fehlermeldung.
                     if (result && result.degraded === true) {
-                        var degradedMsg;
-                        if (result.blocked === true && result.error) {
-                            // Sprint 215 — Bot-Wall/Consent-Wall: Adresse ist korrekt,
-                            // kein irreführender "Schreibweise prüfen"-Zusatz.
-                            degradedMsg = result.error;
-                        } else {
-                            degradedMsg = (result.error && typeof result.error === 'string')
-                                ? result.error + ' Bitte Schreibweise prüfen oder Domain neu eingeben.'
-                                : 'Diese Adresse konnten wir nicht abrufen. Bitte Schreibweise prüfen.';
-                        }
+                        var degradedMsg = (result.error && typeof result.error === 'string')
+                            ? result.error + ' Bitte Schreibweise prüfen oder Domain neu eingeben.'
+                            : 'Diese Adresse konnten wir nicht abrufen. Bitte Schreibweise prüfen.';
                         throw new Error('backend:' + degradedMsg);
                     }
                     done = true;

@@ -811,7 +811,6 @@ const BRAND_COLOR_MAP = {
 // ────────────────────────────────────────────────────────────────
 
 function buildAuditMagicSection() {
-    const dots = buildPhyllotaxisDots();
     return `
 <!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
 <section class="kr-audit-magic" aria-labelledby="audit-magic-title" id="erste-einschaetzung">
@@ -836,16 +835,37 @@ function buildAuditMagicSection() {
         </button>
     </form>
     <div class="kr-audit-magic-stage" data-audit-magic-stage hidden>
-        <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="120" height="120" aria-hidden="true">
+        <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="80" height="80" aria-hidden="true">
             <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
             <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
             <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
             <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
-            ${dots}
+            <!-- Sprint 215 — echte Phyllotaxis-Blüte (110 Punkte, Gold = Fibonacci); Punkte atmen beim Laden -->
+            <g class="kr-audit-seal-dots"></g>
         </svg>
         <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
     </div>
-    <p class="kr-audit-magic-caption" aria-hidden="true">θ = 137,5° · n = 13</p>
+    <p class="kr-audit-magic-caption" aria-hidden="true">θ = 137,5° · n = 110</p>
+    <script>
+        (function () {
+            var g = document.querySelector('.kr-audit-magic-seal .kr-audit-seal-dots');
+            if (!g) return;
+            var svgNS = 'http://www.w3.org/2000/svg';
+            var gA = (3 - Math.sqrt(5)) * Math.PI, N = 110, R = 36, c = R / Math.sqrt(N);
+            var FIB = { 1:1, 2:1, 3:1, 5:1, 8:1, 13:1, 21:1, 34:1, 55:1, 89:1 };
+            for (var n = 1; n <= N; n++) {
+                var r = c * Math.sqrt(n), t = n * gA, gold = FIB[n] === 1;
+                var circ = document.createElementNS(svgNS, 'circle');
+                circ.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
+                circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
+                circ.setAttribute('r', (c * 0.34).toFixed(2));
+                circ.setAttribute('fill', gold ? '#C9A24B' : '#8A7B5C');
+                circ.setAttribute('class', gold ? 'kr-audit-seal-dot kr-audit-seal-dot--gold' : 'kr-audit-seal-dot');
+                circ.style.setProperty('--i', n);
+                g.appendChild(circ);
+            }
+        })();
+    </script>
 </section>
 `;
 }

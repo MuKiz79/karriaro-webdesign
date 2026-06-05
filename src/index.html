@@ -201,7 +201,7 @@
     <script src="/js/attribution.js?v=199" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
-    <script src="/js/audit-magic-moment.js?v=423" defer></script>
+    <script src="/js/audit-magic-moment.js?v=424" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <!-- Performance — blockierend: definiert @font-face für die Above-fold-Typografie (Fraunces H1);
          der Font selbst ist im <head> vorgeladen. -->
@@ -3246,20 +3246,39 @@
             color: var(--color-gold);
             opacity: 0.92;
         }
+        /* Sprint 215 — Lade-Blüte: der Sucher-Rahmen steht still, die Phyllotaxis-Punkte
+           rotieren langsam als Gruppe UND atmen gestaffelt von innen nach außen → die
+           Punkte „verschieben" sich sichtbar, statt starr mitzudrehen. */
+        .kr-audit-seal-dots {
+            transform-box: view-box;
+            transform-origin: 50% 50%;
+        }
+        .kr-audit-seal-dot {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
         @keyframes kr-audit-seal-spin {
             from { transform: rotate(0deg); }
             to   { transform: rotate(360deg); }
+        }
+        @keyframes kr-audit-dot-breathe {
+            0%, 100% { transform: scale(0.5);  opacity: 0.4; }
+            50%      { transform: scale(1.08); opacity: 1; }
         }
         @keyframes kr-audit-seal-pulse {
             0%, 100% { opacity: 0.55; }
             50%      { opacity: 1; }
         }
-        .kr-audit-magic-seal--spin {
-            animation: kr-audit-seal-spin 8s linear infinite;
-            transform-origin: 50% 50%;
+        .kr-audit-magic-seal--spin .kr-audit-seal-dots {
+            animation: kr-audit-seal-spin 18s linear infinite;
+        }
+        .kr-audit-magic-seal--spin .kr-audit-seal-dot {
+            animation: kr-audit-dot-breathe 2.6s ease-in-out infinite;
+            animation-delay: calc(var(--i, 0) * 20ms);
         }
         @media (prefers-reduced-motion: reduce) {
-            .kr-audit-magic-seal--spin {
+            .kr-audit-magic-seal--spin .kr-audit-seal-dots { animation: none; }
+            .kr-audit-magic-seal--spin .kr-audit-seal-dot {
                 animation: kr-audit-seal-pulse 4s ease-in-out infinite;
             }
         }
@@ -3335,6 +3354,7 @@
         }
         .kr-audit-result-verdict[data-verdict="stark"] .kr-audit-result-verdict-label { color: var(--color-pine); }
         .kr-audit-result-verdict[data-verdict="ausbaufaehig"] .kr-audit-result-verdict-label { color: var(--color-rust); }
+        .kr-audit-result-verdict[data-verdict="geschuetzt"] .kr-audit-result-verdict-label { color: var(--color-gold); }
         .kr-audit-result-verdict-detail {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 14px;
@@ -3847,25 +3867,35 @@
             </button>
         </form>
         <div class="kr-audit-magic-stage" data-audit-magic-stage hidden>
-            <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="120" height="120" aria-hidden="true">
+            <svg class="kr-audit-magic-seal" viewBox="0 0 90 90" width="80" height="80" aria-hidden="true">
                 <path d="M 5 18 L 5 5 L 18 5" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
                 <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
                 <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
                 <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none" stroke-linejoin="miter"/>
-                <circle cx="55.31" cy="42.20" r="1.5" fill="#8A7B5C"/>
-                <circle cx="36.04" cy="44.04" r="1.5" fill="#8A7B5C"/>
-                <circle cx="52.84" cy="60.84" r="1.5" fill="#8A7B5C"/>
-                <circle cx="29.10" cy="34.79" r="1.5" fill="#8A7B5C"/>
-                <circle cx="60.20" cy="29.05" r="1.5" fill="#8A7B5C"/>
-                <circle cx="29.49" cy="58.39" r="1.5" fill="#8A7B5C"/>
-                <circle cx="42.49" cy="22.46" r="1.5" fill="#8A7B5C"/>
-                <circle cx="64.55" cy="51.39" r="1.5" fill="#8A7B5C"/>
-                <circle cx="32.30" cy="69.78" r="1.5" fill="#8A7B5C"/>
-                <circle cx="22.20" cy="48.74" r="1.5" fill="#8A7B5C"/>
-                <circle cx="45.84" cy="20.42" r="1.5" fill="#8A7B5C"/>
-                <circle cx="64.07" cy="65.49" r="1.5" fill="#8A7B5C"/>
-                <circle cx="48.85" cy="73.74" r="1.5" fill="#8A7B5C"/>
+                <!-- Sprint 215 — echte Karriaro-Phyllotaxis-Blüte (Brand-Mark, 110 Punkte, Gold = Fibonacci),
+                     JS-generiert; beim Laden rotiert die Blüte langsam UND die Punkte atmen gestaffelt von innen. -->
+                <g class="kr-audit-seal-dots"></g>
             </svg>
+            <script>
+                (function () {
+                    var g = document.querySelector('.kr-audit-magic-seal .kr-audit-seal-dots');
+                    if (!g) return;
+                    var svgNS = 'http://www.w3.org/2000/svg';
+                    var gA = (3 - Math.sqrt(5)) * Math.PI, N = 110, R = 36, c = R / Math.sqrt(N);
+                    var FIB = { 1:1, 2:1, 3:1, 5:1, 8:1, 13:1, 21:1, 34:1, 55:1, 89:1 };
+                    for (var n = 1; n <= N; n++) {
+                        var r = c * Math.sqrt(n), t = n * gA, gold = FIB[n] === 1;
+                        var circ = document.createElementNS(svgNS, 'circle');
+                        circ.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
+                        circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
+                        circ.setAttribute('r', (c * 0.34).toFixed(2));
+                        circ.setAttribute('fill', gold ? '#C9A24B' : '#8A7B5C');
+                        circ.setAttribute('class', gold ? 'kr-audit-seal-dot kr-audit-seal-dot--gold' : 'kr-audit-seal-dot');
+                        circ.style.setProperty('--i', n);
+                        g.appendChild(circ);
+                    }
+                })();
+            </script>
             <p class="kr-audit-magic-status" data-audit-magic-status>Wird geprüft …</p>
         </div>
         <p class="kr-audit-magic-caption" aria-hidden="true">Goldener Winkel · 137,5°</p>
