@@ -2990,7 +2990,8 @@
 
         .kr-pricing-extras {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 460px));
+            justify-content: center;
             gap: 16px;
             max-width: 980px;
             margin: 0 auto 48px;
@@ -4978,17 +4979,6 @@
                     </div>
                     <a href="#kontakt" class="btn-outline kr-pricing-extra-cta" data-paket="Profil-Generator Add-on (290 €)">Hinzufügen</a>
                 </div>
-                <div class="kr-pricing-extra" data-extra-type="referral">
-                    <div class="kr-pricing-extra-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12a7 7 0 0114 0M5 12l-2-2m2 2l-2 2m16-2l2-2m-2 2l2 2"/><circle cx="12" cy="12" r="2"/></svg>
-                    </div>
-                    <div class="kr-pricing-extra-body">
-                        <p class="kr-pricing-extra-eyebrow">Empfehlungsprogramm</p>
-                        <p class="kr-pricing-extra-title"><strong>200 € Cashback</strong> · für jede Empfehlung, aus der ein Auftrag wird</p>
-                        <p class="kr-pricing-extra-body-text">Sie wurden von einem Kollegen empfohlen? Tragen Sie es im Kontakt-Form ein — wir überweisen automatisch.</p>
-                    </div>
-                    <a href="#kontakt" class="btn-outline kr-pricing-extra-cta" data-paket="Empfehlung (200 € Cashback)">Empfehlung angeben</a>
-                </div>
             </div>
 
             <!-- 50/50-Visualisierung + Branchen-Demos-Link -->
@@ -5404,8 +5394,8 @@
                             <span>Ihre aktuelle Website (falls vorhanden)</span>
                             <input type="text" name="website">
                         </label>
-                        <label class="kr-letter-field kr-letter-field--full kr-letter-field--gold">
-                            <span>Wer hat uns empfohlen? <em>· 200 € Cashback für Empfehler (optional)</em></span>
+                        <label class="kr-letter-field kr-letter-field--full">
+                            <span>Wer hat Sie zu uns gebracht? <em>(optional)</em></span>
                             <input type="text" name="empfehlung" placeholder="z. B. Steuerberater Müller, Köln">
                         </label>
                         <label class="kr-letter-field kr-letter-field--full">
