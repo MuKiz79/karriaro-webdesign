@@ -1276,6 +1276,7 @@
         }
         .hero-h1-line { display: block; }
         .hero-dropcap {
+            position: relative;
             font-family: var(--font-pull-quote);
             font-style: italic;
             font-weight: 500;
@@ -1284,6 +1285,45 @@
             line-height: 0.86;
             padding-right: 0.04em;
             margin-left: -0.04em;
+        }
+        /* Sprint 217 — Hero-Signatur: über dem „I" keimt beim Laden eine goldene
+           Phyllotaxis-Blüte (= Karriaro-Logo-DNA, Goldener Winkel 137,5°, Gold =
+           Fibonacci). Beweist generatives Handwerk; reduced-motion → statische Blüte. */
+        .hero-dropcap-bloom {
+            position: absolute;
+            left: 50%;
+            bottom: 0.62em;
+            width: 0.46em;
+            height: 0.46em;
+            transform: translateX(-50%);
+            overflow: visible;
+            pointer-events: none;
+        }
+        .hero-dropcap-bloom .hero-bloom-dot {
+            transform-box: fill-box;
+            transform-origin: center;
+            opacity: 0;
+            animation: hero-bloom-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(650ms + var(--i, 0) * 24ms) both;
+        }
+        .hero-dropcap-bloom .hero-bloom-dot--gold {
+            animation: hero-bloom-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(650ms + var(--i, 0) * 24ms) both,
+                       hero-bloom-spark 1100ms ease-out calc(1150ms + var(--i, 0) * 24ms) 1;
+        }
+        @keyframes hero-bloom-pop {
+            0%   { opacity: 0; transform: scale(0); }
+            70%  { opacity: 1; transform: scale(1.28); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes hero-bloom-spark {
+            0%   { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
+            45%  { filter: drop-shadow(0 0 1.6px rgba(201, 162, 75, 0.95)); }
+            100% { filter: drop-shadow(0 0 0 rgba(201, 162, 75, 0)); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-dropcap-bloom .hero-bloom-dot,
+            .hero-dropcap-bloom .hero-bloom-dot--gold {
+                opacity: 1; transform: none; animation: none; filter: none;
+            }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-headline {
@@ -3673,7 +3713,7 @@
                     <span>Handcodiert in Köln</span>
                 </p>
                 <h1 class="hero-headline">
-                    <span class="hero-h1-line"><span class="hero-dropcap">I</span>hre Website.</span>
+                    <span class="hero-h1-line"><span class="hero-dropcap">I<svg class="hero-dropcap-bloom" viewBox="0 0 40 40" aria-hidden="true"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="17.83" cy="21.99" r="1.47" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="20.36" cy="15.85" r="1.47" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="23.10" cy="24.05" r="1.47" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="14.20" cy="18.97" r="1.47" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="25.56" cy="16.46" r="1.47" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="18.13" cy="26.97" r="1.47" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="16.41" cy="13.08" r="1.47" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="27.83" cy="22.86" r="1.47" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="11.83" cy="23.37" r="1.47" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="23.95" cy="11.56" r="1.47" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="22.92" cy="29.32" r="1.47" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="11.17" cy="14.88" r="1.47" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.37" cy="17.72" r="1.47" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="13.66" cy="29.02" r="1.47" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="18.53" cy="8.69" r="1.47" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="29.01" cy="27.59" r="1.47" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="7.86" cy="20.50" r="1.47" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="28.86" cy="11.18" r="1.47" fill="#B89968" style="--i:18"/><circle class="hero-bloom-dot" cx="19.41" cy="32.83" r="1.47" fill="#B89968" style="--i:19"/><circle class="hero-bloom-dot" cx="11.56" cy="9.88" r="1.47" fill="#B89968" style="--i:20"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="33.38" cy="21.80" r="1.47" fill="#C9A24B" style="--i:21"/></svg></span>hre Website.</span>
                     <span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>
                 </h1>
                 <p class="subhead">
