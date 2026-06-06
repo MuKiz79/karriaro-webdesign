@@ -818,7 +818,8 @@
         width: 100%;
         height: 2px;
         border-radius: 1px;
-        background: rgba(0, 0, 0, 0.18);
+        /* Sprint 230 — Gold-Familie wie der Desktop-Goldfaden (#C9A24B/#E3C173) */
+        background: rgba(201, 162, 75, 0.34);
         transition: background 220ms var(--apple-ease-reveal),
                     height 220ms var(--apple-ease-reveal);
     }
@@ -826,7 +827,7 @@
         width: 40px;
     }
     .m-demo-swiper-dot.is-active::before {
-        background: var(--apple-ink);
+        background: linear-gradient(90deg, #C9A24B, #E3C173);
         height: 3px;
         border-radius: 1.5px;
     }
