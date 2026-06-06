@@ -12,6 +12,9 @@
 /* Marginalia-Anker — eine starke Aussage statt drei Bullet-Points */
 .hero-marginalia-anchor {
     margin-top: clamp(28px, 5vh, 48px);
+    /* Bottom-Luft, damit der absolut gesetzte Folio-Marker (S. 0X, unten links)
+       nicht in diese Marginalie ragt (Overlap-Fix Immobilien-Hero). */
+    margin-bottom: clamp(64px, 9vh, 96px);
     padding-left: 16px;
     border-left: 1px solid var(--color-gold);
     max-width: 480px;
