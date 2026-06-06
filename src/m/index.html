@@ -1382,19 +1382,28 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             overflow: visible;
         }
         .hero-tittle .hero-bloom-dot {
-            /* Sprint 224 — Basis opacity:1 (sichtbarer Ruhezustand); der 0%-Keyframe
-               hält die Punkte via backwards-Fill bis zum Pop unsichtbar. */
-            transform-box: fill-box; transform-origin: center; opacity: 1;
-            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both;
+            /* Sprint 227 — Blüte als einmalige Geste: blüht gestaffelt auf (hero-bloom-pop),
+               hält kurz, löst sich dann SYNCHRON wieder auf (hero-bloom-out) → Ruhezustand
+               unsichtbar (Basis opacity:0), übrig bleibt das goldene „I".
+               -out mit `forwards` (NICHT both), sonst überschreibt dessen backwards-Fill den
+               gestaffelten Pop. Endzustand = Basis = Safari-sicher. */
+            transform-box: fill-box; transform-origin: center; opacity: 0;
+            animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both,
+                       hero-bloom-out 900ms ease-out 3500ms forwards;
         }
         .hero-tittle .hero-bloom-dot--gold {
             animation: hero-bloom-pop 540ms cubic-bezier(0.22, 1, 0.36, 1) calc(1860ms + var(--i, 0) * 15ms) both,
-                       hero-bloom-spark 1000ms ease-out calc(2260ms + var(--i, 0) * 15ms) 1;
+                       hero-bloom-spark 1000ms ease-out calc(2260ms + var(--i, 0) * 15ms) 1,
+                       hero-bloom-out 900ms ease-out 3500ms forwards;
         }
         @keyframes hero-bloom-pop {
             0%   { opacity: 0; transform: scale(0); }
             70%  { opacity: 1; transform: scale(1.18); }
             100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes hero-bloom-out {
+            0%   { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.45); }
         }
         @keyframes hero-bloom-spark {
             0%   { filter: drop-shadow(0 0 0 rgba(231, 200, 120, 0)); }
@@ -1405,7 +1414,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .hero-i-glyph { clip-path: none; scale: 1 1; animation: none; }
             .hero-seed2 { display: none; }
             .hero-tittle .hero-bloom-dot,
-            .hero-tittle .hero-bloom-dot--gold { opacity: 1; transform: none; animation: none; filter: none; }
+            .hero-tittle .hero-bloom-dot--gold { opacity: 0; transform: none; animation: none; filter: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             .hero-headline {
