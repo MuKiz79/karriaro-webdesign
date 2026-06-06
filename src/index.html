@@ -1173,28 +1173,70 @@
             opacity: 0.4;
             cursor: not-allowed;
         }
-        /* Progress-Indikator unter dem aktiven Tab (nur während Auto-Rotation) */
-        .branche-tab::after {
+        /* ── Sprint 228 — Progress-Indikator „Goldfaden-Schiene" (Design-Panel) ──
+           Sichtbare Schiene (::before) + Fill (::after) als width-Animation → der
+           runde Gold-Kopf bleibt bei jeder Breite rund (kein scaleX-Verzerren).
+           Branche→Messing-Gold-Verlauf bindet den Countdown an die Marken-DNA. */
+        .branche-switcher {
+            --kr-gold: #C9A24B;
+            --kr-gold-bright: #E3C173;
+            --kr-track-h: 3px;
+            --kr-track-inset: 9px;
+            --kr-rotate-dur: 6s; /* MUSS = JS-Rotations-Intervall */
+        }
+        .branche-tab.is-active::before {
             content: '';
             position: absolute;
-            left: 4px;
-            right: 4px;
-            bottom: -5px;
-            height: 2px;
-            background: var(--branche-accent, var(--color-onyx));
-            border-radius: 1px;
-            transform: scaleX(0);
-            transform-origin: left;
+            left: var(--kr-track-inset);
+            right: var(--kr-track-inset);
+            bottom: -3px;
+            height: var(--kr-track-h);
+            border-radius: 999px;
+            background: color-mix(in srgb, var(--branche-accent, var(--color-onyx, #16202C)) 14%, transparent);
             pointer-events: none;
             opacity: 0;
+            transition: opacity 280ms ease;
+        }
+        .branche-switcher.is-rotating .branche-tab.is-active::before { opacity: 1; }
+        /* Fill = derselbe Spur-Footprint wie die Schiene (left+right inset), per
+           clip-path von links aufgedeckt. clip-path-inset interpoliert sauber bis
+           100% (im Gegensatz zu width: 0 → calc(%) — das bricht engine-seitig zum
+           Ende hin). Branche-Akzent „zündet" links, läuft in den Messing-Goldfaden;
+           die runde Aufdeck-Kante (round 999px) ist der Gold-Kopf. */
+        .branche-tab.is-active::after {
+            content: '';
+            position: absolute;
+            left: var(--kr-track-inset);
+            right: var(--kr-track-inset);
+            bottom: -3px;
+            height: var(--kr-track-h);
+            border-radius: 999px;
+            background: linear-gradient(90deg,
+                color-mix(in srgb, var(--branche-accent, var(--kr-gold)) 55%, var(--kr-gold)) 0%,
+                var(--kr-gold) 32%,
+                var(--kr-gold-bright) 100%);
+            filter: drop-shadow(0 1px 3px color-mix(in srgb, var(--kr-gold) 38%, transparent));
+            pointer-events: none;
+            opacity: 0;
+            clip-path: inset(0 100% 0 0 round 999px);
         }
         .branche-switcher.is-rotating .branche-tab.is-active::after {
             opacity: 1;
-            animation: branche-progress 6s linear forwards;
+            animation: kr-goldthread var(--kr-rotate-dur) linear forwards;
         }
-        @keyframes branche-progress {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
+        .branche-switcher:not(.is-rotating) .branche-tab.is-active::after {
+            opacity: 0;
+            transition: opacity 220ms ease;
+        }
+        @keyframes kr-goldthread {
+            from { clip-path: inset(0 100% 0 0 round 999px); }
+            to   { clip-path: inset(0 0 0 0 round 999px); }
+        }
+        @supports not (background: color-mix(in srgb, red 50%, blue)) {
+            .branche-tab.is-active::before { background: rgba(22, 32, 44, 0.14); }
+            .branche-tab.is-active::after {
+                background: linear-gradient(90deg, var(--kr-gold), var(--kr-gold-bright));
+            }
         }
         /* Crossfade beim Branche-Wechsel */
         .browser-screen-large,
@@ -1208,11 +1250,14 @@
             opacity: 0;
         }
         @media (prefers-reduced-motion: reduce) {
+            .branche-tab.is-active::after,
             .branche-switcher.is-rotating .branche-tab.is-active::after {
                 animation: none;
-                transform: scaleX(0);
-                opacity: 0;
+                opacity: 1;
+                clip-path: inset(0 0 0 0 round 999px);
+                filter: none;
             }
+            .branche-tab.is-active::before { transition: none; opacity: 1; }
             .browser-screen-large,
             .mockup-label,
             .mockup-story {
