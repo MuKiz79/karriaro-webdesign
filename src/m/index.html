@@ -1117,7 +1117,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .price-card-premium .price-deliver::before {
             background: #4ea3ff;
         }
-        .branche-switcher-wrap { margin-top: 20px; }
+        .branche-switcher-wrap { margin-top: 20px; min-width: 0; }
         .branche-switcher-label { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #86868b; margin-bottom: 10px; }
         .branche-switcher-label::before { content: ''; width: 16px; height: 1px; background: var(--branche-accent, var(--color-indigo)); transition: background-color 320ms ease; }
         .branche-switcher {
@@ -1127,14 +1127,27 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         /* Sprint 9a Fix #3 — Mobile: horizontaler Scroll statt 3-Zeilen-Umbruch */
         @media (max-width: 640px) {
+            .branche-switcher-wrap {
+                align-self: stretch;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
             .branche-switcher {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 overflow-y: hidden;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
-                margin-right: -24px;
-                padding-right: 24px;
+                /* Sprint 229 — Breite auf die Spalte klemmen, damit overflow-x INTERN
+                   scrollt statt die SEITE zu verbreitern. min-width:0 hebt das implizite
+                   min-width:auto (=max-content der nowrap-Reihe, blähte auf 915px) auf.
+                   Der frühere margin-right:-24px-Bleed ist RAUS — er addierte bei
+                   width:100% exakt 24px Rest-Seiten-Overflow. */
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                align-self: stretch;
             }
             .branche-switcher::-webkit-scrollbar { display: none; }
             .branche-tab { flex-shrink: 0; }
@@ -1614,6 +1627,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .hero-mockup-block { align-items: center; }
             .mockup-caption { padding-left: 0; align-items: center; text-align: center; }
             .branche-switcher { justify-content: center; }
+        }
+
+        /* Sprint 229 — MUSS physisch NACH dem ≤1024-Block stehen: gleiche Spezifität
+           wie {justify-content:center} oben → bei Gleichstand gewinnt die spätere Regel
+           in Quellreihenfolge. Links-bündig, damit der aktive erste Tab (+ Gold-Thread)
+           sichtbar startet statt zentriert off-screen-links. Tablet 641–1024px bleibt
+           zentriert (1024er-Regel unberührt). */
+        @media (max-width: 640px) {
+            .branche-switcher { justify-content: flex-start; }
         }
 
         /* Arbeiten-Section (Premium-Galerie unter Hero) */
@@ -2140,7 +2162,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             letter-spacing: 0.08em;
             color: var(--color-graphite-soft);
         }
-        .kr-footer-legal-links { display: flex; gap: 20px; }
+        .kr-footer-legal-links { display: flex; gap: 12px 20px; flex-wrap: wrap; }
         .kr-footer-legal-links a { color: var(--color-graphite); }
         .kr-footer-legal-links a:hover { color: var(--color-indigo); }
 
@@ -6152,6 +6174,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             // greift die Signaturfarbe erst nach dem ersten Switch.
             var initialActive = (allTabs.filter(function (t) { return t.classList.contains('is-active'); })[0] || {}).dataset;
             applyAccent(initialActive && initialActive.branche ? initialActive.branche : (enabledOrder[0] || 'immobilien'));
+            // Sprint 229 — initialen aktiven Tab in den Mobile-Scroll-Strip rücken
+            // (erster Load läuft nicht durch setActiveTab; is-active steht im Markup).
+            requestAnimationFrame(function () { scrollActiveIntoStrip(true); });
 
             var currentIdx = 0;
             var timer = null;
@@ -6205,6 +6230,30 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     t.classList.toggle('is-active', match);
                     t.setAttribute('aria-pressed', match ? 'true' : 'false');
                 });
+                scrollActiveIntoStrip(false);
+            }
+
+            // Sprint 229 — Mobile: aktiven Tab + Gold-Thread im horizontalen Scroll-
+            // Strip sichtbar halten. NUR switcher.scrollLeft/scrollTo (NIE
+            // element.scrollIntoView → das würde die ganze Seite vertikal reißen).
+            // Position via getBoundingClientRect (offsetParent der Tabs ist nicht
+            // garantiert der Switcher). Guard scrollWidth>clientWidth = Desktop-No-op.
+            function scrollActiveIntoStrip(instant) {
+                if (switcher.scrollWidth <= switcher.clientWidth + 1) return;
+                var active = switcher.querySelector('.branche-tab.is-active');
+                if (!active) return;
+                var swRect = switcher.getBoundingClientRect();
+                var aRect = active.getBoundingClientRect();
+                var activeStart = (aRect.left - swRect.left) + switcher.scrollLeft;
+                var target = activeStart - (switcher.clientWidth - aRect.width) / 2;
+                var max = switcher.scrollWidth - switcher.clientWidth;
+                if (target < 0) target = 0; else if (target > max) target = max;
+                var smooth = !instant && !prefersReduced;
+                if (typeof switcher.scrollTo === 'function') {
+                    switcher.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
+                } else {
+                    switcher.scrollLeft = target;
+                }
             }
 
             function gotoBranche(branche, opts) {
