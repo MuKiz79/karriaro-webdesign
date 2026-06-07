@@ -56,7 +56,7 @@ Synergie: Webdesign-Manufaktur-Kunden bekommen Lighthouse-Setup integriert (Snip
 
 ## Warum handcodiert statt WordPress
 
-- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded): Performance (dank schlankem Code spürbar schnell, auf Core Web Vitals optimiert), Sicherheit (kein Plugin-Risiko), kein Vendor-Lock-in, KI-Auffindbarkeit (Schema.org von Anfang an).
+- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded): Performance (dank schlankem Code spürbar schnell, auf Core Web Vitals optimiert), Sicherheit (kein Plugin-Risiko), kein Abo-Zwang, KI-Auffindbarkeit (Schema.org von Anfang an).
 
 ## Standorte
 
