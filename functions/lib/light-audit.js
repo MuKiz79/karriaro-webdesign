@@ -502,10 +502,15 @@ async function detectSeoGeo(html, baseUrl) {
         { ok: hasRobots, label: 'robots.txt erreichbar' },
         { ok: hasSitemap, label: 'sitemap.xml erreichbar' }
     ];
+    // Sprint 230 — GEO-Mythen entschaerft (KB domains/geo-ai-findability):
+    // llms.txt wird von keinem grossen LLM ausgewertet (Google/Mueller bestaetigt,
+    // ~0,1% Bot-Requests), Schema-Markup hat keinen kausalen KI-Zitat-Effekt
+    // (Ahrefs Difference-in-Differences). Labels jetzt ehrlich/neutral; der neue
+    // geoScore (computeGeoScore) wertet llms.txt NICHT als Positiv-Signal.
     const geoItems = [
-        { ok: hasLlmsTxt, label: 'llms.txt vorhanden (2025-Standard für ChatGPT/Perplexity)' },
-        { ok: hasFaqSchema, label: 'FAQ-Schema (FAQPage) für KI-Zitierung' },
-        { ok: hasBreadcrumb, label: 'BreadcrumbList-Schema für Navigation-KI' },
+        { ok: hasLlmsTxt, label: 'llms.txt vorhanden (optional — von KI-Suche aktuell nicht ausgewertet)' },
+        { ok: hasFaqSchema, label: 'FAQ-Schema (FAQPage) — saubere Frage/Antwort-Struktur' },
+        { ok: hasBreadcrumb, label: 'BreadcrumbList-Schema — klare Seitenhierarchie' },
         { ok: anyStructuredData, label: `Strukturierte Daten (JSON-LD): ${jsonLdMatches.length}× vorhanden` }
     ];
 
@@ -514,12 +519,16 @@ async function detectSeoGeo(html, baseUrl) {
             items: seoItems,
             found: seoItems.filter(i => i.ok).length,
             total: seoItems.length,
-            schemaTypes: Array.from(schemaTypes)
+            schemaTypes: Array.from(schemaTypes),
+            // Sprint 230 — Roh-Flags fuer computeGeoScore (Score braucht Einzelsignale,
+            // nicht nur found/total).
+            flags: { hasLocalBusiness, hasCanonical, metaDescOk, titleOk, hasRobots, hasSitemap }
         },
         geo: {
             items: geoItems,
             found: geoItems.filter(i => i.ok).length,
-            total: geoItems.length
+            total: geoItems.length,
+            flags: { hasLlmsTxt, hasFaqSchema, hasBreadcrumb, anyStructuredData }
         }
     };
 }
@@ -563,6 +572,238 @@ function detectBlockedResponse(html, seoGeo) {
         if (titleLen === 0) return 'opaque';
     }
     return null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 230 — GEO-Score (Generative Engine Optimization), evidenzbasiert.
+// Leitet sich aus der KB ab (~/Projects/knowledge-base/playbooks/geo-audit-score.md
+// + domains/geo-ai-findability.md). Gewichtet die NACHWEISLICH wirksamen Signale:
+// Crawlbarkeit/SSR (30) ≫ zitierfähige Struktur (25) ≫ Entität (20) ≫ Frische (15)
+// ≫ Hygiene (10). Ignoriert bewusst die widerlegten Mythen (llms.txt, Schema als
+// KI-Zitier-Treiber). Off-Page (stärkster realer Hebel) ist aus einem Seiten-Fetch
+// nicht messbar → als Advice ausgegeben, nicht gescort.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** GET robots.txt (Vollbody, nicht nur HEAD) für die KI-Crawler-Analyse. */
+async function fetchRobotsTxt(baseUrl) {
+    let origin;
+    try { origin = new URL(baseUrl).origin; } catch { return null; }
+    try {
+        const res = await safeFetch(origin + '/robots.txt', { method: 'GET', timeoutMs: 3000 });
+        if (!res.ok) return '';
+        const txt = await res.text();
+        return String(txt).slice(0, 50000);
+    } catch (_) { return null; }
+}
+
+/**
+ * Prüft, ob die KI-Retrieval-Crawler (über die Zitate entstehen) per robots.txt
+ * blockiert sind. Training-Bots (GPTBot etc.) sind bewusst IRRELEVANT für Zitate.
+ * @param {string|null} robotsTxt  Inhalt der robots.txt (null = nicht gelesen)
+ */
+function detectAiCrawlerAccess(robotsTxt) {
+    const RETRIEVAL = ['oai-searchbot', 'perplexitybot', 'claude-searchbot'];
+    if (robotsTxt == null) return { ok: true, fetched: false, blockedBots: [] };
+    const txt = String(robotsTxt);
+    if (!txt.trim()) return { ok: true, fetched: true, blockedBots: [] }; // keine robots.txt = alles erlaubt
+
+    const lines = txt.split(/\r?\n/).map(l => l.replace(/#.*$/, '').trim()).filter(Boolean);
+    const groups = [];
+    let cur = null, collectingAgents = false;
+    for (const line of lines) {
+        const m = line.match(/^([a-z-]+)\s*:\s*(.*)$/i);
+        if (!m) continue;
+        const field = m[1].toLowerCase();
+        const value = m[2].trim();
+        if (field === 'user-agent') {
+            if (!collectingAgents || !cur) { cur = { agents: [], disallowAll: false, allowRoot: false }; groups.push(cur); collectingAgents = true; }
+            cur.agents.push(value.toLowerCase());
+        } else {
+            collectingAgents = false;
+            if (!cur) continue;
+            if (field === 'disallow' && value === '/') cur.disallowAll = true;
+            if (field === 'disallow' && value === '') cur.allowRoot = true;        // Disallow: <leer> = alles erlaubt
+            if (field === 'allow' && (value === '/' || value === '')) cur.allowRoot = true;
+        }
+    }
+    function blocksRoot(agent) {
+        const exact = groups.find(g => g.agents.includes(agent));
+        const star = groups.find(g => g.agents.includes('*'));
+        const g = exact || star;                 // spezifische Gruppe schlägt '*'
+        if (!g) return false;
+        if (g.allowRoot) return false;
+        return g.disallowAll;
+    }
+    const blockedBots = RETRIEVAL.filter(blocksRoot);
+    return { ok: blockedBots.length === 0, fetched: true, blockedBots };
+}
+
+/** Entitäts-Signale aus JSON-LD: Organization/LocalBusiness + sameAs + name. */
+function detectEntitySignals(html) {
+    const h = html || '';
+    const ORG_TYPE = /^(Organization|Corporation|LocalBusiness|RealEstateAgent|Restaurant|FoodEstablishment|HealthAndBeautyBusiness|Dentist|DentalClinic|Physician|MedicalClinic|MedicalBusiness|AutoRepair|Plumber|Electrician|LegalService|HairSalon|BeautySalon|Store|ProfessionalService|WebDesignAgency|Pharmacy|VeterinaryCare|AccountingService|Architect|Optician|Bakery|FuneralHome|TravelAgency|HousePainter|GeneralContractor|NGO|EducationalOrganization)$/;
+    let hasOrg = false, hasSameAs = false, sameAsCount = 0, name = null;
+    const blocks = h.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
+    for (const block of blocks) {
+        const json = block.replace(/^<script[^>]*>/i, '').replace(/<\/script>$/i, '').trim();
+        let data;
+        try { data = JSON.parse(json); } catch (_) { continue; }
+        const nodes = [];
+        const collect = (n) => {
+            if (!n || typeof n !== 'object') return;
+            if (Array.isArray(n)) { n.forEach(collect); return; }
+            nodes.push(n);
+            if (n['@graph']) collect(n['@graph']);
+        };
+        collect(data);
+        for (const node of nodes) {
+            const types = [].concat(node['@type'] || []);
+            if (!types.some(t => ORG_TYPE.test(String(t)))) continue;
+            hasOrg = true;
+            if (!name && node.name) name = String(node.name).slice(0, 120);
+            const sa = node.sameAs;
+            if (sa) {
+                const arr = Array.isArray(sa) ? sa : [sa];
+                const valid = arr.filter(x => typeof x === 'string' && /^https?:\/\//i.test(x));
+                if (valid.length) { hasSameAs = true; sameAsCount = Math.max(sameAsCount, valid.length); }
+            }
+        }
+    }
+    return { hasOrg, hasSameAs, sameAsCount, name };
+}
+
+/** Überschriften-Struktur: H1-Anzahl, H2/H3-Anzahl, frageförmige H2/H3 (Q&A). */
+function detectHeadings(html) {
+    const h = html || '';
+    const h1 = (h.match(/<h1\b[^>]*>/gi) || []).length;
+    const h2h3 = (h.match(/<h[23]\b[^>]*>/gi) || []).length;
+    const QWORD = /^(wie|was|warum|wann|wo|welche[rs]?|wer|wieso|wof[uü]r|wieviel|wie viel|kann|k[oö]nnen|sollte|braucht?|muss|darf|ist|sind)\b/i;
+    const headingTexts = (h.match(/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/gi) || [])
+        .map(t => t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim())
+        .filter(Boolean);
+    const questionHeadings = headingTexts.filter(t => /\?\s*$/.test(t) || QWORD.test(t)).length;
+    return { h1, h2h3, questionHeadings };
+}
+
+/** Faktendichte (Princeton-Hebel): Zahlen/Statistik-Token pro 1000 Wörter + externe Quell-Links. */
+function detectFactDensity(bodyText, html, finalUrl) {
+    const text = bodyText || '';
+    const words = (text.match(/\S+/g) || []).length || 1;
+    const numTokens = (text.match(/\b\d+([.,]\d+)?\s?%|\b\d{2,}([.,]\d+)?\b|€\s?\d|\d+\s?(Jahre|Kunden|Projekte|Mitarbeiter)/gi) || []).length;
+    const statsPer1k = Math.round((numTokens / words) * 1000 * 10) / 10;
+    let host = '';
+    try { host = new URL(finalUrl).hostname.replace(/^www\./, ''); } catch (_) { /* noop */ }
+    const hrefs = (html || '').match(/<a\b[^>]+href\s*=\s*["']([^"']+)["']/gi) || [];
+    let externalLinks = 0;
+    for (const a of hrefs) {
+        const m = a.match(/href\s*=\s*["']([^"']+)["']/i);
+        if (!m || !/^https?:\/\//i.test(m[1])) continue;
+        try { const hh = new URL(m[1]).hostname.replace(/^www\./, ''); if (hh && hh !== host) externalLinks++; } catch (_) { /* noop */ }
+    }
+    return { statsPer1k, externalLinks, words };
+}
+
+/** Frische-Marker: dateModified im Schema oder sichtbares Aktualisierungsdatum. */
+function detectFreshnessMarkers(html) {
+    const h = html || '';
+    const hasDateModified = /"dateModified"\s*:/.test(h);
+    const year = new Date().getFullYear();
+    const recent = new RegExp('(aktualisiert|zuletzt ge[aä]ndert|stand:?|last updated|updated)[\\s\\S]{0,40}(' + year + '|' + (year - 1) + ')', 'i');
+    const hasVisibleDate = recent.test(h);
+    return { hasDateModified, hasVisibleDate, ok: hasDateModified || hasVisibleDate };
+}
+
+/**
+ * Verrechnet alle Signale zum 0–100-GEO-Score (5 Kategorien). Reine Funktion →
+ * testbar ohne Netzwerk.
+ */
+function computeGeoScore({ seoGeo, painPoints, entity, headings, lists, factDensity, freshnessMarkers, aiCrawlerAccess }) {
+    const seoF = (seoGeo && seoGeo.seo && seoGeo.seo.flags) || {};
+    const geoF = (seoGeo && seoGeo.geo && seoGeo.geo.flags) || {};
+    const pp = painPoints || {};
+    const en = entity || {};
+    const h = headings || {};
+    const fd = factDensity || {};
+    const fm = freshnessMarkers || {};
+    const ac = aiCrawlerAccess || { ok: true, blockedBots: [] };
+    const ssrOk = !!(pp.spaArchitecture && pp.spaArchitecture.ok);
+
+    const cats = [];
+    const cat = (key, label, max, checks) => {
+        const points = Math.min(max, checks.reduce((s, c) => s + (c.points || 0), 0));
+        cats.push({ key, label, max, points, checks });
+    };
+
+    // A — Maschinen-Zugänglichkeit (30) — das Tor
+    const nBlocked = (ac.blockedBots || []).length;
+    cat('access', 'Maschinen-Zugänglichkeit', 30, [
+        { id: 'ssr', label: 'Server-gerendertes HTML (kein JS-only)', ok: ssrOk, points: ssrOk ? 15 : 0 },
+        { id: 'ai-crawler', label: 'KI-Such-Crawler nicht blockiert (OAI-SearchBot, PerplexityBot, Claude-SearchBot)', ok: nBlocked === 0, points: nBlocked === 0 ? 8 : Math.max(0, 8 - 3 * nBlocked) },
+        { id: 'robots-sitemap', label: 'robots.txt + sitemap.xml erreichbar', ok: !!(seoF.hasRobots && seoF.hasSitemap), points: (seoF.hasRobots ? 2 : 0) + (seoF.hasSitemap ? 2 : 0) },
+        { id: 'title-meta', label: 'Title + Meta-Description sinnvoll', ok: !!(seoF.titleOk && seoF.metaDescOk), points: (seoF.titleOk ? 2 : 0) + (seoF.metaDescOk ? 1 : 0) }
+    ]);
+
+    // B — Zitierfähige Struktur (25)
+    const oneH1 = h.h1 === 1;
+    const hasFaq = !!geoF.hasFaqSchema;
+    const qaPoints = hasFaq ? 9 : ((h.questionHeadings || 0) >= 2 ? 6 : 0);
+    cat('structure', 'Zitierfähige Struktur', 25, [
+        { id: 'headings', label: 'Saubere Überschriften-Hierarchie (genau 1 H1, H2/H3 vorhanden)', ok: oneH1 && (h.h2h3 || 0) >= 2, points: (oneH1 ? 5 : 0) + ((h.h2h3 || 0) >= 2 ? 3 : 0) },
+        { id: 'qa', label: hasFaq ? 'FAQ-/Q&A-Struktur (FAQPage-Schema)' : 'Frage/Antwort-Struktur (frageförmige Überschriften)', ok: qaPoints > 0, points: qaPoints },
+        { id: 'lists', label: 'Listen/Tabellen (extrahierbare Chunks)', ok: !!(lists && (lists.hasList || lists.hasTable)), points: ((lists && lists.hasList) ? 2 : 0) + ((lists && lists.hasTable) ? 2 : 0) },
+        { id: 'facts', label: 'Faktendichte: Zahlen/Statistiken + externe Quell-Links', ok: !!((fd.statsPer1k || 0) >= 3 && (fd.externalLinks || 0) >= 1), points: ((fd.statsPer1k || 0) >= 3 ? 2 : 0) + ((fd.externalLinks || 0) >= 1 ? 2 : 0) }
+    ]);
+
+    // C — Entitäts-Klarheit (20)
+    const hasOrg = !!(en.hasOrg || seoF.hasLocalBusiness);
+    cat('entity', 'Entitäts-Klarheit', 20, [
+        { id: 'org', label: 'Organization/LocalBusiness-Schema', ok: hasOrg, points: hasOrg ? 7 : 0 },
+        { id: 'sameas', label: 'sameAs zu externen Profilen (Wikidata/Wikipedia/LinkedIn …)', ok: !!en.hasSameAs, points: en.hasSameAs ? ((en.sameAsCount || 0) >= 2 ? 7 : 4) : 0 },
+        { id: 'name', label: 'Klarer Marken-/Firmenname im Schema', ok: !!en.name, points: en.name ? 6 : 0 }
+    ]);
+
+    // D — Frische & Pflege (15)
+    const freshOk = !!(pp.contentFreshness && pp.contentFreshness.ok);
+    cat('freshness', 'Frische & Pflege', 15, [
+        { id: 'content-fresh', label: 'Sichtbarer Inhalt aktuell', ok: freshOk, points: freshOk ? 10 : 0 },
+        { id: 'date-marker', label: 'dateModified / sichtbares Aktualisierungsdatum', ok: !!fm.ok, points: fm.ok ? 5 : 0 }
+    ]);
+
+    // E — Technische Hygiene (10)
+    cat('hygiene', 'Technische Hygiene', 10, [
+        { id: 'canonical', label: 'Canonical-URL gesetzt', ok: !!seoF.hasCanonical, points: seoF.hasCanonical ? 3 : 0 },
+        { id: 'viewport', label: 'Mobile-Viewport responsive', ok: !!(pp.mobileViewport && pp.mobileViewport.ok), points: (pp.mobileViewport && pp.mobileViewport.ok) ? 3 : 0 },
+        { id: 'security', label: 'HTTPS + Security-Header', ok: !!(pp.securityHeaders && pp.securityHeaders.ok), points: (pp.securityHeaders && pp.securityHeaders.ok) ? 2 : 0 },
+        { id: 'og', label: 'Open-Graph (Social-Sharing)', ok: !!(pp.socialMeta && pp.socialMeta.ok), points: (pp.socialMeta && pp.socialMeta.ok) ? 2 : 0 }
+    ]);
+
+    const score = cats.reduce((s, c) => s + c.points, 0);
+    let grade, verdict;
+    if (score >= 80) { grade = 'A'; verdict = 'KI-bereit'; }
+    else if (score >= 60) { grade = 'B'; verdict = 'Solide'; }
+    else if (score >= 40) { grade = 'C'; verdict = 'Ausbaufähig'; }
+    else { grade = 'D'; verdict = 'KI-unsichtbar'; }
+
+    const notes = [];
+    if (geoF.hasLlmsTxt) notes.push('llms.txt erkannt, aber nicht gewertet — wird von KI-Suche aktuell nicht ausgelesen.');
+    if (!ssrOk) notes.push('Inhalte werden per JavaScript geladen — KI-Crawler (GPTBot, PerplexityBot) sehen oft nur leere Container.');
+
+    return {
+        score,
+        grade,
+        verdict,
+        categories: cats,
+        ssrGate: {
+            passed: ssrOk,
+            note: ssrOk
+                ? 'Server-gerendert — für KI-Crawler sichtbar.'
+                : 'Single-Page-App ohne SSR — der stärkste GEO-Hebel fehlt.'
+        },
+        offPageAdvice: [
+            'Der stärkste KI-Sichtbarkeits-Hebel liegt außerhalb Ihrer Seite: Erwähnungen in YouTube, Branchenmedien, Wikipedia/Wikidata und Bewertungsportalen. Das prüfen wir im Komplettaudit.'
+        ],
+        notes
+    };
 }
 
 async function runLightAudit(url, placesKey) {
@@ -612,6 +853,23 @@ async function runLightAudit(url, placesKey) {
     const { getCrossSell } = require('./karriaro-cross-sell.js');
     const crossSell = getCrossSell(primaryType, branch);
 
+    // Sprint 230 — GEO-Score (evidenzbasiert). Re-gewichtet die real wirksamen Signale
+    // und ignoriert die llms.txt/Schema-Mythen (siehe KB playbooks/geo-audit-score.md).
+    // Robots-GET als zusätzlicher Hop ist toleriert (3s Timeout, eigener try/catch).
+    let geoScore = null;
+    try {
+        const robotsTxt = await fetchRobotsTxt(finalUrl);
+        const aiCrawlerAccess = detectAiCrawlerAccess(robotsTxt);
+        const entity = detectEntitySignals(html);
+        const headings = detectHeadings(html);
+        const lists = { hasList: /<(ul|ol)\b/i.test(html), hasTable: /<table\b/i.test(html) };
+        const factDensity = detectFactDensity(body, html, finalUrl);
+        const freshnessMarkers = detectFreshnessMarkers(html);
+        geoScore = computeGeoScore({ seoGeo, painPoints, entity, headings, lists, factDensity, freshnessMarkers, aiCrawlerAccess });
+    } catch (err) {
+        console.warn('geoScore computation failed:', err.message);
+    }
+
     return {
         ok: true,
         light: true,
@@ -625,6 +883,7 @@ async function runLightAudit(url, placesKey) {
         subPages,
         painPoints,
         seoGeo,
+        geoScore,
         crossSell
     };
 }
@@ -639,5 +898,13 @@ module.exports = {
     normalizePlacesType,
     detectPainPoints,
     detectSeoGeo,
-    detectBlockedResponse
+    detectBlockedResponse,
+    // Sprint 230 — GEO-Score
+    fetchRobotsTxt,
+    detectAiCrawlerAccess,
+    detectEntitySignals,
+    detectHeadings,
+    detectFactDensity,
+    detectFreshnessMarkers,
+    computeGeoScore
 };

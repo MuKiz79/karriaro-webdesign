@@ -571,6 +571,8 @@ function buildQuickResponse(domain, light, full) {
         // Sprint 69 — SEO (Schema.org, Canonical, robots/sitemap, Title/Meta-Description)
         // + GEO (llms.txt, FAQ-/Article-/BreadcrumbList-Schema fuer ChatGPT/Perplexity).
         seoGeo: light.seoGeo || null,
+        // Sprint 230 — Evidenzbasierter 0-100-GEO-Score (5 Kategorien, KB-abgeleitet).
+        geoScore: light.geoScore || null,
         // Sprint 69 — Karriaro-Cross-Sell-Tools pro Branche + Trend-Phrase.
         crossSell: light.crossSell || null,
         summary: full?.summary || null
@@ -744,6 +746,8 @@ exports.quickAudit = onRequest(
                 totalCount: branchInfo.totalCount || 0,
                 seoFound: seo.found || 0,
                 geoFound: geo.found || 0,
+                geoScore: payload.geoScore?.score ?? null,
+                geoGrade: payload.geoScore?.grade ?? null,
                 isSpa: !!payload.painPoints?.spaArchitecture?.isSpa,
                 bfsgScore: payload.bfsg?.complianceScore ?? null,
                 ipHash,

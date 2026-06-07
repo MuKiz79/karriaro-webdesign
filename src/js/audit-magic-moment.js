@@ -138,10 +138,27 @@
                     detail: sg.seo.found + ' von ' + sg.seo.total + ' Pflicht-Elementen vorhanden (Schema, Canonical, Meta-Description, Title, robots.txt, sitemap).'
                 });
             }
-            if (sg.geo && sg.geo.total && sg.geo.found / sg.geo.total < 0.7) {
+        }
+        // Sprint 230 — KI-Auffindbarkeit aus dem evidenzbasierten geoScore (kein
+        // llms.txt/Schema-Mythos mehr). SSR-Lücke ist der dominante Hebel.
+        if (result && result.geoScore && typeof result.geoScore.score === 'number') {
+            var gs = result.geoScore;
+            if (gs.ssrGate && gs.ssrGate.passed === false) {
                 pool.push({
-                    label: 'KI-Auffindbarkeit dünn',
-                    detail: 'Für ChatGPT, Perplexity und Gemini fehlen strukturierte Signale (FAQ-Schema, Breadcrumb-Schema, llms.txt).'
+                    label: 'KI-Crawler sehen kaum Inhalt',
+                    detail: 'Ihre Seite lädt Inhalte per JavaScript — ChatGPT, Perplexity & Co. lesen oft nur leere Container. Server-Rendering ist der größte Hebel für KI-Auffindbarkeit.'
+                });
+            } else if (gs.score < 70) {
+                var weakest = null;
+                (gs.categories || []).forEach(function (c) {
+                    var ratio = c.max ? c.points / c.max : 1;
+                    if (weakest === null || ratio < weakest.ratio) weakest = { label: c.label, ratio: ratio };
+                });
+                pool.push({
+                    label: 'KI-Auffindbarkeit: ' + gs.score + '/100',
+                    detail: weakest
+                        ? ('Größter Hebel: ' + weakest.label + '. So werden Sie in KI-Antworten (ChatGPT, Perplexity, Google AI) zitierbar.')
+                        : 'Strukturelle Hebel für die Zitierbarkeit in KI-Antworten fehlen.'
                 });
             }
         }
@@ -194,13 +211,15 @@
                 components.push(Math.round(okCount / keys.length * 100));
             }
         }
-        if (result.seoGeo) {
-            if (result.seoGeo.seo && result.seoGeo.seo.total) {
-                components.push(Math.round(result.seoGeo.seo.found / result.seoGeo.seo.total * 100));
-            }
-            if (result.seoGeo.geo && result.seoGeo.geo.total) {
-                components.push(Math.round(result.seoGeo.geo.found / result.seoGeo.geo.total * 100));
-            }
+        if (result.seoGeo && result.seoGeo.seo && result.seoGeo.seo.total) {
+            components.push(Math.round(result.seoGeo.seo.found / result.seoGeo.seo.total * 100));
+        }
+        // Sprint 230 — GEO-Komponente = evidenzbasierter geoScore (nicht mehr die
+        // llms.txt-belohnende geo.found/total-Quote). Fallback für alte Cache-Einträge.
+        if (result.geoScore && typeof result.geoScore.score === 'number') {
+            components.push(result.geoScore.score);
+        } else if (result.seoGeo && result.seoGeo.geo && result.seoGeo.geo.total) {
+            components.push(Math.round(result.seoGeo.geo.found / result.seoGeo.geo.total * 100));
         }
         if (result.branch && typeof result.branch.foundCount === 'number' && result.branch.totalCount) {
             components.push(Math.round(result.branch.foundCount / result.branch.totalCount * 100));
@@ -209,6 +228,35 @@
         var sum = 0;
         components.forEach(function (c) { sum += c; });
         return Math.round(sum / components.length);
+    }
+
+    // Sprint 230 — KI-Auffindbarkeits-Block: evidenzbasierter GEO-Score mit
+    // Kategorie-Breakdown, SSR-Gate-Hinweis und Off-Page-Empfehlung (nicht gescort).
+    function renderGeoBlock(result) {
+        var gs = result && result.geoScore;
+        if (!gs || typeof gs.score !== 'number') return '';
+        var cats = (gs.categories || []).map(function (c) {
+            var pct = c.max ? Math.round(c.points / c.max * 100) : 0;
+            return '<li class="kr-audit-result-geo-cat">' +
+                '<span class="kr-audit-result-geo-cat-label">' + escapeHtml(c.label) + '</span>' +
+                '<span class="kr-audit-result-geo-cat-bar"><span class="kr-audit-result-geo-cat-fill" style="width:' + pct + '%"></span></span>' +
+                '<span class="kr-audit-result-geo-cat-val">' + c.points + '/' + c.max + '</span>' +
+                '</li>';
+        }).join('');
+        var gate = (gs.ssrGate && gs.ssrGate.passed === false)
+            ? '<p class="kr-audit-result-geo-gate">⚠︎ ' + escapeHtml(gs.ssrGate.note) + '</p>'
+            : '';
+        var offpage = (gs.offPageAdvice && gs.offPageAdvice[0])
+            ? '<p class="kr-audit-result-geo-offpage">' + escapeHtml(gs.offPageAdvice[0]) + '</p>'
+            : '';
+        return '<div class="kr-audit-result-geo" data-geo-grade="' + escapeHtml(gs.grade || '') + '">' +
+            '<div class="kr-audit-result-geo-head">' +
+                '<span class="kr-audit-result-geo-title">KI-Auffindbarkeit</span>' +
+                '<span class="kr-audit-result-geo-score"><strong>' + gs.score + '</strong>/100 · ' + escapeHtml(gs.verdict || '') + '</span>' +
+            '</div>' +
+            '<ul class="kr-audit-result-geo-cats">' + cats + '</ul>' +
+            gate + offpage +
+        '</div>';
     }
 
     function renderResultHtml(result, url) {
@@ -263,6 +311,7 @@
             '</div>' +
             branchHint +
             '<ol class="kr-audit-result-findings">' + findingsHtml + '</ol>' +
+            (blocked ? '' : renderGeoBlock(result)) +
             '<p class="kr-audit-result-note">' + noteText + '</p>' +
             '<form class="kr-audit-result-leadform" data-audit-leadform novalidate>' +
                 '<p class="kr-audit-result-leadform-label">' + leadIntro + '</p>' +

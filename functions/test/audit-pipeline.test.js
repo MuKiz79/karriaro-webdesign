@@ -19,7 +19,12 @@ const {
     normalizePlacesType,
     guessBranchFromUrl,
     detectPainPoints,
-    detectBlockedResponse
+    detectBlockedResponse,
+    detectAiCrawlerAccess,
+    detectEntitySignals,
+    detectHeadings,
+    detectFreshnessMarkers,
+    computeGeoScore
 } = require('../lib/light-audit.js');
 const { BRANCH_STANDARDS, checkBranchStandards } = require('../lib/branch-standards.js');
 const { getCrossSell, CROSS_SELL } = require('../lib/karriaro-cross-sell.js');
@@ -759,4 +764,136 @@ test('buildResearchPrompt: Homepage + Sub-Page-Text landen im Untrusted-Fence', 
     assert.ok(p.includes('marker_entfernt'), 'Sub-Page-Breakout neutralisiert');
     // Homepage-Fence(2) + Sub-Page-Fence(2) = 4 echte Marker
     assert.equal((p.match(/UNTRUSTED_WEBSITE_CONTENT/g) || []).length, 4);
+});
+
+// ────────────────────────────────────────────────────────────────
+// Sprint 230 — GEO-Score (5 Detektoren + computeGeoScore)
+// ────────────────────────────────────────────────────────────────
+
+test('detectAiCrawlerAccess: keine/leere robots.txt → alles erlaubt', () => {
+    assert.equal(detectAiCrawlerAccess(null).ok, true);
+    assert.equal(detectAiCrawlerAccess('').ok, true);
+    assert.equal(detectAiCrawlerAccess('   ').ok, true);
+});
+
+test('detectAiCrawlerAccess: User-agent * Disallow / blockt alle Retrieval-Bots', () => {
+    const r = detectAiCrawlerAccess('User-agent: *\nDisallow: /');
+    assert.equal(r.ok, false);
+    assert.equal(r.blockedBots.length, 3);
+    assert.ok(r.blockedBots.includes('perplexitybot'));
+});
+
+test('detectAiCrawlerAccess: spezifischer OAI-SearchBot-Block trifft nur diesen Bot', () => {
+    const r = detectAiCrawlerAccess('User-agent: OAI-SearchBot\nDisallow: /');
+    assert.equal(r.ok, false);
+    assert.deepEqual(r.blockedBots, ['oai-searchbot']);
+});
+
+test('detectAiCrawlerAccess: normales Disallow /admin lässt Root frei', () => {
+    const r = detectAiCrawlerAccess('User-agent: *\nDisallow: /admin\nDisallow: /cart');
+    assert.equal(r.ok, true);
+    assert.equal(r.blockedBots.length, 0);
+});
+
+test('detectEntitySignals: Organization + sameAs erkannt', () => {
+    const html = '<script type="application/ld+json">' +
+        '{"@context":"https://schema.org","@type":"Organization","name":"Foo GmbH",' +
+        '"sameAs":["https://www.linkedin.com/company/foo","https://de.wikipedia.org/wiki/Foo"]}' +
+        '</script>';
+    const e = detectEntitySignals(html);
+    assert.equal(e.hasOrg, true);
+    assert.equal(e.hasSameAs, true);
+    assert.equal(e.sameAsCount, 2);
+    assert.equal(e.name, 'Foo GmbH');
+});
+
+test('detectEntitySignals: kein Schema → keine Entitäts-Signale', () => {
+    const e = detectEntitySignals('<p>nur Text, kein JSON-LD</p>');
+    assert.equal(e.hasOrg, false);
+    assert.equal(e.hasSameAs, false);
+});
+
+test('detectHeadings: zählt H1/H2-H3 und frageförmige Überschriften', () => {
+    const html = '<h1>Titel</h1><h2>Wie funktioniert das?</h2><h2>Leistungen</h2><h3>Was kostet es?</h3>';
+    const h = detectHeadings(html);
+    assert.equal(h.h1, 1);
+    assert.equal(h.h2h3, 3);
+    assert.equal(h.questionHeadings, 2);
+});
+
+test('detectFreshnessMarkers: dateModified im Schema → ok', () => {
+    assert.equal(detectFreshnessMarkers('{"dateModified":"2026-06-01"}').ok, true);
+    assert.equal(detectFreshnessMarkers('<p>ohne Datum</p>').ok, false);
+});
+
+// computeGeoScore — Fixtures
+const RICH_GEO = {
+    seoGeo: {
+        seo: { flags: { hasLocalBusiness: true, hasCanonical: true, metaDescOk: true, titleOk: true, hasRobots: true, hasSitemap: true } },
+        geo: { flags: { hasFaqSchema: true, hasLlmsTxt: false, hasBreadcrumb: true, anyStructuredData: true } }
+    },
+    painPoints: {
+        spaArchitecture: { ok: true }, contentFreshness: { ok: true },
+        mobileViewport: { ok: true }, securityHeaders: { ok: true }, socialMeta: { ok: true }
+    },
+    entity: { hasOrg: true, hasSameAs: true, sameAsCount: 3, name: 'Foo GmbH' },
+    headings: { h1: 1, h2h3: 5, questionHeadings: 3 },
+    lists: { hasList: true, hasTable: true },
+    factDensity: { statsPer1k: 5, externalLinks: 3 },
+    freshnessMarkers: { ok: true },
+    aiCrawlerAccess: { ok: true, blockedBots: [] }
+};
+
+const SPA_GEO = {
+    seoGeo: {
+        seo: { flags: { hasLocalBusiness: false, hasCanonical: false, metaDescOk: true, titleOk: true, hasRobots: false, hasSitemap: false } },
+        geo: { flags: { hasFaqSchema: false, hasLlmsTxt: false, hasBreadcrumb: false, anyStructuredData: false } }
+    },
+    painPoints: {
+        spaArchitecture: { ok: false }, contentFreshness: { ok: false },
+        mobileViewport: { ok: true }, securityHeaders: { ok: false }, socialMeta: { ok: false }
+    },
+    entity: { hasOrg: false, hasSameAs: false, sameAsCount: 0, name: null },
+    headings: { h1: 1, h2h3: 0, questionHeadings: 0 },
+    lists: { hasList: false, hasTable: false },
+    factDensity: { statsPer1k: 0, externalLinks: 0 },
+    freshnessMarkers: { ok: false },
+    aiCrawlerAccess: { ok: true, blockedBots: [] }
+};
+
+test('computeGeoScore: vollständig optimierte SSR-Site → Grade A (≥80)', () => {
+    const r = computeGeoScore(RICH_GEO);
+    assert.equal(r.score, 100);
+    assert.equal(r.grade, 'A');
+    assert.equal(r.verdict, 'KI-bereit');
+    assert.equal(r.ssrGate.passed, true);
+    assert.equal(r.categories.length, 5);
+});
+
+test('computeGeoScore: SPA ohne SSR → Grade D (<40), SSR-Gate gerissen', () => {
+    const r = computeGeoScore(SPA_GEO);
+    assert.ok(r.score < 40, `Score ${r.score} sollte < 40 sein`);
+    assert.equal(r.grade, 'D');
+    assert.equal(r.verdict, 'KI-unsichtbar');
+    assert.equal(r.ssrGate.passed, false);
+    assert.ok(r.notes.some(n => /JavaScript/i.test(n)), 'SSR-Hinweis in notes');
+});
+
+test('computeGeoScore: llms.txt gibt 0 Punkte und landet nur als Hinweis', () => {
+    const withLlms = JSON.parse(JSON.stringify(SPA_GEO));
+    withLlms.geo = SPA_GEO.geo; // (kein Effekt, nur Klarheit)
+    withLlms.seoGeo.geo.flags.hasLlmsTxt = true;
+    const a = computeGeoScore(SPA_GEO);
+    const b = computeGeoScore(withLlms);
+    assert.equal(a.score, b.score, 'llms.txt verändert den Score NICHT');
+    assert.ok(b.notes.some(n => /llms\.txt/i.test(n)), 'llms.txt-Hinweis vorhanden');
+});
+
+test('computeGeoScore: blockierte KI-Crawler senken die Zugänglichkeit', () => {
+    const blocked = JSON.parse(JSON.stringify(RICH_GEO));
+    blocked.aiCrawlerAccess = { ok: false, blockedBots: ['oai-searchbot', 'perplexitybot', 'claude-searchbot'] };
+    const r = computeGeoScore(blocked);
+    const access = r.categories.find(c => c.key === 'access');
+    assert.ok(access.points <= 22, `Access ${access.points} sollte um 8 P fallen`);
+    assert.ok(r.score < 100);
 });
