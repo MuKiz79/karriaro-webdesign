@@ -14,7 +14,7 @@
 const { checkFreshness, analyzeTechAge } = require('./audit-pipeline.js');
 const { extractSubPages, htmlToText } = require('./deep-research.js');
 const { checkBranchStandards, BRANCH_STANDARDS } = require('./branch-standards.js');
-const { safeFetch } = require('./safe-fetch.js');
+const { safeFetch, resolvePublicAddress } = require('./safe-fetch.js');
 const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
@@ -584,15 +584,32 @@ function detectBlockedResponse(html, seoGeo) {
 // nicht messbar → als Advice ausgegeben, nicht gescort.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** GET robots.txt (Vollbody, nicht nur HEAD) für die KI-Crawler-Analyse. */
+/**
+ * GET robots.txt (Vollbody, nicht nur HEAD) für die KI-Crawler-Analyse.
+ *
+ * ⚠️ Sprint 230-Hotfix: NICHT safeFetch — dessen Per-Hop-undici-Agent wirft beim
+ * Body-Read (res.text()) einen AssertionError aus dem async Socket-Teardown
+ * (`assert(!this.paused)` in undici client-h1 Parser.finish), der NICHT fangbar ist
+ * und den ganzen Request mit 500 + ERR_HTTP_HEADERS_SENT killt (gleiche Lehre wie
+ * kiVisibility). Stattdessen: Host vorab via resolvePublicAddress validieren
+ * (SSRF-Guard) + globales fetch() mit redirect:'manual' (kein Redirect-Folgen →
+ * keine Rebinding-/SSRF-Lücke; 3xx → leer behandeln). Der Host wurde zudem schon
+ * beim HTML-Abruf als public verifiziert.
+ */
 async function fetchRobotsTxt(baseUrl) {
-    let origin;
-    try { origin = new URL(baseUrl).origin; } catch { return null; }
+    let origin, hostname;
+    try { const u = new URL(baseUrl); origin = u.origin; hostname = u.hostname; }
+    catch (_) { return null; }
     try {
-        const res = await safeFetch(origin + '/robots.txt', { method: 'GET', timeoutMs: 3000 });
-        if (!res.ok) return '';
-        const txt = await res.text();
-        return String(txt).slice(0, 50000);
+        await resolvePublicAddress(hostname);                 // SSRF-Guard
+        const ctrl = new AbortController();
+        const t = setTimeout(() => ctrl.abort(), 3000);
+        try {
+            const res = await fetch(origin + '/robots.txt', { signal: ctrl.signal, redirect: 'manual' });
+            if (!res.ok) return '';                            // non-2xx / opaqueredirect → kein Inhalt
+            const txt = await res.text();
+            return String(txt).slice(0, 50000);
+        } finally { clearTimeout(t); }
     } catch (_) { return null; }
 }
 
