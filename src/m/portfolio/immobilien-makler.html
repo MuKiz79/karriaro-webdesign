@@ -556,13 +556,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         /* Karriaro Demo-Brand-Strip + Footer-Card (Sprint 7a) */
         .kr-strip { background: #0a0a0a; color: #fff; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 13px; }
         .kr-strip a { color: inherit; text-decoration: none; }
-        .kr-strip-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .kr-strip-brand { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 5px 13px 5px 7px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); transition: background 0.2s ease, border-color 0.2s ease; }
+        .kr-strip-brand:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.45); }
         .kr-strip-mark { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 4px; background: #1A2E40; color: #fff; font-weight: 700; font-size: 13px; }
         .kr-strip-name { font-weight: 500; letter-spacing: 0.01em; }
+        .kr-sn-sm { display: none; }
         .kr-strip-tag { color: rgba(255,255,255,0.72); font-size: 12px; text-align: center; flex: 1; min-width: 0; }
         .kr-strip-cta { background: #1A2E40; color: #fff; padding: 6px 14px; border-radius: 4px; font-weight: 500; flex-shrink: 0; transition: background 0.2s; }
         .kr-strip-cta:hover { background: #0058b8; }
-        @media (max-width: 720px) { .kr-strip-tag { display: none; } .kr-strip { padding: 8px 16px; } .kr-strip-name { display: none; } }
+        @media (max-width: 720px) { .kr-strip-tag { display: none; } .kr-strip { padding: 8px 16px; } .kr-sn-lg { display: none; } .kr-sn-sm { display: inline; } }
         .kr-footer-card { background: #0a0a0a; color: #fff; padding: clamp(64px, 10vh, 100px) 24px; font-family: 'Inter', -apple-system, system-ui, sans-serif; }
         .kr-footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: center; }
         .kr-footer-eyebrow { color: #4ea3ff; font-size: 11px; font-weight: 500; letter-spacing: 0.24em; text-transform: uppercase; margin: 0 0 18px; }
@@ -618,6 +620,16 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>
+
+    <div class="kr-strip" role="complementary" aria-label="Karriaro Demo-Hinweis">
+        <a href="https://karriaro-webdesign.de" class="kr-strip-brand">
+            <span class="kr-strip-mark">K</span>
+            <span class="kr-strip-name"><span class="kr-sn-lg">← Zurück zu Karriaro Webdesign</span><span class="kr-sn-sm">← Karriaro</span></span>
+        </a>
+        <span class="kr-strip-tag">Diese Demo-Seite hat Karriaro gebaut · Ihre eigene ab 2.990 €</span>
+        <a href="https://karriaro-webdesign.de/#kontakt" class="kr-strip-cta">Erstgespräch buchen →</a>
+    </div>
+
 
     <header class="nav">
         <div class="nav-inner">
