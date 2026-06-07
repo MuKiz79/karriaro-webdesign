@@ -8,9 +8,9 @@ Gründer: Muammer Kızılaslan. Karriaro Webdesign ist eine Kölner Webdesign-Ma
 
 ## Leistungspakete
 
-- [Essential — 1.290 € einmalig](https://karriaro-webdesign.de/#preise): Eine Seite, 4-6 Sektionen, BFSG-konform, SEO-Foundation, mobile-optimiert. Für Handwerk, Beauty, Café, Florist, Gym.
+- [Essential — 1.290 € einmalig](https://karriaro-webdesign.de/#preise): Eine Seite, 4-6 Sektionen, barrierefrei nach BFSG/WCAG gebaut, SEO-Foundation, mobile-optimiert. Für Handwerk, Beauty, Café, Florist, Gym.
 - [Professional — 1.990 € einmalig](https://karriaro-webdesign.de/#preise): Bis 5 Unterseiten, lokale SEO, 1 Branchen-Werkzeug. Für Dachdecker, Spedition, Physio, Hotel, Autohaus.
-- [Premium — 2.990 € einmalig](https://karriaro-webdesign.de/#preise): Unbegrenzte Unterseiten, volle Branchen-KI-Werkzeuge, Editorial-Layout. Für Zahnarzt, Arzt, Immobilien, Anwalt.
+- [Premium — 2.990 € einmalig](https://karriaro-webdesign.de/#preise): Unbegrenzte Unterseiten, volles Branchen-Werkzeug-Set, Editorial-Layout. Für Zahnarzt, Arzt, Immobilien, Anwalt.
 - [Premium+ — 3.990 € einmalig](https://karriaro-webdesign.de/#preise): Premium + Mandantenportal + DSGVO-Compliance-Pflege (Pilot für Anwalt).
 
 Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (50 % nach Entwurf, 50 % bei Fertigstellung).
@@ -56,7 +56,7 @@ Synergie: Webdesign-Manufaktur-Kunden bekommen Lighthouse-Setup integriert (Snip
 
 ## Warum handcodiert statt WordPress
 
-- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded): Performance (<0,5s Ladezeit), Sicherheit (kein Plugin-Risiko), Eigentum (Code gehört Ihnen), KI-Auffindbarkeit (Schema.org von Anfang an).
+- [Warum-Handcoded](https://karriaro-webdesign.de/warum-handcoded): Performance (dank schlankem Code spürbar schnell, auf Core Web Vitals optimiert), Sicherheit (kein Plugin-Risiko), kein Vendor-Lock-in, KI-Auffindbarkeit (Schema.org von Anfang an).
 
 ## Standorte
 

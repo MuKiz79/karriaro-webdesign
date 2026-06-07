@@ -25,11 +25,11 @@ Sicherheit, KI-Auffindbarkeit und BFSG-Compliance.
 
 | Aspekt | Karriaro | WordPress-Agentur | Wix/Squarespace |
 |---|---|---|---|
-| Ladezeit | < 0,5 s | 2-4 s | 1-3 s |
-| Quellcode-Eigentum | Kunde | Geteilt (Plugins) | Anbieter |
-| Plugin-Risiko | Keiner | Hoch | n/a |
+| Ladezeit | spürbar schnell (schlanker Code) | 2-4 s | 1-3 s |
+| Abhängigkeit | kein Vendor-Lock-in | Plugin-gebunden | Anbieter-gebunden |
+| Plugin-Angriffsfläche | keine | hoch | n/a |
 | Abo-Gebühren | Optional | Hosting + Plugins | 144-432 €/Jahr |
-| BFSG-Compliance | Garantiert | Plugin-abhängig | Theme-abhängig |
+| BFSG-Barrierefreiheit | nach BFSG/WCAG gebaut & geprüft | Plugin-abhängig | Theme-abhängig |
 | KI-Auffindbarkeit | Schema.org von Anfang an | Manual | Limitiert |
 
 ---
@@ -51,7 +51,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 - Kontaktformular mit DSGVO-Hinweis
 - Hosting-Setup-Beratung
 
-**Zeit bis Live:** 7-10 Tage
+**Zeit bis Live:** ca. 1–2 Wochen — je nach Umfang und Ihrer Zuarbeit
 
 ### Professional — 1.990 € einmalig
 
@@ -64,7 +64,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 - Erweiterte Content-Sections
 - Newsletter-Anbindung
 
-**Zeit bis Live:** 10-14 Tage
+**Zeit bis Live:** ca. 2–3 Wochen — je nach Umfang und Ihrer Zuarbeit
 
 ### Premium — 2.990 € einmalig
 
@@ -72,12 +72,12 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 
 **Inhalt:**
 - Unbegrenzte Unterseiten
-- Volle Branchen-Werkzeuge (KI-gestützt, je nach Branche)
+- Volle Branchen-Werkzeuge (je nach Branche)
 - Editorial-Layout (Magazine-Style, Fraunces + Inter Typografie)
 - Service-spezifische Schema.org-Strukturen
 - Mehrsprachigkeit auf Wunsch (DE/EN)
 
-**Zeit bis Live:** 10-14 Tage
+**Zeit bis Live:** ca. 3–4 Wochen — je nach Umfang und Ihrer Zuarbeit
 
 ### Premium+ — 3.990 € einmalig (Pilot)
 
@@ -89,7 +89,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 - Erweiterte DSGVO-Compliance-Pflege (Auftragsverarbeitung, TOMs)
 - Quartalsweise Schema-Updates
 
-**Zeit bis Live:** 14-21 Tage
+**Zeit bis Live:** ca. 4 Wochen — je nach Umfang und Ihrer Zuarbeit
 
 ### Optional: Hosting & Wartung
 
@@ -247,17 +247,18 @@ Fertigstellung).
 
 ### Warum handcodierte Websites statt WordPress?
 
-Handcodierte Websites laden unter 0,5 Sekunden, sind sicherer (kein
-Plugin-Risiko), DSGVO-konform und werden von Google und KI-Assistenten
-bevorzugt indexiert. Kein Plugin-Risiko, keine Abo-Gebühren, der Quellcode
-gehört Ihnen.
+Handcodierte Websites laden dank schlankem Code spürbar schnell, haben durch
+fehlende Fremd-Plugins eine kleinere Angriffsfläche, sind datenschutzfreundlich
+gebaut und für Google und KI-Assistenten technisch optimal aufbereitet
+(Schema.org, semantisches HTML, llms.txt). Kein Plugin-Risiko, keine
+Abo-Gebühren, kein Vendor-Lock-in.
 
 ### Ist meine Website für Google und KI-Suche optimiert?
 
 Ja. Jede Karriaro-Website wird mit Schema.org-Strukturdaten, semantischem
 HTML, llms.txt-Knowledge-Base und optimierter Ladezeit gebaut — so dass
 Google, ChatGPT, Claude, Perplexity, Apple Intelligence und Sprachassistenten
-Ihre Inhalte bevorzugt anzeigen.
+Ihre Inhalte zuverlässig auslesen und zitieren können.
 
 ### Bekomme ich branchenspezifische Werkzeuge auf meiner Website?
 
@@ -276,10 +277,11 @@ enthält das volle Set:
 50 % nach dem Entwurf, 50 % bei Fertigstellung. Sie zahlen erst, wenn Sie
 mit dem ersten Entwurf zufrieden sind — kein Risiko vorab.
 
-### Bekomme ich den Quellcode?
+### Bin ich an Karriaro gebunden?
 
-Ja, vollständig. Code, Schriften, Bilder, Domain — alles gehört Ihnen. Kein
-Vendor Lock-in, kein Abo, kein Plugin-Risiko. Sie sind nie abhängig.
+Nein. Kein Baukasten-Zwang, kein Abo-Lock-in, kein Plugin-Ökosystem — Sie haben
+die vollen Nutzungsrechte an Ihrer für Sie gebauten Website. Schriften und Bilder
+werden im Rahmen ihrer jeweiligen Lizenz bereitgestellt.
 
 ### Wie kann ich Karriaro kontaktieren?
 
@@ -336,8 +338,9 @@ dahinter."*
 
 1. **Substanz** — Was Ihre Website TUT ist wichtiger als wie sie AUSSIEHT.
    Werkzeuge, Audits, Schema.org messen Google und KI.
-2. **Eigentum** — Code, Schriften, Bilder, Domain gehören Ihnen. Kein
-   Vendor Lock-in, kein Abo, kein Plugin-Risiko.
+2. **Unabhängigkeit** — Kein Vendor-Lock-in, kein Abo, kein Plugin-Ökosystem.
+   Sie haben die vollen Nutzungsrechte an Ihrer Website; Schriften und Bilder im
+   Rahmen ihrer jeweiligen Lizenz.
 3. **Persönlich** — Sie sprechen direkt mit dem Gründer, nicht mit einem
    Account-Manager. Keine Hotline, kein Ticket-System.
 
