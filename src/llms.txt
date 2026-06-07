@@ -10,16 +10,16 @@ Gründer: Muammer Kızılaslan. Karriaro Webdesign ist eine Kölner Webdesign-Ma
 
 - [Essential — 1.290 € einmalig](https://karriaro-webdesign.de/#preise): Eine Seite, 4-6 Sektionen, barrierefrei nach BFSG/WCAG gebaut, SEO-Foundation, mobile-optimiert. Für Handwerk, Beauty, Café, Florist, Gym.
 - [Professional — 1.990 € einmalig](https://karriaro-webdesign.de/#preise): Bis 5 Unterseiten, lokale SEO, 1 Branchen-Werkzeug. Für Dachdecker, Spedition, Physio, Hotel, Autohaus.
-- [Premium — 2.990 € einmalig](https://karriaro-webdesign.de/#preise): Unbegrenzte Unterseiten, volles Branchen-Werkzeug-Set, Editorial-Layout. Für Zahnarzt, Arzt, Immobilien, Anwalt.
-- [Premium+ — 3.990 € einmalig](https://karriaro-webdesign.de/#preise): Premium + Mandantenportal + DSGVO-Compliance-Pflege (Pilot für Anwalt).
+- [Premium — 2.990 € einmalig](https://karriaro-webdesign.de/#preise): Großzügiger Seitenumfang nach Absprache, volles Branchen-Werkzeug-Set, Editorial-Layout. Für Zahnarzt, Arzt, Immobilien, Anwalt.
+- [Premium+ — 3.990 € einmalig](https://karriaro-webdesign.de/#preise): Premium + Mandantenportal + technische Datenschutz-Pflege (Pilot für Anwalt).
 
-Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst bei Zufriedenheit (50 % nach Entwurf, 50 % bei Fertigstellung).
+Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst nach Ihrer Entwurfs-Freigabe (50 % nach Entwurf, 50 % bei Fertigstellung).
 
 ## Branchen-Demos (Live-Beispiele)
 
 - [Immobilienmakler — Stadtmakler Stuttgart](https://karriaro-webdesign.de/portfolio/immobilien-makler): Online-Wertermittlung, Live-Filter-Suche, Verkäufer-Dashboard, Off-Market-Portfolio, Marktbarometer.
-- [Arztpraxis — Dr. Weber](https://karriaro-webdesign.de/portfolio/praxis-weber): KI-Symptom-Checker (Vor-Anamnese, keine Diagnose), Online-Slot-Buchung, Rezept-Bestellung.
-- [Restaurant](https://karriaro-webdesign.de/portfolio/restaurant-template): AI-Sommelier (Wein-Pairing), Saisonkarte mit Auto-Update, Online-Reservierung.
+- [Arztpraxis — Dr. Weber](https://karriaro-webdesign.de/portfolio/praxis-weber): Symptom-Wegweiser (Vor-Anamnese, keine Diagnose), Online-Slot-Buchung, Rezept-Bestellung.
+- [Restaurant](https://karriaro-webdesign.de/portfolio/restaurant-template): Wein-Berater (Wein-Pairing), Saisonkarte mit Auto-Update, Online-Reservierung.
 - [Friseursalon — Müller](https://karriaro-webdesign.de/portfolio/friseur-salon): Style-Empfehlung (Gesichtsform + Anlass), Wunsch-Stylist-Direkt-Buchung, Foto-Galerie.
 - [Handwerk SHK — Müller Meisterbetrieb](https://karriaro-webdesign.de/portfolio/meisterbetrieb-mueller): Notdienst-Puls mit Anrückzeit, Foto-Festpreis-Anfrage, BAFA-Förder-Rechner.
 - [Dachdecker — Berger Meisterbetrieb](https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb): BAFA + KfW-Wärmepumpe-Rechner, Förder-Übersicht, Notfall-Hotline.

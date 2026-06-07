@@ -121,8 +121,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             "itemListElement": [
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Essential" }, "price": "1290", "priceCurrency": "EUR", "description": "Eine Seite, barrierefrei gebaut, für Handwerk · Beauty · Café · Florist · Gym" },
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Professional" }, "price": "1990", "priceCurrency": "EUR", "description": "Bis 5 Unterseiten, lokale SEO, 1 Branchen-Werkzeug für Dachdecker · Spedition · Physio · Hotel · Autohaus" },
-                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Premium" }, "price": "2990", "priceCurrency": "EUR", "description": "Unbegrenzte Unterseiten, Branchen-KI, Editorial-Layout für Zahnarzt · Arzt · Immobilien · Anwalt" },
-                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Premium+" }, "price": "3990", "priceCurrency": "EUR", "description": "Premium + Mandantenportal + DSGVO-Compliance-Pflege (Pilot Anwalt)" }
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Premium" }, "price": "2990", "priceCurrency": "EUR", "description": "Großzügiger Seitenumfang nach Absprache, Branchen-Werkzeuge, Editorial-Layout für Zahnarzt · Arzt · Immobilien · Anwalt" },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Premium+" }, "price": "3990", "priceCurrency": "EUR", "description": "Premium + Mandantenportal + technische Datenschutz-Pflege (Pilot Anwalt)" }
             ]
         }
     }
@@ -138,7 +138,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 "name": "Was kostet eine Website bei Karriaro?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Karriaro arbeitet mit Festpreisen, jeweils einmalig: Essential 1.290 €, Professional 1.990 €, Premium 2.990 € und Premium+ 3.990 €. Optionale Wartung ab 99 €/Monat (Care) bzw. 199 €/Monat (Care+). Sie zahlen erst bei Zufriedenheit — 50 % nach Entwurf, 50 % bei Fertigstellung."
+                    "text": "Karriaro arbeitet mit Festpreisen, jeweils einmalig: Essential 1.290 €, Professional 1.990 €, Premium 2.990 € und Premium+ 3.990 €. Optionale Wartung ab 99 €/Monat (Care) bzw. 199 €/Monat (Care+). Sie zahlen erst nach Ihrer Entwurfs-Freigabe — 50 % nach Entwurf, 50 % bei Fertigstellung."
                 }
             },
             {
@@ -170,7 +170,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 "name": "Bekomme ich branchenspezifische Werkzeuge auf meiner Website?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, KI-Symptom-Checker (Vor-Anamnese, keine Diagnose) für Praxen, AI-Sommelier für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage."
+                    "text": "Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, Symptom-Wegweiser (Vor-Anamnese, keine Diagnose) für Praxen, Wein-Berater für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage."
                 }
             },
             {
@@ -227,7 +227,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <script src="/js/attribution.js?v=199" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
-    <script src="/js/audit-magic-moment.js?v=425" defer></script>
+    <script src="/js/audit-magic-moment.js?v=426" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <!-- Performance — blockierend: definiert @font-face für die Above-fold-Typografie (Fraunces H1);
          der Font selbst ist im <head> vorgeladen. -->
@@ -3513,6 +3513,90 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             grid-column: 2;
             min-width: 0;
         }
+        /* Sprint 230 — KI-Auffindbarkeit (GEO-Score) Block */
+        .kr-audit-result-geo {
+            margin: 22px 0 4px;
+            padding: 18px 18px 16px;
+            border: 1px solid rgba(201, 162, 75, 0.34);
+            border-radius: 12px;
+            background: rgba(201, 162, 75, 0.055);
+        }
+        .kr-audit-result-geo-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .kr-audit-result-geo-title {
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 11px;
+            color: var(--color-ink-2);
+        }
+        .kr-audit-result-geo-score {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            color: var(--color-ink-2);
+        }
+        .kr-audit-result-geo-score strong {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 22px;
+            color: var(--color-gold-text);
+            margin-right: 2px;
+        }
+        .kr-audit-result-geo-cats {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .kr-audit-result-geo-cat {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 92px auto;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            color: var(--color-ink-3);
+        }
+        .kr-audit-result-geo-cat-bar {
+            position: relative;
+            height: 5px;
+            border-radius: 99px;
+            background: rgba(20, 32, 43, 0.10);
+            overflow: hidden;
+        }
+        .kr-audit-result-geo-cat-fill {
+            position: absolute;
+            inset: 0 auto 0 0;
+            background: var(--color-gold);
+            border-radius: 99px;
+        }
+        .kr-audit-result-geo-cat-val {
+            font-variant-numeric: tabular-nums;
+            font-size: 12px;
+            color: var(--color-ink-3);
+            white-space: nowrap;
+        }
+        .kr-audit-result-geo-gate {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--color-rust);
+            margin: 12px 0 0;
+        }
+        .kr-audit-result-geo-offpage {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 12px;
+            line-height: 1.5;
+            font-style: italic;
+            color: var(--color-ink-3);
+            margin: 8px 0 0;
+        }
         .kr-audit-result-note {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 13px;
@@ -3854,6 +3938,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <div class="inner">
             <a href="/" class="nav-logo" aria-label="Karriaro · Startseite"><svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false"><path d="M 1.50 7.61 L 1.50 1.50 L 7.61 1.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 1.50 L 38.50 1.50 L 38.50 7.61" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 1.50 32.39 L 1.50 38.50 L 7.61 38.50" stroke="currentColor" stroke-width="1" fill="none"/><path d="M 32.39 38.50 L 38.50 38.50 L 38.50 32.39" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="18.71" cy="21.18" r="0.66" fill="#C9A24B"/><circle cx="20.22" cy="17.54" r="0.66" fill="#C9A24B"/><circle cx="21.84" cy="22.40" r="0.66" fill="#C9A24B"/><circle cx="16.56" cy="19.39" r="0.66" fill="currentColor"/><circle cx="23.30" cy="17.90" r="0.66" fill="#C9A24B"/><circle cx="18.89" cy="24.14" r="0.66" fill="currentColor"/><circle cx="17.87" cy="15.89" r="0.66" fill="currentColor"/><circle cx="24.65" cy="21.70" r="0.66" fill="#C9A24B"/><circle cx="15.15" cy="22.00" r="0.66" fill="currentColor"/><circle cx="22.34" cy="14.99" r="0.66" fill="currentColor"/><circle cx="21.74" cy="25.53" r="0.66" fill="currentColor"/><circle cx="14.76" cy="16.96" r="0.66" fill="currentColor"/><circle cx="26.16" cy="18.65" r="0.66" fill="#C9A24B"/><circle cx="16.24" cy="25.35" r="0.66" fill="currentColor"/><circle cx="19.13" cy="13.28" r="0.66" fill="currentColor"/><circle cx="25.35" cy="24.51" r="0.66" fill="currentColor"/><circle cx="12.79" cy="20.30" r="0.66" fill="currentColor"/><circle cx="25.26" cy="14.77" r="0.66" fill="currentColor"/><circle cx="19.65" cy="27.62" r="0.66" fill="currentColor"/><circle cx="14.99" cy="13.99" r="0.66" fill="currentColor"/><circle cx="27.94" cy="21.07" r="0.66" fill="#C9A24B"/><circle cx="13.27" cy="24.69" r="0.66" fill="currentColor"/><circle cx="21.84" cy="11.82" r="0.66" fill="currentColor"/><circle cx="24.26" cy="27.43" r="0.66" fill="currentColor"/><circle cx="11.67" cy="17.34" r="0.66" fill="currentColor"/><circle cx="28.10" cy="16.26" r="0.66" fill="currentColor"/><circle cx="16.49" cy="28.38" r="0.66" fill="currentColor"/><circle cx="16.87" cy="11.29" r="0.66" fill="currentColor"/><circle cx="28.34" cy="24.38" r="0.66" fill="currentColor"/><circle cx="10.74" cy="22.44" r="0.66" fill="currentColor"/><circle cx="25.27" cy="11.81" r="0.66" fill="currentColor"/><circle cx="21.68" cy="29.75" r="0.66" fill="currentColor"/><circle cx="12.06" cy="13.85" r="0.66" fill="currentColor"/><circle cx="30.16" cy="19.16" r="0.66" fill="#C9A24B"/><circle cx="12.97" cy="27.60" r="0.66" fill="currentColor"/><circle cx="20.05" cy="9.51" r="0.66" fill="currentColor"/><circle cx="27.15" cy="27.88" r="0.66" fill="currentColor"/><circle cx="9.26" cy="19.01" r="0.66" fill="currentColor"/><circle cx="28.70" cy="13.40" r="0.66" fill="currentColor"/><circle cx="18.02" cy="30.88" r="0.66" fill="currentColor"/><circle cx="14.04" cy="10.52" r="0.66" fill="currentColor"/><circle cx="30.93" cy="23.00" r="0.66" fill="currentColor"/><circle cx="9.80" cy="25.24" r="0.66" fill="currentColor"/><circle cx="24.03" cy="9.12" r="0.66" fill="currentColor"/><circle cx="24.42" cy="30.87" r="0.66" fill="currentColor"/><circle cx="9.28" cy="14.92" r="0.66" fill="currentColor"/><circle cx="31.46" cy="16.47" r="0.66" fill="currentColor"/><circle cx="13.87" cy="30.45" r="0.66" fill="currentColor"/><circle cx="17.43" cy="8.03" r="0.66" fill="currentColor"/><circle cx="30.08" cy="27.16" r="0.66" fill="currentColor"/><circle cx="7.61" cy="21.54" r="0.66" fill="currentColor"/><circle cx="28.17" cy="10.40" r="0.66" fill="currentColor"/><circle cx="20.46" cy="32.72" r="0.66" fill="currentColor"/><circle cx="10.98" cy="10.85" r="0.66" fill="currentColor"/><circle cx="32.95" cy="20.66" r="0.66" fill="#C9A24B"/><circle cx="9.91" cy="28.34" r="0.66" fill="currentColor"/><circle cx="21.82" cy="6.92" r="0.66" fill="currentColor"/><circle cx="27.55" cy="30.97" r="0.66" fill="currentColor"/><circle cx="6.91" cy="16.99" r="0.66" fill="currentColor"/><circle cx="31.79" cy="13.32" r="0.66" fill="currentColor"/><circle cx="15.78" cy="32.99" r="0.66" fill="currentColor"/><circle cx="14.28" cy="7.47" r="0.66" fill="currentColor"/><circle cx="32.78" cy="25.42" r="0.66" fill="currentColor"/><circle cx="6.81" cy="24.67" r="0.66" fill="currentColor"/><circle cx="26.62" cy="7.55" r="0.66" fill="currentColor"/><circle cx="23.55" cy="33.76" r="0.66" fill="currentColor"/><circle cx="8.00" cy="12.20" r="0.66" fill="currentColor"/><circle cx="34.23" cy="17.63" r="0.66" fill="currentColor"/><circle cx="11.05" cy="31.44" r="0.66" fill="currentColor"/><circle cx="18.86" cy="5.41" r="0.66" fill="currentColor"/><circle cx="30.77" cy="30.06" r="0.66" fill="currentColor"/><circle cx="5.16" cy="19.86" r="0.66" fill="currentColor"/><circle cx="31.12" cy="10.01" r="0.66" fill="currentColor"/><circle cx="18.54" cy="34.97" r="0.66" fill="currentColor"/><circle cx="10.90" cy="7.89" r="0.66" fill="currentColor"/><circle cx="34.99" cy="22.80" r="0.66" fill="currentColor"/><circle cx="6.97" cy="28.11" r="0.66" fill="currentColor"/><circle cx="24.16" cy="5.12" r="0.66" fill="currentColor"/><circle cx="27.03" cy="33.87" r="0.66" fill="currentColor"/><circle cx="5.36" cy="14.49" r="0.66" fill="currentColor"/><circle cx="34.61" cy="14.14" r="0.66" fill="currentColor"/><circle cx="13.15" cy="34.28" r="0.66" fill="currentColor"/><circle cx="15.38" cy="4.75" r="0.66" fill="currentColor"/><circle cx="33.79" cy="28.17" r="0.66" fill="currentColor"/><circle cx="4.22" cy="23.31" r="0.66" fill="currentColor"/><circle cx="29.46" cy="6.82" r="0.66" fill="currentColor"/><circle cx="21.94" cy="36.20" r="0.66" fill="currentColor"/><circle cx="7.56" cy="9.30" r="0.66" fill="currentColor"/><circle cx="36.49" cy="19.48" r="0.66" fill="#C9A24B"/></svg><span class="nav-wordmark-group"><span class="nav-wordmark">Karriaro</span><span class="nav-wordmark-sub">Webdesign</span></span></a>
             <div class="links">
+                <a href="/werkschau">Werkschau</a>
                 <a href="#faq">FAQ</a>
                 <a href="#preis">Preis</a>
                 <a href="/blog">Blog</a>
@@ -3867,6 +3952,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </nav>
 
     <div id="mobile-menu" class="mobile-menu">
+        <a href="/werkschau" onclick="this.parentElement.classList.remove('open')">Werkschau</a>
         <a href="#faq" onclick="this.parentElement.classList.remove('open')">FAQ</a>
         <a href="#preis" onclick="this.parentElement.classList.remove('open')">Preis</a>
         <a href="/blog">Blog</a>
@@ -4425,11 +4511,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                 </div>
             </div>
+            <p style="margin: 14px auto 0; max-width: 660px; text-align: center; font-size: 12px; color: #86868b; line-height: 1.5;">DACH-Median: Web&nbsp;Almanac&nbsp;2025. Die WordPress-/Wix-Werte sind typische Richtwerte zur Einordnung — Ihre tatsächliche Ladezeit messen wir live vor dem Launch.</p>
 
             <!-- Trust-Pills + Lighthouse-Pitch -->
             <div class="kr-perf-trust">
                 <div class="kr-perf-pills">
-                    <span class="kr-perf-pill"><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht. Kleinstunternehmen (<10 MA, <2 Mio. € Umsatz) bei reinen Info-Sites ausgenommen, bei Online-Buchung/Shop greift die Pflicht.">BFSG</abbr>-konform inklusive</span>
+                    <span class="kr-perf-pill"><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht. Kleinstunternehmen (<10 MA, <2 Mio. € Umsatz) bei reinen Info-Sites ausgenommen, bei Online-Buchung/Shop greift die Pflicht.">BFSG</abbr>/WCAG gebaut</span>
                     <span class="kr-perf-pill">DSGVO &amp; Hosting in DE/EU</span>
                     <span class="kr-perf-pill">Schema.org pro Branche</span>
                 </div>
@@ -4662,11 +4749,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                 </div>
 
-                <!-- Praxis: KI-Symptom-Checker -->
+                <!-- Praxis: Symptom-Wegweiser -->
                 <div class="kr-tool-panel" data-kr-panel="praxis" role="tabpanel" hidden>
                     <div class="kr-tool-meta">
                         <p class="kr-tool-eyebrow">Live-Werkzeug · Praxis-Demo</p>
-                        <h3 class="kr-tool-title">KI-Symptom-Checker</h3>
+                        <h3 class="kr-tool-title">Symptom-Wegweiser</h3>
                         <p class="kr-tool-desc">Patient klickt 3 Symptome an, das System empfiehlt Behandlungstyp und Termin-Slot. Keine Diagnose (Haftung), aber strukturierte Vorab-Anamnese — spart MFA-Zeit.</p>
                         <p><a href="/portfolio/praxis-weber" class="link-arrow">Volle Praxis-Demo ansehen →</a></p>
                     </div>
@@ -4741,11 +4828,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                 </div>
 
-                <!-- Restaurant: AI-Sommelier -->
+                <!-- Restaurant: Wein-Berater -->
                 <div class="kr-tool-panel" data-kr-panel="restaurant" role="tabpanel" hidden>
                     <div class="kr-tool-meta">
                         <p class="kr-tool-eyebrow">Live-Werkzeug · Restaurant-Demo</p>
-                        <h3 class="kr-tool-title">AI-Sommelier-Chat</h3>
+                        <h3 class="kr-tool-title">Wein-Berater</h3>
                         <p class="kr-tool-desc">Gast wählt das Hauptgericht, der Sommelier empfiehlt drei Weine aus der Karte mit Begründung. Wein-Umsatz im DACH-Schnitt +14 %.</p>
                         <p><a href="/portfolio/restaurant-template" class="link-arrow">Volle Restaurant-Demo ansehen →</a></p>
                     </div>
@@ -5231,7 +5318,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <option value="premium" data-branche="Anwalt">Anwalt / Kanzlei</option>
                     </optgroup>
                     <optgroup label="Premium+ Pilot (3.990 €)">
-                        <option value="premium-plus" data-branche="Anwalt-Pilot">Anwalt mit DSGVO-Compliance-Pflege</option>
+                        <option value="premium-plus" data-branche="Anwalt-Pilot">Anwalt mit Datenschutz-Bedarf</option>
                     </optgroup>
                 </select>
             </div>
@@ -5295,7 +5382,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <p class="kr-tier-price"><span class="kr-tier-price-num">2.990 €</span><span class="kr-tier-price-unit"> einmalig</span></p>
                     <p class="kr-tier-deliver">In ca. 3–4 Wochen online — je nach Umfang &amp; Ihrer Zuarbeit</p>
                     <ul class="kr-tier-list">
-                        <li>Unbegrenzte Unterseiten · maßgeschneidertes Editorial-Layout</li>
+                        <li>Großzügiger Seitenumfang nach Absprache · maßgeschneidertes Editorial-Layout</li>
                         <li>Volles Branchen-Werkzeug-Set (je nach Branche)</li>
                         <li>Founder-Profil &amp; Über-uns inklusive (Profil-Generator)</li>
                         <li>Erweiterte KI-Auffindbarkeit (llms.txt · FAQ-Schema)</li>
@@ -5303,7 +5390,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <div class="kr-tier-wartung">
                         <label>
                             <input type="checkbox" class="kr-wartung-toggle" data-care="199" checked>
-                            <span class="kr-wartung-text"><strong>+ 199 €/Mt Care+</strong> · Care + 1 h Content/Mt + SEO-Report + Reaktionszeit i. d. R. 24 h · <strong>Lighthouse Visitor-Cockpit inkl.</strong></span>
+                            <span class="kr-wartung-text"><strong>+ 199 €/Mt Care+</strong> · Care + bis zu 1 h Content/Mt (nach Verfügbarkeit) + SEO-Report quartalsweise + Reaktionszeit i. d. R. 24 h (werktags) · <strong>Lighthouse Visitor-Cockpit inkl.</strong></span>
                         </label>
                     </div>
                     <div class="kr-tier-cta">
@@ -5315,20 +5402,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <span class="kr-tier-badge kr-tier-badge--pilot">Pilot · Anwalt</span>
                     <header class="kr-tier-head">
                         <p class="kr-tier-eyebrow">Premium+</p>
-                        <p class="kr-tier-target">Anwalt mit DSGVO-Compliance-Pflege</p>
+                        <p class="kr-tier-target">Anwalt mit Datenschutz-Bedarf</p>
                     </header>
                     <p class="kr-tier-price"><span class="kr-tier-price-num">3.990 €</span><span class="kr-tier-price-unit"> einmalig</span></p>
                     <p class="kr-tier-deliver">In ca. 4 Wochen online — je nach Umfang &amp; Ihrer Zuarbeit</p>
                     <ul class="kr-tier-list">
                         <li>Alles aus Premium</li>
-                        <li>Mandantenportal mit verschlüsseltem Upload</li>
-                        <li>Laufende DSGVO-Compliance-Pflege (vierteljährlich)</li>
+                        <li>Mandantenportal · Upload TLS-verschlüsselt, Dateien verschlüsselt gespeichert</li>
+                        <li>Laufende technische Datenschutz-Pflege, vierteljährlich — rechtl. Bewertung durch Ihren Anwalt/DSB</li>
                         <li>Auf Kanzlei-Workflows zugeschnitten</li>
                     </ul>
                     <div class="kr-tier-wartung">
                         <label>
                             <input type="checkbox" class="kr-wartung-toggle" data-care="199" checked>
-                            <span class="kr-wartung-text"><strong>+ 199 €/Mt Care+</strong> · inkl. DSGVO-Compliance-Pflege</span>
+                            <span class="kr-wartung-text"><strong>+ 199 €/Mt Care+</strong> · inkl. technische Datenschutz-Pflege</span>
                         </label>
                     </div>
                     <div class="kr-tier-cta">
@@ -5346,7 +5433,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </style>
             <div class="kr-pricing-baseline" data-kr-reveal>
                 <p class="kr-pricing-baseline-label">In jedem Paket enthalten</p>
-                <p class="kr-pricing-baseline-text">Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform · gesicherte Header &amp; TLS · Schema.org &amp; semantisches HTML · mobil &amp; auf schnelle Ladezeit optimiert · kein Vendor-Lock-in.</p>
+                <p class="kr-pricing-baseline-text">Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform gebaut · gesicherte Header &amp; TLS · Schema.org &amp; semantisches HTML · mobil &amp; auf schnelle Ladezeit optimiert · kein Vendor-Lock-in.</p>
             </div>
 
             <!-- Cross-Sell Profil-Generator + Empfehlungs-Hinweis -->
@@ -5396,7 +5483,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         Was kostet eine Website bei Karriaro?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Vier Tiers, branchen-getrennt zugeschnitten: <strong>Essential 1.290 €</strong> (Handwerk · Beauty · Café · Florist · Gym), <strong>Professional 1.990 €</strong> (Dachdecker · Spedition · Physio · Hotel · Autohaus), <strong>Premium 2.990 €</strong> (Zahnarzt · Arzt · Immobilien · Anwalt), <strong>Premium+ 3.990 €</strong> (Anwalt mit DSGVO-Compliance-Pflege, Pilot). Wartung inklusive ab 99 €/Mt (Care) bzw. 199 €/Mt (Care+). Kein Abo-Zwang, kein Vendor-Lock-in.</p>
+                    <p>Vier Tiers, branchen-getrennt zugeschnitten: <strong>Essential 1.290 €</strong> (Handwerk · Beauty · Café · Florist · Gym), <strong>Professional 1.990 €</strong> (Dachdecker · Spedition · Physio · Hotel · Autohaus), <strong>Premium 2.990 €</strong> (Zahnarzt · Arzt · Immobilien · Anwalt), <strong>Premium+ 3.990 €</strong> (Anwalt mit Datenschutz-Bedarf, Pilot). Wartung inklusive ab 99 €/Mt (Care) bzw. 199 €/Mt (Care+). Kein Abo-Zwang, kein Vendor-Lock-in.</p>
                 </details>
 
                 <details class="kr-faq-item" data-track-event="FAQ_EXPAND" data-track-question-id="zahlung">
@@ -5420,7 +5507,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         Bekomme ich branchenspezifische Werkzeuge auf meiner Website?
                         <span class="kr-faq-icon" aria-hidden="true"></span>
                     </summary>
-                    <p>Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, KI-Symptom-Checker (Vor-Anamnese, keine Diagnose) für Praxen, AI-Sommelier für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage.</p>
+                    <p>Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner). Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, Symptom-Wegweiser (Vor-Anamnese, keine Diagnose) für Praxen, Wein-Berater für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage.</p>
                 </details>
 
                 <details class="kr-faq-item" data-track-event="FAQ_EXPAND" data-track-question-id="handcodiert">
@@ -6044,7 +6131,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     url: 'goldener-hirsch.de',
                     label: 'Goldener Hirsch · Gastro-Werkzeuge',
                     story: 'Reservierung und Speisekarte auf einem Bildschirm.',
-                    features: ['Tisch-Reservierung online', 'Speisekarte mit Filter', 'AI-Sommelier', 'Google-Bewertungen live', 'Saisonkarte', 'Veranstaltungs-Anfragen'],
+                    features: ['Tisch-Reservierung online', 'Speisekarte mit Filter', 'Wein-Berater', 'Google-Bewertungen live', 'Saisonkarte', 'Veranstaltungs-Anfragen'],
                     meta: 'Professional · ca. 2–3 Wochen',
                     href: '/portfolio/restaurant-template.html'
                 },

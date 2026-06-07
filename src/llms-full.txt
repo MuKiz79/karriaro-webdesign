@@ -45,7 +45,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 
 **Inhalt:**
 - Eine Seite, 4-6 Sektionen
-- BFSG-konform (Barrierefreiheit, EU-Norm 2025)
+- barrierefrei nach BFSG/WCAG gebaut (EU-Norm 2025)
 - SEO-Foundation (semantisches HTML, Schema.org, sitemap.xml, robots.txt)
 - Mobile-optimiert (Apple-PWA-Standard)
 - Kontaktformular mit DSGVO-Hinweis
@@ -71,7 +71,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 **Für:** Zahnarzt, Arzt, Immobilien, Anwalt, Coaching, Restaurant
 
 **Inhalt:**
-- Unbegrenzte Unterseiten
+- Großzügiger Seitenumfang nach Absprache
 - Volle Branchen-Werkzeuge (je nach Branche)
 - Editorial-Layout (Magazine-Style, Fraunces + Inter Typografie)
 - Service-spezifische Schema.org-Strukturen
@@ -86,7 +86,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 **Inhalt:**
 - Premium-Paket plus:
 - Mandantenportal (Login, Dokumente, Beratungsanfragen)
-- Erweiterte DSGVO-Compliance-Pflege (Auftragsverarbeitung, TOMs)
+- Technische Datenschutz-Umsetzung (Verschlüsselung, AVV-Vorlage, TOMs einrichten) — rechtliche Bewertung durch Ihren Anwalt/DSB
 - Quartalsweise Schema-Updates
 
 **Zeit bis Live:** ca. 4 Wochen — je nach Umfang und Ihrer Zuarbeit
@@ -104,7 +104,7 @@ Karriaro arbeitet mit **vier Festpreis-Paketen**, einmalig zahlbar
 
 - **50 % nach Entwurf-Freigabe** (Erstentwurf innerhalb weniger Tage nach Briefing)
 - **50 % bei Fertigstellung**
-- Sie zahlen erst, wenn Sie mit dem Entwurf zufrieden sind
+- Sie zahlen erst nach Ihrer Entwurfs-Freigabe
 - Kein Risiko vorab — keine Kreditkarte, kein Auftragsformular
 - Storno-Möglichkeit bis Entwurfs-Abnahme kostenfrei
 
@@ -139,7 +139,7 @@ URL: https://karriaro-webdesign.de/portfolio/immobilien-makler
 URL: https://karriaro-webdesign.de/portfolio/praxis-weber
 
 **Branchen-Werkzeuge:**
-- **KI-Symptom-Checker**: Vor-Anamnese durch Patient, KI-gestützte Triage.
+- **Symptom-Wegweiser**: Vor-Anamnese durch Patient, strukturierte Vorab-Anamnese (keine Diagnose).
   **Keine Diagnose** — nur Slot-Vorschlag und Dringlichkeit.
 - **Online-Slot-Buchung**: Live-Kalender, Sprechstunden-Filter.
 - **Rezept-Bestellung**: Patient bestellt Folgerezept, Praxis bestätigt.
@@ -151,7 +151,7 @@ URL: https://karriaro-webdesign.de/portfolio/praxis-weber
 URL: https://karriaro-webdesign.de/portfolio/restaurant-template
 
 **Branchen-Werkzeuge:**
-- **AI-Sommelier**: Wein-Empfehlung pro Gang oder Vorliebe (KI-basiert).
+- **Wein-Berater**: Wein-Empfehlung pro Gang oder Vorliebe (regelbasiert).
 - **Saisonkarte mit Auto-Update**: Saison-Filter, automatische Verfügbarkeit.
 - **Online-Tisch-Reservierung**: Live-Verfügbarkeit, Bestätigung per Mail.
 - **Allergene-Hinweise**: BFSG-konforme Auszeichnung.
@@ -161,7 +161,7 @@ URL: https://karriaro-webdesign.de/portfolio/restaurant-template
 URL: https://karriaro-webdesign.de/portfolio/friseur-salon
 
 **Branchen-Werkzeuge:**
-- **Style-Empfehlung**: Gesichtsform + Anlass → KI-Stilvorschlag.
+- **Style-Empfehlung**: Gesichtsform + Anlass → Stilvorschlag.
 - **Wunsch-Stylist-Direkt-Buchung**: Stylist-Profil + Verfügbarkeit.
 - **Foto-Galerie**: Vorher/Nachher-Bilder pro Stylist.
 - **Foto-Anfrage-Tool**: Kunde lädt Foto hoch, Stylist kommentiert.
@@ -268,8 +268,8 @@ enthält das volle Set:
 - **Dachdecker**: BAFA + KfW-Rechner
 - **Immobilien**: Wertermittlung + Hypothekenrechner
 - **Friseur**: Style-Galerie mit Foto-Vorschau
-- **Praxis**: KI-Symptom-Checker (Vor-Anamnese, keine Diagnose)
-- **Restaurant**: AI-Sommelier + Allergene-Hinweise
+- **Praxis**: Symptom-Wegweiser (Vor-Anamnese, keine Diagnose)
+- **Restaurant**: Wein-Berater + Allergene-Hinweise
 - **Spedition**: Frachtquote-Rechner + Track & Trace
 
 ### Wie sind die Zahlungsbedingungen?
