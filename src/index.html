@@ -27,7 +27,7 @@
     <!-- Performance — LCP-Preloads: Hero-Bild (AVIF) + H1-Display-Schrift, so früh wie möglich,
          damit sie nicht erst bei Render-Discovery / hinter render-blockierendem CSS starten. -->
     <link rel="preconnect" href="https://lighthouse.karriaro.de" crossorigin>
-    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.avif?v=410" type="image/avif" fetchpriority="high">
+    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.avif?v=411" type="image/avif" fetchpriority="high">
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-latin.woff2" crossorigin>
 
     <script type="application/ld+json">
@@ -3875,7 +3875,7 @@
                             <span class="browser-url" id="hero-mockup-url">stadtmakler-stuttgart.de</span>
                         </div>
                         <picture>
-                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=410">
+                            <source id="hero-mockup-source-avif" type="image/avif" srcset="/images/immobilien-stadtmakler-mockup-fold.avif?v=411">
                             <img class="browser-screen-large" id="hero-mockup-img" src="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" alt="Vorschau-Bild für Stadtmakler Stuttgart — Immobilien" loading="eager" width="1440" height="900" fetchpriority="high">
                         </picture>
                     </div>
@@ -5677,7 +5677,7 @@
                     href: '/portfolio/praxis-weber.html'
                 },
                 handwerk: {
-                    src: '/images/handwerk-mueller-mockup-fold.jpg?v=139',
+                    src: '/images/handwerk-mueller-mockup-fold.jpg?v=140',
                     alt: 'Vorschau-Bild für Meisterbetrieb Müller — Sanitär & Heizung',
                     url: 'meisterbetrieb-mueller.de',
                     label: 'Meisterbetrieb Müller · Handwerker-Werkzeuge',
@@ -5717,7 +5717,7 @@
                     href: '/portfolio/friseur-salon.html'
                 },
                 dachdecker: {
-                    src: '/images/dachdecker-meister-mockup-fold.jpg?v=139',
+                    src: '/images/dachdecker-meister-mockup-fold.jpg?v=140',
                     alt: 'Vorschau-Bild für Dachdecker-Meister Berger',
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Dachdecker-Werkzeuge',
@@ -5837,7 +5837,7 @@
 
             // Sprint 158 — AVIF-Pendant via Replace, kein separates data[k].avif nötig
             function getAvifSrc(jpgSrc) {
-                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=410');
+                return jpgSrc.replace(/-fold\.jpg(\?[^"]*)?$/, '-fold.avif?v=411');
             }
             var avifSourceEl = document.getElementById('hero-mockup-source-avif');
 
