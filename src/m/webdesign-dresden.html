@@ -141,31 +141,35 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <!-- Kanonische Organization-Entität (site-weit; GEO: Entitäts-Klarheit). Marker: #organization -->
+    <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://karriaro-webdesign.de/#organization",
-      "name": "Karriaro Webdesign",
-      "url": "https://karriaro-webdesign.de",
-      "logo": "https://karriaro-webdesign.de/images/favicon.svg",
-      "email": "kontakt@karriaro.de",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Spitalstr. 7",
-        "addressLocality": "Schiltach",
-        "postalCode": "77761",
-        "addressCountry": "DE"
-      },
-      "founder": {
-        "@type": "Person",
-        "name": "Muammer Kızılaslan",
-        "url": "https://karriaro-webdesign.de/gruender",
-        "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
-      },
-      "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://karriaro-webdesign.de/#organization",
+          "name": "Karriaro Webdesign",
+          "url": "https://karriaro-webdesign.de",
+          "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+          "email": "kontakt@karriaro.de",
+          "address": { "@type": "PostalAddress", "streetAddress": "Spitalstr. 7", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
+          "founder": { "@type": "Person", "name": "Muammer Kızılaslan", "url": "https://karriaro-webdesign.de/gruender", "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"] },
+          "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://karriaro-webdesign.de/webdesign-dresden#webpage",
+          "url": "https://karriaro-webdesign.de/webdesign-dresden",
+          "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "dateModified": "2026-06-08"
+        }
+      ]
     }
+    </script>
+    <script type="application/ld+json" data-city-faq>
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Was kostet eine Website für ein Unternehmen in Dresden?","acceptedAnswer":{"@type":"Answer","text":"Karriaro arbeitet mit festen Paketen von 1.290 € (Essential) bis 3.990 € (Premium+) — einmalig, ohne Abo. Der Preis richtet sich nach Umfang und Ihrer Zuarbeit, nicht nach Ihrem Standort."}},{"@type":"Question","name":"Wie lange dauert ein Webdesign-Projekt für einen Betrieb aus Dresden?","acceptedAnswer":{"@type":"Answer","text":"Je nach Umfang wenige Tage bis einige Wochen. Sie sehen früh einen Entwurf und können jederzeit abbrechen, bevor eine Zahlung fällig wird."}},{"@type":"Question","name":"Arbeiten Sie auch remote mit Kunden aus Dresden?","acceptedAnswer":{"@type":"Answer","text":"Ja. Karriaro betreut Betriebe in ganz DACH remote — persönlich begleitet, mit klaren Reaktionszeiten. Ein Vor-Ort-Termin in Dresden ist nicht nötig."}}]}
     </script>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=428">
     <link rel="stylesheet" href="/css/mobile-overrides.css?v=428" media="print" onload="this.media='all'">
@@ -273,7 +277,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
-    </main>
+        <section class="fade-in" data-city-faq aria-labelledby="city-faq-h" style="padding:64px 24px;">
+      <div style="max-width:760px;margin:0 auto;">
+        <h2 id="city-faq-h" style="font-size:26px;font-weight:600;margin-bottom:8px;">Häufige Fragen aus Dresden</h2>
+        <h3 style="font-size:18px;font-weight:600;margin:24px 0 6px;">Was kostet eine Website für ein Unternehmen in Dresden?</h3>
+        <p style="color:#424245;margin:0;">Karriaro arbeitet mit festen Paketen von 1.290 € (Essential) bis 3.990 € (Premium+) — einmalig, ohne Abo. Der Preis richtet sich nach Umfang und Ihrer Zuarbeit, nicht nach Ihrem Standort.</p>
+        <h3 style="font-size:18px;font-weight:600;margin:24px 0 6px;">Wie lange dauert ein Webdesign-Projekt für einen Betrieb aus Dresden?</h3>
+        <p style="color:#424245;margin:0;">Je nach Umfang wenige Tage bis einige Wochen. Sie sehen früh einen Entwurf und können jederzeit abbrechen, bevor eine Zahlung fällig wird.</p>
+        <h3 style="font-size:18px;font-weight:600;margin:24px 0 6px;">Arbeiten Sie auch remote mit Kunden aus Dresden?</h3>
+        <p style="color:#424245;margin:0;">Ja. Karriaro betreut Betriebe in ganz DACH remote — persönlich begleitet, mit klaren Reaktionszeiten. Ein Vor-Ort-Termin in Dresden ist nicht nötig.</p>
+      </div>
+    </section>
+</main>
 
     <footer>
         <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">

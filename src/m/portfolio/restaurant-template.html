@@ -526,6 +526,33 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
     }
     </style>
+    <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://karriaro-webdesign.de/#organization",
+          "name": "Karriaro Webdesign",
+          "url": "https://karriaro-webdesign.de",
+          "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+          "email": "kontakt@karriaro.de",
+          "address": { "@type": "PostalAddress", "streetAddress": "Spitalstr. 7", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
+          "founder": { "@type": "Person", "name": "Muammer Kızılaslan", "url": "https://karriaro-webdesign.de/gruender", "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"] },
+          "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://karriaro-webdesign.de/portfolio/restaurant-template#webpage",
+          "url": "https://karriaro-webdesign.de/portfolio/restaurant-template",
+          "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "dateModified": "2026-06-08"
+        }
+      ]
+    }
+    </script>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=428">
     <link rel="stylesheet" href="/css/mobile-overrides.css?v=428" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=428"></noscript>
