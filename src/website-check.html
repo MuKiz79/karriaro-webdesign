@@ -2744,25 +2744,25 @@ App.sequence = {
         return [
             {
                 day: 1, subject: `${name} — Ihre Website kostet Sie Kunden`,
-                body: `Guten Tag,\n\nich habe ${domain} auf Google getestet. Die Ergebnisse:\n\n- Performance: ${ws.perf}/100 (Mobile)\n- ${!ws.isHttps ? 'Kein SSL-Zertifikat — Browser zeigen "Nicht sicher"\n- ' : ''}SEO: ${ws.seo}/100\n- Geschaetzter Umsatzverlust: ~${revStr} Euro/Jahr\n\n${tech.isBaukasten ? `Ihre Seite laeuft auf ${tech.cms}. Das limitiert Design, Geschwindigkeit und SEO strukturell.` : ''}\n\nIch baue moderne Websites fuer Unternehmen wie Ihres — handcodiert, ab 990 Euro einmalig. Kein Abo.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nMuammer Kizilaslan\nkarriaro-webdesign.de`
+                body: `Guten Tag,\n\nich habe ${domain} auf Google getestet. Die Ergebnisse:\n\n- Performance: ${ws.perf}/100 (Mobile)\n- ${!ws.isHttps ? 'Kein SSL-Zertifikat — Browser zeigen "Nicht sicher"\n- ' : ''}SEO: ${ws.seo}/100\n- Geschaetzter Umsatzverlust: ~${revStr} Euro/Jahr\n\n${tech.isBaukasten ? `Ihre Seite laeuft auf ${tech.cms}. Das limitiert Design, Geschwindigkeit und SEO strukturell.` : ''}\n\nIch baue moderne Websites fuer Unternehmen wie Ihres — handcodiert, ab 1.290 Euro einmalig. Kein Abo.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nIhr Karriaro-Team\nkarriaro-webdesign.de`
             },
             {
                 day: 4, subject: `Vorher/Nachher — so sah Spedition Kolbe aus`,
-                body: `Guten Tag,\n\nich hatte Ihnen vor ein paar Tagen geschrieben. Hier ein konkretes Beispiel:\n\nSpedition Kolbe — vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt der Vertrauen schafft. Ergebnis: deutlich mehr Anfragen ueber die Website.\n\nFuer ${name} sehe ich aehnliches Potenzial.\n\nSchauen Sie sich das Ergebnis an: karriaro-webdesign.de\n\nBeste Gruesse\nMuammer Kizilaslan`
+                body: `Guten Tag,\n\nich hatte Ihnen vor ein paar Tagen geschrieben. Hier ein konkretes Beispiel:\n\nSpedition Kolbe — vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt der Vertrauen schafft. Ergebnis: deutlich mehr Anfragen ueber die Website.\n\nFuer ${name} sehe ich aehnliches Potenzial.\n\nSchauen Sie sich das Ergebnis an: karriaro-webdesign.de\n\nBeste Gruesse\nIhr Karriaro-Team`
             },
             {
                 day: 8, subject: `${ws.a11y < 70 ? 'BFSG-Frist: Barrierefreiheit seit Juni 2025 Pflicht' : 'Google bevorzugt schnelle Websites — Ihre ist es nicht'}`,
                 body: ws.a11y < 70
-                    ? `Guten Tag,\n\nseit Juni 2025 gilt das Barrierefreiheitsstaerkungsgesetz (BFSG). Ihre Website erreicht ${ws.a11y}/100 im Barrierefreiheits-Test.\n\nDas ist nicht nur ein Ranking-Nachteil — es kann rechtliche Konsequenzen haben.\n\nEine neue Karriaro-Website ist von Anfang an BFSG- und DSGVO-konform.\n\nSoll ich Ihnen ein unverbindliches Angebot machen?\n\nViele Gruesse\nMuammer Kizilaslan`
-                    : `Guten Tag,\n\nGoogle hat bestaetigt: Websites die alle Core Web Vitals bestehen, erhalten bis zu 24% mehr organischen Traffic.\n\nIhre Website besteht ${prob.dimensions?.d1 ? Math.round((1 - prob.dimensions.d1.score) * 6) : '?'} von 6 Pruefungen.\n\nMit einer neuen Website von Karriaro bestehen Sie alle — garantiert.\n\nViele Gruesse\nMuammer Kizilaslan`
+                    ? `Guten Tag,\n\nseit Juni 2025 gilt das Barrierefreiheitsstaerkungsgesetz (BFSG). Ihre Website erreicht ${ws.a11y}/100 im Barrierefreiheits-Test.\n\nDas ist nicht nur ein Ranking-Nachteil — es kann rechtliche Konsequenzen haben.\n\nEine neue Karriaro-Website ist von Anfang an BFSG- und DSGVO-konform.\n\nSoll ich Ihnen ein unverbindliches Angebot machen?\n\nViele Gruesse\nIhr Karriaro-Team`
+                    : `Guten Tag,\n\nGoogle hat bestaetigt: Websites die alle Core Web Vitals bestehen, erhalten bis zu 24% mehr organischen Traffic.\n\nIhre Website besteht ${prob.dimensions?.d1 ? Math.round((1 - prob.dimensions.d1.score) * 6) : '?'} von 6 Pruefungen.\n\nMit einer neuen Website von Karriaro bestehen Sie alle.\n\nViele Gruesse\nIhr Karriaro-Team`
             },
             {
                 day: 12, subject: `Kostenloser Entwurf fuer ${name}`,
-                body: `Guten Tag,\n\nich habe mir die Freiheit genommen, einen groben Entwurf fuer ${domain} zu erstellen. Keine Verpflichtung — ich moechte Ihnen einfach zeigen, was moeglich ist.\n\nDarf ich Ihnen den Entwurf per E-Mail oder in einem kurzen 15-Minuten-Call zeigen?\n\nAntworten Sie einfach auf diese Mail oder buchen Sie direkt: karriaro-webdesign.de\n\nViele Gruesse\nMuammer Kizilaslan`
+                body: `Guten Tag,\n\nich habe mir die Freiheit genommen, einen groben Entwurf fuer ${domain} zu erstellen. Keine Verpflichtung — ich moechte Ihnen einfach zeigen, was moeglich ist.\n\nDarf ich Ihnen den Entwurf per E-Mail oder in einem kurzen 15-Minuten-Call zeigen?\n\nAntworten Sie einfach auf diese Mail oder buchen Sie direkt: karriaro-webdesign.de\n\nViele Gruesse\nIhr Karriaro-Team`
             },
             {
                 day: 18, subject: `Letzte Nachricht — Angebot fuer ${name}`,
-                body: `Guten Tag,\n\ndies ist meine letzte Nachricht. Ich moechte nicht aufdringlich sein.\n\nFalls Sie irgendwann ueber eine neue Website nachdenken: karriaro-webdesign.de — ab 990 Euro, fertig in 1-2 Wochen, komplett handcodiert.\n\n${rev > 1990 ? `Bei einem geschaetzten Umsatzverlust von ${revStr} Euro/Jahr amortisiert sich das in ${Math.ceil(1990 / (rev / 12))} Monaten.` : ''}\n\nIch wuensche Ihnen weiterhin viel Erfolg.\n\nViele Gruesse\nMuammer Kizilaslan\nKarriaro Webdesign`
+                body: `Guten Tag,\n\ndies ist meine letzte Nachricht. Ich moechte nicht aufdringlich sein.\n\nFalls Sie irgendwann ueber eine neue Website nachdenken: karriaro-webdesign.de — ab 1.290 Euro, fertig in 1-2 Wochen, komplett handcodiert.\n\n${rev > 1990 ? `Bei einem geschaetzten Umsatzverlust von ${revStr} Euro/Jahr amortisiert sich das in ${Math.ceil(1990 / (rev / 12))} Monaten.` : ''}\n\nIch wuensche Ihnen weiterhin viel Erfolg.\n\nViele Gruesse\nIhr Karriaro-Team\nKarriaro Webdesign`
             }
         ];
     }
@@ -3672,7 +3672,7 @@ App.ui = {
 
         let text;
         if (lines.length > 0) {
-            text = `Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${lines.join(', ')}.${bizLine}${compLine}\n\nDas sind Punkte, die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne, schnelle Websites — handcodiert, keine Templates, ab 990 Euro.\n\nSchauen Sie sich karriaro-webdesign.de an. Darf ich Ihnen kostenlos zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nMuammer Kizilaslan\nKarriaro Webdesign`;
+            text = `Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${lines.join(', ')}.${bizLine}${compLine}\n\nDas sind Punkte, die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne, schnelle Websites — handcodiert, keine Templates, ab 1.290 Euro.\n\nSchauen Sie sich karriaro-webdesign.de an. Darf ich Ihnen kostenlos zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nIhr Karriaro-Team\nKarriaro Webdesign`;
         } else {
             text = 'Die Website ist technisch in gutem Zustand. Redesign waere Optimierung, kein Notfall.';
         }
