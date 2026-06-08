@@ -21,6 +21,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(255,255,255,0
 .hero-folio-eyebrow{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:#6E6E73;margin:0 18px 20px;font-weight:600;line-height:1.2}
 .hero-headline{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif;font-size:56px;font-weight:700;line-height:1.07;letter-spacing:-0.025em;margin:0 18px 24px;color:#000000}
 .hero-headline .hero-h1-line{display:block;color:#000000}
+.hero-headline--seal{padding-top:26px}
 section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',sans-serif;font-size:32px;font-weight:700;line-height:1.12;letter-spacing:-0.02em;color:#000000}
 /* Desktop-only Hero-Elemente sofort verstecken (vor mobile-overrides.css-Load) */
 .hero-with-photo .hero-mockup-block,.hero-with-photo .mockup-features,.hero-with-photo .mockup-features-list,.hero-with-photo .marginalia,.hero-with-photo .hero-marginalia,.hero-with-photo .hero-portrait,.hero-with-photo picture{display:none!important}
@@ -214,9 +215,35 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=421">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=421" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=421"></noscript>
+    <!-- Kanonische Organization-Entität (site-weit; GEO: Entitäts-Klarheit). Marker: #organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://karriaro-webdesign.de/#organization",
+      "name": "Karriaro Webdesign",
+      "url": "https://karriaro-webdesign.de",
+      "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+      "email": "kontakt@karriaro.de",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Spitalstr. 7",
+        "addressLocality": "Schiltach",
+        "postalCode": "77761",
+        "addressCountry": "DE"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Muammer Kızılaslan",
+        "url": "https://karriaro-webdesign.de/gruender",
+        "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+      },
+      "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+    }
+    </script>
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=428">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=428" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=428"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>
     <link rel="manifest" href="/manifest.json">
@@ -411,6 +438,19 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         const safeReportSlug = reportSlugParam && REPORT_SLUG_RE.test(reportSlugParam) ? reportSlugParam : null;
         const safeRefHash = refHashParam && REF_HASH_RE.test(refHashParam) ? refHashParam : null;
 
+        // Attribution (gclid + UTM) aus URL — für Google-Ads-Conversion-Messung.
+        // Wird an requestAudit übergeben und serverseitig in auditRequests.attribution
+        // gespeichert. Bewusst KEIN Google-Tag/GA auf der Seite (Kodex): die Conversion
+        // ist allein über die gclid im Firestore-Doc messbar.
+        const attributionFromUrl = {};
+        [['gclid', 200], ['utm_source', 120], ['utm_medium', 120], ['utm_campaign', 150], ['utm_term', 150], ['utm_content', 150]]
+            .forEach(function (pair) {
+                const raw = params.get(pair[0]);
+                if (!raw) return;
+                const cleaned = String(raw).trim().slice(0, pair[1]);
+                if (cleaned) attributionFromUrl[pair[0]] = cleaned;
+            });
+
         // Sprint 162 — Sofort-Mini-Score via quickAudit.
         // Triggert sobald URL valide ist (blur + 600ms-debounced input).
         // Pro Session max 1 Call pro URL (Cache im Speicher).
@@ -448,6 +488,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             }
             if (bfsg != null) {
                 chips.push('<span class="quick-score-chip">BFSG <strong>' + bfsg + '</strong>/100</span>');
+            }
+            // Sprint 230 — KI-Auffindbarkeit (evidenzbasierter GEO-Score).
+            const geo = data && data.geoScore && data.geoScore.score;
+            if (geo != null) {
+                chips.push('<span class="quick-score-chip">KI-Auffindbarkeit <strong>' + geo + '</strong>/100</span>');
             }
             const branche = data && data.branch && data.branch.name;
             if (branche) {
@@ -520,6 +565,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             };
             if (safeReportSlug) data.reportSlug = safeReportSlug;
             if (safeRefHash) data.refHash = safeRefHash;
+            Object.assign(data, attributionFromUrl);  // gclid + UTM → Conversion-Messung
 
             if (!data.consent) {
                 showAlert('error', 'Bitte stimmen Sie der Verarbeitung Ihrer Daten zu.');
@@ -699,6 +745,6 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </script>
 
 
-<script src="/js/m-interactions.js?v=421" defer></script>
+<script src="/js/m-interactions.js?v=425" defer></script>
 </body>
 </html>
