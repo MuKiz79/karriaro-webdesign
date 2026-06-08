@@ -14,31 +14,51 @@
 const { checkFreshness, analyzeTechAge } = require('./audit-pipeline.js');
 const { extractSubPages, htmlToText } = require('./deep-research.js');
 const { checkBranchStandards, BRANCH_STANDARDS } = require('./branch-standards.js');
-const { safeFetch, resolvePublicAddress } = require('./safe-fetch.js');
+const { resolvePublicAddress } = require('./safe-fetch.js');  // Sprint 240 — safeFetch entfernt (undici-Agent-Teardown-500); alle Fetches via globales fetch + resolvePublicAddress-Guard
 const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
 
 async function fetchHtml(url, timeoutMs = 8000) {
-    // Sprint 82 — safeFetch validiert Protokoll + DNS-resolved IP (SSRF-Guard).
-    const res = await safeFetch(url, {
-        method: 'GET',
-        timeoutMs,
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; KarriaroAudit/1.0; +https://karriaro-webdesign.de/audit)',
-            'Accept': 'text/html,application/xhtml+xml',
-            'Accept-Language': 'de-DE,de;q=0.9'
+    // Sprint 240 — globales fetch + per-Hop resolvePublicAddress statt safeFetchs custom-undici-
+    // Agent. Dessen Socket-Teardown NACH dem Body-Read wirft im Cloud-Env intermittent eine
+    // uncatchable AssertionError (assert(!this.paused), undici client-h1.js Parser.finish) → die
+    // dem try/catch entkommt → quickAudit-500 + ERR_HTTP_HEADERS_SENT. Manueller Redirect-Follow
+    // (redirect:'manual', Node-undici liefert die 3xx-Response mit Location lesbar) + SSRF-Guard
+    // pro Hop. Kein IP-Pinning → DNS-Rebinding-TOCTOU akzeptiert (wie fetchRobotsTxt/kiVisibility).
+    let current = url, finalUrl = url;
+    for (let hop = 0; hop <= 3; hop++) {
+        const u = new URL(current);
+        if (!['http:', 'https:'].includes(u.protocol)) throw new Error(`SSRF blocked: protocol ${u.protocol}`);
+        await resolvePublicAddress(u.hostname);
+        const res = await fetch(current, {
+            method: 'GET',
+            redirect: 'manual',
+            signal: AbortSignal.timeout(timeoutMs),
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (compatible; KarriaroAudit/1.0; +https://karriaro-webdesign.de/audit)',
+                'Accept': 'text/html,application/xhtml+xml',
+                'Accept-Language': 'de-DE,de;q=0.9'
+            }
+        });
+        if (res.status >= 300 && res.status < 400) {
+            const loc = res.headers.get('location');
+            if (!loc) throw new Error(`HTTP ${res.status}`);
+            current = new URL(loc, current).toString();
+            finalUrl = current;
+            continue;
         }
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const finalUrl = res.url || url;
-    const html = await res.text();
-    const headers = {};
-    try {
-        res.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
-    } catch (_) { /* headers iteration kann fehlschlagen je nach runtime */ }
-    return { html, finalUrl, headers };
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        finalUrl = current;
+        const html = await res.text();
+        const headers = {};
+        try {
+            res.headers.forEach((v, k) => { headers[k.toLowerCase()] = v; });
+        } catch (_) { /* headers iteration kann fehlschlagen je nach runtime */ }
+        return { html, finalUrl, headers };
+    }
+    throw new Error('SSRF blocked: too many redirects');
 }
 
 function detectTechFromHtml(html, finalUrl) {
