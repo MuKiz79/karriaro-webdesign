@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <script>(function(){var h=location.hostname;if(h!=="karriaro-webdesign.de"&&h!=="www.karriaro-webdesign.de")return;if(sessionStorage.getItem("kr-keep-desktop")==="1")return;var ua=navigator.userAgent||"";if(/bot|crawl|spider|slurp|mediapartners|googlebot|google-extended|bingpreview|gptbot|oai-searchbot|chatgpt|claudebot|claude-web|anthropic|perplexity|applebot|ccbot|facebookbot|facebookexternalhit|meta-external|bytespider|amazonbot|duckduckbot|yandex|baidu|lighthouse|pagespeed|headless|prerender/i.test(ua))return;var isMobileUA=/iPhone|iPod|Android|Mobile|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);var isNarrow=(window.innerWidth||document.documentElement.clientWidth||0)<=900;if(!isMobileUA&&!isNarrow)return;location.replace("https://m.karriaro-webdesign.de"+location.pathname+location.search);})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Werkschau · Handcodiert, live bewiesen · Karriaro Webdesign</title>
+    <meta name="description" content="Die Werkschau von Karriaro: ein interaktiver 3D-Drohnenschwarm in WebGL — GPU-gerendert, in Code geformt. Bewegen Sie die Maus, wechseln Sie die Form. Dieselbe Sorgfalt steckt in jeder Website, die wir bauen.">
+    <meta name="keywords" content="Webdesign Werkschau, handcodiert, Canvas Animation, WebGL Köln, interaktive Website, Partikelschwarm">
+    <meta name="author" content="Karriaro Webdesign">
+    <link rel="canonical" href="https://karriaro-webdesign.de/werkschau">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://karriaro-webdesign.de/werkschau">
+    <meta property="og:title" content="Werkschau · Handcodiert, live bewiesen · Karriaro Webdesign">
+    <meta property="og:description" content="Ein interaktiver 3D-Drohnenschwarm in WebGL — GPU-gerendert. Können, das man anfassen kann.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:locale" content="de_DE">
+
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=8">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Karriaro Webdesign", "item": "https://karriaro-webdesign.de/" },
+            { "@type": "ListItem", "position": 2, "name": "Werkschau", "item": "https://karriaro-webdesign.de/werkschau" }
+        ]
+    }
+    </script>
+
+    <link rel="stylesheet" href="/css/tokens.css">
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: var(--kr-bg, #FBFAF7); color: var(--kr-ink, #14202B);
+            -webkit-font-smoothing: antialiased; line-height: 1.5;
+        }
+        a { color: inherit; text-decoration: none; }
+        .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+        .display { font-family: 'Fraunces', 'Cormorant Garamond', Georgia, serif; }
+        .mono { font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace; }
+
+        nav { padding: 18px 0; border-bottom: 1px solid rgba(20,32,43,0.06); }
+        nav .inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+        nav a.brand { font-family: 'Fraunces','Cormorant Garamond',Georgia,serif; font-size: 18px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+        nav a.brand span { color: var(--kr-grey, #525E6B); font-weight: 400; }
+        nav .back { color: var(--kr-blue, #1A2E40); font-size: 14px; }
+
+        /* ── Hero ── */
+        .hero { padding: 92px 0 36px; text-align: center; }
+        .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.20em; text-transform: uppercase; color: var(--color-gold-text, #6E5F3F); margin-bottom: 22px; }
+        .eyebrow .num { color: var(--kr-grey, #525E6B); }
+        .hero h1 { font-size: clamp(34px, 5.4vw, 58px); letter-spacing: -0.02em; line-height: 1.08; margin-bottom: 20px; }
+        .hero .lead { font-size: clamp(17px, 2vw, 20px); line-height: 1.6; color: var(--kr-grey, #525E6B); max-width: 600px; margin: 0 auto; }
+
+        /* ── Bühne (Deep-Moment, Navy) ── */
+        .stage { background: #0E141B; margin: 44px 0 0; padding: 18px 0 26px; position: relative; }
+        @media (prefers-color-scheme: dark) { .stage { background: #090C11; } }
+        .stage-inner { max-width: 1180px; margin: 0 auto; padding: 0 18px; }
+        .canvas-box { position: relative; height: min(62vh, 560px); min-height: 360px; width: 100%; overflow: hidden; border-radius: 14px; background: radial-gradient(120% 120% at 50% 45%, rgba(40,52,68,0.45) 0%, rgba(14,20,27,0) 62%); }
+        #kr-swarm { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .8s ease; cursor: crosshair; display: block; }
+        .canvas-box.is-live #kr-swarm { opacity: 1; }
+        .canvas-box.is-live .poster { opacity: 0; visibility: hidden; transition: opacity .6s ease; }
+        .poster { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }
+        .poster .cap { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(236,230,216,0.55); }
+
+        .controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; }
+        .controls button {
+            font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.06em;
+            color: #ECE6D8; background: transparent; border: 1px solid rgba(236,230,216,0.28);
+            padding: 9px 18px; border-radius: 999px; cursor: pointer; transition: all .25s var(--ease-standard, ease);
+        }
+        .controls button:hover { border-color: #C9A24B; color: #fff; }
+        .controls button.is-active { background: #C9A24B; border-color: #C9A24B; color: #0E141B; font-weight: 600; }
+
+        .stage-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: center; justify-content: center; margin-top: 18px; }
+        .stage-meta .hint { font-size: 12.5px; color: rgba(236,230,216,0.62); }
+        .stage-meta .tech { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; color: rgba(201,162,75,0.85); }
+
+        /* ── Prinzipien ── */
+        section.intro { padding: 64px 0 8px; }
+        section.intro h2 { font-size: clamp(24px, 3vw, 32px); letter-spacing: -0.01em; margin-bottom: 16px; }
+        section.intro p { font-size: 18px; line-height: 1.7; color: var(--kr-ink, #14202B); }
+        section.intro p.sub { color: var(--kr-grey, #525E6B); margin-top: 16px; font-size: 16px; }
+
+        .principles { max-width: 1080px; margin: 40px auto 0; padding: 0 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        @media (max-width: 900px) { .principles { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .principles { grid-template-columns: 1fr; } }
+        .principle { background: #fff; border: 1px solid rgba(20,32,43,0.07); border-radius: 16px; padding: 26px; }
+        @media (prefers-color-scheme: dark) { .principle { background: #161A20; border-color: rgba(245,243,238,0.08); } }
+        .principle .label { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.10em; color: var(--kr-blue, #1A2E40); margin-bottom: 12px; }
+        .principle h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .principle p { font-size: 14px; line-height: 1.6; color: var(--kr-grey, #525E6B); }
+
+        .closing { max-width: 720px; margin: 0 auto; padding: 56px 24px 8px; }
+        .closing p { font-size: 18px; line-height: 1.7; }
+        .closing a.link { color: var(--kr-blue, #1A2E40); text-decoration: underline; text-underline-offset: 3px; }
+
+        /* ── CTA + Footer ── */
+        .cta-bar { background: #0E141B; color: #fff; padding: 56px 0; text-align: center; margin-top: 56px; }
+        @media (prefers-color-scheme: dark) { .cta-bar { background: #090C11; } }
+        .cta-bar h2 { font-family: 'Fraunces','Cormorant Garamond',Georgia,serif; font-size: clamp(24px, 3vw, 34px); margin-bottom: 14px; }
+        .cta-bar p { font-size: 15px; color: rgba(255,255,255,0.62); margin-bottom: 26px; }
+        .cta-bar .row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+        .cta-bar a.primary { display: inline-block; background: #C9A24B; color: #0E141B; padding: 14px 30px; border-radius: 28px; font-size: 15px; font-weight: 600; transition: transform .2s ease; }
+        .cta-bar a.primary:hover { transform: translateY(-2px); }
+        .cta-bar a.ghost { display: inline-block; border: 1px solid rgba(255,255,255,0.24); color: #fff; padding: 14px 28px; border-radius: 28px; font-size: 15px; }
+        .cta-bar a.ghost:hover { border-color: #fff; }
+
+        footer { padding: 32px 0; text-align: center; font-size: 12px; color: var(--kr-grey, #6e6e73); border-top: 1px solid rgba(20,32,43,0.06); }
+        footer a { color: var(--kr-grey, #424245); }
+        footer a:hover { color: var(--kr-ink, #14202B); }
+
+        @media (prefers-color-scheme: dark) {
+            nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
+            section.intro p { color: #C2C7CD; }
+            .closing p { color: #C2C7CD; }
+            footer { border-top-color: rgba(255,255,255,0.08); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="inner">
+            <a href="/" class="brand">Karriaro<span> Webdesign</span></a>
+            <a href="/" class="back">← Zur Startseite</a>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="wrap">
+                <div class="eyebrow mono"><span class="num">№ —</span> Werkschau · Können, das man anfasst</div>
+                <h1 class="display">Was Worte behaupten,<br>zeigt der Code.</h1>
+                <p class="lead">Jeder Punkt hier unten ist echtes 3D im Browser — GPU-gerendert, in Code geformt. Bewegen Sie die Maus, klicken Sie, wechseln Sie die Form. Dieselbe Sorgfalt steckt in jeder Website, die wir bauen.</p>
+            </div>
+        </section>
+
+        <!-- BÜHNE — handcodierter Partikelschwarm -->
+        <section class="stage" aria-label="Interaktiver Partikelschwarm">
+            <div class="stage-inner">
+                <div class="canvas-box" id="kr-canvas-box">
+                    <canvas id="kr-swarm" role="img" aria-label="3D-Drohnenschwarm, der zwischen dem Karriaro-Siegel und einer Rakete morpht"></canvas>
+                    <!-- Poster / Fallback (Mobil, Touch, reduzierte Bewegung): statisches Phyllotaxis-Siegel -->
+                    <div class="poster" aria-hidden="true">
+                        <svg width="180" height="180" viewBox="0 0 90 90">
+                            <g id="kr-poster-dots"></g>
+                        </svg>
+                        <div class="cap mono">Phyllotaxis-Siegel · Goldener Winkel 137,5°</div>
+                    </div>
+                </div>
+
+                <div class="controls" role="group" aria-label="Form wählen">
+                    <button type="button" data-form="bloom" class="is-active" aria-pressed="true">Siegel</button>
+                    <button type="button" data-form="rocket" aria-pressed="false">Rakete</button>
+                </div>
+
+                <div class="stage-meta">
+                    <span class="hint">Maus bewegen — die Drohnen weichen aus · Klick — Explosion · Form unten wechseln</span>
+                    <span class="tech">echtes 3D · WebGL · GPU-gerendert · ~6.500 drohnen · φ = 1,618</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="intro">
+            <div class="wrap">
+                <h2 class="display">Eine Spielerei? Nein — ein Beweis.</h2>
+                <p>Die meisten Agenturen behaupten „individuell" und liefern ein Template mit ausgetauschtem Logo. Wir behaupten es nicht — Sie sehen es. Was oben läuft, gibt es so kein zweites Mal, weil es Zeile für Zeile entstanden ist.</p>
+                <p class="sub">Und genau deshalb haben wir es so gebaut, dass es Ihre Werte nicht ruiniert:</p>
+            </div>
+        </section>
+
+        <div class="principles">
+            <div class="principle">
+                <div class="label">01 · Echtes 3D</div>
+                <h3>WebGL im Browser</h3>
+                <p>GPU-gerenderte Drohnen, Punkt für Punkt in Code geformt — kein Baukasten, kein Template. Exakt das, was wir mit „Unikat" meinen.</p>
+            </div>
+            <div class="principle">
+                <div class="label">02 · Performant</div>
+                <h3>Score bleibt unberührt</h3>
+                <p>Läuft nur am Desktop, lädt verzögert, pausiert beim Wegscrollen. Auf dem Handy: ein ruhiges Standbild statt Last.</p>
+            </div>
+            <div class="principle">
+                <div class="label">03 · Barrierefrei</div>
+                <h3>Respektiert Ihre Wahl</h3>
+                <p>Wer im System „reduzierte Bewegung" einstellt, bekommt das stille Siegel — keine Animation gegen den Willen.</p>
+            </div>
+            <div class="principle">
+                <div class="label">04 · Markentreu</div>
+                <h3>Dieselbe Mathematik</h3>
+                <p>Die Punkte formen unser Phyllotaxis-Siegel — der Goldene Winkel von 137,5°, der auch in Ihrem Logo stecken könnte.</p>
+            </div>
+        </div>
+
+        <div class="closing">
+            <p>Wir bauen keine Imagefilme und keine Logos — wir bauen Websites, die Anfragen bringen, in Google und KI-Suche auftauchen und rechtskonform sind. Dass wir dabei auch so etwas wie oben können, ist kein Selbstzweck: Es ist der Beleg für die Sorgfalt, mit der wir an jedes Detail gehen. <a href="/warum-handcoded" class="link">Warum handcodiert →</a></p>
+        </div>
+    </main>
+
+    <section class="cta-bar">
+        <div class="wrap">
+            <h2 class="display">Wollen Sie eine Website, die so gebaut ist?</h2>
+            <p>Festpreis ab 1.290 €, kein Abo. Pro Quartal höchstens fünf Plätze.</p>
+            <div class="row">
+                <a href="/#kontakt" class="primary">Projekt anfragen →</a>
+                <a href="/#portfolio" class="ghost">Portfolio ansehen</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© Karriaro Webdesign · Köln · <a href="/impressum">Impressum</a> · <a href="/datenschutz">Datenschutz</a> · <a href="/barrierefreiheit">Barrierefreiheit</a></p>
+    </footer>
+
+    <!-- Poster-Siegel: rendert immer (auch ohne Swarm). Phyllotaxis r=c·√n, θ=137,5°; Gold = Fibonacci. -->
+    <script>
+        (function () {
+            var g = document.getElementById('kr-poster-dots');
+            if (!g) return;
+            var gA = (3 - Math.sqrt(5)) * Math.PI, N = 110, R = 36, c = R / Math.sqrt(N);
+            var FIB = { 1:1, 2:1, 3:1, 5:1, 8:1, 13:1, 21:1, 34:1, 55:1, 89:1 };
+            var ns = 'http://www.w3.org/2000/svg';
+            for (var n = 1; n <= N; n++) {
+                var r = c * Math.sqrt(n), t = n * gA;
+                var ci = document.createElementNS(ns, 'circle');
+                ci.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
+                ci.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
+                ci.setAttribute('r', (c * 0.34).toFixed(2));
+                ci.setAttribute('fill', FIB[n] === 1 ? '#C9A24B' : '#ECE6D8');
+                g.appendChild(ci);
+            }
+        })();
+    </script>
+
+    <!-- Bootstrap: WebGL-Drohnenschwarm NUR auf Desktop ohne reduzierte Bewegung / ohne Touch
+         laden (Performance-Budget). Three.js wird so auf Mobil NIE geladen → Poster bleibt. -->
+    <script>
+        (function () {
+            var mm = window.matchMedia;
+            var reduce = mm && mm('(prefers-reduced-motion: reduce)').matches;
+            var coarse = mm && mm('(pointer: coarse)').matches;
+            var narrow = (window.innerWidth || 0) <= 900;
+            if (reduce || coarse || narrow) return; // Poster bleibt stehen
+            var s = document.createElement('script');
+            s.type = 'module'; // ES-Modul (importiert self-hosted Three.js)
+            s.src = '/js/werkschau-swarm-3d.js?v=244';
+            document.body.appendChild(s);
+        })();
+    </script>
+
+</body>
+</html>
