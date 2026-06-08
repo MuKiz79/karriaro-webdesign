@@ -124,31 +124,35 @@
             footer { border-top-color: rgba(255,255,255,0.08); }
         }
     </style>
-    <!-- Kanonische Organization-Entität (site-weit; GEO: Entitäts-Klarheit). Marker: #organization -->
+    <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://karriaro-webdesign.de/#organization",
-      "name": "Karriaro Webdesign",
-      "url": "https://karriaro-webdesign.de",
-      "logo": "https://karriaro-webdesign.de/images/favicon.svg",
-      "email": "kontakt@karriaro.de",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Spitalstr. 7",
-        "addressLocality": "Schiltach",
-        "postalCode": "77761",
-        "addressCountry": "DE"
-      },
-      "founder": {
-        "@type": "Person",
-        "name": "Muammer Kızılaslan",
-        "url": "https://karriaro-webdesign.de/gruender",
-        "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
-      },
-      "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://karriaro-webdesign.de/#organization",
+          "name": "Karriaro Webdesign",
+          "url": "https://karriaro-webdesign.de",
+          "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+          "email": "kontakt@karriaro.de",
+          "address": { "@type": "PostalAddress", "streetAddress": "Spitalstr. 7", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
+          "founder": { "@type": "Person", "name": "Muammer Kızılaslan", "url": "https://karriaro-webdesign.de/gruender", "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"] },
+          "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://karriaro-webdesign.de/werkschau#webpage",
+          "url": "https://karriaro-webdesign.de/werkschau",
+          "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "dateModified": "2026-06-08"
+        }
+      ]
     }
+    </script>
+    <script type="application/ld+json" data-page-faq>
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Was ist die Karriaro-Werkschau?","acceptedAnswer":{"@type":"Answer","text":"Eine kuratierte Schau handcodierter Website-Arbeiten — vom ersten Entwurf bis zum fertigen Unikat. Sie zeigt, wie Karriaro Gestaltung, Technik und eingebaute Werkzeuge zusammenbringt."}},{"@type":"Question","name":"Sind die gezeigten Arbeiten echte Kundenprojekte?","acceptedAnswer":{"@type":"Answer","text":"Die Werkschau mischt echte Projekte mit Studien und Demonstratoren. Demo-Beispiele sind als solche gekennzeichnet und stehen für eine Branche, nicht für reale Auftraggeber."}},{"@type":"Question","name":"Kann mein Betrieb so eine Website bekommen?","acceptedAnswer":{"@type":"Answer","text":"Ja. Jede Karriaro-Site wird einzeln handcodiert — vom Paket Essential (1.290 €) bis Premium+. Den Umfang stimmen wir vorab ab, Sie können vor jeder Zahlung abbrechen."}}]}
     </script>
 </head>
 <body>
@@ -229,7 +233,16 @@
         <div class="closing">
             <p>Wir bauen keine Imagefilme und keine Logos — wir bauen Websites, die Anfragen bringen, in Google und KI-Suche auftauchen und rechtskonform sind. Dass wir dabei auch so etwas wie oben können, ist kein Selbstzweck: Es ist der Beleg für die Sorgfalt, mit der wir an jedes Detail gehen. <a href="/warum-handcoded" class="link">Warum handcodiert →</a></p>
         </div>
-    </main>
+        <section class="fade-in" data-page-faq aria-labelledby="page-faq-h" style="max-width:640px;margin:3.5rem auto 0;padding:2rem 1.5rem 0;border-top:1px solid currentColor;border-image:linear-gradient(to right,currentColor,transparent) 1;">
+      <h2 id="page-faq-h" style="font-size:1.5rem;font-weight:600;margin:0 0 .25rem;">Häufige Fragen</h2>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Was ist die Karriaro-Werkschau?</h3>
+        <p style="margin:0;opacity:.85;">Eine kuratierte Schau handcodierter Website-Arbeiten — vom ersten Entwurf bis zum fertigen Unikat. Sie zeigt, wie Karriaro Gestaltung, Technik und eingebaute Werkzeuge zusammenbringt.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Sind die gezeigten Arbeiten echte Kundenprojekte?</h3>
+        <p style="margin:0;opacity:.85;">Die Werkschau mischt echte Projekte mit Studien und Demonstratoren. Demo-Beispiele sind als solche gekennzeichnet und stehen für eine Branche, nicht für reale Auftraggeber.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Kann mein Betrieb so eine Website bekommen?</h3>
+        <p style="margin:0;opacity:.85;">Ja. Jede Karriaro-Site wird einzeln handcodiert — vom Paket Essential (1.290 €) bis Premium+. Den Umfang stimmen wir vorab ab, Sie können vor jeder Zahlung abbrechen.</p>
+    </section>
+</main>
 
     <section class="cta-bar">
         <div class="wrap">

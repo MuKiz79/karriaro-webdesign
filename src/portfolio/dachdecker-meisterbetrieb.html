@@ -626,6 +626,33 @@ html.embed-hero .hero-h1-line{display:block}
         }
     }
     </style>
+    <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://karriaro-webdesign.de/#organization",
+          "name": "Karriaro Webdesign",
+          "url": "https://karriaro-webdesign.de",
+          "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+          "email": "kontakt@karriaro.de",
+          "address": { "@type": "PostalAddress", "streetAddress": "Spitalstr. 7", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
+          "founder": { "@type": "Person", "name": "Muammer Kızılaslan", "url": "https://karriaro-webdesign.de/gruender", "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"] },
+          "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb#webpage",
+          "url": "https://karriaro-webdesign.de/portfolio/dachdecker-meisterbetrieb",
+          "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "dateModified": "2026-06-08"
+        }
+      ]
+    }
+    </script>
 </head>
 <body>
     <a class="skip-link" href="#main">Zum Inhalt</a>

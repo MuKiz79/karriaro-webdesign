@@ -102,31 +102,35 @@
         .kv-foot a { text-decoration: underline; text-underline-offset: 2px; }
         @media (prefers-reduced-motion: reduce) { .kv-seal { animation: none; opacity: 0.8; } .kv-result.is-on { animation: none; } }
     </style>
-    <!-- Kanonische Organization-Entität (site-weit; GEO: Entitäts-Klarheit). Marker: #organization -->
+    <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://karriaro-webdesign.de/#organization",
-      "name": "Karriaro Webdesign",
-      "url": "https://karriaro-webdesign.de",
-      "logo": "https://karriaro-webdesign.de/images/favicon.svg",
-      "email": "kontakt@karriaro.de",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Spitalstr. 7",
-        "addressLocality": "Schiltach",
-        "postalCode": "77761",
-        "addressCountry": "DE"
-      },
-      "founder": {
-        "@type": "Person",
-        "name": "Muammer Kızılaslan",
-        "url": "https://karriaro-webdesign.de/gruender",
-        "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
-      },
-      "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://karriaro-webdesign.de/#organization",
+          "name": "Karriaro Webdesign",
+          "url": "https://karriaro-webdesign.de",
+          "logo": "https://karriaro-webdesign.de/images/favicon.svg",
+          "email": "kontakt@karriaro.de",
+          "address": { "@type": "PostalAddress", "streetAddress": "Spitalstr. 7", "addressLocality": "Schiltach", "postalCode": "77761", "addressCountry": "DE" },
+          "founder": { "@type": "Person", "name": "Muammer Kızılaslan", "url": "https://karriaro-webdesign.de/gruender", "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"] },
+          "sameAs": ["https://muammerkizilaslan.com", "https://www.linkedin.com/in/muammerkizilaslan"]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://karriaro-webdesign.de/ki-sichtbarkeit#webpage",
+          "url": "https://karriaro-webdesign.de/ki-sichtbarkeit",
+          "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
+          "dateModified": "2026-06-08"
+        }
+      ]
     }
+    </script>
+    <script type="application/ld+json" data-page-faq>
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Was bedeutet KI-Sichtbarkeit?","acceptedAnswer":{"@type":"Answer","text":"KI-Sichtbarkeit beschreibt, ob und wie Antwortmaschinen wie ChatGPT, Perplexity und Googles AI-Overviews Ihr Unternehmen kennen, korrekt beschreiben und als Quelle nennen. 2026 beginnt die Suche zunehmend dort — nicht mehr nur in der klassischen Trefferliste."}},{"@type":"Question","name":"Wie beeinflusse ich, wie ChatGPT mein Unternehmen darstellt?","acceptedAnswer":{"@type":"Answer","text":"Drei Hebel zählen am meisten: eine für KI-Crawler lesbare Website (server-gerendert, nicht nur per JavaScript), eine eindeutige Entität (konsistenter Name, Schema, verknüpfte Profile) und Erwähnungen über viele vertrauenswürdige Quellen hinweg."}},{"@type":"Question","name":"Hilft eine llms.txt-Datei, damit KI mich besser findet?","acceptedAnswer":{"@type":"Answer","text":"Nein. Kein großes KI-System wertet llms.txt derzeit aus — Google stellt sie offen mit dem längst wirkungslosen Keywords-Meta-Tag auf eine Stufe. Wir setzen stattdessen auf die nachweislich wirksamen Signale."}},{"@type":"Question","name":"Was ist der wichtigste technische Hebel?","acceptedAnswer":{"@type":"Answer","text":"Dass KI-Crawler Ihre Inhalte überhaupt sehen. Sie führen kein JavaScript aus — eine server-gerenderte, sauber strukturierte Seite ist die Grundvoraussetzung. Genau so baut Karriaro: handcodiert, ausliefernd statt nachladend."}}]}
     </script>
 </head>
 <body>
@@ -232,8 +236,19 @@
             </div>
         </div>
 
-        <p class="kv-foot">Der KI-Spiegel simuliert, wie generative Suchmaschinen ein Unternehmen anhand öffentlichen Wissens und technischer Signale (Schema, llms.txt, Struktur) einschätzen. Er erfindet keine Fakten. Zurück zu <a href="/">Karriaro Webdesign</a>.</p>
-    </main>
+        <p class="kv-foot">Der KI-Spiegel simuliert, wie generative Suchmaschinen ein Unternehmen anhand öffentlichen Wissens und technischer Signale (Schema, Struktur, Markensignale) einschätzen. Er erfindet keine Fakten. Zurück zu <a href="/">Karriaro Webdesign</a>.</p>
+        <section class="fade-in" data-page-faq aria-labelledby="page-faq-h" style="max-width:640px;margin:3.5rem auto 0;padding:2rem 1.5rem 0;border-top:1px solid currentColor;border-image:linear-gradient(to right,currentColor,transparent) 1;">
+      <h2 id="page-faq-h" style="font-size:1.5rem;font-weight:600;margin:0 0 .25rem;">Häufige Fragen</h2>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Was bedeutet KI-Sichtbarkeit?</h3>
+        <p style="margin:0;opacity:.85;">KI-Sichtbarkeit beschreibt, ob und wie Antwortmaschinen wie ChatGPT, Perplexity und Googles AI-Overviews Ihr Unternehmen kennen, korrekt beschreiben und als Quelle nennen. 2026 beginnt die Suche zunehmend dort — nicht mehr nur in der klassischen Trefferliste.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Wie beeinflusse ich, wie ChatGPT mein Unternehmen darstellt?</h3>
+        <p style="margin:0;opacity:.85;">Drei Hebel zählen am meisten: eine für KI-Crawler lesbare Website (server-gerendert, nicht nur per JavaScript), eine eindeutige Entität (konsistenter Name, Schema, verknüpfte Profile) und Erwähnungen über viele vertrauenswürdige Quellen hinweg.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Hilft eine llms.txt-Datei, damit KI mich besser findet?</h3>
+        <p style="margin:0;opacity:.85;">Nein. Kein großes KI-System wertet llms.txt derzeit aus — Google stellt sie offen mit dem längst wirkungslosen Keywords-Meta-Tag auf eine Stufe. Wir setzen stattdessen auf die nachweislich wirksamen Signale.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Was ist der wichtigste technische Hebel?</h3>
+        <p style="margin:0;opacity:.85;">Dass KI-Crawler Ihre Inhalte überhaupt sehen. Sie führen kein JavaScript aus — eine server-gerenderte, sauber strukturierte Seite ist die Grundvoraussetzung. Genau so baut Karriaro: handcodiert, ausliefernd statt nachladend.</p>
+    </section>
+</main>
 
     <script>
         (function () {
