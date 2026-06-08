@@ -472,13 +472,18 @@ async function detectSeoGeo(html, baseUrl) {
     const titleOk = titleLen >= 30 && titleLen <= 65;
 
     // robots.txt + sitemap.xml + llms.txt — parallele HEAD-Requests
-    let origin;
-    try { origin = new URL(baseUrl).origin; } catch { origin = null; }
+    let origin, probeHost;
+    try { const u = new URL(baseUrl); origin = u.origin; probeHost = u.hostname; } catch { origin = null; }
+    // Sprint 240 — Probes via GLOBALES fetch + resolvePublicAddress-SSRF-Guard, NICHT safeFetchs
+    // custom-undici-Agent: der flakte im Cloud-Env unter parallelen HEAD-Requests → robots.txt/
+    // sitemap.xml fälschlich "nicht erreichbar" (200, aber Probe schlug fehl), während llms.txt im
+    // selben Lauf durchkam → SEO 3/6 statt 5/6 + GEO-Zugang −4. Gleiche Lehre wie fetchRobotsTxt/
+    // kiVisibility. redirect:'manual' (kein Redirect-SSRF) + 5s Timeout.
     async function probe(path) {
         if (!origin) return false;
         try {
-            // Sprint 175 — SSRF: safeFetch (per-Hop-Validierung) statt redirect:'follow'.
-            const res = await safeFetch(origin + path, { method: 'HEAD', timeoutMs: 3000 });
+            await resolvePublicAddress(probeHost);
+            const res = await fetch(origin + path, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(5000) });
             return res.ok;
         } catch (_) { return false; }
     }
