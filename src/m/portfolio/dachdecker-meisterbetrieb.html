@@ -532,6 +532,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ai-result-cost { padding: 12px 14px; background: var(--accent-bg); border-radius: 6px; font-size: 14px; }
         .ai-result-cost strong { display: block; font-size: 18px; color: var(--accent-strong); margin-top: 4px; }
         .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        /* Hinweis-Zustand: kein Foto hochgeladen → keine erfundene Diagnose */
+        .ai-result.is-hint { display: block; border-style: dashed; border-color: var(--accent); background: var(--accent-bg); }
+        .ai-result.is-hint .ai-result-loading, .ai-result.is-hint .ai-result-body { display: none; }
+        .ai-result-hint { display: none; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .ai-result.is-hint .ai-result-hint { display: flex; }
+        .ai-result-hint svg { width: 22px; height: 22px; flex-shrink: 0; stroke: var(--accent-strong); margin-top: 1px; }
+        .foto-drop.needs-photo { border-color: var(--accent-strong); box-shadow: 0 0 0 3px rgba(122,139,107,0.25); animation: dropPulse 0.6s ease 2; }
+        @keyframes dropPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(122,139,107,0.25); } 50% { box-shadow: 0 0 0 7px rgba(122,139,107,0.12); } }
+        /* Foto-Vorschau (Thumbnails + Zähler) */
+        .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
+        .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .foto-preview-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; padding: 0; border: none; border-radius: 50%; background: rgba(20,20,20,0.72); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         /* Hagel-Karte */
         .hagel { background: var(--bg); padding: 64px 0; border-top: 1px solid var(--border); }
@@ -1040,32 +1054,38 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                             <div><label for="fa-msg">Beschreibung (optional)</label><textarea id="fa-msg" placeholder="Wann ist es aufgefallen? Schon einmal ausgebessert?"></textarea></div>
                         </div>
                     </div>
+                    <!-- Foto-Vorschau (gewählte Bilder) -->
+                    <div class="foto-preview" id="foto-preview" hidden></div>
                     <!-- D8. KI-Schaden-Klassifikator -->
                     <div class="ai-trigger" onclick="runAiAnalysis()" role="button">
                         <span class="ai-icon">KI</span>
                         <div class="ai-text">
                             <strong>Sofort-Einschätzung per KI vor dem Versand</strong>
-                            <span>Click hier — unser Modell klassifiziert die Bilder in ca. 3 Sekunden (Demo).</span>
+                            <span>Foto hochladen, dann klicken — unser Modell wertet die Aufnahmen in ca. 3 Sekunden aus (Demo).</span>
                         </div>
                     </div>
                     <div class="ai-result" id="ai-result">
+                        <div class="ai-result-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span id="ai-hint-text">Bitte laden Sie zuerst mindestens ein Foto des Schadens hoch — die KI wertet echte Aufnahmen aus, keine leere Anfrage.</span>
+                        </div>
                         <div class="ai-result-loading">
                             <span class="label">KI-Analyse läuft …</span>
                             <div class="ai-progress"><div class="ai-progress-bar" id="ai-progress-bar"></div></div>
                         </div>
                         <div class="ai-result-body">
                             <div class="ai-result-header">
-                                <span class="ai-damage-class is-medium">⚠ Mittelschwer</span>
-                                <h4>Sturmschaden mit Sekundär-Verschleiß</h4>
+                                <span class="ai-damage-class is-medium" id="ai-dmg-class">⚠ Mittelschwer</span>
+                                <h4 id="ai-dmg-title">Sturmschaden mit Sekundär-Verschleiß</h4>
                             </div>
-                            <ul class="ai-result-diagnose">
+                            <ul class="ai-result-diagnose" id="ai-dmg-list">
                                 <li>Lose und teilweise gebrochene Ziegel im First-Bereich erkannt</li>
                                 <li>Mooswachstum und Material-Alterung deutet auf Sanierungs-Reife in 2–4 Jahren</li>
                                 <li>Rinne und Anschlüsse benötigen voraussichtlich Wartung</li>
                             </ul>
                             <div class="ai-result-cost">
                                 Geschätzte Reparatur-Kostenrange
-                                <strong>4.800 – 8.500 € (ohne Förderung)</strong>
+                                <strong id="ai-dmg-cost">4.800 – 8.500 € (ohne Förderung)</strong>
                             </div>
                             <p class="ai-result-disclaimer">Verbindlicher Festpreis erst nach Drohnen-Begehung und Begutachtung vor Ort. KI-Schätzung dient nur der Vorab-Orientierung — keine rechtliche Grundlage.</p>
                         </div>
@@ -1769,11 +1789,52 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         });
 
         // Foto-Dropzone visual feedback
+        // Foto-Upload: gewählte Bilder erfassen (Klick + Drag&Drop) + Vorschau rendern.
+        // krFotos ist der geteilte State, den runAiAnalysis() prüft (kein Ergebnis ohne Foto).
+        var krFotos = [];
         (function () {
             var dz = document.getElementById('dropzone');
-            if (!dz) return;
+            var input = document.getElementById('foto-upload');
+            var preview = document.getElementById('foto-preview');
+            if (!dz || !input || !preview) return;
+            var MAX = 5;
+            function render() {
+                preview.innerHTML = '';
+                if (!krFotos.length) { preview.hidden = true; return; }
+                preview.hidden = false;
+                var count = document.createElement('div');
+                count.className = 'foto-preview-count';
+                count.textContent = krFotos.length + ' von ' + MAX + ' Bildern ausgewählt';
+                preview.appendChild(count);
+                krFotos.forEach(function (item, i) {
+                    var th = document.createElement('div');
+                    th.className = 'foto-preview-thumb';
+                    var img = document.createElement('img');
+                    img.src = item.url; img.alt = 'Foto ' + (i + 1);
+                    var rm = document.createElement('button');
+                    rm.type = 'button'; rm.setAttribute('aria-label', 'Foto entfernen'); rm.textContent = '×';
+                    rm.addEventListener('click', function () {
+                        URL.revokeObjectURL(item.url);
+                        krFotos.splice(i, 1);
+                        render();
+                    });
+                    th.appendChild(img); th.appendChild(rm);
+                    preview.appendChild(th);
+                });
+            }
+            function add(files) {
+                Array.prototype.slice.call(files || []).forEach(function (f) {
+                    if (krFotos.length >= MAX) return;
+                    if (!/^image\//.test(f.type)) return;
+                    krFotos.push({ file: f, url: URL.createObjectURL(f) });
+                });
+                dz.classList.remove('needs-photo');
+                render();
+            }
+            input.addEventListener('change', function () { add(input.files); input.value = ''; });
             ['dragover', 'dragenter'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('is-active'); }); });
-            ['dragleave', 'drop'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.remove('is-active'); }); });
+            dz.addEventListener('dragleave', function (e) { e.preventDefault(); dz.classList.remove('is-active'); });
+            dz.addEventListener('drop', function (e) { e.preventDefault(); dz.classList.remove('is-active'); if (e.dataTransfer && e.dataTransfer.files) add(e.dataTransfer.files); });
         })();
 
         // FAQ
@@ -1793,15 +1854,50 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von zwei Stunden beantwortet.']
         };
 
-        // KI-Schaden-Klassifikator (Demo-Animation)
+        // KI-Schaden-Klassifikator (Demo) — reagiert auf Upload + gewählten Schadenstyp.
+        // Ergebnis-Sets je Problem-Typ (fa-art). Demo-Pauschalen; reale Produktion: Vision-Modell.
+        var AI_RESULTS = {
+            'Sturmschaden / lose Ziegel': { cls: 'is-medium', label: '⚠ Mittelschwer', title: 'Sturmschaden mit Sekundär-Verschleiß', bullets: ['Lose und teilweise gebrochene Ziegel im First-Bereich erkannt', 'Mooswachstum und Material-Alterung deutet auf Sanierungs-Reife in 2–4 Jahren', 'Rinne und Anschlüsse benötigen voraussichtlich Wartung'], cost: '4.800 – 8.500 €' },
+            'Undichte Stelle / Wassereintritt': { cls: 'is-critical', label: '⚠ Dringend', title: 'Akuter Wassereintritt — Folgeschaden-Risiko', bullets: ['Durchfeuchtung im Bereich der Eindeckung sichtbar', 'Risiko für Dämmung und Dachstuhl bei verzögerter Reparatur', 'Sofort-Abdichtung empfohlen, danach dauerhafte Sanierung'], cost: '2.900 – 6.500 €' },
+            'Komplette Dachsanierung': { cls: 'is-critical', label: '◼ Großprojekt', title: 'Vollsanierung — Eindeckung & Unterkonstruktion', bullets: ['Eindeckung am Ende der Nutzungsdauer', 'Lattung und Unterspannbahn voraussichtlich mit zu erneuern', 'Gerüst und Entsorgung im Umfang enthalten'], cost: '28.000 – 55.000 €' },
+            'Dämmung nach GEG': { cls: 'is-low', label: '✓ Planbar', title: 'Aufsparrendämmung nach GEG-Standard', bullets: ['Energetische Schwachstelle an der Dachfläche', 'Förderfähig über BAFA/KfW — siehe Förderrechner', 'Kombination mit Neueindeckung sinnvoll'], cost: '14.000 – 30.000 €' },
+            'Dachfenster Tausch / Einbau': { cls: 'is-low', label: '✓ Planbar', title: 'Dachfenster — Tausch / Neueinbau', bullets: ['Vorhandene Fenster mit Wärmebrücken oder undicht', 'Eindeckrahmen und Innenfutter im Umfang', 'Kalkulation pro Fenster'], cost: '1.400 – 3.200 € / Fenster' },
+            'PV-Vorbereitung (Indach)': { cls: 'is-low', label: '✓ Planbar', title: 'Indach-PV — dachintegrierte Vorbereitung', bullets: ['Statik und Eindeckung für Indach-Montage prüfen', 'Kabelwege und Durchdringungen einplanen', 'Mit Dachsanierung kombinierbar'], cost: '6.000 – 12.000 € (ohne Module)' },
+            'Flachdach-Abdichtung': { cls: 'is-medium', label: '⚠ Mittelschwer', title: 'Flachdach — Abdichtung erneuern', bullets: ['Bahnen porös oder Nähte offen — Eintrittsrisiko', 'Gefälle und Entwässerung prüfen', 'Optional Dämmung im Aufbau ergänzen'], cost: '5.500 – 11.000 €' },
+            'Sonstiges': { cls: 'is-medium', label: '◷ Einschätzung', title: 'Schaden erkannt — Vor-Ort-Begehung empfohlen', bullets: ['Erste Sichtprüfung der Aufnahmen abgeschlossen', 'Eindeutige Klassifizierung erfordert Detailaufnahmen', 'Drohnen-Begehung liefert die verbindliche Grundlage'], cost: 'nach Begehung' }
+        };
         function runAiAnalysis() {
             var result = document.getElementById('ai-result');
             var bar = document.getElementById('ai-progress-bar');
-            if (!result || !bar) return;
-            result.classList.remove('is-done');
+            if (!result) return;
+            // Kein Foto → keine erfundene Diagnose, sondern ehrlicher Hinweis.
+            if (!krFotos.length) {
+                result.classList.remove('is-loading', 'is-done');
+                result.classList.add('is-hint');
+                var dz = document.getElementById('dropzone');
+                if (dz) {
+                    dz.classList.add('needs-photo');
+                    dz.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(function () { dz.classList.remove('needs-photo'); }, 2400);
+                }
+                return;
+            }
+            // Ergebnis passend zum gewählten Schadenstyp füllen (statt fix „Sturmschaden").
+            var art = (document.getElementById('fa-art') || {}).value || 'Sonstiges';
+            var r = AI_RESULTS[art] || AI_RESULTS['Sonstiges'];
+            var clsEl = document.getElementById('ai-dmg-class');
+            var titleEl = document.getElementById('ai-dmg-title');
+            var listEl = document.getElementById('ai-dmg-list');
+            var costEl = document.getElementById('ai-dmg-cost');
+            if (clsEl) { clsEl.className = 'ai-damage-class ' + r.cls; clsEl.textContent = r.label; }
+            if (titleEl) titleEl.textContent = r.title;
+            if (listEl) listEl.innerHTML = r.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
+            if (costEl) costEl.textContent = r.cost + (/[()]/.test(r.cost) || r.cost === 'nach Begehung' ? '' : ' (ohne Förderung)');
+            var loadingLabel = result.querySelector('.ai-result-loading .label');
+            if (loadingLabel) loadingLabel.textContent = 'KI wertet ' + krFotos.length + ' Aufnahme' + (krFotos.length > 1 ? 'n' : '') + ' aus …';
+            result.classList.remove('is-hint', 'is-done');
             result.classList.add('is-loading');
-            bar.style.width = '0%';
-            setTimeout(function () { bar.style.width = '95%'; }, 50);
+            if (bar) { bar.style.width = '0%'; setTimeout(function () { bar.style.width = '95%'; }, 50); }
             setTimeout(function () {
                 result.classList.remove('is-loading');
                 result.classList.add('is-done');

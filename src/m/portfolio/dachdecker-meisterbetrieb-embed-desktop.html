@@ -523,6 +523,20 @@ html.embed-hero .hero-h1-line{display:block}
         .ai-result-cost { padding: 12px 14px; background: var(--accent-bg); border-radius: 6px; font-size: 14px; }
         .ai-result-cost strong { display: block; font-size: 18px; color: var(--accent-strong); margin-top: 4px; }
         .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        /* Hinweis-Zustand: kein Foto hochgeladen → keine erfundene Diagnose */
+        .ai-result.is-hint { display: block; border-style: dashed; border-color: var(--accent); background: var(--accent-bg); }
+        .ai-result.is-hint .ai-result-loading, .ai-result.is-hint .ai-result-body { display: none; }
+        .ai-result-hint { display: none; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .ai-result.is-hint .ai-result-hint { display: flex; }
+        .ai-result-hint svg { width: 22px; height: 22px; flex-shrink: 0; stroke: var(--accent-strong); margin-top: 1px; }
+        .foto-drop.needs-photo { border-color: var(--accent-strong); box-shadow: 0 0 0 3px rgba(122,139,107,0.25); animation: dropPulse 0.6s ease 2; }
+        @keyframes dropPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(122,139,107,0.25); } 50% { box-shadow: 0 0 0 7px rgba(122,139,107,0.12); } }
+        /* Foto-Vorschau (Thumbnails + Zähler) */
+        .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
+        .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .foto-preview-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; padding: 0; border: none; border-radius: 50%; background: rgba(20,20,20,0.72); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
         /* Hagel-Karte */
         .hagel { background: var(--bg); padding: 64px 0; border-top: 1px solid var(--border); }
