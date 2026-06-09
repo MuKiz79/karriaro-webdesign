@@ -510,6 +510,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
         .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
         .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
         .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
         .ai-result.is-loading { display: block; }
         .ai-result.is-done { display: block; border-color: var(--accent); }
@@ -1056,14 +1058,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     </div>
                     <!-- Foto-Vorschau (gewählte Bilder) -->
                     <div class="foto-preview" id="foto-preview" hidden></div>
-                    <!-- D8. KI-Schaden-Klassifikator -->
+                    <!-- D8. KI-Schaden-Analyse (echter Claude-Vision-Call) -->
                     <div class="ai-trigger" onclick="runAiAnalysis()" role="button">
                         <span class="ai-icon">KI</span>
                         <div class="ai-text">
-                            <strong>Sofort-Einschätzung per KI vor dem Versand</strong>
-                            <span>Foto hochladen, dann klicken — unser Modell wertet die Aufnahmen in ca. 3 Sekunden aus (Demo).</span>
+                            <strong>Sofort-Einschätzung per KI <span class="ai-real-badge">echte KI</span></strong>
+                            <span>Foto hochladen, dann klicken — ein echtes KI-Modell wertet Ihr Bild aus (ca. 10 Sekunden).</span>
                         </div>
                     </div>
+                    <p class="ai-consent">🔒 Ihr Foto wird nur zur KI-Analyse an unseren Dienstleister übermittelt und <strong>nicht gespeichert</strong>. Die Einschätzung ist unverbindlich.</p>
                     <div class="ai-result" id="ai-result">
                         <div class="ai-result-hint">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -1087,7 +1090,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                                 Geschätzte Reparatur-Kostenrange
                                 <strong id="ai-dmg-cost">4.800 – 8.500 € (ohne Förderung)</strong>
                             </div>
-                            <p class="ai-result-disclaimer">Verbindlicher Festpreis erst nach Drohnen-Begehung und Begutachtung vor Ort. KI-Schätzung dient nur der Vorab-Orientierung — keine rechtliche Grundlage.</p>
+                            <p class="ai-result-disclaimer" id="ai-dmg-disclaimer">Verbindlicher Festpreis erst nach Drohnen-Begehung und Begutachtung vor Ort. KI-Schätzung dient nur der Vorab-Orientierung — keine rechtliche Grundlage.</p>
                         </div>
                     </div>
 
@@ -1854,55 +1857,104 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             kontakt: ['Demo-Nachricht gesendet', 'In der echten Anwendung wäre Ihre Anfrage jetzt verschickt und würde innerhalb von zwei Stunden beantwortet.']
         };
 
-        // KI-Schaden-Klassifikator (Demo) — reagiert auf Upload + gewählten Schadenstyp.
-        // Ergebnis-Sets je Problem-Typ (fa-art). Demo-Pauschalen; reale Produktion: Vision-Modell.
-        var AI_RESULTS = {
-            'Sturmschaden / lose Ziegel': { cls: 'is-medium', label: '⚠ Mittelschwer', title: 'Sturmschaden mit Sekundär-Verschleiß', bullets: ['Lose und teilweise gebrochene Ziegel im First-Bereich erkannt', 'Mooswachstum und Material-Alterung deutet auf Sanierungs-Reife in 2–4 Jahren', 'Rinne und Anschlüsse benötigen voraussichtlich Wartung'], cost: '4.800 – 8.500 €' },
-            'Undichte Stelle / Wassereintritt': { cls: 'is-critical', label: '⚠ Dringend', title: 'Akuter Wassereintritt — Folgeschaden-Risiko', bullets: ['Durchfeuchtung im Bereich der Eindeckung sichtbar', 'Risiko für Dämmung und Dachstuhl bei verzögerter Reparatur', 'Sofort-Abdichtung empfohlen, danach dauerhafte Sanierung'], cost: '2.900 – 6.500 €' },
-            'Komplette Dachsanierung': { cls: 'is-critical', label: '◼ Großprojekt', title: 'Vollsanierung — Eindeckung & Unterkonstruktion', bullets: ['Eindeckung am Ende der Nutzungsdauer', 'Lattung und Unterspannbahn voraussichtlich mit zu erneuern', 'Gerüst und Entsorgung im Umfang enthalten'], cost: '28.000 – 55.000 €' },
-            'Dämmung nach GEG': { cls: 'is-low', label: '✓ Planbar', title: 'Aufsparrendämmung nach GEG-Standard', bullets: ['Energetische Schwachstelle an der Dachfläche', 'Förderfähig über BAFA/KfW — siehe Förderrechner', 'Kombination mit Neueindeckung sinnvoll'], cost: '14.000 – 30.000 €' },
-            'Dachfenster Tausch / Einbau': { cls: 'is-low', label: '✓ Planbar', title: 'Dachfenster — Tausch / Neueinbau', bullets: ['Vorhandene Fenster mit Wärmebrücken oder undicht', 'Eindeckrahmen und Innenfutter im Umfang', 'Kalkulation pro Fenster'], cost: '1.400 – 3.200 € / Fenster' },
-            'PV-Vorbereitung (Indach)': { cls: 'is-low', label: '✓ Planbar', title: 'Indach-PV — dachintegrierte Vorbereitung', bullets: ['Statik und Eindeckung für Indach-Montage prüfen', 'Kabelwege und Durchdringungen einplanen', 'Mit Dachsanierung kombinierbar'], cost: '6.000 – 12.000 € (ohne Module)' },
-            'Flachdach-Abdichtung': { cls: 'is-medium', label: '⚠ Mittelschwer', title: 'Flachdach — Abdichtung erneuern', bullets: ['Bahnen porös oder Nähte offen — Eintrittsrisiko', 'Gefälle und Entwässerung prüfen', 'Optional Dämmung im Aufbau ergänzen'], cost: '5.500 – 11.000 €' },
-            'Sonstiges': { cls: 'is-medium', label: '◷ Einschätzung', title: 'Schaden erkannt — Vor-Ort-Begehung empfohlen', bullets: ['Erste Sichtprüfung der Aufnahmen abgeschlossen', 'Eindeutige Klassifizierung erfordert Detailaufnahmen', 'Drohnen-Begehung liefert die verbindliche Grundlage'], cost: 'nach Begehung' }
-        };
+        // KI-Schaden-Analyse — ECHTER Claude-Vision-Call (Sprint 241). Das hochgeladene Foto
+        // wird client-seitig verkleinert und an /roofVision geschickt; das Modell beurteilt es real.
+        var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+        var aiBusy = false;
+        function aiEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]; }); }
+        function aiShowHint(msg) {
+            var result = document.getElementById('ai-result');
+            var hint = document.getElementById('ai-hint-text');
+            if (hint && msg) hint.textContent = msg;
+            if (result) { result.classList.remove('is-loading', 'is-done'); result.classList.add('is-hint'); }
+        }
+        function aiSeverity(dc) { return (dc === 'dringend' || dc === 'erheblich') ? 'is-critical' : (dc === 'mittel') ? 'is-medium' : 'is-low'; }
+        // Foto verkleinern (≤1568 px Kante, JPEG q0.8) → Data-URL. Bremst Bild-Tokens/Kosten.
+        function resizePhoto(file, maxDim, quality) {
+            return new Promise(function (resolve, reject) {
+                var url = URL.createObjectURL(file);
+                var im = new Image();
+                im.onload = function () {
+                    var w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
+                    var scale = Math.min(1, maxDim / Math.max(w, h || 1));
+                    var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+                    var cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+                    cv.getContext('2d').drawImage(im, 0, 0, cw, ch);
+                    URL.revokeObjectURL(url);
+                    try { resolve(cv.toDataURL('image/jpeg', quality)); } catch (e) { reject(e); }
+                };
+                im.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Bild konnte nicht gelesen werden.')); };
+                im.src = url;
+            });
+        }
         function runAiAnalysis() {
+            if (aiBusy) return;
             var result = document.getElementById('ai-result');
             var bar = document.getElementById('ai-progress-bar');
             if (!result) return;
             // Kein Foto → keine erfundene Diagnose, sondern ehrlicher Hinweis.
             if (!krFotos.length) {
-                result.classList.remove('is-loading', 'is-done');
-                result.classList.add('is-hint');
+                aiShowHint('Bitte laden Sie zuerst mindestens ein Foto des Schadens hoch — die KI wertet echte Aufnahmen aus, keine leere Anfrage.');
                 var dz = document.getElementById('dropzone');
-                if (dz) {
-                    dz.classList.add('needs-photo');
-                    dz.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(function () { dz.classList.remove('needs-photo'); }, 2400);
-                }
+                if (dz) { dz.classList.add('needs-photo'); dz.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { dz.classList.remove('needs-photo'); }, 2400); }
                 return;
             }
-            // Ergebnis passend zum gewählten Schadenstyp füllen (statt fix „Sturmschaden").
-            var art = (document.getElementById('fa-art') || {}).value || 'Sonstiges';
-            var r = AI_RESULTS[art] || AI_RESULTS['Sonstiges'];
-            var clsEl = document.getElementById('ai-dmg-class');
-            var titleEl = document.getElementById('ai-dmg-title');
-            var listEl = document.getElementById('ai-dmg-list');
-            var costEl = document.getElementById('ai-dmg-cost');
-            if (clsEl) { clsEl.className = 'ai-damage-class ' + r.cls; clsEl.textContent = r.label; }
-            if (titleEl) titleEl.textContent = r.title;
-            if (listEl) listEl.innerHTML = r.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
-            if (costEl) costEl.textContent = r.cost + (/[()]/.test(r.cost) || r.cost === 'nach Begehung' ? '' : ' (ohne Förderung)');
+            aiBusy = true;
             var loadingLabel = result.querySelector('.ai-result-loading .label');
-            if (loadingLabel) loadingLabel.textContent = 'KI wertet ' + krFotos.length + ' Aufnahme' + (krFotos.length > 1 ? 'n' : '') + ' aus …';
+            if (loadingLabel) loadingLabel.textContent = 'KI wertet Ihr Foto aus …';
             result.classList.remove('is-hint', 'is-done');
             result.classList.add('is-loading');
-            if (bar) { bar.style.width = '0%'; setTimeout(function () { bar.style.width = '95%'; }, 50); }
-            setTimeout(function () {
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Progress läuft langsam auf ~90 % (echter Call ~5–15 s), Rest beim Ergebnis.
+            var prog = 8;
+            if (bar) { bar.style.transition = 'width .9s linear'; bar.style.width = '8%'; }
+            var progTimer = setInterval(function () { prog = Math.min(90, prog + 6); if (bar) bar.style.width = prog + '%'; }, 900);
+            function finish() { clearInterval(progTimer); aiBusy = false; }
+            var art = (document.getElementById('fa-art') || {}).value || '';
+            resizePhoto(krFotos[0].file, 1568, 0.8).then(function (dataUrl) {
+                var ctrl = new AbortController();
+                var to = setTimeout(function () { ctrl.abort(); }, 50000);
+                return fetch(FN_BASE + '/roofVision', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: dataUrl, problemType: art }), signal: ctrl.signal
+                }).then(function (r) {
+                    clearTimeout(to);
+                    if (r.status === 429) throw new Error('RATE');
+                    return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'FEHLER'); return j; });
+                });
+            }).then(function (j) {
+                finish();
+                var a = j.assessment || {};
+                if (a.isRoof === false) {
+                    aiShowHint('Das sieht nicht nach einem Dach aus. Bitte laden Sie ein Foto des Dachschadens hoch — dann analysiert die KI es.');
+                    return;
+                }
+                if (bar) bar.style.width = '100%';
+                var clsEl = document.getElementById('ai-dmg-class');
+                var titleEl = document.getElementById('ai-dmg-title');
+                var listEl = document.getElementById('ai-dmg-list');
+                var costEl = document.getElementById('ai-dmg-cost');
+                var discEl = document.getElementById('ai-dmg-disclaimer');
+                if (clsEl) { clsEl.className = 'ai-damage-class ' + aiSeverity(a.damageClass); clsEl.textContent = a.damageLabel || 'Einschätzung'; }
+                if (titleEl) titleEl.textContent = a.title || 'KI-Ersteinschätzung';
+                if (listEl) {
+                    var items = (a.observations || []).slice();
+                    if (a.urgency) items.push('Dringlichkeit: ' + a.urgency);
+                    (a.recommendedActions || []).forEach(function (x) { items.push('Empfehlung: ' + x); });
+                    listEl.innerHTML = items.map(function (b) { return '<li>' + aiEsc(b) + '</li>'; }).join('');
+                }
+                if (costEl) costEl.textContent = a.costOrientation || 'nach Begehung';
+                if (discEl) discEl.textContent = 'Ersteinschätzung per KI' + (a.confidence ? ' · KI-Vertrauen: ' + a.confidence : '') + '. Verbindlicher Festpreis erst nach Drohnen-Begehung und Begutachtung vor Ort — keine rechtliche Grundlage.';
                 result.classList.remove('is-loading');
                 result.classList.add('is-done');
                 result.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 1900);
+            }).catch(function (err) {
+                finish();
+                var m = String(err && err.message || '');
+                if (m === 'RATE') aiShowHint('Zu viele Analysen — bitte in einer Stunde erneut (echte KI-Calls sind begrenzt).');
+                else if (err && err.name === 'AbortError') aiShowHint('Zeitüberschreitung — bitte erneut versuchen.');
+                else aiShowHint('Die KI-Analyse hat nicht geklappt. Bitte später erneut versuchen — oder senden Sie das Foto direkt mit der Anfrage.');
+            });
         }
 
         // Booking-Slot Toggle
