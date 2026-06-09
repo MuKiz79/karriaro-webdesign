@@ -93,8 +93,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .kv-stage { margin-top: 40px; display: none; }
         .kv-stage.is-on { display: block; }
         .kv-loading { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 40px 0; text-align: center; }
-        .kv-seal { width: 64px; height: 64px; color: var(--kv-navy); animation: kv-pulse 2.4s ease-in-out infinite; }
-        @keyframes kv-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        /* Lade-Siegel = dieselbe Animation wie das Audit-Siegel auf der Hauptseite („Sie haben schon
+           eine Website?"): die ganze Punkt-Blüte rotiert langsam, jeder Punkt „atmet" gestaffelt. */
+        .kv-seal { width: 74px; height: 74px; }
+        .kv-seal-dots { transform-box: view-box; transform-origin: 50% 50%; animation: kv-seal-spin 18s linear infinite; }
+        .kv-seal-dot { transform-box: fill-box; transform-origin: center; animation: kv-dot-breathe 2.6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 20ms); }
+        @keyframes kv-seal-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes kv-dot-breathe { 0%, 100% { transform: scale(0.5); opacity: 0.4; } 50% { transform: scale(1.08); opacity: 1; } }
+        @keyframes kv-seal-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
         .kv-loading-text { font-family: var(--kv-serif); font-style: italic; font-size: 20px; color: var(--kv-navy); }
         .kv-loading-sub { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); }
         /* Result */
@@ -126,7 +132,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .kv-error.is-on { display: block; }
         .kv-foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--kv-border); font-size: 13px; color: var(--kv-graphite); }
         .kv-foot a { text-decoration: underline; text-underline-offset: 2px; }
-        @media (prefers-reduced-motion: reduce) { .kv-seal { animation: none; opacity: 0.8; } .kv-result.is-on { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { .kv-seal-dots { animation: none; } .kv-seal-dot { animation: kv-seal-pulse 4s ease-in-out infinite; } .kv-result.is-on { animation: none; } }
     </style>
     <!-- Kanonische Organization-Entität + WebPage-Frische (site-weit; GEO). Marker: #organization -->
     <script type="application/ld+json">
@@ -246,7 +252,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <path d="M 72 5 L 85 5 L 85 18" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
                     <path d="M 5 72 L 5 85 L 18 85" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
                     <path d="M 72 85 L 85 85 L 85 72" stroke="#8A7B5C" stroke-width="1.5" fill="none"/>
-                    <g id="kv-seal-dots"></g>
+                    <g id="kv-seal-dots" class="kv-seal-dots"></g>
                 </svg>
                 <div class="kv-loading-text">Die KI schaut auf Ihr Unternehmen …</div>
                 <div class="kv-loading-sub">ChatGPT · Perplexity · AI-Overviews</div>
@@ -304,20 +310,24 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         (function () {
             var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
 
-            // Phyllotaxis-Siegel (Lade-Animation) — dieselbe Marken-Blüte wie auf der Hauptseite
+            // Phyllotaxis-Siegel (Lade-Animation) — exakt dieselbe Marken-Blüte + Bewegung wie das
+            // Audit-Siegel auf der Hauptseite (N=110, R=36, Fibonacci-Punkte gold, Rest oliv,
+            // Rotation + gestaffeltes „Atmen" via --i). Single-Source-Parität.
             (function () {
                 var g = document.getElementById('kv-seal-dots');
                 if (!g) return;
                 var ns = 'http://www.w3.org/2000/svg';
-                var gA = (3 - Math.sqrt(5)) * Math.PI, N = 70, R = 34, c = R / Math.sqrt(N);
-                var FIB = { 1: 1, 2: 1, 3: 1, 5: 1, 8: 1, 13: 1, 21: 1, 34: 1, 55: 1 };
+                var gA = (3 - Math.sqrt(5)) * Math.PI, N = 110, R = 36, c = R / Math.sqrt(N);
+                var FIB = { 1: 1, 2: 1, 3: 1, 5: 1, 8: 1, 13: 1, 21: 1, 34: 1, 55: 1, 89: 1 };
                 for (var n = 1; n <= N; n++) {
-                    var r = c * Math.sqrt(n), t = n * gA;
+                    var r = c * Math.sqrt(n), t = n * gA, gold = FIB[n] === 1;
                     var circ = document.createElementNS(ns, 'circle');
                     circ.setAttribute('cx', (45 + r * Math.cos(t)).toFixed(2));
                     circ.setAttribute('cy', (45 + r * Math.sin(t)).toFixed(2));
                     circ.setAttribute('r', (c * 0.34).toFixed(2));
-                    circ.setAttribute('fill', FIB[n] ? '#C9A24B' : 'currentColor');
+                    circ.setAttribute('fill', gold ? '#C9A24B' : '#8A7B5C');
+                    circ.setAttribute('class', 'kv-seal-dot');
+                    circ.style.setProperty('--i', n);
                     g.appendChild(circ);
                 }
             })();
@@ -362,6 +372,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     ['hasSchema', 'Schema'],
                     ['hasLocalBusinessSchema', 'LocalBusiness'],
                     ['hasMetaDescription', 'Meta-Description'],
+                    ['hasFaqSchema', 'FAQ-Schema'],
                     ['hasLlmsTxt', 'llms.txt']
                 ];
                 var html = '';
