@@ -15,7 +15,7 @@
     "build:mobile": "node scripts/build-embed-hero.mjs && node scripts/build-mobile-pages.mjs",
     "smoke": "node scripts/smoke-playwright.mjs",
     "smoke:quick": "node scripts/smoke-playwright.mjs --quick",
-    "test:audit": "node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js functions/test/mcp.test.js functions/test/ki-visibility.test.js functions/test/roof-vision.test.js",
+    "test:audit": "node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js functions/test/mcp.test.js functions/test/ki-visibility.test.js functions/test/roof-vision.test.js functions/test/style-vision.test.js",
     "render:social": "node scripts/render-social.mjs"
   },
   "keywords": [

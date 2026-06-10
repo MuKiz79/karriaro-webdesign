@@ -31,6 +31,7 @@ const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
 const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Single-Source
 const { kiVisScore, kiVisLabel, reconcileKiVis } = require("./lib/ki-visibility.js");  // Sprint 240
 const { parseImage, normalizeAssessment } = require("./lib/roof-vision.js");  // Sprint 241 (Vision)
+const { sanitizeOccasion, buildStyleVisionPrompt, STYLE_VISION_TOOL, normalizeAssessment: normalizeStyleAssessment } = require("./lib/style-vision.js");  // Sprint 242 (Friseur-Vision)
 const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
@@ -1799,6 +1800,88 @@ exports.roofVision = onRequest(
         } catch (err) {
             console.error("roofVision failed:", err);
             return res.status(502).json({ error: "KI-Analyse fehlgeschlagen", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// Friseur-Portraitfoto → Claude-Vision-Stilberatung (2026-06-09, Sprint 242).
+// Zweiter Vision-Call, exakt nach roofVision-Muster: echtes Foto wird real von
+// Claude (Bild-Input) beurteilt — Gesichtsform + Frisuren-Empfehlung, respektvoll,
+// ohne Beauty-Bewertung. Bild wird NICHT gespeichert (nur in-memory).
+// Pure Helfer (Prompt/Tool/Normalisierung) in lib/style-vision.js.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── styleVision ─── POST { image (Data-URL oder Base64), mediaType?, occasion? }
+exports.styleVision = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Vision-Calls = teurer als Text → strenges Limit 5/h (eigener Counter-Key).
+        if (await enforceRateLimit(db, req, res, "styleVision", 5, 3600)) return;
+
+        const { image, mediaType, occasion } = req.body || {};
+        let img;
+        try {
+            img = parseImage(image, mediaType); // validiert Format + Größe (≤2 MB), wirft sonst
+        } catch (e) {
+            return res.status(400).json({ error: String(e?.message || "Ungültiges Bild").slice(0, 160) });
+        }
+
+        // occasion sanitisiert (max 40 Zeichen, [a-z]-Whitelist) als Kontextzeile in den Prompt.
+        const { system, userText } = buildStyleVisionPrompt(sanitizeOccasion(occasion));
+        try {
+            const body = {
+                model: ROOF_VISION_MODEL, // gleiches Vision-Modell wie roofVision
+                max_tokens: 1024,
+                system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+                tools: [STYLE_VISION_TOOL],
+                tool_choice: { type: "tool", name: STYLE_VISION_TOOL.name },
+                messages: [{
+                    role: "user",
+                    content: [
+                        { type: "text", text: userText },
+                        { type: "image", source: { type: "base64", media_type: img.mediaType, data: img.base64 } }
+                    ]
+                }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": CLAUDE_API_KEY.value(),
+                    "anthropic-version": "2023-06-01"
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(45000)
+            });
+            if (!r.ok) {
+                const t = await r.text().catch(() => "");
+                throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+            }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === STYLE_VISION_TOOL.name);
+            if (!tu?.input) throw new Error("Claude lieferte kein tool_use-Payload");
+            const { isPortrait, message, ...assessment } = normalizeStyleAssessment(tu.input);
+            // isPortrait-Gate (Vertrauens-Regel): ohne erkennbares Portrait keine Empfehlung,
+            // sondern eine ehrliche Ablehnung mit Bitte um ein Portraitfoto.
+            if (!isPortrait) return res.json({ ok: true, isPortrait: false, message });
+            // Ohne eine einzige Empfehlung gibt es kein leeres "Ergebnis" — ehrlicher Fehler.
+            if (!assessment.recommendations.length) throw new Error("Vision-Antwort ohne Empfehlung");
+            return res.json({ ok: true, isPortrait: true, assessment });
+        } catch (err) {
+            // Generischer Fehler an den Client; Details nur ins strukturierte Log.
+            logger.error("styleVision failed", {
+                fn: "styleVision", error: String(err?.message || err).slice(0, 300)
+            });
+            return res.status(500).json({ error: "KI-Analyse fehlgeschlagen" });
         }
     }
 );
