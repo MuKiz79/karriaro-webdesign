@@ -121,6 +121,9 @@ html.embed-hero .hero-h1-line{display:block}
         .sc-result-h em { font-family: var(--serif); font-style: italic; }
         .sc-result-body { font-size: 15px; opacity: 0.92; line-height: 1.55; margin-bottom: 24px; }
         .sc-disclaimer { font-size: 11px; opacity: 0.65; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.18); }
+        .sc-result-inputs { font-size: 12px; letter-spacing: 0.03em; opacity: 0.92; background: rgba(255,255,255,0.12); border-radius: var(--p-radius); padding: 10px 14px; margin-bottom: 16px; }
+        .sc-result-cathint { font-size: 13px; opacity: 0.85; line-height: 1.5; margin: -12px 0 24px; }
+        .sc-result-inputs:empty, .sc-result-cathint:empty { display: none; }
         @media (max-width: 720px) { .sc-opts { grid-template-columns: 1fr; } }
         /* P2 E-Rezept — Sprint 9c: dezente Background-Image als Editorial-Anker */
         .erezept {
@@ -137,6 +140,7 @@ html.embed-hero .hero-h1-line{display:block}
         .erezept-success.is-visible { display: block; }
         .erezept-success-h { font-family: var(--serif); font-style: italic; font-size: 20px; margin-bottom: 6px; }
         .erezept-success-body { font-size: 13px; opacity: 0.9; }
+        .erezept-success-note { font-size: 11px; opacity: 0.78; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.22); }
         @media (max-width: 920px) { .erezept-inner { grid-template-columns: 1fr; } }
         /* P3 Express-Video — Sprint 9c: dezente Background-Image als Editorial-Anker */
         .express-video {
@@ -589,7 +593,7 @@ html.embed-hero .hero-h1-line{display:block}
         <!-- P1 · Symptom-Wegweiser -->
         <section class="symptom-checker" id="symptom-checker" aria-label="Symptom-Checker">
             <div class="sc-inner">
-                <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Neu · KBV-zertifiziert · keine Diagnose</p>
+                <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Symptom-Wegweiser · Demo-Konzept · keine Diagnose</p>
                 <h2>Was haben Sie? <em>In 60 Sekunden zur Empfehlung.</em></h2>
                 <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:560px; margin-left:auto; margin-right:auto; font-weight:300; line-height:1.55;">Drei Fragen, dann sagen wir Ihnen: Termin in 24 h, Express-Video heute oder Selbstbehandlung. Datenschutz-konform, keine Speicherung.</p>
 
@@ -629,22 +633,28 @@ html.embed-hero .hero-h1-line{display:block}
 
                 <div class="sc-result" data-result="routine">
                     <div class="sc-result-eyebrow">Empfehlung · Routine-Termin</div>
+                    <div class="sc-result-inputs"></div>
                     <div class="sc-result-h">Termin <em>in 24 Stunden.</em></div>
                     <div class="sc-result-body">Klingt nicht akut. Buchen Sie einen Regeltermin — wir hören in Ruhe zu und finden die Ursache. Bei Bedarf direkt vor Ort behandeln.</div>
+                    <div class="sc-result-cathint"></div>
                     <a href="#termin" class="btn btn-primary">Termin online buchen →</a>
                     <div class="sc-disclaimer">Keine medizinische Diagnose. Bei Verschlechterung sofort Hausarzt oder 116 117 kontaktieren.</div>
                 </div>
                 <div class="sc-result" data-result="soon">
                     <div class="sc-result-eyebrow">Empfehlung · Heute oder morgen</div>
+                    <div class="sc-result-inputs"></div>
                     <div class="sc-result-h">Express-Video <em>noch heute.</em></div>
                     <div class="sc-result-body">Bei deutlicher Belastung empfehlen wir kein Warten. Express-Video-Sprechstunde unter 2 Stunden — Rezept, AU oder Vor-Ort-Empfehlung folgt direkt.</div>
+                    <div class="sc-result-cathint"></div>
                     <a href="#express-video" class="btn btn-primary">Express-Video-Slot wählen →</a>
                     <div class="sc-disclaimer">Keine medizinische Diagnose. Bei Verschlechterung sofort Hausarzt oder 116 117.</div>
                 </div>
                 <div class="sc-result" data-result="urgent">
                     <div class="sc-result-eyebrow">Empfehlung · heute Vor-Ort</div>
+                    <div class="sc-result-inputs"></div>
                     <div class="sc-result-h">Vor-Ort-Termin <em>noch heute.</em></div>
                     <div class="sc-result-body">Bei starker Belastung gehört eine körperliche Untersuchung dazu. Rufen Sie uns an oder kommen Sie zur Akut-Sprechstunde 11-12 Uhr — wir reservieren einen Slot.</div>
+                    <div class="sc-result-cathint"></div>
                     <a href="tel:+498912345678" class="btn btn-primary">089 234 567 anrufen</a>
                     <div class="sc-disclaimer">Keine medizinische Diagnose. Bei Verschlechterung sofort Hausarzt oder 116 117.</div>
                 </div>
@@ -677,6 +687,7 @@ html.embed-hero .hero-h1-line{display:block}
                     <div class="erezept-success" id="erezept-success">
                         <div class="erezept-success-h">In 2 Stunden in der Apotheke abrufbar.</div>
                         <div class="erezept-success-body">Sie bekommen eine SMS, sobald das E-Rezept in der gematik-Cloud freigegeben ist. Mit Versichertenkarte abholbar.</div>
+                        <div class="erezept-success-note">Demo-Hinweis: In der echten Praxis-Website würde Ihre Anfrage jetzt ans Praxisteam gehen. Diese Seite ist ein Karriaro-Designbeispiel.</div>
                     </div>
                 </div>
                 <div>
@@ -697,7 +708,7 @@ html.embed-hero .hero-h1-line{display:block}
             <div class="ev-inner">
                 <p class="eyebrow" style="color:var(--accent-dark); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Heute · Innerhalb 2 Stunden</p>
                 <h2>Express-Video-Sprechstunde.</h2>
-                <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:560px; margin-left:auto; margin-right:auto; font-weight:300; line-height:1.55;">Wenn es schnell gehen muss — und kein Notfall ist. KBV-zertifiziert, gesetzliche Kassen übernehmen die Kosten. Slot wählen, Video-Link kommt per SMS.</p>
+                <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:560px; margin-left:auto; margin-right:auto; font-weight:300; line-height:1.55;">Wenn es schnell gehen muss — und kein Notfall ist. Gesetzliche Kassen übernehmen die Kosten der Videosprechstunde. Slot wählen, Video-Link kommt per SMS.</p>
                 <div class="ev-slots">
                     <button type="button" class="ev-slot" onclick="this.parentElement.querySelectorAll('.ev-slot').forEach(s=>s.classList.remove('is-active')); this.classList.add('is-active');">
                         <div class="ev-slot-time">Heute 14:30</div>
@@ -1349,15 +1360,42 @@ html.embed-hero .hero-h1-line{display:block}
         });
 
         // P1 Symptom-Checker — Step-Navigation
+        // QA 2026-06-09: Frage 1 (data-cat) + Frage 2 (data-acute) wurden nie gelesen, nur Frage 3
+        // entschied. Jetzt werden alle drei Antworten mitgeschrieben und sichtbar ins Ergebnis
+        // zurückgespielt ("Ihre Angaben: …" + kategorie-/dauerabhängiger Hinweis). Notfall-Pfad (112) unverändert.
+        var scCat = null, scAcute = null;
+        var SC_CAT_LABELS = { resp: 'Husten & Atemwege', gi: 'Bauch & Verdauung', msk: 'Rücken, Gelenke & Muskeln', other: 'Andere Beschwerde' };
+        var SC_ACUTE_LABELS = { now: 'seit heute', days: 'seit 2-7 Tagen', weeks: 'seit mehr als einer Woche', chronic: 'länger / immer wieder' };
+        var SC_SEV_LABELS = { low: 'leichte Beschwerden', mid: 'starke Beschwerden', high: 'sehr starke Beschwerden' };
+        var SC_CAT_HINTS = {
+            resp: 'Hinweis zu Husten & Atemwegen: Messen Sie vorab Fieber — der Wert hilft uns bei der Einschätzung.',
+            gi: 'Hinweis zu Bauch & Verdauung: Trinken Sie ausreichend und notieren Sie, was Sie zuletzt gegessen haben.',
+            msk: 'Hinweis zu Rücken & Gelenken: Merken Sie sich, welche Bewegung die Beschwerden auslöst — das verkürzt die Untersuchung.'
+        };
         document.querySelectorAll('.sc-opt').forEach(function (b) {
             b.addEventListener('click', function () {
                 var next = b.getAttribute('data-next');
+                if (b.hasAttribute('data-cat')) scCat = b.getAttribute('data-cat');
+                if (b.hasAttribute('data-acute')) scAcute = b.getAttribute('data-acute');
                 document.querySelectorAll('.sc-step').forEach(function (s) { s.classList.remove('is-active'); });
                 document.querySelectorAll('.sc-result').forEach(function (r) { r.classList.remove('is-active'); });
                 if (next && next.indexOf('result-') === 0) {
                     var key = next.replace('result-', '');
                     var r = document.querySelector('.sc-result[data-result="' + key + '"]');
-                    if (r) r.classList.add('is-active');
+                    if (r) {
+                        var inputsEl = r.querySelector('.sc-result-inputs');
+                        var hintEl = r.querySelector('.sc-result-cathint');
+                        if (inputsEl && scCat && scAcute) {
+                            var sev = b.getAttribute('data-sev');
+                            inputsEl.textContent = 'Ihre Angaben: ' + SC_CAT_LABELS[scCat] + ' · ' + SC_ACUTE_LABELS[scAcute] + ' · ' + (SC_SEV_LABELS[sev] || '');
+                        }
+                        if (hintEl) {
+                            var hint = SC_CAT_HINTS[scCat] || '';
+                            if (scAcute === 'chronic') hint += (hint ? ' ' : '') + 'Da die Beschwerden länger bestehen: Bringen Sie vorhandene Befunde oder Ihren Medikationsplan mit.';
+                            hintEl.textContent = hint;
+                        }
+                        r.classList.add('is-active');
+                    }
                 } else {
                     var step = document.querySelector('.sc-step[data-step="' + next + '"]');
                     if (step) step.classList.add('is-active');

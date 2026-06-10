@@ -44,6 +44,20 @@
     // === Dachdecker · BAFA-Förderrechner ===
     /* DEMO-NOTE: Förder-Math (80 €/m² Basis + 15 % iSFP + 50 €/m² Solar)
        sind Demo-Pauschalen. Reale Produktion: BAFA-XML-Tarif + iSFP-Aktor. */
+    // PLZ-Zone (erste Ziffer) → Hinweis auf mögliche Landesförderung. Reiner
+    // Demo-Hinweis, keine Förderberatung — die BAFA-Spanne bleibt bundesweit gleich.
+    var DACH_LAND_HINWEIS = {
+        '0': 'Länderprogramme Ost (Sachsen/Sachsen-Anhalt/Thüringen)',
+        '1': 'Länderprogramme Berlin/Brandenburg',
+        '2': 'Länderprogramme Nord (Hamburg/Schleswig-Holstein/Niedersachsen)',
+        '3': 'Länderprogramme Niedersachsen/Nordhessen',
+        '4': 'progres.nrw',
+        '5': 'progres.nrw',
+        '6': 'Länderprogramme Hessen/Rheinland-Pfalz/Saarland',
+        '7': 'Länderprogramme Baden-Württemberg',
+        '8': 'Länderprogramme Bayern',
+        '9': 'Länderprogramme Bayern/Thüringen'
+    };
     function attachDachdecker() {
         var f = document.querySelector('[data-kr-tool-form="dachdecker"]');
         if (!f) return;
@@ -56,6 +70,8 @@
                 return;
             }
             var solar = fd.get('solar') === '1';
+            var plzZone = (fd.get('plz') || '').toString().charAt(0);
+            var landHinweis = DACH_LAND_HINWEIS[plzZone];
             var basis = flaeche * 80;
             var maxIsfp = basis * 1.15;
             var solarBonus = solar ? flaeche * 50 : 0;
@@ -63,7 +79,9 @@
             var max = Math.round((maxIsfp + solarBonus) / 100) * 100;
             showOutput('dachdecker',
                 formatEUR(min) + ' <span style="color:var(--color-graphite-soft,#525E6B); font-weight:300;">bis</span> ' + formatEUR(max),
-                'Schätzung BAFA + KfW + iSFP-Bonus' + (solar ? ' + Solar-Förderung' : '') + '. Echte Demo gibt PDF-Report mit Auszahlungsbescheinigung-Vorlage aus.'
+                'Schätzung BAFA + KfW + iSFP-Bonus' + (solar ? ' + Solar-Förderung' : '') + '.'
+                + (landHinweis ? ' Plus ' + landHinweis + ' möglich (Demo-Hinweis für PLZ-Region ' + plzZone + ', keine Förderberatung).' : '')
+                + ' Echte Demo gibt PDF-Report mit Auszahlungsbescheinigung-Vorlage aus.'
             );
         });
     }
@@ -102,8 +120,9 @@
     }
 
     // === Praxis · KI-Symptom-Checker ===
-    /* DEMO-NOTE: Nur 7 hartcodierte Symptom-Kombinationen. Reale Produktion:
-       SNOMED-CT-basiertes Triage-Mapping mit echtem MFA-Slot-API. */
+    /* DEMO-NOTE: 10 hartcodierte Zuordnungen (alle 6 Einzel-Symptome + 4 Kombis);
+       unbekannte Kombinationen bekommen ehrlich KEINEN fiktiven Slot. Reale
+       Produktion: SNOMED-CT-basiertes Triage-Mapping mit echtem MFA-Slot-API. */
     function attachPraxis() {
         var f = document.querySelector('[data-kr-tool-form="praxis"]');
         if (!f) return;
@@ -131,16 +150,27 @@
             }
             // Sprint 63 — Mapping-Keys müssen alphabetisch sortiert sein (matched gegen syms.sort().join).
             var mapping = {
+                'fieber': { typ: 'Akutsprechstunde', slot: 'heute 14:00' },
                 'fieber_kopfschmerz': { typ: 'Akutsprechstunde', slot: 'heute 14:30' },
                 'fieber_husten': { typ: 'Akutsprechstunde + ggf. Atemwegs-Check', slot: 'heute 15:00' },
+                'husten': { typ: 'Atemwegs-Sprechstunde', slot: 'heute 15:30' },
                 'rueckenschmerz_schwindel': { typ: 'Untersuchung HNO + Orthopädie', slot: 'morgen 09:45' },
                 'rueckenschmerz': { typ: 'Orthopädische Akut-Sprechstunde', slot: 'morgen 11:00' },
+                'schwindel': { typ: 'Kreislauf-Check (Blutdruck + HNO)', slot: 'morgen 09:15' },
                 'muedigkeit_schwindel': { typ: 'Blutdruck + Labor-Check', slot: 'morgen 10:15' },
                 'muedigkeit': { typ: 'Routine-Check-Up', slot: 'Mittwoch 16:00' },
                 'kopfschmerz': { typ: 'Akut-Termin Hausarzt', slot: 'morgen 08:30' }
             };
             var key = syms.sort().join('_');
-            var match = mapping[key] || mapping[syms[0]] || { typ: 'Routine-Termin', slot: 'Donnerstag 11:30' };
+            var match = mapping[key];
+            // Ehrlicher Fallback: keine eindeutige Zuordnung → kein fiktiver Slot.
+            if (!match) {
+                showOutput('praxis',
+                    'Keine eindeutige Zuordnung',
+                    'Rufen Sie kurz an — die Praxis ordnet das persönlich ein. Echte Demo übergibt die Vorab-Anamnese direkt an die MFA-Inbox.'
+                );
+                return;
+            }
             showOutput('praxis',
                 match.typ,
                 'Vorschlag: <strong>' + match.slot + '</strong>. Echte Demo prüft DMP-Status und reserviert den Slot live in der MFA-Inbox.'
@@ -150,7 +180,8 @@
 
     // === Friseur · Style-Empfehlung ===
     /* Sprint 84 — Slot + Preis rotieren jetzt pro Aufruf. Slot aus 8er-Pool
-       via Date.now()-Modulo, Preis aus Style-Kategorie. Reale Produktion
+       via Date.now()-Modulo, Preis aus Style-Kategorie. Slot ist als
+       "Beispiel-Slot" gekennzeichnet — kein Live-Kalender. Reale Produktion
        wuerde noch Treatwell/Shore-Slot-API anbinden. */
     var FRISEUR_SLOTS = [
         'Dienstag 9:30 bei Sara M.',
@@ -223,7 +254,7 @@
                 : '';
             showOutput('friseur',
                 style,
-                bildHtml + 'Nächster freier Slot: <strong>' + slot + '</strong> · ' + preis + ' €. Style-Vorschau aus unserer Galerie (echte Stylistinnen-Arbeit).<div style="clear:both;"></div>'
+                bildHtml + 'Beispiel-Slot: <strong>' + slot + '</strong> · ' + preis + ' €. Style-Vorschau aus unserer Galerie (echte Stylistinnen-Arbeit).<div style="clear:both;"></div>'
             );
         });
     }
@@ -252,6 +283,37 @@
     }
 
     // === Restaurant · AI-Sommelier ===
+    /* DEMO-NOTE: Fiktive Demo-Weinkarte. Je Gericht 3 Range-Varianten
+       (Einsteiger <30 €, Mittel 30–60 €, Premium >60 €) — die gewählte
+       Preisrange steuert die Auswahl real. Reale Produktion: Karte des
+       Restaurants. */
+    var RESTAURANT_PAIRINGS = {
+        'rind': {
+            'bis30': ['Primitivo Puglia 2022 (vollmundig, weich) · 24 €', 'Montepulciano d\'Abruzzo 2021 (saftig, unkompliziert) · 19 €', 'Rioja Crianza 2020 (rund, leichte Vanille) · 28 €'],
+            '30-60': ['Toskanischer Sangiovese 2020 (würzig, mittlere Tannine) · 38 €', 'Ribera del Duero Crianza 2019 (dicht, dunkle Frucht) · 46 €', 'Malbec Mendoza Reserva 2020 (kraftvoll, samtig) · 36 €'],
+            '60+': ['Barolo "Cannubi" 2019 (kräftig, gerbsäurereich) · 96 €', 'Spätburgunder Pfalz "GG" 2021 (elegant) · 72 €', 'Brunello di Montalcino 2018 (komplex, gereift) · 89 €']
+        },
+        'lamm': {
+            'bis30': ['Syrah Côtes-du-Rhône 2020 (würzig, pfeffrig) · 22 €', 'Garnacha Campo de Borja 2021 (saftig, dunkle Beeren) · 18 €', 'Nero d\'Avola Sizilien 2021 (warm, würzig) · 24 €'],
+            '30-60': ['Rioja Reserva 2018 (vanillig, weich) · 38 €', 'Cabernet Franc Loire 2019 · 34 €', 'Crozes-Hermitage 2020 (dunkle Frucht, Pfeffer) · 44 €'],
+            '60+': ['Châteauneuf-du-Pape 2019 (vielschichtig, kraftvoll) · 74 €', 'Barossa Shiraz Reserve 2018 (opulent, reife Frucht) · 78 €', 'Pauillac Grand Cru Classé 2016 (klassisch, feste Struktur) · 120 €']
+        },
+        'fisch': {
+            'bis30': ['Riesling Mosel Kabinett 2022 (frisch, mineralisch) · 24 €', 'Albariño Rías Baixas 2022 (salzig, zitrisch) · 27 €', 'Picpoul de Pinet 2022 (leicht, knackig) · 19 €'],
+            '30-60': ['Riesling Rheingau trocken 2021 (straff, präzise) · 34 €', 'Sancerre Sauvignon Blanc 2021 · 42 €', 'Chablis Premier Cru 2021 (kalkig, kühl) · 52 €'],
+            '60+': ['Chablis Grand Cru "Les Clos" 2020 (tiefgründig, mineralisch) · 88 €', 'Pouilly-Fumé "Silex" 2020 (rauchig, präzise) · 92 €', 'Meursault 2019 (cremig, lang) · 98 €']
+        },
+        'pasta': {
+            'bis30': ['Vermentino Ligurien 2022 (hell, mediterran) · 22 €', 'Soave Classico 2021 (mild, mandelig) · 18 €', 'Barbera d\'Asti 2021 (frisch, saftig) · 25 €'],
+            '30-60': ['Chianti Classico 2020 (klassisch, leicht) · 34 €', 'Etna Rosso 2021 (vulkanisch, feingliedrig) · 39 €', 'Vino Nobile di Montepulciano 2019 (ausgewogen, kirschig) · 44 €'],
+            '60+': ['Barbaresco 2019 (floral, feine Tannine) · 74 €', 'Chianti Classico Gran Selezione 2018 (dicht, lang) · 68 €', 'Amarone della Valpolicella 2017 (opulent, kraftvoll) · 95 €']
+        },
+        'gefluegel': {
+            'bis30': ['Grüner Veltliner Federspiel 2022 (pfeffrig, frisch) · 21 €', 'Chardonnay Pays d\'Oc 2022 (rund, fruchtig) · 17 €', 'Silvaner Franken trocken 2022 (erdig, klar) · 23 €'],
+            '30-60': ['Burgunder weiß 2021 (cremig) · 38 €', 'Grüner Veltliner Reserve 2020 · 33 €', 'Crémant de Bourgogne Brut (feinperlig, festlich) · 31 €'],
+            '60+': ['Champagner Blanc de Blancs (festlich) · 89 €', 'Puligny-Montrachet 2020 (elegant, mineralisch) · 110 €', 'Chassagne-Montrachet 2019 (nussig, tief) · 95 €']
+        }
+    };
     function attachRestaurant() {
         var f = document.querySelector('[data-kr-tool-form="restaurant"]');
         if (!f) return;
@@ -260,14 +322,8 @@
             var fd = new FormData(f);
             var gericht = fd.get('gericht'), preis = fd.get('preis');
             if (!gericht) { showOutput('restaurant', '—', 'Bitte Hauptgericht wählen.'); return; }
-            var pairings = {
-                'rind': ['Barolo "Cannubi" 2019 (kräftig, gerbsäurereich)', 'Toskanischer Sangiovese 2020 (würzig, mittlere Tannine)', 'Spätburgunder Pfalz "GG" 2021 (elegant)'],
-                'lamm': ['Rioja Reserva 2018 (vanillig, weich)', 'Syrah Côtes-du-Rhône 2020 (würzig, pfeffrig)', 'Cabernet Franc Loire 2019'],
-                'fisch': ['Riesling Mosel Kabinett 2022 (frisch, mineralisch)', 'Sancerre Sauvignon Blanc 2021', 'Albariño Rías Baixas 2022'],
-                'pasta': ['Chianti Classico 2020 (klassisch, leicht)', 'Vermentino Ligurien 2022', 'Soave Classico 2021'],
-                'gefluegel': ['Burgunder weiß 2021 (cremig)', 'Grüner Veltliner Reserve 2020', 'Champagner Blanc de Blancs (festlich)']
-            };
-            var wines = pairings[gericht] || [];
+            var ranges = RESTAURANT_PAIRINGS[gericht];
+            var wines = ranges ? (ranges[preis] || ranges['bis30']) : [];
             if (!wines.length) {
                 showOutput('restaurant', '—', 'Für die Auswahl gibt es keine Empfehlung. Bitte ein anderes Gericht wählen.');
                 return;
@@ -455,4 +511,7 @@
     } else {
         init();
     }
+
+    // Export für die Spedition-Demo-Seite — nutzt dieselbe PLZ-Centroid-Distanz.
+    window.KarriaroPlz = { distanceKm: plzDistanceKm };
 })();

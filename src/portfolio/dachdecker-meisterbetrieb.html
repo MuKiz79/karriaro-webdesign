@@ -457,6 +457,7 @@ html.embed-hero .hero-h1-line{display:block}
         .solar-toggle-row .hint { color: var(--text-soft); font-size: 12px; margin-left: auto; }
         .foerder-line.solar { color: var(--accent-strong); }
         .foerder-line.solar.is-hidden { display: none; }
+        .foerder-hint { font-size: 14px; color: var(--text-soft); text-align: center; padding: 14px 0; }
 
         /* Sturmschaden-Checkliste-Modal */
         .modal-wide { max-width: 600px; text-align: left; }
@@ -1233,29 +1234,24 @@ html.embed-hero .hero-h1-line{display:block}
                     <div class="foerder-card">
                         <div class="foerder-row">
                             <div class="foerder-input"><label for="fr-typ">Maßnahme</label>
-                                <select id="fr-typ"><option>Dachsanierung mit Aufsparrendämmung</option><option>Zwischensparrendämmung nachträglich</option><option>Komplett-Neueindeckung</option><option>Indach-PV mit Sanierung</option></select>
+                                <select id="fr-typ"><option value="" selected disabled>Bitte wählen …</option><option value="aufsparren">Dachsanierung mit Aufsparrendämmung</option><option value="zwischensparren">Zwischensparrendämmung nachträglich</option><option value="neueindeckung">Komplett-Neueindeckung</option><option value="indachpv">Indach-PV mit Sanierung</option></select>
                             </div>
                             <div class="foerder-input"><label for="fr-jahr">Baujahr Ihres Hauses</label>
-                                <select id="fr-jahr"><option>vor 1978</option><option>1978–1995</option><option>1995–2009</option><option>nach 2009</option></select>
+                                <select id="fr-jahr"><option value="" selected disabled>Bitte wählen …</option><option value="vor1978">vor 1978</option><option value="1978-1995">1978–1995</option><option value="1995-2009">1995–2009</option><option value="nach2009">nach 2009</option></select>
                             </div>
                         </div>
                         <div class="solar-toggle-row">
                             <label>
-                                <input type="checkbox" id="solar-toggle" onchange="document.querySelectorAll('.foerder-line.solar').forEach(function(el){el.classList.toggle('is-hidden', !this.checked);}, this);">
+                                <input type="checkbox" id="solar-toggle">
                                 Mit PV-Anlage kombinieren
                             </label>
                             <span class="hint">+ KfW 270 Kredit & gemeinsame BAFA-Bonus-Stufe</span>
                         </div>
                         <div class="foerder-output">
-                            <div class="foerder-line"><span>Investitionskosten Dach (geschätzt)</span><span>34.200 €</span></div>
-                            <div class="foerder-line solar is-hidden"><span>+ Investitionskosten PV-Anlage 8 kWp</span><span>14.800 €</span></div>
-                            <div class="foerder-line"><span>BAFA Einzelmaßnahme Dach 15 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 5.130 €</span></div>
-                            <div class="foerder-line solar is-hidden"><span>BAFA-Bonus iSFP +5 %</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.710 €</span></div>
-                            <div class="foerder-line"><span>KfW 261 Effizienzhaus-Bonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 3.420 €</span></div>
-                            <div class="foerder-line solar is-hidden"><span>KfW 270 Solarkredit (ab 3,5 % p.a., separat)</span><span style="color: var(--accent-dark); font-weight: 600;">– 14.800 €</span></div>
-                            <div class="foerder-line"><span>Stadt Stuttgart Klimabonus</span><span style="color: var(--accent-dark); font-weight: 600;">– 1.000 €</span></div>
-                            <div class="foerder-line total"><span>Ihr Eigenanteil</span><span id="foerder-total">24.650 €</span></div>
-                            <p class="foerder-source">Stand 2026, je nach Einzelfall. Verbindliche Berechnung im Beratungsgespräch — kostenlos, wir übernehmen die Antragsstellung.</p>
+                            <div id="foerder-lines">
+                                <p class="foerder-hint">Wählen Sie Maßnahme und Baujahr — der Rechner zeigt dann Ihre Förder-Schätzung.</p>
+                            </div>
+                            <p class="foerder-source">Demo-Pauschalen, Stand 2026 — der Betrieb rechnet Ihr konkretes Dach vor Ort. Verbindliche Berechnung im Beratungsgespräch — kostenlos, wir übernehmen die Antragsstellung.</p>
                         </div>
                         <button type="button" class="btn btn-primary" style="margin-top: 18px; width: 100%; justify-content: center;" onclick="openModal('foerder')">Persönliche Förderberatung anfragen</button>
                     </div>
@@ -1290,10 +1286,10 @@ html.embed-hero .hero-h1-line{display:block}
                                 </div>
                             </div>
                             <div class="co2-output">
-                                <div class="co2-output-row"><span>Dämmung-Effekt (Heiz-Einsparung)</span><span id="co2-daemm-eff">1,8 t/Jahr</span></div>
-                                <div class="co2-output-row"><span>Solar-Stromertrag (CO2-frei)</span><span id="co2-solar-eff">2,4 t/Jahr</span></div>
-                                <div class="co2-output-row total"><span>Gesamt CO2-Einsparung</span><span id="co2-total">4,2 t/Jahr · 84 t Lifetime</span></div>
-                                <div class="co2-output-equiv" id="co2-equiv">🌳 Entspricht 1.680 gepflanzten Bäumen über 20 Jahre</div>
+                                <div class="co2-output-row"><span>Dämmung-Effekt (Heiz-Einsparung)</span><span id="co2-daemm-eff">6.2 t/Jahr</span></div>
+                                <div class="co2-output-row"><span>Solar-Stromertrag (CO2-frei)</span><span id="co2-solar-eff">2.4 t/Jahr</span></div>
+                                <div class="co2-output-row total"><span>Gesamt CO2-Einsparung</span><span id="co2-total">8.6 t/Jahr · 172 t Lifetime</span></div>
+                                <div class="co2-output-equiv" id="co2-equiv">🌳 Entspricht 3.440 gepflanzten Bäumen über 20 Jahre</div>
                             </div>
                         </div>
                     </div>
@@ -1938,6 +1934,7 @@ html.embed-hero .hero-h1-line{display:block}
             document.getElementById('co2-total').textContent = total + ' t/Jahr · ' + lifetime + ' t Lifetime';
             document.getElementById('co2-equiv').innerHTML = '🌳 Entspricht ' + baeume.toLocaleString('de-DE') + ' gepflanzten Bäumen über 20 Jahre';
         }
+        updateCo2(); // Initialanzeige formelkonsistent zur Slider-Vorbelegung (140 m² / 8 kWp / 22 cm)
         function openModal(kind) {
             var modal = document.getElementById('modal');
             var t = document.getElementById('modal-title');
@@ -1954,16 +1951,49 @@ html.embed-hero .hero-h1-line{display:block}
             if (e.key === 'Escape') { closeModal(); closeSturmChecklist(); }
         });
 
-        // Solar-Toggle: Total-Anzeige aktualisieren
+        // Förderrechner: Demo-Berechnung aus Maßnahme + Baujahr (+ Solar-Toggle).
+        // Kein Ergebnis ohne Auswahl — alle Zeilen werden aus der Rechnung gerendert.
         (function () {
-            var toggle = document.getElementById('solar-toggle');
-            var total = document.getElementById('foerder-total');
-            if (!toggle || !total) return;
-            toggle.addEventListener('change', function () {
-                // Dach-Eigenanteil: 24.650 € | mit Solar: 24.650 + (14.800 - 1.710 - 14.800) = 22.940 € (KfW-Kredit muss zurückgezahlt werden, daher netto +)
-                // Vereinfacht: Solar-Total inkl. KfW-Kredit-Anteil (Kredit wird zurückgezahlt, also +14.800)
-                total.textContent = this.checked ? '37.740 €' : '24.650 €';
-            });
+            var typEl = document.getElementById('fr-typ');
+            var jahrEl = document.getElementById('fr-jahr');
+            var solarEl = document.getElementById('solar-toggle');
+            var linesEl = document.getElementById('foerder-lines');
+            if (!typEl || !jahrEl || !solarEl || !linesEl) return;
+            // Demo-Pauschalen je Maßnahme (Referenzdach ~140 m², vgl. Galerie-Projekte)
+            var BASIS = { aufsparren: 34200, zwischensparren: 12600, neueindeckung: 26600, indachpv: 42500 };
+            // Baujahr-Faktor: älter = mehr Sanierungsumfang
+            var FAKTOR = { 'vor1978': 1.15, '1978-1995': 1.0, '1995-2009': 0.9, 'nach2009': 0.8 };
+            var PV_KOSTEN = 14800;  // 8-kWp-Demo-Pauschale
+            var KLIMABONUS = 1000;  // Stadt Stuttgart, Festbetrag
+            function eur(n) { return n.toLocaleString('de-DE') + ' €'; }
+            function row(label, value, abzug, solar) {
+                return '<div class="foerder-line' + (solar ? ' solar' : '') + '"><span>' + label + '</span><span' +
+                    (abzug ? ' style="color: var(--accent-dark); font-weight: 600;"' : '') + '>' + (abzug ? '– ' : '') + eur(value) + '</span></div>';
+            }
+            function render() {
+                if (!typEl.value || !jahrEl.value) {
+                    linesEl.innerHTML = '<p class="foerder-hint">Wählen Sie Maßnahme und Baujahr — der Rechner zeigt dann Ihre Förder-Schätzung.</p>';
+                    return;
+                }
+                var basis = Math.round(BASIS[typEl.value] * FAKTOR[jahrEl.value] / 100) * 100;
+                var mitSolar = solarEl.checked;
+                var bafa = Math.round(basis * 0.15);  // BAFA Einzelmaßnahme 15 %
+                var isfp = Math.round(basis * 0.05);  // iSFP-Bonus +5 % (Kombi-Stufe, vgl. iSFP-Card)
+                var kfw = Math.round(basis * 0.10);   // KfW 261 Effizienzhaus-Bonus 10 %
+                var total = basis + (mitSolar ? PV_KOSTEN : 0) - bafa - (mitSolar ? isfp : 0) - kfw - KLIMABONUS;
+                var html = row('Investitionskosten Dach (Demo-Pauschale)', basis, false, false);
+                if (mitSolar) html += row('+ Investitionskosten PV-Anlage 8 kWp', PV_KOSTEN, false, true);
+                html += row('BAFA Einzelmaßnahme Dach 15 %', bafa, true, false);
+                if (mitSolar) html += row('BAFA-Bonus iSFP +5 %', isfp, true, true);
+                html += row('KfW 261 Effizienzhaus-Bonus 10 %', kfw, true, false);
+                if (mitSolar) html += '<div class="foerder-line solar"><span>KfW 270 Solarkredit (separat finanzierbar)</span><span>ab 3,5 % p.a.</span></div>';
+                html += row('Stadt Stuttgart Klimabonus', KLIMABONUS, true, false);
+                html += '<div class="foerder-line total"><span>Ihr Eigenanteil</span><span id="foerder-total">' + eur(total) + '</span></div>';
+                linesEl.innerHTML = html;
+            }
+            typEl.addEventListener('change', render);
+            jahrEl.addEventListener('change', render);
+            solarEl.addEventListener('change', render);
         })();
 
         // Live-Status: Uhrzeit-basiert (Mo-Fr 7-17, Sa 8-12)

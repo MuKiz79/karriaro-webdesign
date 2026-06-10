@@ -153,6 +153,7 @@ html.embed-hero .hero-h1-line{display:block}
         .virtual-stage-canvas[data-stage="bohemian"] { background: linear-gradient(135deg, #D4A574, #8B5E3C); color: #FBF8F2; }
         .virtual-stage-canvas[data-stage="scandi"] { background: linear-gradient(135deg, #E8E2D6, #B8A88E); color: #2A2620; }
         .virtual-stage-canvas[data-stage="classic"] { background: linear-gradient(135deg, #4A3A2E, #2A1F18); color: #C9A06B; }
+        .stage-canvas-badge { position: absolute; top: 18px; left: 18px; font-family: var(--font); font-style: normal; font-weight: 500; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: rgba(20, 16, 12, 0.55); color: #FBF8F2; border: 1px solid rgba(251, 248, 242, 0.35); }
         .stage-toggles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; max-width: 980px; margin: 0 auto; }
         .stage-btn { padding: 18px 16px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--p-radius); cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; }
         .stage-btn:hover { border-color: var(--accent); }
@@ -247,6 +248,7 @@ html.embed-hero .hero-h1-line{display:block}
         .bewertung-result { margin-top: 28px; padding: 28px; background: var(--accent-bg); border-radius: var(--p-radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
         .bewertung-range { font-size: 30px; font-weight: 600; color: var(--accent); letter-spacing: -0.02em; }
         .bewertung-range small { display: block; font-size: 12px; color: var(--text-soft); font-weight: 400; margin-top: 4px; }
+        .bewertung-range.is-pending { font-family: var(--serif); font-style: italic; font-size: 19px; font-weight: 400; color: var(--text-soft); }
 
         .trust-strip { background: var(--bg); padding: 36px 0; border-bottom: 1px solid var(--border); }
         .trust-strip-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
@@ -736,11 +738,14 @@ html.embed-hero .hero-h1-line{display:block}
         <section class="virtual-stage" id="virtual-stage" aria-label="3D-Begehung mit Virtual-Staging">
             <div class="virtual-stage-inner">
                 <div class="section-head" style="text-align:left; max-width:720px; margin:0;">
-                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">3D-Begehung · Mit AI-Staging</p>
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">3D-Begehung · Konzept</p>
                     <h2>Begehen Sie das Objekt — <em>vor dem Vor-Ort-Termin.</em></h2>
-                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Matterport-3D-Dollhouse mit drei AI-gestützten Einrichtungs-Stilen. Käufer mit Lifestyle-Vorstellung kaufen 12–18 % über AVM-Spanne.</p>
+                    <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Drei Einrichtungs-Linien als Stil-Vorschau — die echte Website bindet an dieser Stelle den begehbaren 3D-Rundgang ein.</p>
                 </div>
-                <div class="virtual-stage-canvas" id="stage-canvas" data-stage="bohemian">Bohemian — Penthouse Stuttgart-Mitte</div>
+                <div class="virtual-stage-canvas" id="stage-canvas" data-stage="bohemian">
+                    <span id="stage-canvas-label">Bohemian — Penthouse Stuttgart-Mitte</span>
+                    <span class="stage-canvas-badge">Stil-Vorschau · Demo</span>
+                </div>
                 <div class="stage-toggles" id="stage-toggles">
                     <button type="button" class="stage-btn is-active" data-stage="bohemian" data-label="Bohemian — Penthouse Stuttgart-Mitte">
                         <div class="stage-btn-name">Bohemian</div>
@@ -778,16 +783,16 @@ html.embed-hero .hero-h1-line{display:block}
                     <div class="konfig-step">
                         <h4>Zustand</h4>
                         <div class="konfig-options" id="bw-zustand">
-                            <button type="button" class="konfig-option">Sanierungsbedürftig</button>
-                            <button type="button" class="konfig-option">Gepflegt</button>
-                            <button type="button" class="konfig-option is-active">Renoviert</button>
-                            <button type="button" class="konfig-option">Neuwertig</button>
+                            <button type="button" class="konfig-option" data-zustand="sanierung">Sanierungsbedürftig</button>
+                            <button type="button" class="konfig-option" data-zustand="gepflegt">Gepflegt</button>
+                            <button type="button" class="konfig-option is-active" data-zustand="renoviert">Renoviert</button>
+                            <button type="button" class="konfig-option" data-zustand="neuwertig">Neuwertig</button>
                         </div>
                     </div>
                     <div class="bewertung-result">
                         <div>
-                            <p class="bewertung-range" id="bw-range">685.000 – 745.000 €</p>
-                            <p style="font-size: 12px; color: var(--text-soft); margin-top: 4px;">Spanne basiert auf 18 Vergleichsobjekten im PLZ-Bereich, Stand Q1/2026.</p>
+                            <p class="bewertung-range is-pending" id="bw-range">Wird aus Ihren Angaben berechnet</p>
+                            <p style="font-size: 12px; color: var(--text-soft); margin-top: 4px;">Demo-Modell: PLZ-Markttier + Objekttyp-, Baujahr- und Zustands-Modifier — die echte Website rechnet mit Live-Vergleichsdaten.</p>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="openModal('bewertung')">Vor-Ort-Termin vereinbaren →</button>
                     </div>
@@ -1666,25 +1671,63 @@ html.embed-hero .hero-h1-line{display:block}
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
         });
 
-        // I2 Virtual-Staging-Toggle
+        // I2 Virtual-Staging-Toggle (Stil-Vorschau der Demo — Label-Span statt textContent,
+        // damit der "Stil-Vorschau · Demo"-Badge im Canvas stehen bleibt)
         var stageBtns = document.querySelectorAll('#stage-toggles .stage-btn');
         var stageCanvas = document.getElementById('stage-canvas');
+        var stageCanvasLabel = document.getElementById('stage-canvas-label');
         stageBtns.forEach(function (b) {
             b.addEventListener('click', function () {
                 stageBtns.forEach(function (x) { x.classList.remove('is-active'); });
                 b.classList.add('is-active');
-                if (stageCanvas) {
-                    stageCanvas.setAttribute('data-stage', b.getAttribute('data-stage'));
-                    stageCanvas.textContent = b.getAttribute('data-label');
-                }
+                if (stageCanvas) stageCanvas.setAttribute('data-stage', b.getAttribute('data-stage'));
+                if (stageCanvasLabel) stageCanvasLabel.textContent = b.getAttribute('data-label');
             });
         });
 
-        // Konfig-Tabs + Zustand-Toggle
+        // Konfig-Tabs + Zustand-Toggle + Live-Wertermittlung
+        // Vertrauens-Fix 2026-06-09: Spanne war hartkodiert ("685.000 – 745.000 €") und ignorierte alle
+        // Eingaben. Jetzt seiteneigenes Demo-Modell analog karriaro-tools.js attachImmobilien (PLZ-Präfix
+        // → €/m²-Tier, Baujahr-Modifier, ±6 % Spanne), ehrlich erweitert um Objekttyp- + Zustands-Faktor.
+        // Vor gültiger Eingabe zeigt #bw-range keinen Betrag, sondern einen neutralen Platzhalter.
+        function updateBewertung() {
+            var out = document.getElementById('bw-range');
+            if (!out) return;
+            function pending(msg) { out.classList.add('is-pending'); out.textContent = msg; }
+            var plz = (document.getElementById('bw-plz').value || '').trim();
+            var flaecheRaw = (document.getElementById('bw-flaeche').value || '').trim();
+            var baujahrRaw = (document.getElementById('bw-baujahr').value || '').trim();
+            if (!plz && !flaecheRaw) { pending('Wird aus Ihren Angaben berechnet'); return; }
+            if (!/^\d{5}$/.test(plz)) { pending('Bitte gültige PLZ eingeben (5 Ziffern).'); return; }
+            var flaeche = parseFloat(flaecheRaw);
+            if (!isFinite(flaeche) || flaeche < 20 || flaeche > 800) { pending('Bitte Fläche zwischen 20 und 800 m² eingeben.'); return; }
+            var baujahr = baujahrRaw === '' ? 1990 : parseInt(baujahrRaw, 10); // Baujahr optional, Default wie im Embed
+            if (!isFinite(baujahr) || baujahr < 1850 || baujahr > 2026) { pending('Bitte Baujahr zwischen 1850 und 2026 eingeben.'); return; }
+            // PLZ-Präfix → €/m²-Markttier (Demo-Tiers wie karriaro-tools.js: Berlin/München, SW/HH-Achse, Ost, Default)
+            var firstTwo = plz.substring(0, 2);
+            var basePerM2 = 3500;
+            if (['10', '11', '12', '13', '80', '81', '82'].indexOf(firstTwo) >= 0) basePerM2 = 6800;
+            else if (['70', '71', '72', '73', '60', '61', '40', '41', '20', '22'].indexOf(firstTwo) >= 0) basePerM2 = 5400;
+            else if (['01', '02', '04', '06', '99'].indexOf(firstTwo) >= 0) basePerM2 = 2400;
+            var typBtn = document.querySelector('.konfig-tab.is-active');
+            var typ = typBtn ? typBtn.getAttribute('data-konfig') : 'haus';
+            var typMod = { haus: 1.0, etw: 0.94, grund: 0.40 }[typ] || 1.0;
+            var alterMod = baujahr > 2015 ? 1.10 : (baujahr < 1990 ? 0.92 : 1.0);
+            var zustandBtn = document.querySelector('#bw-zustand .konfig-option.is-active');
+            var zustand = zustandBtn ? zustandBtn.getAttribute('data-zustand') : 'renoviert';
+            var zustandMod = { sanierung: 0.82, gepflegt: 0.96, renoviert: 1.0, neuwertig: 1.08 }[zustand] || 1.0;
+            if (typ === 'grund') { alterMod = 1.0; zustandMod = 1.0; } // Bodenwert: Baujahr/Zustand neutral
+            var basis = flaeche * basePerM2 * typMod * alterMod * zustandMod;
+            var min = Math.round(basis * 0.94 / 1000) * 1000;
+            var max = Math.round(basis * 1.07 / 1000) * 1000;
+            out.classList.remove('is-pending');
+            out.textContent = min.toLocaleString('de-DE') + ' – ' + max.toLocaleString('de-DE') + ' €';
+        }
         document.querySelectorAll('.konfig-tab').forEach(function (t) {
             t.addEventListener('click', function () {
                 document.querySelectorAll('.konfig-tab').forEach(function (x) { x.classList.remove('is-active'); });
                 t.classList.add('is-active');
+                updateBewertung();
             });
         });
         (function () {
@@ -1694,9 +1737,14 @@ html.embed-hero .hero-h1-line{display:block}
                 o.addEventListener('click', function () {
                     el.querySelectorAll('.konfig-option').forEach(function (x) { x.classList.remove('is-active'); });
                     o.classList.add('is-active');
+                    updateBewertung();
                 });
             });
         })();
+        ['bw-plz', 'bw-flaeche', 'bw-baujahr'].forEach(function (id) {
+            var input = document.getElementById(id);
+            if (input) input.addEventListener('input', updateBewertung);
+        });
 
         // FAQ
         document.querySelectorAll('.faq-item').forEach(function (item) {

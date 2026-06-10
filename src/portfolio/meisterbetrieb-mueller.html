@@ -256,6 +256,7 @@ html.embed-hero .hero-h1-line{display:block}
         .konfig-result { margin-top: 28px; padding: 24px; background: var(--bg); border-radius: var(--p-radius); border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
         .konfig-price { font-size: 30px; font-weight: 600; color: var(--accent-strong); }
         .konfig-price small { display: block; font-size: 12px; color: var(--text-soft); font-weight: 400; margin-top: 2px; }
+        .konfig-note { margin-top: 14px; font-size: 12px; color: var(--text-soft); }
         .hersteller { padding: 64px 0; background: var(--bg-soft); }
         .hersteller-head { text-align: center; margin-bottom: 32px; }
         .hersteller-head .eyebrow { color: var(--accent-dark); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
@@ -610,13 +611,13 @@ html.embed-hero .hero-h1-line{display:block}
                 </div>
                 <div class="wp-output" id="wp-result">
                     <div class="wp-output-label">Maximale Förderung KfW + BAFA</div>
-                    <div class="wp-output-val" id="wp-total">17.850&nbsp;€</div>
-                    <div class="wp-output-sub">bei 28.000 € Brutto-Investition · 65 % gefördert</div>
+                    <div class="wp-output-val" id="wp-total">21.000&nbsp;€</div>
+                    <div class="wp-output-sub">bei 33.200 € Brutto-Investition · 63 % gefördert</div>
                     <div class="wp-output-rows">
-                        <div class="wp-output-row"><span>KfW 458 Grundförderung 30 %</span><strong id="wp-kfw-base">8.400&nbsp;€</strong></div>
-                        <div class="wp-output-row"><span>Klimageschwindigkeits-Bonus 20 %</span><strong id="wp-kfw-speed">5.600&nbsp;€</strong></div>
-                        <div class="wp-output-row"><span>Einkommens-Bonus 15 %</span><strong id="wp-kfw-income">3.850&nbsp;€</strong></div>
-                        <div class="wp-output-row"><span>Eigenanteil Brutto</span><strong id="wp-own">10.150&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>KfW 458 Grundförderung 30 %</span><strong id="wp-kfw-base">9.960&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Klimageschwindigkeits-Bonus 20 %</span><strong id="wp-kfw-speed">6.640&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Einkommens-Bonus 15 %</span><strong id="wp-kfw-income">4.980&nbsp;€</strong></div>
+                        <div class="wp-output-row"><span>Eigenanteil Brutto</span><strong id="wp-own">12.200&nbsp;€</strong></div>
                     </div>
                 </div>
             </div>
@@ -762,9 +763,10 @@ html.embed-hero .hero-h1-line{display:block}
                         </div>
                     </div>
                     <div class="konfig-result">
-                        <div class="konfig-price" id="konfig-price">18.500 – 24.000 €<small>geschätzter Komplettpreis · inkl. MwSt.</small></div>
+                        <div class="konfig-price" id="konfig-price">14.000 – 18.000 €<small>geschätzter Komplettpreis · inkl. MwSt.</small></div>
                         <button type="button" class="btn btn-primary" onclick="openModal('konfig')">Detailliertes Angebot →</button>
                     </div>
+                    <p class="konfig-note">Demo-Spannen aus Projekt, Größe, Ausstattung und Zeitplan — das verbindliche Angebot kommt nach der Besichtigung.</p>
                 </div>
             </div>
         </section>
@@ -1083,6 +1085,7 @@ html.embed-hero .hero-h1-line{display:block}
             var subEl = document.querySelector('#wp-result .wp-output-sub');
             if (subEl) subEl.textContent = 'bei ' + fmt(invest) + ' Brutto-Investition · ' + Math.round(totalFunding / invest * 100) + ' % gefördert';
         }
+        if (document.getElementById('wp-area')) wpCalc();
 
         // S3 GMG-Quiz
         document.querySelectorAll('.gmg-opt-btn').forEach(function (b) {
@@ -1098,11 +1101,30 @@ html.embed-hero .hero-h1-line{display:block}
                 }
             });
         });
+        // S4 Projekt-Konfigurator: Basisspanne je Projekt × Größe × Ausstattung × Zeitplan (Express +15 %)
+        var KONFIG_BASE = { bad: [18500, 24000], heiz: [22000, 32000], solar: [14500, 22000] };
+        var KONFIG_SUB = { bad: 'geschätzter Komplettpreis · inkl. MwSt.', heiz: 'inkl. Demontage · vor Förderung', solar: 'inkl. Montage · vor Förderung' };
+        var KONFIG_FACTORS = { 'konfig-size': [0.75, 1, 1.35], 'konfig-ausst': [0.8, 1, 1.35], 'konfig-zeit': [1, 1.15] };
+        function konfigFactor(group) {
+            var btns = document.querySelectorAll('#' + group + ' button');
+            for (var i = 0; i < btns.length; i++) { if (btns[i].classList.contains('is-active')) return KONFIG_FACTORS[group][i]; }
+            return 1;
+        }
+        function konfigRecalc() {
+            var priceEl = document.getElementById('konfig-price');
+            var tab = document.querySelector('.konfig-tab.is-active');
+            if (!priceEl || !tab) return;
+            var base = KONFIG_BASE[tab.dataset.konfig];
+            var factor = konfigFactor('konfig-size') * konfigFactor('konfig-ausst') * konfigFactor('konfig-zeit');
+            var round500 = function (n) { return Math.round(n / 500) * 500; };
+            priceEl.innerHTML = round500(base[0] * factor).toLocaleString('de-DE') + ' – ' + round500(base[1] * factor).toLocaleString('de-DE') + ' €<small>' + KONFIG_SUB[tab.dataset.konfig] + '</small>';
+        }
         function makeOptionToggle(group) {
             document.querySelectorAll('#' + group + ' button').forEach(b => {
                 b.addEventListener('click', () => {
                     document.querySelectorAll('#' + group + ' button').forEach(x => x.classList.remove('is-active'));
                     b.classList.add('is-active');
+                    konfigRecalc();
                 });
             });
         }
@@ -1111,12 +1133,10 @@ html.embed-hero .hero-h1-line{display:block}
             t.addEventListener('click', () => {
                 document.querySelectorAll('.konfig-tab').forEach(x => x.classList.remove('is-active'));
                 t.classList.add('is-active');
-                var prices = { bad: '18.500 – 24.000 €', heiz: '22.000 – 32.000 €', solar: '14.500 – 22.000 €' };
-                var label = { bad: 'geschätzter Komplettpreis · inkl. MwSt.', heiz: 'inkl. Demontage · vor Förderung', solar: 'inkl. Montage · vor Förderung' };
-                var key = t.dataset.konfig;
-                document.getElementById('konfig-price').innerHTML = prices[key] + '<small>' + label[key] + '</small>';
+                konfigRecalc();
             });
         });
+        konfigRecalc();
         var dropzone = document.getElementById('dropzone');
         if (dropzone) {
             ['dragenter', 'dragover'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.add('is-active'); }));

@@ -813,20 +813,20 @@ html.embed-hero .hero-h1-line{display:block}
                             <div class="quote-result-label">Sammelgut · 48 h DACH</div>
                             <div class="quote-result-name">Sammelgut Standard</div>
                             <div class="quote-result-meta">Stuttgart → München · 850 kg · Standard-Palette</div>
-                            <div class="quote-result-price" id="q-price-sammelgut">187 €</div>
+                            <div class="quote-result-price" id="q-price-sammelgut">80 €</div>
                         </div>
                         <div class="quote-result-card is-recommended">
                             <span class="quote-result-badge">Empfohlen</span>
                             <div class="quote-result-label">Express · 24 h DACH · Geld-zurück</div>
                             <div class="quote-result-name">Express-Service</div>
                             <div class="quote-result-meta">Stuttgart → München · 850 kg · Realtime-Tracking</div>
-                            <div class="quote-result-price" id="q-price-express">312 €</div>
+                            <div class="quote-result-price" id="q-price-express">131 €</div>
                         </div>
                         <div class="quote-result-card">
                             <div class="quote-result-label">FTL · Direkt · Eigener LKW</div>
                             <div class="quote-result-name">Vollladung (FTL)</div>
                             <div class="quote-result-meta">Stuttgart → München · ein LKW · keine Umladung</div>
-                            <div class="quote-result-price" id="q-price-ftl">684 €</div>
+                            <div class="quote-result-price" id="q-price-ftl">366 €</div>
                         </div>
                     </div>
                 </div>
@@ -837,7 +837,7 @@ html.embed-hero .hero-h1-line{display:block}
         <section class="capacity-pulse" id="capacity-pulse" aria-label="Aktuelle Flotte-Auslastung">
             <div class="cp-inner">
                 <div class="section-head" style="text-align:left; max-width:780px; margin:0 0 16px;">
-                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Live · Aktualisiert vor 4 Min</p>
+                    <p class="eyebrow" style="color:var(--accent); font-size:11px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase; margin-bottom:20px;">Demo · Beispiel-Auslastung</p>
                     <h2>Heute frei in der Flotte.</h2>
                     <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Wir zeigen, was wirklich verfügbar ist — bevor Sie anrufen. Disposition aktualisiert die Auslastung alle 15 Minuten direkt aus dem TMS.</p>
                 </div>
@@ -1481,7 +1481,7 @@ html.embed-hero .hero-h1-line{display:block}
             <div class="kr-tool-embed-meta">
                 <p class="kr-tool-embed-eyebrow">Live-Werkzeug · auf jeder Karriaro-Site verbaubar</p>
                 <h2 class="kr-tool-embed-title">Instant-Quote-Calculator — probieren Sie es aus</h2>
-                <p class="kr-tool-embed-desc">Versender füllt vier Felder aus, die Demo zeigt sofort Frachtkosten, ETA und Fahrzeug-Klasse. Trust-Anker: „24h DACH oder Geld zurück".</p>
+                <p class="kr-tool-embed-desc">Versender füllt drei Felder aus, die Demo zeigt sofort Frachtkosten, ETA und Fahrzeug-Klasse. Trust-Anker: „24h DACH oder Geld zurück".</p>
                 <p><a href="/" class="kr-tool-embed-link">Mehr zur Karriaro-Webdesign-Manufaktur →</a></p>
             </div>
             <div class="kr-tool-live">
@@ -1579,7 +1579,10 @@ html.embed-hero .hero-h1-line{display:block}
             var from = document.getElementById('q-from').value;
             var to = document.getElementById('q-to').value;
             var type = document.getElementById('q-type').value;
-            var distance = Math.abs((+from || 0) - (+to || 0)) / 1000 * 220 + 220;
+            // Distanz via shared PLZ-Centroid-Haversine aus /js/karriaro-tools.js
+            // (Straßen-Aufschlag ~25% dort bereits enthalten); Fallback: 80 km Mindestdistanz wie im Embed.
+            var km = (window.KarriaroPlz && window.KarriaroPlz.distanceKm) ? window.KarriaroPlz.distanceKm(from, to) : null;
+            var distance = Math.max(80, km || 0);
             var typeMul = { standard: 1, cooled: 1.35, adr: 1.55 }[type] || 1;
             var weightFactor = Math.max(1, Math.log10(Math.max(50, w)) - 1.4);
             var pSamm = Math.round(distance * 0.22 * weightFactor * typeMul);
@@ -1593,6 +1596,13 @@ html.embed-hero .hero-h1-line{display:block}
                 if (i === 1) m.textContent = from + ' → ' + to + ' · ' + w + ' kg · Realtime-Tracking';
                 if (i === 2) m.textContent = from + ' → ' + to + ' · ein LKW · keine Umladung';
             });
+        }
+        // Initialanzeige formelkonsistent: einmal mit den vorbefüllten Defaults rechnen
+        // (karriaro-tools.js lädt weiter unten, daher auf DOMContentLoaded warten).
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', quoteCalc);
+        } else {
+            quoteCalc();
         }
 
         // L3 Compliance-Drawer
