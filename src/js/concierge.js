@@ -1,7 +1,9 @@
 /* Karriaro Branchen-KI-Concierge — wiederverwendbares Chat-Widget (2026-06-04, KI-Werkzeug #2).
  * Einbinden: <script src="/js/concierge.js" data-branche="immobilien"
  *   data-name="Stadtmakler Stuttgart" data-accent="#1A2E40" defer></script>
- * Spricht den Cloud-Function-Endpoint /concierge (Claude Haiku, Branchen-Persona) an. */
+ * Spricht den Cloud-Function-Endpoint /concierge (Claude Haiku, Branchen-Persona) an.
+ * Sonderfall data-branche="karriaro": Grounded-Mode gegen /siteAsk — jede Frage stateless,
+ * Antworten kommen ausschließlich aus dem Seiteninhalt, Quellen werden als Chips verlinkt. */
 (function () {
     'use strict';
     // Code-Review-Fix: nicht in eingebetteten Demo-Previews (iframe) initialisieren — sonst
@@ -16,6 +18,8 @@
     var GREETING = (script && script.getAttribute('data-greeting')) ||
         ('Hallo! Ich bin der digitale Assistent von ' + BIZ + '. Wie kann ich Ihnen helfen?');
     var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+    // Grounded-Mode für die Karriaro-Hauptseite: stateless /siteAsk statt /concierge-Persona.
+    var IS_KARRIARO = BRANCHE === 'karriaro';
 
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)')) { /* respected in CSS */ }
 
@@ -54,6 +58,9 @@
         '.krc-send{flex:0 0 auto;width:40px;border:none;border-radius:10px;background:' + ACCENT + ';color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}' +
         '.krc-send:disabled{opacity:.4;cursor:default}.krc-send svg{width:18px;height:18px}' +
         '.krc-foot{font-size:10px;text-align:center;color:#9a9a9f;padding:0 12px 9px;background:#fff;letter-spacing:.03em}' +
+        '.krc-sources{align-self:flex-start;display:flex;flex-wrap:wrap;gap:6px;max-width:84%;margin-top:-4px}' +
+        '.krc-source{font:500 11.5px/1.3 inherit;color:#16202C;text-decoration:none;background:#fff;border:1px solid rgba(20,32,43,.16);border-radius:999px;padding:5px 11px;letter-spacing:.01em;transition:border-color .15s ease,color .15s ease}' +
+        '.krc-source:hover{border-color:' + ACCENT + ';color:' + ACCENT + '}' +
         '.krc-fab.krc-left{left:24px;right:auto}.krc-panel.krc-left{left:24px;right:auto}' +
         '.krc-fab.krc-raised{bottom:88px}' +
         '@media (prefers-reduced-motion:reduce){.krc-panel.krc-open{animation:none}.krc-typing span{animation:none}.krc-fab{transition:none}}';
@@ -84,7 +91,9 @@
         '<div class="krc-msgs" aria-live="polite"></div>' +
         '<form class="krc-form"><textarea class="krc-input" rows="1" placeholder="Ihre Frage …" aria-label="Nachricht"></textarea>' +
         '<button type="submit" class="krc-send" aria-label="Senden">' + ICON_SEND + '</button></form>' +
-        '<div class="krc-foot">KI-Assistent · kann Fehler machen</div>';
+        '<div class="krc-foot">' + (IS_KARRIARO
+            ? 'Antworten aus dem Seiteninhalt · Quellen verlinkt · KI kann Fehler machen'
+            : 'KI-Assistent · kann Fehler machen') + '</div>';
 
     if (POSITION === 'left') { fab.classList.add('krc-left'); panel.classList.add('krc-left'); }
     document.body.appendChild(fab);
@@ -120,6 +129,31 @@
         msgsEl.scrollTop = msgsEl.scrollHeight;
         return el;
     }
+    // Karriaro-Grounded-Mode: Quellen-Chips unter der Bot-Antwort. Aufbau rein über
+    // DOM-API + textContent (kein innerHTML) — heading/url/anchor kommen vom Server,
+    // werden aber wie alle Messages behandelt: nie als HTML interpretiert. Zusätzlich
+    // nur seiteninterne Pfade (führender „/") als href zulassen.
+    function addSources(sources) {
+        var wrap = document.createElement('div');
+        wrap.className = 'krc-sources';
+        var added = 0;
+        for (var i = 0; i < sources.length && added < 4; i++) {
+            var s = sources[i] || {};
+            var url = typeof s.url === 'string' ? s.url : '';
+            if (url.charAt(0) !== '/' || url.charAt(1) === '/' || url.charAt(1) === '\\') continue; // nur relative Pfade, kein „//host" (Browser normalisieren \ zu /)
+            var a = document.createElement('a');
+            a.className = 'krc-source';
+            a.href = url + (s.anchor ? '#' + s.anchor : '');
+            a.target = '_self';
+            a.textContent = String(s.heading || url);
+            wrap.appendChild(a);
+            added++;
+        }
+        if (!added) return;
+        msgsEl.appendChild(wrap);
+        msgsEl.scrollTop = msgsEl.scrollHeight;
+    }
+
     function showTyping() {
         var t = document.createElement('div');
         t.className = 'krc-typing';
@@ -156,17 +190,28 @@
         if (!text) return;
         inputEl.value = ''; inputEl.style.height = 'auto';
         addMsg('user', text);
-        history.push({ role: 'user', content: text });
+        // siteAsk-Vertrag: Frage 3–300 Zeichen. Zu kurz/zu lang ehrlich abfangen,
+        // statt einen 400er später als „Verbindung nicht möglich" zu verkaufen.
+        if (IS_KARRIARO && (text.length < 3 || text.length > 300)) {
+            addMsg('bot', text.length < 3
+                ? 'Mögen Sie Ihre Frage etwas ausführlicher stellen? Dann kann ich gezielt im Seiteninhalt nachsehen.'
+                : 'Ihre Frage ist etwas zu lang (maximal 300 Zeichen). Mögen Sie sie kürzer fassen?');
+            return;
+        }
+        if (!IS_KARRIARO) history.push({ role: 'user', content: text });
         busy = true; sendBtn.disabled = true;
         var typing = showTyping();
 
         var ctrl = new AbortController();
         var to = setTimeout(function () { ctrl.abort(); }, 28000);
 
-        fetch(FN_BASE + '/concierge', {
+        // Karriaro-Hauptseite: Grounded-Mode /siteAsk — jede Frage stateless, KEINE History.
+        fetch(FN_BASE + (IS_KARRIARO ? '/siteAsk' : '/concierge'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ branche: BRANCHE, messages: history.slice(-12) }),
+            body: JSON.stringify(IS_KARRIARO
+                ? { question: text }
+                : { branche: BRANCHE, messages: history.slice(-12) }),
             signal: ctrl.signal
         }).then(function (r) {
             clearTimeout(to);
@@ -174,6 +219,14 @@
             return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'fail'); return j; });
         }).then(function (j) {
             typing.remove();
+            if (IS_KARRIARO) {
+                // Grounded-Antwort: answer kommt server-seitig belegt zurück (auch bei
+                // found:false ehrlich formuliert). Quellen-Chips nur bei found:true.
+                var answer = (j && j.answer) || 'Das kann ich gerade nicht beantworten. Mögen Sie es anders formulieren?';
+                addMsg('bot', answer);
+                if (j && j.found && j.sources && j.sources.length) addSources(j.sources);
+                return;
+            }
             var reply = (j && j.reply) || 'Entschuldigung, das habe ich nicht verstanden. Mögen Sie es anders formulieren?';
             addMsg('bot', reply);
             history.push({ role: 'assistant', content: reply });
@@ -182,8 +235,8 @@
             typing.remove();
             // Code-Review-Fix: fehlgeschlagenen user-Turn aus der History entfernen — sonst bleibt
             // ein unbeantworteter user-Turn stehen, die nächste Nachricht erzeugt zwei user-Rollen
-            // in Folge → Anthropic-API 400 → Chat tot bis Reload.
-            history.pop();
+            // in Folge → Anthropic-API 400 → Chat tot bis Reload. (Karriaro-Mode: keine History.)
+            if (!IS_KARRIARO) history.pop();
             var msg = err && err.message === 'rate'
                 ? 'Gerade sind sehr viele Anfragen unterwegs — bitte versuchen Sie es in einer Stunde erneut, oder nutzen Sie das Kontaktformular.'
                 : 'Verbindung gerade nicht möglich. Bitte versuchen Sie es erneut oder nutzen Sie das Kontaktformular.';
