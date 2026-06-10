@@ -228,6 +228,49 @@ html.embed-hero .hero-h1-line{display:block}
         .foto-cta-row { margin-top: 24px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
         .foto-promise { font-size: 13px; color: var(--text-soft); }
         .foto-promise strong { color: var(--accent-dark); }
+        /* Foto-Vorschau + KI-Bad-Ersteinschätzung (echter Vision-Call, Port des Dachdecker-Musters) */
+        .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
+        .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .foto-preview-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; padding: 0; border: none; border-radius: 50%; background: rgba(20,20,20,0.72); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .foto-drop.needs-photo { border-color: var(--accent-strong); box-shadow: 0 0 0 3px rgba(180,112,69,0.25); animation: dropPulse 0.6s ease 2; }
+        @keyframes dropPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(180,112,69,0.25); } 50% { box-shadow: 0 0 0 7px rgba(180,112,69,0.12); } }
+        .ai-consent-check { margin-top: 18px; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); cursor: pointer; line-height: 1.5; }
+        .ai-consent-check input { margin-top: 3px; accent-color: var(--accent); }
+        .ai-trigger { margin-top: 12px; background: var(--accent-bg); border: 1px dashed var(--accent); border-radius: var(--p-radius); padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
+        .ai-trigger:hover { background: rgba(180,112,69,0.16); }
+        .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
+        .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
+        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
+        .ai-result.is-loading { display: block; }
+        .ai-result.is-done { display: block; border-color: var(--accent); }
+        .ai-result-loading { display: flex; flex-direction: column; gap: 10px; }
+        .ai-result-loading .label { font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+        .ai-progress { width: 100%; height: 6px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; }
+        .ai-progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 1.8s ease-out; }
+        .ai-result.is-done .ai-result-loading { display: none; }
+        .ai-result.is-done .ai-result-body { display: block; }
+        .ai-result-body { display: none; }
+        .ai-result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .ai-scope-chip { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: var(--bg-soft); color: var(--text-soft); }
+        .ai-scope-chip.is-auffrischung { background: rgba(122,139,107,0.18); color: #4f5d43; }
+        .ai-scope-chip.is-teil { background: rgba(212,165,81,0.18); color: #a5762e; }
+        .ai-scope-chip.is-komplett { background: var(--accent); color: #fff; }
+        .ai-result-header h4 { font-size: 16px; margin: 0; }
+        .ai-result-diagnose { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .ai-result-diagnose li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--text-soft); }
+        .ai-result-diagnose li::before { content: '•'; color: var(--accent-dark); font-weight: 700; }
+        .ai-result-steps h5 { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 8px; }
+        .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result.is-hint { display: block; border-style: dashed; border-color: var(--accent); background: var(--accent-bg); }
+        .ai-result.is-hint .ai-result-loading, .ai-result.is-hint .ai-result-body { display: none; }
+        .ai-result-hint { display: none; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .ai-result.is-hint .ai-result-hint { display: flex; }
+        .ai-result-hint svg { width: 22px; height: 22px; flex-shrink: 0; stroke: var(--accent-strong); margin-top: 1px; }
         .trust-strip { padding: 36px 0; background: var(--accent-bg); border-bottom: 1px solid #e8dccd; }
         .trust-strip-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
         .trust-badge { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); }
@@ -679,7 +722,7 @@ html.embed-hero .hero-h1-line{display:block}
                 <div class="foto-card">
                     <div class="foto-card-head">
                         <h2>Foto vom Schaden — Festpreis in 24 h</h2>
-                        <p>Spart Ihnen den Vor-Ort-Termin und uns die Anfahrt. Sie wissen morgen, was es kostet.</p>
+                        <p>Spart Ihnen den Vor-Ort-Termin und uns die Anfahrt. Sie wissen morgen, was es kostet. Für Bad-Projekte gibt es darunter zusätzlich eine sofortige KI-Ersteinschätzung — unverbindlich und bewusst ohne Preis: Der Festpreis kommt nach dem Aufmaß vor Ort.</p>
                     </div>
                     <div class="foto-grid">
                         <label class="foto-drop" for="foto-upload" id="dropzone">
@@ -698,6 +741,40 @@ html.embed-hero .hero-h1-line{display:block}
                             <div><label for="fa-name">Ihr Name</label><input id="fa-name" type="text" placeholder="Vor- und Nachname"></div>
                             <div><label for="fa-tel">Telefon (für Rückruf)</label><input id="fa-tel" type="tel" placeholder="0711 …"></div>
                             <div><label for="fa-msg">Beschreibung (optional)</label><textarea id="fa-msg" placeholder="Seit wann? Was haben Sie schon versucht?"></textarea></div>
+                        </div>
+                    </div>
+                    <!-- Foto-Vorschau (gewählte Bilder) -->
+                    <div class="foto-preview" id="foto-preview" hidden></div>
+                    <!-- KI-Bad-Ersteinschätzung (echter Claude-Vision-Call, bewusst ohne Preis) -->
+                    <label class="ai-consent-check"><input type="checkbox" id="bad-consent"> <span>Ich bin einverstanden, dass mein Foto für diese eine KI-Analyse übermittelt wird.</span></label>
+                    <div class="ai-trigger" onclick="runBadAnalysis()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();runBadAnalysis();}" role="button" tabindex="0">
+                        <span class="ai-icon">KI</span>
+                        <div class="ai-text">
+                            <strong>Bad-Ersteinschätzung per KI <span class="ai-real-badge">echte KI</span></strong>
+                            <span>Bad-Foto hochladen, Einwilligung bestätigen, dann klicken — ein echtes KI-Modell wertet Ihr Bild aus (ca. 10 Sekunden). Sofort, unverbindlich, bewusst ohne Preis.</span>
+                        </div>
+                    </div>
+                    <p class="ai-consent">🔒 Ihr Foto wird nur für diese Analyse verwendet und <strong>nicht gespeichert</strong> — bitte ohne Personen im Bild.</p>
+                    <div class="ai-result" id="ai-result">
+                        <div class="ai-result-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span id="ai-hint-text">Bitte laden Sie zuerst ein Foto Ihres Bades hoch — die KI wertet echte Aufnahmen aus, keine leere Anfrage.</span>
+                        </div>
+                        <div class="ai-result-loading">
+                            <span class="label">KI-Analyse läuft …</span>
+                            <div class="ai-progress"><div class="ai-progress-bar" id="ai-progress-bar"></div></div>
+                        </div>
+                        <div class="ai-result-body">
+                            <div class="ai-result-header">
+                                <span class="ai-scope-chip" id="ai-scope-chip">Einschätzung</span>
+                                <h4 id="ai-bad-title">KI-Ersteinschätzung</h4>
+                            </div>
+                            <ul class="ai-result-diagnose" id="ai-bad-list"></ul>
+                            <div class="ai-result-steps" id="ai-bad-steps" hidden>
+                                <h5>Empfohlene Schritte</h5>
+                                <ul class="ai-result-diagnose" id="ai-bad-steps-list"></ul>
+                            </div>
+                            <p class="ai-result-disclaimer" id="ai-bad-disclaimer"></p>
                         </div>
                     </div>
                     <div class="foto-cta-row">
@@ -1137,10 +1214,162 @@ html.embed-hero .hero-h1-line{display:block}
             });
         });
         konfigRecalc();
-        var dropzone = document.getElementById('dropzone');
-        if (dropzone) {
-            ['dragenter', 'dragover'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.add('is-active'); }));
-            ['dragleave', 'drop'].forEach(e => dropzone.addEventListener(e, ev => { ev.preventDefault(); dropzone.classList.remove('is-active'); }));
+        // Foto-Upload: gewählte Bilder erfassen (Klick + Drag&Drop) + Vorschau rendern.
+        // krFotos ist der geteilte State, den runBadAnalysis() prüft (kein Ergebnis ohne Foto).
+        var krFotos = [];
+        (function () {
+            var dz = document.getElementById('dropzone');
+            var input = document.getElementById('foto-upload');
+            var preview = document.getElementById('foto-preview');
+            if (!dz || !input || !preview) return;
+            var MAX = 5;
+            function render() {
+                preview.innerHTML = '';
+                if (!krFotos.length) { preview.hidden = true; return; }
+                preview.hidden = false;
+                var count = document.createElement('div');
+                count.className = 'foto-preview-count';
+                count.textContent = krFotos.length + ' von ' + MAX + ' Bildern ausgewählt';
+                preview.appendChild(count);
+                krFotos.forEach(function (item, i) {
+                    var th = document.createElement('div');
+                    th.className = 'foto-preview-thumb';
+                    var img = document.createElement('img');
+                    img.src = item.url; img.alt = 'Foto ' + (i + 1);
+                    var rm = document.createElement('button');
+                    rm.type = 'button'; rm.setAttribute('aria-label', 'Foto entfernen'); rm.textContent = '×';
+                    rm.addEventListener('click', function () {
+                        URL.revokeObjectURL(item.url);
+                        krFotos.splice(i, 1);
+                        render();
+                    });
+                    th.appendChild(img); th.appendChild(rm);
+                    preview.appendChild(th);
+                });
+            }
+            function add(files) {
+                Array.prototype.slice.call(files || []).forEach(function (f) {
+                    if (krFotos.length >= MAX) return;
+                    if (!/^image\//.test(f.type)) return;
+                    krFotos.push({ file: f, url: URL.createObjectURL(f) });
+                });
+                dz.classList.remove('needs-photo');
+                render();
+            }
+            input.addEventListener('change', function () { add(input.files); input.value = ''; });
+            ['dragover', 'dragenter'].forEach(function (ev) { dz.addEventListener(ev, function (e) { e.preventDefault(); dz.classList.add('is-active'); }); });
+            dz.addEventListener('dragleave', function (e) { e.preventDefault(); dz.classList.remove('is-active'); });
+            dz.addEventListener('drop', function (e) { e.preventDefault(); dz.classList.remove('is-active'); if (e.dataTransfer && e.dataTransfer.files) add(e.dataTransfer.files); });
+        })();
+
+        // KI-Bad-Ersteinschätzung — ECHTER Claude-Vision-Call. Das hochgeladene Foto wird
+        // client-seitig verkleinert und an /badVision geschickt; das Modell beurteilt es real.
+        // Bewusst OHNE Preis-Schätzung — der Festpreis kommt nach dem Aufmaß vor Ort.
+        var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+        var aiBusy = false;
+        function aiEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]; }); }
+        function aiShowHint(msg) {
+            var result = document.getElementById('ai-result');
+            var hint = document.getElementById('ai-hint-text');
+            if (hint && msg) hint.textContent = msg;
+            if (result) { result.classList.remove('is-loading', 'is-done'); result.classList.add('is-hint'); }
+        }
+        function aiScopeClass(sc) { return sc === 'komplettsanierung' ? 'is-komplett' : sc === 'teilsanierung' ? 'is-teil' : sc === 'auffrischung' ? 'is-auffrischung' : 'is-unklar'; }
+        // Foto verkleinern (≤1568 px Kante, JPEG q0.8) → Data-URL. Bremst Bild-Tokens/Kosten.
+        function resizePhoto(file, maxDim, quality) {
+            return new Promise(function (resolve, reject) {
+                var url = URL.createObjectURL(file);
+                var im = new Image();
+                im.onload = function () {
+                    var w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
+                    if (Math.min(w, h) < 100) { URL.revokeObjectURL(url); reject(new Error('TOO_SMALL')); return; }
+                    var scale = Math.min(1, maxDim / Math.max(w, h || 1));
+                    var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+                    var cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+                    cv.getContext('2d').drawImage(im, 0, 0, cw, ch);
+                    URL.revokeObjectURL(url);
+                    try { resolve(cv.toDataURL('image/jpeg', quality)); } catch (e) { reject(e); }
+                };
+                im.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Bild konnte nicht gelesen werden.')); };
+                im.src = url;
+            });
+        }
+        function runBadAnalysis() {
+            if (aiBusy) return;
+            var result = document.getElementById('ai-result');
+            var bar = document.getElementById('ai-progress-bar');
+            if (!result) return;
+            // Kein Foto → keine erfundene Einschätzung, sondern ehrlicher Hinweis (Vertrauens-Regel).
+            if (!krFotos.length) {
+                aiShowHint('Bitte laden Sie zuerst ein Foto Ihres Bades hoch — die KI wertet echte Aufnahmen aus, keine leere Anfrage.');
+                var dz = document.getElementById('dropzone');
+                if (dz) { dz.classList.add('needs-photo'); dz.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { dz.classList.remove('needs-photo'); }, 2400); }
+                return;
+            }
+            var consent = document.getElementById('bad-consent');
+            if (consent && !consent.checked) {
+                aiShowHint('Bitte bestätigen Sie noch die Einwilligung zur Foto-Übermittlung — erst dann startet die Analyse.');
+                return;
+            }
+            aiBusy = true;
+            var loadingLabel = result.querySelector('.ai-result-loading .label');
+            if (loadingLabel) loadingLabel.textContent = 'KI wertet Ihr Bad-Foto aus …';
+            result.classList.remove('is-hint', 'is-done');
+            result.classList.add('is-loading');
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Progress läuft langsam auf ~90 % (echter Call ~5–15 s), Rest beim Ergebnis.
+            var prog = 8;
+            if (bar) { bar.style.transition = 'width .9s linear'; bar.style.width = '8%'; }
+            var progTimer = setInterval(function () { prog = Math.min(90, prog + 6); if (bar) bar.style.width = prog + '%'; }, 900);
+            function finish() { clearInterval(progTimer); aiBusy = false; }
+            var art = ((document.getElementById('fa-art') || {}).value || '').slice(0, 60);
+            resizePhoto(krFotos[0].file, 1568, 0.8).then(function (dataUrl) {
+                if (dataUrl.length > 2000000) throw new Error('TOO_BIG');
+                var payload = { image: dataUrl };
+                if (art) payload.problemType = art;
+                var ctrl = new AbortController();
+                var to = setTimeout(function () { ctrl.abort(); }, 50000);
+                return fetch(FN_BASE + '/badVision', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload), signal: ctrl.signal
+                }).then(function (r) {
+                    clearTimeout(to);
+                    if (r.status === 429) throw new Error('RATE');
+                    return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'FEHLER'); return j; });
+                });
+            }).then(function (j) {
+                finish();
+                if (j.isBathroom === false) {
+                    aiShowHint(j.message || 'Das sieht nicht nach einem Bad aus. Bitte laden Sie ein Foto Ihres Bades hoch — dann schätzt die KI es ein.');
+                    return;
+                }
+                var a = j.assessment || {};
+                if (bar) bar.style.width = '100%';
+                var chipEl = document.getElementById('ai-scope-chip');
+                var titleEl = document.getElementById('ai-bad-title');
+                var listEl = document.getElementById('ai-bad-list');
+                var stepsWrap = document.getElementById('ai-bad-steps');
+                var stepsList = document.getElementById('ai-bad-steps-list');
+                var discEl = document.getElementById('ai-bad-disclaimer');
+                if (chipEl) { chipEl.className = 'ai-scope-chip ' + aiScopeClass(a.scopeClass); chipEl.textContent = a.scopeLabel || 'Einschätzung'; }
+                if (titleEl) titleEl.textContent = a.title || 'KI-Ersteinschätzung';
+                if (listEl) listEl.innerHTML = (a.observations || []).map(function (b) { return '<li>' + aiEsc(b) + '</li>'; }).join('');
+                var steps = a.recommendedSteps || [];
+                if (stepsWrap) stepsWrap.hidden = !steps.length;
+                if (stepsList) stepsList.innerHTML = steps.map(function (b) { return '<li>' + aiEsc(b) + '</li>'; }).join('');
+                if (discEl) discEl.textContent = (a.note ? a.note + ' ' : '') + 'Ersteinschätzung per KI' + (a.confidence ? ' · KI-Vertrauen: ' + a.confidence : '') + ' — der Festpreis kommt nach dem Aufmaß vor Ort, bewusst ohne Preisschätzung.';
+                result.classList.remove('is-loading');
+                result.classList.add('is-done');
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }).catch(function (err) {
+                finish();
+                var m = String(err && err.message || '');
+                if (m === 'RATE') aiShowHint('Zu viele Analysen — bitte in einer Stunde erneut (echte KI-Calls sind begrenzt).');
+                else if (m === 'TOO_SMALL') aiShowHint('Das Foto ist zu klein für eine Analyse — bitte wählen Sie eine größere Aufnahme.');
+                else if (m === 'TOO_BIG') aiShowHint('Das Foto ist auch verkleinert noch zu groß — bitte wählen Sie ein kleineres Bild.');
+                else if (err && err.name === 'AbortError') aiShowHint('Zeitüberschreitung — bitte erneut versuchen.');
+                else aiShowHint('Die KI-Analyse hat nicht geklappt. Bitte später erneut versuchen — oder senden Sie das Foto direkt mit der Anfrage.');
+            });
         }
         function openModal(kind) {
             var modal = document.getElementById('modal');
