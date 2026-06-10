@@ -38,6 +38,7 @@ const {
     evalWikiResults, probeMatch, computeZitierScore, zitierLabel, reconcileZitier,
     KI_ZITIER_SYSTEM, KI_ZITIER_TOOL, DIRECTORIES
 } = require("./lib/ki-zitier.js");  // KI-Zitier-Check (2026-06-10)
+const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAnswer, SITE_ASK_NOT_FOUND } = require("./lib/site-qa.js");  // Site-Q&A „Frag die Seite"
 const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
@@ -2373,6 +2374,150 @@ exports.concierge = onRequest(
         } catch (err) {
             console.error("concierge failed:", err);
             return res.status(502).json({ error: "Concierge nicht erreichbar", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// Site-Q&A „Frag die Seite" — beantwortet Besucherfragen AUSSCHLIESSLICH aus
+// dem vorgebauten Seiten-Index (functions/data/site-index.json, generiert via
+// `npm run build:site-index`; der firebase-predeploy-Hook baut ihn vor jedem
+// Functions-Deploy frisch). EISERNE REGEL: jede inhaltliche Aussage in answer
+// muss durch die mitgelieferten sources gedeckt sein; unterschreitet das
+// BM25-Retrieval die Schwelle → found:false OHNE LLM-Call. Stateless (keine
+// History), Antwort-Cache nur Frage-Hash + Antwort (keine IP, kein PII).
+// ════════════════════════════════════════════════════════════════════════════
+const SITE_ASK_FRESH_MS = 7 * 86400000;     // Antwort-Cache 7 Tage frisch
+const SITE_ASK_TTL_DAYS = 14;               // Firestore-TTL via expiresAt (+14d)
+// BM25-Schwelle, grob kalibriert auf dem echten Index: Off-Topic-Fragen
+// ("Wetter morgen in Tokio", "Verkaufen Sie Schuhe?") scoren 0.00, echte
+// Site-Fragen ("Bieten Sie Wartung an?") ≥ ~2.9 — 1.2 trennt sauber.
+const SITE_ASK_MIN_SCORE = 1.2;
+const SITE_ASK_TOP_K = 8;
+
+// Index einmal pro Instanz laden (lazy, damit ein fehlendes Datenfile den
+// Modul-Load der übrigen Functions nicht reißt; require cached selbst).
+let siteIndexCache = null;
+function loadSiteIndex() {
+    if (!siteIndexCache) siteIndexCache = require("./data/site-index.json");
+    return siteIndexCache;
+}
+
+function normalizeSiteQuestion(q) {
+    return String(q).toLowerCase().replace(/\s+/g, " ").trim().replace(/[?!. ]+$/, "");
+}
+
+function siteAskCacheKey(normQuestion) {
+    return crypto.createHash("sha256").update(normQuestion).digest("hex").slice(0, 48);
+}
+
+// ─── siteAsk ─── POST { question } (3-300 Zeichen, stateless, KEINE History)
+exports.siteAsk = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 30,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "siteAsk", 20, 3600,
+            "Sie haben das stündliche Limit erreicht. Bitte später erneut.")) return;
+
+        const rawQuestion = (req.body || {}).question;
+        const question = typeof rawQuestion === "string" ? rawQuestion.trim() : "";
+        if (question.length < 3 || question.length > 300) {
+            return res.status(400).json({ error: "Bitte stellen Sie eine Frage mit 3 bis 300 Zeichen." });
+        }
+
+        const cacheKey = siteAskCacheKey(normalizeSiteQuestion(question));
+        try {
+            const cached = await db.collection("siteAskAnswers").doc(cacheKey).get();
+            if (cached.exists) {
+                const d = cached.data();
+                if (d.cachedAtMs && Date.now() - d.cachedAtMs < SITE_ASK_FRESH_MS) {
+                    return res.json({ ...d.payload, cached: true });
+                }
+            }
+        } catch (err) {
+            console.warn("siteAsk cache lookup failed:", err.message);
+        }
+
+        try {
+            const index = loadSiteIndex();
+            const ranked = rankBM25(tokenizeDe(question), index.chunks, SITE_ASK_TOP_K);
+            const bestScore = ranked.length ? ranked[0].score : 0;
+
+            let payload;
+            if (bestScore < SITE_ASK_MIN_SCORE) {
+                // Retrieval-Schwelle unterschritten → ehrliches found:false OHNE LLM-Call.
+                payload = { ok: true, found: false, answer: SITE_ASK_NOT_FOUND, sources: [] };
+            } else {
+                const topChunks = ranked.map((r) => r.chunk);
+                const sentIds = topChunks.map((c) => c.id);
+                const { system, userText } = buildSiteAskPrompt(question, topChunks);
+                const r = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": CLAUDE_API_KEY.value(),
+                        "anthropic-version": "2023-06-01"
+                    },
+                    body: JSON.stringify({
+                        model: CONCIERGE_MODEL,
+                        max_tokens: 500,
+                        system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+                        messages: [{ role: "user", content: userText }],
+                        tools: [SITE_ASK_TOOL],
+                        tool_choice: { type: "tool", name: SITE_ASK_TOOL.name }
+                    }),
+                    signal: AbortSignal.timeout(25000)
+                });
+                if (!r.ok) {
+                    const t = await r.text().catch(() => "");
+                    throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+                }
+                const data = await r.json();
+                const toolUse = (data.content || []).find((c) => c.type === "tool_use");
+                const norm = normalizeSiteAnswer(toolUse ? toolUse.input : null, sentIds);
+
+                // chunkIds serverseitig auf {url, anchor, heading} mappen — der Client
+                // sieht nie Chunk-Interna; dedupe je url#anchor, max 4 Quellen.
+                const byId = new Map(topChunks.map((c) => [c.id, c]));
+                const seen = new Set();
+                const sources = [];
+                for (const { chunkId } of norm.citations) {
+                    const c = byId.get(chunkId);
+                    if (!c) continue;
+                    const key = c.url + "#" + (c.anchor || "");
+                    if (seen.has(key)) continue;
+                    seen.add(key);
+                    sources.push({ url: c.url, anchor: c.anchor || "", heading: c.heading || "" });
+                    if (sources.length >= 4) break;
+                }
+                payload = (norm.found && sources.length > 0)
+                    ? { ok: true, found: true, answer: norm.answer, sources }
+                    : { ok: true, found: false, answer: SITE_ASK_NOT_FOUND, sources: [] };
+            }
+
+            try {
+                await db.collection("siteAskAnswers").doc(cacheKey).set({
+                    cachedAtMs: Date.now(),
+                    payload,
+                    expiresAt: new admin.firestore.Timestamp(
+                        Math.floor((Date.now() + SITE_ASK_TTL_DAYS * 86400000) / 1000), 0
+                    )
+                });
+            } catch (err) {
+                console.warn("siteAsk cache write failed:", err.message);
+            }
+
+            return res.json({ ...payload, cached: false });
+        } catch (err) {
+            logger.error("siteAsk failed", { fn: "siteAsk", error: String(err?.message || err).slice(0, 200) });
+            return res.status(500).json({ error: "Anfrage derzeit nicht möglich. Bitte versuchen Sie es später erneut." });
         }
     }
 );

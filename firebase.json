@@ -4,6 +4,9 @@
       "source": "functions",
       "codebase": "webdesign-functions",
       "runtime": "nodejs20",
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR/..\" run build:site-index"
+      ],
       "ignore": [
         "node_modules",
         ".git",
