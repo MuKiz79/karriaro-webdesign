@@ -47,6 +47,7 @@ const PAGES = [
     { path: '/', name: 'Hauptseite DE' },
     { path: '/en/', name: 'Hauptseite EN' },
     { path: '/gruender.html', name: 'Gruender-Story' },
+    { path: '/werkschau.html', name: 'Werkschau' },
     { path: '/blog.html', name: 'Blog-Index' },
     { path: '/blog/core-web-vitals-erklaert.html', name: 'Blog · Core Web Vitals' },
     { path: '/blog/dsgvo-website-checkliste.html', name: 'Blog · DSGVO-Checkliste' },
