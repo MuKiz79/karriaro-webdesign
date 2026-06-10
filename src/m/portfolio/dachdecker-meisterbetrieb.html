@@ -149,10 +149,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .material-viz-canvas { aspect-ratio: 16/10; background-color: var(--bg-soft); background-size: cover; background-position: center; border-radius: var(--p-radius-lg); margin: 40px auto 24px; max-width: 980px; display: flex; align-items: center; justify-content: center; font-family: var(--font-tight); font-weight: 700; font-size: clamp(40px, 5vw, 72px); color: #fff; letter-spacing: -0.02em; transition: background-image 0.4s ease; position: relative; overflow: hidden; border: 1px solid var(--border); text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
         .material-viz-canvas::before { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.35) 100%); z-index: 1; }
         .material-viz-canvas > * { position: relative; z-index: 2; }
-        .material-viz-canvas[data-material="prefa"] { background-image: url('/images/dachdecker/nachher-3-pv-indach.jpg'); }
-        .material-viz-canvas[data-material="braas"] { background-image: url('/images/dachdecker/nachher-1-neueindeckung.jpg'); }
-        .material-viz-canvas[data-material="eternit"] { background-image: url('/images/dachdecker/vorher-1-moos.jpg'); }
-        .material-viz-canvas[data-material="zinco"] { background-image: url('/images/dachdecker/vorher-3-pv-leer.jpg'); }
+        .material-viz-canvas[data-material="prefa"] { background-image: url('/images/dachdecker/material-prefa.jpg'); }
+        .material-viz-canvas[data-material="braas"] { background-image: url('/images/dachdecker/material-braas.jpg'); }
+        .material-viz-canvas[data-material="eternit"] { background-image: url('/images/dachdecker/material-eternit.jpg'); }
+        .material-viz-canvas[data-material="zinco"] { background-image: url('/images/dachdecker/material-zinco.jpg'); }
         .material-toggles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 980px; margin: 0 auto; }
         .material-btn { padding: 18px 16px; background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--p-radius); cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; }
         .material-btn:hover { border-color: var(--accent); }
@@ -928,7 +928,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <div class="material-btn-name">PREFA Falzdach</div>
                         <div class="material-btn-spec">Aluminium · 40 J Garantie</div>
                     </button>
-                    <button type="button" class="material-btn" data-mat="braas" data-label="BRAAS Tegalit Rotbraun">
+                    <button type="button" class="material-btn" data-mat="braas" data-label="BRAAS Tegalit Anthrazit">
                         <div class="material-btn-name">BRAAS Tegalit</div>
                         <div class="material-btn-spec">Beton · 30 J Frostsicher</div>
                     </button>
@@ -996,9 +996,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         </a>
                     </div>
                     <div class="drohne-media">
-                        <video poster="/images/dachdecker/drohne-poster.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
-                            <source src="/images/dachdecker/drohne-flight.mp4" type="video/mp4">
-                        </video>
+                        <video poster="/images/dachdecker/drohne-poster.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">                        </video>
                         <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier der Drohnen-Flug über ein Stuttgarter Dach abspielen (90 Sek).');">
                             <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
                         </div>
@@ -1248,21 +1246,21 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
         <section id="referenzen" class="galerie">
             <div class="container">
-                <div class="section-head"><p class="eyebrow">Referenzen</p><h2>Vorher. Nachher.</h2><p>Drei Projekte aus 2025 — echte Dächer, echte Familien, echte Festpreise inklusive Förder-Abzug.</p></div>
+                <div class="section-head"><p class="eyebrow">Referenzen</p><h2>Vorher. Nachher.</h2><p>Drei Projektgeschichten aus 2025 — Beispiel-Motive, echte Abläufe, echte Festpreise inklusive Förder-Abzug.</p></div>
                 <div class="galerie-grid">
                     <div class="gal-project">
                         <div class="gal-imgs">
                             <div data-label="Vorher"><img src="/images/dachdecker/vorher-1-moos.jpg" alt="Altes Dach mit Moosbefall vor Sanierung" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                             <div data-label="Nachher"><img src="/images/dachdecker/nachher-1-neueindeckung.jpg" alt="Neues Ziegeldach nach Komplettsanierung" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         </div>
-                        <div class="gal-meta"><p class="gal-tag">Dachsanierung · 140 m² · 3 Wochen</p><h4>Familie Schmidt, Stuttgart-Degerloch</h4><p>34.200 € Festpreis · inkl. Aufsparrendämmung, neue Rinne, Schiefer-Klassik.</p></div>
+                        <div class="gal-meta"><p class="gal-tag">Dachsanierung · 140 m² · 3 Wochen</p><h4>Familie Schmidt, Stuttgart-Degerloch</h4><p>34.200 € Festpreis · inkl. Aufsparrendämmung, neue Rinne, Tonziegel Naturrot-Klassik.</p></div>
                     </div>
                     <div class="gal-project">
                         <div class="gal-imgs">
                             <div data-label="Vorher"><img src="/images/dachdecker/vorher-2-sturm.jpg" alt="Sturmschaden mit losen Ziegeln" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
-                            <div data-label="Nachher"><img src="/images/dachdecker/nachher-2-repariert.jpg" alt="Saniertes Dach nach Sturmschaden" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
+                            <div data-label="Nachher"><img src="/images/dachdecker/nachher-2-repariert.jpg" alt="Komplett neu eingedecktes Ziegeldach nach Sturmschaden" loading="lazy" width="600" height="400" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';"></div>
                         </div>
-                        <div class="gal-meta"><p class="gal-tag">Sturmnotdienst + Reparatur · 5 Tage</p><h4>Familie Hartmann, Stuttgart-Vaihingen</h4><p>7.800 € · Versicherungs-Abrechnung übernommen, Eigenanteil 250 €.</p></div>
+                        <div class="gal-meta"><p class="gal-tag">Sturmschaden → Neueindeckung Wetterseite · 12 Tage</p><h4>Familie Hartmann, Stuttgart-Vaihingen</h4><p>21.400 € Festpreis · Versicherung übernahm den Schadenanteil, Abrechnung komplett durch uns.</p></div>
                     </div>
                     <div class="gal-project">
                         <div class="gal-imgs">
@@ -1441,26 +1439,22 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <div class="stimmen-grid" style="grid-template-columns: 1fr 1fr; margin-bottom: 28px;">
                     <div class="video-stimme">
                         <div class="video-stimme-media">
-                            <video poster="/images/dachdecker/video-poster-1.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
-                                <source src="/images/dachdecker/video-testi-1.mp4" type="video/mp4">
-                            </video>
-                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier die Schadensfall-Story von Familie Schmidt abspielen (50 Sek).');">
+                            <video poster="/images/dachdecker/video-poster-1.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">                            </video>
+                            <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier die Schadensfall-Story von Familie Hartmann abspielen (50 Sek).');">
                                 <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
                             </div>
                         </div>
                         <div class="video-stimme-body">
                             <p class="video-stimme-quote">"Sturmschaden am Sonntag. Plane noch am Sonntag drauf, Montag Festpreis-Angebot in der E-Mail."</p>
                             <div class="video-stimme-author">
-                                <div class="stimme-ava">FS</div>
-                                <div><div class="stimme-name">Familie Schmidt</div><div class="stimme-role">Sturmschaden-Story · 50 Sek</div></div>
+                                <div class="stimme-ava">FH</div>
+                                <div><div class="stimme-name">Familie Hartmann</div><div class="stimme-role">Sturmschaden-Story · 50 Sek</div></div>
                             </div>
                         </div>
                     </div>
                     <div class="video-stimme">
                         <div class="video-stimme-media">
-                            <video poster="/images/dachdecker/video-poster-2.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">
-                                <source src="/images/dachdecker/video-testi-2.mp4" type="video/mp4">
-                            </video>
+                            <video poster="/images/dachdecker/video-poster-2.jpg" muted playsinline preload="none" onerror="this.parentElement.classList.add('img-pending');this.style.display='none';">                            </video>
                             <div class="video-play" onclick="alert('Video-Demo — in der echten Anwendung würde hier Familie Beckers Indach-PV-Reportage abspielen (75 Sek).');">
                                 <span class="video-play-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
                             </div>
@@ -1480,16 +1474,16 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <div class="stimme-stars">★★★★★</div>
                         <p>"Sturmschaden am Sonntag, Plane noch am Sonntag drauf, Montag Festpreis-Angebot in der E-Mail. Versicherung hat alles ohne Diskussion gezahlt — auch wegen der sauberen Foto-Dokumentation von Berger."</p>
                         <div class="stimme-author">
-                            <div class="stimme-ava">FS</div>
-                            <div><div class="stimme-name">Familie Schmidt</div><div class="stimme-role">Degerloch · 2025</div></div>
+                            <div class="stimme-ava">FH</div>
+                            <div><div class="stimme-name">Familie Hartmann</div><div class="stimme-role">Vaihingen · 2025</div></div>
                         </div>
                     </div>
                     <div class="stimme">
                         <div class="stimme-stars">★★★★★</div>
                         <p>"Dachsanierung inklusive Aufsparrendämmung. Drei Wochen Bauzeit, exakt im Festpreis. Die Förderanträge hat Herr Berger komplett gemacht — wir mussten nur unterschreiben. So muss Handwerk."</p>
                         <div class="stimme-author">
-                            <div class="stimme-ava">JH</div>
-                            <div><div class="stimme-name">Jörg Hartmann</div><div class="stimme-role">Vaihingen · 2024</div></div>
+                            <div class="stimme-ava">FS</div>
+                            <div><div class="stimme-name">Familie Schmidt</div><div class="stimme-role">Degerloch · 2025</div></div>
                         </div>
                     </div>
                     <div class="stimme">
