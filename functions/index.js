@@ -13,7 +13,7 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
-const { runLightAudit } = require("./lib/light-audit.js");
+const { runLightAudit, detectBlockedResponse } = require("./lib/light-audit.js");
 const {
     extractSubPages,
     htmlToText,
@@ -32,6 +32,11 @@ const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Singl
 const { kiVisScore, kiVisLabel, reconcileKiVis } = require("./lib/ki-visibility.js");  // Sprint 240
 const { parseImage, normalizeAssessment } = require("./lib/roof-vision.js");  // Sprint 241 (Vision)
 const { sanitizeOccasion, buildStyleVisionPrompt, STYLE_VISION_TOOL, normalizeAssessment: normalizeStyleAssessment } = require("./lib/style-vision.js");  // Sprint 242 (Friseur-Vision)
+const {
+    normalizeBusinessName, pickBestPlace, evalGbpChecks, evalDirectoryHtml,
+    evalWikiResults, probeMatch, computeZitierScore, zitierLabel, reconcileZitier,
+    KI_ZITIER_SYSTEM, KI_ZITIER_TOOL, DIRECTORIES
+} = require("./lib/ki-zitier.js");  // KI-Zitier-Check (2026-06-10)
 const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
@@ -1696,6 +1701,309 @@ Bewerte die KI-Sichtbarkeit dieses Unternehmens ehrlich und liefere konkrete, br
         } catch (err) {
             console.error("kiVisibility failed:", err);
             return res.status(502).json({ error: "KI-Analyse fehlgeschlagen", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// KI-Zitier-Check (2026-06-10) — "Würde die KI Sie empfehlen?".
+// Misst die ZITIERFÄHIGKEIT eines Betriebs über echte Markensignale (Google-
+// Unternehmensprofil via Places API, Branchenverzeichnisse, Wikipedia/Wikidata)
+// plus EINE ehrliche Stichprobe einer einzelnen Engine (Claude, Momentaufnahme).
+// Score deterministisch aus den Messwerten (lib/ki-zitier.js), NIE vom LLM;
+// reconcileZitier streicht LLM-Aussagen, die grüne Messungen widersprechen.
+// Keine Google-Review-TEXTE: FieldMask holt nur reviews.publishTime (Aggregate).
+// ════════════════════════════════════════════════════════════════════════════
+const KI_ZITIER_FRESH_MS = 24 * 3600 * 1000;   // Cache 24h frisch
+const KI_ZITIER_TTL_DAYS = 7;                  // Storage-TTL via expiresAt
+
+function kiZitierCacheKey(business, ort, branche, domain) {
+    const raw = `${normalizeBusinessName(business)}|${String(ort).trim().toLowerCase()}|${String(branche).trim().toLowerCase()}|${String(domain || "").trim().toLowerCase()}`;
+    return crypto.createHash("sha256").update(raw).digest("hex").slice(0, 32);
+}
+
+// ─── kiZitierCheck ─── POST { business, ort, branche, domain? }
+exports.kiZitierCheck = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 90,
+        cors: false,
+        secrets: [CLAUDE_API_KEY, PLACES_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Claude- + Places-Enterprise-Calls = $$$ → strenges Limit 5/h
+        if (await enforceRateLimit(db, req, res, "kiZitierCheck", 5, 3600)) return;
+
+        const b = req.body || {};
+        const business = typeof b.business === "string" ? b.business.trim() : "";
+        const ort = typeof b.ort === "string" ? b.ort.trim() : "";
+        const branche = typeof b.branche === "string" ? b.branche.trim() : "";
+        const domain = typeof b.domain === "string" ? b.domain.trim().slice(0, 120) : "";
+        if (business.length < 2 || business.length > 120) {
+            return res.status(400).json({ error: "Unternehmensname erforderlich (2–120 Zeichen)" });
+        }
+        if (ort.length < 2 || ort.length > 80) {
+            return res.status(400).json({ error: "Ort erforderlich (2–80 Zeichen)" });
+        }
+        if (branche.length < 2 || branche.length > 60) {
+            return res.status(400).json({ error: "Branche erforderlich (2–60 Zeichen)" });
+        }
+
+        const cacheKey = kiZitierCacheKey(business, ort, branche, domain);
+        try {
+            const cached = await db.collection("kiZitierChecks").doc(cacheKey).get();
+            if (cached.exists) {
+                const d = cached.data();
+                if (d.cachedAtMs && Date.now() - d.cachedAtMs < KI_ZITIER_FRESH_MS && d.payload) {
+                    return res.json({ ...d.payload, cached: true });
+                }
+            }
+        } catch (err) {
+            logger.warn("kiZitierCheck cache lookup failed", { fn: "kiZitierCheck", error: err.message });
+        }
+
+        // SSRF-sicherer GET — gleiches Muster wie kiVisibility: globales fetch
+        // (KEIN custom-undici-Agent, dessen Teardown-AssertionError dem catch
+        // entkommt) + resolvePublicAddress pro Redirect-Hop.
+        async function safeGet(target, ms) {
+            let current = target;
+            for (let hop = 0; hop <= 3; hop++) {
+                const u = new URL(current);
+                if (!["http:", "https:"].includes(u.protocol)) throw new Error("bad protocol");
+                await resolvePublicAddress(u.hostname); // pro Hop: wirft bei privater/nicht-auflösbarer IP
+                const r = await fetch(current, {
+                    redirect: "manual",
+                    headers: { "User-Agent": "Karriaro-KIZitierBot/1.0", "Accept": "text/html,application/json,*/*" },
+                    signal: AbortSignal.timeout(ms)
+                });
+                if (r.status >= 300 && r.status < 400) {
+                    const loc = r.headers.get("location");
+                    if (!loc) return r;
+                    current = new URL(loc, current).toString(); // nächster Hop wird oben re-validiert
+                    continue;
+                }
+                return r;
+            }
+            throw new Error("too many redirects");
+        }
+
+        async function placesLookup() {
+            // KOSTEN: rating/userRatingCount/reviews/photos liegen in der teuersten
+            // Text-Search-SKU (Enterprise + Atmosphere). reviews.publishTime statt
+            // places.reviews: wir holen bewusst NUR Zeitstempel — Review-TEXTE
+            // werden nie abgerufen und nie ausgeliefert (nur Aggregate, "via Google").
+            const r = await fetch(`${PLACES_BASE}:searchText`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Goog-Api-Key": PLACES_KEY.value(),
+                    "X-Goog-FieldMask": "places.displayName,places.rating,places.userRatingCount,places.reviews.publishTime,places.photos.name,places.websiteUri,places.nationalPhoneNumber,places.regularOpeningHours,places.businessStatus"
+                },
+                body: JSON.stringify({ textQuery: `${business} ${ort}`, languageCode: "de", maxResultCount: 5 }),
+                signal: AbortSignal.timeout(8000)
+            });
+            if (!r.ok) throw new Error(`Places API ${r.status}`);
+            return (await r.json()).places || [];
+        }
+
+        // 'found' | 'notfound' | 'unknown' — Bot-Wall/Fehler ehrlich als unknown
+        // (fällt aus Zähler UND Nenner), NIE als "kein Eintrag" werten.
+        async function directoryCheck(dir) {
+            const r = await safeGet(dir.buildUrl(business, ort), 5000);
+            // Live-verifiziert 2026-06-10: gelbeseiten 404 / dasoertliche 410 = die
+            // "keine Treffer"-Seite (echoet das Suchwort im SICHTBAREN Text → Status
+            // MUSS vor dem Text-Match greifen, sonst False Positive).
+            if (r.status === 404 || r.status === 410) return "notfound";
+            if (!r.ok) return "unknown";
+            const html = (await r.text()).slice(0, 400000);
+            if (detectBlockedResponse(html, null)) return "unknown";
+            return evalDirectoryHtml(html, business);
+        }
+
+        async function wikiCheck(url) {
+            const r = await safeGet(url, 5000);
+            if (!r.ok) throw new Error(`wiki ${r.status}`);
+            return evalWikiResults(await r.json(), business);
+        }
+
+        const enabledDirs = DIRECTORIES.filter(d => d.enabled);
+        const settled = await Promise.allSettled([
+            placesLookup(),
+            ...enabledDirs.map(d => directoryCheck(d)),
+            wikiCheck("https://de.wikipedia.org/w/api.php?action=query&list=search&format=json&srlimit=5&srsearch=" + encodeURIComponent(business)),
+            wikiCheck("https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=de&uselang=de&type=item&limit=5&search=" + encodeURIComponent(business))
+        ]);
+        const placesRes = settled[0];
+        const dirResults = settled.slice(1, 1 + enabledDirs.length);
+        const [wpRes, wdRes] = settled.slice(1 + enabledDirs.length);
+
+        const checks = [];
+        if (placesRes.status === "fulfilled") {
+            // Kein Match in den Suchergebnissen = GEMESSENES "nicht gefunden" (fail).
+            const bestPlace = pickBestPlace(placesRes.value, business, domain);
+            // Dauerhaft geschlossenes Profil zählt nicht als aktiver GBP-Treffer.
+            checks.push(...evalGbpChecks(bestPlace && bestPlace.businessStatus === "CLOSED_PERMANENTLY" ? null : bestPlace));
+        } else {
+            // API-Fehler ≠ "kein Profil" → unknown (neutral, ohne Score-Wirkung).
+            logger.warn("kiZitierCheck places failed", {
+                fn: "kiZitierCheck", error: String(placesRes.reason?.message || placesRes.reason).slice(0, 200)
+            });
+            checks.push(...evalGbpChecks(null, { unknown: true }));
+        }
+        enabledDirs.forEach((dir, i) => {
+            const verdict = dirResults[i].status === "fulfilled" ? dirResults[i].value : "unknown";
+            checks.push({
+                id: `dir-${dir.key}`,
+                label: `Eintrag: ${dir.label}`,
+                category: "verzeichnisse",
+                max: 5,
+                status: verdict === "found" ? "ok" : verdict === "notfound" ? "fail" : "unknown",
+                points: verdict === "found" ? 5 : 0,
+                detail: verdict === "found" ? "Eintrag gefunden"
+                    : verdict === "notfound" ? "Kein Eintrag gefunden"
+                    : "Nicht prüfbar (Bot-Schutz oder Abruf-Fehler)"
+            });
+        });
+        const wikiEntry = (id, label, s) => {
+            const verdict = s.status === "fulfilled" ? s.value : "unknown";
+            return {
+                id, label, category: "entitaet", max: 5,
+                status: verdict === "found" ? "ok" : verdict === "notfound" ? "fail" : "unknown",
+                points: verdict === "found" ? 5 : 0,
+                detail: verdict === "found" ? "Eintrag gefunden"
+                    : verdict === "notfound" ? "Kein Eintrag gefunden"
+                    : "Nicht prüfbar (Abruf-Fehler)"
+            };
+        };
+        checks.push(wikiEntry("wikipedia", "Wikipedia-Artikel", wpRes));
+        checks.push(wikiEntry("wikidata", "Wikidata-Eintrag", wdRes));
+
+        // Gemessener Signal-Block für den Prompt: ja / nein / nicht geprüft.
+        const fmtCheck = (c) => c.status === "ok"
+            ? `ja${c.detail ? ` (${c.detail})` : ""}`
+            : c.status === "fail" ? "nein" : "nicht geprüft";
+        const greenLabels = checks.filter(c => c.status === "ok").map(c => c.label);
+        const userPrompt =
+`Unternehmen: ${business}
+Ort: ${ort}
+Branche: ${branche}
+Domain: ${domain || "(keine angegeben)"}
+
+Gemessene Markensignale (ja/nein/nicht geprüft — "nicht geprüft" heißt NICHT, dass das Signal fehlt):
+${checks.map(c => `- ${c.label}: ${fmtCheck(c)}`).join("\n")}${greenLabels.length
+    ? `\n\nBEREITS VORHANDEN (Signalwert "ja"): ${greenLabels.join(", ")}. Diese sind gemessen bestätigt — nenne sie NIEMALS als gap und NIE als fix (auch nicht „ergänzen/anlegen/eintragen"), und spekuliere NICHT über ihre Qualität.`
+    : ""}
+
+Aufgaben:
+1. empfehlungen: Welche real existierenden Betriebe der Branche „${branche}" in „${ort}" kennst du aus deinem Trainingswissen? NUR sicher bekannte — leeres Array, wenn keine.
+2. aiKnows + knowledgeLevel: Was weißt du ehrlich über „${business}" in ${ort}?
+3. gaps & fixes: gestützt auf die gemessenen Signale und dein (Nicht-)Trainingswissen.`;
+
+        try {
+            const claudeBody = {
+                model: DEEP_RESEARCH_MODEL,
+                max_tokens: 2048,
+                system: [{ type: "text", text: KI_ZITIER_SYSTEM, cache_control: { type: "ephemeral" } }],
+                tools: [KI_ZITIER_TOOL],
+                tool_choice: { type: "tool", name: KI_ZITIER_TOOL.name },
+                messages: [{ role: "user", content: userPrompt }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": CLAUDE_API_KEY.value(),
+                    "anthropic-version": "2023-06-01"
+                },
+                body: JSON.stringify(claudeBody),
+                signal: AbortSignal.timeout(45000)
+            });
+            if (!r.ok) {
+                const t = await r.text().catch(() => "");
+                throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+            }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === KI_ZITIER_TOOL.name);
+            if (!tu?.input) throw new Error("Claude lieferte kein tool_use-Payload");
+
+            // LLM-Output sanitisiert übernehmen — der Score kommt NICHT vom LLM.
+            const empfehlungen = (Array.isArray(tu.input.empfehlungen) ? tu.input.empfehlungen : [])
+                .slice(0, 7)
+                .map(e => ({ name: String(e?.name || "").slice(0, 120), warum: String(e?.warum || "").slice(0, 300) }))
+                .filter(e => e.name);
+            const knowledgeLevel = ["keine", "vage", "solide"].includes(tu.input.knowledgeLevel)
+                ? tu.input.knowledgeLevel : "keine";
+            const aiKnows = String(tu.input.aiKnows || "").slice(0, 1200);
+
+            // Probe-Match SERVER-seitig (Namensabgleich), nicht dem LLM überlassen.
+            const mentioned = probeMatch(empfehlungen, business);
+            checks.push({
+                id: "probe-mentioned",
+                label: "In der KI-Stichprobe empfohlen (Claude)",
+                category: "probe",
+                max: 15,
+                status: mentioned ? "ok" : "fail",
+                points: mentioned ? 15 : 0,
+                detail: mentioned
+                    ? "In dieser Stichprobe genannt (eine Engine, Momentaufnahme)"
+                    : "In dieser Stichprobe nicht genannt (eine Engine, Momentaufnahme)"
+            });
+            checks.push({
+                id: "probe-knowledge",
+                label: "KI-Trainingswissen über den Betrieb (Claude)",
+                category: "probe",
+                max: 10,
+                status: knowledgeLevel === "keine" ? "fail" : "ok",
+                points: knowledgeLevel === "solide" ? 10 : knowledgeLevel === "vage" ? 5 : 0,
+                detail: `Trainingswissen: ${knowledgeLevel}`
+            });
+
+            const { score, categories } = computeZitierScore(checks);
+            const result = {
+                gaps: (Array.isArray(tu.input.gaps) ? tu.input.gaps : [])
+                    .slice(0, 8)
+                    .map(g => ({ gap: String(g?.gap || "").slice(0, 200), why: String(g?.why || "").slice(0, 300) }))
+                    .filter(g => g.gap),
+                fixes: (Array.isArray(tu.input.fixes) ? tu.input.fixes : [])
+                    .slice(0, 8)
+                    .map(f => ({ fix: String(f?.fix || "").slice(0, 200), impact: String(f?.impact || "").slice(0, 300) }))
+                    .filter(f => f.fix)
+            };
+            reconcileZitier(result, checks);
+
+            const payload = {
+                ok: true,
+                business, ort, branche,
+                score,
+                scoreLabel: zitierLabel(score),
+                categories,
+                checks: checks.map(c => ({ id: c.id, label: c.label, status: c.status, ...(c.detail ? { detail: c.detail } : {}) })),
+                probe: { empfehlungen, mentioned, knowledgeLevel, aiKnows },
+                gaps: result.gaps,
+                fixes: result.fixes
+            };
+            try {
+                await db.collection("kiZitierChecks").doc(cacheKey).set({
+                    cachedAtMs: Date.now(),
+                    business, ort, branche,
+                    payload,
+                    expiresAt: new admin.firestore.Timestamp(
+                        Math.floor((Date.now() + KI_ZITIER_TTL_DAYS * 86400000) / 1000), 0
+                    )
+                });
+            } catch (err) {
+                logger.warn("kiZitierCheck cache write failed", { fn: "kiZitierCheck", error: err.message });
+            }
+            return res.json({ ...payload, cached: false });
+        } catch (err) {
+            // Generischer Fehler an den Client; Details nur ins strukturierte Log.
+            logger.error("kiZitierCheck failed", {
+                fn: "kiZitierCheck", error: String(err?.message || err).slice(0, 300)
+            });
+            return res.status(500).json({ error: "KI-Zitier-Check fehlgeschlagen" });
         }
     }
 );
