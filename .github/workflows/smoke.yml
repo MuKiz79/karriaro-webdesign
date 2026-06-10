@@ -51,8 +51,8 @@ jobs:
       - name: Install function dependencies
         run: cd functions && npm ci
 
-      - name: Run audit-pipeline + safe-fetch + rate-limit + mcp tests
-        run: node --test functions/test/audit-pipeline.test.js functions/test/safe-fetch.test.js functions/test/rate-limit-store.test.js functions/test/mcp.test.js
+      - name: Run Cloud-Function tests (test:audit — komplette Suite)
+        run: npm run test:audit
 
   unit:
     name: lead-intelligence Vitest (304 tests)
