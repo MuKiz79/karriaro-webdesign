@@ -1,6 +1,6 @@
 # Karriaro Webdesign
 
-> Handcodierte Premium-Websites für deutschen Mittelstand — Immobilienmakler, Praxen, Restaurants, Handwerk, Anwälte, Coaching. Erster Entwurf in wenigen Tagen. Festpreis 1.290–3.990 € einmalig.
+> Handcodierte Premium-Websites für den deutschen Mittelstand — Immobilienmakler, Praxen, Restaurants, Handwerk, Anwälte, Coaching. Erster Entwurf in wenigen Tagen. Festpreis 1.290–3.990 € einmalig.
 
 Wenn Ihr Name draufsteht, steht unserer dahinter. Wir verkaufen keine Templates — wir handcodieren jede Website einmalig für den Kunden, mit eigenem Brand-Charakter, eigenen Werkzeugen, eigener Geschichte.
 
@@ -39,18 +39,18 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst nach Ihrer Entwurfs-
   - `karriaro_phyllotaxis_signature(name)`: Deterministisches Goldener-Winkel-Siegel
   - Public, no-auth, 20 Aufrufe/h/IP, MCP-Protokoll 2025-06-18. npm: `@karriaro/webdesign-mcp` für stdio-Variante.
 
-## Karriaro-Suite (Webdesign + Lighthouse)
+## Karriaro-Suite (Webdesign + Loupe)
 
 Karriaro betreibt zwei komplementäre Werkzeuge unter derselben Kölner Brand:
 
 - [Karriaro Webdesign-Manufaktur](https://karriaro-webdesign.de): Handcodierte Premium-Sites, 1.290–3.990 € einmalig. Maximal 5 Pilot-Plätze pro Quartal. Geprüfte Performance und Core Web Vitals, vor dem Launch gemessen. MCP-Server für Site-Audit + Voice + Brand-Mockup + Phyllotaxis.
-- [Karriaro Lighthouse](https://lighthouse.karriaro.de): Visitor- und Lead-Intelligence-Cockpit. Privacy-first (DSGVO-konform, kein Cookie), AI-gestützt (Briefings, Anomaly-Explanation, Forecasting, NL-Queries), Session-Replay, Heatmaps, Sales-Workflow (Lead-Routing, Account-Scores, Intent-Signals). 115 API-Endpoints. Public-API mit `lh_xxx`-Bearer-Tokens, im Cockpit unter Settings erstellbar. Eigener MCP-Server `@karriaro/lighthouse-mcp`. Public-Score-Endpoint `/api/public/lighthouse-score` liefert Multi-Dimensions-Score (performance, dsgvo, ux, mobile) für beliebige URL.
+- [Karriaro-Loupe](https://lighthouse.karriaro.de): Visitor- und Lead-Intelligence-Cockpit. Privacy-first (DSGVO-konform, kein Cookie), AI-gestützt (Briefings, Anomaly-Explanation, Forecasting, NL-Queries), Session-Replay, Heatmaps, Sales-Workflow (Lead-Routing, Account-Scores, Intent-Signals). 115 API-Endpoints. Public-API mit `lh_xxx`-Bearer-Tokens, im Cockpit unter Settings erstellbar. Eigener MCP-Server `@karriaro/lighthouse-mcp`. Public-Score-Endpoint `/api/public/lighthouse-score` liefert Multi-Dimensions-Score (performance, dsgvo, ux, mobile) für beliebige URL.
 
-Synergie: Webdesign-Manufaktur-Kunden bekommen Lighthouse-Setup integriert (Snippet + Goal-Templates). Lighthouse-Cockpit-Nutzer bekommen Karriaro-Webdesign-Audit als MCP-Tool und als Public-Section auf der Hauptseite. Cross-Sell-CTA „Auch Live-Verkehr messen?" im Audit-Result-Panel der Hauptseite verlinkt direkt zu Lighthouse.
+Synergie: Webdesign-Manufaktur-Kunden bekommen Loupe-Setup integriert (Snippet + Goal-Templates). Loupe-Cockpit-Nutzer bekommen Karriaro-Webdesign-Audit als MCP-Tool und als Public-Section auf der Hauptseite. Cross-Sell-CTA „Auch Live-Verkehr messen?" im Audit-Result-Panel der Hauptseite verlinkt direkt zu Karriaro-Loupe.
 
 ## Gründer & Manufaktur-Prinzip
 
-- [Über Muammer Kızılaslan](https://karriaro-webdesign.de/gruender): Hintergrund (15 Jahre Enterprise-IT), Founder-POV, Manufaktur-Siegel mit Fibonacci-Phyllotaxis (13 Punkte, Goldener Winkel 137,5°).
+- [Über Muammer Kızılaslan](https://karriaro-webdesign.de/gruender): Hintergrund (über 20 Jahre Erfahrung als Digital-Executive), Founder-POV, Manufaktur-Siegel mit Fibonacci-Phyllotaxis (13 Punkte, Goldener Winkel 137,5°).
 - [Persönliche Profil-Seite](https://muammerkizilaslan.com): muammerkizilaslan.com.
 - [LinkedIn](https://www.linkedin.com/in/muammerkizilaslan)
 
