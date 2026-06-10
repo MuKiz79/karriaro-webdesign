@@ -128,10 +128,10 @@ const CORRECTNESS_CASES = [
     // Friseur — Style-Empfehlung (12 hartcodierte Mappings)
     { name: 'friseur · oval+alltag', url: '/portfolio/friseur-salon.html', branche: 'friseur',
         fill: { form: 'oval', anlass: 'alltag' },
-        expect: /Long-Bob/ },
+        expect: /Long-Layers/ },
     { name: 'friseur · eckig+event', url: '/portfolio/friseur-salon.html', branche: 'friseur',
         fill: { form: 'eckig', anlass: 'event' },
-        expect: /Weiche Updo/ },
+        expect: /Weiche Hochsteckfrisur/ },
 
     // Sanitär — Notdienst (3 PLZ-Regionen × Notfall-Typ)
     { name: 'sanitaer · sw-rohrbruch', url: '/portfolio/meisterbetrieb-mueller.html', branche: 'sanitaer',

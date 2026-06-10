@@ -159,7 +159,7 @@ html.embed-hero .hero-h1-line{display:block}
         .ref-stars { color: var(--gold); margin-bottom: 16px; letter-spacing: 2px; }
         .ref-quote { font-family: var(--serif); font-style: italic; font-size: 21px; line-height: 1.4; margin-bottom: 24px; flex: 1; }
         .ref-author { display: flex; align-items: center; gap: 14px; padding-top: 20px; border-top: 1px solid var(--border); }
-        .ref-author img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+        .ref-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1; letter-spacing: 0.02em; flex: none; }
         .ref-author-name { font-weight: 500; font-size: 15px; }
         .ref-author-role { font-size: 13px; color: var(--text-light); }
 
@@ -188,7 +188,11 @@ html.embed-hero .hero-h1-line{display:block}
         .nm-form button { background: var(--gold); color: var(--accent-dark); padding: 16px 26px; border-radius: 999px; font-size: 14px; font-weight: 600; transition: all 0.2s; }
         .nm-form button:hover { transform: translateY(-1px); }
         .nm-foot { margin-top: 16px; font-size: 12px; opacity: 0.6; }
-        .nm-visual img { border-radius: var(--p-radius-lg); width: 100%; aspect-ratio: 3/2; object-fit: cover; box-shadow: var(--p-shadow-lg); }
+        .nm-guide-card { width: 100%; aspect-ratio: 3/2; border-radius: var(--p-radius-lg); background: var(--bg); color: var(--text); box-shadow: var(--p-shadow-lg); display: flex; flex-direction: column; padding: clamp(28px, 4vw, 48px); }
+        .nm-guide-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+        .nm-guide-title { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.12; letter-spacing: -0.02em; font-weight: 500; margin: auto 0; }
+        .nm-guide-title em { font-family: var(--serif); font-style: italic; font-weight: 400; }
+        .nm-guide-meta { font-size: 13px; color: var(--text-light); padding-top: 16px; border-top: 1px solid var(--border); }
 
         .blog { background: var(--bg-soft); }
         .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
@@ -473,7 +477,7 @@ html.embed-hero .hero-h1-line{display:block}
                         <div class="ref-stars">★★★★★</div>
                         <p class="ref-quote">„Vier Monate festgehangen zwischen GF-Wechsel und Headhunter-Anruf. Sarah hat in zwei Sessions klargemacht, dass die richtige Frage nicht ‚wechseln?', sondern ‚wohin wirklich?' war. Heute bin ich CEO einer 80-Mio-Tochter."</p>
                         <div class="ref-author">
-                            <img src="/images/coaching/referenzen-1.jpg" alt="Klientin Mandat 2024" loading="lazy" width="52" height="52">
+                            <div class="ref-avatar" aria-hidden="true">AM</div>
                             <div>
                                 <div class="ref-author-name">Andrea M.</div>
                                 <div class="ref-author-role">Geschäftsführerin Industrie · 2024</div>
@@ -484,7 +488,7 @@ html.embed-hero .hero-h1-line{display:block}
                         <div class="ref-stars">★★★★★</div>
                         <p class="ref-quote">„Konflikt im Top-Team, der seit zwei Jahren unter dem Teppich lag. Sarah hat als externe Sparringspartnerin geholfen, ihn präzise zu benennen und in drei moderierten Gesprächen aufzulösen. Selten so klar gearbeitet."</p>
                         <div class="ref-author">
-                            <img src="/images/coaching/referenzen-2.jpg" alt="Klient Mandat 2024" loading="lazy" width="52" height="52">
+                            <div class="ref-avatar" aria-hidden="true">MK</div>
                             <div>
                                 <div class="ref-author-name">Markus K.</div>
                                 <div class="ref-author-role">CFO Mittelstand · 2024</div>
@@ -495,7 +499,7 @@ html.embed-hero .hero-h1-line{display:block}
                         <div class="ref-stars">★★★★★</div>
                         <p class="ref-quote">„Vorbereitung auf den Sprung in den Aufsichtsrat eines DAX-Konzerns. Sarah hat mir nicht beigebracht, was ich nicht weiß — sondern was ich anders sagen soll. Berufung kam nach dem dritten Hearing."</p>
                         <div class="ref-author">
-                            <img src="/images/coaching/referenzen-3.jpg" alt="Klientin Mandat 2023" loading="lazy" width="52" height="52">
+                            <div class="ref-avatar" aria-hidden="true">KR</div>
                             <div>
                                 <div class="ref-author-name">Dr. Karin R.</div>
                                 <div class="ref-author-role">AR-Mandat DAX · 2023</div>
@@ -520,7 +524,7 @@ html.embed-hero .hero-h1-line{display:block}
                         </div>
                     </div>
                     <div class="online-img">
-                        <img src="/images/coaching/online-erstgespraech.jpg" alt="Online-Erstgespräch — Laptop auf Walnussschreibtisch" loading="lazy" width="800" height="533">
+                        <img src="/images/coaching/online-erstgespraech.jpg" alt="Online-Beratung am Laptop" loading="lazy" width="800" height="533">
                     </div>
                 </div>
             </div>
@@ -540,7 +544,11 @@ html.embed-hero .hero-h1-line{display:block}
                         <p class="nm-foot">Ich schicke maximal 1 Mail pro Monat. Abmeldung mit einem Klick.</p>
                     </div>
                     <div class="nm-visual">
-                        <img src="/images/coaching/news-2.jpg" alt="90-Tage-Klarheit-Guide" loading="lazy">
+                        <div class="nm-guide-card" aria-hidden="true">
+                            <p class="nm-guide-eyebrow">PDF · 14 Seiten · kostenfrei</p>
+                            <p class="nm-guide-title">Der <em>90-Tage-Klarheit-Guide.</em></p>
+                            <p class="nm-guide-meta">Drei Fragen, drei Übungen — Sarah Lehmann · Frankfurt</p>
+                        </div>
                     </div>
                 </div>
             </div>

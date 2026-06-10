@@ -194,34 +194,37 @@
         'Samstag 11:00 bei Sara M.'
     ];
     var FRISEUR_PREISE = {
-        'Long-Bob mit weichen Layers': 65,
+        'Long-Layers mit weichen Wellen': 65,
         'Klassischer Bob auf Kinnhöhe': 55,
-        'Hollywood-Waves Halboffen': 85,
+        'Glamour-Waves mit Seitenscheitel': 85,
         'Stufenschnitt mit Volumen oben': 60,
-        'Side-Part Lob mit Tiefe': 75,
-        'Hochgesteckte Welle, asymmetrisch': 90,
-        'Pony schräg, mittellang': 55,
-        'Curtain-Bangs mit Bob': 70,
+        'Side-Part mit Tiefe, lang': 75,
+        'Weicher Chignon, tief gesteckt': 90,
+        'Long-Pixie mit schrägem Pony': 55,
+        'Sleek Long Hair': 70,
         'Knot mit Akzent-Strähnen': 85,
         'Soft-Layers, Mittellang': 60,
-        'Stumpfer Schnitt, Schulterhöhe': 55,
-        'Weiche Updo mit Locken': 95
+        'Stumpfer Schnitt, kinnlang': 55,
+        'Weiche Hochsteckfrisur, geflochten': 95
     };
     // Sprint 84 — Style-Galerie-Vorschau: jeder Style mappt auf ein vorhandenes
     // Foto-Asset aus src/images/friseur/. Ersetzt das FAQ-versprochene "AR-Try-On".
+    // Konsistenz-Pass: Style-Namen an die tatsächlichen Motive angepasst
+    // (Text folgt Bild). fade-cut.jpg ist ein Herren-Schnitt — die Style-Map
+    // enthält nur Damen-Empfehlungen, daher bewusst nicht zugeordnet.
     var FRISEUR_BILDER = {
-        'Long-Bob mit weichen Layers': 'french-bob.jpg',
+        'Long-Layers mit weichen Wellen': 'honey-balayage.jpg',
         'Klassischer Bob auf Kinnhöhe': 'french-bob.jpg',
-        'Hollywood-Waves Halboffen': 'modern-shag.jpg',
-        'Stufenschnitt mit Volumen oben': 'long-pixie.jpg',
-        'Side-Part Lob mit Tiefe': 'caramel-highlights.jpg',
-        'Hochgesteckte Welle, asymmetrisch': 'bridal-updo.jpg',
-        'Pony schräg, mittellang': 'curtain-bangs.jpg',
-        'Curtain-Bangs mit Bob': 'curtain-bangs.jpg',
+        'Glamour-Waves mit Seitenscheitel': 'caramel-highlights.jpg',
+        'Stufenschnitt mit Volumen oben': 'modern-shag.jpg',
+        'Side-Part mit Tiefe, lang': 'caramel-highlights.jpg',
+        'Weicher Chignon, tief gesteckt': 'bridal-updo.jpg',
+        'Long-Pixie mit schrägem Pony': 'long-pixie.jpg',
+        'Sleek Long Hair': 'curtain-bangs.jpg',
         'Knot mit Akzent-Strähnen': 'bridal-updo.jpg',
-        'Soft-Layers, Mittellang': 'honey-balayage.jpg',
-        'Stumpfer Schnitt, Schulterhöhe': 'fade-cut.jpg',
-        'Weiche Updo mit Locken': 'brautstyling.jpg'
+        'Soft-Layers, Mittellang': 'modern-shag.jpg',
+        'Stumpfer Schnitt, kinnlang': 'french-bob.jpg',
+        'Weiche Hochsteckfrisur, geflochten': 'brautstyling.jpg'
     };
     function attachFriseur() {
         var f = document.querySelector('[data-kr-tool-form="friseur"]');
@@ -232,18 +235,18 @@
             var form = fd.get('form'), anlass = fd.get('anlass');
             if (!form || !anlass) { showOutput('friseur', '—', 'Bitte Gesichtsform und Anlass auswählen.'); return; }
             var stiles = {
-                'oval_alltag': 'Long-Bob mit weichen Layers',
+                'oval_alltag': 'Long-Layers mit weichen Wellen',
                 'oval_business': 'Klassischer Bob auf Kinnhöhe',
-                'oval_event': 'Hollywood-Waves Halboffen',
+                'oval_event': 'Glamour-Waves mit Seitenscheitel',
                 'rund_alltag': 'Stufenschnitt mit Volumen oben',
-                'rund_business': 'Side-Part Lob mit Tiefe',
-                'rund_event': 'Hochgesteckte Welle, asymmetrisch',
-                'herz_alltag': 'Pony schräg, mittellang',
-                'herz_business': 'Curtain-Bangs mit Bob',
+                'rund_business': 'Side-Part mit Tiefe, lang',
+                'rund_event': 'Weicher Chignon, tief gesteckt',
+                'herz_alltag': 'Long-Pixie mit schrägem Pony',
+                'herz_business': 'Sleek Long Hair',
                 'herz_event': 'Knot mit Akzent-Strähnen',
                 'eckig_alltag': 'Soft-Layers, Mittellang',
-                'eckig_business': 'Stumpfer Schnitt, Schulterhöhe',
-                'eckig_event': 'Weiche Updo mit Locken'
+                'eckig_business': 'Stumpfer Schnitt, kinnlang',
+                'eckig_event': 'Weiche Hochsteckfrisur, geflochten'
             };
             var style = stiles[form + '_' + anlass] || 'Persönliche Beratung empfohlen';
             var slot = FRISEUR_SLOTS[Math.floor(Date.now() / 1000) % FRISEUR_SLOTS.length];
@@ -405,20 +408,22 @@
                 if (!v) { showOutput('coaching', '—', 'Bitte alle 5 Fragen beantworten.'); return; }
                 sum += v;
             }
-            // 5 = sehr unklar, 25 = sehr klar
+            // 5 = sehr unklar, 25 = sehr klar.
+            // Empfehlungen = die drei realen Formate der Angebots-Sektion
+            // (Karriere-Pivot / Führungs-Sparring / C-Level-Preparation).
             var rec, level;
             if (sum <= 10) {
                 level = 'Hoher Klärungsbedarf';
-                rec = '6-Wochen-Intensiv-Coaching empfohlen. Erstgespräch mit Sarah Lehmann, wir definieren Top-3-Hebel und Roadmap.';
+                rec = 'Karriere-Pivot empfohlen: intensive Standort-Analyse in 6–12 Sessions. Erstgespräch mit Sarah Lehmann, wir definieren Top-3-Hebel und Roadmap.';
             } else if (sum <= 17) {
                 level = 'Mittlerer Klärungsbedarf';
-                rec = '90-Tage-Programm mit zweiwöchentlichen Sessions. Fokus auf Energie-Management und nächsten Karriere-Schritt.';
+                rec = 'Führungs-Sparring empfohlen: vertrauliche Begleitung im aktuellen Mandat — Konflikte, Personalentscheidungen, nächster Karriere-Schritt.';
             } else if (sum <= 22) {
                 level = 'Konkretisierungsbedarf';
-                rec = 'Strategie-Sparring 4–6 Sessions. Sie wissen, wohin — wir helfen mit Geschwindigkeit und Stakeholder-Management.';
+                rec = 'C-Level-Preparation empfohlen. Sie wissen, wohin — wir arbeiten an Positionierung, Stakeholder-Mapping und Board-Sprache.';
             } else {
                 level = 'Reflexionsbedarf';
-                rec = 'Sounding-Board-Format. 90-Minuten-Reflexionsgespräche bei Bedarf statt fester Roadmap.';
+                rec = 'Führungs-Sparring in niedriger Frequenz: punktuelle Reflexionsgespräche statt fester Roadmap.';
             }
             showOutput('coaching',
                 level + ' <span style="color:var(--color-graphite-soft,#525E6B); font-weight:300;">· Score ' + sum + '/25</span>',

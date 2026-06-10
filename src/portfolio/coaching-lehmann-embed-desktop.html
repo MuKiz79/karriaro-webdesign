@@ -151,7 +151,7 @@ html.embed-hero .hero-h1-line{display:block}
         .ref-stars { color: var(--gold); margin-bottom: 16px; letter-spacing: 2px; }
         .ref-quote { font-family: var(--serif); font-style: italic; font-size: 21px; line-height: 1.4; margin-bottom: 24px; flex: 1; }
         .ref-author { display: flex; align-items: center; gap: 14px; padding-top: 20px; border-top: 1px solid var(--border); }
-        .ref-author img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; }
+        .ref-avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1; letter-spacing: 0.02em; flex: none; }
         .ref-author-name { font-weight: 500; font-size: 15px; }
         .ref-author-role { font-size: 13px; color: var(--text-light); }
 
@@ -180,7 +180,11 @@ html.embed-hero .hero-h1-line{display:block}
         .nm-form button { background: var(--gold); color: var(--accent-dark); padding: 16px 26px; border-radius: 999px; font-size: 14px; font-weight: 600; transition: all 0.2s; }
         .nm-form button:hover { transform: translateY(-1px); }
         .nm-foot { margin-top: 16px; font-size: 12px; opacity: 0.6; }
-        .nm-visual img { border-radius: var(--p-radius-lg); width: 100%; aspect-ratio: 3/2; object-fit: cover; box-shadow: var(--p-shadow-lg); }
+        .nm-guide-card { width: 100%; aspect-ratio: 3/2; border-radius: var(--p-radius-lg); background: var(--bg); color: var(--text); box-shadow: var(--p-shadow-lg); display: flex; flex-direction: column; padding: clamp(28px, 4vw, 48px); }
+        .nm-guide-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+        .nm-guide-title { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.12; letter-spacing: -0.02em; font-weight: 500; margin: auto 0; }
+        .nm-guide-title em { font-family: var(--serif); font-style: italic; font-weight: 400; }
+        .nm-guide-meta { font-size: 13px; color: var(--text-light); padding-top: 16px; border-top: 1px solid var(--border); }
 
         .blog { background: var(--bg-soft); }
         .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
