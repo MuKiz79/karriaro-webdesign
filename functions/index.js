@@ -32,6 +32,7 @@ const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Singl
 const { kiVisScore, kiVisLabel, reconcileKiVis } = require("./lib/ki-visibility.js");  // Sprint 240
 const { parseImage, normalizeAssessment } = require("./lib/roof-vision.js");  // Sprint 241 (Vision)
 const { sanitizeOccasion, buildStyleVisionPrompt, STYLE_VISION_TOOL, normalizeAssessment: normalizeStyleAssessment } = require("./lib/style-vision.js");  // Sprint 242 (Friseur-Vision)
+const { sanitizeProblem, buildBadVisionPrompt, BAD_VISION_TOOL, normalizeAssessment: normalizeBadAssessment } = require("./lib/bad-vision.js");  // Sprint 243 (Bad-Vision)
 const {
     normalizeBusinessName, pickBestPlace, evalGbpChecks, evalDirectoryHtml,
     evalWikiResults, probeMatch, computeZitierScore, zitierLabel, reconcileZitier,
@@ -2195,6 +2196,89 @@ exports.styleVision = onRequest(
 );
 
 // ════════════════════════════════════════════════════════════════════════════
+// Sanitär-Badfoto → Claude-Vision-Ersteinschätzung (2026-06-10, Sprint 243).
+// Dritter Vision-Call, exakt nach styleVision-Muster: echtes Badfoto wird real von
+// Claude (Bild-Input) beurteilt — Sanierungsumfang + Beobachtungen, bewusst OHNE
+// Preise/Kostenspannen (Abgrenzung zu roofVision: der Betrieb macht den Festpreis
+// erst nach Aufmaß vor Ort). Bild wird NICHT gespeichert (nur in-memory).
+// Pure Helfer (Prompt/Tool/Normalisierung) in lib/bad-vision.js.
+// ════════════════════════════════════════════════════════════════════════════
+
+// ─── badVision ─── POST { image (Data-URL oder Base64), mediaType?, problemType? }
+exports.badVision = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Vision-Calls = teurer als Text → strenges Limit 5/h (eigener Counter-Key).
+        if (await enforceRateLimit(db, req, res, "badVision", 5, 3600)) return;
+
+        const { image, mediaType, problemType } = req.body || {};
+        let img;
+        try {
+            img = parseImage(image, mediaType); // validiert Format + Größe (≤2 MB), wirft sonst
+        } catch (e) {
+            return res.status(400).json({ error: String(e?.message || "Ungültiges Bild").slice(0, 160) });
+        }
+
+        // problemType (fa-art-Select) sanitisiert (max 60, [a-z0-9 -] nach Umlaut-Folding) in den Prompt.
+        const { system, userText } = buildBadVisionPrompt(sanitizeProblem(problemType));
+        try {
+            const body = {
+                model: ROOF_VISION_MODEL, // gleiches Vision-Modell wie roof-/styleVision
+                max_tokens: 1024,
+                system: [{ type: "text", text: system, cache_control: { type: "ephemeral" } }],
+                tools: [BAD_VISION_TOOL],
+                tool_choice: { type: "tool", name: BAD_VISION_TOOL.name },
+                messages: [{
+                    role: "user",
+                    content: [
+                        { type: "text", text: userText },
+                        { type: "image", source: { type: "base64", media_type: img.mediaType, data: img.base64 } }
+                    ]
+                }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": CLAUDE_API_KEY.value(),
+                    "anthropic-version": "2023-06-01"
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(45000)
+            });
+            if (!r.ok) {
+                const t = await r.text().catch(() => "");
+                throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`);
+            }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === BAD_VISION_TOOL.name);
+            if (!tu?.input) throw new Error("Claude lieferte kein tool_use-Payload");
+            const { isBathroom, message, ...assessment } = normalizeBadAssessment(tu.input);
+            // isBathroom-Gate (Vertrauens-Regel): ohne erkennbares Bad keine Einschätzung,
+            // sondern eine ehrliche Ablehnung mit Bitte um ein Bad-Foto.
+            if (!isBathroom) return res.json({ ok: true, isBathroom: false, message });
+            // Ohne eine einzige Beobachtung gibt es kein leeres "Ergebnis" — ehrlicher Fehler.
+            if (!assessment.observations.length) throw new Error("Vision-Antwort ohne Beobachtung");
+            return res.json({ ok: true, isBathroom: true, assessment });
+        } catch (err) {
+            // Generischer Fehler an den Client; Details nur ins strukturierte Log.
+            logger.error("badVision failed", {
+                fn: "badVision", error: String(err?.message || err).slice(0, 300)
+            });
+            return res.status(500).json({ error: "KI-Analyse fehlgeschlagen" });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
 // Branchen-KI-Concierge (2026-06-04) — KI-Werkzeug #2. Echter LLM-Assistent pro
 // Branche: kennt die Leistungen des Betriebs, beantwortet Besucherfragen frei,
 // qualifiziert + routet zur passenden Aktion (Termin/Wertermittlung/Anfrage).
@@ -2213,7 +2297,7 @@ const CONCIERGE_PERSONAS = {
     restaurant: `Betrieb: Goldener Hirsch (saisonale Küche, Bio-zertifiziert, Slow-Food, München-Schwabing, seit 1987). Leistungen: Online-Tisch-Reservierung, Speisekarte mit Allergen-/Diät-Filter, Wein-Berater (strukturierte Weinempfehlung zum Gericht aus der Karte), Saisonkarte, Veranstaltungs-Anfragen. Typische Aktionen: „Tisch reservieren", „Veranstaltung anfragen".`,
     dachdecker: `Betrieb: Dachdecker Berger (Meisterbetrieb). Leistungen: Sofort-Einschätzung per KI (echtes KI-Modell wertet das hochgeladene Dachfoto aus — Schadensklasse, Beobachtungen, Kostenorientierung), Foto-Upload zur Anfrage → Festpreis in 48 Stunden, Sanierungs-Konfigurator mit BAFA/KfW-Förderrechner, Sturm-Notdienst, Material-Auswahl (PREFA/BRAAS/Eternit/ZinCo), Innungs-Zertifikat. Typische Aktionen: „Foto von der KI einschätzen lassen", „Förderung berechnen", „Termin reservieren".`,
     spedition: `Betrieb: Spedition Schwaben GmbH (Spedition). Leistungen: Tarif-Rechner (PLZ+Gewicht → Frachtkosten+ETA), Frachtanfrage-Formular, Sendungs-Tracking, Compliance-Dokumente (GDP/ADR/IFS/ISO), Flotten-Auslastung, Schadensmeldung. Typische Aktionen: „Frachtkosten berechnen", „Angebot anfordern", „Sendung verfolgen".`,
-    handwerk: `Betrieb: Meisterbetrieb Müller (Sanitär & Heizung). Leistungen: Festpreis-/Förderrechner (Bad-Sanierung/Heizungstausch/Solar), Foto-zu-Festpreis in 24 Stunden, Notdienst-Status, Projekt-Galerie, Innungs-Mitglied. Typische Aktionen: „Förderung berechnen", „Anfrage senden".`,
+    handwerk: `Betrieb: Meisterbetrieb Müller (Sanitär & Heizung). Leistungen: Festpreis-/Förderrechner (Bad-Sanierung/Heizungstausch/Solar), Foto-zu-Festpreis in 24 Stunden, Notdienst-Status, Projekt-Galerie, Innungs-Mitglied. Außerdem gibt es eine Bad-Ersteinschätzung per KI (echtes KI-Modell wertet Ihr Badezimmer-Foto aus, ohne Preiszusage — den Festpreis macht der Betrieb erst nach Aufmaß vor Ort), zu der du Besucher mit Bad-Sanierungs-Fragen leiten kannst. Typische Aktionen: „Förderung berechnen", „Anfrage senden".`,
     coaching: `Betrieb: Coach Lehmann (Business-Coaching für C-Level, Frankfurt). Leistungen: kostenloses 30-Min-Online-Erstgespräch (Calendly), Methoden-Übersicht, Klarheits-Score-Selbsttest, Referenzen, Blog. Typische Aktionen: „Erstgespräch buchen", „Score berechnen".`,
     karriaro: `Betrieb: Karriaro Webdesign — Kölner Webdesign-Manufaktur für handcodierte Premium-Websites (Legal-Sitz Schiltach). Zielgruppe: lokaler Mittelstand im DACH-Raum (Handwerk, Beauty, Immobilien, Gastronomie, Medizin, Recht). Angebot: handcodierte Unikate (KEIN Baukasten, kein Template) mit eingebauten Branchen-Werkzeugen (Rechner, Online-Buchung, Konfiguratoren), einem Besucher-Cockpit und Optimierung für KI-Auffindbarkeit (ChatGPT/Perplexity). Preise EINMALIG: 1.290 € Essential, 1.990 € Professional, 2.990 € Premium, 3.990 € Premium+; Wartung ab 99 €/Monat. Einmal zahlen, kein Abo, kein Vendor-Lock-in. Ablauf: kostenloses, unverbindliches 30-Minuten-Erstgespräch; Erstentwurf in wenigen Tagen; Umsetzung meist 2–4 Wochen; Abbruch vor Abnahme ohne Zahlung möglich. Gegründet von Muammer Kızılaslan. Werkzeuge, zu denen du leiten kannst: „Erste Einschätzung" (kostenloser Website-Check auf der Startseite), „KI-Sichtbarkeits-Spiegel" (/ki-sichtbarkeit — zeigt, was die KI über einen Betrieb weiß), „Erstgespräch buchen" (Kontaktformular). Qualifiziere freundlich: frage bei Bedarf nach Branche, ob schon eine Website existiert und was das Ziel ist — und schlage dann den passenden nächsten Schritt vor.`
 };
