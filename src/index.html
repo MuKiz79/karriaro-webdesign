@@ -4080,6 +4080,9 @@
         .kr-kispiegel-cta span { transition: transform 200ms ease; }
         .kr-kispiegel-cta:hover { background: #16202C; }
         .kr-kispiegel-cta:hover span { transform: translateX(4px); }
+        .kr-kispiegel-ctas { display: flex; flex-wrap: wrap; gap: 12px; align-items: stretch; }
+        .kr-kispiegel-cta--zitier { background: transparent; color: #1A2E40; border: 1px solid rgba(20, 32, 43, 0.35); }
+        .kr-kispiegel-cta--zitier:hover { background: rgba(20, 32, 43, 0.06); }
         .kr-kispiegel-meta { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #86868b; margin: 16px 0 0; }
         /* Mini-"KI-Antwort"-Mockup (zeigt den Pain: dünne Antwort + niedriger Score) */
         .kr-kispiegel-card { background: #FBFAF7; border: 1px solid rgba(20,32,43,0.12); border-radius: 10px; padding: 22px 24px; box-shadow: 0 18px 44px rgba(20,32,43,0.07); }
@@ -4098,7 +4101,10 @@
                 <p class="kr-kispiegel-eyebrow">Neu · KI-Sichtbarkeit</p>
                 <h2 id="kispiegel-title" class="kr-kispiegel-title">Ihre Kunden fragen die KI. Findet sie Sie?</h2>
                 <p class="kr-kispiegel-lede">„Wer macht das in meiner Stadt?" — immer öfter beantwortet das ChatGPT, nicht Google. Sehen Sie in Sekunden, was die KI heute über Ihr Unternehmen weiß — ehrlich, mit konkreten Schritten zur Auffindbarkeit.</p>
-                <a href="https://karriaro-webdesign.de/ki-sichtbarkeit" class="kr-kispiegel-cta">KI-Sichtbarkeit prüfen <span aria-hidden="true">→</span></a>
+                <div class="kr-kispiegel-ctas">
+                    <a href="https://karriaro-webdesign.de/ki-sichtbarkeit" class="kr-kispiegel-cta">KI-Sichtbarkeit prüfen <span aria-hidden="true">→</span></a>
+                    <a href="https://karriaro-webdesign.de/ki-zitier-check" class="kr-kispiegel-cta kr-kispiegel-cta--zitier">KI-Zitier-Check <span aria-hidden="true">→</span></a>
+                </div>
                 <p class="kr-kispiegel-meta">Live-KI-Analyse · keine Anmeldung · in Sekunden</p>
             </div>
             <div class="kr-kispiegel-viz" aria-hidden="true">
