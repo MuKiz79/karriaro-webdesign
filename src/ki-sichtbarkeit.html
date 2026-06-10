@@ -98,6 +98,11 @@
         .kv-sig { font-family: var(--kv-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--kv-border); }
         .kv-sig.ok { color: #2f6b4f; border-color: rgba(47, 107, 79, 0.4); }
         .kv-sig.no { color: #8a3a33; border-color: rgba(138, 58, 51, 0.4); }
+        /* Cross-Verzahnung mit dem KI-Zitier-Check (Off-Site-Signale) */
+        .kv-crosslink p { font-size: 15px; color: var(--kv-graphite); }
+        .kv-crosslink-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 600; color: var(--kv-gold-text); }
+        .kv-crosslink-link span { transition: transform 200ms ease; }
+        .kv-crosslink-link:hover span { transform: translateX(3px); }
         .kv-cta { margin-top: 30px; padding: 28px; background: var(--kv-navy); border-radius: 8px; color: #F1EFE7; text-align: center; }
         .kv-cta h3 { font-family: var(--kv-serif); font-weight: 400; font-size: clamp(22px, 3.6vw, 30px); color: #fff; margin-bottom: 8px; }
         .kv-cta p { color: rgba(241, 239, 231, 0.8); max-width: 48ch; margin: 0 auto 18px; font-size: 15px; }
@@ -234,6 +239,12 @@
                     <ul class="kv-list" id="kv-fixes"></ul>
                 </div>
 
+                <div class="kv-card kv-crosslink">
+                    <p class="kv-card-eyebrow">Nächster Schritt · Off-Site-Signale</p>
+                    <p>Der Spiegel prüft Ihre Website und das KI-Trainingswissen. Ob Claude Sie in einer echten Empfehlungsfrage nennt — und wie es um Google-Profil, Verzeichnisse und Wikipedia steht — zeigt der KI-Zitier-Check.</p>
+                    <a class="kv-crosslink-link" id="kv-to-zitier" href="/ki-zitier-check">Off-Site-Signale prüfen <span aria-hidden="true">→</span></a>
+                </div>
+
                 <div class="kv-cta">
                     <h3>Soll Ihre Seite für die KI-Suche gebaut werden?</h3>
                     <p>Genau das macht Karriaro: handcodierte, server-gerenderte Seiten mit strukturierten Daten und Antwort-Architektur — die nachweislich wirksamen Signale, damit die KI Sie findet und korrekt beschreibt.</p>
@@ -291,6 +302,19 @@
             var submitting = false; // Code-Review-Fix: Busy-Guard gegen Enter-Doppel-Submit (teure KI-Calls + 5/h-Budget)
 
             function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]; }); }
+
+            // Prefill aus URL-Query (Cross-Verzahnung mit /ki-zitier-check): ?business=&ort=&branche=&domain=
+            (function () {
+                try {
+                    var q = new URLSearchParams(location.search);
+                    [['business', 'kv-business'], ['ort', 'kv-ort'], ['branche', 'kv-branche'], ['domain', 'kv-domain']].forEach(function (pair) {
+                        var v = (q.get(pair[0]) || '').trim();
+                        if (!v) return;
+                        var el = document.getElementById(pair[1]);
+                        if (el) el.value = v; // Select: kein Options-Match → Wert bleibt leer (bewusst).
+                    });
+                } catch (e) { /* defensiv — Prefill ist optional */ }
+            })();
 
             function showError(msg) {
                 errBox.textContent = msg;
@@ -390,6 +414,16 @@
                     renderList(document.getElementById('kv-fixes'), res.fixes, 'fix', 'impact');
                     document.getElementById('kv-gaps-card').style.display = (res.gaps && res.gaps.length) ? '' : 'none';
                     document.getElementById('kv-fixes-card').style.display = (res.fixes && res.fixes.length) ? '' : 'none';
+                    // Cross-Link zum KI-Zitier-Check mit Prefill der eingegebenen Werte.
+                    var cross = document.getElementById('kv-to-zitier');
+                    if (cross) {
+                        var qp = new URLSearchParams();
+                        qp.set('business', payload.business);
+                        if (payload.ort) qp.set('ort', payload.ort);
+                        if (payload.branche) qp.set('branche', payload.branche);
+                        if (payload.domain) qp.set('domain', payload.domain);
+                        cross.href = '/ki-zitier-check?' + qp.toString();
+                    }
                     result.classList.add('is-on');
                     countUp(document.getElementById('kv-score-val'), Math.max(0, Math.min(100, parseInt(res.visibilityScore, 10) || 0)));
                     submit.disabled = false;
