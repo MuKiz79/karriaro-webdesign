@@ -303,19 +303,61 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .bento-card-body { font-size: 15px; color: var(--text-soft); line-height: 1.55; }
         .bento-card-big-num { font-family: var(--serif); font-size: clamp(56px, 6vw, 88px); font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-style: italic; }
         @media (max-width: 920px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } .bento-card.size-2x2, .bento-card.size-2x1, .bento-card.size-1x2 { grid-column: span 2; grid-row: span 1; } }
-        /* F1 AR Virtual Try-On */
+        /* F1 KI-Stilanalyse (echter Vision-Call — Muster der Dachdecker-KI-Schaden-Analyse) */
         .ar-tryon { background: var(--accent-bg); padding: clamp(80px, 12vh, 140px) 0; }
         .ar-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: center; }
         .ar-upload-card { background: var(--bg); border: 1px dashed var(--border-strong); border-radius: var(--p-radius-lg); padding: 48px 36px; text-align: center; cursor: pointer; transition: all 0.3s; }
         .ar-upload-card:hover { border-color: var(--accent); background: var(--bg-soft); }
         .ar-upload-icon { width: 56px; height: 56px; margin: 0 auto 18px; color: var(--accent-dark); }
-        .ar-styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; opacity: 0; max-height: 0; overflow: hidden; transition: all 0.5s ease; }
-        .ar-styles-grid.is-revealed { opacity: 1; max-height: 600px; }
+        .ar-styles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .ar-gallery-label { font-size: 11px; color: var(--text-light); letter-spacing: 0.12em; text-transform: uppercase; margin: 28px 0 12px; }
         .ar-style-tile { background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); padding: 14px; cursor: pointer; transition: all 0.2s; }
         .ar-style-tile:hover { border-color: var(--accent); }
         .ar-style-tile-img { aspect-ratio: 1; background: var(--accent-bg); border-radius: var(--p-radius); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; color: var(--accent-dark); font-size: 13px; }
         .ar-style-tile-name { font-size: 13px; font-weight: 500; color: var(--text); }
         .ar-style-tile-stylist { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+        .ar-upload-card.needs-photo { border-color: var(--accent-strong); box-shadow: 0 0 0 3px rgba(176,123,94,0.25); animation: arPulse 0.6s ease 2; }
+        @keyframes arPulse { 50% { transform: scale(1.012); } }
+        .ar-preview { margin-top: 14px; display: flex; gap: 12px; align-items: center; }
+        .ar-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); flex-shrink: 0; }
+        .ar-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .ar-preview-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; padding: 0; border: none; border-radius: 50%; background: rgba(20,20,20,0.72); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .ar-preview-name { font-size: 12px; color: var(--text-soft); word-break: break-all; }
+        .ar-occasion { margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+        .ar-occasion label { font-size: 12px; color: var(--text-soft); letter-spacing: 0.06em; text-transform: uppercase; flex-shrink: 0; }
+        .ar-occasion select { flex: 1; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--p-radius); background: var(--bg); font-family: var(--font); font-size: 14px; color: var(--text); }
+        .ai-consent-check { margin-top: 14px; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); cursor: pointer; line-height: 1.5; }
+        .ai-consent-check input { margin-top: 3px; accent-color: var(--accent); }
+        .ai-trigger { margin-top: 14px; background: var(--bg); border: 1px dashed var(--accent); border-radius: var(--p-radius); padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
+        .ai-trigger:hover { background: rgba(176,123,94,0.12); }
+        .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
+        .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
+        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
+        .ai-result.is-loading { display: block; }
+        .ai-result.is-done { display: block; border-color: var(--accent); }
+        .ai-result-loading { display: flex; flex-direction: column; gap: 10px; }
+        .ai-result-loading .label { font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+        .ai-progress { width: 100%; height: 6px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; }
+        .ai-progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 1.8s ease-out; }
+        .ai-result.is-done .ai-result-loading { display: none; }
+        .ai-result.is-done .ai-result-body { display: block; }
+        .ai-result-body { display: none; }
+        .ai-result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .ai-face-chip { padding: 4px 12px; border-radius: 999px; background: var(--accent-bg); color: var(--accent-strong); font-size: 12px; font-weight: 600; }
+        .ai-result-header h4 { font-size: 16px; margin: 0; }
+        .ai-impression { font-size: 13px; color: var(--text-soft); margin-bottom: 14px; line-height: 1.5; }
+        .ai-reco { padding: 12px 14px; background: var(--accent-bg); border-radius: 6px; margin-bottom: 8px; }
+        .ai-reco strong { display: block; font-size: 14px; color: var(--accent-strong); margin-bottom: 2px; }
+        .ai-reco span { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+        .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result.is-hint { display: block; border-style: dashed; border-color: var(--accent); background: var(--accent-bg); }
+        .ai-result.is-hint .ai-result-loading, .ai-result.is-hint .ai-result-body { display: none; }
+        .ai-result-hint { display: none; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .ai-result.is-hint .ai-result-hint { display: flex; }
+        .ai-result-hint svg { width: 22px; height: 22px; flex-shrink: 0; stroke: var(--accent-strong); margin-top: 1px; }
         @media (max-width: 920px) { .ar-inner { grid-template-columns: 1fr; gap: 32px; } .ar-styles-grid { grid-template-columns: repeat(2, 1fr); } }
         /* F2 Visual Match — Style-Galerie */
         .style-gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 1200px; margin: 0 auto; }
@@ -770,20 +812,62 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
         </section>
 
-        <!-- F1 · AR Virtual Try-On -->
-        <section class="ar-tryon" id="ar-tryon" aria-label="AR-Try-On">
+        <!-- F1 · KI-Stilanalyse (echter Claude-Vision-Call — ersetzt die frühere AR-Try-On-Attrappe) -->
+        <section class="ar-tryon" id="ar-tryon" aria-label="KI-Stilanalyse">
             <div class="ar-inner">
                 <div>
-                    <p class="hero-eyebrow" style="margin-bottom:24px;">Vor dem Termin · Ihr Look in 2 Sekunden</p>
-                    <h2>Probieren Sie Ihren Look. <em>Vor dem Schnitt.</em></h2>
-                    <p class="lead" style="margin-top:20px; max-width:480px;">Foto hochladen, sechs Empfehlungen unserer Stylistinnen vergleichen — und mit einem Klick den passenden Stylist buchen.</p>
+                    <p class="hero-eyebrow" style="margin-bottom:24px;">Vor dem Termin · Echte KI-Stilanalyse</p>
+                    <h2>Erst die Analyse. <em>Dann die Schere.</em></h2>
+                    <p class="lead" style="margin-top:20px; max-width:480px;">Selfie hochladen — ein echtes KI-Modell schaut auf Gesichtsform und Haar und empfiehlt bis zu drei Looks, mit Begründung. Den Feinschliff macht Ihre Stylistin im Gespräch.</p>
                 </div>
                 <div>
-                    <div class="ar-upload-card" id="ar-upload-trigger" tabindex="0" role="button" aria-label="Foto hochladen für Style-Vorschau">
+                    <div class="ar-upload-card" id="ar-upload-trigger" tabindex="0" role="button" aria-label="Selfie hochladen für die KI-Stilanalyse">
                         <svg class="ar-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4m4-4l4 4M4 20h16"/></svg>
                         <div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px;">Selfie hochladen</div>
-                        <div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">JPG/PNG · max 8 MB · privat verarbeitet</div>
+                        <div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">JPG/PNG · max 8 MB · wird nicht gespeichert</div>
                     </div>
+                    <input type="file" id="ar-file" accept="image/*" hidden>
+                    <!-- Foto-Vorschau (gewähltes Selfie) -->
+                    <div class="ar-preview" id="ar-preview" hidden></div>
+                    <div class="ar-occasion">
+                        <label for="ar-occasion">Anlass · optional</label>
+                        <select id="ar-occasion">
+                            <option value="">Keine Angabe</option>
+                            <option value="alltag">Alltag</option>
+                            <option value="business">Business</option>
+                            <option value="event">Event</option>
+                        </select>
+                    </div>
+                    <label class="ai-consent-check"><input type="checkbox" id="ar-consent"> <span>Ich bin einverstanden, dass mein Foto für diese eine KI-Analyse übermittelt wird.</span></label>
+                    <!-- KI-Stilanalyse (echter Claude-Vision-Call) -->
+                    <div class="ai-trigger" onclick="runStyleAnalysis()" role="button">
+                        <span class="ai-icon">KI</span>
+                        <div class="ai-text">
+                            <strong>Stil-Empfehlung per KI <span class="ai-real-badge">echte KI</span></strong>
+                            <span>Selfie hochladen, dann klicken — ein echtes KI-Modell wertet Ihr Foto aus (ca. 10 Sekunden).</span>
+                        </div>
+                    </div>
+                    <p class="ai-consent">🔒 Ihr Foto wird nur für diese Analyse verwendet und <strong>nicht gespeichert</strong>. Die Empfehlung ist unverbindlich.</p>
+                    <div class="ai-result" id="ai-result">
+                        <div class="ai-result-hint">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span id="ai-hint-text">Bitte laden Sie zuerst ein Selfie hoch — die KI wertet echte Fotos aus, keine leere Anfrage.</span>
+                        </div>
+                        <div class="ai-result-loading">
+                            <span class="label">KI-Analyse läuft …</span>
+                            <div class="ai-progress"><div class="ai-progress-bar" id="ai-progress-bar"></div></div>
+                        </div>
+                        <div class="ai-result-body">
+                            <div class="ai-result-header">
+                                <span class="ai-face-chip" id="ai-face-chip">Gesichtsform</span>
+                                <h4 id="ai-style-title">Ihre Stil-Empfehlung</h4>
+                            </div>
+                            <p class="ai-impression" id="ai-impression"></p>
+                            <div id="ai-reco-list"></div>
+                            <p class="ai-result-disclaimer" id="ai-note"></p>
+                        </div>
+                    </div>
+                    <p class="ar-gallery-label">Look-Galerie · vom Salon-Team kuratiert — Beispiele, kein KI-Ergebnis</p>
                     <div class="ar-styles-grid" id="ar-styles-grid">
                         <div class="ar-style-tile" onclick="document.getElementById('termin').scrollIntoView({behavior:'smooth'})">
                             <div class="ar-style-tile-img">Long Pixie</div>
@@ -1862,16 +1946,137 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             a.addEventListener('click', function () { document.getElementById('mobile-menu').classList.remove('is-open'); });
         });
 
-        // F1 AR-Try-On: Demo-Trigger zeigt Style-Grid nach 1.6s "Analyse"
-        var arTrigger = document.getElementById('ar-upload-trigger');
-        var arStylesGrid = document.getElementById('ar-styles-grid');
-        if (arTrigger && arStylesGrid) {
-            arTrigger.addEventListener('click', function () {
-                arTrigger.innerHTML = '<div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px;">KI analysiert Ihr Haar…</div><div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">Gesichtsform · Haarstruktur · Stil-Match</div>';
-                setTimeout(function () {
-                    arTrigger.innerHTML = '<div style="font-family:var(--serif); font-style:italic; font-size:22px; margin-bottom:8px; color:var(--accent-dark);">6 Looks für Sie</div><div style="font-size:13px; color:var(--text-light); letter-spacing:0.06em; text-transform:uppercase;">Klicken Sie einen Look → Termin</div>';
-                    arStylesGrid.classList.add('is-revealed');
-                }, 1600);
+        // F1 KI-Stilanalyse — ECHTER Claude-Vision-Call (ersetzt die frühere 1,6-s-Attrappe).
+        // Das Selfie wird client-seitig verkleinert und an /styleVision geschickt; das Modell beurteilt es real.
+        var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+        var arPhoto = null;
+        var arBusy = false;
+        var FACE_SHAPES = { oval: 'Ovale Gesichtsform', rund: 'Runde Gesichtsform', eckig: 'Eckige Gesichtsform', herzfoermig: 'Herzförmige Gesichtsform', laenglich: 'Längliche Gesichtsform', unbekannt: 'Gesichtsform nicht eindeutig' };
+        function arEsc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]; }); }
+        function arShowHint(msg) {
+            var result = document.getElementById('ai-result');
+            var hint = document.getElementById('ai-hint-text');
+            if (hint && msg) hint.textContent = msg;
+            if (result) { result.classList.remove('is-loading', 'is-done'); result.classList.add('is-hint'); }
+        }
+        function arRenderPreview() {
+            var box = document.getElementById('ar-preview');
+            if (!box) return;
+            if (!arPhoto) { box.hidden = true; box.innerHTML = ''; return; }
+            box.hidden = false;
+            box.innerHTML = '<div class="ar-preview-thumb"><img src="' + arPhoto.url + '" alt="Ihr gewähltes Selfie"><button type="button" aria-label="Foto entfernen">×</button></div><span class="ar-preview-name">' + arEsc(arPhoto.file.name) + '</span>';
+            box.querySelector('button').addEventListener('click', function () { URL.revokeObjectURL(arPhoto.url); arPhoto = null; arRenderPreview(); });
+        }
+        (function () {
+            var card = document.getElementById('ar-upload-trigger');
+            var input = document.getElementById('ar-file');
+            if (!card || !input) return;
+            card.addEventListener('click', function () { input.click(); });
+            card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+            input.addEventListener('change', function () {
+                var f = input.files && input.files[0];
+                input.value = '';
+                if (!f) return;
+                if (!/^image\//.test(f.type)) { arShowHint('Bitte wählen Sie ein Bild (JPG oder PNG) — andere Dateitypen kann die KI nicht auswerten.'); return; }
+                if (f.size > 8 * 1024 * 1024) { arShowHint('Das Foto ist größer als 8 MB — bitte wählen Sie ein kleineres Bild.'); return; }
+                if (arPhoto) URL.revokeObjectURL(arPhoto.url);
+                arPhoto = { file: f, url: URL.createObjectURL(f) };
+                card.classList.remove('needs-photo');
+                arRenderPreview();
+            });
+        })();
+        // Foto verkleinern (≤1568 px Kante, JPEG q0.8) → Data-URL. Sehr kleine Bilder lehnt die Vision-API ab → vorher abfangen.
+        function arResizePhoto(file, maxDim, quality) {
+            return new Promise(function (resolve, reject) {
+                var url = URL.createObjectURL(file);
+                var im = new Image();
+                im.onload = function () {
+                    var w = im.naturalWidth || im.width, h = im.naturalHeight || im.height;
+                    if (Math.min(w, h) < 100) { URL.revokeObjectURL(url); reject(new Error('TOO_SMALL')); return; }
+                    var scale = Math.min(1, maxDim / Math.max(w, h || 1));
+                    var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+                    var cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+                    cv.getContext('2d').drawImage(im, 0, 0, cw, ch);
+                    URL.revokeObjectURL(url);
+                    try { resolve(cv.toDataURL('image/jpeg', quality)); } catch (e) { reject(e); }
+                };
+                im.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Bild konnte nicht gelesen werden.')); };
+                im.src = url;
+            });
+        }
+        function runStyleAnalysis() {
+            if (arBusy) return;
+            var result = document.getElementById('ai-result');
+            var bar = document.getElementById('ai-progress-bar');
+            if (!result) return;
+            // Kein Foto → keine erfundene Empfehlung, sondern ehrlicher Hinweis.
+            if (!arPhoto) {
+                arShowHint('Bitte laden Sie zuerst ein Selfie hoch — die KI wertet echte Fotos aus, keine leere Anfrage.');
+                var card = document.getElementById('ar-upload-trigger');
+                if (card) { card.classList.add('needs-photo'); card.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(function () { card.classList.remove('needs-photo'); }, 2400); }
+                return;
+            }
+            var consent = document.getElementById('ar-consent');
+            if (consent && !consent.checked) {
+                arShowHint('Bitte bestätigen Sie noch die Einwilligung zur Foto-Übermittlung — erst dann startet die Analyse.');
+                return;
+            }
+            arBusy = true;
+            var loadingLabel = result.querySelector('.ai-result-loading .label');
+            if (loadingLabel) loadingLabel.textContent = 'KI wertet Ihr Selfie aus …';
+            result.classList.remove('is-hint', 'is-done');
+            result.classList.add('is-loading');
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Progress läuft langsam auf ~90 % (echter Call ~5–15 s), Rest beim Ergebnis.
+            var prog = 8;
+            if (bar) { bar.style.transition = 'width .9s linear'; bar.style.width = '8%'; }
+            var progTimer = setInterval(function () { prog = Math.min(90, prog + 6); if (bar) bar.style.width = prog + '%'; }, 900);
+            function finish() { clearInterval(progTimer); arBusy = false; }
+            var occasion = ((document.getElementById('ar-occasion') || {}).value || '').slice(0, 40);
+            arResizePhoto(arPhoto.file, 1568, 0.8).then(function (dataUrl) {
+                if (dataUrl.length > 2800000) throw new Error('TOO_BIG');
+                var payload = { image: dataUrl };
+                if (occasion) payload.occasion = occasion;
+                var ctrl = new AbortController();
+                var to = setTimeout(function () { ctrl.abort(); }, 50000);
+                return fetch(FN_BASE + '/styleVision', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload), signal: ctrl.signal
+                }).then(function (r) {
+                    clearTimeout(to);
+                    if (r.status === 429) throw new Error('RATE');
+                    return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'FEHLER'); return j; });
+                });
+            }).then(function (j) {
+                finish();
+                if (j.isPortrait === false) {
+                    arShowHint(j.message || 'Auf dem Foto ist kein Gesicht zu erkennen — bitte laden Sie ein Selfie hoch, dann berät die KI.');
+                    return;
+                }
+                var a = j.assessment || {};
+                if (bar) bar.style.width = '100%';
+                var chipEl = document.getElementById('ai-face-chip');
+                var titleEl = document.getElementById('ai-style-title');
+                var imprEl = document.getElementById('ai-impression');
+                var listEl = document.getElementById('ai-reco-list');
+                var noteEl = document.getElementById('ai-note');
+                var recos = (a.recommendations || []).slice(0, 3);
+                if (chipEl) chipEl.textContent = FACE_SHAPES[a.faceShape] || FACE_SHAPES.unbekannt;
+                if (titleEl) titleEl.textContent = recos.length === 1 ? 'Eine Stil-Empfehlung für Sie' : recos.length > 1 ? recos.length + ' Stil-Empfehlungen für Sie' : 'KI-Ersteinschätzung';
+                if (imprEl) imprEl.textContent = a.hairImpression || '';
+                if (listEl) listEl.innerHTML = recos.map(function (r) { return '<div class="ai-reco"><strong>' + arEsc(r.style) + '</strong><span>' + arEsc(r.reason) + '</span></div>'; }).join('');
+                if (noteEl) noteEl.textContent = (a.note ? a.note + ' ' : '') + 'Ersteinschätzung per KI' + (a.confidence ? ' · KI-Vertrauen: ' + a.confidence : '') + ' — die verbindliche Beratung übernimmt Ihre Stylistin im Salon.';
+                result.classList.remove('is-loading');
+                result.classList.add('is-done');
+                result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }).catch(function (err) {
+                finish();
+                var m = String(err && err.message || '');
+                if (m === 'RATE') arShowHint('Zu viele Analysen — bitte in einer Stunde erneut (echte KI-Calls sind begrenzt).');
+                else if (m === 'TOO_SMALL') arShowHint('Das Foto ist zu klein für eine Analyse — bitte wählen Sie ein größeres Selfie.');
+                else if (m === 'TOO_BIG') arShowHint('Das Foto ist auch verkleinert noch zu groß — bitte wählen Sie ein kleineres Bild.');
+                else if (err && err.name === 'AbortError') arShowHint('Zeitüberschreitung — bitte erneut versuchen.');
+                else arShowHint('Die KI-Analyse hat nicht geklappt. Bitte später erneut versuchen — oder buchen Sie direkt einen Beratungstermin.');
             });
         }
 

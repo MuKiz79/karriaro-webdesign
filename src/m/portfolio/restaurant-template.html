@@ -141,6 +141,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .som-chip:hover { border-color: var(--accent); color: var(--accent); }
         .som-answer { background: var(--accent-soft); border-left: 3px solid var(--gold); padding: 24px 28px; border-radius: var(--p-radius); display: none; }
         .som-answer.is-visible { display: block; }
+        .som-answer.is-hint .som-answer-wine, .som-answer.is-hint .som-answer-meta { display: none; }
+        .som-answer.is-hint .som-answer-body { margin-bottom: 0; }
         .som-answer-eyebrow { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; font-weight: 600; }
         .som-answer-wine { font-family: var(--serif); font-style: italic; font-size: clamp(24px, 3vw, 36px); color: var(--text); margin-bottom: 12px; line-height: 1.2; }
         .som-answer-body { font-size: 15px; color: var(--text-soft); line-height: 1.6; margin-bottom: 14px; }
@@ -1588,18 +1590,29 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             schnitzel: { wine: 'Grüner Veltliner Federspiel · Hirtzberger 2023', body: 'Klassische Begleitung: Knackige Säure, Pfeffernoten, federleichter Körper — der österreichische Reflex.', glass: '7 €', bottle: '36 €', region: 'Wachau' },
             kaiserschmarrn: { wine: 'Beerenauslese · Kracher Auslese 2019', body: 'Süßer Begleiter mit Aprikose und Honig — hebt die Karamellnoten des Kaiserschmarrns, ohne zu schwer zu sein.', glass: '9 € (0,1l)', bottle: '48 € (0,375l)', region: 'Burgenland' }
         };
+        function somHint(msg) {
+            // Hinweis statt Empfehlung — keine Weindaten ohne passende Eingabe
+            var answer = document.getElementById('som-answer');
+            answer.querySelector('.som-answer-eyebrow').textContent = 'Unser Sommelier';
+            document.getElementById('som-body').textContent = msg;
+            answer.classList.add('is-visible', 'is-hint');
+        }
         function somAsk(key) {
             var data = SOMMELIER[key];
             if (!data) {
-                // Free-Text-Fallback: Standard-Antwort
-                data = SOMMELIER.schmorbraten;
+                // Kein Treffer auf der Karte → ehrlich sagen statt Default-Empfehlung
+                somHint('Dazu habe ich auf unserer Karte keine eingespielte Empfehlung — fragen Sie mich nach Schmorbraten, Lachs, Ente, Risotto, Wiener Schnitzel oder Kaiserschmarrn, oder sprechen Sie unser Team an.');
+                return;
             }
+            var answer = document.getElementById('som-answer');
+            answer.classList.remove('is-hint');
+            answer.querySelector('.som-answer-eyebrow').textContent = 'Empfehlung unseres Sommeliers';
             document.getElementById('som-wine').textContent = data.wine;
             document.getElementById('som-body').textContent = data.body;
             document.getElementById('som-glass').textContent = data.glass;
             document.getElementById('som-bottle').textContent = data.bottle;
             document.getElementById('som-region').textContent = data.region;
-            document.getElementById('som-answer').classList.add('is-visible');
+            answer.classList.add('is-visible');
         }
         document.querySelectorAll('.som-chip').forEach(function (c) {
             c.addEventListener('click', function () {
@@ -1609,7 +1622,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         });
         var somAskBtn = document.getElementById('som-ask');
         if (somAskBtn) somAskBtn.addEventListener('click', function () {
-            var v = document.getElementById('som-prompt').value.toLowerCase();
+            var v = document.getElementById('som-prompt').value.trim().toLowerCase();
+            if (!v) {
+                somHint('Nennen Sie ein Gericht oder tippen Sie auf einen Vorschlag.');
+                return;
+            }
             var key = null;
             Object.keys(SOMMELIER).forEach(function (k) { if (v.indexOf(k) !== -1) key = k; });
             somAsk(key);

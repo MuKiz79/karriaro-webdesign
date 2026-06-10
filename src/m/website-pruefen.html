@@ -517,6 +517,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 renderQuickScore(quickCache.get(url));
                 return;
             }
+            // Sprint 21-Q — die geprüfte Domain an Lighthouse melden (an die de-anon Session
+            // gebunden → im Cockpit sichtbar: welche Firma hat welche Adresse geprüft). Feuert
+            // genau einmal pro neuer URL (Cache-Miss). Eigenes Tool, kein 3rd-Party-Tracker.
+            try {
+                if (window.lighthouse && typeof window.lighthouse.track === 'function') {
+                    window.lighthouse.track('TOOL_SUBMIT', { tool: 'website-pruefen', value: url });
+                }
+            } catch (e) { /* swallow */ }
             if (quickAbort) quickAbort.abort();
             quickAbort = new AbortController();
             quickEl.hidden = false;
