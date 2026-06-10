@@ -112,6 +112,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .kv-score-num span { font-size: 0.4em; color: var(--kv-graphite); }
         .kv-score-meta .kv-score-label { font-family: var(--kv-serif); font-style: italic; font-size: clamp(20px, 3.6vw, 28px); color: var(--kv-navy); line-height: 1.1; }
         .kv-score-meta .kv-score-for { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); margin-top: 8px; }
+        .kv-score-parts { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--kv-graphite); margin: 10px 0 0; line-height: 1.7; }
         .kv-card { background: #fff; border: 1px solid var(--kv-border); border-radius: 6px; padding: 24px 26px; margin-top: 22px; }
         .kv-card-eyebrow { font-family: var(--kv-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--kv-graphite); margin-bottom: 12px; }
         .kv-aiknows { font-family: var(--kv-serif); font-size: clamp(18px, 2.8vw, 22px); line-height: 1.5; color: var(--kv-ink); font-style: italic; }
@@ -167,7 +168,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     }
     </script>
     <script type="application/ld+json" data-page-faq>
-    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Was bedeutet KI-Sichtbarkeit?","acceptedAnswer":{"@type":"Answer","text":"KI-Sichtbarkeit beschreibt, ob und wie Antwortmaschinen wie ChatGPT, Perplexity und Googles AI-Overviews Ihr Unternehmen kennen, korrekt beschreiben und als Quelle nennen. 2026 beginnt die Suche zunehmend dort — nicht mehr nur in der klassischen Trefferliste."}},{"@type":"Question","name":"Wie beeinflusse ich, wie ChatGPT mein Unternehmen darstellt?","acceptedAnswer":{"@type":"Answer","text":"Drei Hebel zählen am meisten: eine für KI-Crawler lesbare Website (server-gerendert, nicht nur per JavaScript), eine eindeutige Entität (konsistenter Name, Schema, verknüpfte Profile) und Erwähnungen über viele vertrauenswürdige Quellen hinweg."}},{"@type":"Question","name":"Hilft eine llms.txt-Datei, damit KI mich besser findet?","acceptedAnswer":{"@type":"Answer","text":"Nein. Kein großes KI-System wertet llms.txt derzeit aus — Google stellt sie offen mit dem längst wirkungslosen Keywords-Meta-Tag auf eine Stufe. Wir setzen stattdessen auf die nachweislich wirksamen Signale."}},{"@type":"Question","name":"Was ist der wichtigste technische Hebel?","acceptedAnswer":{"@type":"Answer","text":"Dass KI-Crawler Ihre Inhalte überhaupt sehen. Sie führen kein JavaScript aus — eine server-gerenderte, sauber strukturierte Seite ist die Grundvoraussetzung. Genau so baut Karriaro: handcodiert, ausliefernd statt nachladend."}}]}
+    {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Was bedeutet KI-Sichtbarkeit?","acceptedAnswer":{"@type":"Answer","text":"KI-Sichtbarkeit beschreibt, ob und wie Antwortmaschinen wie ChatGPT, Perplexity und Googles AI-Overviews Ihr Unternehmen kennen, korrekt beschreiben und als Quelle nennen. 2026 beginnt die Suche zunehmend dort — nicht mehr nur in der klassischen Trefferliste."}},{"@type":"Question","name":"Wie beeinflusse ich, wie ChatGPT mein Unternehmen darstellt?","acceptedAnswer":{"@type":"Answer","text":"Drei Hebel zählen am meisten: eine für KI-Crawler lesbare Website (server-gerendert, nicht nur per JavaScript), eine eindeutige Entität (konsistenter Name, Schema, verknüpfte Profile) und Erwähnungen über viele vertrauenswürdige Quellen hinweg."}},{"@type":"Question","name":"Hilft eine llms.txt-Datei, damit KI mich besser findet?","acceptedAnswer":{"@type":"Answer","text":"Nein. Kein großes KI-System wertet llms.txt derzeit aus — Google stellt sie offen mit dem längst wirkungslosen Keywords-Meta-Tag auf eine Stufe. Wir setzen stattdessen auf die nachweislich wirksamen Signale."}},{"@type":"Question","name":"Kann ich das nicht einfach selbst in ChatGPT fragen?","acceptedAnswer":{"@type":"Answer","text":"Können Sie — aber mit aktiviertem Web-Zugriff liest ChatGPT Ihre Website live vor und klingt informiert, selbst wenn im Modell nichts über Sie gespeichert ist. Der Spiegel trennt beides: echtes Trainingswissen und gemessene technische Signale Ihrer Website — als reproduzierbarer Score mit geprüften Empfehlungen."}},{"@type":"Question","name":"Was ist der wichtigste technische Hebel?","acceptedAnswer":{"@type":"Answer","text":"Dass KI-Crawler Ihre Inhalte überhaupt sehen. Sie führen kein JavaScript aus — eine server-gerenderte, sauber strukturierte Seite ist die Grundvoraussetzung. Genau so baut Karriaro: handcodiert, ausliefernd statt nachladend."}}]}
     </script>
     <link rel="preload" as="style" href="/css/mobile-overrides.css?v=428">
     <link rel="stylesheet" href="/css/mobile-overrides.css?v=428" media="print" onload="this.media='all'">
@@ -207,7 +208,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <main id="main-content" class="kv-wrap">
         <p class="kv-eyebrow">Karriaro · KI-Sichtbarkeit</p>
         <h1>Was weiß die KI <em>wirklich</em> über Ihr Unternehmen?</h1>
-        <p class="kv-lede">Ihre Kunden fragen heute ChatGPT, Perplexity und Google-AI: „Wer macht das in meiner Stadt?" Sehen Sie live, wie die KI Ihr Unternehmen heute beschreibt — ehrlich, ungeschönt, mit konkreten Schritten zur KI-Auffindbarkeit.</p>
+        <p class="kv-lede">Ihre Kunden fragen heute ChatGPT, Perplexity und Google-AI: „Wer macht das in meiner Stadt?" Sehen Sie live, wie die KI Ihr Unternehmen heute beschreibt — ehrlich, ungeschönt, mit konkreten Schritten zur KI-Auffindbarkeit. Anders als eine schnelle ChatGPT-Frage trennt der Spiegel, was die KI wirklich über Sie gespeichert hat — und was sie nur live von Ihrer Website abliest.</p>
 
         <form class="kv-form" id="kv-form" novalidate>
             <div class="kv-field">
@@ -271,6 +272,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <div class="kv-score-for" id="kv-score-for">KI-Sichtbarkeit</div>
                     </div>
                 </div>
+                <p class="kv-score-parts" id="kv-score-parts" hidden></p>
 
                 <div class="kv-signals" id="kv-signals"></div>
 
@@ -312,6 +314,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <p style="margin:0;opacity:.85;">Drei Hebel zählen am meisten: eine für KI-Crawler lesbare Website (server-gerendert, nicht nur per JavaScript), eine eindeutige Entität (konsistenter Name, Schema, verknüpfte Profile) und Erwähnungen über viele vertrauenswürdige Quellen hinweg.</p>
         <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Hilft eine llms.txt-Datei, damit KI mich besser findet?</h3>
         <p style="margin:0;opacity:.85;">Nein. Kein großes KI-System wertet llms.txt derzeit aus — Google stellt sie offen mit dem längst wirkungslosen Keywords-Meta-Tag auf eine Stufe. Wir setzen stattdessen auf die nachweislich wirksamen Signale.</p>
+        <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Kann ich das nicht einfach selbst in ChatGPT fragen?</h3>
+        <p style="margin:0;opacity:.85;">Können Sie — aber mit aktiviertem Web-Zugriff liest ChatGPT Ihre Website live vor und klingt informiert, selbst wenn im Modell nichts über Sie gespeichert ist. Der Spiegel trennt beides: echtes Trainingswissen und gemessene technische Signale Ihrer Website — als reproduzierbarer Score mit geprüften Empfehlungen statt einer jedes Mal anders ausfallenden Chat-Antwort.</p>
         <h3 style="font-size:1.1rem;font-weight:600;margin:1.4rem 0 .35rem;">Was ist der wichtigste technische Hebel?</h3>
         <p style="margin:0;opacity:.85;">Dass KI-Crawler Ihre Inhalte überhaupt sehen. Sie führen kein JavaScript aus — eine server-gerenderte, sauber strukturierte Seite ist die Grundvoraussetzung. Genau so baut Karriaro: handcodiert, ausliefernd statt nachladend.</p>
     </section>
@@ -396,8 +400,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     ['hasSchema', 'Schema'],
                     ['hasLocalBusinessSchema', 'LocalBusiness'],
                     ['hasMetaDescription', 'Meta-Description'],
-                    ['hasFaqSchema', 'FAQ-Schema'],
-                    ['hasLlmsTxt', 'llms.txt']
+                    ['hasFaqSchema', 'FAQ-Schema']
                 ];
                 var html = '';
                 defs.forEach(function (d) {
@@ -476,6 +479,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     }
                     result.classList.add('is-on');
                     countUp(document.getElementById('kv-score-val'), Math.max(0, Math.min(100, parseInt(res.visibilityScore, 10) || 0)));
+                    // Aufschlüsselung Technik vs. Trainingswissen — erklärt, warum eine junge Marke
+                    // nicht 100 erreichen kann (Wissen wächst nur off-site, nicht per Website-Fix).
+                    var spEl = document.getElementById('kv-score-parts');
+                    if (spEl) {
+                        var sp = j.scoreParts;
+                        spEl.hidden = !sp;
+                        if (sp) spEl.textContent = 'Website-Technik ' + sp.tech + '/' + sp.techMax + ' · KI-Trainingswissen ' + sp.know + '/' + sp.knowMax + ' — Technik steuern Sie selbst, Bekanntheit wächst über externe Erwähnungen.';
+                    }
                     submit.disabled = false;
                     submitting = false;
                     submit.querySelector('span').textContent = 'Erneut prüfen';

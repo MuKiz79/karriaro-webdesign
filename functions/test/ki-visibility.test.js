@@ -10,7 +10,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
-const { kiVisScore, kiVisLabel, reconcileKiVis } = require('../lib/ki-visibility.js');
+const { kiVisScore, kiVisParts, kiVisLabel, reconcileKiVis } = require('../lib/ki-visibility.js');
 
 const ALL_GREEN = {
     reachable: true,
@@ -18,7 +18,6 @@ const ALL_GREEN = {
     hasLocalBusinessSchema: true,
     hasMetaDescription: true,
     hasFaqSchema: true,
-    hasLlmsTxt: true,
 };
 
 // ── kiVisScore: Reproduzierbarkeit & Verankerung ──────────────────────────────
@@ -36,8 +35,8 @@ test('kiVisScore: alle Signale grün ⇒ kein vernichtender Score (Karriaro-Fall
 });
 
 test('kiVisScore: schwache Seite ohne Signale + keine KI-Kenntnis ⇒ niedriger Score (Hook bleibt)', () => {
-    const bare = { reachable: true, hasSchema: false, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: false, hasLlmsTxt: false };
-    assert.equal(kiVisScore(bare, 'keine'), 6 + 10); // Technik nur Meta (6) + keine-Sockel (10) = 16
+    const bare = { reachable: true, hasSchema: false, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: false };
+    assert.equal(kiVisScore(bare, 'keine'), 8 + 10); // Technik nur Meta (8) + keine-Sockel (10) = 18
 });
 
 test('kiVisScore: alle Signale grün bleiben über keine/vage im selben Label-Band (kein Sprung)', () => {
@@ -47,10 +46,10 @@ test('kiVisScore: alle Signale grün bleiben über keine/vage im selben Label-Ba
 });
 
 test('kiVisScore: jedes technische Signal trägt seinen Punktwert bei', () => {
-    const base = { reachable: true, hasSchema: false, hasLocalBusinessSchema: false, hasMetaDescription: false, hasFaqSchema: false, hasLlmsTxt: false };
+    const base = { reachable: true, hasSchema: false, hasLocalBusinessSchema: false, hasMetaDescription: false, hasFaqSchema: false };
     assert.equal(kiVisScore(base, 'keine'), 10); // nur Wissens-Sockel
-    assert.equal(kiVisScore({ ...base, hasFaqSchema: true }, 'keine'), 10 + 14);
-    assert.equal(kiVisScore({ ...base, hasSchema: true }, 'keine'), 10 + 10);
+    assert.equal(kiVisScore({ ...base, hasFaqSchema: true }, 'keine'), 10 + 18);
+    assert.equal(kiVisScore({ ...base, hasSchema: true }, 'keine'), 10 + 12);
 });
 
 test('kiVisScore: nicht erreichbar / keine Domain ⇒ null (LLM-Score bleibt)', () => {
@@ -89,9 +88,9 @@ test('reconcileKiVis: streicht „fehlende FAQ"-Lücke, wenn FAQPage vorhanden i
     reconcileKiVis(result, ALL_GREEN);
     assert.equal(result.gaps.length, 1);
     assert.equal(result.gaps[0].gap, 'Fehlendes KI-Trainingswissen');
-    // „FAQ-Schema ergänzen" fliegt raus (FAQ vorhanden + Ergänz-Verb); „llms.txt optimieren" bleibt.
-    assert.equal(result.fixes.length, 1);
-    assert.match(result.fixes[0].fix, /llms\.txt optimieren/);
+    // „FAQ-Schema ergänzen" fliegt raus (FAQ vorhanden + Ergänz-Verb); „llms.txt optimieren"
+    // fliegt seit Sprint 247 EBENFALLS raus (Doktrin: llms.txt nie empfehlen).
+    assert.equal(result.fixes.length, 0);
 });
 
 test('reconcileKiVis: streicht verb-losen FAQ-Fix („FAQ-Schema für typische Fragen"), wenn FAQ vorhanden', () => {
@@ -113,14 +112,33 @@ test('reconcileKiVis: streicht „Schema-Qualität unbekannt"-Hedge, wenn Schema
 });
 
 test('reconcileKiVis: behält Lücke für ein ROTES Signal', () => {
-    const noLlms = { ...ALL_GREEN, hasLlmsTxt: false };
+    const noMeta = { ...ALL_GREEN, hasMetaDescription: false };
     const result = {
-        gaps: [{ gap: 'Keine llms.txt', why: 'KI-Crawler finden keine kompakte Firmenübersicht' }],
-        fixes: [{ fix: 'llms.txt anlegen mit Leistungen', impact: 'KI-Crawler lesen Firmenprofil' }],
+        gaps: [{ gap: 'Keine Meta-Description', why: 'KI-Suchen fehlt die kompakte Kurzbeschreibung' }],
+        fixes: [{ fix: 'Meta-Description ergänzen', impact: 'bessere Snippets in KI-Antworten' }],
     };
-    reconcileKiVis(result, noLlms);
+    reconcileKiVis(result, noMeta);
     assert.equal(result.gaps.length, 1);
     assert.equal(result.fixes.length, 1);
+});
+
+test('reconcileKiVis: llms.txt fliegt IMMER raus — als gap wie als fix (Sprint 247, Doktrin)', () => {
+    // Die FAQ derselben Seite + der GEO-Score stufen llms.txt als wirkungslos ein — der Spiegel
+    // darf sie weder als Mangel anklagen noch ihre Erstellung empfehlen (Selbstwiderspruch).
+    const result = {
+        gaps: [{ gap: 'Keine llms.txt-Datei', why: 'KI-Modelle können keine strukturierten Infos abrufen' }],
+        fixes: [{ fix: 'llms.txt erstellen mit Kernleistungen und Standort', impact: 'präzisere KI-Antworten' }],
+    };
+    reconcileKiVis(result, ALL_GREEN);
+    assert.equal(result.gaps.length, 0);
+    assert.equal(result.fixes.length, 0);
+});
+
+test('kiVisParts: Aufschlüsselung konsistent zum Score; null wenn unerreichbar', () => {
+    const p = kiVisParts(ALL_GREEN, 'keine');
+    assert.deepEqual(p, { tech: 52, techMax: 52, know: 10, knowMax: 48 });
+    assert.equal(p.tech + p.know, kiVisScore(ALL_GREEN, 'keine'));
+    assert.equal(kiVisParts({ reachable: false }, 'vage'), null);
 });
 
 test('reconcileKiVis: robust gegen fehlende Felder', () => {
