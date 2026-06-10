@@ -218,6 +218,49 @@ html.embed-hero .hero-h1-line{display:block}
         .foto-cta-row { margin-top: 24px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
         .foto-promise { font-size: 13px; color: var(--text-soft); }
         .foto-promise strong { color: var(--accent-dark); }
+        /* Foto-Vorschau + KI-Bad-Ersteinschätzung (echter Vision-Call, Port des Dachdecker-Musters) */
+        .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
+        .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .foto-preview-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; padding: 0; border: none; border-radius: 50%; background: rgba(20,20,20,0.72); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .foto-drop.needs-photo { border-color: var(--accent-strong); box-shadow: 0 0 0 3px rgba(180,112,69,0.25); animation: dropPulse 0.6s ease 2; }
+        @keyframes dropPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(180,112,69,0.25); } 50% { box-shadow: 0 0 0 7px rgba(180,112,69,0.12); } }
+        .ai-consent-check { margin-top: 18px; display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--text-soft); cursor: pointer; line-height: 1.5; }
+        .ai-consent-check input { margin-top: 3px; accent-color: var(--accent); }
+        .ai-trigger { margin-top: 12px; background: var(--accent-bg); border: 1px dashed var(--accent); border-radius: var(--p-radius); padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s; }
+        .ai-trigger:hover { background: rgba(180,112,69,0.16); }
+        .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
+        .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
+        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
+        .ai-result.is-loading { display: block; }
+        .ai-result.is-done { display: block; border-color: var(--accent); }
+        .ai-result-loading { display: flex; flex-direction: column; gap: 10px; }
+        .ai-result-loading .label { font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+        .ai-progress { width: 100%; height: 6px; background: var(--bg-soft); border-radius: 999px; overflow: hidden; }
+        .ai-progress-bar { height: 100%; width: 0%; background: var(--accent); transition: width 1.8s ease-out; }
+        .ai-result.is-done .ai-result-loading { display: none; }
+        .ai-result.is-done .ai-result-body { display: block; }
+        .ai-result-body { display: none; }
+        .ai-result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+        .ai-scope-chip { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: var(--bg-soft); color: var(--text-soft); }
+        .ai-scope-chip.is-auffrischung { background: rgba(122,139,107,0.18); color: #4f5d43; }
+        .ai-scope-chip.is-teil { background: rgba(212,165,81,0.18); color: #a5762e; }
+        .ai-scope-chip.is-komplett { background: var(--accent); color: #fff; }
+        .ai-result-header h4 { font-size: 16px; margin: 0; }
+        .ai-result-diagnose { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .ai-result-diagnose li { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; color: var(--text-soft); }
+        .ai-result-diagnose li::before { content: '•'; color: var(--accent-dark); font-weight: 700; }
+        .ai-result-steps h5 { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-dark); margin-bottom: 8px; }
+        .ai-result-disclaimer { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
+        .ai-result.is-hint { display: block; border-style: dashed; border-color: var(--accent); background: var(--accent-bg); }
+        .ai-result.is-hint .ai-result-loading, .ai-result.is-hint .ai-result-body { display: none; }
+        .ai-result-hint { display: none; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--text); line-height: 1.5; }
+        .ai-result.is-hint .ai-result-hint { display: flex; }
+        .ai-result-hint svg { width: 22px; height: 22px; flex-shrink: 0; stroke: var(--accent-strong); margin-top: 1px; }
         .trust-strip { padding: 36px 0; background: var(--accent-bg); border-bottom: 1px solid #e8dccd; }
         .trust-strip-inner { max-width: var(--max); margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
         .trust-badge { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); }
