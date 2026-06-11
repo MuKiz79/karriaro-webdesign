@@ -497,6 +497,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     showError(err.name === 'AbortError' ? 'Zeitüberschreitung — die KI-Analyse hat zu lange gedauert. Bitte erneut versuchen.' : (err.message || 'Analyse fehlgeschlagen.'));
                 });
             });
+
+            // Auto-Start: Wer vom Live-Beweis-Streifen der Dachseite kommt (?auto=1) und ein gefülltes
+            // Pflichtfeld mitbringt, soll die Prüfung sofort sehen — ohne zweiten Klick. Läuft NACH der
+            // submit-Handler-Registrierung; nutzt denselben Handler (inkl. Validierung + 5/h-Busy-Guard).
+            (function () {
+                try {
+                    if (new URLSearchParams(location.search).get('auto') !== '1') return;
+                    if (document.getElementById('kv-business').value.trim().length < 2) return;
+                    if (form.requestSubmit) form.requestSubmit();
+                    else form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                } catch (e) { /* defensiv — Auto-Start ist optional */ }
+            })();
         })();
     </script>
 
