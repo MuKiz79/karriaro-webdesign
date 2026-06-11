@@ -60,11 +60,13 @@ const FRAGMENT = `<!-- ═══ SPLASH „Der goldene Faden näht das Siegel" (
 <div class="kr-splash" id="kr-splash" role="presentation" aria-hidden="true">
   <div class="kr-splash-inner">
     ${seal}
-    <div class="kr-splash-lockup">
-      <div class="kr-splash-word">Karriaro</div>
-      <div class="kr-splash-product">Webdesign</div>
+    <div class="kr-splash-caption">
+      <div class="kr-splash-lockup">
+        <div class="kr-splash-word">Karriaro</div>
+        <div class="kr-splash-product">Webdesign</div>
+      </div>
+      <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
     </div>
-    <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
   </div>
 </div>
 <style>
@@ -75,21 +77,31 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
   transition:opacity .8s cubic-bezier(.76,0,.24,1),visibility .8s}
 .kr-splash.kr-done{opacity:0;visibility:hidden}
 .kr-splash-inner{display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 24px}
+/* Caption (Lockup + Eyebrow) als EIN Container — beim Morph als Ganzes ausgeblendet,
+   damit die forwards-Animationen der Kinder das Opacity nicht überschreiben. */
+.kr-splash-caption{display:flex;flex-direction:column;align-items:center;gap:20px}
 /* Lockup = Wortmarke + Produktname, wie in der Nav der Webdesign-Seite. */
 .kr-splash-lockup{display:flex;flex-direction:column;align-items:center;gap:8px}
 /* Das ganze Siegel atmet einmal sanft ein, während sich die Blüte schreibt (Tiefe statt Spektakel). */
 .kr-seal{width:min(46vw,300px);height:auto;overflow:visible;transform-origin:center 50%;
   animation:kr-seal-settle 2.1s cubic-bezier(.22,1,.36,1) 300ms both}
+/* „Karriaro" — Wisch-Reveal PLUS opsz-Atem: Fraunces ist variabel; die optische Größe
+   öffnet sich von 12 (kräftig) auf 144 (elegant, hoher Kontrast) — die Wortmarke „atmet auf".
+   Nur Kenner bemerken es bewusst; genau deshalb wirkt es teuer. */
 .kr-splash-word{font-family:'Fraunces','Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(30px,6vw,52px);
-  letter-spacing:.16em;text-indent:.16em;color:${CREAM};line-height:1;
-  clip-path:inset(0 100% 0 0);animation:kr-word-reveal .9s cubic-bezier(.76,0,.24,1) 1700ms forwards}
+  letter-spacing:.16em;text-indent:.16em;color:${CREAM};line-height:1;font-variation-settings:"opsz" 12;
+  clip-path:inset(0 100% 0 0);animation:kr-word-reveal .9s cubic-bezier(.76,0,.24,1) 1600ms forwards,
+  kr-word-opsz 1.3s cubic-bezier(.22,1,.36,1) 1600ms forwards}
 /* Produktname „Webdesign" — Messing-Mono wie die Nav-Sublinie der Webdesign-Seite. */
 .kr-splash-product{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500;
   font-size:clamp(12px,1.9vw,17px);letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;
-  color:${GOLD};opacity:0;animation:kr-eyebrow-in .7s ease-out 2150ms forwards}
+  color:${GOLD};opacity:0;animation:kr-eyebrow-in .7s ease-out 1900ms forwards}
 .kr-splash-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(8px,1.2vw,10px);
   letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:${CREAM};opacity:0;
-  animation:kr-eyebrow-in .8s ease-out 2400ms forwards}
+  animation:kr-eyebrow-in .8s ease-out 2150ms forwards}
+/* Morph-Phase: die Caption (Lockup + Eyebrow) weicht, damit das Siegel allein in die Nav
+   fliegt. Der Eck-Rahmen bleibt im Siegel und skaliert mit (Nav-Marke hat denselben Rahmen). */
+.kr-splash.kr-morph .kr-splash-caption{opacity:0;transition:opacity .35s ease}
 /* Siegel-Rahmen zeichnet sich. */
 .kr-frame{stroke-dasharray:1;stroke-dashoffset:1;animation:kr-draw .6s ease-out 200ms forwards}
 /* WOW: Samen erscheinen in Phyllotaxis-Reihenfolge (--si=n/N) — der Goldene Winkel lässt die
@@ -104,6 +116,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 @keyframes kr-gold-glow{0%{filter:drop-shadow(0 0 0 ${GOLD})}35%{filter:drop-shadow(0 0 3px ${GOLD})}to{filter:drop-shadow(0 0 1px ${GOLD})}}
 @keyframes kr-seal-settle{0%{transform:scale(.9)}65%{transform:scale(1.025)}to{transform:scale(1)}}
 @keyframes kr-word-reveal{to{clip-path:inset(0 0 0 0)}}
+@keyframes kr-word-opsz{from{font-variation-settings:"opsz" 12}to{font-variation-settings:"opsz" 144}}
 @keyframes kr-eyebrow-in{to{opacity:.95}}
 /* Reduced-Motion: fertiges Siegel + Wortmarke sofort, kein Aufbau. */
 @media (prefers-reduced-motion:reduce){
@@ -111,7 +124,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
   .kr-seal{animation:none}
   .kr-seed,.kr-seed-gold{opacity:1;transform:none;animation:none}
   .kr-seed-gold{filter:drop-shadow(0 0 1px ${GOLD})}
-  .kr-splash-word{clip-path:none;animation:none}
+  .kr-splash-word{clip-path:none;animation:none;font-variation-settings:"opsz" 144}
   .kr-splash-product,.kr-splash-eyebrow{opacity:.95;animation:none}
 }
 </style>
@@ -129,18 +142,47 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
   if(sessionStorage.getItem('kr-splash-seen')==='1'){s.parentNode&&s.parentNode.removeChild(s);return;}
   document.documentElement.classList.add('kr-splash-lock'); // Scroll während des Splash sperren
   var done=false;
-  function finish(){
-    if(done)return;done=true;
-    sessionStorage.setItem('kr-splash-seen','1');
-    s.classList.add('kr-done');
-    document.documentElement.classList.remove('kr-splash-lock');
-    setTimeout(function(){s.parentNode&&s.parentNode.removeChild(s);},850);
-  }
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var hold=reduce?1100:3050; // nach der Geste kurz halten, dann auflösen
-  var timer=setTimeout(finish,hold);
-  // Überspringen: Klick/Tap, Esc, Scroll/Wheel.
-  function skip(){clearTimeout(timer);finish();}
+  function remove(){s.parentNode&&s.parentNode.removeChild(s);}
+  function unlock(){document.documentElement.classList.remove('kr-splash-lock');}
+  // Einfaches Auflösen (Skip oder Fallback): Overlay faded weg.
+  function fadeOut(){
+    if(done)return;done=true;sessionStorage.setItem('kr-splash-seen','1');
+    s.classList.add('kr-done');unlock();setTimeout(remove,850);
+  }
+  // FINALE-GESTE: Das Siegel fliegt exakt in die Nav-Marke (FLIP/Shared-Element).
+  // Die Nav-Marke ist geometrisch identisch → ehrliche Fortsetzung, kein Trick.
+  // Harter Fallback aufs Fade bei reduced-motion / Mobile / fehlender oder
+  // nicht messbarer Nav-Marke (Founder-Bedingung).
+  function morphToNav(){
+    if(done)return;
+    var nav=document.querySelector('.nav-mark');
+    var seal=s.querySelector('.kr-seal');
+    if(reduce||window.innerWidth<=900||!nav||!seal){fadeOut();return;}
+    var r1=nav.getBoundingClientRect();
+    seal.style.animation='none';                 // Settle-Animation lösen (Endwert scale 1)
+    var r0=seal.getBoundingClientRect();
+    if(!r1.width||!r0.width){fadeOut();return;}   // nicht messbar → Fallback
+    done=true;sessionStorage.setItem('kr-splash-seen','1');unlock();
+    var sc=r1.width/r0.width;
+    var dx=(r1.left+r1.width/2)-(r0.left+r0.width/2);
+    var dy=(r1.top+r1.height/2)-(r0.top+r0.height/2);
+    s.classList.add('kr-morph');                  // Lockup + Eyebrow weichen
+    seal.style.transformOrigin='center center';
+    seal.style.transition='transform .9s cubic-bezier(.22,1,.36,1)';
+    // doppeltes rAF, damit transition vor dem Transform greift
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      seal.style.transform='translate('+dx+'px,'+dy+'px) scale('+sc+')';
+    });});
+    // Auf halbem Weg das Navy-Overlay wegblenden → die echte Nav-Marke darunter
+    // übernimmt nahtlos (Cross-Dissolve, Siegel sitzt exakt an Nav-Position).
+    setTimeout(function(){s.style.transition='opacity .5s ease';s.style.opacity='0';},540);
+    setTimeout(remove,1050);
+  }
+  var hold=reduce?1100:3050; // Aufbau + 200ms Stille, dann die Finale-Geste
+  var timer=setTimeout(morphToNav,hold);
+  // Überspringen (ungeduldig): kein Morph, schnelles Fade.
+  function skip(){clearTimeout(timer);fadeOut();}
   s.addEventListener('click',skip);
   window.addEventListener('keydown',function(e){if(e.key==='Escape')skip();});
   window.addEventListener('wheel',skip,{passive:true,once:true});
