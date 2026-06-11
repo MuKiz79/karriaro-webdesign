@@ -30,7 +30,7 @@ const { safeFetch, resolvePublicAddress } = require("./lib/safe-fetch.js");
 const { enforceRateLimit, clientIp } = require("./lib/rate-limit-store.js");
 const { normalizeUrl } = require("./lib/url-utils.js");  // Sprint 178 — Single-Source
 const { kiVisScore, kiVisParts, kiVisLabel, reconcileKiVis } = require("./lib/ki-visibility.js");  // Sprint 240/247/250
-const { detectBlockedResponse } = require("./lib/light-audit.js");  // Sprint 250 — Bot-Wall-Erkennung (Akamai/Cloudflare/Incapsula)
+// detectBlockedResponse wird bereits in Zeile 16 aus light-audit importiert (Sprint 250 nutzt es im kiVisibility-Fetch).
 const { parseImage, normalizeAssessment } = require("./lib/roof-vision.js");  // Sprint 241 (Vision)
 const { sanitizeOccasion, buildStyleVisionPrompt, STYLE_VISION_TOOL, normalizeAssessment: normalizeStyleAssessment } = require("./lib/style-vision.js");  // Sprint 242 (Friseur-Vision)
 const { sanitizeProblem, buildBadVisionPrompt, BAD_VISION_TOOL, normalizeAssessment: normalizeBadAssessment } = require("./lib/bad-vision.js");  // Sprint 243 (Bad-Vision)
