@@ -60,7 +60,10 @@ const FRAGMENT = `<!-- ═══ SPLASH „Der goldene Faden näht das Siegel" (
 <div class="kr-splash" id="kr-splash" role="presentation" aria-hidden="true">
   <div class="kr-splash-inner">
     ${seal}
-    <div class="kr-splash-word">Karriaro</div>
+    <div class="kr-splash-lockup">
+      <div class="kr-splash-word">Karriaro</div>
+      <div class="kr-splash-product">Webdesign</div>
+    </div>
     <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
   </div>
 </div>
@@ -71,16 +74,22 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 .kr-splash{position:fixed;inset:0;z-index:2147483647;background:${INDIGO};display:flex;align-items:center;justify-content:center;
   transition:opacity .8s cubic-bezier(.76,0,.24,1),visibility .8s}
 .kr-splash.kr-done{opacity:0;visibility:hidden}
-.kr-splash-inner{display:flex;flex-direction:column;align-items:center;gap:22px;padding:0 24px}
+.kr-splash-inner{display:flex;flex-direction:column;align-items:center;gap:20px;padding:0 24px}
+/* Lockup = Wortmarke + Produktname, wie in der Nav der Webdesign-Seite. */
+.kr-splash-lockup{display:flex;flex-direction:column;align-items:center;gap:8px}
 /* Das ganze Siegel atmet einmal sanft ein, während sich die Blüte schreibt (Tiefe statt Spektakel). */
 .kr-seal{width:min(46vw,300px);height:auto;overflow:visible;transform-origin:center 50%;
   animation:kr-seal-settle 2.1s cubic-bezier(.22,1,.36,1) 300ms both}
 .kr-splash-word{font-family:'Fraunces','Cormorant Garamond',Georgia,serif;font-weight:500;font-size:clamp(30px,6vw,52px);
   letter-spacing:.16em;text-indent:.16em;color:${CREAM};line-height:1;
   clip-path:inset(0 100% 0 0);animation:kr-word-reveal .9s cubic-bezier(.76,0,.24,1) 1700ms forwards}
-.kr-splash-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(9px,1.4vw,11px);
-  letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:${GOLD};opacity:0;
-  animation:kr-eyebrow-in .8s ease-out 2150ms forwards}
+/* Produktname „Webdesign" — Messing-Mono wie die Nav-Sublinie der Webdesign-Seite. */
+.kr-splash-product{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:500;
+  font-size:clamp(12px,1.9vw,17px);letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;
+  color:${GOLD};opacity:0;animation:kr-eyebrow-in .7s ease-out 2150ms forwards}
+.kr-splash-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(8px,1.2vw,10px);
+  letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:${CREAM};opacity:0;
+  animation:kr-eyebrow-in .8s ease-out 2400ms forwards}
 /* Siegel-Rahmen zeichnet sich. */
 .kr-frame{stroke-dasharray:1;stroke-dashoffset:1;animation:kr-draw .6s ease-out 200ms forwards}
 /* WOW: Samen erscheinen in Phyllotaxis-Reihenfolge (--si=n/N) — der Goldene Winkel lässt die
@@ -103,7 +112,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
   .kr-seed,.kr-seed-gold{opacity:1;transform:none;animation:none}
   .kr-seed-gold{filter:drop-shadow(0 0 1px ${GOLD})}
   .kr-splash-word{clip-path:none;animation:none}
-  .kr-splash-eyebrow{opacity:.95;animation:none}
+  .kr-splash-product,.kr-splash-eyebrow{opacity:.95;animation:none}
 }
 </style>
 <script>
@@ -128,7 +137,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     setTimeout(function(){s.parentNode&&s.parentNode.removeChild(s);},850);
   }
   var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var hold=reduce?1100:2750; // nach der Geste kurz halten, dann auflösen
+  var hold=reduce?1100:3050; // nach der Geste kurz halten, dann auflösen
   var timer=setTimeout(finish,hold);
   // Überspringen: Klick/Tap, Esc, Scroll/Wheel.
   function skip(){clearTimeout(timer);finish();}
