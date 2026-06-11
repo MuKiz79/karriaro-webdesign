@@ -11,20 +11,39 @@
 //
 // Sprint 247: llms.txt KOMPLETT aus Score & Empfehlungen entfernt — kein großes KI-System
 // wertet die Datei aus (Knowledge-Base-Doktrin; die FAQ derselben Seite sagt das auch).
-// Vorher vergab der Score 10 Punkte dafür und das LLM empfahl ihre Erstellung — der Spiegel
-// widersprach damit der eigenen Lehre. Gewichte auf die echten Signale umverteilt (max bleibt 52).
+//
+// Sprint 250: UNTERNEHMENSTYP-bewusst + Bot-Wall. (1) Das LocalBusiness-Schema ist nur für
+// LOKALE Betriebe (Friseur, Praxis, Handwerk …) ein Signal. Für Hersteller/Konzerne/globale
+// Marken (z.B. Hansgrohe) ist es nicht angebracht — sein Fehlen darf NICHT als Mangel zählen.
+// Score-Gewichte daher scope-abhängig (local vs. nicht-local), tech max bleibt 52. (2) Liegt die
+// Seite hinter einer Bot-Wall (signals.blocked), sind die Signale ungeprüft → kein Technik-Score
+// und keine technischen Mängel (sonst läse „blockiert" fälschlich als „mangelhaft").
 // ════════════════════════════════════════════════════════════════════════════
 
-// Technik (gemessen, max 52) + KI-Trainingswissen (LLM-Urteil, max 48) = 0–100, reproduzierbar.
-// Gibt null zurück, wenn die Seite NICHT erreichbar war (keine echten Signale) → dann bleibt der
-// ehrliche LLM-Score (reines Trainingswissen) bestehen, statt technische Signale zu erfinden.
-function kiVisTech(signals) {
-    if (!signals || signals.reachable !== true) return null;
+// 'local' = Betrieb mit physischem Einzugsgebiet (LocalBusiness-Schema ist angebracht).
+// alles andere (regional/national/global/Hersteller/Online-only) → LocalBusiness ist N/A.
+function isLocalScope(scope) {
+    return scope === undefined || scope === null || scope === "local";
+}
+
+// Technik (gemessen, max 52). Gibt null zurück, wenn die Seite NICHT erreichbar oder blockiert
+// war (keine echten Signale) → dann bleibt der ehrliche LLM-Score (reines Trainingswissen).
+// scope-abhängig: lokal gewichtet LocalBusiness mit; nicht-lokal verteilt diese Punkte auf die
+// universellen Signale (Schema/Meta/FAQ), weil LocalBusiness dort kein sinnvolles Ziel ist.
+function kiVisTech(signals, scope) {
+    if (!signals || signals.reachable !== true || signals.blocked) return null;
     let tech = 0;
-    if (signals.hasSchema) tech += 12;
-    if (signals.hasLocalBusinessSchema) tech += 14;
-    if (signals.hasMetaDescription) tech += 8;
-    if (signals.hasFaqSchema) tech += 18;            // tech max = 52
+    if (isLocalScope(scope)) {
+        if (signals.hasSchema) tech += 12;
+        if (signals.hasLocalBusinessSchema) tech += 14;
+        if (signals.hasMetaDescription) tech += 8;
+        if (signals.hasFaqSchema) tech += 18;            // tech max = 52
+    } else {
+        // Hersteller/Konzern/globale Marke: LocalBusiness entfällt (14 Pkt umverteilt → +6/+4/+4).
+        if (signals.hasSchema) tech += 18;               // Organization/Product-Schema = die Entität
+        if (signals.hasMetaDescription) tech += 12;
+        if (signals.hasFaqSchema) tech += 22;            // tech max = 52
+    }
     return tech;
 }
 
@@ -35,18 +54,19 @@ function kiVisKnow(knowledgeLevel) {
     return knowledgeLevel === "solide" ? 48 : knowledgeLevel === "vage" ? 24 : 10; // max 48
 }
 
-function kiVisScore(signals, knowledgeLevel) {
-    const tech = kiVisTech(signals);
+function kiVisScore(signals, knowledgeLevel, scope) {
+    const tech = kiVisTech(signals, scope);
     if (tech === null) return null;
     return Math.max(0, Math.min(100, Math.round(tech + kiVisKnow(knowledgeLevel))));
 }
 
 // Aufschlüsselung fürs UI: beantwortet „warum nicht 100?" ehrlich — die Technik-Hälfte steuert
 // die Website, die Wissens-Hälfte wächst nur über externe Erwähnungen + Zeit (Off-Site-Hebel).
-function kiVisParts(signals, knowledgeLevel) {
-    const tech = kiVisTech(signals);
+// localApplies sagt dem Frontend, ob der LocalBusiness-Chip überhaupt angezeigt werden soll.
+function kiVisParts(signals, knowledgeLevel, scope) {
+    const tech = kiVisTech(signals, scope);
     if (tech === null) return null;
-    return { tech, techMax: 52, know: kiVisKnow(knowledgeLevel), knowMax: 48 };
+    return { tech, techMax: 52, know: kiVisKnow(knowledgeLevel), knowMax: 48, localApplies: isLocalScope(scope) };
 }
 
 function kiVisLabel(score) {
@@ -58,23 +78,31 @@ function kiVisLabel(score) {
 
 // Grüne (gemessen vorhandene) Signale dürfen NICHT als Lücke erscheinen — sonst widerspricht der
 // „Warum die KI Sie kaum findet"-Block den grünen Chips daneben. Server-seitiges Netz zusätzlich
-// zur Prompt-Anweisung: gaps streichen, die ein vorhandenes Signal als fehlend/schwach/„Qualität
-// unbekannt" behaupten; Fixes streichen, die ein vorhandenes Signal NEU ergänzen (Verb-gated;
-// „optimieren/erweitern" bleibt = legitime Verbesserung des Bestehenden). Mutiert result in place.
-// llms.txt fliegt IMMER raus (gap wie fix), unabhängig vom Messwert — Doktrin, s. Kopfkommentar.
-function reconcileKiVis(result, signals) {
+// zur Prompt-Anweisung. Streicht: (a) llms.txt IMMER (Doktrin), (b) gaps/fixes über ein bereits
+// grünes Signal, (c) bei nicht-lokalem Scope alle LocalBusiness-/„lokale Sichtbarkeit"-Befunde
+// (für einen Hersteller kein Mangel), (d) bei Bot-Wall alle technischen Website-Mängel (ungeprüft).
+function reconcileKiVis(result, signals, scope) {
     if (!result || !signals) return result;
     const llms = /llms\.?txt/i;
+    const localBiz = /localbusiness|local-business|lokale[rsn]? (sichtbarkeit|signale|auffindbarkeit|suche)|standortbezogen|local seo|google[- ]?(unternehmens|business)[- ]?profil/i;
+    const techMangel = /schema|strukturierte daten|json-?ld|markup|meta-?descr|meta-?beschreib|\bfaq\b|server-?gerendert|crawl|ladezeit|core web vitals/i;
     const present = [];
     if (signals.hasFaqSchema) present.push(/\bfaq/i);
-    if (signals.hasSchema) present.push(/\bschema\b|strukturierte daten|json-?ld|markup/i);
+    // „schema" nur als EIGENSTÄNDIGES Wort werten — NICHT in „LocalBusiness-Schema"/„FAQ-Schema"
+    // (sonst streicht ein vorhandenes generisches Schema fälschlich den Mangel eines fehlenden Subtyps).
+    if (signals.hasSchema) present.push(/(?<![\w-])schema\b|strukturierte daten|json-?ld|markup/i);
     if (signals.hasLocalBusinessSchema) present.push(/localbusiness|local-business/i);
     if (signals.hasMetaDescription) present.push(/meta-?descr|meta-?beschreib/i);
     const hits = (txt) => present.some((re) => re.test(txt || ""));
+    const nonLocal = !isLocalScope(scope);
+    const blocked = !!signals.blocked;
     if (Array.isArray(result.gaps)) {
         result.gaps = result.gaps.filter((g) => {
             const txt = (g.gap || "") + " " + (g.why || "");
-            return !llms.test(txt) && !hits(txt);
+            if (llms.test(txt)) return false;
+            if (nonLocal && localBiz.test(txt)) return false;     // Hersteller: kein lokaler Mangel
+            if (blocked && techMangel.test(txt)) return false;    // Bot-Wall: Technik ungeprüft
+            return !hits(txt);
         });
     }
     if (Array.isArray(result.fixes)) {
@@ -82,14 +110,13 @@ function reconcileKiVis(result, signals) {
         result.fixes = result.fixes.filter((f) => {
             const txt = (f.fix || "") + " " + (f.impact || "");
             if (llms.test(txt)) return false;
-            // FAQ-Schema ist binär vorhanden → jeder FAQ-Fix ist redundant, egal mit welchem Verb
-            // (z.B. „FAQ-Schema für typische Fragen" ohne Verb). Häufigster halluzinierter Fix.
+            if (nonLocal && localBiz.test(txt)) return false;
+            if (blocked && techMangel.test(txt)) return false;
             if (signals.hasFaqSchema && /\bfaq/i.test(txt)) return false;
-            // sonst: nur das NEU-Ergänzen eines vorhandenen Signals streichen („optimieren/erweitern" bleibt).
             return !(hits(txt) && addVerb.test(txt));
         });
     }
     return result;
 }
 
-module.exports = { kiVisScore, kiVisParts, kiVisLabel, reconcileKiVis };
+module.exports = { kiVisScore, kiVisParts, kiVisLabel, reconcileKiVis, isLocalScope };

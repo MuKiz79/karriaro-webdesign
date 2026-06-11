@@ -344,7 +344,7 @@
                 requestAnimationFrame(tick);
             }
 
-            function renderSignals(sig) {
+            function renderSignals(sig, localApplies) {
                 if (!sig) return '';
                 var defs = [
                     ['hasSchema', 'Schema'],
@@ -354,6 +354,8 @@
                 ];
                 var html = '';
                 defs.forEach(function (d) {
+                    // LocalBusiness ist nur für lokale Betriebe ein Signal — bei Herstellern/Konzernen ausblenden.
+                    if (d[0] === 'hasLocalBusinessSchema' && localApplies === false) return;
                     var v = sig[d[0]];
                     if (v === null || v === undefined) return;
                     html += '<span class="kv-sig ' + (v ? 'ok' : 'no') + '">' + (v ? '✓ ' : '✗ ') + d[1] + '</span>';
@@ -412,7 +414,8 @@
                     loading.style.display = 'none';
                     document.getElementById('kv-aiknows').textContent = res.aiKnows || '—';
                     document.getElementById('kv-score-label').textContent = res.scoreLabel || '—';
-                    document.getElementById('kv-signals').innerHTML = renderSignals(j.signals);
+                    var localApplies = !j.businessScope || j.businessScope === 'local';
+                    document.getElementById('kv-signals').innerHTML = renderSignals(j.signals, localApplies);
                     renderList(document.getElementById('kv-gaps'), res.gaps, 'gap', 'why');
                     renderList(document.getElementById('kv-fixes'), res.fixes, 'fix', 'impact');
                     document.getElementById('kv-gaps-card').style.display = (res.gaps && res.gaps.length) ? '' : 'none';
@@ -433,9 +436,15 @@
                     // nicht 100 erreichen kann (Wissen wächst nur off-site, nicht per Website-Fix).
                     var spEl = document.getElementById('kv-score-parts');
                     if (spEl) {
-                        var sp = j.scoreParts;
-                        spEl.hidden = !sp;
-                        if (sp) spEl.textContent = 'Website-Technik ' + sp.tech + '/' + sp.techMax + ' · KI-Trainingswissen ' + sp.know + '/' + sp.knowMax + ' — Technik steuern Sie selbst, Bekanntheit wächst über externe Erwähnungen.';
+                        if (j.signals && j.signals.blocked) {
+                            // Bot-Wall: technische Signale ungeprüft — ehrlich kennzeichnen statt „mangelhaft".
+                            spEl.hidden = false;
+                            spEl.textContent = 'Hinweis: Diese Website ist durch einen Bot-Schutz (z. B. Akamai/Cloudflare) für die automatische Prüfung gesperrt — die technischen Signale konnten nicht gemessen werden. Der Wert spiegelt allein das KI-Trainingswissen.';
+                        } else {
+                            var sp = j.scoreParts;
+                            spEl.hidden = !sp;
+                            if (sp) spEl.textContent = 'Website-Technik ' + sp.tech + '/' + sp.techMax + ' · KI-Trainingswissen ' + sp.know + '/' + sp.knowMax + ' — Technik steuern Sie selbst, Bekanntheit wächst über externe Erwähnungen.';
+                        }
                     }
                     submit.disabled = false;
                     submitting = false;

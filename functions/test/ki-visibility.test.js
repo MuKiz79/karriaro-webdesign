@@ -136,7 +136,7 @@ test('reconcileKiVis: llms.txt fliegt IMMER raus — als gap wie als fix (Sprint
 
 test('kiVisParts: Aufschlüsselung konsistent zum Score; null wenn unerreichbar', () => {
     const p = kiVisParts(ALL_GREEN, 'keine');
-    assert.deepEqual(p, { tech: 52, techMax: 52, know: 10, knowMax: 48 });
+    assert.deepEqual(p, { tech: 52, techMax: 52, know: 10, knowMax: 48, localApplies: true });
     assert.equal(p.tech + p.know, kiVisScore(ALL_GREEN, 'keine'));
     assert.equal(kiVisParts({ reachable: false }, 'vage'), null);
 });
@@ -146,4 +146,84 @@ test('reconcileKiVis: robust gegen fehlende Felder', () => {
     assert.doesNotThrow(() => reconcileKiVis(result, ALL_GREEN));
     assert.doesNotThrow(() => reconcileKiVis(null, ALL_GREEN));
     assert.doesNotThrow(() => reconcileKiVis({ gaps: [] }, null));
+});
+
+// ── Sprint 250: Unternehmenstyp (scope) — LocalBusiness nur für lokale Betriebe ──
+
+test('kiVisScore: scope default = local (unverändert), LocalBusiness zählt', () => {
+    assert.equal(kiVisScore(ALL_GREEN, 'vage'), 76);          // ohne scope
+    assert.equal(kiVisScore(ALL_GREEN, 'vage', 'local'), 76); // explizit local
+});
+
+test('kiVisScore: Hersteller/global — fehlendes LocalBusiness ist KEIN Mangel (Hansgrohe-Fall)', () => {
+    // Schema✓ + Meta✓, LocalBusiness✗ + FAQ✗. local würde 12+8=20 geben; global gewichtet ohne Local: 18+12=30.
+    const hg = { reachable: true, hasSchema: true, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: false };
+    assert.equal(kiVisScore(hg, 'solide', 'local'), 20 + 48);   // altes Raster: 68
+    assert.equal(kiVisScore(hg, 'solide', 'global'), 30 + 48);  // neues Raster: 78 (LocalBusiness entfällt)
+    assert.ok(kiVisScore(hg, 'solide', 'global') > kiVisScore(hg, 'solide', 'local'));
+});
+
+test('kiVisScore: nicht-lokal max bleibt 52 (alle universellen Signale grün)', () => {
+    const allUniversal = { reachable: true, hasSchema: true, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: true };
+    assert.equal(kiVisScore(allUniversal, 'keine', 'national'), 52 + 10); // 18+12+22 = 52
+});
+
+test('kiVisParts: localApplies = false bei nicht-lokalem Scope', () => {
+    const p = kiVisParts(ALL_GREEN, 'solide', 'global');
+    assert.equal(p.localApplies, false);
+    assert.equal(p.techMax, 52);
+    assert.equal(kiVisParts(ALL_GREEN, 'solide', 'local').localApplies, true);
+});
+
+test('reconcileKiVis: nicht-lokal streicht LocalBusiness-/lokale-Sichtbarkeit-Befunde', () => {
+    const result = {
+        gaps: [
+            { gap: 'Lokale Sichtbarkeit begrenzt', why: 'fehlen strukturierte lokale Signale für standortbezogene Anfragen' },
+            { gap: 'Kein Trainingswissen', why: 'unklar' },
+        ],
+        fixes: [
+            { fix: 'LocalBusiness-Schema ergänzen', impact: 'lokale Treffer' },
+            { fix: 'Google-Unternehmensprofil pflegen', impact: 'lokale Sichtbarkeit' },
+            { fix: 'Organization-Schema konsolidieren', impact: 'klare Entität' },
+        ],
+    };
+    const sig = { reachable: true, hasSchema: true, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: false };
+    reconcileKiVis(result, sig, 'global');
+    assert.equal(result.gaps.length, 1);
+    assert.equal(result.gaps[0].gap, 'Kein Trainingswissen');
+    // LocalBusiness- + Google-Profil-Fix raus; Organization-Fix bleibt (legitimer Hebel für Hersteller).
+    assert.equal(result.fixes.length, 1);
+    assert.match(result.fixes[0].fix, /Organization/);
+});
+
+test('reconcileKiVis: lokaler Scope BEHÄLT den LocalBusiness-Mangel', () => {
+    const result = { gaps: [{ gap: 'Lokale Sichtbarkeit begrenzt', why: 'kein LocalBusiness-Schema' }], fixes: [] };
+    const sig = { reachable: true, hasSchema: true, hasLocalBusinessSchema: false, hasMetaDescription: true, hasFaqSchema: false };
+    reconcileKiVis(result, sig, 'local');
+    assert.equal(result.gaps.length, 1); // für einen lokalen Betrieb ist das ein echter Mangel
+});
+
+// ── Sprint 250: Bot-Wall — blockierte Seite ist „ungeprüft", nicht „mangelhaft" ──
+
+test('kiVisScore/kiVisParts: blocked ⇒ null (kein Technik-Score)', () => {
+    const blocked = { reachable: false, blocked: 'challenge', hasSchema: null, hasLocalBusinessSchema: null, hasMetaDescription: null, hasFaqSchema: null };
+    assert.equal(kiVisScore(blocked, 'solide', 'global'), null);
+    assert.equal(kiVisParts(blocked, 'solide', 'global'), null);
+    // Selbst wenn reachable fälschlich true wäre, verhindert blocked den Score:
+    assert.equal(kiVisScore({ reachable: true, blocked: 'http-403', hasSchema: true }, 'solide'), null);
+});
+
+test('reconcileKiVis: blocked streicht technische Mängel (Signale ungeprüft)', () => {
+    const result = {
+        gaps: [
+            { gap: 'Kein Schema vorhanden', why: 'KI kann nichts extrahieren' },
+            { gap: 'Geringe Markenbekanntheit', why: 'wenig Off-Site-Erwähnungen' },
+        ],
+        fixes: [{ fix: 'Meta-Description ergänzen', impact: 'bessere Snippets' }],
+    };
+    const sig = { reachable: false, blocked: 'challenge' };
+    reconcileKiVis(result, sig, 'global');
+    assert.equal(result.gaps.length, 1);
+    assert.match(result.gaps[0].gap, /Markenbekanntheit/);
+    assert.equal(result.fixes.length, 0); // technischer Fix gestrichen (ungeprüft)
 });
