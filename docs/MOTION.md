@@ -20,8 +20,16 @@ lesbare Sprache**.
 ### 1 — Ein Ursprungs-Prinzip: Keimen, nicht Gleiten
 Jedes Element tritt ein, indem es **aus einem Punkt keimt**:
 `transform-origin: var(--origin-seed)` + `scale(var(--grow-from))` + `opacity:0`
-→ auf `scale(1)`/`opacity:1`. **Nie** `translateX` von außerhalb des Viewports.
-Das ist die sichtbare Handschrift.
+→ auf `scale(1)`/`opacity:1`. **Nie** `translateX/Y` von außerhalb. Das ist die
+sichtbare Handschrift.
+
+> ⚠️ **Origin ZENTRIERT (50% 50%), nicht unten.** Live-gemessen + Wahrnehmungs-
+> Analyse (Sprint 251): `transform-origin: 50% 100%` (unten) + sanftes
+> `--grow-from` lässt nur die Oberkante steigen → liest sich als Aufwärts-**Slide**
+> (gleicher Vektor!), obwohl es technisch reines Scale ist. Zentriert expandieren
+> alle Kanten symmetrisch → kein Richtungsvektor, kann nicht zum Slide aliasieren.
+> `--grow-from` außerdem sichtbar genug wählen (≈.85, nicht .92), sonst zu subtil
+> für „Wachstum".
 
 ### 2 — Eine Easing-Familie (genau zwei Kurven)
 | Token | Wert | Rolle |
@@ -118,7 +126,7 @@ der `.is-revealed` schaltet) — kein neuer JS-Pfad:
 **Erster Live-Konsument (2026-06-12):** Sektion „Wie eine Karriaro-Manufaktur
 entsteht" (№ 07 · Werkstatt-Logbuch, `index.html`) — die 5 Akte gleiten nicht
 mehr (`translateY`), sondern **keimen** aus ihrem Saatpunkt, gestaffelt per `--si`
-(0 / .25 / .5 / .75 / 1; `--grow-from:.9` am `<ol>` = premium-sanft). Damit ist
+(0 / .25 / .5 / .75 / 1; `--grow-from:.85` am `<ol>` = sichtbar, aber premium). Damit ist
 die Werde-Geschichte der Manufaktur selbst die erste sichtbare Einlösung der
 Leitidee. Verifiziert (11/11): Keim-scale + `--ease-grow` + Staffelung 0→0.39s +
 reduced-motion sofort sichtbar; Smoke 86/0.

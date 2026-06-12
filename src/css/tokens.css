@@ -70,14 +70,17 @@
   --t-4: 390ms;
   --t-5: 630ms;
 
-  /* Keim-Ursprung: Eintritte wachsen aus einem Punkt (scale+fade), nie translateX
-   * von ausserhalb. Nutzung:
+  /* Keim-Ursprung: Eintritte BLUEHEN aus EINEM PUNKT (scale+fade), nie translateX/Y.
+   * Nutzung:
    *   transform-origin: var(--origin-seed);
    *   @keyframes kr-keim { from { transform: scale(var(--grow-from)); opacity: 0 }
    *                        to   { transform: none; opacity: 1 } }
-   * --origin-seed default unten-mittig (verwurzelt, wie Hero-«I» aus der Erde),
-   * pro Element ueberschreibbar. */
-  --origin-seed: 50% 100%;
+   * ⚠️ --origin-seed = ZENTRIERT (50% 50%): symmetrische Expansion aus der Mitte,
+   * KEIN dominanter Richtungsvektor → kann nicht als Slide (miss)gelesen werden.
+   * Frueh getestet: unten-mittig (50% 100%) + zu sanftes --grow-from liest sich wie
+   * ein Aufwaerts-Slide (nur die Oberkante wandert) → bewusst zentriert. Pro Element
+   * ueberschreibbar (z.B. Hero-«I» wurzelt unten via eigener Animation). */
+  --origin-seed: 50% 50%;
   --grow-from: 0.62;
 
   /* Type-Scale (clamp-Wertepaare, branchen-spezifische Fonts setzen Family) */
