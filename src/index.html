@@ -473,6 +473,19 @@
         [data-kr-reveal][data-kr-delay="4"] { transition-delay: 400ms; }
         [data-kr-reveal][data-kr-delay="5"] { transition-delay: 500ms; }
 
+        /* ─── Keimung (Phyllotaxis-Motion-System · docs/MOTION.md · Leitidee «Aus einem Kern wächst alles») ───
+           Opt-in-Modifier auf [data-kr-reveal]: statt zu GLEITEN (translateY) keimt das
+           Element aus seinem Saatpunkt — scale+fade mit Wachstums-Easing, kontinuierlich
+           gestaffelt per --si (0..1) statt diskreter data-kr-delay-Stufen. Derselbe
+           Beobachter (.is-revealed); reduced-motion deckt die Bestandsregel (Z.530) ab. */
+        [data-kr-reveal].kr-grow {
+            transform: scale(var(--grow-from));
+            transform-origin: var(--origin-seed);
+            transition: opacity var(--t-5) var(--ease-grow), transform var(--t-5) var(--ease-grow);
+            transition-delay: calc(var(--si, 0) * var(--t-4));
+        }
+        [data-kr-reveal].kr-grow.is-revealed { transform: scale(1); }
+
         /* Magnetic-CTA: smooth Rück-Animation auf mouseleave */
         [data-kr-magnetic] { transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), background var(--duration-base), box-shadow var(--duration-base); will-change: transform; }
 
@@ -4842,8 +4855,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <p class="subhead">Fünf Akte vom Anruf zum Live-Gang. Schriftlich zugesichert. 50/50-Zahlung.</p>
             </div>
 
-            <ol class="kr-werkstatt-timeline">
-                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="1">
+            <ol class="kr-werkstatt-timeline" style="--grow-from:.9">
+                <li class="kr-werkstatt-akt kr-grow" data-kr-reveal style="--si:0">
                     <div class="kr-werkstatt-marker">
                         <span class="kr-werkstatt-tag">Tag 0</span>
                         <span class="kr-werkstatt-icon" aria-hidden="true">
@@ -4855,7 +4868,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <p>Sie erzählen, wir hören zu. 30-Minuten-Call, kein Discovery-Workshop-Theater. Sie sagen, was die Seite leisten muss — wir notieren, welche Branchen-Tools sich anbieten.</p>
                     </div>
                 </li>
-                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="2">
+                <li class="kr-werkstatt-akt kr-grow" data-kr-reveal style="--si:0.25">
                     <div class="kr-werkstatt-marker">
                         <span class="kr-werkstatt-tag">Erste Tage</span>
                         <span class="kr-werkstatt-icon" aria-hidden="true">
@@ -4867,7 +4880,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <p>Erster Entwurf meist innerhalb weniger Tage. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe.</p>
                     </div>
                 </li>
-                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="3">
+                <li class="kr-werkstatt-akt kr-grow" data-kr-reveal style="--si:0.5">
                     <div class="kr-werkstatt-marker">
                         <span class="kr-werkstatt-tag">Woche 1–4</span>
                         <span class="kr-werkstatt-icon" aria-hidden="true">
@@ -4879,7 +4892,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <p>Handcodiertes HTML &amp; CSS. Keine Templates, keine Plugins, keine Page-Builder. Schema.org branchen-spezifisch. <strong data-kr-counter-inline="10538">10.538</strong> Zeilen Beweis aus unseren bisherigen Demos — Ihre Seite kommt mit eigenem Code-Stand.</p>
                     </div>
                 </li>
-                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="4">
+                <li class="kr-werkstatt-akt kr-grow" data-kr-reveal style="--si:0.75">
                     <div class="kr-werkstatt-marker">
                         <span class="kr-werkstatt-tag">Tag vor Live</span>
                         <span class="kr-werkstatt-icon" aria-hidden="true">
@@ -4891,7 +4904,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <p>BFSG-Check. Schema.org-Validator. Performance- und Mobil-Audit. Wir liefern erst, wenn die Site unsere Qualitäts-Checks besteht — kein „später korrigieren wir das".</p>
                     </div>
                 </li>
-                <li class="kr-werkstatt-akt" data-kr-reveal data-kr-delay="5">
+                <li class="kr-werkstatt-akt kr-grow" data-kr-reveal style="--si:1">
                     <div class="kr-werkstatt-marker">
                         <span class="kr-werkstatt-tag">Live</span>
                         <span class="kr-werkstatt-icon" aria-hidden="true">

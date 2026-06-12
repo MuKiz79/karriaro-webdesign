@@ -55,6 +55,31 @@
   --ease-spring:   cubic-bezier(0.32, 0.72, 0.16, 1); /* Snappy spring-feel */
   --ease-premium:  cubic-bezier(0.16, 1, 0.3, 1);     /* Overshoot, Hero opsz-reveal */
 
+  /* ─── Phyllotaxis-Motion-System (Award-Leitidee «Aus einem Kern wächst alles») ───
+   * Spec: docs/MOTION.md + docs/LEITIDEE.md. Genau ZWEI Kurven, fuenf Zeiten,
+   * ein Saat-Ursprung, eine Regel: alles keimt aus einem Punkt, nie gleitet
+   * etwas herein. Additiv eingefuehrt 2026-06-12 — bestehende Hardcodes wandern
+   * inkrementell hierauf zu (keine neue cubic-bezier-Variante mehr anlegen). */
+  --ease-grow:   cubic-bezier(.34, 1.56, .64, 1); /* Keimung — organischer Overshoot (= Splash-Saat) */
+  --ease-settle: cubic-bezier(.22, 1, .36, 1);    /* Beruhigung — ruhiges Ankommen (= FLIP / opsz-Atem) */
+
+  /* Fibonacci-nahe Zeitskala — selbst das Timing ist Phyllotaxis */
+  --t-1: 90ms;
+  --t-2: 150ms;
+  --t-3: 240ms;
+  --t-4: 390ms;
+  --t-5: 630ms;
+
+  /* Keim-Ursprung: Eintritte wachsen aus einem Punkt (scale+fade), nie translateX
+   * von ausserhalb. Nutzung:
+   *   transform-origin: var(--origin-seed);
+   *   @keyframes kr-keim { from { transform: scale(var(--grow-from)); opacity: 0 }
+   *                        to   { transform: none; opacity: 1 } }
+   * --origin-seed default unten-mittig (verwurzelt, wie Hero-«I» aus der Erde),
+   * pro Element ueberschreibbar. */
+  --origin-seed: 50% 100%;
+  --grow-from: 0.62;
+
   /* Type-Scale (clamp-Wertepaare, branchen-spezifische Fonts setzen Family) */
   --type-display-min: 56px;
   --type-display-max: 88px;
