@@ -143,7 +143,11 @@
         if (document.body.contains(fab)) {
             fab.classList.remove('krc-raised');
             var fb = fab.getBoundingClientRect();
-            if (fb.width) for (var j = 0; j < wa.length; j++) if (krcHit(fb, wa[j])) { krcWaRaise = true; break; }
+            var GAP = 18;  // Sicherheitsabstand: ANHEBEN, bevor sich die Symbole fast berühren
+            if (fb.width) for (var j = 0; j < wa.length; j++) {
+                var w = wa[j];
+                if (krcHit(fb, { left: w.left - GAP, right: w.right + GAP, top: w.top - GAP, bottom: w.bottom + GAP })) { krcWaRaise = true; break; }
+            }
         }
         krcSyncRaise();
     }
