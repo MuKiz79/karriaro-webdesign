@@ -22,6 +22,7 @@ import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
+import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 
 const BRANCHES = [
@@ -350,7 +351,9 @@ function bindWorkspaceEvents(el) {
                 leadScore: leadData.leadScore, conversionRate: leadData.conversionRate,
                 expectedValue: leadData.expectedValue,
                 reviews: leadData.reviews, rating: leadData.rating,
-                source: 'scanner_workspace'
+                source: 'scanner_workspace',
+                // Magerer Pitch-Blob (PSI-Light: nur ws/tech/place, kein deep/bfsg/mockup).
+                pitchInputs: buildPitchInputs(leadData)
             });
             const btn = e.target;
             btn.textContent = '✓ Gespeichert';

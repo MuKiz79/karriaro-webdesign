@@ -142,7 +142,7 @@
     transition: border-color 0.2s;
 }
 .crm-search:focus { border-color: var(--accent); }
-.crm-search::placeholder { color: #c7c7cc; }
+.crm-search::placeholder { color: var(--muted); }
 
 .crm-filters {
     display: flex;
@@ -289,7 +289,7 @@
     background: var(--bg);
     border-color: var(--accent);
 }
-.crm-notes-input::placeholder { color: #c7c7cc; }
+.crm-notes-input::placeholder { color: var(--muted); }
 .crm-lead-ev {
     font-size: 12px;
     font-weight: 600;

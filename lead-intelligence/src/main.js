@@ -7,23 +7,47 @@ import { config, loadConfig, saveConfig } from './config.js';
 import { state } from './state.js';
 import { loadCloudSettings, saveCloudSettings } from './crm/settings.js';
 import { checkReminders } from './crm/reminders.js';
+import { SEQUENCE_STEPS } from './templates/sequences.js';
+import { openStudio } from './ui/render-outreach.js';
 import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } from './crm/auto-scan.js';
 import { runSingleCheck } from './orchestration/single-check.js';
 import { runBatchSearch } from './orchestration/batch-search.js';
 import { runScanner, requestNotificationPermissionOnGesture } from './orchestration/scanner.js';
 import { renderCRM, cleanupInboundListener } from './ui/render-crm.js';
+import { renderSetupGate } from './ui/setup-gate.js';
 
 // ── Config laden ──
 loadConfig();
 
 // ── DOM Ready ──
 document.addEventListener('DOMContentLoaded', () => {
-    initTabs();
+    initFinderCards();
     initButtons();
     initAuth();
     checkOnboarding();
     checkAutoScanAlerts();
+    renderSetupGate();
+    showView('finden');
 });
+
+// ── Workflow-Router ──
+// Eine Reise statt Tabs+Nav-Chaos: Finden → Pipeline → Outreach → Einstellungen.
+const VIEW_CONTAINER = { finden: 'hero', pipeline: 'crm-view', outreach: 'outreach-view', einstellungen: 'settings-panel' };
+const ALL_VIEW_IDS = ['hero', 'crm-view', 'outreach-view', 'settings-panel'];
+const TRANSIENT_IDS = ['results', 'batch-results', 'error', 'loading', 'progress'];
+
+function showView(name) {
+    if (!VIEW_CONTAINER[name]) name = 'finden';
+    ALL_VIEW_IDS.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+    // Ergebnis-/Lade-Container nur beim Verlassen von "Finden" wegblenden.
+    if (name !== 'finden') TRANSIENT_IDS.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+    document.getElementById(VIEW_CONTAINER[name])?.classList.remove('hidden');
+    document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('nav-active', b.dataset.view === name));
+    state.view = name;
+    if (name === 'pipeline') renderCRM();
+    if (name === 'outreach') renderOutreachLanding();
+    if (name === 'einstellungen') openSettings();
+}
 
 // ── Auto-Scan Alert ──
 function checkAutoScanAlerts() {
@@ -37,32 +61,25 @@ function checkAutoScanAlerts() {
     document.querySelector('nav').after(banner);
 }
 
-// ── Tab Navigation ──
-function initTabs() {
-    const tabs = document.querySelectorAll('.tab');
+// ── Finder-Methoden-Auswahl (Klartext-Karten statt Tabs) ──
+// Wechselt nur die Such-Methode innerhalb von "Finden"; blendet Ergebnisse NICHT weg.
+function initFinderCards() {
+    const cards = document.querySelectorAll('.finder-card');
     const inputs = {
         single: document.getElementById('input-single'),
         batch: document.getElementById('input-batch'),
         scanner: document.getElementById('input-scanner')
     };
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const mode = tab.dataset.tab;
-            state.mode = mode;
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const mode = card.dataset.tab;
+            state.mode = mode;   // wird von Cmd+Enter gelesen
 
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-
+            cards.forEach(c => c.classList.toggle('active', c === card));
             Object.entries(inputs).forEach(([key, el]) => {
-                el.classList.toggle('hidden', key !== mode);
+                el?.classList.toggle('hidden', key !== mode);
             });
-
-            // Hide all results
-            document.getElementById('results').classList.add('hidden');
-            document.getElementById('batch-results').classList.add('hidden');
-            document.getElementById('crm-view').classList.add('hidden');
-            document.getElementById('error').classList.add('hidden');
         });
     });
 }
@@ -140,13 +157,11 @@ function initButtons() {
         }
     });
 
-    // Nav buttons
+    // Nav buttons — Workflow-Views via data-view, Auth separat.
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const action = btn.dataset.action;
-            if (action === 'settings') toggleSettings();
-            if (action === 'crm') showCRM();
-            if (action === 'auth') toggleAuth();
+            if (btn.dataset.view) { showView(btn.dataset.view); return; }
+            if (btn.dataset.action === 'auth') toggleAuth();
         });
     });
 
@@ -188,10 +203,10 @@ async function toggleAuth() {
 }
 
 // ── Settings ──
-function toggleSettings() {
+// Wird von showView('einstellungen') aufgerufen; Sichtbarkeit steuert der Router.
+function openSettings() {
     const panel = document.getElementById('settings-panel');
-    panel.classList.toggle('hidden');
-    if (!panel.classList.contains('hidden')) {
+    {
         const p = config.profile;
         const autoScan = loadAutoScanConfig();
         const field = (id, label, value, placeholder, hint) =>
@@ -256,15 +271,31 @@ function toggleSettings() {
             const competitors = document.getElementById('cfg-competitor-watch').value.split('\n').map(q => q.trim()).filter(Boolean);
             const minScore = parseInt(document.getElementById('cfg-autoscan-minscore').value) || 50;
             saveAutoScanConfig({ ...loadAutoScanConfig(), queries, competitorDomains: competitors, minScore, enabled: queries.length > 0 });
-            panel.classList.add('hidden');
+            renderSetupGate();
+            showView('finden');
         });
     }
 }
 
-// ── CRM ──
-async function showCRM() {
-    
-    renderCRM();
+// ── CRM ── (dünner Alias — Aufrufer wie der Auto-Scan-Banner bleiben gültig)
+function showCRM() {
+    showView('pipeline');
+}
+
+// ── Outreach-Studio Landing (Nav-Einstieg) ──
+// Die eigentliche Auswahl passiert im CRM (Häkchen + „✉ Outreach-Studio").
+// Sichtbarkeit steuert showView; hier nur der Inhalt.
+function renderOutreachLanding() {
+    const el = document.getElementById('outreach-view');
+    el.innerHTML = `
+        <div class="studio-header"><h2 class="studio-title">Outreach-Studio</h2></div>
+        <div class="studio-landing card">
+            <p>Wählen Sie im CRM die Leads aus (Häkchen) und klicken Sie dort auf <strong>✉ Outreach-Studio</strong>.
+            Ohne Häkchen wird die aktuell gefilterte Liste übernommen.</p>
+            <p class="metric-desc">Für jeden Lead entsteht ein individueller Entwurf (gemessene Mängel + Tier-Pitch; KI-Tiefe nur für Top-Leads). Versand bleibt assistiert — Sie prüfen & senden selbst.</p>
+            <button class="btn-primary" id="btn-outreach-to-crm" style="margin-top:12px">Zum CRM</button>
+        </div>`;
+    document.getElementById('btn-outreach-to-crm')?.addEventListener('click', showCRM);
 }
 
 // ── Abort ──
@@ -290,22 +321,20 @@ function checkOnboarding() {
     const el = document.getElementById('onboarding');
     el.classList.remove('hidden');
     el.innerHTML = `
-        <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px">
-            <div style="background:var(--card);border-radius:var(--radius);padding:32px;max-width:480px;width:100%">
-                <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:12px">Willkommen bei Lead Intelligence</h2>
-                <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px">
-                    Finde Leads die wirklich konvertieren — mit Bayesianischer Statistik,
-                    Monte-Carlo-Simulation und KI-Analyse.<br><br>
-                    <strong>3 Modi:</strong><br>
-                    <strong>Einzel-Check</strong> — Eine URL analysieren (Score, Funnel, Pitch)<br>
-                    <strong>Batch-Suche</strong> — "Friseur Köln" → 10 Leads auf einmal<br>
-                    <strong>Branchen-Scanner</strong> — Welche Branche hat das meiste Potenzial?<br><br>
-                    <strong>Was du bekommst:</strong><br>
-                    Lead-Score · BFSG-Compliance · Signal-Stacking · KI-Branchenanalyse ·
-                    Konkurrenz-Vergleich · Pitch-Vorlagen · CRM mit Pipeline<br><br>
-                    <strong>Tipp:</strong> Trage zuerst unter "Einstellungen" deinen API-Key + Cloud Function URL ein.
+        <div style="position:fixed;inset:0;background:rgba(22,32,44,0.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px">
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:500px;width:100%">
+                <p class="hero-eyebrow" style="margin-bottom:8px">Willkommen</p>
+                <h2 style="font-family:var(--font-display);font-size:1.6rem;font-weight:600;margin-bottom:14px;letter-spacing:-0.01em">So finden Sie lohnende Kunden</h2>
+                <p style="color:var(--text);font-size:14px;line-height:1.65;margin-bottom:18px">
+                    Die Reise verläuft von links nach rechts in der Navigation:
                 </p>
-                <button class="btn-primary" id="btn-onboarding-close" style="width:100%">Verstanden — loslegen</button>
+                <p style="color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px">
+                    <strong style="color:var(--text)">Finden</strong> — eine Website prüfen, eine Stadt absuchen oder eine Region scannen.<br>
+                    <strong style="color:var(--text)">Pipeline</strong> — vielversprechende Leads speichern und im Blick behalten.<br>
+                    <strong style="color:var(--text)">Outreach</strong> — pro Lead einen individuellen Entwurf erzeugen und assistiert versenden.<br><br>
+                    <strong style="color:var(--text)">Zuerst:</strong> Hinterlegen Sie unter „Einstellungen" Ihren PageSpeed-API-Key und die Cloud-Function-URL — sonst laufen die Analysen ins Leere.
+                </p>
+                <button class="btn-primary" id="btn-onboarding-close" style="width:100%">Verstanden — los geht's</button>
             </div>
         </div>
     `;
@@ -326,8 +355,17 @@ function showReminders() {
     banner.style.cssText = 'border-left:3px solid var(--accent);margin:80px auto 0;max-width:680px;padding:16px 20px';
     banner.innerHTML = `
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:6px">Follow-Up fällig (${due.length})</div>
-        ${due.slice(0, 3).map(r => `<div class="stat-row"><span class="stat-label">${r.name || r.domain} — Tag ${r.touchDay}</span><span class="stat-value">Seit ${r.daysSince} Tagen</span></div>`).join('')}
+        ${due.slice(0, 3).map(r => `<div class="stat-row"><span class="stat-label">${r.name || r.domain} — Tag ${r.touchDay}</span><span class="stat-value"><button class="crm-btn-export" data-followup-domain="${r.domain}" data-followup-day="${r.touchDay}">Folge-Entwurf</button> · seit ${r.daysSince} Tagen</span></div>`).join('')}
     `;
+    // Folge-Entwurf → Studio mit passender touchNumber (Sequenz-Schritt).
+    banner.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-followup-domain]');
+        if (!btn) return;
+        const lead = due.find(r => r.domain === btn.dataset.followupDomain);
+        if (!lead) return;
+        const idx = SEQUENCE_STEPS.findIndex(s => s.day === parseInt(btn.dataset.followupDay, 10));
+        openStudio([lead], { touchNumber: idx >= 0 ? idx + 1 : 1 });
+    });
     document.querySelector('nav').after(banner);
 }
 

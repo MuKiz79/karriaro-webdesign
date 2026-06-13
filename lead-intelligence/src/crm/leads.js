@@ -50,6 +50,13 @@ export async function saveLead(domain, url, data) {
             conversionRate: data.conversionRate || 0,
             expectedValue: data.expectedValue || 0,
             status: 'neu', notes: '',
+            // Outreach-Felder additiv — nur schreiben wenn vorhanden (Firestore
+            // verträgt kein undefined; pitchInputs/contact werden via clean() bereits
+            // undefined-frei geliefert).
+            ...(data.pitchInputs ? { pitchInputs: data.pitchInputs } : {}),
+            ...(data.outreachStatus ? { outreachStatus: data.outreachStatus } : {}),
+            ...(data.contact ? { contact: data.contact } : {}),
+            ...(data.aiTier ? { aiTier: data.aiTier } : {}),
             savedAt: fb().fns.serverTimestamp(),
             updatedAt: fb().fns.serverTimestamp()
         }, { merge: true });

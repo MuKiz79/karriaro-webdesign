@@ -6,37 +6,43 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-    --bg: #fbfbfd;
-    --text: #1d1d1f;
-    --muted: #86868b;
-    --accent: #0071e3;
-    --green: #30d158;
-    --orange: #ff9f0a;
-    --red: #ff453a;
-    --card: #ffffff;
-    --border: #e5e5ea;
+    /* Karriaro-Markenpalette: Navy / Creme / Messing */
+    --bg: #F1EFE7;        /* Creme */
+    --text: #16202C;      /* Navy */
+    --muted: #6B7280;     /* warmes Grau */
+    --accent: #C9A24B;    /* Messing */
+    --accent-ink: #16202C;/* Textfarbe AUF Messing-Flächen (Buttons) */
+    --green: #2E9E54;     /* gedämpftes Grün — Lead-Qualität, nicht Marke */
+    --orange: #C8841C;    /* gedämpftes Orange */
+    --red: #C0392B;       /* gedämpftes Rot */
+    --card: #FBFAF5;      /* aufgehelltes Creme */
+    --border: #E0DCCF;    /* Creme-getöntes Border */
+    --ink: #16202C;       /* dunkle Flächen auf hellem Grund (Pitch-Box, Toast) */
     --radius: 16px;
     --radius-sm: 8px;
     --radius-md: 12px;
-    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
 
     /* Spacing Scale (4px base) */
     --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
     --s5: 20px; --s6: 24px; --s7: 32px; --s8: 48px;
 }
 
-/* Dark Mode */
+/* Dark Mode — dunkle Karriaro-Variante (Navy-Grund, Creme-Text, helleres Messing) */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: #1c1c1e;
-        --text: #f5f5f7;
-        --muted: #98989d;
-        --card: #2c2c2e;
-        --border: #3a3a3c;
-        --accent: #0a84ff;
+        --bg: #16202C;
+        --text: #F1EFE7;
+        --muted: #9AA3AD;
+        --card: #1E2B3A;
+        --border: #2C3A4A;
+        --accent: #D9B968;   /* aufgehelltes Messing für AA-Kontrast auf Navy */
+        --accent-ink: #16202C;
         --green: #30d158;
         --orange: #ff9f0a;
-        --red: #ff453a;
+        --red: #ff6961;
+        --ink: #0E1620;
     }
 }
 
@@ -119,16 +125,16 @@ a:hover { text-decoration: underline; }
     font-weight: 600;
     font-family: var(--font);
     background: var(--accent);
-    color: #fff;
+    color: var(--accent-ink);
     border: none;
     border-radius: var(--radius-md);
     cursor: pointer;
     white-space: nowrap;
     transition: background 0.2s, transform 0.1s;
 }
-.btn-primary:hover { background: #0077ed; }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
 .btn-primary:active { transform: scale(0.97); }
-.btn-primary:disabled { background: #c7c7cc; cursor: not-allowed; }
+.btn-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
 
 .btn-abort {
     margin-top: var(--s3);
@@ -169,7 +175,7 @@ a:hover { text-decoration: underline; }
 
 /* Pitch Box */
 .pitch-box {
-    background: #1d1d1f;
+    background: var(--ink);
     color: #fff;
     border-radius: var(--radius);
     padding: var(--s6);
@@ -284,7 +290,7 @@ a:hover { text-decoration: underline; }
     bottom: 24px;
     right: 24px;
     padding: 12px 20px;
-    background: #1d1d1f;
+    background: var(--ink);
     color: #fff;
     border-radius: 12px;
     font-size: 13px;

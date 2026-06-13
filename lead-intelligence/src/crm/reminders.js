@@ -3,12 +3,7 @@
  * Liest aus localStorage (wird durch loadLeads() aus Firestore gesynct)
  */
 
-const TOUCHPOINTS = [
-    { day: 4,  label: 'Erinnerung senden' },
-    { day: 8,  label: 'Nachfassen (Case Study)' },
-    { day: 12, label: 'Kostenlosen Entwurf anbieten' },
-    { day: 18, label: 'Letzte Nachricht' }
-];
+import { TOUCHPOINTS } from '../templates/sequences.js';
 
 export function checkReminders() {
     const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
