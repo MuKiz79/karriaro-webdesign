@@ -16,6 +16,8 @@ import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
+import { buildPitchInputs } from '../strategy/pitch-inputs.js';
+import { buildSequence } from '../templates/sequences.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { saveSnapshot } from '../crm/rescan.js';
 import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
@@ -601,14 +603,8 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         html += `<div class="pitch-box anim-in"><h3>Pitch-Vorlage</h3><p>Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${pitchLines.join(', ')}.\n\nDas sind Punkte die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne Websites — handcodiert, ab 990 Euro.\n\nDarf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?\n\nViele Grüße\nMuammer Kizilaslan\nkarriaro-webdesign.de</p><button class="btn-copy-large" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='Kopiert!'})">Kopieren</button></div>`;
     }
 
-    // Sequence
-    const seqMails = [
-        { day: 1, subject: `${domain} — Ihre Website kostet Sie Kunden`, body: `Performance ${ws.perf}/100, SEO ${ws.seo}/100.${rev?.yearlyLoss > 0 ? ' Geschätzter Verlust: ~'+rev.yearlyLoss.toLocaleString('de-DE')+'€/Jahr.' : ''} Darf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?` },
-        { day: 4, subject: 'Vorher/Nachher — so sah Spedition Kolbe aus', body: 'Konkretes Beispiel: Vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt. karriaro-webdesign.de' },
-        { day: 8, subject: ws.a11y < 70 ? 'BFSG: Barrierefreiheit seit 2025 Pflicht' : 'Google bevorzugt schnelle Websites', body: ws.a11y < 70 ? `Barrierefreiheit ${ws.a11y}/100. Gesetz seit Juni 2025. Erste Abmahnungen laufen.` : 'Websites die Core Web Vitals bestehen bekommen 24% mehr Traffic.' },
-        { day: 12, subject: `Kostenloser Entwurf für ${domain}`, body: 'Darf ich Ihnen den Entwurf in einem 15-Minuten-Call zeigen? Keine Verpflichtung.' },
-        { day: 18, subject: 'Letzte Nachricht', body: `Ab 990€, fertig in 1-2 Wochen.${rev?.roi > 1 ? ' Amortisiert sich in '+Math.ceil(1990/(rev.yearlyLoss/12))+' Monaten.' : ''}` }
-    ];
+    // Sequence — Vorlagen aus templates/sequences.js (Single Source of Truth)
+    const seqMails = buildSequence(data);
     html += `<div class="section-label" style="margin:16px 0 8px">5-Schritt Follow-up-Sequenz</div>`;
     for (const m of seqMails) {
         html += `<div class="pitch-box sequence-step anim-in"><h3>Tag ${m.day} — ${m.subject}</h3><p>${m.body}</p><button class="btn-copy" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='✓'})">Kopieren</button></div>`;
@@ -728,7 +724,9 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             expectedValue: r.expectedValue || 0,
             reviews: data.place?.userRatingCount || 0,
             rating: data.place?.rating || null,
-            contactEmail: email.to
+            contactEmail: email.to,
+            // Reichen Pitch-Blob mitspeichern → späterer Massen-Outreach ohne Re-Fetch.
+            pitchInputs: buildPitchInputs(data)
         };
         await saveLead(domain, data.url, leadData);
         saveSnapshot(domain, leadData);

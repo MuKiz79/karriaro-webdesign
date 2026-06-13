@@ -1,0 +1,116 @@
+/* ══════════════════════════════════════
+   Karriaro-Markenschicht — Fraunces-Display, Messing-Akzente, editorial.
+   Lädt nach den Komponenten-Styles → überschreibt gezielt; neue Klassen
+   (.finder-card, .setup-gate, .hero-eyebrow) sind konfliktfrei.
+   ══════════════════════════════════════ */
+
+/* ── Display-Schrift auf Headlines ── */
+.hero h1,
+.studio-title,
+.crm-title,
+.panel h3,
+#onboarding h2 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+}
+.hero h1 {
+    font-weight: 600;
+    line-height: 1.05;
+}
+
+/* ── Eyebrow (Mono-Anmutung über Inter-Uppercase) ── */
+.hero-eyebrow,
+.section-label,
+.setup-gate-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+}
+.hero-eyebrow { margin-bottom: var(--s4); }
+
+/* ── Nav: aktiver Workflow-Schritt (Messing-Unterstrich) ── */
+.nav-logo { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.01em; }
+.nav-btn { border-radius: 999px; transition: color .15s, background .15s; }
+.nav-btn.nav-active {
+    color: var(--text);
+    position: relative;
+}
+.nav-btn.nav-active::after {
+    content: '';
+    position: absolute;
+    left: var(--s3); right: var(--s3); bottom: 2px;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+/* ── Finder-Karten (ersetzen die Tabs) ── */
+.finder-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--s3);
+    max-width: 760px;
+    margin: 0 auto var(--s7);
+    text-align: left;
+}
+.finder-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: var(--s4) var(--s5);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: var(--font);
+    transition: border-color .18s, box-shadow .18s, transform .12s;
+}
+.finder-card:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); transform: translateY(-1px); }
+.finder-card.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 6px 18px rgba(22,32,44,0.06);
+}
+.finder-card-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.finder-card-desc { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+
+/* ── Setup-Gate ── */
+.setup-gate { max-width: 680px; margin: 80px auto 0; padding: 0 var(--s6); }
+.setup-gate-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s4);
+    padding: var(--s4) var(--s5);
+    background: var(--card);
+    border: 1px solid var(--accent);
+    border-left-width: 3px;
+    border-radius: var(--radius-md);
+}
+.setup-gate-text { flex: 1; min-width: 240px; font-size: 13.5px; line-height: 1.5; color: var(--text); }
+.setup-gate-eyebrow { width: 100%; margin-bottom: -4px; }
+.setup-gate .btn-primary { padding: 10px 18px; font-size: 14px; }
+
+/* ── Editoriale Empty-States (CRM/Outreach) ── */
+.brand-empty {
+    max-width: 520px;
+    margin: 60px auto;
+    padding: var(--s7) var(--s6);
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.brand-empty .brand-empty-eyebrow {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.16em; color: var(--accent); margin-bottom: var(--s3);
+}
+.brand-empty h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: var(--s3); }
+.brand-empty p { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: var(--s4); }
+
+/* Mobile: Finder-Karten gestapelt */
+@media (max-width: 640px) {
+    .finder-cards { grid-template-columns: 1fr; }
+}

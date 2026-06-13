@@ -10,10 +10,13 @@ import { getFeedbackStats } from '../learning/score-feedback.js';
 import { renderStatisticsPanel } from './render-statistics.js';
 import { subscribeToInboundLeads, HEAT_CONSTANTS } from '../learning/inbound-signals.js';
 import { requestNotificationPermissionOnGesture } from '../orchestration/scanner.js';
+import { openStudio } from './render-outreach.js';
 
-const STATUSES = ['alle', 'neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
-const STATUS_LABELS = { neu: 'Neu', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
-const STATUS_COLORS = { neu: 'var(--muted)', kontaktiert: 'var(--orange)', interessiert: 'var(--accent)', angebot: 'var(--accent)', kunde: 'var(--green)', verloren: 'var(--red)' };
+// 'qualifiziert' (Verifikations-Plan) und 'entwurf'/'outreach_bereit' (Outreach-Studio)
+// liegen zwischen 'neu' und 'kontaktiert'. Reihenfolge = Lead-Lebenszyklus.
+const STATUSES = ['alle', 'neu', 'qualifiziert', 'entwurf', 'outreach_bereit', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
+const STATUS_LABELS = { neu: 'Neu', qualifiziert: 'Qualifiziert', entwurf: 'Entwurf', outreach_bereit: 'Versandbereit', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
+const STATUS_COLORS = { neu: 'var(--muted)', qualifiziert: 'var(--accent)', entwurf: 'var(--accent)', outreach_bereit: 'var(--orange)', kontaktiert: 'var(--orange)', interessiert: 'var(--accent)', angebot: 'var(--accent)', kunde: 'var(--green)', verloren: 'var(--red)' };
 
 // AbortController für Event-Listener Cleanup
 let crmController = null;
@@ -45,8 +48,16 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     const signal = crmController.signal;
 
     if (!currentUser()) {
-        el.innerHTML = `<div class="crm-empty"><p>Bitte zuerst anmelden um deine Leads zu sehen.</p></div>`;
+        el.innerHTML = `<div class="brand-empty">
+            <div class="brand-empty-eyebrow">Pipeline</div>
+            <h3>Ihre Leads, an einem Ort</h3>
+            <p>Ihre gespeicherten Leads, die Verkaufs-Pipeline und das Outreach-Studio erscheinen hier, sobald Sie angemeldet sind.</p>
+            <button class="btn-primary" data-action="auth">Anmelden</button>
+        </div>`;
         el.classList.remove('hidden');
+        el.querySelector('[data-action="auth"]')?.addEventListener('click', () => {
+            document.getElementById('auth-btn')?.click();
+        }, { signal });
         return;
     }
 
@@ -75,6 +86,20 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     }
 
     const leads = await loadLeads();
+
+    // Eingeloggt, aber noch keine Leads → freundlicher Start-Hinweis statt leerer Tabelle.
+    if (leads.length === 0 && !searchQuery) {
+        el.innerHTML = `<div class="brand-empty">
+            <div class="brand-empty-eyebrow">Pipeline</div>
+            <h3>Noch keine Leads gespeichert</h3>
+            <p>Starten Sie unter „Finden" mit einer Website, einer Stadt oder einer ganzen Region — gespeicherte Leads erscheinen dann hier.</p>
+            <button class="btn-primary" data-action="goto-finden">Zu „Finden"</button>
+        </div>`;
+        el.querySelector('[data-action="goto-finden"]')?.addEventListener('click', () => {
+            document.querySelector('.nav-btn[data-view="finden"]')?.click();
+        }, { signal });
+        return;
+    }
 
     // Suche
     let searched = leads;
@@ -110,6 +135,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     html += `<div class="crm-header">
         <h2 class="crm-title">Lead-CRM</h2>
         <div class="crm-actions-top">
+            <button class="crm-btn-export crm-btn-studio" data-action="studio">✉ Outreach-Studio</button>
             <button class="crm-btn-export" data-action="toggleStats">Wissenschaft</button>
             <button class="crm-btn-export" data-action="export">CSV Export</button>
             <button class="crm-btn-export crm-btn-danger" data-action="deleteAll">Alle löschen</button>
@@ -180,6 +206,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
 
             html += `<div class="card crm-lead-card anim-in">
                 <div class="crm-lead-top">
+                    <input type="checkbox" class="crm-lead-select" data-lead-id="${l.id}" title="Für Outreach-Studio auswählen">
                     <div class="crm-lead-score" style="background:${scoreBg};color:${scoreColor}">${l.leadScore || 0}</div>
                     <div class="crm-lead-info">
                         <div class="crm-lead-name">${l.name || l.domain}</div>
@@ -425,6 +452,16 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             el.dataset.showStats = el.dataset.showStats === 'true' ? 'false' : 'true';
             renderCRM(filter, searchQuery);
         }
+    }, { signal });
+
+    // Outreach-Studio: angehakte Leads (sonst die gefilterte Liste) übernehmen.
+    el.addEventListener('click', (e) => {
+        if (e.target.dataset.action !== 'studio') return;
+        const checked = new Set([...el.querySelectorAll('.crm-lead-select:checked')].map(c => c.dataset.leadId));
+        let selection = checked.size > 0 ? filtered.filter(l => checked.has(l.id)) : filtered;
+        if (selection.length === 0) { showToast('Keine Leads zum Anschreiben.'); return; }
+        if (selection.length > 50 && !confirm(`${selection.length} Leads ins Outreach-Studio übernehmen? Für Top-Leads kann das KI-Kosten verursachen.`)) return;
+        openStudio(selection);
     }, { signal });
 }
 

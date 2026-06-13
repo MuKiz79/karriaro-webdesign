@@ -193,7 +193,7 @@
 /* Phone Frame (Screenshot) */
 .phone-frame {
     display: inline-block;
-    border: 6px solid #1d1d1f;
+    border: 6px solid var(--ink);
     border-radius: 20px;
     overflow: hidden;
     max-width: 200px;
@@ -253,7 +253,7 @@
 
 /* Email Args Box */
 .email-args {
-    background: #1d1d1f;
+    background: var(--ink);
     color: rgba(255,255,255,0.85);
     padding: 16px 20px;
     border-radius: 12px;

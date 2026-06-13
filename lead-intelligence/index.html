@@ -38,24 +38,39 @@
     <nav id="nav">
         <a class="nav-logo" href="/">Karriaro Webdesign</a>
         <div class="nav-right">
-            <button class="nav-btn" data-action="settings">Einstellungen</button>
-            <button class="nav-btn" data-action="crm">CRM</button>
+            <button class="nav-btn" data-view="finden">Finden</button>
+            <button class="nav-btn" data-view="pipeline">Pipeline</button>
+            <button class="nav-btn" data-view="outreach">Outreach</button>
+            <button class="nav-btn" data-view="einstellungen">Einstellungen</button>
             <button class="nav-btn nav-auth" id="auth-btn" data-action="auth">Anmelden</button>
         </div>
     </nav>
+
+    <!-- ═══ SETUP-GATE (nicht-blockierender Hinweis bei fehlender Konfiguration) ═══ -->
+    <div id="setup-gate" class="setup-gate hidden"></div>
 
     <!-- ═══ SETTINGS ═══ -->
     <div id="settings-panel" class="panel hidden"></div>
 
     <!-- ═══ HERO ═══ -->
     <section id="hero" class="hero">
-        <h1>Lead Intelligence</h1>
-        <p class="hero-sub">Bayesianische Funnel-Analyse, Monte-Carlo-Simulation und KI — in einem Check.</p>
+        <p class="hero-eyebrow">№ 01 · Manufaktur-Werkzeug</p>
+        <h1>Welche Websites lohnen den Anruf?</h1>
+        <p class="hero-sub">Sie prüfen eine Adresse, suchen eine Stadt ab oder scannen eine ganze Region — und sehen sofort, wo eine handcodierte Website den größten Unterschied macht. Verdikt zuerst, Begründung auf Wunsch.</p>
 
-        <div class="tabs" id="tabs">
-            <button class="tab active" data-tab="single">Einzel-Check</button>
-            <button class="tab" data-tab="batch">Batch-Suche</button>
-            <button class="tab" data-tab="scanner">Branchen-Scanner</button>
+        <div class="finder-cards" id="finder-cards">
+            <button class="finder-card active" data-tab="single">
+                <span class="finder-card-title">Eine Website prüfen</span>
+                <span class="finder-card-desc">Eine Adresse, ein vollständiges Lead-Profil mit Score und Pitch-Entwurf.</span>
+            </button>
+            <button class="finder-card" data-tab="batch">
+                <span class="finder-card-title">Eine Stadt absuchen</span>
+                <span class="finder-card-desc">Branche plus Ort — z. B. „Friseur Hamburg" — bis zu 20 Leads auf einmal.</span>
+            </button>
+            <button class="finder-card" data-tab="scanner">
+                <span class="finder-card-title">Eine Region scannen</span>
+                <span class="finder-card-desc">Welche Branche vor Ort das größte Potenzial hat — automatisch getestet.</span>
+            </button>
         </div>
 
         <!-- Single -->
@@ -110,25 +125,26 @@
 
     <!-- ═══ RESULTS ═══ -->
     <div id="results" class="results hidden">
-        <!-- Ebene 1: Score + Erklärung (immer sichtbar) -->
+        <!-- Ebene 1: Score + Erklärung + Primär-Aktion (immer sichtbar, ganz oben) -->
         <div id="result-score"></div>
+        <div id="result-actions"></div>
 
         <!-- Ebene 2: Funnel + Entscheidung (expandierbar) -->
-        <details class="result-section" open>
+        <details class="result-section">
             <summary class="section-title">Conversion-Funnel &amp; Entscheidung</summary>
             <div id="result-funnel"></div>
             <div id="result-decision"></div>
         </details>
 
         <!-- Ebene 2b: Branchen-UX + Zukunft -->
-        <details class="result-section" open>
+        <details class="result-section">
             <summary class="section-title">Branchen-Analyse &amp; Zukunfts-Readiness</summary>
             <div id="result-ux"></div>
             <div id="result-future"></div>
         </details>
 
         <!-- Ebene 2c: Neue Module (Signal Stack, BFSG, Trigger, Tech) -->
-        <details class="result-section" open>
+        <details class="result-section">
             <summary class="section-title">Signal-Analyse &amp; Compliance</summary>
             <div id="result-signals"></div>
         </details>
@@ -157,9 +173,6 @@
             <summary class="section-title">Expert-Daten</summary>
             <div id="result-expert"></div>
         </details>
-
-        <!-- Actions -->
-        <div id="result-actions"></div>
     </div>
 
     <!-- ═══ BATCH RESULTS ═══ -->
@@ -168,11 +181,14 @@
     <!-- ═══ CRM ═══ -->
     <div id="crm-view" class="crm-view hidden"></div>
 
+    <!-- ═══ OUTREACH-STUDIO ═══ -->
+    <div id="outreach-view" class="outreach-view hidden"></div>
+
     <!-- ═══ ONBOARDING ═══ -->
     <div id="onboarding" class="onboarding hidden"></div>
 
-    <!-- App Bundle -->
-    <script type="module" src="src/main.js"></script>
+    <!-- App Bundle (gebündelt nach dist/app.js — NICHT src/main.js, das in dist/ nicht existiert) -->
+    <script type="module" src="app.js"></script>
 
 </body>
 </html>
