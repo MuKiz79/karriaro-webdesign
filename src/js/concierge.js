@@ -95,9 +95,48 @@
             ? 'Antworten aus dem Seiteninhalt · Quellen verlinkt · KI kann Fehler machen'
             : 'KI-Assistent · kann Fehler machen') + '</div>';
 
-    if (POSITION === 'left') { fab.classList.add('krc-left'); panel.classList.add('krc-left'); }
+    // ── Kollisionssichere Eck-Wahl (Sprint 251): data-position ist nur ein HINWEIS.
+    //    Liegt auf der Hinweis-Ecke ein schwebender WhatsApp-Button (oder ein per
+    //    data-kr-avoid markiertes fixiertes Element), weicht das Widget GARANTIERT auf
+    //    die freie Ecke aus — auf keiner Seite können sich die Symbole überlappen. ──
+    function krcOccupiedSides() {
+        var sides = { left: false, right: false };
+        var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+        var vh = window.innerHeight || document.documentElement.clientHeight || 0;
+        if (!vw) return sides;
+        var nodes;
+        try {
+            nodes = document.querySelectorAll(
+                'a[href*="wa.me"],a[href*="api.whatsapp.com"],a[href*="whatsapp.com/send"],' +
+                '.whatsapp-sticky,.whatsapp-fab,[class*="whatsapp"],[data-kr-avoid]');
+        } catch (e) { nodes = document.querySelectorAll('.whatsapp-sticky,[data-kr-avoid]'); }
+        for (var i = 0; i < nodes.length; i++) {
+            var el = nodes[i];
+            if (el === fab || el === panel || fab.contains(el) || panel.contains(el)) continue;
+            var cs = window.getComputedStyle(el);
+            if (cs.position !== 'fixed' && cs.position !== 'sticky') continue;   // nur SCHWEBENDE Buttons
+            if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') continue;
+            var b = el.getBoundingClientRect();
+            if (b.width < 1 || b.height < 1) continue;
+            if (b.bottom < vh * 0.55) continue;                                  // nur unterer Bildschirmbereich
+            sides[(b.left + b.width / 2) < vw / 2 ? 'left' : 'right'] = true;
+        }
+        return sides;
+    }
+    function krcApplySide() {
+        var occ = krcOccupiedSides();
+        var side = POSITION;                                                     // Hinweis: 'left' | 'right'
+        if (occ[side]) { var other = side === 'right' ? 'left' : 'right'; if (!occ[other]) side = other; }
+        var isLeft = side === 'left';
+        fab.classList.toggle('krc-left', isLeft);
+        panel.classList.toggle('krc-left', isLeft);
+    }
+    krcApplySide();
     document.body.appendChild(fab);
     document.body.appendChild(panel);
+    // Spät injizierte FABs / Layout-Änderungen abfangen (FAB-Seite ist sonst stabil).
+    window.addEventListener('load', krcApplySide);
+    window.addEventListener('resize', krcApplySide, { passive: true });
 
     // Der FAB (bottom-right) teilt sich die Ecke mit der „Erstgespräch buchen"-Float-CTA
     // (.kr-cta-float — nur auf der Desktop-Site <769px sichtbar; auf m.* display:none).
