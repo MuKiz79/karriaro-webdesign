@@ -95,15 +95,16 @@
             ? 'Antworten aus dem Seiteninhalt · Quellen verlinkt · KI kann Fehler machen'
             : 'KI-Assistent · kann Fehler machen') + '</div>';
 
-    // ── Kollisionssichere Eck-Wahl (Sprint 251): data-position ist nur ein HINWEIS.
-    //    Liegt auf der Hinweis-Ecke ein schwebender WhatsApp-Button (oder ein per
-    //    data-kr-avoid markiertes fixiertes Element), weicht das Widget GARANTIERT auf
-    //    die freie Ecke aus — auf keiner Seite können sich die Symbole überlappen. ──
-    function krcOccupiedSides() {
-        var sides = { left: false, right: false };
-        var vw = window.innerWidth || document.documentElement.clientWidth || 0;
-        var vh = window.innerHeight || document.documentElement.clientHeight || 0;
-        if (!vw) return sides;
+    // ── Kollisionssichere Platzierung (Sprint 251). data-position ist nur ein HINWEIS:
+    //    (1) Liegt auf der Hinweis-Ecke ein schwebender WhatsApp-Button (oder ein
+    //        [data-kr-avoid]-Element), weicht das Widget auf die freie Ecke aus.
+    //    (2) ECHTE Bounding-Box-Garantie: überlappt der FAB danach trotzdem noch einen
+    //        WhatsApp-FAB (z.B. breite Pill bei Zoom/großer Schrift auf schmalem Handy
+    //        — reicht über die Mitte) ODER die „Erstgespräch"-Float-CTA, wird er
+    //        angehoben (krc-raised → bottom:88px) und stapelt sich darüber. So können
+    //        sich „WhatsApp" und „Fragen Sie uns" auf KEINER Seite je überlagern. ──
+    function krcWaRects() {
+        var rects = [], vh = window.innerHeight || document.documentElement.clientHeight || 0;
         var nodes;
         try {
             nodes = document.querySelectorAll(
@@ -119,36 +120,46 @@
             var b = el.getBoundingClientRect();
             if (b.width < 1 || b.height < 1) continue;
             if (b.bottom < vh * 0.55) continue;                                  // nur unterer Bildschirmbereich
-            sides[(b.left + b.width / 2) < vw / 2 ? 'left' : 'right'] = true;
+            rects.push(b);
         }
-        return sides;
+        return rects;
     }
-    function krcApplySide() {
-        var occ = krcOccupiedSides();
-        var side = POSITION;                                                     // Hinweis: 'left' | 'right'
+    function krcHit(a, b) { return !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top); }
+    var krcWaRaise = false;
+    // Teuer (Seite + Bbox-Messung) — nur bei load/resize/Init.
+    function krcLayout() {
+        var wa = krcWaRects();
+        var vw = window.innerWidth || document.documentElement.clientWidth || 0;
+        // (1) freie Ecke wählen (Hinweis = POSITION)
+        var occ = { left: false, right: false };
+        for (var i = 0; i < wa.length; i++) occ[(wa[i].left + wa[i].width / 2) < vw / 2 ? 'left' : 'right'] = true;
+        var side = POSITION;
         if (occ[side]) { var other = side === 'right' ? 'left' : 'right'; if (!occ[other]) side = other; }
         var isLeft = side === 'left';
         fab.classList.toggle('krc-left', isLeft);
         panel.classList.toggle('krc-left', isLeft);
+        // (2) FAB OHNE Raise messen → echte Überlappungsprüfung gegen jeden WhatsApp-FAB
+        krcWaRaise = false;
+        if (document.body.contains(fab)) {
+            fab.classList.remove('krc-raised');
+            var fb = fab.getBoundingClientRect();
+            if (fb.width) for (var j = 0; j < wa.length; j++) if (krcHit(fb, wa[j])) { krcWaRaise = true; break; }
+        }
+        krcSyncRaise();
     }
-    krcApplySide();
-    document.body.appendChild(fab);
-    document.body.appendChild(panel);
-    // Spät injizierte FABs / Layout-Änderungen abfangen (FAB-Seite ist sonst stabil).
-    window.addEventListener('load', krcApplySide);
-    window.addEventListener('resize', krcApplySide, { passive: true });
-
-    // Der FAB (bottom-right) teilt sich die Ecke mit der „Erstgespräch buchen"-Float-CTA
-    // (.kr-cta-float — nur auf der Desktop-Site <769px sichtbar; auf m.* display:none).
-    // Solange die CTA eingeblendet ist, den FAB darüber stapeln, sonst überlappen sie.
-    function syncFabPosition() {
+    // Billig (nur CTA-Zustand + gecachtes krcWaRaise) — auch bei scroll.
+    function krcSyncRaise() {
         var cta = document.querySelector('.kr-cta-float');
         var ctaShown = !!cta && getComputedStyle(cta).display !== 'none' && cta.classList.contains('is-visible');
-        fab.classList.toggle('krc-raised', ctaShown);
+        fab.classList.toggle('krc-raised', krcWaRaise || ctaShown);
     }
-    syncFabPosition();
-    window.addEventListener('resize', syncFabPosition, { passive: true });
-    window.addEventListener('scroll', syncFabPosition, { passive: true });
+    krcLayout();
+    document.body.appendChild(fab);
+    document.body.appendChild(panel);
+    krcLayout();                                          // erneut MIT im DOM gemessenem FAB
+    window.addEventListener('load', krcLayout);
+    window.addEventListener('resize', krcLayout, { passive: true });
+    window.addEventListener('scroll', krcSyncRaise, { passive: true });
 
     var msgsEl = panel.querySelector('.krc-msgs');
     var formEl = panel.querySelector('.krc-form');
