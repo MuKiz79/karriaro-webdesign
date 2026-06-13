@@ -2399,13 +2399,13 @@ exports.concierge = onRequest(
 // ════════════════════════════════════════════════════════════════════════════
 const DACH_META = {
     webdesign: { key: "webdesign", name: "Karriaro-Webdesign", status: "live" },
-    folio: { key: "folio", name: "Karriaro-Folio", status: "in Entwicklung" },
+    folio: { key: "folio", name: "Karriaro-Folio", status: "live" },
     loupe: { key: "loupe", name: "Karriaro-Loupe", status: "in Entwicklung" },
     mesitara: { key: "mesitara", name: "Karriaro-Mesitara", status: "im Pilot" }
 };
 const DACH_CORPUS = [
     { id: "webdesign", text: "Karriaro-Webdesign (live): handcodierte Premium-Websites (KEIN Baukasten, kein Template) mit eingebauten Branchen-KI-Werkzeugen (Rechner, Online-Buchung, Konfiguratoren, Foto-Analyse), einem Besucher-/Lead-Cockpit und Optimierung für die Auffindbarkeit in Google UND KI-Suchen (ChatGPT/Perplexity/Google AI). Für lokalen Mittelstand im DACH-Raum: Handwerk, Beauty, Immobilien, Gastronomie, Medizin, Recht. Einmalpreise von 1.290 € bis 3.990 €, kein Abo, kein Vendor-Lock-in. Passt, wenn jemand eine neue/bessere Website, mehr Anfragen, bessere Google-/KI-Auffindbarkeit oder digitale Werkzeuge für seinen Betrieb braucht." },
-    { id: "folio", text: "Karriaro-Folio (in Entwicklung, Early Access): KI-Profil-Generator für Führungskräfte — eine eigene Executive-Webseite statt PDF oder LinkedIn, die verbürgte Quelle zur eigenen Reputation, die Presse, Aufsichts- und Beiräte, Headhunter und KI-Suchen (ChatGPT & Co.) finden und zitieren. In der eigenen Stimme, auf der eigenen Domain. Passt für Einzelpersonen/Executives, die ihren persönlichen Auftritt oder ihre Reputation digital verankern wollen." },
+    { id: "folio", text: "Karriaro-Folio (live, verfügbar unter profil.karriaro.de): KI-Profil-Generator für Führungskräfte — eine eigene Executive-Webseite statt PDF oder LinkedIn, die verbürgte Quelle zur eigenen Reputation, die Presse, Aufsichts- und Beiräte, Headhunter und KI-Suchen (ChatGPT & Co.) finden und zitieren. In der eigenen Stimme, auf der eigenen Domain. Passt für Einzelpersonen/Executives, die ihren persönlichen Auftritt oder ihre Reputation digital verankern wollen." },
     { id: "loupe", text: "Karriaro-Loupe (in Entwicklung, Early Access): Besucher- und Lead-Cockpit für Websites — macht sichtbar, was auf einer Website passiert, und hilft, aus Besuchern Anfragen und Leads zu machen. Passt für Website-Betreiber, die verstehen wollen, wer ihre Seite besucht, und mehr aus ihrem Traffic holen möchten." },
     { id: "mesitara", text: "Karriaro-Mesitara (im Pilot): PropTech-Werkzeug für Immobilienmakler — digitale Werkzeuge speziell für den Makler-Alltag. Passt für Immobilienmakler und Maklerbüros." }
 ];
