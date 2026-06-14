@@ -48,6 +48,11 @@ const PAGES = [
     { path: '/en/', name: 'Hauptseite EN' },
     { path: '/gruender.html', name: 'Gruender-Story' },
     { path: '/werkschau.html', name: 'Werkschau' },
+    // Money-Page + Branchen-Landingpages (Sprint 252)
+    { path: '/webseite-erstellen-lassen.html', name: 'Money · Webseite erstellen lassen' },
+    { path: '/webdesign-fuer-friseur.html', name: 'Branche · Friseur' },
+    { path: '/webdesign-fuer-dachdecker.html', name: 'Branche · Dachdecker' },
+    { path: '/webdesign-fuer-immobilienmakler.html', name: 'Branche · Immobilienmakler' },
     { path: '/ki-zitier-check.html', name: 'KI-Zitier-Check' },
     { path: '/blog.html', name: 'Blog-Index' },
     { path: '/blog/core-web-vitals-erklaert.html', name: 'Blog · Core Web Vitals' },
