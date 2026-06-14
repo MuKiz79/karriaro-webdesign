@@ -1,0 +1,13 @@
+{
+  "_comment": "Echte, auf Google/GBP nachweisbare Bewertungen. aggregateRating wird erst ab aggregateThreshold automatisch erzeugt (Manual-Action-Risiko bei dünner Basis). reviewCount/ratingValue MÜSSEN exakt der öffentlich auf dem Google-Unternehmensprofil sichtbaren Zahl entsprechen.",
+  "aggregateThreshold": 5,
+  "reviews": [
+    {
+      "author": "Ilyas Kablan",
+      "rating": 5,
+      "body": "Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!",
+      "publisher": "Google",
+      "url": "https://share.google/8XBj19xUXH2G4PV8l"
+    }
+  ]
+}

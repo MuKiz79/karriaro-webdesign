@@ -176,7 +176,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <p>Wenn Sie diese Website besuchen, werden automatisch technische Informationen erfasst (sog. Server-Logfiles). Wenn Sie uns über das Kontaktformular schreiben, speichern wir die von Ihnen angegebenen Daten zur Bearbeitung Ihrer Anfrage. Zusätzlich nutzen wir eine selbst betriebene, anonyme Reichweitenmessung („Lighthouse") ohne Cookies und ohne Speicherung auf Ihrem Endgerät — Details siehe unten. Wir setzen darüber hinaus keine externen Tracking-Tools wie Google Analytics oder Facebook Pixel ein.</p>
 
             <h2>Hosting</h2>
-            <p>Diese Website wird bei GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) gehostet. Beim Besuch der Website erfasst der Server automatisch Ihre IP-Adresse, den Zeitpunkt des Zugriffs und die aufgerufene Seite. Diese Daten werden zur Bereitstellung der Website benötigt und nach kurzer Zeit automatisch gelöscht.</p>
+            <p>Diese Website wird über Firebase Hosting bereitgestellt (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland; Muttergesellschaft Google LLC, USA). Beim Besuch der Website erfasst der Server automatisch Ihre IP-Adresse, den Zeitpunkt des Zugriffs und die aufgerufene Seite (Server-Logfiles). Diese Daten werden zur sicheren Bereitstellung der Website benötigt und nach kurzer Zeit automatisch gelöscht.</p>
             <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und effizienten Bereitstellung).</p>
 
             <h2>Kontaktformular</h2>
@@ -204,7 +204,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <h2>Auftragsverarbeiter und Empfänger</h2>
             <p>Im Rahmen der oben beschriebenen Verarbeitungen kommen folgende Dienstleister zum Einsatz, mit denen wir Auftragsverarbeitungsverträge (AVV) gemäß Art.&nbsp;28 DSGVO geschlossen haben oder schließen werden:</p>
             <ul style="margin: 12px 0 12px 24px; padding-left: 0; line-height: 1.7;">
-                <li><strong>GitHub, Inc.</strong> (USA) — statisches Hosting der Marketing-Site (GitHub Pages), siehe oben.</li>
+                <li><strong>Google Ireland Ltd.</strong> (Dublin, Irland) — Bereitstellung dieser Website über Firebase Hosting (Google-Infrastruktur/CDN), siehe oben.</li>
                 <li><strong>Formspree, Inc.</strong> (USA) — Weiterleitung des Kontaktformulars an unsere E-Mail-Adresse.</li>
                 <li><strong>Google Ireland Ltd.</strong> (Dublin, Irland) — Hosting der Audit-Cloud-Function und der Firestore-Datenbank im Rechenzentrum Belgien (Region <code>europe-west1</code>), inklusive Aufrufe der Google&nbsp;Places&nbsp;API und der PageSpeed&nbsp;Insights&nbsp;API für branchen-spezifische Zusatz-Informationen.</li>
                 <li><strong>Anthropic PBC</strong> (USA) — Sprachmodell (Claude) für vertiefte Audit-Analysen. Bei Aktivierung wird der öffentlich abrufbare Text der angefragten Audit-URL an Anthropic übermittelt. Wird nur bei expliziter Anforderung eines Deep-Audits genutzt.</li>
@@ -213,6 +213,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <li><strong>Hetzner Online GmbH</strong> (Gunzenhausen, Deutschland) — Betrieb unseres eigenen Reichweite-Servers <code>lighthouse.karriaro.de</code>, siehe oben.</li>
             </ul>
             <p>Die Übermittlung in die USA erfolgt auf Grundlage des EU-US Data Privacy Framework bzw. der Standardvertragsklauseln nach Art.&nbsp;46 DSGVO. Auf Wunsch stellen wir Ihnen Kopien dieser Garantien zur Verfügung.</p>
+
+            <!-- VORBEREITET, NICHT AKTIV — beim Start von Google-Ads-Conversion-Messung einkommentieren
+                 (cookielose, serverseitige gclid-Conversion ODER Offline-Import; AVV mit Google erforderlich,
+                 juristisch prüfen lassen). Solange keine Ads laufen, bleibt dieser Absatz auskommentiert,
+                 damit der Datenschutztext keine nicht stattfindende Verarbeitung behauptet.
+            <h2>Conversion-Messung Google Ads</h2>
+            <p>Wenn Sie unsere Website über eine Google-Anzeige erreichen, kann der Anzeigen-Klick-Parameter
+               (<code>gclid</code>) cookielos in Ihrer Sitzung erfasst und im Fall einer Anfrage serverseitig an
+               Google&nbsp;Ads (Google Ireland Ltd., Dublin; Google LLC, USA) gemeldet werden, um den Erfolg unserer
+               Anzeigen zu messen. Es werden hierfür keine Cookies gesetzt und kein Zugriff auf Ihr Endgerät genommen.
+               Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an der Erfolgsmessung
+               unserer Werbung); USA-Transfer über EU-US Data Privacy Framework bzw. Standardvertragsklauseln.</p>
+            -->
+
 
             <h2>SSL-Verschlüsselung</h2>
             <p>Diese Seite nutzt eine SSL- bzw. TLS-Verschlüsselung. Sie erkennen dies am Schloss-Symbol in der Adresszeile Ihres Browsers. Damit sind Daten, die Sie an uns übermitteln, vor dem Zugriff Dritter geschützt.</p>

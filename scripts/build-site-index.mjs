@@ -51,6 +51,7 @@ const NAMED_PAGES = [
     ['ki-zitier-check.html', '/ki-zitier-check'],
     ['warum-handcoded.html', '/warum-handcoded'],
     ['website-kosten.html', '/website-kosten'],
+    ['webseite-erstellen-lassen.html', '/webseite-erstellen-lassen'],
     ['website-pruefen.html', '/website-pruefen'],
     ['barrierefreiheit.html', '/barrierefreiheit'],
     ['bfsg-website-pflicht.html', '/bfsg-website-pflicht'],
