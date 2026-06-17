@@ -13,7 +13,7 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
-const { runLightAudit, detectBlockedResponse } = require("./lib/light-audit.js");
+const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
 const {
     extractSubPages,
     htmlToText,
@@ -40,6 +40,11 @@ const {
     KI_ZITIER_SYSTEM, KI_ZITIER_TOOL, DIRECTORIES
 } = require("./lib/ki-zitier.js");  // KI-Zitier-Check (2026-06-10)
 const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAnswer, SITE_ASK_NOT_FOUND } = require("./lib/site-qa.js");  // Site-Q&A „Frag die Seite"
+const {
+    normalizeBranche, pickWidget, extractBrandTokens, BRANCHE_LABEL,
+    SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
+    composeFallbackCopy, deriveAudit
+} = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
 const logger = require("./lib/logger.js");
 
 if (!admin.apps.length) admin.initializeApp();
@@ -540,6 +545,7 @@ function buildQuickResponse(domain, light, full) {
         ? { ...full.bfsg, method: "wcag" }
         : { ...(light.bfsg || {}), method: "heuristic" };
     const perfScore = full?.websiteScore?.perf;
+    const ws = full?.websiteScore;
 
     return {
         ok: true,
@@ -562,7 +568,7 @@ function buildQuickResponse(domain, light, full) {
             method: bfsg.method
         },
         performance: perfScore != null
-            ? { score: perfScore, source: "psi" }
+            ? { score: perfScore, source: "psi", lcpMs: ws?.lcpMs ?? null, cls: ws?.cls ?? null, tbtMs: ws?.tbtMs ?? null }
             : { score: null, source: null, hint: "Performance-Score erhalten Sie im Komplettaudit per E-Mail." },
         branch: light.branch ? {
             name: light.branch.branch,
@@ -2635,6 +2641,199 @@ exports.siteAsk = onRequest(
         } catch (err) {
             logger.error("siteAsk failed", { fn: "siteAsk", error: String(err?.message || err).slice(0, 200) });
             return res.status(500).json({ error: "Anfrage derzeit nicht möglich. Bitte versuchen Sie es später erneut." });
+        }
+    }
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 253 — Sofort-Skizze: Lead-Werkzeug „Konzept-Skizze in ~30 Sekunden".
+//   POST { url, branche, ziel, consent, hp } → { brand, copy, widget, audit, meta }.
+//   Liest die fremde Seite serverseitig (CORS-frei), zieht Marken-Tokens, fährt das
+//   echte Audit (Light + PSI/LCP) und formuliert geerdeten, UWG-sicheren Text (Haiku,
+//   forced tool_use). Transient wie kiVisibility/dachConcierge: KEINE Persistenz von
+//   Eingaben/PII, nur ein kurzlebiger funktionaler Domain-Cache (Brief §5) + IP-Limit.
+//   Fehlerphilosophie: lieber HTTP 200 mit reduzierten Daten (Frontend hat zusätzlich
+//   einen stillen lokalen Fallback) als eine 500 vor einem Interessenten.
+// ─────────────────────────────────────────────────────────────────────────────
+const SOFORT_MODEL = CONCIERGE_MODEL;               // "claude-haiku-4-5-20251001"
+const SOFORT_CACHE_FRESH_MS = 10 * 60 * 1000;       // 10 Min funktionaler Cache (Brief §5)
+const SOFORT_CACHE_TTL_DAYS = 1;                     // Storage-TTL via expiresAt
+
+function sofortCacheKey(domain, brancheKey, ziel) {
+    // ziel fließt MIT in den Key: der generierte Text kann den (vom Besucher
+    // getippten) Ziel-Satz enthalten — ein anderer/leerer Ziel-Wert darf NIE den
+    // gecachten Text eines anderen Interessenten zurückbekommen (kein PII-Bleed).
+    return crypto.createHash("sha256").update(`${domain}:${brancheKey}:${ziel || ""}`).digest("hex").slice(0, 32);
+}
+// Bounded-Promise: rejected nach ms → in Promise.allSettled wird daraus „rejected"
+// (→ null im Handler). Hält das Audit-Phase-Budget unter dem 60s-Function-Ceiling,
+// auch wenn PSI(35s)+serielles Wayback(8s) den langsamsten Zweig aufbläht.
+function withSofortDeadline(p, ms, label) {
+    let t;
+    const guard = new Promise((_, rej) => { t = setTimeout(() => rej(new Error(label + " deadline")), ms); });
+    return Promise.race([p, guard]).finally(() => clearTimeout(t));
+}
+function sofortMetaDescription(html) {
+    if (!html) return "";
+    const m = html.match(/<meta[^>]*\bname\s*=\s*["']description["'][^>]*>/i);
+    if (!m) return "";
+    const c = m[0].match(/content\s*=\s*(["'])([\s\S]*?)\1/i);
+    return c ? c[2].replace(/\s+/g, " ").trim().slice(0, 200) : "";
+}
+function sofortSnippet(html) {
+    if (!html) return "";
+    try { return htmlToText(html).replace(/\s+/g, " ").trim().slice(0, 600); }
+    catch { return ""; }
+}
+
+exports.sofortSkizze = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [PLACES_KEY, PSI_API_KEY, CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "sofortSkizze", 8, 3600,
+            "Sie haben das stündliche Limit erreicht — die Skizze nutzt echte KI- und Audit-Calls. Bitte später erneut.")) return;
+
+        const { url, branche, ziel, consent, hp } = req.body || {};
+
+        // Honeypot — Bot bekommt stilles Erfolgs-Signal.
+        if (hp && String(hp).trim().length > 0) return res.status(200).json({ ok: true, bot: true });
+
+        // DSGVO-Einwilligung Pflicht (zweite Schicht hinter der Client-Checkbox).
+        if (!consent) return res.status(400).json({ error: "DSGVO-Zustimmung fehlt" });
+
+        const auditUrl = normalizeUrl(url);
+        if (!auditUrl) return res.status(400).json({ error: "Ungültige URL — bitte mit Domain (z. B. ihrefirma.de)." });
+        let domain;
+        try { domain = new URL(auditUrl).hostname.replace(/^www\./, ""); }
+        catch { return res.status(400).json({ error: "Ungültige URL" }); }
+
+        const brancheKey = normalizeBranche(branche);
+        const widget = pickWidget(brancheKey);
+        const safeZiel = String(ziel || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 200);
+
+        // ── Funktionaler Cache (Brief §5): Key = Domain+Branche+Ziel, kein Lead-Profil. ──
+        const cacheKey = sofortCacheKey(domain, brancheKey, safeZiel);
+        try {
+            const cached = await db.collection("sofortSkizze").doc(cacheKey).get();
+            if (cached.exists) {
+                const d = cached.data();
+                if (d.cachedAtMs && Date.now() - d.cachedAtMs < SOFORT_CACHE_FRESH_MS && d.payload) {
+                    return res.json({ ...d.payload, meta: { ...(d.payload.meta || {}), cached: true } });
+                }
+            }
+        } catch (err) { console.warn("sofortSkizze cache lookup failed:", err.message); }
+
+        // Ab hier: jeder unerwartete Wurf endet in einer 200 mit reduzierten Daten
+        // (nie 500 vor einem Interessenten — Brief §5/§Fehlerphilosophie).
+        try {
+            // ── Seite lesen + beide Audits parallel, jeweils mit eigenem Deadline-Cap,
+            //    damit der langsamste Zweig (PSI ~35s + serielles Wayback ~8s) das
+            //    60s-Function-Budget nicht aufzehrt. Danach bleibt Claude sein Fenster. ──
+            const placesKey = safeSecretValue(PLACES_KEY);
+            const psiKey = safeSecretValue(PSI_API_KEY);
+            const [htmlR, lightR, fullR] = await Promise.allSettled([
+                withSofortDeadline(fetchHtml(auditUrl, 8000), 9000, "fetchHtml"),
+                withSofortDeadline(runLightAudit(auditUrl, placesKey), 30000, "light"),
+                withSofortDeadline(runAuditPipeline(auditUrl, psiKey), 40000, "psi")
+            ]);
+            const html = htmlR.status === "fulfilled" && htmlR.value ? htmlR.value.html : null;
+            const finalUrl = (htmlR.status === "fulfilled" && htmlR.value && htmlR.value.finalUrl) || auditUrl;
+            const light = lightR.status === "fulfilled" ? lightR.value : null;
+            const full = fullR.status === "fulfilled" ? fullR.value : null;
+
+            const brand = extractBrandTokens(html, finalUrl, domain, brancheKey);
+
+            let audit;
+            if (light || full) {
+                const payload = buildQuickResponse(domain, light || {}, full);
+                const { topLeak, findings } = deriveAudit(payload);
+                audit = { score: computeServerScore(payload), topLeak, findings };
+            } else {
+                // Beide Audits gescheitert (z. B. Bot-Wall) — ehrlich, keine erfundenen Befunde.
+                audit = { score: null, topLeak: null, findings: [] };
+            }
+
+            // ── KI-Text (forced tool_use, geerdet auf Fakten + Audit), best effort. ──
+            let copy, copySource = "ai";
+            try {
+                const facts = {
+                    name: brand.name,
+                    domain,
+                    brancheLabel: BRANCHE_LABEL[brancheKey] || "Lokaler Betrieb",
+                    widgetName: widget.name,
+                    ziel: safeZiel,
+                    metaDesc: sofortMetaDescription(html),
+                    pageSnippet: sofortSnippet(html),
+                    score: audit.score,
+                    topLeak: audit.topLeak,
+                    findingLabels: audit.findings.map((f) => f.label)
+                };
+                const body = {
+                    model: SOFORT_MODEL,
+                    max_tokens: 600,
+                    system: [{ type: "text", text: SOFORT_SYS, cache_control: { type: "ephemeral" } }],
+                    tools: [SOFORT_TOOL],
+                    tool_choice: { type: "tool", name: SOFORT_TOOL.name },
+                    messages: [{ role: "user", content: buildCopyUserMessage(facts) }]
+                };
+                const r = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": CLAUDE_API_KEY.value(),
+                        "anthropic-version": "2023-06-01"
+                    },
+                    body: JSON.stringify(body),
+                    signal: AbortSignal.timeout(14000)
+                });
+                if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 160)}`); }
+                const data = await r.json();
+                copy = parseCopyResult(data);
+            } catch (err) {
+                // Statische Fehlermeldung, NIE die Interessenten-Eingaben loggen (DSGVO).
+                console.error("sofortSkizze copy failed:", String(err && err.message ? err.message : err).slice(0, 160));
+                copy = composeFallbackCopy(brand, brancheKey, widget, safeZiel, audit);
+                copySource = "fallback";
+            }
+
+            const out = {
+                brand,
+                copy,
+                widget,
+                audit,
+                meta: { source: (light || full) ? "server" : "reduced", copySource, cached: false }
+            };
+
+            // ── Cache schreiben (transient; TTL via expiresAt). ──
+            try {
+                await db.collection("sofortSkizze").doc(cacheKey).set({
+                    cachedAtMs: Date.now(),
+                    payload: out,
+                    expiresAt: new admin.firestore.Timestamp(
+                        Math.floor((Date.now() + SOFORT_CACHE_TTL_DAYS * 86400000) / 1000), 0
+                    )
+                });
+            } catch (err) { console.warn("sofortSkizze cache write failed:", err.message); }
+
+            return res.json(out);
+        } catch (err) {
+            // Letzte Verteidigungslinie: 200 mit reduzierten Daten statt 500.
+            console.error("sofortSkizze fatal (reduced response):", String(err && err.message ? err.message : err).slice(0, 160));
+            const brand = extractBrandTokens(null, auditUrl, domain, brancheKey);
+            return res.json({
+                brand,
+                copy: composeFallbackCopy(brand, brancheKey, widget, safeZiel, { score: null, topLeak: null, findings: [] }),
+                widget,
+                audit: { score: null, topLeak: null, findings: [] },
+                meta: { source: "reduced", copySource: "fallback", cached: false }
+            });
         }
     }
 );

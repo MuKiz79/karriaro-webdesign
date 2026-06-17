@@ -265,13 +265,22 @@ async function runAuditPipeline(url, psiKey) {
     const bfsg = checkBFSGCompliance(psiData);
 
     const lh = psiData?.lighthouseResult || {};
+    // Sprint 253 — Core-Web-Vitals-Metriken (echtes LCP/CLS/TBT) zusätzlich zum
+    // Kategorie-Score auslesen. Additiv: bestehende Felder unverändert. Nutzt die
+    // Sofort-Skizze (echtes „LCP 4,2 s"-Finding) ohne zweiten PSI-Call.
+    const lcpNum = lh.audits?.['largest-contentful-paint']?.numericValue;
+    const clsNum = lh.audits?.['cumulative-layout-shift']?.numericValue;
+    const tbtNum = lh.audits?.['total-blocking-time']?.numericValue;
     const ws = {
         perf: Math.round((lh.categories?.performance?.score || 0) * 100),
         seo: Math.round((lh.categories?.seo?.score || 0) * 100),
         a11y: Math.round((lh.categories?.accessibility?.score || 0) * 100),
         bp: Math.round((lh.categories?.['best-practices']?.score || 0) * 100),
         isHttps: url.startsWith('https://'),
-        viewport: !!lh.audits?.['viewport']?.score
+        viewport: !!lh.audits?.['viewport']?.score,
+        lcpMs: (typeof lcpNum === 'number' && lcpNum > 0) ? Math.round(lcpNum) : null,
+        cls: (typeof clsNum === 'number') ? Math.round(clsNum * 1000) / 1000 : null,
+        tbtMs: (typeof tbtNum === 'number' && tbtNum >= 0) ? Math.round(tbtNum) : null
     };
 
     // Lead-Score grob: max-severity + perf-malus

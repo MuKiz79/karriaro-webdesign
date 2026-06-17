@@ -54,6 +54,7 @@ const PAGES = [
     { path: '/webdesign-fuer-dachdecker.html', name: 'Branche · Dachdecker' },
     { path: '/webdesign-fuer-immobilienmakler.html', name: 'Branche · Immobilienmakler' },
     { path: '/ki-zitier-check.html', name: 'KI-Zitier-Check' },
+    { path: '/sofort-skizze.html', name: 'Sofort-Skizze' },
     { path: '/blog.html', name: 'Blog-Index' },
     { path: '/blog/core-web-vitals-erklaert.html', name: 'Blog · Core Web Vitals' },
     { path: '/blog/dsgvo-website-checkliste.html', name: 'Blog · DSGVO-Checkliste' },
