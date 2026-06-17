@@ -22,18 +22,45 @@ test("pickWidget: liefert {key,name,tool} und Brief-Keys", () => {
     assert.equal(ss.pickWidget("unbekannt").key, "generic");
 });
 
-test("extractBrandTokens: og:site_name + absolute Logo + theme-color", () => {
+test("extractBrandTokens: og:site_name + apple-touch-icon-Logo (NICHT og:image-Foto) + theme-color", () => {
     const html = `<html><head>
         <title>Egal | Slogan</title>
         <meta property="og:site_name" content="Mustermann GmbH">
-        <meta property="og:image" content="/img/logo.png">
+        <meta property="og:image" content="/social-foto.jpg">
+        <link rel="apple-touch-icon" href="/img/logo.png">
         <meta name="theme-color" content="#C2592E">
     </head><body>x</body></html>`;
     const b = ss.extractBrandTokens(html, "https://www.mustermann.de/start", "mustermann.de", "dachdecker");
     assert.equal(b.name, "Mustermann GmbH");
     assert.equal(b.logoUrl, "https://www.mustermann.de/img/logo.png");
+    assert.ok(!/social-foto/.test(b.logoUrl), "og:image (Foto) darf NIE als Logo dienen");
     assert.equal(b.accent, "#C2592E");
     assert.equal(b.domain, "mustermann.de");
+});
+
+test("extractBrandTokens: Slogan-Titel → Name aus Domain, kein Foto als Logo (Hansgrohe-Fall)", () => {
+    const html = `<html><head><title>Faucets for the bathroom, shower, and kitchen</title>
+        <meta property="og:image" content="https://assets/woman-showering.jpg"></head><body>x</body></html>`;
+    const b = ss.extractBrandTokens(html, "https://www.hansgrohe.com", "hansgrohe.com", "generic");
+    assert.equal(b.name, "Hansgrohe", "langer Slogan-Titel darf NICHT der Markenname werden");
+    assert.ok(!/woman-showering/.test(b.logoUrl || ""), "Social-Foto darf nicht Logo werden");
+});
+
+test("nameFromTitle: Domain-Kern-Segment bevorzugt, Slogan verworfen", () => {
+    assert.equal(ss.nameFromTitle("Faucets for the bathroom | Hansgrohe", "hansgrohe.com"), "Hansgrohe");
+    assert.equal(ss.nameFromTitle("Bäckerei Schmidt – Köln", "baeckerei-schmidt.de"), "Bäckerei Schmidt");
+    assert.equal(ss.nameFromTitle("Faucets for the bathroom, shower, and kitchen", "hansgrohe.com"), null);
+});
+
+test("detectBranche: Keyword zuerst, dann Places-Typ, sonst generic", () => {
+    assert.equal(ss.detectBranche("dachdecker-mueller.de", "", null), "dachdecker");
+    assert.equal(ss.detectBranche("spedition-schwaben.de", "", null), "spedition");
+    assert.equal(ss.detectBranche("x.de", "Wir sind Ihr Klempner und Installateur vor Ort", null), "sanitaer");
+    assert.equal(ss.detectBranche("x.de", "", "real_estate_agency"), "immobilien");
+    assert.equal(ss.detectBranche("x.de", "", "hair_salon"), "friseur");
+    assert.equal(ss.detectBranche("x.de", "", "restaurant"), "restaurant");
+    assert.equal(ss.detectBranche("hansgrohe.com", "Faucets for the bathroom", null), "generic");
+    assert.equal(ss.detectBranche("randomshop.de", "", "grocery_store"), "generic");
 });
 
 test("extractBrandTokens: Title-Fallback + Logo-Fallback (favicons) + accent null", () => {

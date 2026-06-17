@@ -41,7 +41,7 @@ const {
 } = require("./lib/ki-zitier.js");  // KI-Zitier-Check (2026-06-10)
 const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAnswer, SITE_ASK_NOT_FOUND } = require("./lib/site-qa.js");  // Site-Q&A „Frag die Seite"
 const {
-    normalizeBranche, pickWidget, extractBrandTokens, BRANCHE_LABEL,
+    normalizeBranche, pickWidget, detectBranche, extractBrandTokens, BRANCHE_LABEL,
     SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
     composeFallbackCopy, deriveAudit
 } = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
@@ -2714,12 +2714,16 @@ exports.sofortSkizze = onRequest(
         try { domain = new URL(auditUrl).hostname.replace(/^www\./, ""); }
         catch { return res.status(400).json({ error: "Ungültige URL" }); }
 
-        const brancheKey = normalizeBranche(branche);
-        const widget = pickWidget(brancheKey);
         const safeZiel = String(ziel || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 200);
+        // Branche: leer/"auto" → die KI/der Audit erkennt sie selbst (Founder-Wunsch,
+        // kein Dropdown). Ein expliziter Wert (Korrektur aus dem Ergebnis-UI) hat Vorrang.
+        const explicitBranche = (branche && String(branche).trim() && String(branche).toLowerCase() !== "auto")
+            ? normalizeBranche(branche) : null;
+        let brancheKey = explicitBranche || "generic";   // Default für den catch-Fallback
+        let widget = pickWidget(brancheKey);
 
-        // ── Funktionaler Cache (Brief §5): Key = Domain+Branche+Ziel, kein Lead-Profil. ──
-        const cacheKey = sofortCacheKey(domain, brancheKey, safeZiel);
+        // ── Funktionaler Cache (Brief §5): Key = Domain+Branche(oder „auto")+Ziel. ──
+        const cacheKey = sofortCacheKey(domain, explicitBranche || "auto", safeZiel);
         try {
             const cached = await db.collection("sofortSkizze").doc(cacheKey).get();
             if (cached.exists) {
@@ -2747,6 +2751,15 @@ exports.sofortSkizze = onRequest(
             const finalUrl = (htmlR.status === "fulfilled" && htmlR.value && htmlR.value.finalUrl) || auditUrl;
             const light = lightR.status === "fulfilled" ? lightR.value : null;
             const full = fullR.status === "fulfilled" ? fullR.value : null;
+
+            // Branche automatisch erkennen (sofern kein expliziter Override): aus
+            // Domain + Seitentext (Titel/Description/Snippet) + erkanntem Places-Typ.
+            if (!explicitBranche) {
+                const titleM = html ? html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) : null;
+                const detectText = [titleM ? titleM[1] : "", sofortMetaDescription(html), sofortSnippet(html)].join(" ");
+                brancheKey = detectBranche(domain, detectText, light && light.branch && light.branch.branch);
+                widget = pickWidget(brancheKey);
+            }
 
             const brand = extractBrandTokens(html, finalUrl, domain, brancheKey);
 

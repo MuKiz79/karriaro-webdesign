@@ -132,6 +132,10 @@
         .ss-concept-sub { font-size: 15px; color: var(--ss-graphite); }
         .ss-widget-pitch { font-size: 13px; color: var(--ss-graphite); font-style: italic; }
         .ss-geo-hook { font-size: 12.5px; color: var(--ss-graphite); border-left: 2px solid var(--ss-accent); padding-left: 10px; }
+        .ss-field-hint { font-size: 12px; color: var(--ss-graphite); opacity: .82; }
+        .ss-rebranche { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--ss-mono); font-size: 11px; letter-spacing: .04em; color: var(--ss-graphite); }
+        .ss-rebranche strong { color: var(--ss-ink); }
+        .ss-rebranche select { font-family: var(--ss-sans); font-size: 12px; padding: 5px 9px; border: 1px solid var(--ss-border); border-radius: 8px; background: #fff; color: var(--ss-ink); }
         .ss-prospect-tools { --accent: var(--ss-accent); --kr-gold: var(--ss-accent); background: #fff; border: 1px solid var(--ss-border); border-radius: 12px; padding: 16px; min-width: 0; overflow-x: hidden; }
         .ss-prospect-tools .kr-tool-form, .ss-prospect-tools .kr-tool-form label, .ss-prospect-tools .kr-tool-form input, .ss-prospect-tools .kr-tool-form select { min-width: 0; max-width: 100%; }
         .ss-prospect-tools .kr-tool-form input:focus, .ss-prospect-tools .kr-tool-form select:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-accent) 18%, transparent); }
@@ -240,21 +244,10 @@
 
         <form class="ss-intake" id="ss-form" novalidate>
             <div class="ss-intake-grid">
-                <div class="ss-field">
+                <div class="ss-field ss-field-wide">
                     <label for="ss-url">Ihre Website-Adresse</label>
                     <input type="text" id="ss-url" name="url" inputmode="url" autocomplete="url" placeholder="z. B. ihrefirma.de" required>
-                </div>
-                <div class="ss-field">
-                    <label for="ss-branche">Ihre Branche</label>
-                    <select id="ss-branche" name="branche">
-                        <option value="dachdecker">Dachdecker</option>
-                        <option value="immobilien">Immobilienmakler</option>
-                        <option value="friseur">Friseur / Salon</option>
-                        <option value="restaurant">Restaurant / Gastronomie</option>
-                        <option value="spedition">Spedition / Logistik</option>
-                        <option value="sanitaer">Sanitär / Klempner</option>
-                        <option value="generic">Andere Branche</option>
-                    </select>
+                    <span class="ss-field-hint">Ihre Branche erkennen wir automatisch aus der Seite.</span>
                 </div>
                 <div class="ss-field ss-field-wide">
                     <label for="ss-ziel">Ihr Ziel (optional)</label>
@@ -318,6 +311,19 @@
                             <h2 id="ss-headline"></h2>
                             <p class="ss-concept-sub" id="ss-subline"></p>
                             <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
+                            <div class="ss-rebranche">
+                                <span>Branche erkannt: <strong id="ss-detected-branche">—</strong></span>
+                                <select id="ss-rebranche-select" aria-label="Branche manuell anpassen">
+                                    <option value="">anpassen …</option>
+                                    <option value="dachdecker">Dachdecker</option>
+                                    <option value="immobilien">Immobilienmakler</option>
+                                    <option value="friseur">Friseur / Salon</option>
+                                    <option value="restaurant">Restaurant / Gastronomie</option>
+                                    <option value="spedition">Spedition / Logistik</option>
+                                    <option value="sanitaer">Sanitär / Klempner</option>
+                                    <option value="generic">Andere Branche</option>
+                                </select>
+                            </div>
                             <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
                             <p class="ss-geo-hook" id="ss-geo-hook"></p>
                             <div class="ss-cta-row">
@@ -483,7 +489,6 @@
 
         var form = document.getElementById('ss-form');
         var urlInput = document.getElementById('ss-url');
-        var brancheSel = document.getElementById('ss-branche');
         var zielInput = document.getElementById('ss-ziel');
         var hpInput = document.getElementById('ss-hp');
         var consent = document.getElementById('ss-consent');
@@ -725,6 +730,13 @@
             placeLogo(brand);
             mountWidget(widget.tool || 'generic');
 
+            // Erkannte Branche anzeigen + Override-Select synchronisieren.
+            var bk = brancheKeyOf(widget);
+            var lblEl = document.getElementById('ss-detected-branche');
+            if (lblEl) lblEl.textContent = (BRANCHE_WIDGET[bk] && BRANCHE_WIDGET[bk].label) || 'Lokaler Betrieb';
+            var rb = document.getElementById('ss-rebranche-select');
+            if (rb) rb.value = bk;
+
             result.classList.add('is-on');
             finishLoader();
             submit.disabled = false;
@@ -756,30 +768,41 @@
             };
         }
 
-        var lastBranche = 'generic';
+        // currentOverride = null → Server/KI erkennt die Branche selbst (Founder-Wunsch);
+        // gesetzt → explizite Korrektur aus dem Ergebnis-Dropdown.
+        var currentOverride = null;
+        function guessBrancheLocal(host) {
+            var h = String(host || '').toLowerCase();
+            if (/dachdeck|dachbau|bedachung|flachdach|roofing/.test(h)) return 'dachdecker';
+            if (/spedition|logistik|fuhrunternehm|umzug|logistics|freight/.test(h)) return 'spedition';
+            if (/sanit|klempner|installateur|heizung|plumb/.test(h)) return 'sanitaer';
+            if (/immobil|makler|immo|realestate|realtor/.test(h)) return 'immobilien';
+            if (/friseur|salon|barber|coiffeur|hair|kosmetik|beauty/.test(h)) return 'friseur';
+            if (/restaurant|gasthof|pizzeria|trattoria|osteria|bistro|gastro/.test(h)) return 'restaurant';
+            return 'generic';
+        }
         function fallbackRender() {
             var domain = domainOf(urlInput.value) || 'ihre-domain.de';
-            render(localData(domain, lastBranche, zielInput.value));
+            var bk = currentOverride || guessBrancheLocal(domain);
+            render(localData(domain, bk, zielInput.value));
         }
 
-        // ── Submit ──
-        consent.addEventListener('change', function () { submit.disabled = !consent.checked; });
-
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+        // ── Skizze starten (auto-Branche oder mit explizitem Override) ──
+        function runSkizze(brancheOverride) {
             if (submitting) return;
             if (hpInput.value) return; // Honeypot
             var url = String(urlInput.value || '').trim();
             if (!url) { urlInput.focus(); return; }
             if (!consent.checked) { consent.focus(); return; }
-            lastBranche = brancheSel.value || 'generic';
+            currentOverride = brancheOverride || null;
 
             submitting = true;
             submit.disabled = true;
             submit.querySelector('span').textContent = 'Skizziert …';
             showLoader();
 
-            var payload = { url: url, branche: lastBranche, ziel: zielInput.value || '', consent: true, hp: '' };
+            var payload = { url: url, ziel: zielInput.value || '', consent: true, hp: '' };
+            if (currentOverride) payload.branche = currentOverride; // sonst: Server erkennt automatisch
             var ctrl = new AbortController();
             var to = setTimeout(function () { ctrl.abort(); }, 55000);
 
@@ -801,6 +824,12 @@
                 clearTimeout(to);
                 fallbackRender(); // stiller Fallback (Brief §3) — das Werkzeug sieht nie kaputt aus
             });
+        }
+
+        consent.addEventListener('change', function () { submit.disabled = !consent.checked; });
+        form.addEventListener('submit', function (e) { e.preventDefault(); runSkizze(null); });
+        document.getElementById('ss-rebranche-select').addEventListener('change', function () {
+            if (this.value) runSkizze(this.value);
         });
 
         document.getElementById('ss-again').addEventListener('click', function () {

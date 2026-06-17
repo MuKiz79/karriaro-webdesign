@@ -86,6 +86,36 @@ function pickWidget(brancheKey) {
     return { ...WIDGET_MAP[k] };
 }
 
+// Auto-Erkennung der Branche (Founder-Wunsch: kein Branchen-Dropdown).
+// Eigene Keyword-Erkennung ZUERST (deckt Dachdecker + Spedition ab, die der
+// Light-Audit-Guesser nicht sauber trennt), dann Mapping des erkannten
+// Google-Places-primaryType, sonst generic.
+const PLACES_TYPE_MAP = {
+    plumber: "sanitaer",
+    real_estate_agency: "immobilien",
+    hair_salon: "friseur",
+    beauty_salon: "friseur",
+    restaurant: "restaurant"
+};
+const BRANCHE_RULES = [
+    ["dachdecker", /(dachdeck|dachbau|bedachung|flachdach|steildach|\broofing\b|\broofer\b)/],
+    ["spedition",  /(spedition|logistik|fuhrunternehm|umzugsunternehm|kurierdienst|\blogistics\b|\bfreight\b|\bhaulage\b)/],
+    ["sanitaer",   /(sanit[äa]r|klempner|installateur|rohrreinig|badsanierung|heizungsbau|\bshk\b|\bplumber\b|\bplumbing\b)/],
+    ["immobilien", /(immobilie|makler|hausverwaltung|real[\s-]?estate|\brealtor\b)/],
+    ["friseur",    /(friseur|coiffeur|\bbarber\b|hairdress|hair[\s-]?salon|kosmetikstudio|nagelstudio|beauty[\s-]?salon)/],
+    ["restaurant", /(restaurant|gasthof|gasthaus|trattoria|osteria|pizzeria|wirtshaus|\bbistro\b|gastronom|brasserie)/]
+];
+
+/** detectBranche(host, text, placesType) → einer der 7 Widget-Keys. */
+function detectBranche(host, text, placesType) {
+    const hay = (String(host || "") + " " + String(text || "")).toLowerCase();
+    for (const [key, re] of BRANCHE_RULES) {
+        if (re.test(hay)) return key;
+    }
+    if (placesType && PLACES_TYPE_MAP[placesType]) return PLACES_TYPE_MAP[placesType];
+    return "generic";
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. Marken-Token-Extraktion (regex-basiert — keine DOM-Lib in Functions)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -137,16 +167,32 @@ function isHexColor(s) {
     return typeof s === "string" && /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(s.trim());
 }
 
-function cleanTitle(title, domain) {
-    if (!title) return null;
-    let t = decodeEntities(title);
-    // typische Suffixe abschneiden: „Name | Slogan", „Name – Stadt", „Name - …"
-    t = t.split(/\s+[|–—-]\s+/)[0].trim();
-    // generische Floskeln entfernen
-    t = t.replace(/^(startseite|home|willkommen( bei)?)\s*[:\-–]?\s*/i, "").trim();
+function cleanSeg(s) {
+    let t = String(s || "").replace(/^(startseite|home|willkommen( bei)?)\s*[:\-–]?\s*/i, "").trim();
     if (!t || t.length < 2 || t.length > 70) return null;
-    // Wenn der Titel quasi nur die Domain ist, lieber Domain-Ableitung nutzen
     return t;
+}
+
+// Markenname aus <title>: bevorzugt das Segment, das den Domain-Kern enthält
+// (sichere Bindung an die Marke). Sonst das erste Segment NUR, wenn es wie ein
+// Name aussieht (≤4 Wörter) — Slogan-Sätze („Faucets for the bathroom…") werden
+// verworfen → nameFromDomain übernimmt (z. B. „Hansgrohe").
+function nameFromTitle(title, domain) {
+    if (!title) return null;
+    const raw = decodeEntities(title).replace(/\s+/g, " ").trim();
+    const segs = raw.split(/\s+[|–—·]\s+|\s+-\s+/).map(cleanSeg).filter(Boolean);
+    if (!segs.length) return null;
+    const core = String(domain || "").replace(/^www\./, "").split(".")[0].replace(/[^a-z0-9]/gi, "").toLowerCase();
+    if (core.length >= 4) {
+        const hit = segs.find((s) => s.replace(/[^a-z0-9]/gi, "").toLowerCase().includes(core));
+        if (hit) return /^[a-zäöüß0-9 .&-]+$/.test(hit) && hit === hit.toLowerCase() ? titleCase(hit) : hit;
+    }
+    if (segs[0].split(/\s+/).length <= 4) return segs[0];
+    return null;
+}
+
+function titleCase(s) {
+    return String(s || "").replace(/\b([a-zäöü])/g, (m, c) => c.toUpperCase());
 }
 
 function nameFromDomain(domain) {
@@ -168,16 +214,19 @@ function extractBrandTokens(html, finalUrl, domain, brancheKey) {
     let name = null, logoUrl = null, accent = null;
 
     if (html && typeof html === "string") {
-        // Name: og:site_name → bereinigter <title> → Domain
+        // Name: og:site_name → Titel-Segment, das den Domain-Kern enthält → Domain.
+        // (Reine Slogan-Titel wie „Faucets for the bathroom…" werden NICHT als Name
+        //  genommen — sonst heißt „Hansgrohe" plötzlich „Faucets for the bathroom".)
         name = decodeEntities(findMeta(html, "og:site_name") || "");
         if (!name) {
             const tm = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-            name = cleanTitle(tm ? tm[1] : null, domain);
+            name = nameFromTitle(tm ? tm[1] : null, domain);
         }
 
-        // Logo-Kette: og:image → apple-touch-icon → link[rel~=icon]
-        const cand = absolutize(findMeta(html, "og:image"), base)
-            || absolutize(findLink(html, (r) => r.includes("apple-touch-icon")), base)
+        // Logo-Kette für ein ECHTES Logo (kein Social-Foto!):
+        // apple-touch-icon → link[rel~=icon] → (später Clearbit/Favicon).
+        // og:image ist bewusst NICHT dabei — das ist meist ein Kampagnen-/Hero-Foto.
+        const cand = absolutize(findLink(html, (r) => r.includes("apple-touch-icon")), base)
             || absolutize(findLink(html, (r) => r.includes("icon")), base);
         if (cand) logoUrl = cand;
 
@@ -189,8 +238,8 @@ function extractBrandTokens(html, finalUrl, domain, brancheKey) {
     if (!name) name = nameFromDomain(domain);
     name = name.slice(0, 80);
 
-    // Logo-Fallbacks (Brief §6): favicons.google → clearbit. Frontend hat
-    // zusätzlich onerror→Monogramm, falls auch diese leer/zu klein sind.
+    // Logo-Fallback: Google-Favicon (sz=128) liefert die echte Favicon der Seite —
+    // bei lokalen Betrieben oft ihr Logo. Frontend hat zusätzlich onerror→Monogramm.
     if (!logoUrl && domain) {
         logoUrl = "https://www.google.com/s2/favicons?sz=128&domain=" + encodeURIComponent(domain);
     }
@@ -487,6 +536,7 @@ module.exports = {
     BRANCHE_DEFAULT_ACCENT,
     normalizeBranche,
     pickWidget,
+    detectBranche,
     extractBrandTokens,
     SOFORT_SYS,
     SOFORT_TOOL,
@@ -496,7 +546,7 @@ module.exports = {
     composeFallbackCopy,
     deriveAudit,
     // intern für Tests
-    cleanTitle,
+    nameFromTitle,
     nameFromDomain,
     isHexColor
 };
