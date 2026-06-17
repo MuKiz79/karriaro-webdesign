@@ -136,6 +136,41 @@
         .ss-rebranche { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--ss-mono); font-size: 11px; letter-spacing: .04em; color: var(--ss-graphite); }
         .ss-rebranche strong { color: var(--ss-ink); }
         .ss-rebranche select { font-family: var(--ss-sans); font-size: 12px; padding: 5px 9px; border: 1px solid var(--ss-border); border-radius: 8px; background: #fff; color: var(--ss-ink); }
+
+        /* ── „Heute": echter Screenshot in Browser-Rahmen ── */
+        .ss-browser { border: 1px solid var(--ss-border); border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 10px 30px -24px rgba(20,32,43,.5); }
+        .ss-browser-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #ECE7DC; border-bottom: 1px solid var(--ss-border); }
+        .ss-browser-dots { display: inline-flex; gap: 5px; }
+        .ss-browser-dots i { width: 9px; height: 9px; border-radius: 50%; background: #C9C0AE; }
+        .ss-browser-url { font-family: var(--ss-mono); font-size: 11px; color: var(--ss-graphite); background: #fff; border-radius: 6px; padding: 3px 10px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ss-shot-img { background: #F4F1EA; min-height: 150px; max-height: 280px; overflow: hidden; display: grid; place-items: center; }
+        .ss-shot-img img { width: 100%; height: auto; display: block; object-fit: cover; object-position: top; }
+        .ss-shot-img.is-empty { color: var(--ss-graphite); font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; padding: 40px 16px; text-align: center; }
+        .ss-today-shot { margin-bottom: 18px; }
+
+        /* ── „Konzept": gerendertes Mini-Website-Mockup ── */
+        .ss-mock { border-radius: 12px 12px 14px 14px; overflow: hidden; border: 1px solid var(--ss-border); background: #fff; box-shadow: 0 14px 36px -26px rgba(20,32,43,.55); }
+        .ss-mock-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #ECE7DC; border-bottom: 1px solid var(--ss-border); }
+        .ss-mock-page { background: var(--ss-bg); }
+        .ss-mock-nav { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--ss-border); background: #fff; }
+        .ss-mock-nav .ss-logo-slot { width: 38px; height: 38px; border-radius: 9px; box-shadow: 0 0 0 2px var(--ss-accent); }
+        .ss-mock-brand { font-family: var(--ss-serif); font-weight: 600; font-size: 15px; color: var(--ss-ink); flex: 1; }
+        .ss-mock-navlinks { display: flex; gap: 12px; }
+        .ss-mock-navlinks span { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ss-graphite); }
+        .ss-mock-navlinks span:first-child { color: var(--ss-accent); border-bottom: 2px solid var(--ss-accent); padding-bottom: 2px; }
+        .ss-mock-hero { padding: 24px 20px 22px; background: linear-gradient(160deg, color-mix(in srgb, var(--ss-accent) 9%, #fff), var(--ss-bg)); display: flex; flex-direction: column; gap: 12px; }
+        .ss-mock-hero h2 { font-family: var(--ss-serif); font-weight: 600; font-size: clamp(21px, 2.8vw, 30px); line-height: 1.1; color: var(--ss-ink); }
+        .ss-mock-hero .ss-cta { align-self: flex-start; margin-top: 4px; }
+        .ss-mock-tool { padding: 18px 20px; border-top: 1px solid var(--ss-border); }
+        .ss-mock-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px 20px; border-top: 1px solid var(--ss-border); background: #fff; }
+        .ss-mock-cell { border: 1px solid var(--ss-border); border-radius: 9px; padding: 11px 12px; }
+        .ss-mock-cell b { display: block; font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 6px; }
+        .ss-mock-cell span { display: block; height: 5px; border-radius: 3px; background: var(--ss-border); }
+        .ss-mock-cell span + span { margin-top: 5px; width: 70%; }
+        .ss-mock-foot { padding: 14px 20px; border-top: 1px solid var(--ss-border); background: var(--ss-ink); color: var(--ss-cream); display: flex; flex-direction: column; gap: 6px; }
+        .ss-mock-foot-name { font-family: var(--ss-serif); font-weight: 600; font-size: 14px; }
+        .ss-mock-foot .ss-geo-hook { border-left: 0; padding-left: 0; color: rgba(241,239,231,.78); font-size: 11.5px; }
+        .ss-concept-meta { display: flex; flex-direction: column; gap: 12px; padding: 16px 4px 2px; }
         .ss-prospect-tools { --accent: var(--ss-accent); --kr-gold: var(--ss-accent); background: #fff; border: 1px solid var(--ss-border); border-radius: 12px; padding: 16px; min-width: 0; overflow-x: hidden; }
         .ss-prospect-tools .kr-tool-form, .ss-prospect-tools .kr-tool-form label, .ss-prospect-tools .kr-tool-form input, .ss-prospect-tools .kr-tool-form select { min-width: 0; max-width: 100%; }
         .ss-prospect-tools .kr-tool-form input:focus, .ss-prospect-tools .kr-tool-form select:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-accent) 18%, transparent); }
@@ -166,6 +201,11 @@
         @media (max-width: 860px) {
             .ss-intake-grid { grid-template-columns: 1fr; }
             .ss-split { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 540px) {
+            .ss-mock-navlinks { display: none; }
+            .ss-mock-strip { grid-template-columns: 1fr; }
+            .ss-mock-hero, .ss-mock-tool, .ss-mock-strip, .ss-mock-foot, .ss-mock-nav { padding-left: 14px; padding-right: 14px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .kr-frame { stroke-dashoffset: 0; animation: none; }
@@ -285,6 +325,12 @@
                 <div class="ss-split">
                     <div class="ss-today">
                         <p class="ss-col-label">Heute</p>
+                        <div class="ss-today-shot">
+                            <div class="ss-browser">
+                                <div class="ss-browser-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-shot-url"></span></div>
+                                <div class="ss-shot-img is-empty" id="ss-shot-img">Vorschau wird geladen …</div>
+                            </div>
+                        </div>
                         <div class="ss-today-head">
                             <span class="ss-today-domain" id="ss-today-domain"></span>
                             <span class="ss-score">
@@ -294,42 +340,58 @@
                         </div>
                         <div class="ss-leak" id="ss-leak" hidden></div>
                         <ul class="ss-findings" id="ss-findings"></ul>
-                        <p class="ss-today-note">Befunde aus einem automatisierten Audit Ihrer Seite. Score selbst ermittelt, nicht extern zertifiziert.</p>
+                        <p class="ss-today-note">Vorschau + Befunde aus einem automatisierten Audit Ihrer Seite. Score selbst ermittelt, nicht extern zertifiziert.</p>
                     </div>
 
                     <div class="ss-concept">
                         <div class="ss-concept-edge"></div>
                         <div class="ss-concept-inner">
                             <p class="ss-col-label">Konzept im Karriaro-Stil</p>
-                            <div class="ss-concept-head">
-                                <span class="ss-logo-slot" id="ss-logo-slot"></span>
-                                <span>
-                                    <span class="ss-concept-eyebrow" id="ss-eyebrow"></span><br>
-                                    <span class="ss-concept-brand" id="ss-brand-name"></span>
-                                </span>
+                            <div class="ss-mock">
+                                <div class="ss-mock-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-mock-url"></span></div>
+                                <div class="ss-mock-page">
+                                    <div class="ss-mock-nav">
+                                        <span class="ss-logo-slot" id="ss-logo-slot"></span>
+                                        <span class="ss-mock-brand" id="ss-brand-name"></span>
+                                        <span class="ss-mock-navlinks" aria-hidden="true"><span>Start</span><span>Leistungen</span><span>Referenzen</span><span>Kontakt</span></span>
+                                    </div>
+                                    <div class="ss-mock-hero">
+                                        <span class="ss-concept-eyebrow" id="ss-eyebrow"></span>
+                                        <h2 id="ss-headline"></h2>
+                                        <p class="ss-concept-sub" id="ss-subline"></p>
+                                        <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
+                                    </div>
+                                    <div class="ss-mock-tool">
+                                        <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
+                                        <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
+                                    </div>
+                                    <div class="ss-mock-strip" aria-hidden="true">
+                                        <div class="ss-mock-cell"><b>Leistungen</b><span></span><span></span></div>
+                                        <div class="ss-mock-cell"><b>Referenzen</b><span></span><span></span></div>
+                                        <div class="ss-mock-cell"><b>Kontakt &amp; Anfahrt</b><span></span><span></span></div>
+                                    </div>
+                                    <div class="ss-mock-foot">
+                                        <span class="ss-mock-foot-name" id="ss-mock-foot-name"></span>
+                                        <span class="ss-geo-hook" id="ss-geo-hook"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <h2 id="ss-headline"></h2>
-                            <p class="ss-concept-sub" id="ss-subline"></p>
-                            <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
-                            <div class="ss-rebranche">
-                                <span>Branche erkannt: <strong id="ss-detected-branche">—</strong></span>
-                                <select id="ss-rebranche-select" aria-label="Branche manuell anpassen">
-                                    <option value="">anpassen …</option>
-                                    <option value="dachdecker">Dachdecker</option>
-                                    <option value="immobilien">Immobilienmakler</option>
-                                    <option value="friseur">Friseur / Salon</option>
-                                    <option value="restaurant">Restaurant / Gastronomie</option>
-                                    <option value="spedition">Spedition / Logistik</option>
-                                    <option value="sanitaer">Sanitär / Klempner</option>
-                                    <option value="generic">Andere Branche</option>
-                                </select>
+                            <div class="ss-concept-meta">
+                                <div class="ss-rebranche">
+                                    <span>Branche erkannt: <strong id="ss-detected-branche">—</strong></span>
+                                    <select id="ss-rebranche-select" aria-label="Branche manuell anpassen">
+                                        <option value="">anpassen …</option>
+                                        <option value="dachdecker">Dachdecker</option>
+                                        <option value="immobilien">Immobilienmakler</option>
+                                        <option value="friseur">Friseur / Salon</option>
+                                        <option value="restaurant">Restaurant / Gastronomie</option>
+                                        <option value="spedition">Spedition / Logistik</option>
+                                        <option value="sanitaer">Sanitär / Klempner</option>
+                                        <option value="generic">Andere Branche</option>
+                                    </select>
+                                </div>
+                                <p class="ss-concept-disclaimer"><span class="ss-concept-label">Konzept-Skizze</span><br>Eine Richtung, kein fertiges Template — die finale Seite codieren wir von Hand.</p>
                             </div>
-                            <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
-                            <p class="ss-geo-hook" id="ss-geo-hook"></p>
-                            <div class="ss-cta-row">
-                                <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
-                            </div>
-                            <p class="ss-concept-disclaimer"><span class="ss-concept-label">Konzept-Skizze</span><br>Eine Richtung, kein fertiges Template — die finale Seite codieren wir von Hand.</p>
                         </div>
                     </div>
                 </div>
@@ -658,8 +720,8 @@
                 var anliegen = f.anliegen.value, kanal = f.kanal.value;
                 var aMap = { angebot: 'Angebot', termin: 'Termin', frage: 'Frage', reklamation: 'Reklamation' };
                 var kMap = { anruf: 'Rückruf', email: 'E-Mail', whatsapp: 'WhatsApp' };
-                out.querySelector('.kr-tool-output-value').textContent = aMap[anliegen] + ' · Antwort per ' + kMap[kanal];
-                out.querySelector('.kr-tool-output-note').textContent = 'Auf der echten Seite ginge das in einem Klick direkt an den Betrieb.';
+                out.querySelector('.kr-tool-output-value').textContent = '✓ ' + aMap[anliegen] + ' — Antwort per ' + kMap[kanal];
+                out.querySelector('.kr-tool-output-note').textContent = 'So kommt die Anfrage strukturiert beim Betrieb an — mit Thema und gewünschtem Kanal. Auf der fertigen Seite per Klick versendet.';
                 out.classList.add('is-revealed');
             });
         }
@@ -683,6 +745,21 @@
             } else { mono(); }
         }
 
+        // ── „Heute"-Vorschau: echter PSI-Screenshot, sonst og:image, sonst Platzhalter ──
+        function placeShot(audit, brand) {
+            var box = document.getElementById('ss-shot-img');
+            if (!box) return;
+            box.textContent = ''; box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar';
+            var src = (audit && audit.screenshot) || (brand && brand.ogImage) || '';
+            if (!src || !/^(data:image\/|https?:\/\/)/i.test(src)) return;
+            var img = new Image();
+            img.alt = 'Aktuelle Startseite von ' + (brand.domain || 'Ihrer Website');
+            img.referrerPolicy = 'no-referrer';
+            img.onload = function () { box.textContent = ''; box.classList.remove('is-empty'); box.appendChild(img); };
+            img.onerror = function () { box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar'; };
+            img.src = src;
+        }
+
         // ── Ergebnis rendern (aus Server- oder lokalem Fallback-Datenvertrag) ──
         function render(data) {
             var brand = data.brand || {};
@@ -702,6 +779,10 @@
             document.getElementById('ss-widget-pitch').textContent = copy.widgetPitch || '';
             document.getElementById('ss-geo-hook').textContent = copy.geoHook || '';
             document.getElementById('ss-today-domain').textContent = brand.domain || '';
+            document.getElementById('ss-shot-url').textContent = brand.domain || '';
+            document.getElementById('ss-mock-url').textContent = brand.domain || '';
+            var foot = document.getElementById('ss-mock-foot-name'); if (foot) foot.textContent = brand.name || '';
+            placeShot(audit, brand);
 
             var sn = document.getElementById('ss-score-num');
             sn.textContent = (audit.score == null ? '—' : audit.score);

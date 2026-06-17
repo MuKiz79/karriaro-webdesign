@@ -211,7 +211,7 @@ function nameFromDomain(domain) {
  */
 function extractBrandTokens(html, finalUrl, domain, brancheKey) {
     const base = finalUrl || ("https://" + domain);
-    let name = null, logoUrl = null, accent = null;
+    let name = null, logoUrl = null, accent = null, ogImage = null;
 
     if (html && typeof html === "string") {
         // Name: og:site_name → Titel-Segment, das den Domain-Kern enthält → Domain.
@@ -230,6 +230,10 @@ function extractBrandTokens(html, finalUrl, domain, brancheKey) {
             || absolutize(findLink(html, (r) => r.includes("icon")), base);
         if (cand) logoUrl = cand;
 
+        // og:image NICHT als Logo (s. o.), aber als Vorschau-Bild der heutigen Seite
+        // (Fallback für die „Heute"-Spalte, wenn kein PSI-Screenshot vorliegt).
+        ogImage = absolutize(findMeta(html, "og:image"), base);
+
         // Akzentfarbe: theme-color (msapplication-TileColor als Reserve)
         const tc = findMeta(html, "theme-color") || findMeta(html, "msapplication-TileColor");
         if (isHexColor(tc)) accent = tc.trim();
@@ -247,7 +251,7 @@ function extractBrandTokens(html, finalUrl, domain, brancheKey) {
     // Akzent nicht ermittelbar → null (Frontend nutzt Branchen-Standardfarbe).
     // Wir liefern die Standardfarbe als Hinweis separat NICHT mit; der Vertrag
     // erlaubt null, daher bleibt accent null wenn keine theme-color da war.
-    return { name, domain, logoUrl: logoUrl || null, accent: accent || null };
+    return { name, domain, logoUrl: logoUrl || null, accent: accent || null, ogImage: ogImage || null };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -271,6 +271,10 @@ async function runAuditPipeline(url, psiKey) {
     const lcpNum = lh.audits?.['largest-contentful-paint']?.numericValue;
     const clsNum = lh.audits?.['cumulative-layout-shift']?.numericValue;
     const tbtNum = lh.audits?.['total-blocking-time']?.numericValue;
+    // Sprint 253 — echter Viewport-Screenshot (mobile) der geprüften Seite, frei aus
+    // dem Lighthouse-Ergebnis. Datei-URI (data:image/jpeg;base64,…), klein (~30–80 KB).
+    const shot = lh.audits?.['final-screenshot']?.details?.data;
+    const screenshot = (typeof shot === "string" && shot.startsWith("data:image")) ? shot : null;
     const ws = {
         perf: Math.round((lh.categories?.performance?.score || 0) * 100),
         seo: Math.round((lh.categories?.seo?.score || 0) * 100),
@@ -308,7 +312,8 @@ async function runAuditPipeline(url, psiKey) {
         bfsg,
         websiteScore: ws,
         leadScore,
-        summary
+        summary,
+        screenshot
     };
 }
 

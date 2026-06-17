@@ -2772,6 +2772,8 @@ exports.sofortSkizze = onRequest(
                 // Beide Audits gescheitert (z. B. Bot-Wall) — ehrlich, keine erfundenen Befunde.
                 audit = { score: null, topLeak: null, findings: [] };
             }
+            // Echter Viewport-Screenshot der heutigen Seite (aus PSI), für die „Heute"-Spalte.
+            audit.screenshot = (full && full.screenshot) || null;
 
             // ── KI-Text (forced tool_use, geerdet auf Fakten + Audit), best effort. ──
             let copy, copySource = "ai";
