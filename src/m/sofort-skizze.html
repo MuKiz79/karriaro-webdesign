@@ -144,6 +144,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-dot.high { background: #C2592E; }
         .ss-dot.medium { background: #C9A24B; }
         .ss-dot.low { background: #9aa3ab; }
+        .ss-findings li > div { display: flex; flex-direction: column; }
+        .ss-finding-cons { font-size: 12px; color: var(--ss-graphite); opacity: .8; margin-top: 3px; line-height: 1.4; }
         .ss-today-note { margin-top: 16px; font-size: 11.5px; color: var(--ss-graphite); opacity: .8; }
 
         /* Konzept */
@@ -226,6 +228,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-mock-foot { padding: 22px 26px; background: var(--ss-ink); color: var(--ss-cream); display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
         .ss-mock-foot-l { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
         .ss-mock-foot-name { font-family: var(--ss-serif); font-weight: 500; font-size: 16px; }
+        .ss-mock-foot-phone { font-family: var(--ss-mono); font-size: 11px; letter-spacing: .04em; color: rgba(241,239,231,.85); }
         .ss-mock-foot .ss-geo-hook { border-left: 0; padding-left: 0; color: rgba(241,239,231,.72); font-size: 11px; line-height: 1.45; max-width: 360px; }
         .ss-mock-foot-folio { font-family: var(--ss-mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: rgba(241,239,231,.5); white-space: nowrap; flex: 0 0 auto; }
         /* „Das würden wir einbauen" — Lösungen, abgeleitet aus den Befunden links */
@@ -464,14 +467,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                                         <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
                                         <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
                                     </div>
-                                    <div class="ss-mock-sections" aria-hidden="true">
-                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Leistungen</b><span>Klar gegliedert, was Sie anbieten — verständlich auf einen Blick.</span></div></div>
-                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Referenzen</b><span>Echte Stimmen Ihrer Kunden schaffen Vertrauen.</span></div></div>
-                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Kontakt &amp; Anfahrt</b><span>Ein Klick zu Anruf, Route und Anfrage.</span></div></div>
-                                    </div>
+                                    <div class="ss-mock-sections" id="ss-mock-sections"></div>
                                     <div class="ss-mock-foot">
                                         <span class="ss-mock-foot-l">
                                             <span class="ss-mock-foot-name" id="ss-mock-foot-name"></span>
+                                            <span class="ss-mock-foot-phone" id="ss-mock-phone" hidden></span>
                                             <span class="ss-geo-hook" id="ss-geo-hook"></span>
                                         </span>
                                         <span class="ss-mock-foot-folio">S. 01 · Konzept</span>
@@ -716,6 +716,21 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
         }
         function scoreBand(s) { return s == null ? 'mid' : (s < 50 ? 'bad' : (s < 75 ? 'mid' : 'good')); }
+        // Geschäftswert/Risiko: Befund → Folge (UWG-sicher, allgemein, kein Versprechen).
+        function consequenceFor(label) {
+            var l = (label || '').toLowerCase();
+            if (/lcp|ladezeit|performance/.test(l)) return 'Viele Besucher springen ab, bevor die Seite geladen ist.';
+            if (/bfsg|barrierefrei|wcag/.test(l)) return 'Barrierefreiheit ist seit 2025 Pflicht — Lücken können abgemahnt werden.';
+            if (/localbusiness|lokales schema|schema/.test(l)) return 'Ohne lokale Daten findet Google Sie in der Umgebung schwerer.';
+            if (/telefon|anruf|klickbar/.test(l)) return 'Am Handy kein Klick zum Anruf bedeutet verlorene Anfragen.';
+            if (/formular|anfrage/.test(l)) return 'Jede Hürde im Anfrageweg kostet Kontakte.';
+            if (/mobil|viewport/.test(l)) return 'Über die Hälfte der Besucher kommt heute über das Smartphone.';
+            if (/security|header|https/.test(l)) return 'Browser warnen Besucher bei unsicher wirkenden Seiten.';
+            if (/javascript|spa|crawl|geladen/.test(l)) return 'Inhalte, die erst per Skript laden, übersehen Google & KI häufig.';
+            if (/veraltet|technologie|aktualisiert|baukasten/.test(l)) return 'Veraltete Technik bremst die Seite und erschwert die Pflege.';
+            if (/social|vorschaubild|teilen/.test(l)) return 'Beim Teilen erscheint kein sauberes Vorschaubild.';
+            return '';
+        }
         // Kontrast von Weiß auf einer Akzentfarbe — entscheidet, ob der Akzent als
         // Button-Hintergrund taugt (sonst Navy), damit beliebige Marken-Farben lesbar bleiben.
         function relLum(hex) {
@@ -957,6 +972,27 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             var foot = document.getElementById('ss-mock-foot-name'); if (foot) foot.textContent = brand.name || '';
             placeShot(audit, brand);
 
+            // Echte Leistungen → Mockup-Sektionen (sonst generische 3).
+            var secBox = document.getElementById('ss-mock-sections'); secBox.textContent = '';
+            var svc = ((copy.services) || []).filter(Boolean).slice(0, 3);
+            var secs = (svc.length >= 2)
+                ? svc.map(function (s) { return { t: s, d: '' }; })
+                : [
+                    { t: 'Leistungen', d: 'Klar gegliedert, was Sie anbieten — verständlich auf einen Blick.' },
+                    { t: 'Referenzen', d: 'Echte Stimmen Ihrer Kunden schaffen Vertrauen.' },
+                    { t: 'Kontakt & Anfahrt', d: 'Ein Klick zu Anruf, Route und Anfrage.' }
+                ];
+            secs.forEach(function (x) {
+                var sec = document.createElement('div'); sec.className = 'ss-mock-sec';
+                var b = document.createElement('div'); b.className = 'ss-mock-sec-body';
+                var bb = document.createElement('b'); bb.textContent = x.t; b.appendChild(bb);
+                if (x.d) { var sp = document.createElement('span'); sp.textContent = x.d; b.appendChild(sp); }
+                sec.appendChild(b); secBox.appendChild(sec);
+            });
+            // Echtes Telefon im Footer.
+            var ph = document.getElementById('ss-mock-phone');
+            if (ph) { if (brand.phone) { ph.textContent = '☎ ' + brand.phone; ph.hidden = false; } else { ph.hidden = true; ph.textContent = ''; } }
+
             // „Das würden wir einbauen" — Lösungsliste rechts.
             var sol = document.getElementById('ss-solutions'); sol.textContent = '';
             buildSolutions(audit, widget).forEach(function (it) {
@@ -975,17 +1011,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             else { leak.hidden = true; }
 
             var ul = document.getElementById('ss-findings'); ul.textContent = '';
-            function findingLi(label, severity) {
+            function findingLi(label, severity, cons) {
                 var li = document.createElement('li');
                 var dot = document.createElement('span');
                 dot.className = 'ss-dot';
                 dot.classList.add(['high', 'medium', 'low'].indexOf(severity) > -1 ? severity : 'low');
-                var txt = document.createElement('span');
-                txt.textContent = label;
-                li.appendChild(dot); li.appendChild(txt);
+                var body = document.createElement('div');
+                var lbl = document.createElement('span'); lbl.textContent = label; body.appendChild(lbl);
+                if (cons) { var c = document.createElement('span'); c.className = 'ss-finding-cons'; c.textContent = cons; body.appendChild(c); }
+                li.appendChild(dot); li.appendChild(body);
                 return li;
             }
-            (audit.findings || []).forEach(function (f) { ul.appendChild(findingLi(f.label, f.severity)); });
+            (audit.findings || []).forEach(function (f) { ul.appendChild(findingLi(f.label, f.severity, consequenceFor(f.label))); });
             if (!(audit.findings || []).length) {
                 ul.appendChild(findingLi('Keine kritischen Schwachstellen automatisch erkannt — eine handcodierte Neufassung kann Conversion und Auffindbarkeit dennoch verbessern.', 'low'));
             }

@@ -175,6 +175,26 @@ test("parseCopyResult: tool_use-Payload → 6 Felder, gescrubbt; Fehlerfälle we
     assert.throws(() => ss.parseCopyResult({ content: [{ type: "tool_use", name: "skizze", input: { found: "", eyebrow: "x", headline: "x", subline: "x", widgetPitch: "x", geoHook: "x" } }] }), /leeres Feld/);
 });
 
+test("parseCopyResult: services (echte Leistungen) werden geparst, gekappt, gescrubbt", () => {
+    const data = { content: [{ type: "tool_use", name: "skizze", input: {
+        found: "x", eyebrow: "Dach · Köln", headline: "Dächer", subline: "y", widgetPitch: "z", geoHook: "kann helfen",
+        services: ["Dachsanierung", "Steildach", "Flachdach", "Viertes weg"]
+    } }] };
+    const c = ss.parseCopyResult(data);
+    assert.ok(Array.isArray(c.services) && c.services.length === 3, "max 3 Services");
+    assert.deepEqual(c.services, ["Dachsanierung", "Steildach", "Flachdach"]);
+    // ohne services → leeres Array
+    const c2 = ss.parseCopyResult({ content: [{ type: "tool_use", name: "skizze", input: { found: "x", eyebrow: "a", headline: "b", subline: "c", widgetPitch: "d", geoHook: "e" } }] });
+    assert.deepEqual(c2.services, []);
+});
+
+test("extractPhone: tel-Link bevorzugt, sichtbare Nummer, sonst null", () => {
+    assert.equal(ss.extractPhone('<a href="tel:+49 70173 12345">Anruf</a>'), "+49 70173 12345");
+    assert.match(ss.extractPhone('<p>Telefon: 0711 / 123 456 78</p>') || '', /123/);
+    assert.equal(ss.extractPhone('<p>kein telefon hier</p>'), null);
+    assert.equal(ss.extractPhone(null), null);
+});
+
 test("composeFallbackCopy: alle 6 Felder, UWG-sicher, branche-aware", () => {
     const brand = { name: "Müller Sanitär", domain: "mueller-sanitaer.de", logoUrl: null, accent: null };
     const widget = ss.pickWidget("sanitaer");

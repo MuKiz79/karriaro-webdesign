@@ -43,7 +43,7 @@ const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAn
 const {
     normalizeBranche, pickWidget, detectBranche, extractBrandTokens, BRANCHE_LABEL,
     SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
-    composeFallbackCopy, deriveAudit
+    composeFallbackCopy, extractPhone, deriveAudit
 } = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
 const logger = require("./lib/logger.js");
 
@@ -2762,6 +2762,7 @@ exports.sofortSkizze = onRequest(
             }
 
             const brand = extractBrandTokens(html, finalUrl, domain, brancheKey);
+            brand.phone = extractPhone(html); // echtes Telefon der Seite (oder null)
 
             let audit;
             if (light || full) {
