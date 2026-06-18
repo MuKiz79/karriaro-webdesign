@@ -148,9 +148,15 @@
         .ss-browser-dots { display: inline-flex; gap: 5px; }
         .ss-browser-dots i { width: 9px; height: 9px; border-radius: 50%; background: #C9C0AE; }
         .ss-browser-url { font-family: var(--ss-mono); font-size: 11px; color: var(--ss-graphite); background: #fff; border-radius: 6px; padding: 3px 10px; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .ss-shot-img { background: #F4F1EA; min-height: 150px; max-height: 280px; overflow: hidden; display: grid; place-items: center; }
-        .ss-shot-img img { width: 100%; height: auto; display: block; object-fit: cover; object-position: top; }
-        .ss-shot-img.is-empty { color: var(--ss-graphite); font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; padding: 40px 16px; text-align: center; }
+        /* Ganzseiten-Screenshot: feste Höhe, vertikal scrollbar (komplette Seite drin) */
+        .ss-shot-wrap { position: relative; }
+        .ss-shot-img { background: #F4F1EA; height: 500px; overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+        .ss-shot-img img { width: 100%; height: auto; display: block; }
+        .ss-shot-img.is-empty { height: auto; min-height: 150px; display: grid; place-items: center; color: var(--ss-graphite); font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; padding: 40px 16px; text-align: center; }
+        /* Verlaufs-Hinweis unten = „es geht weiter, scrollbar" */
+        .ss-shot-wrap.is-scroll::after { content: ''; position: absolute; left: 1px; right: 1px; bottom: 1px; height: 56px; background: linear-gradient(to bottom, rgba(244,241,234,0), rgba(244,241,234,.92)); pointer-events: none; border-radius: 0 0 6px 6px; }
+        .ss-shot-scrollhint { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-family: var(--ss-mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ss-gold-text); pointer-events: none; }
+        .ss-shot-wrap:not(.is-scroll) .ss-shot-scrollhint { display: none; }
         .ss-today-shot { margin-bottom: 18px; }
         .ss-shot-live { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; color: var(--ss-gold-text); white-space: nowrap; flex: 0 0 auto; }
         .ss-shot-live:hover { color: var(--ss-ink); text-decoration: none; }
@@ -362,7 +368,10 @@
                         <div class="ss-today-shot">
                             <div class="ss-browser">
                                 <div class="ss-browser-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-shot-url"></span><a class="ss-shot-live" id="ss-shot-live" target="_blank" rel="noopener nofollow">live ansehen ↗</a></div>
-                                <div class="ss-shot-img is-empty" id="ss-shot-img">Vorschau wird geladen …</div>
+                                <div class="ss-shot-wrap" id="ss-shot-wrap">
+                                    <div class="ss-shot-img is-empty" id="ss-shot-img">Vorschau wird geladen …</div>
+                                    <span class="ss-shot-scrollhint">↓ ganze Seite scrollen</span>
+                                </div>
                             </div>
                         </div>
                         <div class="ss-today-head">
@@ -830,14 +839,20 @@
         // ── „Heute"-Vorschau: echter PSI-Screenshot, sonst og:image, sonst Platzhalter ──
         function placeShot(audit, brand) {
             var box = document.getElementById('ss-shot-img');
+            var wrap = document.getElementById('ss-shot-wrap');
             if (!box) return;
+            if (wrap) wrap.classList.remove('is-scroll');
             box.textContent = ''; box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar';
             var src = (audit && audit.screenshot) || (brand && brand.ogImage) || '';
             if (!src || !/^(data:image\/|https?:\/\/)/i.test(src)) return;
             var img = new Image();
             img.alt = 'Aktuelle Startseite von ' + (brand.domain || 'Ihrer Website');
             img.referrerPolicy = 'no-referrer';
-            img.onload = function () { box.textContent = ''; box.classList.remove('is-empty'); box.appendChild(img); };
+            img.onload = function () {
+                box.textContent = ''; box.classList.remove('is-empty'); box.appendChild(img);
+                // scrollbar? → Hinweis + Verlauf einblenden (Ganzseiten-Screenshot)
+                if (wrap) requestAnimationFrame(function () { if (box.scrollHeight - box.clientHeight > 24) wrap.classList.add('is-scroll'); });
+            };
             img.onerror = function () { box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar'; };
             img.src = src;
         }
