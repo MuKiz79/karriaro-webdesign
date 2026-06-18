@@ -183,6 +183,11 @@ test("parseCopyResult: services (echte Leistungen) werden geparst, gekappt, gesc
     const c = ss.parseCopyResult(data);
     assert.ok(Array.isArray(c.services) && c.services.length === 3, "max 3 Services");
     assert.deepEqual(c.services, ["Dachsanierung", "Steildach", "Flachdach"]);
+    assert.equal(c.accent, undefined, "ohne accent-Feld kein accent");
+    const cA = ss.parseCopyResult({ content: [{ type: "tool_use", name: "skizze", input: { found: "x", eyebrow: "a", headline: "b", subline: "c", widgetPitch: "d", geoHook: "e", accent: "#C2592E" } }] });
+    assert.equal(cA.accent, "#C2592E", "valide Hex-Markenfarbe übernommen");
+    const cB = ss.parseCopyResult({ content: [{ type: "tool_use", name: "skizze", input: { found: "x", eyebrow: "a", headline: "b", subline: "c", widgetPitch: "d", geoHook: "e", accent: "blau" } }] });
+    assert.equal(cB.accent, undefined, "ungültige Farbe verworfen");
     // ohne services → leeres Array
     const c2 = ss.parseCopyResult({ content: [{ type: "tool_use", name: "skizze", input: { found: "x", eyebrow: "a", headline: "b", subline: "c", widgetPitch: "d", geoHook: "e" } }] });
     assert.deepEqual(c2.services, []);

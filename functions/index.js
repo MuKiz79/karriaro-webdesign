@@ -2686,6 +2686,22 @@ function sofortSnippet(html) {
     try { return htmlToText(html).replace(/\s+/g, " ").trim().slice(0, 600); }
     catch { return ""; }
 }
+// Sauberer VIEWPORT-Screenshot (klein, lesbar) als Vision-Input für Claude — die KI
+// SIEHT damit den echten Auftritt. Eigener Shot (nicht der tall Ganzseiten-Shot, den
+// Claude zu stark herunterskalieren würde). Liefert {base64, mediaType} oder null.
+async function fetchVisionShot(target, key) {
+    if (!key) return null;
+    const api = "https://api.screenshotone.com/take?access_key=" + encodeURIComponent(key) +
+        "&url=" + encodeURIComponent(target) +
+        "&format=jpeg&image_quality=72&viewport_width=1280&block_cookie_banners=true&block_ads=true&block_chats=true&cache=true&cache_ttl=2592000&delay=2";
+    try {
+        const r = await fetch(api, { signal: AbortSignal.timeout(20000) });
+        if (!r.ok) return null;
+        const buf = Buffer.from(await r.arrayBuffer());
+        if (buf.length < 1000 || buf.length > 4 * 1024 * 1024) return null;
+        return { base64: buf.toString("base64"), mediaType: (r.headers.get("content-type") || "image/jpeg").split(";")[0] };
+    } catch { return null; }
+}
 
 exports.sofortSkizze = onRequest(
     {
@@ -2693,7 +2709,7 @@ exports.sofortSkizze = onRequest(
         memory: "512MiB",
         timeoutSeconds: 60,
         cors: false,
-        secrets: [PLACES_KEY, PSI_API_KEY, CLAUDE_API_KEY]
+        secrets: [PLACES_KEY, PSI_API_KEY, CLAUDE_API_KEY, SHOT_API_KEY]
     },
     async (req, res) => {
         if (cors(req, res, "GET, POST, OPTIONS")) return;
@@ -2756,15 +2772,19 @@ exports.sofortSkizze = onRequest(
             //    60s-Function-Budget nicht aufzehrt. Danach bleibt Claude sein Fenster. ──
             const placesKey = safeSecretValue(PLACES_KEY);
             const psiKey = safeSecretValue(PSI_API_KEY);
-            const [htmlR, lightR, fullR] = await Promise.allSettled([
+            const shotKey = safeSecretValue(SHOT_API_KEY);
+            // Vision-Screenshot parallel zu den Audits holen (blockiert nicht extra).
+            const [htmlR, lightR, fullR, shotR] = await Promise.allSettled([
                 withSofortDeadline(fetchHtml(auditUrl, 8000), 9000, "fetchHtml"),
                 withSofortDeadline(runLightAudit(auditUrl, placesKey), 30000, "light"),
-                withSofortDeadline(runAuditPipeline(auditUrl, psiKey), 40000, "psi")
+                withSofortDeadline(runAuditPipeline(auditUrl, psiKey), 40000, "psi"),
+                withSofortDeadline(fetchVisionShot(auditUrl, shotKey), 22000, "shot")
             ]);
             const html = htmlR.status === "fulfilled" && htmlR.value ? htmlR.value.html : null;
             const finalUrl = (htmlR.status === "fulfilled" && htmlR.value && htmlR.value.finalUrl) || auditUrl;
             const light = lightR.status === "fulfilled" ? lightR.value : null;
             const full = fullR.status === "fulfilled" ? fullR.value : null;
+            const visionShot = shotR.status === "fulfilled" ? shotR.value : null;
 
             // Branche automatisch erkennen (sofern kein expliziter Override): aus
             // Domain + Seitentext (Titel/Description/Snippet) + erkanntem Places-Typ.
@@ -2792,8 +2812,9 @@ exports.sofortSkizze = onRequest(
             audit.screenshot = (full && full.screenshot) || null;
             audit.screenshotView = (full && full.screenshotView) || null;
 
-            // ── KI-Text (forced tool_use, geerdet auf Fakten + Audit), best effort. ──
-            let copy, copySource = "ai";
+            // ── KI-Text, best effort. MIT Screenshot → Claude Vision (Sonnet): die KI
+            //    SIEHT die echte Seite. Ohne Screenshot → Haiku-Textpfad. Forced tool_use. ──
+            let copy, copySource = visionShot ? "vision" : "ai";
             try {
                 const facts = {
                     name: brand.name,
@@ -2807,13 +2828,20 @@ exports.sofortSkizze = onRequest(
                     topLeak: audit.topLeak,
                     findingLabels: audit.findings.map((f) => f.label)
                 };
+                const userText = buildCopyUserMessage(facts);
+                const content = visionShot
+                    ? [{ type: "text", text: "Anbei ein Screenshot der heutigen Startseite. " + userText },
+                       { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }]
+                    : userText;
                 const body = {
+                    // Haiku 4.5 ist multimodal + aktuell + schnell — für Bild UND Text.
+                    // (ROOF_VISION_MODEL = claude-sonnet-4-20250514 ist mittlerweile 404/retired.)
                     model: SOFORT_MODEL,
-                    max_tokens: 600,
+                    max_tokens: 700,
                     system: [{ type: "text", text: SOFORT_SYS, cache_control: { type: "ephemeral" } }],
                     tools: [SOFORT_TOOL],
                     tool_choice: { type: "tool", name: SOFORT_TOOL.name },
-                    messages: [{ role: "user", content: buildCopyUserMessage(facts) }]
+                    messages: [{ role: "user", content }]
                 };
                 const r = await fetch("https://api.anthropic.com/v1/messages", {
                     method: "POST",
@@ -2823,11 +2851,14 @@ exports.sofortSkizze = onRequest(
                         "anthropic-version": "2023-06-01"
                     },
                     body: JSON.stringify(body),
-                    signal: AbortSignal.timeout(14000)
+                    signal: AbortSignal.timeout(visionShot ? 20000 : 14000)
                 });
                 if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 160)}`); }
                 const data = await r.json();
                 copy = parseCopyResult(data);
+                // Vision-erkannte Markenfarbe → Akzent (besser als theme-color); aus copy entfernen.
+                if (copy.accent) { brand.accent = copy.accent; }
+                delete copy.accent;
             } catch (err) {
                 // Statische Fehlermeldung, NIE die Interessenten-Eingaben loggen (DSGVO).
                 console.error("sofortSkizze copy failed:", String(err && err.message ? err.message : err).slice(0, 160));
