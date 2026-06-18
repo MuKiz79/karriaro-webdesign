@@ -177,6 +177,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-shot-img img { width: 100%; height: auto; display: block; object-fit: cover; object-position: top; }
         .ss-shot-img.is-empty { color: var(--ss-graphite); font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; padding: 40px 16px; text-align: center; }
         .ss-today-shot { margin-bottom: 18px; }
+        .ss-shot-live { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; color: var(--ss-gold-text); white-space: nowrap; flex: 0 0 auto; }
+        .ss-shot-live:hover { color: var(--ss-ink); text-decoration: none; }
 
         /* ── „Konzept": Award-Niveau Mini-Website-Mockup (Fraunces-Editorial) ── */
         .ss-mock { border-radius: 6px; overflow: hidden; border: 1px solid var(--ss-line); background: var(--ss-surface); box-shadow: 0 28px 70px -34px rgba(20,30,40,.28); }
@@ -220,6 +222,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-mock-foot-name { font-family: var(--ss-serif); font-weight: 500; font-size: 16px; }
         .ss-mock-foot .ss-geo-hook { border-left: 0; padding-left: 0; color: rgba(241,239,231,.72); font-size: 11px; line-height: 1.45; max-width: 360px; }
         .ss-mock-foot-folio { font-family: var(--ss-mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: rgba(241,239,231,.5); white-space: nowrap; flex: 0 0 auto; }
+        /* „Das würden wir einbauen" — Lösungen, abgeleitet aus den Befunden links */
+        .ss-buildlist { margin-top: 22px; padding: 22px 24px; border: 1px solid var(--ss-line); border-radius: 10px; background: #fff; }
+        .ss-buildlist-label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 16px; }
+        .ss-buildlist ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .ss-buildlist li { display: flex; gap: 12px; align-items: flex-start; }
+        .ss-buildlist li::before { content: '✓'; color: var(--ss-gold-text); font-weight: 700; font-size: 14px; flex: 0 0 auto; line-height: 1.45; }
+        .ss-buildlist b { font-family: var(--ss-sans); font-weight: 600; font-size: 14.5px; color: var(--ss-ink); letter-spacing: -.005em; }
+        .ss-buildlist .ss-build-today { display: block; font-size: 12px; color: #525E6B; margin-top: 2px; }
         .ss-concept-meta { display: flex; flex-direction: column; gap: 12px; padding: 18px 4px 2px; }
         .ss-prospect-tools { --accent: var(--ss-accent-tool, var(--ss-accent)); --kr-gold: var(--ss-accent-tool, var(--ss-accent)); background: var(--ss-surface); border: 1px solid var(--ss-line); border-radius: 6px; padding: 16px; min-width: 0; overflow-x: hidden; }
         .ss-prospect-tools .kr-tool-form, .ss-prospect-tools .kr-tool-form label, .ss-prospect-tools .kr-tool-form input, .ss-prospect-tools .kr-tool-form select { min-width: 0; max-width: 100%; }
@@ -400,7 +410,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <p class="ss-col-label">Heute</p>
                         <div class="ss-today-shot">
                             <div class="ss-browser">
-                                <div class="ss-browser-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-shot-url"></span></div>
+                                <div class="ss-browser-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-shot-url"></span><a class="ss-shot-live" id="ss-shot-live" target="_blank" rel="noopener nofollow">live ansehen ↗</a></div>
                                 <div class="ss-shot-img is-empty" id="ss-shot-img">Vorschau wird geladen …</div>
                             </div>
                         </div>
@@ -458,6 +468,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                                         <span class="ss-mock-foot-folio">S. 01 · Konzept</span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="ss-buildlist">
+                                <p class="ss-buildlist-label">Das würden wir einbauen</p>
+                                <ul id="ss-solutions"></ul>
                             </div>
                             <div class="ss-concept-meta">
                                 <div class="ss-rebranche">
@@ -703,6 +717,31 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         function whiteContrast(hex) { return 1.05 / (relLum(hex) + 0.05); }
 
+        // „Das würden wir einbauen" — Lösungen aus den Audit-Befunden ableiten + Karriaro-Standards.
+        function buildSolutions(audit, widget) {
+            var items = [], seen = {};
+            function add(title, today) { if (title && !seen[title]) { seen[title] = 1; items.push({ title: title, today: today || '' }); } }
+            (audit.findings || []).forEach(function (f) {
+                var l = (f.label || '').toLowerCase(), t = f.label;
+                if (/lcp|ladezeit|performance/.test(l)) add('Blitzschnelle Ladezeit — handcodiert, ohne Ballast', t);
+                else if (/bfsg|barrierefrei|wcag/.test(l)) add('Barrierefrei nach BFSG/WCAG gebaut', t);
+                else if (/localbusiness|lokales schema/.test(l)) add('Lokales Schema (LocalBusiness) für Google', t);
+                else if (/telefon|anruf|klickbar/.test(l)) add('Klick-to-Call & klare Kontaktwege', t);
+                else if (/formular|anfrage/.test(l)) add('Reibungslose Online-Anfrage', t);
+                else if (/mobil|viewport/.test(l)) add('Sauber fürs Smartphone optimiert', t);
+                else if (/security|header|https/.test(l)) add('Sicherheits-Header & sauberes HTTPS', t);
+                else if (/javascript|spa|crawl|geladen/.test(l)) add('Inhalte sofort lesbar für Google & KI', t);
+                else if (/social|vorschaubild|teilen/.test(l)) add('Perfekte Vorschau beim Teilen (Social)', t);
+                else if (/veraltet|technologie|aktualisiert|baukasten/.test(l)) add('Moderne, wartbare Technik statt Baukasten', t);
+                else if (/seo|title|meta|canonical|sitemap/.test(l)) add('Saubere SEO-Grundlagen', t);
+            });
+            add('Ihr Logo & Ihre Farbwelt — handcodiert, kein Template', '');
+            if (widget && widget.name && widget.key !== 'generic') add(widget.name + ' — ein Werkzeug, das mitarbeitet', '');
+            else add('Ein eingebautes Werkzeug, das Anfragen erleichtert', '');
+            add('Für Google & KI-Suchen auffindbar gebaut', '');
+            return items.slice(0, 7);
+        }
+
         // ── Phyllotaxis-Siegel im Loader erzeugen ──
         function buildSeal() {
             var gA = (3 - Math.sqrt(5)) * Math.PI, CREAM = '#F1EFE7', GOLD = '#C9A24B';
@@ -878,8 +917,19 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             document.getElementById('ss-today-domain').textContent = brand.domain || '';
             document.getElementById('ss-shot-url').textContent = brand.domain || '';
             document.getElementById('ss-mock-url').textContent = brand.domain || '';
+            var live = document.getElementById('ss-shot-live');
+            if (live && brand.domain) live.href = 'https://' + brand.domain;
             var foot = document.getElementById('ss-mock-foot-name'); if (foot) foot.textContent = brand.name || '';
             placeShot(audit, brand);
+
+            // „Das würden wir einbauen" — Lösungsliste rechts.
+            var sol = document.getElementById('ss-solutions'); sol.textContent = '';
+            buildSolutions(audit, widget).forEach(function (it) {
+                var li = document.createElement('li');
+                var b = document.createElement('b'); b.textContent = it.title; li.appendChild(b);
+                if (it.today) { var t = document.createElement('span'); t.className = 'ss-build-today'; t.textContent = 'Heute: ' + it.today; b.appendChild(t); }
+                sol.appendChild(li);
+            });
 
             var sn = document.getElementById('ss-score-num');
             sn.textContent = (audit.score == null ? '—' : audit.score);
