@@ -276,9 +276,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-verdict { margin-bottom: 18px; }
         .ss-verdict .ss-eyebrow { margin-bottom: 8px; }
         .ss-verdict-found { font-family: var(--ss-serif); font-size: 18px; color: var(--ss-ink); max-width: 760px; }
-        .ss-again { margin-top: 24px; }
-        .ss-again button { background: none; border: 1px solid var(--ss-border); color: var(--ss-ink); padding: 10px 22px; border-radius: 999px; font-family: var(--ss-sans); font-size: 14px; cursor: pointer; }
-        .ss-again button:hover { border-color: var(--ss-navy); }
+        .ss-actions { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .ss-actions button { background: none; border: 1px solid var(--ss-border); color: var(--ss-ink); padding: 10px 20px; border-radius: 999px; font-family: var(--ss-sans); font-size: 14px; cursor: pointer; transition: border-color .2s; }
+        .ss-actions button:hover { border-color: var(--ss-navy); }
+        .ss-actions #ss-share { border-color: var(--ss-navy); }
+        .ss-share-msg { font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; color: var(--ss-gold-text); }
 
         /* ── FAQ ── */
         .ss-faq { margin-top: 64px; max-width: 760px; }
@@ -297,6 +299,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @media (max-width: 540px) {
             .ss-mock-navlinks { display: none; }
             .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav { padding-left: 16px; padding-right: 16px; }
+        }
+        /* Druck / „Als PDF speichern": nur das Ergebnis, Farben erhalten */
+        @media print {
+            .ss-nav, .ss-hero, .ss-intake, .ss-loading, .ss-faq, .ss-foot, .ss-actions, .ss-leadcap, .ss-shot-scrollhint, .ss-shot-live, .ss-rebranche { display: none !important; }
+            body { background: #fff; }
+            main { padding: 0; max-width: none; }
+            .ss-stage { min-height: 0; }
+            .ss-result { display: block !important; }
+            .ss-split { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .ss-today, .ss-concept, .ss-mock, .ss-buildlist { break-inside: avoid; box-shadow: none; }
+            .ss-shot-img { height: auto; max-height: 420px; overflow: hidden; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
         @media (prefers-reduced-motion: reduce) {
             .kr-frame { stroke-dashoffset: 0; animation: none; }
@@ -542,8 +556,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <div class="ss-leadcap-done">✓ Danke — wir melden uns in Kürze mit Ihrer Konzept-Skizze.</div>
                 </div>
 
-                <div class="ss-again">
+                <div class="ss-actions">
+                    <button type="button" id="ss-share">Link kopieren</button>
+                    <button type="button" id="ss-pdf">Als PDF speichern</button>
                     <button type="button" id="ss-again">Andere Adresse skizzieren</button>
+                    <span class="ss-share-msg" id="ss-share-msg" aria-live="polite"></span>
                 </div>
             </div>
         </section>
@@ -712,6 +729,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         var statusTimer = null;
         var lastData = null;       // letztes gerendertes Ergebnis (für die Lead-Erfassung)
         var leadSubmitting = false;
+        var lastId = null;         // Share-ID der aktuellen Skizze
 
         // ── Branchen-Defaults (Spiegel der Server-Logik für den lokalen Fallback) ──
         var BRANCHE_WIDGET = {
@@ -987,6 +1005,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         // ── Ergebnis rendern (aus Server- oder lokalem Fallback-Datenvertrag) ──
         function render(data) {
             lastData = data;
+            lastId = (data.meta && data.meta.id) || null;
+            var shm = document.getElementById('ss-share-msg'); if (shm) shm.textContent = '';
             // Lead-Erfassung zurücksetzen (neues Ergebnis = neue Erfassung möglich).
             var lc = document.getElementById('ss-leadcap');
             if (lc) { lc.classList.remove('is-done'); var lm = document.getElementById('ss-leadcap-msg'); if (lm) { lm.textContent = ''; lm.classList.remove('is-err'); } }
@@ -1221,6 +1241,40 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 leadSubmitting = false;
             });
         });
+
+        // ── Teilen-Link kopieren ──
+        document.getElementById('ss-share').addEventListener('click', function () {
+            var msg = document.getElementById('ss-share-msg');
+            if (!lastId) { msg.textContent = 'Link erst nach der Skizze verfügbar.'; return; }
+            var link = location.origin + location.pathname + '?s=' + lastId;
+            function done() { msg.textContent = '✓ Link kopiert'; }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(link).then(done).catch(function () { window.prompt('Link kopieren:', link); });
+            } else { window.prompt('Link kopieren:', link); }
+        });
+
+        // ── Als PDF speichern (Browser-Druck → PDF) ──
+        document.getElementById('ss-pdf').addEventListener('click', function () { window.print(); });
+
+        // ── Geteilte Skizze über ?s=<id> laden ──
+        function loadShared(id) {
+            submitting = true; submit.disabled = true; submit.querySelector('span').textContent = 'Skizziert …';
+            showLoader();
+            var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 30000);
+            fetch(FN_BASE + '/sofortSkizze?id=' + encodeURIComponent(id), { method: 'GET', signal: ctrl.signal })
+                .then(function (r) { clearTimeout(to); return r.json().then(function (j) { if (!r.ok || j.error) throw new Error(j.error || 'nicht gefunden'); return j; }); })
+                .then(function (j) { render(j); })
+                .catch(function () {
+                    clearTimeout(to); hideLoaderImmediate(); stage.classList.remove('is-on');
+                    submit.disabled = false; submit.querySelector('span').textContent = 'Skizze erstellen'; submitting = false;
+                });
+        }
+        (function () {
+            try {
+                var sid = new URLSearchParams(location.search).get('s');
+                if (sid && /^[a-f0-9]{16,40}$/i.test(sid)) loadShared(sid);
+            } catch (e) {}
+        })();
 
         document.getElementById('ss-again').addEventListener('click', function () {
             result.classList.remove('is-on');

@@ -2657,7 +2657,7 @@ exports.siteAsk = onRequest(
 // ─────────────────────────────────────────────────────────────────────────────
 const SOFORT_MODEL = CONCIERGE_MODEL;               // "claude-haiku-4-5-20251001"
 const SOFORT_CACHE_FRESH_MS = 10 * 60 * 1000;       // 10 Min funktionaler Cache (Brief §5)
-const SOFORT_CACHE_TTL_DAYS = 1;                     // Storage-TTL via expiresAt
+const SOFORT_CACHE_TTL_DAYS = 7;                     // Storage-TTL via expiresAt (auch für teilbare Links)
 
 function sofortCacheKey(domain, brancheKey, ziel) {
     // ziel fließt MIT in den Key: der generierte Text kann den (vom Besucher
@@ -2695,7 +2695,20 @@ exports.sofortSkizze = onRequest(
         secrets: [PLACES_KEY, PSI_API_KEY, CLAUDE_API_KEY]
     },
     async (req, res) => {
-        if (cors(req, res)) return;
+        if (cors(req, res, "GET, POST, OPTIONS")) return;
+        // GET ?id=… → gespeicherte (geteilte) Skizze laden — für teilbare Links.
+        if (req.method === "GET") {
+            const sid = String((req.query && req.query.id) || "").replace(/[^a-f0-9]/gi, "").slice(0, 40);
+            if (!/^[a-f0-9]{16,40}$/.test(sid)) return res.status(400).json({ error: "Ungültige ID" });
+            try {
+                const doc = await db.collection("sofortSkizze").doc(sid).get();
+                if (doc.exists && doc.data() && doc.data().payload) {
+                    const p = doc.data().payload;
+                    return res.json({ ...p, meta: { ...(p.meta || {}), cached: true, shared: true } });
+                }
+            } catch (e) { console.warn("sofortSkizze GET failed:", e.message); }
+            return res.status(404).json({ error: "Skizze nicht gefunden oder abgelaufen." });
+        }
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
         if (await enforceRateLimit(db, req, res, "sofortSkizze", 8, 3600,
             "Sie haben das stündliche Limit erreicht — die Skizze nutzt echte KI- und Audit-Calls. Bitte später erneut.")) return;
@@ -2826,7 +2839,7 @@ exports.sofortSkizze = onRequest(
                 copy,
                 widget,
                 audit,
-                meta: { source: (light || full) ? "server" : "reduced", copySource, cached: false }
+                meta: { source: (light || full) ? "server" : "reduced", copySource, cached: false, id: cacheKey }
             };
 
             // ── Cache schreiben (transient; TTL via expiresAt). ──
@@ -2850,7 +2863,7 @@ exports.sofortSkizze = onRequest(
                 copy: composeFallbackCopy(brand, brancheKey, widget, safeZiel, { score: null, topLeak: null, findings: [] }),
                 widget,
                 audit: { score: null, topLeak: null, findings: [] },
-                meta: { source: "reduced", copySource: "fallback", cached: false }
+                meta: { source: "reduced", copySource: "fallback", cached: false, id: cacheKey }
             });
         }
     }
