@@ -232,11 +232,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-mock-hero.has-img .ss-cta:hover { background: var(--ss-cream); }
         .ss-mock-hero.has-img .ss-mock-tertiary { color: #fff; }
         .ss-mock-hero.has-img .ss-mock-tertiary u { text-decoration-color: rgba(255,255,255,.55); }
-        /* Bild-Galerie (Leistungen als echte Fotos) */
-        .ss-mock-gallery { display: none; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 26px; border-top: 1px solid var(--ss-line); }
+        /* Bild-Galerie: echte Fotos der Marke, OHNE falsche Pro-Foto-Labels.
+           Die echten Leistungen stehen als EINE ehrliche Überschrift darüber. */
+        .ss-mock-galsec { display: none; border-top: 1px solid var(--ss-line); padding: 18px 26px 18px; }
+        .ss-mock-galsec-label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 12px; }
+        .ss-mock-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .ss-gtile { position: relative; aspect-ratio: 3 / 4; border-radius: 6px; overflow: hidden; background: #ECE7DC; }
         .ss-gtile img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .ss-gtile-label { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 11px 10px; background: linear-gradient(to top, rgba(12,18,24,.8), transparent); color: #fff; font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
         /* Eingebautes Werkzeug */
         .ss-mock-tool { padding: 26px 26px 30px; border-top: 1px solid var(--ss-line); background: #fff; }
         .ss-mock-tool-label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 10px; }
@@ -321,7 +323,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         @media (max-width: 540px) {
             .ss-mock-navlinks { display: none; }
-            .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav, .ss-mock-gallery { padding-left: 16px; padding-right: 16px; }
+            .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav, .ss-mock-galsec { padding-left: 16px; padding-right: 16px; }
             .ss-mock-gallery { grid-template-columns: 1fr 1fr; }
         }
         /* Druck / „Als PDF speichern": nur das Ergebnis, Farben erhalten */
@@ -526,7 +528,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="ss-mock-gallery" id="ss-mock-gallery" aria-hidden="true"></div>
+                                    <div class="ss-mock-galsec" id="ss-mock-galsec" aria-hidden="true">
+                                        <p class="ss-mock-galsec-label" id="ss-gallery-label">Leistungen</p>
+                                        <div class="ss-mock-gallery" id="ss-mock-gallery"></div>
+                                    </div>
                                     <div class="ss-mock-sections" id="ss-mock-sections"></div>
                                     <div class="ss-mock-tool">
                                         <p class="ss-mock-tool-label">Eingebautes Werkzeug</p>
@@ -1097,23 +1102,24 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 hi.src = imgs[0];
             }
 
-            // Galerie (weitere Fotos mit Leistungs-Labels) ODER nummerierte Sektionen.
+            // Galerie: echte Fotos OHNE Pro-Foto-Labels (sonst Bild≠Label) — die echten
+            // Leistungen stehen als EINE Überschrift darüber. Sonst nummerierte Sektionen.
+            var galsec = document.getElementById('ss-mock-galsec');
             var gal = document.getElementById('ss-mock-gallery'); gal.textContent = '';
             var secBox = document.getElementById('ss-mock-sections'); secBox.textContent = '';
             var galImgs = imgs.slice(1, 4);
             if (galImgs.length >= 2) {
-                gal.style.display = 'grid'; secBox.style.display = 'none';
-                galImgs.forEach(function (u, idx) {
+                galsec.style.display = 'block'; secBox.style.display = 'none';
+                document.getElementById('ss-gallery-label').textContent = svc.length ? svc.join(' · ') : 'Leistungen';
+                galImgs.forEach(function (u) {
                     var tile = document.createElement('div'); tile.className = 'ss-gtile';
                     var im = new Image(); im.alt = ''; im.referrerPolicy = 'no-referrer';
                     im.onerror = function () { tile.style.display = 'none'; };
                     im.src = u; tile.appendChild(im);
-                    var lab = svc[idx] || ['Leistungen', 'Referenzen', 'Kontakt'][idx];
-                    if (lab) { var l = document.createElement('span'); l.className = 'ss-gtile-label'; l.textContent = lab; tile.appendChild(l); }
                     gal.appendChild(tile);
                 });
             } else {
-                gal.style.display = 'none'; secBox.style.display = '';
+                galsec.style.display = 'none'; secBox.style.display = '';
                 var secs = (svc.length >= 2)
                     ? svc.map(function (s) { return { t: s, d: '' }; })
                     : [
