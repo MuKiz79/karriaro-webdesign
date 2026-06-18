@@ -52,6 +52,20 @@ test("nameFromTitle: Domain-Kern-Segment bevorzugt, Slogan verworfen", () => {
     assert.equal(ss.nameFromTitle("Faucets for the bathroom, shower, and kitchen", "hansgrohe.com"), null);
 });
 
+test("extractImages: og:image zuerst, absolut, Logos/Icons/SVG/Tiny gefiltert", () => {
+    const html = `<html><head><meta property="og:image" content="/hero.jpg"></head><body>
+        <img src="/logo.svg"><img src="/icon-mail.png"><img width="40" src="/tiny.png">
+        <img src="https://cdn.x.de/bad-gross.jpg" width="1200">
+        <img srcset="/s-300.jpg 300w, /s-1200.jpg 1200w" src="/s-300.jpg">
+    </body></html>`;
+    const imgs = ss.extractImages(html, "https://www.firma.de/start", "firma.de", 6);
+    assert.equal(imgs[0], "https://www.firma.de/hero.jpg", "og:image zuerst, absolutiert");
+    assert.ok(imgs.includes("https://cdn.x.de/bad-gross.jpg"), "großes Inhaltsbild dabei");
+    assert.ok(imgs.includes("https://www.firma.de/s-1200.jpg"), "srcset-größtes gewählt");
+    assert.ok(!imgs.some((u) => /logo|icon|tiny|\.svg/.test(u)), "Logos/Icons/SVG/Tiny gefiltert");
+    assert.deepEqual(ss.extractImages(null, "https://x.de", "x.de", 6), []);
+});
+
 test("detectBranche: Keyword zuerst, dann Places-Typ, sonst generic", () => {
     assert.equal(ss.detectBranche("dachdecker-mueller.de", "", null), "dachdecker");
     assert.equal(ss.detectBranche("spedition-schwaben.de", "", null), "spedition");

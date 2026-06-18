@@ -189,6 +189,29 @@
         .ss-mock-hero .ss-cta:hover { background: var(--ss-ink); }
         .ss-mock-tertiary { font-family: var(--ss-sans); font-size: 13px; color: var(--ss-ink); }
         .ss-mock-tertiary u { text-decoration-color: rgba(26,46,64,.3); text-underline-offset: 3px; }
+        /* Bild-Hero (mit echtem Foto der Marke) — Text über dunklem Verlauf, weiß */
+        .ss-mock-hero { position: relative; }
+        .ss-mock-hero-media { display: none; }
+        .ss-mock-hero.has-img { padding: 0; min-height: 380px; justify-content: flex-end; overflow: hidden; }
+        .ss-mock-hero.has-img .ss-mock-hero-media { display: block; position: absolute; inset: 0; }
+        .ss-mock-hero-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .ss-mock-hero.has-img .ss-mock-hero-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(12,18,24,.10) 0%, rgba(12,18,24,.45) 55%, rgba(12,18,24,.82) 100%); }
+        .ss-mock-hero-body { position: relative; }
+        .ss-mock-hero.has-img .ss-mock-hero-body { padding: 30px 26px 30px; color: #fff; }
+        .ss-mock-hero.has-img .ss-mock-folio { color: #E3C173; }
+        .ss-mock-hero.has-img .ss-mock-folio .dot { color: rgba(255,255,255,.55); }
+        .ss-mock-hero.has-img h2 { color: #fff; }
+        .ss-mock-hero.has-img h2 em { color: #E3C173; }
+        .ss-mock-hero.has-img .ss-mock-sub { color: rgba(255,255,255,.92); }
+        .ss-mock-hero.has-img .ss-cta { background: #fff; color: var(--ss-ink); }
+        .ss-mock-hero.has-img .ss-cta:hover { background: var(--ss-cream); }
+        .ss-mock-hero.has-img .ss-mock-tertiary { color: #fff; }
+        .ss-mock-hero.has-img .ss-mock-tertiary u { text-decoration-color: rgba(255,255,255,.55); }
+        /* Bild-Galerie (Leistungen als echte Fotos) */
+        .ss-mock-gallery { display: none; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px 26px; border-top: 1px solid var(--ss-line); }
+        .ss-gtile { position: relative; aspect-ratio: 3 / 4; border-radius: 6px; overflow: hidden; background: #ECE7DC; }
+        .ss-gtile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .ss-gtile-label { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 11px 10px; background: linear-gradient(to top, rgba(12,18,24,.8), transparent); color: #fff; font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
         /* Eingebautes Werkzeug */
         .ss-mock-tool { padding: 26px 26px 30px; border-top: 1px solid var(--ss-line); background: #fff; }
         .ss-mock-tool-label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 10px; }
@@ -273,7 +296,8 @@
         }
         @media (max-width: 540px) {
             .ss-mock-navlinks { display: none; }
-            .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav { padding-left: 16px; padding-right: 16px; }
+            .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav, .ss-mock-gallery { padding-left: 16px; padding-right: 16px; }
+            .ss-mock-gallery { grid-template-columns: 1fr 1fr; }
         }
         /* Druck / „Als PDF speichern": nur das Ergebnis, Farben erhalten */
         @media print {
@@ -441,21 +465,25 @@
                                         </span>
                                         <span class="ss-mock-navlinks" aria-hidden="true"><span>Start</span><span>Leistungen</span><span>Kontakt</span></span>
                                     </div>
-                                    <div class="ss-mock-hero">
-                                        <span class="ss-mock-folio"><span>№&nbsp;01</span><span class="dot">·</span><span id="ss-eyebrow"></span></span>
-                                        <h2 id="ss-headline"></h2>
-                                        <p class="ss-mock-sub" id="ss-subline"></p>
-                                        <span class="ss-mock-cta-row">
-                                            <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
-                                            <span class="ss-mock-tertiary"><u>Leistungen ansehen</u> →</span>
-                                        </span>
+                                    <div class="ss-mock-hero" id="ss-mock-hero">
+                                        <div class="ss-mock-hero-media" id="ss-mock-hero-media"></div>
+                                        <div class="ss-mock-hero-body">
+                                            <span class="ss-mock-folio"><span>№&nbsp;01</span><span class="dot">·</span><span id="ss-eyebrow"></span></span>
+                                            <h2 id="ss-headline"></h2>
+                                            <p class="ss-mock-sub" id="ss-subline"></p>
+                                            <span class="ss-mock-cta-row">
+                                                <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
+                                                <span class="ss-mock-tertiary"><u>Leistungen ansehen</u> →</span>
+                                            </span>
+                                        </div>
                                     </div>
+                                    <div class="ss-mock-gallery" id="ss-mock-gallery" aria-hidden="true"></div>
+                                    <div class="ss-mock-sections" id="ss-mock-sections"></div>
                                     <div class="ss-mock-tool">
                                         <p class="ss-mock-tool-label">Eingebautes Werkzeug</p>
                                         <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
                                         <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
                                     </div>
-                                    <div class="ss-mock-sections" id="ss-mock-sections"></div>
                                     <div class="ss-mock-foot">
                                         <span class="ss-mock-foot-l">
                                             <span class="ss-mock-foot-name" id="ss-mock-foot-name"></span>
@@ -1006,23 +1034,52 @@
             var foot = document.getElementById('ss-mock-foot-name'); if (foot) foot.textContent = brand.name || '';
             placeShot(audit, brand);
 
-            // Echte Leistungen → Mockup-Sektionen (sonst generische 3).
-            var secBox = document.getElementById('ss-mock-sections'); secBox.textContent = '';
+            // ── Bildwelt: echte Fotos der Marke ins Konzept (Hero-Bild + Galerie) ──
+            var imgs = ((brand.images) || []).filter(function (u) { return /^https?:\/\//i.test(u); });
             var svc = ((copy.services) || []).filter(Boolean).slice(0, 3);
-            var secs = (svc.length >= 2)
-                ? svc.map(function (s) { return { t: s, d: '' }; })
-                : [
-                    { t: 'Leistungen', d: 'Klar gegliedert, was Sie anbieten — verständlich auf einen Blick.' },
-                    { t: 'Referenzen', d: 'Echte Stimmen Ihrer Kunden schaffen Vertrauen.' },
-                    { t: 'Kontakt & Anfahrt', d: 'Ein Klick zu Anruf, Route und Anfrage.' }
-                ];
-            secs.forEach(function (x) {
-                var sec = document.createElement('div'); sec.className = 'ss-mock-sec';
-                var b = document.createElement('div'); b.className = 'ss-mock-sec-body';
-                var bb = document.createElement('b'); bb.textContent = x.t; b.appendChild(bb);
-                if (x.d) { var sp = document.createElement('span'); sp.textContent = x.d; b.appendChild(sp); }
-                sec.appendChild(b); secBox.appendChild(sec);
-            });
+
+            // Hero-Bild (bestes Foto) → bildgetriebener Hero; sonst Creme-Editorial.
+            var hero = document.getElementById('ss-mock-hero');
+            var heroMedia = document.getElementById('ss-mock-hero-media');
+            hero.classList.remove('has-img'); heroMedia.textContent = '';
+            if (imgs[0]) {
+                var hi = new Image(); hi.alt = ''; hi.referrerPolicy = 'no-referrer';
+                hi.onload = function () { heroMedia.textContent = ''; heroMedia.appendChild(hi); hero.classList.add('has-img'); };
+                hi.src = imgs[0];
+            }
+
+            // Galerie (weitere Fotos mit Leistungs-Labels) ODER nummerierte Sektionen.
+            var gal = document.getElementById('ss-mock-gallery'); gal.textContent = '';
+            var secBox = document.getElementById('ss-mock-sections'); secBox.textContent = '';
+            var galImgs = imgs.slice(1, 4);
+            if (galImgs.length >= 2) {
+                gal.style.display = 'grid'; secBox.style.display = 'none';
+                galImgs.forEach(function (u, idx) {
+                    var tile = document.createElement('div'); tile.className = 'ss-gtile';
+                    var im = new Image(); im.alt = ''; im.referrerPolicy = 'no-referrer';
+                    im.onerror = function () { tile.style.display = 'none'; };
+                    im.src = u; tile.appendChild(im);
+                    var lab = svc[idx] || ['Leistungen', 'Referenzen', 'Kontakt'][idx];
+                    if (lab) { var l = document.createElement('span'); l.className = 'ss-gtile-label'; l.textContent = lab; tile.appendChild(l); }
+                    gal.appendChild(tile);
+                });
+            } else {
+                gal.style.display = 'none'; secBox.style.display = '';
+                var secs = (svc.length >= 2)
+                    ? svc.map(function (s) { return { t: s, d: '' }; })
+                    : [
+                        { t: 'Leistungen', d: 'Klar gegliedert, was Sie anbieten — verständlich auf einen Blick.' },
+                        { t: 'Referenzen', d: 'Echte Stimmen Ihrer Kunden schaffen Vertrauen.' },
+                        { t: 'Kontakt & Anfahrt', d: 'Ein Klick zu Anruf, Route und Anfrage.' }
+                    ];
+                secs.forEach(function (x) {
+                    var sec = document.createElement('div'); sec.className = 'ss-mock-sec';
+                    var b = document.createElement('div'); b.className = 'ss-mock-sec-body';
+                    var bb = document.createElement('b'); bb.textContent = x.t; b.appendChild(bb);
+                    if (x.d) { var sp = document.createElement('span'); sp.textContent = x.d; b.appendChild(sp); }
+                    sec.appendChild(b); secBox.appendChild(sec);
+                });
+            }
             // Echtes Telefon im Footer.
             var ph = document.getElementById('ss-mock-phone');
             if (ph) { if (brand.phone) { ph.textContent = '☎ ' + brand.phone; ph.hidden = false; } else { ph.hidden = true; ph.textContent = ''; } }

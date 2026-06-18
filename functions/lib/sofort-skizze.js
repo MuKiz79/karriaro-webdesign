@@ -204,6 +204,40 @@ function nameFromDomain(domain) {
         .trim() || "Ihr Betrieb";
 }
 
+// Zieht die besten INHALTS-Bilder der Seite (für eine bildreiche Konzept-Komposition):
+// og:image zuerst (kuratierter Hero), dann große <img> (srcset-größtes), gefiltert gegen
+// Logos/Icons/Sprites/SVG/Tiny. Liefert bis zu `max` absolute https-URLs (dedupe).
+function extractImages(html, finalUrl, domain, max) {
+    if (!html || typeof html !== "string") return [];
+    const base = finalUrl || ("https://" + domain);
+    const out = [];
+    const seen = new Set();
+    const BAD = /(logo|icon|sprite|favicon|avatar|placeholder|pixel|loader|spinner|badge|flag[-_]|payment|sprite|1x1|blank|transparent|data:image)/i;
+    const add = (u) => {
+        if (out.length >= (max || 6)) return;
+        const a = absolutize(u, base);
+        if (!a || !/^https?:\/\//i.test(a) || seen.has(a)) return;
+        if (/\.svg(\?|$)/i.test(a) || BAD.test(a)) return;
+        seen.add(a); out.push(a);
+    };
+    const og = findMeta(html, "og:image");
+    if (og) add(og);
+    const tags = html.match(/<img\b[^>]*>/gi) || [];
+    for (const tag of tags) {
+        if (out.length >= (max || 6)) break;
+        const wm = tag.match(/\bwidth\s*=\s*["']?(\d+)/i);
+        if (wm && +wm[1] < 200) continue;            // zu kleine Bilder überspringen
+        const srcset = attr(tag, "srcset");
+        if (srcset) {
+            let best = null, bestW = 0;
+            srcset.split(",").forEach((p) => { const m = p.trim().match(/(\S+)\s+(\d+)w/); if (m && +m[2] > bestW) { bestW = +m[2]; best = m[1]; } });
+            if (best) add(best);
+        }
+        add(attr(tag, "src") || attr(tag, "data-src") || attr(tag, "data-lazy-src") || "");
+    }
+    return out.slice(0, max || 6);
+}
+
 /**
  * extractBrandTokens(html, finalUrl, domain) → { name, logoUrl, accent }
  * Felder, die nicht ermittelbar sind, dürfen null sein (logoUrl/accent) — das
@@ -574,6 +608,7 @@ module.exports = {
     normalizeBranche,
     pickWidget,
     detectBranche,
+    extractImages,
     extractBrandTokens,
     SOFORT_SYS,
     SOFORT_TOOL,

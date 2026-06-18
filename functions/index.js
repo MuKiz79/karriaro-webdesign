@@ -41,7 +41,7 @@ const {
 } = require("./lib/ki-zitier.js");  // KI-Zitier-Check (2026-06-10)
 const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAnswer, SITE_ASK_NOT_FOUND } = require("./lib/site-qa.js");  // Site-Q&A „Frag die Seite"
 const {
-    normalizeBranche, pickWidget, detectBranche, extractBrandTokens, BRANCHE_LABEL,
+    normalizeBranche, pickWidget, detectBranche, extractImages, extractBrandTokens, BRANCHE_LABEL,
     SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
     composeFallbackCopy, extractPhone, deriveAudit
 } = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
@@ -2797,6 +2797,7 @@ exports.sofortSkizze = onRequest(
 
             const brand = extractBrandTokens(html, finalUrl, domain, brancheKey);
             brand.phone = extractPhone(html); // echtes Telefon der Seite (oder null)
+            brand.images = extractImages(html, finalUrl, domain, 6); // echte Fotos für die Bild-Komposition
 
             let audit;
             if (light || full) {
