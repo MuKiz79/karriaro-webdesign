@@ -989,10 +989,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             if (!box) return;
             if (wrap) wrap.classList.remove('is-scroll');
             box.textContent = 'Vorschau wird geladen …'; box.classList.add('is-empty');
-            // Quellen-Kette: ECHTER Render (Microlink, sauber) → Lighthouse-Ganzseite (prüfen)
-            //                → Lighthouse-Viewport (prüfen) → og:image → Platzhalter.
+            // Quellen-Kette: sauberer GANZSEITEN-Render (sofortShot/screenshotone, server-
+            //                seitig, Key geheim) → Microlink-Hero (sauber, gratis) →
+            //                Lighthouse-Ganzseite (prüfen) → Viewport (prüfen) → og:image.
             var sources = [];
-            if (brand && brand.domain) sources.push({ src: microlinkUrl(brand.domain), check: false, timeout: 9000 });
+            if (brand && brand.domain) {
+                sources.push({ src: FN_BASE + '/sofortShot?d=' + encodeURIComponent(brand.domain), check: false, timeout: 16000 });
+                sources.push({ src: microlinkUrl(brand.domain), check: false, timeout: 9000 });
+            }
             if (audit && audit.screenshot) sources.push({ src: audit.screenshot, check: true });
             if (audit && audit.screenshotView && audit.screenshotView !== audit.screenshot) sources.push({ src: audit.screenshotView, check: true });
             if (brand && brand.ogImage && /^https?:\/\//i.test(brand.ogImage)) sources.push({ src: brand.ogImage, check: false });

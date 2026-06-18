@@ -56,6 +56,7 @@ const SMTP_USER = defineSecret("SMTP_USER");
 const SMTP_PASS = defineSecret("SMTP_PASS");
 const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
 const PSI_API_KEY = defineSecret("PSI_API_KEY");
+const SHOT_API_KEY = defineSecret("SHOT_API_KEY"); // Screenshot-Dienst (screenshotone) für saubere Ganzseiten-Shots
 
 const DEEP_RESEARCH_MODEL = "claude-sonnet-4-20250514";
 const DEEP_RESEARCH_CACHE_DAYS = 7;
@@ -2865,6 +2866,53 @@ exports.sofortSkizze = onRequest(
                 audit: { score: null, topLeak: null, findings: [] },
                 meta: { source: "reduced", copySource: "fallback", cached: false, id: cacheKey }
             });
+        }
+    }
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 253 — Sofort-Skizze Screenshot-Proxy: liefert einen sauberen GANZSEITEN-
+// Screenshot der Interessenten-Seite über screenshotone (Cookie-Banner/Ads weg,
+// Lazy-Inhalte gewartet). Der API-Key bleibt SERVERSEITIG (Secret) — der Client
+// lädt nur <img src=".../sofortShot?d=domain">. Ohne gesetzten Key → 503, das
+// Frontend fällt sauber auf Microlink-Hero/Lighthouse/og zurück.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.sofortShot = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 60,
+        cors: false,
+        secrets: [SHOT_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res, "GET, OPTIONS")) return;
+        if (req.method !== "GET") return res.status(405).json({ error: "GET only" });
+        if (await enforceRateLimit(db, req, res, "sofortShot", 30, 3600)) return;
+
+        const key = safeSecretValue(SHOT_API_KEY);
+        if (!key) return res.status(503).json({ error: "Screenshot-Dienst nicht konfiguriert" });
+
+        const target = normalizeUrl((req.query && (req.query.d || req.query.url)) || "");
+        if (!target) return res.status(400).json({ error: "Ungültige URL" });
+
+        const api = "https://api.screenshotone.com/take?access_key=" + encodeURIComponent(key) +
+            "&url=" + encodeURIComponent(target) +
+            "&full_page=true&format=jpeg&image_quality=82&viewport_width=1366" +
+            "&block_cookie_banners=true&block_ads=true&block_chats=true&cache=true&cache_ttl=2592000&delay=2";
+        try {
+            const r = await fetch(api, { signal: AbortSignal.timeout(50000) });
+            if (!r.ok) {
+                console.warn("sofortShot screenshotone error:", r.status);
+                return res.status(502).json({ error: "Screenshot fehlgeschlagen" });
+            }
+            const buf = Buffer.from(await r.arrayBuffer());
+            res.set("Content-Type", r.headers.get("content-type") || "image/jpeg");
+            res.set("Cache-Control", "public, max-age=86400");
+            return res.status(200).send(buf);
+        } catch (err) {
+            console.warn("sofortShot failed:", String(err && err.message ? err.message : err).slice(0, 120));
+            return res.status(502).json({ error: "Screenshot-Zeitüberschreitung" });
         }
     }
 );
