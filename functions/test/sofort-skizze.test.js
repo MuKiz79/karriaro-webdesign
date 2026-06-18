@@ -226,3 +226,57 @@ test("composeFallbackCopy: alle 6 Felder, UWG-sicher, branche-aware", () => {
         assert.ok(!/\b(beste|nr\.?\s*1|garantiert|marktführer)\b/i.test(c[k]), "UWG: " + k);
     }
 });
+
+// ── Stufe 2: Voll-generativer Konzept-Entwurf ───────────────────────────────
+test("sanitizeGeneratedHtml: extrahiert das HTML-Dokument, entfernt Fences", () => {
+    const longBody = "<p>" + "Editorialer Fliesstext zur Konzept-Skizze. ".repeat(8) + "</p>";
+    const raw = "Hier ist die Seite:\n```html\n<!doctype html><html><head><style>body{color:red;font-family:Georgia,serif}</style></head><body><h1>Hallo Welt, das ist ein ausreichend langer Inhalt für die Mindestlaenge der Sanitizer-Pruefung.</h1>" + longBody + "</body></html>\n```";
+    const h = ss.sanitizeGeneratedHtml(raw);
+    assert.ok(h, "Ergebnis vorhanden");
+    assert.ok(/^<!doctype html>/i.test(h), "beginnt mit doctype");
+    assert.ok(/<\/html>$/i.test(h.trim()), "endet mit </html>");
+    assert.ok(!/```/.test(h), "keine Markdown-Fences");
+    assert.ok(/<style>/.test(h), "Inline-Style bleibt erhalten");
+});
+
+test("sanitizeGeneratedHtml: strippt script/iframe/on*-Handler/javascript:", () => {
+    const pad = "<p>" + "Vertrauensvoller Editorial-Text fuer die Konzept-Skizze. ".repeat(8) + "</p>";
+    const raw = '<!doctype html><html><body><h1>Eine ausreichend lange Ueberschrift fuer die Mindestlaenge der Pruefung im Sanitizer-Test.</h1>'
+        + '<script>alert(1)<\/script><iframe src="x"></iframe>'
+        + '<a href="javascript:evil()" onclick="steal()">x</a>'
+        + '<img src="ok.jpg" onerror="hack()">' + pad + '</body></html>';
+    const h = ss.sanitizeGeneratedHtml(raw);
+    assert.ok(h, "Ergebnis vorhanden");
+    assert.ok(!/<script/i.test(h), "kein <script>");
+    assert.ok(!/<iframe/i.test(h), "kein <iframe>");
+    assert.ok(!/onclick/i.test(h), "kein onclick");
+    assert.ok(!/onerror/i.test(h), "kein onerror");
+    assert.ok(!/javascript:/i.test(h), "kein javascript:-URI");
+    assert.ok(/<img src="ok.jpg"/.test(h), "Bild bleibt (nur Handler weg)");
+});
+
+test("sanitizeGeneratedHtml: null bei leer/zu kurz/Nicht-String", () => {
+    assert.equal(ss.sanitizeGeneratedHtml(null), null);
+    assert.equal(ss.sanitizeGeneratedHtml(""), null);
+    assert.equal(ss.sanitizeGeneratedHtml(42), null);
+    assert.equal(ss.sanitizeGeneratedHtml("<html><body>zu kurz</body></html>"), null);
+});
+
+test("buildGenerativeUserMessage: enthält Marke, Branche, Ziel und nur die Bild-URLs", () => {
+    const msg = ss.buildGenerativeUserMessage({
+        name: "Dachprofi Köln", domain: "dachprofi-koeln.de", brancheLabel: "Dachdecker",
+        accent: "#8a1f1f", services: ["Steildach", "Flachdach"], ziel: "mehr Anfragen",
+        images: ["https://x.de/a.jpg", "https://x.de/b.jpg"]
+    });
+    assert.ok(/Dachprofi Köln/.test(msg), "Name");
+    assert.ok(/Dachdecker/.test(msg), "Branche");
+    assert.ok(/mehr Anfragen/.test(msg), "Ziel");
+    assert.ok(/https:\/\/x\.de\/a\.jpg/.test(msg), "Bild-URL 1");
+    assert.ok(/1\. https/.test(msg), "Bilder nummeriert");
+});
+
+test("GENERATIVE_SYS: verbietet Skripte/externe Ressourcen und Hansgrohe", () => {
+    assert.ok(/<script>/i.test(ss.GENERATIVE_SYS) || /KEIN <script>/i.test(ss.GENERATIVE_SYS), "Skript-Verbot benannt");
+    assert.ok(/Hansgrohe/i.test(ss.GENERATIVE_SYS), "Hansgrohe-Verbot benannt");
+    assert.ok(/UWG/i.test(ss.GENERATIVE_SYS), "UWG benannt");
+});

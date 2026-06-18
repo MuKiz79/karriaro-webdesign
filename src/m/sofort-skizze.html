@@ -192,6 +192,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-mock { border-radius: 6px; overflow: hidden; border: 1px solid var(--ss-line); background: var(--ss-surface); box-shadow: 0 28px 70px -34px rgba(20,30,40,.28); }
         .ss-mock-bar { display: flex; align-items: center; gap: 8px; padding: 9px 13px; background: #ECE7DC; border-bottom: 1px solid var(--ss-line); }
         .ss-mock-page { background: var(--ss-surface); }
+        /* Stufe 2 — frei generierter Konzept-Entwurf im Sandbox-iframe (ersetzt das Template) */
+        .ss-genframe { display: block; width: 100%; border: 0; background: #fff; height: 760px; transition: height .25s ease; }
+        .ss-genframe[hidden] { display: none; }
         /* Nav */
         .ss-mock-nav { display: flex; align-items: center; gap: 14px; padding: 17px 24px; border-bottom: 1px solid var(--ss-line); }
         .ss-mock-nav .ss-logo-slot { width: 40px; height: 40px; border-radius: 7px; box-shadow: 0 0 0 1.5px var(--ss-accent); }
@@ -507,7 +510,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                             <p class="ss-col-label">Konzept im Karriaro-Stil</p>
                             <div class="ss-mock">
                                 <div class="ss-mock-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-mock-url"></span></div>
-                                <div class="ss-mock-page">
+                                <iframe class="ss-genframe" id="ss-genframe" title="Konzept-Entwurf im Karriaro-Stil" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="lazy" hidden></iframe>
+                                <div class="ss-mock-page" id="ss-mock-page">
                                     <div class="ss-mock-nav">
                                         <span class="ss-logo-slot" id="ss-logo-slot"></span>
                                         <span class="ss-mock-wordmark">
@@ -1052,6 +1056,43 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
 
         // ── Ergebnis rendern (aus Server- oder lokalem Fallback-Datenvertrag) ──
+        // ── Stufe 2: frei generierte Konzept-Seite im Sandbox-iframe rendern ──
+        // Höhe meldet ein VON UNS injizierter Reporter per postMessage. Das Sandbox-iframe
+        // läuft ohne allow-same-origin (opaque origin) → kann das Parent-DOM nicht berühren,
+        // nur seine Höhe melden. (Der Sanitizer entfernt zusätzlich jedes Modell-Script.)
+        window.addEventListener('message', function (e) {
+            var frame = document.getElementById('ss-genframe');
+            if (!frame || e.source !== frame.contentWindow) return;
+            var h = e.data && e.data.ssHeight;
+            if (typeof h === 'number' && isFinite(h) && h > 0) frame.style.height = Math.min(4800, Math.max(360, h)) + 'px';
+        });
+        function renderGenerated(html, domain) {
+            var frame = document.getElementById('ss-genframe');
+            var page = document.getElementById('ss-mock-page');
+            if (!frame || !page) return false;
+            if (!html || typeof html !== 'string') { frame.hidden = true; frame.removeAttribute('srcdoc'); page.hidden = false; return false; }
+            // Reporter FRÜH injizieren (direkt nach dem Body-Start, sonst nach dem Head-Ende,
+            // sonst voran) — so läuft er auch, wenn das Modell-HTML am Ende abgeschnitten ist.
+            // ResizeObserver fängt das Nachladen der Bilder (Reflow) zuverlässig ab.
+            var reporter = '<scr' + 'ipt>(function(){function s(){try{parent.postMessage({ssHeight:Math.ceil(document.documentElement.scrollHeight)},"*");}catch(e){}}'
+                + 'window.addEventListener("load",s);setTimeout(s,150);setTimeout(s,600);setTimeout(s,1600);setTimeout(s,3000);'
+                + 'if(window.ResizeObserver){try{new ResizeObserver(s).observe(document.documentElement);}catch(e){}}'
+                + 'document.addEventListener("load",s,true);})();<\/scr' + 'ipt>';
+            // m (Treffer) statt Literal-Tag-Strings verwenden — der Mobile-Build sucht den
+            // LETZTEN Head-Schluss-Tag per lastIndexOf und spleisst dort sein PWA-Boilerplate
+            // ein; stuende der Tag hier als String/Kommentar, landete das Boilerplate mitten
+            // im Skript und zerschoesse es. Darum kommt KEIN solcher Tagtext in dieser Datei vor.
+            var doc;
+            if (/<body[^>]*>/i.test(html)) doc = html.replace(/<body[^>]*>/i, function (m) { return m + reporter; });
+            else if (/<\/head>/i.test(html)) doc = html.replace(/<\/head>/i, function (m) { return m + reporter; });
+            else doc = reporter + html;
+            frame.style.height = '760px';
+            frame.srcdoc = doc;
+            frame.hidden = false;
+            page.hidden = true;
+            return true;
+        }
+
         function render(data) {
             lastData = data;
             lastId = (data.meta && data.meta.id) || null;
@@ -1185,6 +1226,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             if (subEl) subEl.textContent = brLabel;
             var rb = document.getElementById('ss-rebranche-select');
             if (rb) rb.value = bk;
+
+            // Stufe 2: liegt eine frei generierte Konzept-Seite vor → im iframe zeigen
+            // (das Template oben bleibt befüllt = stiller Fallback). Sonst Template zeigen.
+            renderGenerated(data.generatedHtml, brand.domain);
 
             result.classList.add('is-on');
             finishLoader();

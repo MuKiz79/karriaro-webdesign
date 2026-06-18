@@ -43,7 +43,8 @@ const { tokenizeDe, rankBM25, buildSiteAskPrompt, SITE_ASK_TOOL, normalizeSiteAn
 const {
     normalizeBranche, pickWidget, detectBranche, extractImages, extractBrandTokens, BRANCHE_LABEL,
     SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
-    composeFallbackCopy, extractPhone, deriveAudit
+    composeFallbackCopy, extractPhone, deriveAudit,
+    GENERATIVE_SYS, buildGenerativeUserMessage, sanitizeGeneratedHtml
 } = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
 const logger = require("./lib/logger.js");
 
@@ -2656,7 +2657,8 @@ exports.siteAsk = onRequest(
 //   Fehlerphilosophie: lieber HTTP 200 mit reduzierten Daten (Frontend hat zusätzlich
 //   einen stillen lokalen Fallback) als eine 500 vor einem Interessenten.
 // ─────────────────────────────────────────────────────────────────────────────
-const SOFORT_MODEL = CONCIERGE_MODEL;               // "claude-haiku-4-5-20251001"
+const SOFORT_MODEL = CONCIERGE_MODEL;               // "claude-haiku-4-5-20251001" — Text/Copy (Fallback-Daten)
+const SOFORT_GEN_MODEL = "claude-sonnet-4-6";       // Voll-generativer Konzept-Entwurf (sieht den Screenshot)
 const SOFORT_CACHE_FRESH_MS = 10 * 60 * 1000;       // 10 Min funktionaler Cache (Brief §5)
 const SOFORT_CACHE_TTL_DAYS = 7;                     // Storage-TTL via expiresAt (auch für teilbare Links)
 
@@ -2707,7 +2709,7 @@ exports.sofortSkizze = onRequest(
     {
         region: "europe-west1",
         memory: "512MiB",
-        timeoutSeconds: 60,
+        timeoutSeconds: 120,   // voll-generativer Entwurf (Sonnet Vision) läuft parallel zum Copy-Call
         cors: false,
         secrets: [PLACES_KEY, PSI_API_KEY, CLAUDE_API_KEY, SHOT_API_KEY]
     },
@@ -2813,10 +2815,20 @@ exports.sofortSkizze = onRequest(
             audit.screenshot = (full && full.screenshot) || null;
             audit.screenshotView = (full && full.screenshotView) || null;
 
-            // ── KI-Text, best effort. MIT Screenshot → Claude Vision (Sonnet): die KI
-            //    SIEHT die echte Seite. Ohne Screenshot → Haiku-Textpfad. Forced tool_use. ──
-            let copy, copySource = visionShot ? "vision" : "ai";
-            try {
+            // ── Zwei KI-Calls PARALLEL (beide best effort, beide mit Screenshot-Vision):
+            //    (A) COPY (Haiku, forced tool_use) → strukturierte Texte für die Template-
+            //        Spalte UND als Fallback, falls die freie Generierung scheitert.
+            //    (B) GENERATIV (Sonnet, frei) → eine komplette, eigenständige Konzept-HTML-
+            //        Seite, die im Sandbox-iframe gerendert wird (Stufe 2, Founder-Wunsch).
+            //    Parallel, damit beide ins 120s-Budget passen. Generativ braucht NUR den
+            //    Screenshot+Marken-Fakten (nicht die Audit-Befunde) → kann sofort starten. ──
+            const apiHeaders = {
+                "Content-Type": "application/json",
+                "x-api-key": CLAUDE_API_KEY.value(),
+                "anthropic-version": "2023-06-01"
+            };
+
+            const runCopy = async () => {
                 const facts = {
                     name: brand.name,
                     domain,
@@ -2834,37 +2846,72 @@ exports.sofortSkizze = onRequest(
                     ? [{ type: "text", text: "Anbei ein Screenshot der heutigen Startseite. " + userText },
                        { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }]
                     : userText;
-                const body = {
-                    // Haiku 4.5 (multimodal) bewusst für Bild UND Text — schnell genug fürs
-                    // 60s-Budget. (Sonnet 4.6 wäre stärker, aber langsamer/teurer hier.)
-                    model: SOFORT_MODEL,
-                    max_tokens: 700,
-                    system: [{ type: "text", text: SOFORT_SYS, cache_control: { type: "ephemeral" } }],
-                    tools: [SOFORT_TOOL],
-                    tool_choice: { type: "tool", name: SOFORT_TOOL.name },
-                    messages: [{ role: "user", content }]
+                const r = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: apiHeaders,
+                    body: JSON.stringify({
+                        model: SOFORT_MODEL,   // Haiku 4.5 (multimodal) — schnell, nur strukturierte Felder
+                        max_tokens: 700,
+                        system: [{ type: "text", text: SOFORT_SYS, cache_control: { type: "ephemeral" } }],
+                        tools: [SOFORT_TOOL],
+                        tool_choice: { type: "tool", name: SOFORT_TOOL.name },
+                        messages: [{ role: "user", content }]
+                    }),
+                    signal: AbortSignal.timeout(visionShot ? 24000 : 16000)
+                });
+                if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 160)}`); }
+                return parseCopyResult(await r.json());
+            };
+
+            const runGenerative = async () => {
+                if (!visionShot) return null;   // ohne Screenshot keine freie Generierung
+                const gFacts = {
+                    name: brand.name,
+                    domain,
+                    brancheLabel: BRANCHE_LABEL[brancheKey] || "Lokaler Betrieb",
+                    accent: brand.accent,
+                    services: [],                 // Sonnet leitet Leistungen aus dem Screenshot ab
+                    ziel: safeZiel,
+                    images: brand.images || []
                 };
                 const r = await fetch("https://api.anthropic.com/v1/messages", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "x-api-key": CLAUDE_API_KEY.value(),
-                        "anthropic-version": "2023-06-01"
-                    },
-                    body: JSON.stringify(body),
-                    signal: AbortSignal.timeout(visionShot ? 20000 : 14000)
+                    headers: apiHeaders,
+                    body: JSON.stringify({
+                        model: SOFORT_GEN_MODEL,   // Sonnet 4.6 (multimodal) — freier, hochwertiger Entwurf
+                        max_tokens: 8000,          // genug für eine vollständige Seite (5000 schnitt ab)
+                        system: [{ type: "text", text: GENERATIVE_SYS, cache_control: { type: "ephemeral" } }],
+                        messages: [{ role: "user", content: [
+                            { type: "text", text: "Anbei ein Screenshot der heutigen Startseite.\n\n" + buildGenerativeUserMessage(gFacts) },
+                            { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }
+                        ] }]
+                    }),
+                    signal: AbortSignal.timeout(80000)
                 });
-                if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 160)}`); }
+                if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude GEN ${r.status}: ${t.slice(0, 160)}`); }
                 const data = await r.json();
-                copy = parseCopyResult(data);
-                // Vision-erkannte Markenfarbe → Akzent (besser als theme-color); aus copy entfernen.
+                const text = (data && Array.isArray(data.content) ? data.content : [])
+                    .filter((b) => b && b.type === "text").map((b) => b.text).join("");
+                return sanitizeGeneratedHtml(text);
+            };
+
+            let copy, copySource = visionShot ? "vision" : "ai";
+            let generatedHtml = null;
+            const [copyR, genR] = await Promise.allSettled([runCopy(), runGenerative()]);
+            if (copyR.status === "fulfilled" && copyR.value) {
+                copy = copyR.value;
                 if (copy.accent) { brand.accent = copy.accent; }
                 delete copy.accent;
-            } catch (err) {
+            } else {
                 // Statische Fehlermeldung, NIE die Interessenten-Eingaben loggen (DSGVO).
-                console.error("sofortSkizze copy failed:", String(err && err.message ? err.message : err).slice(0, 160));
+                console.error("sofortSkizze copy failed:", String(copyR.reason && copyR.reason.message ? copyR.reason.message : copyR.reason).slice(0, 160));
                 copy = composeFallbackCopy(brand, brancheKey, widget, safeZiel, audit);
                 copySource = "fallback";
+            }
+            if (genR.status === "fulfilled" && genR.value) {
+                generatedHtml = genR.value;
+            } else if (genR.status === "rejected") {
+                console.error("sofortSkizze generate failed:", String(genR.reason && genR.reason.message ? genR.reason.message : genR.reason).slice(0, 160));
             }
 
             const out = {
@@ -2872,7 +2919,8 @@ exports.sofortSkizze = onRequest(
                 copy,
                 widget,
                 audit,
-                meta: { source: (light || full) ? "server" : "reduced", copySource, cached: false, id: cacheKey }
+                generatedHtml,
+                meta: { source: (light || full) ? "server" : "reduced", copySource, generated: !!generatedHtml, cached: false, id: cacheKey }
             };
 
             // ── Cache schreiben (transient; TTL via expiresAt). ──
