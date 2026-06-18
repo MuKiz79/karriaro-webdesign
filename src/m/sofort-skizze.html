@@ -886,24 +886,44 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
 
         // ── „Heute"-Vorschau: echter PSI-Screenshot, sonst og:image, sonst Platzhalter ──
+        // Erkennt überwiegend schwarze/leere Screenshots (Lazy-/Video-Heroes rendern in
+        // Lighthouse manchmal schwarz). Nur für data:-URIs möglich (Canvas sonst „tainted").
+        function isMostlyDark(img) {
+            try {
+                var w = 48, h = Math.max(8, Math.min(420, Math.round(48 * img.naturalHeight / img.naturalWidth)));
+                var c = document.createElement('canvas'); c.width = w; c.height = h;
+                var ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+                var d = ctx.getImageData(0, 0, w, h).data, dark = 0, n = w * h;
+                for (var i = 0; i < d.length; i += 4) { if (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2] < 20) dark++; }
+                return dark / n > 0.72;
+            } catch (e) { return false; } // Canvas tainted → nicht beurteilbar, Bild akzeptieren
+        }
+
         function placeShot(audit, brand) {
             var box = document.getElementById('ss-shot-img');
             var wrap = document.getElementById('ss-shot-wrap');
             if (!box) return;
             if (wrap) wrap.classList.remove('is-scroll');
-            box.textContent = ''; box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar';
-            var src = (audit && audit.screenshot) || (brand && brand.ogImage) || '';
-            if (!src || !/^(data:image\/|https?:\/\/)/i.test(src)) return;
-            var img = new Image();
-            img.alt = 'Aktuelle Startseite von ' + (brand.domain || 'Ihrer Website');
-            img.referrerPolicy = 'no-referrer';
-            img.onload = function () {
-                box.textContent = ''; box.classList.remove('is-empty'); box.appendChild(img);
-                // scrollbar? → Hinweis + Verlauf einblenden (Ganzseiten-Screenshot)
-                if (wrap) requestAnimationFrame(function () { if (box.scrollHeight - box.clientHeight > 24) wrap.classList.add('is-scroll'); });
-            };
-            img.onerror = function () { box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar'; };
-            img.src = src;
+            box.textContent = 'Vorschau wird geladen …'; box.classList.add('is-empty');
+            // Quellen-Kette: Ganzseite (prüfen) → Viewport (prüfen) → og:image (nicht prüfbar).
+            var sources = [];
+            if (audit && audit.screenshot) sources.push({ src: audit.screenshot, check: true });
+            if (audit && audit.screenshotView && audit.screenshotView !== audit.screenshot) sources.push({ src: audit.screenshotView, check: true });
+            if (brand && brand.ogImage && /^https?:\/\//i.test(brand.ogImage)) sources.push({ src: brand.ogImage, check: false });
+
+            (function tryNext(i) {
+                if (i >= sources.length) { box.classList.add('is-empty'); box.textContent = 'Keine Vorschau verfügbar'; return; }
+                var s = sources[i], img = new Image();
+                img.alt = 'Aktuelle Startseite von ' + (brand.domain || 'Ihrer Website');
+                img.referrerPolicy = 'no-referrer';
+                img.onload = function () {
+                    if (s.check && isMostlyDark(img)) { tryNext(i + 1); return; } // schwarz → nächste Quelle
+                    box.textContent = ''; box.classList.remove('is-empty'); box.appendChild(img);
+                    if (wrap) requestAnimationFrame(function () { if (box.scrollHeight - box.clientHeight > 24) wrap.classList.add('is-scroll'); });
+                };
+                img.onerror = function () { tryNext(i + 1); };
+                img.src = s.src;
+            })(0);
         }
 
         // ── Ergebnis rendern (aus Server- oder lokalem Fallback-Datenvertrag) ──

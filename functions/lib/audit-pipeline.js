@@ -271,14 +271,13 @@ async function runAuditPipeline(url, psiKey) {
     const lcpNum = lh.audits?.['largest-contentful-paint']?.numericValue;
     const clsNum = lh.audits?.['cumulative-layout-shift']?.numericValue;
     const tbtNum = lh.audits?.['total-blocking-time']?.numericValue;
-    // Sprint 253 — echter Screenshot der geprüften Seite, frei aus dem Lighthouse-
-    // Ergebnis. GANZSEITEN-Screenshot bevorzugt (komplette Seite top→bottom), sonst
-    // der Viewport-Ausschnitt. Datei-URI (data:image/jpeg;base64,…).
-    const fullShot = lh.fullPageScreenshot?.screenshot?.data;
-    const viewShot = lh.audits?.['final-screenshot']?.details?.data;
-    const shot = (typeof fullShot === "string" && fullShot.startsWith("data:image")) ? fullShot
-        : (typeof viewShot === "string" && viewShot.startsWith("data:image")) ? viewShot : null;
-    const screenshot = shot;
+    // Sprint 253 — echte Screenshots der geprüften Seite, frei aus dem Lighthouse-
+    // Ergebnis. BEIDE liefern: Ganzseite (fullPageScreenshot) + Viewport-Ausschnitt
+    // (final-screenshot). Der Client wählt das beste (Ganzseite kann bei Lazy-/Video-
+    // Heroes schwarz sein → dann Fallback auf Viewport/og:image).
+    const okShot = (s) => (typeof s === "string" && s.startsWith("data:image")) ? s : null;
+    const screenshot = okShot(lh.fullPageScreenshot?.screenshot?.data);
+    const screenshotView = okShot(lh.audits?.['final-screenshot']?.details?.data);
     const ws = {
         perf: Math.round((lh.categories?.performance?.score || 0) * 100),
         seo: Math.round((lh.categories?.seo?.score || 0) * 100),
@@ -317,7 +316,8 @@ async function runAuditPipeline(url, psiKey) {
         websiteScore: ws,
         leadScore,
         summary,
-        screenshot
+        screenshot,
+        screenshotView
     };
 }
 
