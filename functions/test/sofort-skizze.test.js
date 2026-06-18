@@ -64,6 +64,9 @@ test("extractImages: og:image zuerst, absolut, Logos/Icons/SVG/Tiny gefiltert", 
     assert.ok(imgs.includes("https://www.firma.de/s-1200.jpg"), "srcset-größtes gewählt");
     assert.ok(!imgs.some((u) => /logo|icon|tiny|\.svg/.test(u)), "Logos/Icons/SVG/Tiny gefiltert");
     assert.deepEqual(ss.extractImages(null, "https://x.de", "x.de", 6), []);
+    // Dedupe: gleiches Bild mit anderer Query/Größen-Variante nur EINMAL
+    const dup = `<body><img src="https://cdn.x.de/a/bild.jpg?w=400" width="800"><img src="https://cdn.x.de/a/bild.jpg?w=1200" width="800"></body>`;
+    assert.equal(ss.extractImages(dup, "https://x.de", "x.de", 6).length, 1, "Query-Duplikat dedupliziert");
 });
 
 test("detectBranche: Keyword zuerst, dann Places-Typ, sonst generic", () => {

@@ -216,9 +216,13 @@ function extractImages(html, finalUrl, domain, max) {
     const add = (u) => {
         if (out.length >= (max || 6)) return;
         const a = absolutize(u, base);
-        if (!a || !/^https?:\/\//i.test(a) || seen.has(a)) return;
+        if (!a || !/^https?:\/\//i.test(a)) return;
         if (/\.svg(\?|$)/i.test(a) || BAD.test(a)) return;
-        seen.add(a); out.push(a);
+        // Dedupe nach Pfad (ohne Query/Größen-Variante) → keine Beinahe-Duplikate.
+        let key = a;
+        try { const uu = new URL(a); key = uu.hostname + uu.pathname.replace(/[-_]\d{2,4}x\d{2,4}(?=\.)/i, ""); } catch (e) { /* key=a */ }
+        if (seen.has(key)) return;
+        seen.add(key); out.push(a);
     };
     const og = findMeta(html, "og:image");
     if (og) add(og);

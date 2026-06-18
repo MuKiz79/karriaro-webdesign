@@ -58,7 +58,7 @@ const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
 const PSI_API_KEY = defineSecret("PSI_API_KEY");
 const SHOT_API_KEY = defineSecret("SHOT_API_KEY"); // Screenshot-Dienst (screenshotone) für saubere Ganzseiten-Shots
 
-const DEEP_RESEARCH_MODEL = "claude-sonnet-4-20250514";
+const DEEP_RESEARCH_MODEL = "claude-sonnet-4-6"; // Sprint 253: sonnet-4-20250514 retired (404) → aktueller Sonnet
 const DEEP_RESEARCH_CACHE_DAYS = 7;
 
 const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "https://m.karriaro-webdesign.de", "https://karriaro.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080", "http://localhost:8780"];
@@ -1262,7 +1262,7 @@ exports.deepResearch = onRequest(
 // GENERATE MOCKUP: Sonnet entwirft Hero-Spec, Server rendert SVG
 // ═══════════════════════════════════════════════════════════════
 
-const MOCKUP_MODEL = "claude-sonnet-4-20250514";
+const MOCKUP_MODEL = "claude-sonnet-4-6"; // Sprint 253: sonnet-4-20250514 retired (404) → aktueller Sonnet
 const MOCKUP_CACHE_DAYS = 7;
 
 function mockupCacheKey(url) {
@@ -2043,7 +2043,7 @@ Aufgaben:
 // (Bild-Input) beurteilt — ersetzt die frühere Attrappe. Echtes „AI in Practice".
 // Bild wird NICHT gespeichert (nur in-memory). Pure Helfer in lib/roof-vision.js.
 // ════════════════════════════════════════════════════════════════════════════
-const ROOF_VISION_MODEL = "claude-sonnet-4-20250514";
+const ROOF_VISION_MODEL = "claude-sonnet-4-6"; // Sprint 253: sonnet-4-20250514 retired (404) → aktueller Sonnet (multimodal); roof/style/badVision
 const ROOF_VISION_SYSTEM = `Du bist ein nüchterner, erfahrener Dachdecker-Gutachter. Du erstellst anhand EINES Fotos eine vorsichtige Ersteinschätzung eines Daches.
 
 Regeln:
@@ -2835,8 +2835,8 @@ exports.sofortSkizze = onRequest(
                        { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }]
                     : userText;
                 const body = {
-                    // Haiku 4.5 ist multimodal + aktuell + schnell — für Bild UND Text.
-                    // (ROOF_VISION_MODEL = claude-sonnet-4-20250514 ist mittlerweile 404/retired.)
+                    // Haiku 4.5 (multimodal) bewusst für Bild UND Text — schnell genug fürs
+                    // 60s-Budget. (Sonnet 4.6 wäre stärker, aber langsamer/teurer hier.)
                     model: SOFORT_MODEL,
                     max_tokens: 700,
                     system: [{ type: "text", text: SOFORT_SYS, cache_control: { type: "ephemeral" } }],
