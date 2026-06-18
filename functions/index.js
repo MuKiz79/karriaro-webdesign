@@ -2855,3 +2855,89 @@ exports.sofortSkizze = onRequest(
         }
     }
 );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 253 — Sofort-Skizze Lead-Erfassung: Interessent hinterlässt E-Mail, um
+// die Skizze/den Report zu erhalten. Speichert einen EINWILLIGUNGS-Lead (Firestore),
+// benachrichtigt den Founder (kontakt@karriaro.de, Reply-To=Lead) + sendet dem
+// Interessenten eine Bestätigung. Anders als sofortSkizze (transient) ist DAS hier
+// die bewusste, eingewilligte Lead-Erfassung — wie das bestehende requestAudit.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.sofortLead = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 30,
+        cors: false,
+        secrets: [SMTP_HOST, SMTP_USER, SMTP_PASS]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "sofortLead", 10, 3600,
+            "Zu viele Anfragen. Bitte später erneut.")) return;
+
+        const { url, email, name, branche, score, topLeak, consent, hp } = req.body || {};
+        if (hp && String(hp).trim().length > 0) return res.status(200).json({ ok: true, bot: true });
+        if (!consent) return res.status(400).json({ error: "Bitte stimmen Sie der Kontaktaufnahme zu." });
+        if (!isValidEmail(email)) return res.status(400).json({ error: "Bitte geben Sie eine gültige E-Mail an." });
+
+        const auditUrl = normalizeUrl(url);
+        let domain;
+        try { domain = auditUrl ? new URL(auditUrl).hostname.replace(/^www\./, "") : String(url || "").replace(/[<>]/g, "").slice(0, 120); }
+        catch { domain = String(url || "").replace(/[<>]/g, "").slice(0, 120); }
+        const safeName = String(name || "").replace(/[<>]/g, "").trim().slice(0, 80);
+        const safeBranche = String(branche || "").replace(/[^a-zäöü]/gi, "").slice(0, 20);
+        const safeScore = Number.isFinite(+score) ? Math.max(0, Math.min(100, Math.round(+score))) : null;
+        const safeLeak = String(topLeak || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 160);
+
+        // Zweite Schutzschicht: 5 Leads/Tag pro E-Mail.
+        const emailHash = crypto.createHash("sha256").update(String(email).toLowerCase()).digest("hex").slice(0, 24);
+        if (await enforceRateLimit(db, { ip: emailHash, headers: {} }, res, "sofortLead:email", 5, 86400,
+            "Diese E-Mail-Adresse hat das Tageslimit erreicht. Bitte morgen erneut.")) return;
+
+        // Lead speichern (deterministische ID je E-Mail+Domain+Tag → idempotent bei Doppel-Klick).
+        const leadId = crypto.createHash("sha256").update(`${emailHash}:${domain}:${Math.floor(Date.now() / 86400000)}`).digest("hex").slice(0, 24);
+        try {
+            await db.collection("sofortLeads").doc(leadId).set({
+                domain, email, name: safeName, branche: safeBranche, score: safeScore, topLeak: safeLeak,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                createdAtMs: Date.now(),
+                expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 90 * 86400000) / 1000), 0),
+                source: "sofort-skizze"
+            }, { merge: true });
+        } catch (err) {
+            logger.warn("sofortLead store failed (non-fatal)", { fn: "sofortLead", domain, error: err.message });
+        }
+
+        // Founder-Benachrichtigung + Interessenten-Bestätigung (best effort).
+        try {
+            const transporter = nodemailer.createTransport({
+                host: SMTP_HOST.value(), port: 587, secure: false,
+                auth: { user: SMTP_USER.value(), pass: SMTP_PASS.value() },
+                connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 12000
+            });
+            await transporter.sendMail({
+                from: AUDIT_FROM, replyTo: email, to: AUDIT_REPLY_TO,
+                subject: `Sofort-Skizze-Lead: ${domain}${safeScore != null ? ` (Score ${safeScore})` : ""}`,
+                text: `Neuer Lead aus der Sofort-Skizze.\n\nDomain:        ${domain}\nName:          ${safeName || "—"}\nE-Mail:        ${email}\nBranche:       ${safeBranche || "—"}\nAudit-Score:   ${safeScore != null ? safeScore : "—"}\nGrößter Hebel: ${safeLeak || "—"}\nZeit:          ${new Date().toISOString()}\n\nReply-To zeigt auf den Lead — einfach direkt antworten.\n\n— Karriaro Backend (sofortLead)`
+            });
+            await transporter.sendMail({
+                from: AUDIT_FROM, replyTo: AUDIT_REPLY_TO, to: email,
+                subject: `Ihre Konzept-Skizze für ${domain}`,
+                text: `Hallo${safeName ? " " + safeName : ""},\n\ndanke für Ihr Interesse! Wir haben Ihre Konzept-Skizze für ${domain} erhalten und melden uns in Kürze persönlich mit den nächsten Schritten und einem Vorschlag für ein kurzes, unverbindliches Erstgespräch.\n\nDie Skizze ist eine Richtung, kein fertiges Template — die finale Seite codieren wir von Hand für Ihren Betrieb.\n\nHerzliche Grüße\nKarriaro — Kölner Webdesign-Manufaktur\nkontakt@karriaro.de`,
+                html: `<div style="font-family:-apple-system,Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;color:#16202C;line-height:1.6">
+                    <p style="margin:0 0 14px">Hallo${safeName ? " " + safeName : ""},</p>
+                    <p style="margin:0 0 14px">danke für Ihr Interesse! Wir haben Ihre Konzept-Skizze für <strong>${domain}</strong> erhalten und melden uns in Kürze persönlich — mit den nächsten Schritten und einem Vorschlag für ein kurzes, unverbindliches Erstgespräch.</p>
+                    <p style="margin:0 0 14px;color:#525E6B">Die Skizze ist eine Richtung, kein fertiges Template — die finale Seite codieren wir von Hand für Ihren Betrieb.</p>
+                    <p style="margin:24px 0 0">Herzliche Grüße<br><strong>Karriaro</strong> — Kölner Webdesign-Manufaktur<br><a href="mailto:kontakt@karriaro.de" style="color:#6E5F3F">kontakt@karriaro.de</a></p>
+                </div>`
+            });
+        } catch (err) {
+            logger.error("sofortLead mail failed", { fn: "sofortLead", domain, error: String(err && err.message ? err.message : err).slice(0, 160) });
+            // Lead ist gespeichert — trotzdem Erfolg melden.
+        }
+
+        return res.json({ ok: true });
+    }
+);

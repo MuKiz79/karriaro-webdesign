@@ -215,6 +215,29 @@
         .ss-buildlist b { font-family: var(--ss-sans); font-weight: 600; font-size: 14.5px; color: var(--ss-ink); letter-spacing: -.005em; }
         .ss-buildlist .ss-build-today { display: block; font-size: 12px; color: #525E6B; margin-top: 2px; }
         .ss-concept-meta { display: flex; flex-direction: column; gap: 12px; padding: 18px 4px 2px; }
+
+        /* Lead-Erfassung: „Skizze sichern" (Band unter dem Split) */
+        .ss-leadcap { margin-top: 26px; background: var(--ss-ink); color: var(--ss-cream); border-radius: 16px; padding: 30px 30px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; }
+        .ss-leadcap-eyebrow { font-family: var(--ss-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold); margin-bottom: 12px; }
+        .ss-leadcap h3 { font-family: var(--ss-serif); font-weight: 500; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.08; letter-spacing: -.02em; color: #fff; }
+        .ss-leadcap-text p { margin-top: 12px; font-size: 14.5px; line-height: 1.55; color: rgba(241,239,231,.82); max-width: 420px; }
+        .ss-leadcap-form { display: flex; flex-direction: column; gap: 11px; }
+        .ss-leadcap-form input[type="text"], .ss-leadcap-form input[type="email"] { font-family: var(--ss-sans); font-size: 15px; padding: 12px 14px; border: 1px solid rgba(241,239,231,.22); border-radius: 9px; background: rgba(255,255,255,.06); color: #fff; width: 100%; }
+        .ss-leadcap-form input::placeholder { color: rgba(241,239,231,.5); }
+        .ss-leadcap-form input:focus { outline: none; border-color: var(--ss-gold); background: rgba(255,255,255,.1); }
+        .ss-leadcap-consent { display: flex; align-items: flex-start; gap: 9px; font-size: 12.5px; color: rgba(241,239,231,.8); line-height: 1.45; }
+        .ss-leadcap-consent input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--ss-gold); flex: 0 0 auto; }
+        .ss-leadcap-consent a { color: var(--ss-gold); }
+        .ss-leadcap-submit { display: inline-flex; align-items: center; justify-content: center; padding: 13px 24px; background: var(--ss-cream); color: var(--ss-ink); border: 0; border-radius: 999px; font-family: var(--ss-sans); font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+        .ss-leadcap-submit:hover:not(:disabled) { opacity: .9; }
+        .ss-leadcap-submit:disabled { opacity: .5; cursor: not-allowed; }
+        .ss-leadcap-msg { font-size: 13px; color: rgba(241,239,231,.85); min-height: 1.2em; }
+        .ss-leadcap-msg.is-err { color: #F0B7A4; }
+        .ss-leadcap.is-done .ss-leadcap-form { display: none; }
+        .ss-leadcap-done { display: none; font-family: var(--ss-serif); font-size: 19px; color: #fff; }
+        .ss-leadcap.is-done .ss-leadcap-done { display: block; }
+        .ss-leadcap .ss-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+        @media (max-width: 720px) { .ss-leadcap { grid-template-columns: 1fr; gap: 20px; } }
         .ss-prospect-tools { --accent: var(--ss-accent-tool, var(--ss-accent)); --kr-gold: var(--ss-accent-tool, var(--ss-accent)); background: var(--ss-surface); border: 1px solid var(--ss-line); border-radius: 6px; padding: 16px; min-width: 0; overflow-x: hidden; }
         .ss-prospect-tools .kr-tool-form, .ss-prospect-tools .kr-tool-form label, .ss-prospect-tools .kr-tool-form input, .ss-prospect-tools .kr-tool-form select { min-width: 0; max-width: 100%; }
         .ss-prospect-tools .kr-tool-form input:focus, .ss-prospect-tools .kr-tool-form select:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-accent) 18%, transparent); }
@@ -452,6 +475,24 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="ss-leadcap" id="ss-leadcap">
+                    <div class="ss-leadcap-text">
+                        <p class="ss-leadcap-eyebrow">Nächster Schritt</p>
+                        <h3>Diese Konzept-Skizze sichern</h3>
+                        <p>Wir senden Ihnen die Skizze samt Audit-Befunden und melden uns für ein kurzes, unverbindliches Erstgespräch.</p>
+                    </div>
+                    <form class="ss-leadcap-form" id="ss-leadcap-form" novalidate>
+                        <input type="text" name="name" autocomplete="name" placeholder="Ihr Name (optional)">
+                        <input type="email" name="email" autocomplete="email" placeholder="Ihre E-Mail" required>
+                        <span class="ss-hp" aria-hidden="true"><input type="text" name="hp" tabindex="-1" autocomplete="off"></span>
+                        <label class="ss-leadcap-consent"><input type="checkbox" id="ss-leadcap-consent" required><span>Ich bin mit der Kontaktaufnahme einverstanden (<a href="/datenschutz">Datenschutz</a>).</span></label>
+                        <button type="submit" class="ss-leadcap-submit" id="ss-leadcap-submit">Skizze sichern</button>
+                        <span class="ss-leadcap-msg" id="ss-leadcap-msg" aria-live="polite"></span>
+                    </form>
+                    <div class="ss-leadcap-done">✓ Danke — wir melden uns in Kürze mit Ihrer Konzept-Skizze.</div>
+                </div>
+
                 <div class="ss-again">
                     <button type="button" id="ss-again">Andere Adresse skizzieren</button>
                 </div>
@@ -620,6 +661,8 @@
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
         var submitting = false;
         var statusTimer = null;
+        var lastData = null;       // letztes gerendertes Ergebnis (für die Lead-Erfassung)
+        var leadSubmitting = false;
 
         // ── Branchen-Defaults (Spiegel der Server-Logik für den lokalen Fallback) ──
         var BRANCHE_WIDGET = {
@@ -894,6 +937,10 @@
 
         // ── Ergebnis rendern (aus Server- oder lokalem Fallback-Datenvertrag) ──
         function render(data) {
+            lastData = data;
+            // Lead-Erfassung zurücksetzen (neues Ergebnis = neue Erfassung möglich).
+            var lc = document.getElementById('ss-leadcap');
+            if (lc) { lc.classList.remove('is-done'); var lm = document.getElementById('ss-leadcap-msg'); if (lm) { lm.textContent = ''; lm.classList.remove('is-err'); } }
             var brand = data.brand || {};
             var copy = data.copy || {};
             var widget = data.widget || BRANCHE_WIDGET.generic;
@@ -1084,6 +1131,46 @@
         form.addEventListener('submit', function (e) { e.preventDefault(); runSkizze(null); });
         document.getElementById('ss-rebranche-select').addEventListener('change', function () {
             if (this.value) runSkizze(this.value);
+        });
+
+        // ── Lead-Erfassung: „Skizze sichern" ──
+        document.getElementById('ss-leadcap-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (leadSubmitting) return;
+            var f = this;
+            var msg = document.getElementById('ss-leadcap-msg');
+            var btn = document.getElementById('ss-leadcap-submit');
+            if (f.hp.value) return; // Honeypot
+            var email = String(f.email.value || '').trim();
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'Bitte eine gültige E-Mail angeben.'; msg.classList.add('is-err'); f.email.focus(); return; }
+            if (!document.getElementById('ss-leadcap-consent').checked) { msg.textContent = 'Bitte der Kontaktaufnahme zustimmen.'; msg.classList.add('is-err'); return; }
+            var d = lastData || {};
+            var payload = {
+                url: (d.brand && d.brand.domain) || domainOf(urlInput.value),
+                email: email, name: f.name.value || '',
+                branche: (d.widget && d.widget.key) || '',
+                score: d.audit ? d.audit.score : null,
+                topLeak: d.audit ? d.audit.topLeak : '',
+                consent: true, hp: ''
+            };
+            leadSubmitting = true; btn.disabled = true; btn.textContent = 'Wird gesendet …';
+            msg.textContent = ''; msg.classList.remove('is-err');
+            var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 20000);
+            fetch(FN_BASE + '/sofortLead', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload), signal: ctrl.signal
+            }).then(function (r) {
+                clearTimeout(to);
+                return r.json().then(function (j) { if (!r.ok || j.error) throw new Error(j.error || 'Fehler'); return j; });
+            }).then(function () {
+                document.getElementById('ss-leadcap').classList.add('is-done');
+            }).catch(function (err) {
+                clearTimeout(to);
+                msg.textContent = (err && err.name === 'AbortError') ? 'Zeitüberschreitung — bitte erneut.' : (err.message || 'Bitte später erneut.');
+                msg.classList.add('is-err');
+                btn.disabled = false; btn.textContent = 'Skizze sichern';
+                leadSubmitting = false;
+            });
         });
 
         document.getElementById('ss-again').addEventListener('click', function () {
