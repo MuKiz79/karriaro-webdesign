@@ -52,8 +52,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             --ss-cream: #F1EFE7;
             --ss-border: rgba(20, 32, 43, 0.14);
             --ss-serif: 'Fraunces', Georgia, serif;
+            --ss-quote: 'Cormorant Garamond', Georgia, serif;
             --ss-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             --ss-mono: 'JetBrains Mono', ui-monospace, monospace;
+            --ss-line: #DDD3C3;
+            --ss-line-strong: #B8AC97;
+            --ss-surface: #FDFCFA;
+            --ss-indigo-strong: #061320;
             --ss-accent: #8A7B5C; /* Interessenten-Akzent (JS überschreibt); Default = Werkstatt-Gold */
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -118,7 +123,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-result { display: none; }
         .ss-result.is-on { display: block; animation: ss-fade .5s ease both; }
         @keyframes ss-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-        .ss-split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
+        .ss-split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
         .ss-col-label { font-family: var(--ss-mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 12px; }
 
         /* Heute */
@@ -173,30 +178,50 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ss-shot-img.is-empty { color: var(--ss-graphite); font-family: var(--ss-mono); font-size: 11px; letter-spacing: .06em; padding: 40px 16px; text-align: center; }
         .ss-today-shot { margin-bottom: 18px; }
 
-        /* ── „Konzept": gerendertes Mini-Website-Mockup ── */
-        .ss-mock { border-radius: 12px 12px 14px 14px; overflow: hidden; border: 1px solid var(--ss-border); background: #fff; box-shadow: 0 14px 36px -26px rgba(20,32,43,.55); }
-        .ss-mock-bar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #ECE7DC; border-bottom: 1px solid var(--ss-border); }
-        .ss-mock-page { background: var(--ss-bg); }
-        .ss-mock-nav { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--ss-border); background: #fff; }
-        .ss-mock-nav .ss-logo-slot { width: 38px; height: 38px; border-radius: 9px; box-shadow: 0 0 0 2px var(--ss-accent); }
-        .ss-mock-brand { font-family: var(--ss-serif); font-weight: 600; font-size: 15px; color: var(--ss-ink); flex: 1; }
-        .ss-mock-navlinks { display: flex; gap: 12px; }
-        .ss-mock-navlinks span { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ss-graphite); }
-        .ss-mock-navlinks span:first-child { color: var(--ss-accent); border-bottom: 2px solid var(--ss-accent); padding-bottom: 2px; }
-        .ss-mock-hero { padding: 24px 20px 22px; background: linear-gradient(160deg, color-mix(in srgb, var(--ss-accent) 9%, #fff), var(--ss-bg)); display: flex; flex-direction: column; gap: 12px; }
-        .ss-mock-hero h2 { font-family: var(--ss-serif); font-weight: 600; font-size: clamp(21px, 2.8vw, 30px); line-height: 1.1; color: var(--ss-ink); }
-        .ss-mock-hero .ss-cta { align-self: flex-start; margin-top: 4px; }
-        .ss-mock-tool { padding: 18px 20px; border-top: 1px solid var(--ss-border); }
-        .ss-mock-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px 20px; border-top: 1px solid var(--ss-border); background: #fff; }
-        .ss-mock-cell { border: 1px solid var(--ss-border); border-radius: 9px; padding: 11px 12px; }
-        .ss-mock-cell b { display: block; font-family: var(--ss-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ss-ink); margin-bottom: 6px; }
-        .ss-mock-cell span { display: block; height: 5px; border-radius: 3px; background: var(--ss-border); }
-        .ss-mock-cell span + span { margin-top: 5px; width: 70%; }
-        .ss-mock-foot { padding: 14px 20px; border-top: 1px solid var(--ss-border); background: var(--ss-ink); color: var(--ss-cream); display: flex; flex-direction: column; gap: 6px; }
-        .ss-mock-foot-name { font-family: var(--ss-serif); font-weight: 600; font-size: 14px; }
-        .ss-mock-foot .ss-geo-hook { border-left: 0; padding-left: 0; color: rgba(241,239,231,.78); font-size: 11.5px; }
-        .ss-concept-meta { display: flex; flex-direction: column; gap: 12px; padding: 16px 4px 2px; }
-        .ss-prospect-tools { --accent: var(--ss-accent); --kr-gold: var(--ss-accent); background: #fff; border: 1px solid var(--ss-border); border-radius: 12px; padding: 16px; min-width: 0; overflow-x: hidden; }
+        /* ── „Konzept": Award-Niveau Mini-Website-Mockup (Fraunces-Editorial) ── */
+        .ss-mock { border-radius: 6px; overflow: hidden; border: 1px solid var(--ss-line); background: var(--ss-surface); box-shadow: 0 28px 70px -34px rgba(20,30,40,.28); }
+        .ss-mock-bar { display: flex; align-items: center; gap: 8px; padding: 9px 13px; background: #ECE7DC; border-bottom: 1px solid var(--ss-line); }
+        .ss-mock-page { background: var(--ss-surface); }
+        /* Nav */
+        .ss-mock-nav { display: flex; align-items: center; gap: 14px; padding: 17px 24px; border-bottom: 1px solid var(--ss-line); }
+        .ss-mock-nav .ss-logo-slot { width: 40px; height: 40px; border-radius: 7px; box-shadow: 0 0 0 1.5px var(--ss-accent); }
+        .ss-mock-wordmark { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+        .ss-mock-brand { font-family: var(--ss-serif); font-weight: 500; font-size: 17px; letter-spacing: .01em; line-height: 1; color: var(--ss-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ss-mock-brand-sub { font-family: var(--ss-mono); font-size: 8.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--ss-gold-text); }
+        .ss-mock-navlinks { display: flex; gap: 20px; flex: 0 0 auto; }
+        .ss-mock-navlinks span { font-family: var(--ss-sans); font-size: 11.5px; letter-spacing: .02em; color: var(--ss-graphite); opacity: .78; }
+        .ss-mock-navlinks span:first-child { opacity: 1; color: var(--ss-ink); position: relative; }
+        .ss-mock-navlinks span:first-child::after { content: ''; position: absolute; left: 0; right: 0; bottom: -7px; height: 1.5px; background: var(--ss-accent); }
+        /* Hero — editorial: Folio · Fraunces-Headline opsz144 · Subline · CTA */
+        .ss-mock-hero { padding: 42px 26px 34px; display: flex; flex-direction: column; }
+        .ss-mock-folio { font-family: var(--ss-mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 22px; display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+        .ss-mock-folio .dot { color: var(--ss-line-strong); opacity: .75; }
+        .ss-mock-hero h2 { font-family: var(--ss-serif); font-weight: 500; font-size: clamp(27px, 3.5vw, 42px); line-height: 1.04; letter-spacing: -.028em; color: var(--ss-indigo-strong); font-variation-settings: "opsz" 144; text-wrap: balance; margin: 0; }
+        .ss-mock-hero h2 em { font-style: italic; font-family: var(--ss-quote); font-weight: 500; color: var(--ss-gold-text); }
+        .ss-mock-sub { font-family: var(--ss-sans); font-size: 16px; line-height: 1.55; color: #525E6B; max-width: 460px; margin-top: 20px; }
+        .ss-mock-cta-row { margin-top: 28px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .ss-mock-hero .ss-cta { background: var(--ss-navy); color: #fff; padding: 13px 27px; border-radius: 999px; font-size: 14.5px; font-weight: 500; }
+        .ss-mock-hero .ss-cta:hover { background: var(--ss-ink); }
+        .ss-mock-tertiary { font-family: var(--ss-sans); font-size: 13px; color: var(--ss-ink); }
+        .ss-mock-tertiary u { text-decoration-color: rgba(26,46,64,.3); text-underline-offset: 3px; }
+        /* Eingebautes Werkzeug */
+        .ss-mock-tool { padding: 26px 26px 30px; border-top: 1px solid var(--ss-line); background: #fff; }
+        .ss-mock-tool-label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--ss-gold-text); margin-bottom: 10px; }
+        /* Editorial nummerierte Sektionen statt grauer Balken */
+        .ss-mock-sections { padding: 10px 26px 24px; border-top: 1px solid var(--ss-line); counter-reset: ssn; }
+        .ss-mock-sec { counter-increment: ssn; display: flex; gap: 16px; padding: 16px 2px; border-bottom: 1px solid var(--ss-line); align-items: baseline; }
+        .ss-mock-sec:last-child { border-bottom: 0; }
+        .ss-mock-sec::before { content: counter(ssn, decimal-leading-zero); font-family: var(--ss-quote); font-style: italic; font-weight: 500; font-size: 25px; line-height: 1; color: var(--ss-gold-text); flex: 0 0 auto; min-width: 32px; }
+        .ss-mock-sec-body b { display: block; font-family: var(--ss-sans); font-weight: 600; font-size: 14.5px; color: var(--ss-ink); letter-spacing: -.005em; }
+        .ss-mock-sec-body span { display: block; font-family: var(--ss-sans); font-size: 13px; color: #525E6B; margin-top: 3px; }
+        /* Footer */
+        .ss-mock-foot { padding: 22px 26px; background: var(--ss-ink); color: var(--ss-cream); display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+        .ss-mock-foot-l { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .ss-mock-foot-name { font-family: var(--ss-serif); font-weight: 500; font-size: 16px; }
+        .ss-mock-foot .ss-geo-hook { border-left: 0; padding-left: 0; color: rgba(241,239,231,.72); font-size: 11px; line-height: 1.45; max-width: 360px; }
+        .ss-mock-foot-folio { font-family: var(--ss-mono); font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: rgba(241,239,231,.5); white-space: nowrap; flex: 0 0 auto; }
+        .ss-concept-meta { display: flex; flex-direction: column; gap: 12px; padding: 18px 4px 2px; }
+        .ss-prospect-tools { --accent: var(--ss-accent-tool, var(--ss-accent)); --kr-gold: var(--ss-accent-tool, var(--ss-accent)); background: var(--ss-surface); border: 1px solid var(--ss-line); border-radius: 6px; padding: 16px; min-width: 0; overflow-x: hidden; }
         .ss-prospect-tools .kr-tool-form, .ss-prospect-tools .kr-tool-form label, .ss-prospect-tools .kr-tool-form input, .ss-prospect-tools .kr-tool-form select { min-width: 0; max-width: 100%; }
         .ss-prospect-tools .kr-tool-form input:focus, .ss-prospect-tools .kr-tool-form select:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--ss-accent) 18%, transparent); }
         .ss-cta-row { margin-top: auto; padding-top: 8px; }
@@ -229,8 +254,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         }
         @media (max-width: 540px) {
             .ss-mock-navlinks { display: none; }
-            .ss-mock-strip { grid-template-columns: 1fr; }
-            .ss-mock-hero, .ss-mock-tool, .ss-mock-strip, .ss-mock-foot, .ss-mock-nav { padding-left: 14px; padding-right: 14px; }
+            .ss-mock-hero, .ss-mock-tool, .ss-mock-sections, .ss-mock-foot, .ss-mock-nav { padding-left: 16px; padding-right: 16px; }
         }
         @media (prefers-reduced-motion: reduce) {
             .kr-frame { stroke-dashoffset: 0; animation: none; }
@@ -401,27 +425,37 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                                 <div class="ss-mock-page">
                                     <div class="ss-mock-nav">
                                         <span class="ss-logo-slot" id="ss-logo-slot"></span>
-                                        <span class="ss-mock-brand" id="ss-brand-name"></span>
-                                        <span class="ss-mock-navlinks" aria-hidden="true"><span>Start</span><span>Leistungen</span><span>Referenzen</span><span>Kontakt</span></span>
+                                        <span class="ss-mock-wordmark">
+                                            <span class="ss-mock-brand" id="ss-brand-name"></span>
+                                            <span class="ss-mock-brand-sub" id="ss-brand-sub"></span>
+                                        </span>
+                                        <span class="ss-mock-navlinks" aria-hidden="true"><span>Start</span><span>Leistungen</span><span>Kontakt</span></span>
                                     </div>
                                     <div class="ss-mock-hero">
-                                        <span class="ss-concept-eyebrow" id="ss-eyebrow"></span>
+                                        <span class="ss-mock-folio"><span>№&nbsp;01</span><span class="dot">·</span><span id="ss-eyebrow"></span></span>
                                         <h2 id="ss-headline"></h2>
-                                        <p class="ss-concept-sub" id="ss-subline"></p>
-                                        <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
+                                        <p class="ss-mock-sub" id="ss-subline"></p>
+                                        <span class="ss-mock-cta-row">
+                                            <a class="ss-cta" id="ss-cta" href="/#kontakt">30-Min-Erstgespräch vereinbaren</a>
+                                            <span class="ss-mock-tertiary"><u>Leistungen ansehen</u> →</span>
+                                        </span>
                                     </div>
                                     <div class="ss-mock-tool">
+                                        <p class="ss-mock-tool-label">Eingebautes Werkzeug</p>
                                         <p class="ss-widget-pitch" id="ss-widget-pitch"></p>
                                         <div class="ss-prospect-tools" id="ss-prospect-tools"></div>
                                     </div>
-                                    <div class="ss-mock-strip" aria-hidden="true">
-                                        <div class="ss-mock-cell"><b>Leistungen</b><span></span><span></span></div>
-                                        <div class="ss-mock-cell"><b>Referenzen</b><span></span><span></span></div>
-                                        <div class="ss-mock-cell"><b>Kontakt &amp; Anfahrt</b><span></span><span></span></div>
+                                    <div class="ss-mock-sections" aria-hidden="true">
+                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Leistungen</b><span>Klar gegliedert, was Sie anbieten — verständlich auf einen Blick.</span></div></div>
+                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Referenzen</b><span>Echte Stimmen Ihrer Kunden schaffen Vertrauen.</span></div></div>
+                                        <div class="ss-mock-sec"><div class="ss-mock-sec-body"><b>Kontakt &amp; Anfahrt</b><span>Ein Klick zu Anruf, Route und Anfrage.</span></div></div>
                                     </div>
                                     <div class="ss-mock-foot">
-                                        <span class="ss-mock-foot-name" id="ss-mock-foot-name"></span>
-                                        <span class="ss-geo-hook" id="ss-geo-hook"></span>
+                                        <span class="ss-mock-foot-l">
+                                            <span class="ss-mock-foot-name" id="ss-mock-foot-name"></span>
+                                            <span class="ss-geo-hook" id="ss-geo-hook"></span>
+                                        </span>
+                                        <span class="ss-mock-foot-folio">S. 01 · Konzept</span>
                                     </div>
                                 </div>
                             </div>
@@ -659,6 +693,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
         }
         function scoreBand(s) { return s == null ? 'mid' : (s < 50 ? 'bad' : (s < 75 ? 'mid' : 'good')); }
+        // Kontrast von Weiß auf einer Akzentfarbe — entscheidet, ob der Akzent als
+        // Button-Hintergrund taugt (sonst Navy), damit beliebige Marken-Farben lesbar bleiben.
+        function relLum(hex) {
+            var m = /^#?([0-9a-f]{6}|[0-9a-f]{3})$/i.exec(hex || ''); if (!m) return 1;
+            var h = m[1]; if (h.length === 3) h = h.replace(/./g, '$&$&');
+            var c = [0, 2, 4].map(function (i) { var v = parseInt(h.substr(i, 2), 16) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+            return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+        }
+        function whiteContrast(hex) { return 1.05 / (relLum(hex) + 0.05); }
 
         // ── Phyllotaxis-Siegel im Loader erzeugen ──
         function buildSeal() {
@@ -816,14 +859,19 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             var widget = data.widget || BRANCHE_WIDGET.generic;
             var audit = data.audit || { score: null, topLeak: null, findings: [] };
             var accent = brand.accent || BRANCHE_ACCENT[brancheKeyOf(widget)] || '#8A7B5C';
+            if (!/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(accent)) accent = '#8A7B5C';
             document.documentElement.style.setProperty('--ss-accent', accent);
-            // Sicherheits-Halbschicht im Client: Akzent muss eine Hex-Farbe sein
-            if (!/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(accent)) document.documentElement.style.setProperty('--ss-accent', '#8A7B5C');
+            // Button-Akzent nur, wenn Weiß darauf lesbar ist (≥3:1), sonst Navy.
+            document.documentElement.style.setProperty('--ss-accent-tool', whiteContrast(accent) >= 3 ? accent : '#1A2E40');
 
             document.getElementById('ss-found').textContent = copy.found || '';
             document.getElementById('ss-eyebrow').textContent = copy.eyebrow || '';
             document.getElementById('ss-brand-name').textContent = brand.name || '';
-            document.getElementById('ss-headline').textContent = copy.headline || '';
+            // Headline editorial: letztes Wort als Fraunces/Cormorant-Italic-Akzent (<em>).
+            var hEl = document.getElementById('ss-headline');
+            var hw = String(copy.headline || '').trim().split(/\s+/);
+            if (hw.length > 1) { var lastW = hw.pop(); hEl.innerHTML = esc(hw.join(' ')) + ' <em>' + esc(lastW) + '</em>'; }
+            else { hEl.textContent = copy.headline || ''; }
             document.getElementById('ss-subline').textContent = copy.subline || '';
             document.getElementById('ss-widget-pitch').textContent = copy.widgetPitch || '';
             document.getElementById('ss-geo-hook').textContent = copy.geoHook || '';
@@ -862,8 +910,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
             // Erkannte Branche anzeigen + Override-Select synchronisieren.
             var bk = brancheKeyOf(widget);
+            var brLabel = (BRANCHE_WIDGET[bk] && BRANCHE_WIDGET[bk].label) || 'Lokaler Betrieb';
             var lblEl = document.getElementById('ss-detected-branche');
-            if (lblEl) lblEl.textContent = (BRANCHE_WIDGET[bk] && BRANCHE_WIDGET[bk].label) || 'Lokaler Betrieb';
+            if (lblEl) lblEl.textContent = brLabel;
+            var subEl = document.getElementById('ss-brand-sub');
+            if (subEl) subEl.textContent = brLabel;
             var rb = document.getElementById('ss-rebranche-select');
             if (rb) rb.value = bk;
 
