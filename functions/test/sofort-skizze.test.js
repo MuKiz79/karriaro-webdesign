@@ -82,9 +82,16 @@ test("detectBranche: Keyword zuerst, dann Places-Typ, sonst generic", () => {
     assert.equal(ss.detectBranche("x.de", "", "restaurant"), "restaurant");
     assert.equal(ss.detectBranche("hansgrohe.com", "Faucets for the bathroom", null), "generic");
     assert.equal(ss.detectBranche("randomshop.de", "", "grocery_store"), "generic");
-    // Metzgerei/Bäckerei (Lebensmittel-Handwerk) → generic, AUCH wenn der Text Gastronomie erwähnt
+    // Lebensmittel-Handwerk wird NUR aus dem HOST abgeleitet (Domain-Identität):
     assert.equal(ss.detectBranche("metzgerei-mueller.de", "Wir beliefern auch die Gastronomie", null), "generic");
     assert.equal(ss.detectBranche("baeckerei-schmidt.de", "", null), "generic");
+    // ASCII-Umlaut-Schreibweise „baecker" im Host muss ebenfalls greifen (Domains haben selten ä),
+    // auch wenn der Text Gastronomie erwähnt:
+    assert.equal(ss.detectBranche("baeckerei-mueller.de", "Wir beliefern auch die Gastronomie", null), "generic");
+    // Regression: ein ECHTES Restaurant, dessen Text Lebensmittel-Wörter erwähnt, bleibt restaurant
+    // (Overmatch-Schutz — der frühere text-basierte generic-Regelvorrang kippte solche Seiten).
+    assert.equal(ss.detectBranche("restaurant-adler.de", "Frühstück mit Brot vom Bäcker und hausgemachter Konditorei", null), "restaurant");
+    assert.equal(ss.detectBranche("gasthaus-hirsch.de", "Feinkost-Vorspeisen, Wein zum Gericht", null), "restaurant");
 });
 
 test("extractBrandTokens: Title-Fallback + Logo-Fallback (favicons) + accent null", () => {

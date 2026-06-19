@@ -2665,6 +2665,11 @@ const SOFORT_CACHE_TTL_DAYS = 7;                     // Storage-TTL via expiresA
 const SOFORT_SIGNAL_TTL_DAYS = 30;                   // Signal-Log (welche Domains eingetragen wurden) — 30 Tage
 const SOFORT_GEN_DAILY_CAP = 120;                    // Tages-Obergrenze für teure Bespoke-Generierungen (Kostenschutz)
 
+// Firestore-TTL-Helper: einheitlich statt handgerolltem new Timestamp(Math.floor(.../1000),0).
+function ttlTimestamp(days) {
+    return admin.firestore.Timestamp.fromMillis(Date.now() + days * 86400000);
+}
+
 // Lead-Signal: festhalten, WELCHE Domain eingetragen wurde (für die Founder-Auswertung
 // nach einem LinkedIn-Post). Bewusst minimal: Domain + Zeit + Anzahl + Branche + letzter
 // Score — KEIN Ziel-Freitext (DSGVO-Datenminimierung). Dedupe per Domain (Zähler). Best
@@ -2678,28 +2683,33 @@ async function recordSofortSignal(domain, branche, score) {
             lastScore: (typeof score === "number" ? score : null),
             lastSeenMs: Date.now(),
             count: admin.firestore.FieldValue.increment(1),
-            expiresAt: new admin.firestore.Timestamp(
-                Math.floor((Date.now() + SOFORT_SIGNAL_TTL_DAYS * 86400000) / 1000), 0
-            )
+            expiresAt: ttlTimestamp(SOFORT_SIGNAL_TTL_DAYS)
         }, { merge: true });
     } catch (err) { console.warn("recordSofortSignal failed:", err.message); }
 }
 
-// Tages-Budget für die teure Bespoke-Generierung. Liefert true, wenn HEUTE noch Platz ist
-// (und zählt dann hoch). Soft-Cap (kleine Races egal) — schützt vor einem viralen Kostentag.
-async function sofortGenBudgetOk() {
+// Tages-Budget für die teure Bespoke-Generierung. NUR LESEND prüfen (kein Verbrauch hier):
+// fehlgeschlagene/abgebrochene Versuche (kein Screenshot, Sonnet-Fehler) dürfen das Budget
+// NICHT aufzehren. Verbraucht wird erst NACH einer erfolgreichen Generierung (recordSofortGen).
+// Soft-Cap: kleine Races über die nicht-atomare Lesung sind egal (überzählt höchstens minimal).
+async function sofortGenBudgetLeft() {
     try {
         const day = new Date().toISOString().slice(0, 10);
-        const ref = db.collection("sofortDaily").doc(day);
-        const snap = await ref.get();
+        const snap = await db.collection("sofortDaily").doc(day).get();
         const c = snap.exists && snap.data() && typeof snap.data().count === "number" ? snap.data().count : 0;
-        if (c >= SOFORT_GEN_DAILY_CAP) return false;
-        await ref.set({
+        return c < SOFORT_GEN_DAILY_CAP;
+    } catch (err) { console.warn("sofortGenBudget read failed:", err.message); return true; } // im Zweifel zulassen
+}
+
+// Verbrauch EINES Budget-Slots — aufrufen erst NACH einer tatsächlichen (teuren) Generierung.
+async function recordSofortGen() {
+    try {
+        const day = new Date().toISOString().slice(0, 10);
+        await db.collection("sofortDaily").doc(day).set({
             count: admin.firestore.FieldValue.increment(1),
-            expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 3 * 86400000) / 1000), 0)
+            expiresAt: ttlTimestamp(3)
         }, { merge: true });
-        return true;
-    } catch (err) { console.warn("sofortGenBudget check failed:", err.message); return true; } // im Zweifel zulassen
+    } catch (err) { console.warn("sofortGen budget record failed:", err.message); }
 }
 
 function sofortCacheKey(domain, brancheKey, ziel) {
@@ -2844,6 +2854,8 @@ exports.sofortSkizze = onRequest(
                 const d = cached.data();
                 if (d.cachedAtMs && Date.now() - d.cachedAtMs < SOFORT_CACHE_FRESH_MS && d.payload) {
                     const gen = d.generatedHtml || d.payload.generatedHtml || null;   // Phase 2 ggf. nachgespeichert
+                    // Auch Cache-Treffer als Eingabe zählen (sonst unterzählt die Auswertung).
+                    await recordSofortSignal(domain, explicitBranche || "auto", d.payload.audit && d.payload.audit.score);
                     return res.json({ ...d.payload, generatedHtml: gen, meta: { ...(d.payload.meta || {}), generated: !!gen, cached: true } });
                 }
             }
@@ -2983,6 +2995,8 @@ exports.sofortSkizze = onRequest(
         } catch (err) {
             // Letzte Verteidigungslinie: 200 mit reduzierten Daten statt 500.
             console.error("sofortSkizze fatal (reduced response):", String(err && err.message ? err.message : err).slice(0, 160));
+            // Auch reduzierte (z. B. bot-gewallte) Eingaben zählen — das sind die interessanten Leads.
+            await recordSofortSignal(domain, brancheKey, null);
             const brand = extractBrandTokens(null, auditUrl, domain, brancheKey);
             return res.json({
                 brand,
@@ -3045,9 +3059,10 @@ exports.sofortGenerate = onRequest(
             }
         } catch (err) { console.warn("sofortGenerate cache lookup failed:", err.message); }
 
-        // Tages-Obergrenze (Kostenschutz bei viralem LinkedIn-Tag): ist das Budget
-        // erschöpft, KEINE teure Generierung — der Client behält das Template (nie kaputt).
-        if (!(await sofortGenBudgetOk())) {
+        // Tages-Obergrenze (Kostenschutz bei viralem LinkedIn-Tag): NUR LESEND prüfen — der
+        // tatsächliche Slot-Verbrauch passiert erst NACH erfolgreicher Generierung (sonst zehren
+        // fehlschlagende/abgebrochene Versuche das Budget auf und cappen echte Leads).
+        if (!(await sofortGenBudgetLeft())) {
             return res.json({ generatedHtml: null, generated: false, capped: true, id: cacheKey });
         }
 
@@ -3082,13 +3097,13 @@ exports.sofortGenerate = onRequest(
 
             // generatedHtml ins Cache-Doc mergen (teilbare Links/Wiederholungen) — payload bleibt erhalten.
             if (generatedHtml) {
+                // Budget-Slot ERST JETZT verbuchen — eine teure Generierung hat tatsächlich stattgefunden.
+                await recordSofortGen();
                 try {
                     await db.collection("sofortSkizze").doc(cacheKey).set({
                         generatedHtml,
                         generatedAtMs: Date.now(),
-                        expiresAt: new admin.firestore.Timestamp(
-                            Math.floor((Date.now() + SOFORT_CACHE_TTL_DAYS * 86400000) / 1000), 0
-                        )
+                        expiresAt: ttlTimestamp(SOFORT_CACHE_TTL_DAYS)
                     }, { merge: true });
                 } catch (err) { console.warn("sofortGenerate cache write failed:", err.message); }
             }
@@ -3118,14 +3133,21 @@ exports.sofortSignals = onRequest(
     async (req, res) => {
         if (cors(req, res, "GET, OPTIONS")) return;
         if (req.method !== "GET") return res.status(405).json({ error: "GET only" });
-        if (await enforceRateLimit(db, req, res, "sofortSignals", 60, 3600)) return;
 
+        // Auth VOR dem Rate-Limit: sonst verbrauchen unauthentifizierte Probes (oder häufiges
+        // Neuladen) das per-IP-Kontingent des Founders + je einen Firestore-Write.
         const adminKey = safeSecretValue(SOFORT_ADMIN_KEY);
         if (!adminKey) return res.status(503).send("Signal-Ansicht nicht konfiguriert (SOFORT_ADMIN_KEY fehlt).");
         const given = String((req.query && (req.query.key || req.query.k)) || "");
-        const ok = given.length === adminKey.length &&
-            crypto.timingSafeEqual(Buffer.from(given), Buffer.from(adminKey));
+        // Konstantzeit-Vergleich über feste 32-Byte-SHA-256-Digests: kein RangeError bei
+        // Multibyte/Längen-Differenz, keine Längen-Leak über Timing.
+        const ok = crypto.timingSafeEqual(
+            crypto.createHash("sha256").update(given).digest(),
+            crypto.createHash("sha256").update(adminKey).digest()
+        );
         if (!ok) return res.status(403).send("Zugriff verweigert.");
+
+        if (await enforceRateLimit(db, req, res, "sofortSignals", 60, 3600)) return;
 
         const esc = (s) => String(s == null ? "" : s)
             .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -3135,10 +3157,15 @@ exports.sofortSignals = onRequest(
             const rows = [];
             snap.forEach((doc) => {
                 const d = doc.data() || {};
-                total += (d.count || 1);
-                const when = d.lastSeenMs ? new Date(d.lastSeenMs).toISOString().replace("T", " ").slice(0, 16) : "";
+                const count = Number(d.count) || 1;
+                total += count;
+                // Nur eine ECHTE Zahl an Date() geben (ein truthy-aber-invalider lastSeenMs würde
+                // sonst per RangeError die ganze Tabelle kippen).
+                const when = (typeof d.lastSeenMs === "number" && isFinite(d.lastSeenMs))
+                    ? new Date(d.lastSeenMs).toISOString().replace("T", " ").slice(0, 16) : "";
                 const dom = esc(d.domain || "");
-                rows.push(`<tr><td>${dom}</td><td>${esc(d.branche || "")}</td><td style="text-align:right">${d.count || 1}&times;</td><td style="text-align:right">${d.lastScore == null ? "&mdash;" : d.lastScore}</td><td>${when}</td><td><a href="https://${dom}" target="_blank" rel="noopener noreferrer nofollow">&#8599;</a></td></tr>`);
+                const score = d.lastScore == null ? "&mdash;" : esc(d.lastScore);
+                rows.push(`<tr><td>${dom}</td><td>${esc(d.branche || "")}</td><td style="text-align:right">${count}&times;</td><td style="text-align:right">${score}</td><td>${when}</td><td><a href="https://${dom}" target="_blank" rel="noopener noreferrer nofollow">&#8599;</a></td></tr>`);
             });
             const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sofort-Skizze &middot; Signale</title>
 <style>body{font-family:system-ui,sans-serif;max-width:880px;margin:24px auto;padding:0 16px;color:#16202C}h1{font-size:20px;margin:0 0 4px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #e3ddd0}th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8a7b5c}tr:hover td{background:#faf8f3}.meta{color:#5a6470;font-size:13px;margin:0 0 16px}</style></head>

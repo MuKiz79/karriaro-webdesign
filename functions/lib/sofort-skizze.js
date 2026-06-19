@@ -108,15 +108,18 @@ const BRANCHE_RULES = [
     ["sanitaer",   /(sanit[äa]r|klempner|installateur|rohrreinig|badsanierung|heizungsbau|\bshk\b|\bplumber\b|\bplumbing\b)/],
     ["immobilien", /(immobilie|makler|hausverwaltung|real[\s-]?estate|\brealtor\b)/],
     ["friseur",    /(friseur|coiffeur|\bbarber\b|hairdress|hair[\s-]?salon|kosmetikstudio|nagelstudio|beauty[\s-]?salon)/],
-    // Lebensmittel-Handwerk VOR restaurant prüfen: eine Metzgerei/Bäckerei, die irgendwo
-    // „Gastronomie/beliefern" erwähnt, soll NICHT als Restaurant (Wein-Berater) gelten.
-    ["generic",    /(metzger|fleischer|b[äa]cker|konditorei|feinkost|hofladen)/],
     ["restaurant", /(restaurant|gasthof|gasthaus|trattoria|osteria|pizzeria|wirtshaus|\bbistro\b|gastronom|brasserie)/]
 ];
 
 /** detectBranche(host, text, placesType) → einer der 7 Widget-Keys. */
 function detectBranche(host, text, placesType) {
-    const hay = (String(host || "") + " " + String(text || "")).toLowerCase();
+    const h = String(host || "").toLowerCase();
+    const hay = (h + " " + String(text || "")).toLowerCase();
+    // Lebensmittel-Handwerk (Metzgerei/Bäckerei/Konditorei/Feinkost) ist eine DOMAIN-Identität,
+    // KEINE Gastronomie → neutraler Anfrage-Assistent. Bewusst NUR aus dem HOST ableiten: der
+    // Seitentext eines Restaurants erwähnt oft „Bäcker/Konditorei/Feinkost" und darf es NICHT
+    // umklassifizieren (vgl. grocery_store → generic).
+    if (/(metzger|fleischer|b(?:ae|ä|a)cker|konditorei|feinkost|hofladen)/.test(h)) return "generic";
     for (const [key, re] of BRANCHE_RULES) {
         if (re.test(hay)) return key;
     }
