@@ -44,7 +44,7 @@ const {
     normalizeBranche, pickWidget, detectBranche, extractImages, extractBrandTokens, BRANCHE_LABEL,
     SOFORT_SYS, SOFORT_TOOL, buildCopyUserMessage, parseCopyResult,
     composeFallbackCopy, extractPhone, deriveAudit,
-    GENERATIVE_SYS, buildGenerativeUserMessage, sanitizeGeneratedHtml
+    GENERATIVE_SYS, buildGenerativeUserMessage, sanitizeGeneratedHtml, scrubGeneratedHtml
 } = require("./lib/sofort-skizze.js");  // Sofort-Skizze (2026-06-17)
 const logger = require("./lib/logger.js");
 
@@ -2705,6 +2705,46 @@ async function fetchVisionShot(target, key) {
     } catch { return null; }
 }
 
+// Phase 2 — VOLL-GENERATIVE Bespoke-Konzeptseite (Sonnet 4.6 Vision sieht den Screenshot).
+// Eigener, langsamer Call (~60-90s) → bewusst aus dem Phase-1-Antwortpfad gelöst, damit das
+// schnelle Template das 55s-Client-Fenster nie reißt. Liefert sanitisiertes HTML oder null.
+async function sofortGenerateConcept(brand, brancheKey, safeZiel, visionShot) {
+    if (!visionShot) return null;
+    const gFacts = {
+        name: brand.name,
+        domain: brand.domain,
+        brancheLabel: BRANCHE_LABEL[brancheKey] || "Lokaler Betrieb",
+        accent: brand.accent,
+        services: [],                 // Sonnet leitet Leistungen aus dem Screenshot ab
+        ziel: safeZiel,
+        images: brand.images || []
+    };
+    const r = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CLAUDE_API_KEY.value(),
+            "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+            model: SOFORT_GEN_MODEL,   // Sonnet 4.6 (multimodal) — freier, hochwertiger Entwurf
+            max_tokens: 8000,          // genug für eine vollständige Seite (5000 schnitt ab)
+            system: [{ type: "text", text: GENERATIVE_SYS, cache_control: { type: "ephemeral" } }],
+            messages: [{ role: "user", content: [
+                { type: "text", text: "Anbei ein Screenshot der heutigen Startseite.\n\n" + buildGenerativeUserMessage(gFacts) },
+                { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }
+            ] }]
+        }),
+        signal: AbortSignal.timeout(95000)
+    });
+    if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude GEN ${r.status}: ${t.slice(0, 160)}`); }
+    const data = await r.json();
+    const text = (data && Array.isArray(data.content) ? data.content : [])
+        .filter((b) => b && b.type === "text").map((b) => b.text).join("");
+    // sanitize (entfernt Ausführbares) + UWG-Scrub auf sichtbarem Text (2. Schicht).
+    return scrubGeneratedHtml(sanitizeGeneratedHtml(text));
+}
+
 exports.sofortSkizze = onRequest(
     {
         region: "europe-west1",
@@ -2722,23 +2762,25 @@ exports.sofortSkizze = onRequest(
             try {
                 const doc = await db.collection("sofortSkizze").doc(sid).get();
                 if (doc.exists && doc.data() && doc.data().payload) {
-                    const p = doc.data().payload;
-                    return res.json({ ...p, meta: { ...(p.meta || {}), cached: true, shared: true } });
+                    const dd = doc.data();
+                    const p = dd.payload;
+                    const gen = dd.generatedHtml || p.generatedHtml || null;   // Phase 2 ggf. nachgespeichert
+                    return res.json({ ...p, generatedHtml: gen, meta: { ...(p.meta || {}), generated: !!gen, cached: true, shared: true } });
                 }
             } catch (e) { console.warn("sofortSkizze GET failed:", e.message); }
             return res.status(404).json({ error: "Skizze nicht gefunden oder abgelaufen." });
         }
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (await enforceRateLimit(db, req, res, "sofortSkizze", 8, 3600,
-            "Sie haben das stündliche Limit erreicht — die Skizze nutzt echte KI- und Audit-Calls. Bitte später erneut.")) return;
 
         const { url, branche, ziel, consent, hp } = req.body || {};
 
-        // Honeypot — Bot bekommt stilles Erfolgs-Signal.
+        // Honeypot + Consent VOR dem Rate-Limit → Bots/zustimmungslose Calls verbrauchen
+        // kein Kontingent. Honeypot: Bot bekommt stilles Erfolgs-Signal.
         if (hp && String(hp).trim().length > 0) return res.status(200).json({ ok: true, bot: true });
-
         // DSGVO-Einwilligung Pflicht (zweite Schicht hinter der Client-Checkbox).
         if (!consent) return res.status(400).json({ error: "DSGVO-Zustimmung fehlt" });
+        if (await enforceRateLimit(db, req, res, "sofortSkizze", 8, 3600,
+            "Sie haben das stündliche Limit erreicht — die Skizze nutzt echte KI- und Audit-Calls. Bitte später erneut.")) return;
 
         const auditUrl = normalizeUrl(url);
         if (!auditUrl) return res.status(400).json({ error: "Ungültige URL — bitte mit Domain (z. B. ihrefirma.de)." });
@@ -2761,7 +2803,8 @@ exports.sofortSkizze = onRequest(
             if (cached.exists) {
                 const d = cached.data();
                 if (d.cachedAtMs && Date.now() - d.cachedAtMs < SOFORT_CACHE_FRESH_MS && d.payload) {
-                    return res.json({ ...d.payload, meta: { ...(d.payload.meta || {}), cached: true } });
+                    const gen = d.generatedHtml || d.payload.generatedHtml || null;   // Phase 2 ggf. nachgespeichert
+                    return res.json({ ...d.payload, generatedHtml: gen, meta: { ...(d.payload.meta || {}), generated: !!gen, cached: true } });
                 }
             }
         } catch (err) { console.warn("sofortSkizze cache lookup failed:", err.message); }
@@ -2815,13 +2858,11 @@ exports.sofortSkizze = onRequest(
             audit.screenshot = (full && full.screenshot) || null;
             audit.screenshotView = (full && full.screenshotView) || null;
 
-            // ── Zwei KI-Calls PARALLEL (beide best effort, beide mit Screenshot-Vision):
-            //    (A) COPY (Haiku, forced tool_use) → strukturierte Texte für die Template-
-            //        Spalte UND als Fallback, falls die freie Generierung scheitert.
-            //    (B) GENERATIV (Sonnet, frei) → eine komplette, eigenständige Konzept-HTML-
-            //        Seite, die im Sandbox-iframe gerendert wird (Stufe 2, Founder-Wunsch).
-            //    Parallel, damit beide ins 120s-Budget passen. Generativ braucht NUR den
-            //    Screenshot+Marken-Fakten (nicht die Audit-Befunde) → kann sofort starten. ──
+            // ── PHASE 1 (schnell): nur COPY (Haiku, Screenshot-Vision) → reicht für das
+            //    bildreiche Template + Audit. Die freie BESPOKE-Generierung (Sonnet, ~60-90s)
+            //    läuft hier NICHT — sie sprengte das 55s-Client-Fenster und löste den stillen
+            //    lokalen Fallback aus (generisch, bildlos). Der Client holt die Bespoke-Seite
+            //    separat per Phase 2 (/sofortGenerate) nach und blendet sie progressiv ein. ──
             const apiHeaders = {
                 "Content-Type": "application/json",
                 "x-api-key": CLAUDE_API_KEY.value(),
@@ -2863,55 +2904,16 @@ exports.sofortSkizze = onRequest(
                 return parseCopyResult(await r.json());
             };
 
-            const runGenerative = async () => {
-                if (!visionShot) return null;   // ohne Screenshot keine freie Generierung
-                const gFacts = {
-                    name: brand.name,
-                    domain,
-                    brancheLabel: BRANCHE_LABEL[brancheKey] || "Lokaler Betrieb",
-                    accent: brand.accent,
-                    services: [],                 // Sonnet leitet Leistungen aus dem Screenshot ab
-                    ziel: safeZiel,
-                    images: brand.images || []
-                };
-                const r = await fetch("https://api.anthropic.com/v1/messages", {
-                    method: "POST",
-                    headers: apiHeaders,
-                    body: JSON.stringify({
-                        model: SOFORT_GEN_MODEL,   // Sonnet 4.6 (multimodal) — freier, hochwertiger Entwurf
-                        max_tokens: 8000,          // genug für eine vollständige Seite (5000 schnitt ab)
-                        system: [{ type: "text", text: GENERATIVE_SYS, cache_control: { type: "ephemeral" } }],
-                        messages: [{ role: "user", content: [
-                            { type: "text", text: "Anbei ein Screenshot der heutigen Startseite.\n\n" + buildGenerativeUserMessage(gFacts) },
-                            { type: "image", source: { type: "base64", media_type: visionShot.mediaType, data: visionShot.base64 } }
-                        ] }]
-                    }),
-                    signal: AbortSignal.timeout(80000)
-                });
-                if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude GEN ${r.status}: ${t.slice(0, 160)}`); }
-                const data = await r.json();
-                const text = (data && Array.isArray(data.content) ? data.content : [])
-                    .filter((b) => b && b.type === "text").map((b) => b.text).join("");
-                return sanitizeGeneratedHtml(text);
-            };
-
             let copy, copySource = visionShot ? "vision" : "ai";
-            let generatedHtml = null;
-            const [copyR, genR] = await Promise.allSettled([runCopy(), runGenerative()]);
-            if (copyR.status === "fulfilled" && copyR.value) {
-                copy = copyR.value;
+            try {
+                copy = await runCopy();
                 if (copy.accent) { brand.accent = copy.accent; }
                 delete copy.accent;
-            } else {
+            } catch (err) {
                 // Statische Fehlermeldung, NIE die Interessenten-Eingaben loggen (DSGVO).
-                console.error("sofortSkizze copy failed:", String(copyR.reason && copyR.reason.message ? copyR.reason.message : copyR.reason).slice(0, 160));
+                console.error("sofortSkizze copy failed:", String(err && err.message ? err.message : err).slice(0, 160));
                 copy = composeFallbackCopy(brand, brancheKey, widget, safeZiel, audit);
                 copySource = "fallback";
-            }
-            if (genR.status === "fulfilled" && genR.value) {
-                generatedHtml = genR.value;
-            } else if (genR.status === "rejected") {
-                console.error("sofortSkizze generate failed:", String(genR.reason && genR.reason.message ? genR.reason.message : genR.reason).slice(0, 160));
             }
 
             const out = {
@@ -2919,8 +2921,8 @@ exports.sofortSkizze = onRequest(
                 copy,
                 widget,
                 audit,
-                generatedHtml,
-                meta: { source: (light || full) ? "server" : "reduced", copySource, generated: !!generatedHtml, cached: false, id: cacheKey }
+                generatedHtml: null,   // Bespoke-Seite liefert Phase 2 (/sofortGenerate) nach
+                meta: { source: (light || full) ? "server" : "reduced", copySource, generated: false, cached: false, id: cacheKey }
             };
 
             // ── Cache schreiben (transient; TTL via expiresAt). ──
@@ -2946,6 +2948,106 @@ exports.sofortSkizze = onRequest(
                 audit: { score: null, topLeak: null, findings: [] },
                 meta: { source: "reduced", copySource: "fallback", cached: false, id: cacheKey }
             });
+        }
+    }
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 253 (Stufe 2) — PHASE 2: voll-generative Bespoke-Konzeptseite.
+//   POST { url, branche, ziel, consent, hp } → { generatedHtml, generated, id }.
+//   Eigener langsamer Sonnet-Vision-Call (~60-90s), bewusst vom schnellen Phase-1-
+//   `sofortSkizze` getrennt: das bildreiche Template kommt sofort (unter dem 55s-
+//   Client-Fenster), die Bespoke-Seite wird HIER nachgeholt und im Client progressiv
+//   eingeblendet. Schreibt generatedHtml ins bestehende Cache-Doc (teilbare Links +
+//   Wiederholungen). Transient wie sofortSkizze: keine PII-Persistenz über TTL hinaus.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.sofortGenerate = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 120,
+        cors: false,
+        secrets: [PLACES_KEY, CLAUDE_API_KEY, SHOT_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res, "POST, OPTIONS")) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+
+        const { url, branche, ziel, consent, hp } = req.body || {};
+        // Honeypot + Consent VOR dem Rate-Limit prüfen → Bots/zustimmungslose Calls
+        // verbrauchen kein Kontingent.
+        if (hp && String(hp).trim().length > 0) return res.status(200).json({ ok: true, bot: true });
+        if (!consent) return res.status(400).json({ error: "DSGVO-Zustimmung fehlt" });
+        if (await enforceRateLimit(db, req, res, "sofortGenerate", 8, 3600,
+            "Stündliches Limit erreicht — die Generierung nutzt echte KI-Calls. Bitte später erneut.")) return;
+
+        const auditUrl = normalizeUrl(url);
+        if (!auditUrl) return res.status(400).json({ error: "Ungültige URL" });
+        let domain;
+        try { domain = new URL(auditUrl).hostname.replace(/^www\./, ""); }
+        catch { return res.status(400).json({ error: "Ungültige URL" }); }
+
+        const safeZiel = String(ziel || "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, 200);
+        const explicitBranche = (branche && String(branche).trim() && String(branche).toLowerCase() !== "auto")
+            ? normalizeBranche(branche) : null;
+        const cacheKey = sofortCacheKey(domain, explicitBranche || "auto", safeZiel);
+
+        // Schon generiert (Cache)? → sofort zurück, kein zweiter Sonnet-Call.
+        try {
+            const cached = await db.collection("sofortSkizze").doc(cacheKey).get();
+            if (cached.exists) {
+                const d = cached.data();
+                const prev = d.generatedHtml || (d.payload && d.payload.generatedHtml) || null;
+                if (prev) return res.json({ generatedHtml: prev, generated: true, id: cacheKey, cached: true });
+            }
+        } catch (err) { console.warn("sofortGenerate cache lookup failed:", err.message); }
+
+        try {
+            const shotKey = safeSecretValue(SHOT_API_KEY);
+            // Seite + Vision-Screenshot parallel (gecappt). Audit NICHT nötig (nur Marken-Fakten).
+            const [htmlR, shotR] = await Promise.allSettled([
+                withSofortDeadline(fetchHtml(auditUrl, 8000), 9000, "fetchHtml"),
+                withSofortDeadline(fetchVisionShot(auditUrl, shotKey), 22000, "shot")
+            ]);
+            const html = htmlR.status === "fulfilled" && htmlR.value ? htmlR.value.html : null;
+            const finalUrl = (htmlR.status === "fulfilled" && htmlR.value && htmlR.value.finalUrl) || auditUrl;
+            const visionShot = shotR.status === "fulfilled" ? shotR.value : null;
+            if (!visionShot) return res.json({ generatedHtml: null, generated: false, id: cacheKey });
+
+            // Branche-Konsistenz mit Phase 1: der Client reicht die in Phase 1 (mit Places-
+            // Audit) erkannte Branche als detectedBranche durch → identischer Generierungs-
+            // Kontext. Reihenfolge: User-Override > Phase-1-Branche > eigene Heuristik.
+            const passedDetected = (req.body && req.body.detectedBranche && String(req.body.detectedBranche).trim())
+                ? normalizeBranche(req.body.detectedBranche) : null;
+            let brancheKey = explicitBranche || passedDetected;
+            if (!brancheKey) {
+                const titleM = html ? html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) : null;
+                const detectText = [titleM ? titleM[1] : "", sofortMetaDescription(html), sofortSnippet(html)].join(" ");
+                brancheKey = detectBranche(domain, detectText, null);
+            }
+            const brand = extractBrandTokens(html, finalUrl, domain, brancheKey);
+            brand.domain = brand.domain || domain;
+            brand.images = extractImages(html, finalUrl, domain, 6);
+
+            const generatedHtml = await sofortGenerateConcept(brand, brancheKey, safeZiel, visionShot);
+
+            // generatedHtml ins Cache-Doc mergen (teilbare Links/Wiederholungen) — payload bleibt erhalten.
+            if (generatedHtml) {
+                try {
+                    await db.collection("sofortSkizze").doc(cacheKey).set({
+                        generatedHtml,
+                        generatedAtMs: Date.now(),
+                        expiresAt: new admin.firestore.Timestamp(
+                            Math.floor((Date.now() + SOFORT_CACHE_TTL_DAYS * 86400000) / 1000), 0
+                        )
+                    }, { merge: true });
+                } catch (err) { console.warn("sofortGenerate cache write failed:", err.message); }
+            }
+            return res.json({ generatedHtml: generatedHtml || null, generated: !!generatedHtml, id: cacheKey });
+        } catch (err) {
+            // Nie 500 vor dem Client — Phase 2 ist optional; Template bleibt stehen.
+            console.error("sofortGenerate failed:", String(err && err.message ? err.message : err).slice(0, 160));
+            return res.json({ generatedHtml: null, generated: false, id: cacheKey });
         }
     }
 );

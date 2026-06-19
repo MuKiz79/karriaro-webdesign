@@ -280,3 +280,37 @@ test("GENERATIVE_SYS: verbietet Skripte/externe Ressourcen und Hansgrohe", () =>
     assert.ok(/Hansgrohe/i.test(ss.GENERATIVE_SYS), "Hansgrohe-Verbot benannt");
     assert.ok(/UWG/i.test(ss.GENERATIVE_SYS), "UWG benannt");
 });
+
+// ── scrubGeneratedHtml: UWG-Scrub auf sichtbarem Text, CSS/Attribute unangetastet ──
+test("scrubGeneratedHtml: scrubt sichtbare Superlative, lässt CSS '100%' in Ruhe", () => {
+    const html = '<!doctype html><html><head><style>.x{width:100%;max-width:100%}</style></head>'
+        + '<body><h1>Wir sind die Nr. 1 und garantiert unschlagbar</h1>'
+        + '<p>100% zufrieden oder Marktführer in der Region.</p>'
+        + '<img src="https://x.de/garantiert-gut.jpg" alt="garantiert schön"></body></html>';
+    const out = ss.scrubGeneratedHtml(html);
+    // CSS unverändert (Layout darf NICHT brechen):
+    assert.ok(/width:100%/.test(out), "CSS 100% bleibt");
+    assert.ok(/max-width:100%/.test(out), "CSS max-width:100% bleibt");
+    // sichtbare Superlative ersetzt:
+    assert.ok(!/Nr\. 1/.test(out), "Nr. 1 ersetzt");
+    assert.ok(!/\bgarantiert\b/i.test(out.replace(/garantiert-gut\.jpg|alt="[^"]*"/g, "")), "garantiert im Text ersetzt");
+    assert.ok(!/unschlagbar/i.test(out), "unschlagbar ersetzt");
+    assert.ok(!/Marktführer/i.test(out), "Marktführer ersetzt");
+    assert.ok(!/100% zufrieden/i.test(out), "100% zufrieden ersetzt");
+    // Bild-URL (Attribut) bleibt funktionsfähig — Scrub fasst nur Text zwischen Tags an:
+    assert.ok(/src="https:\/\/x\.de\/garantiert-gut\.jpg"/.test(out), "Bild-URL unangetastet");
+});
+
+test("scrubGeneratedHtml: SEO-Garantien werden zu Möglichkeiten", () => {
+    const html = '<!doctype html><html><body><p>Wir verbessert Ihr Google-Ranking und Sie wird sichtbar bei Google.</p>'
+        + '<p>Ranking-Boost und Platz 1 bei Google inklusive.</p></body></html>';
+    const out = ss.scrubGeneratedHtml(html);
+    assert.ok(!/Ranking-Boost/i.test(out), "Ranking-Boost weg");
+    assert.ok(!/Platz 1 bei Google/i.test(out), "Platz 1 bei Google weg");
+    assert.ok(!/verbessert ihr google-ranking/i.test(out), "verbessert Ranking weg");
+});
+
+test("scrubGeneratedHtml: null/non-string passthrough", () => {
+    assert.equal(ss.scrubGeneratedHtml(null), null);
+    assert.equal(ss.scrubGeneratedHtml(undefined), undefined);
+});

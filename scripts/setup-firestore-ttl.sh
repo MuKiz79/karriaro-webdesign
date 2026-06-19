@@ -15,7 +15,7 @@ DATABASE="(default)"
 
 echo "Sprint-82 TTL-Setup fuer ${PROJECT_ID}..."
 
-for collection in auditRequests auditAnalytics quickAudits rateLimitCounters; do
+for collection in auditRequests auditAnalytics quickAudits rateLimitCounters sofortSkizze sofortLeads; do
     echo "→ TTL ${collection}.expiresAt"
     # `gcloud firestore fields ttls update` setzt die Policy idempotent.
     gcloud firestore fields ttls update expiresAt \

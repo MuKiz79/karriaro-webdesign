@@ -167,6 +167,12 @@
         .ss-mock { border-radius: 6px; overflow: hidden; border: 1px solid var(--ss-line); background: var(--ss-surface); box-shadow: 0 28px 70px -34px rgba(20,30,40,.28); }
         .ss-mock-bar { display: flex; align-items: center; gap: 8px; padding: 9px 13px; background: #ECE7DC; border-bottom: 1px solid var(--ss-line); }
         .ss-mock-page { background: var(--ss-surface); }
+        /* Stufe 2 — „Bespoke-Entwurf wird gebaut"-Hinweis (Phase 2 läuft im Hintergrund) */
+        .ss-gen-status { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; padding: 10px 14px; border: 1px solid var(--ss-line); border-left: 2px solid var(--ss-gold); border-radius: 8px; background: #fff; font-family: var(--ss-sans); font-size: 12.5px; line-height: 1.45; color: var(--ss-graphite); }
+        .ss-gen-status[hidden] { display: none; }
+        .ss-gen-spin { width: 13px; height: 13px; flex: 0 0 auto; border-radius: 50%; border: 2px solid var(--ss-line-strong); border-top-color: var(--ss-gold-text); animation: ss-gen-rot .8s linear infinite; }
+        @keyframes ss-gen-rot { to { transform: rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { .ss-gen-spin { animation-duration: 2.4s; } }
         /* Stufe 2 — frei generierter Konzept-Entwurf im Sandbox-iframe (ersetzt das Template) */
         .ss-genframe { display: block; width: 100%; border: 0; background: #fff; height: 760px; transition: height .25s ease; }
         .ss-genframe[hidden] { display: none; }
@@ -367,7 +373,7 @@
         {
           "@type": "Question",
           "name": "Was passiert mit meinen Eingaben und meinem Logo?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sie werden nur für die Dauer der Skizze verarbeitet und nicht dauerhaft gespeichert, nicht öffentlich gezeigt und nicht in eine Galerie aufgenommen. Es ist keine Anmeldung nötig." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Ihre Adresse und Ihr Logo werden für die Konzept-Skizze verarbeitet und bis zu 7 Tage gespeichert, damit Sie die Skizze per Link teilen und schnell erneut öffnen können — danach wird sie automatisch gelöscht. Sie wird nicht öffentlich gezeigt und nicht in eine Galerie aufgenommen. Es ist keine Anmeldung nötig." }
         }
       ]
     }
@@ -407,7 +413,7 @@
                 </div>
                 <label class="ss-consent">
                     <input type="checkbox" id="ss-consent" name="consent" required>
-                    <span>Ich bin einverstanden, dass meine Adresse und mein Logo für diese Konzept-Skizze einmalig verarbeitet werden (keine Speicherung, <a href="/datenschutz">Datenschutz</a>).</span>
+                    <span>Ich bin einverstanden, dass meine Adresse und mein Logo für diese Konzept-Skizze verarbeitet werden. Die Skizze speichern wir bis zu 7 Tage (für teilbare Links), danach wird sie automatisch gelöscht (<a href="/datenschutz">Datenschutz</a>).</span>
                 </label>
                 <div class="ss-submit-row">
                     <button type="submit" class="ss-submit" id="ss-submit" disabled><span>Skizze erstellen</span></button>
@@ -459,6 +465,10 @@
                         <div class="ss-concept-edge"></div>
                         <div class="ss-concept-inner">
                             <p class="ss-col-label">Konzept im Karriaro-Stil</p>
+                            <div class="ss-gen-status" id="ss-gen-status" role="status" aria-live="polite" hidden>
+                                <span class="ss-gen-spin" aria-hidden="true"></span>
+                                <span>Maßgeschneiderter Entwurf wird erstellt … die Vorschau aktualisiert sich gleich (etwa eine Minute).</span>
+                            </div>
                             <div class="ss-mock">
                                 <div class="ss-mock-bar"><span class="ss-browser-dots"><i></i><i></i><i></i></span><span class="ss-browser-url" id="ss-mock-url"></span></div>
                                 <iframe class="ss-genframe" id="ss-genframe" title="Konzept-Entwurf im Karriaro-Stil" sandbox="allow-scripts" referrerpolicy="no-referrer" loading="lazy" hidden></iframe>
@@ -565,7 +575,7 @@
             </details>
             <details>
                 <summary>Was passiert mit meinen Eingaben und meinem Logo?</summary>
-                <p>Sie werden nur für die Dauer der Skizze verarbeitet und nicht dauerhaft gespeichert, nicht öffentlich gezeigt und nicht in eine Referenz-Galerie aufgenommen. Es ist keine Anmeldung nötig.</p>
+                <p>Ihre Adresse und Ihr Logo werden für die Konzept-Skizze verarbeitet und bis zu 7 Tage gespeichert, damit Sie die Skizze per Link teilen und schnell erneut öffnen können — danach wird sie automatisch gelöscht. Sie wird nicht öffentlich gezeigt und nicht in eine Referenz-Galerie aufgenommen. Es ist keine Anmeldung nötig.</p>
             </details>
         </section>
 
@@ -1037,6 +1047,13 @@
             if (/<body[^>]*>/i.test(html)) doc = html.replace(/<body[^>]*>/i, function (m) { return m + reporter; });
             else if (/<\/head>/i.test(html)) doc = html.replace(/<\/head>/i, function (m) { return m + reporter; });
             else doc = reporter + html;
+            // Defense-in-depth (zusätzlich zum Sandbox-iframe): CSP erlaubt nur Inline-Style
+            // (Design), das injizierte Inline-Skript (Höhen-Reporter) und Bilder; blockt
+            // externe Skripte/Objekte/Frames/Formulare. In den <head> früh injiziert.
+            var csp = '<meta http-equiv="Content-Security-Policy" content="default-src \'none\'; img-src * data:; style-src \'unsafe-inline\'; script-src \'unsafe-inline\'; font-src data:; base-uri \'none\'; form-action \'none\';">';
+            if (/<head[^>]*>/i.test(doc)) doc = doc.replace(/<head[^>]*>/i, function (m) { return m + csp; });
+            else if (/<html[^>]*>/i.test(doc)) doc = doc.replace(/<html[^>]*>/i, function (m) { return m + csp; });
+            else doc = csp + doc;
             frame.style.height = '760px';
             frame.srcdoc = doc;
             frame.hidden = false;
@@ -1048,6 +1065,7 @@
             lastData = data;
             lastId = (data.meta && data.meta.id) || null;
             var shm = document.getElementById('ss-share-msg'); if (shm) shm.textContent = '';
+            var gs = document.getElementById('ss-gen-status'); if (gs) gs.hidden = true;   // Phase-2-Hinweis zurücksetzen
             // Lead-Erfassung zurücksetzen (neues Ergebnis = neue Erfassung möglich).
             var lc = document.getElementById('ss-leadcap');
             if (lc) { lc.classList.remove('is-done'); var lm = document.getElementById('ss-leadcap-msg'); if (lm) { lm.textContent = ''; lm.classList.remove('is-err'); } }
@@ -1233,6 +1251,10 @@
         }
 
         // ── Skizze starten (auto-Branche oder mit explizitem Override) ──
+        // Zwei Phasen: (1) schnelles Template (Audit+Bildwelt+Text) sofort, dann (2) die
+        // maßgeschneiderte Bespoke-Seite per /sofortGenerate nachholen + progressiv einblenden.
+        // genSeq invalidiert eine veraltete Phase 2, wenn inzwischen neu skizziert wurde.
+        var genSeq = 0;
         function runSkizze(brancheOverride) {
             if (submitting) return;
             if (hpInput.value) return; // Honeypot
@@ -1240,6 +1262,7 @@
             if (!url) { urlInput.focus(); return; }
             if (!consent.checked) { consent.focus(); return; }
             currentOverride = brancheOverride || null;
+            var runToken = ++genSeq;   // jede neue Skizze entwertet eine laufende Phase-2-Generierung
 
             submitting = true;
             submit.disabled = true;
@@ -1265,9 +1288,48 @@
                 });
             }).then(function (j) {
                 render(j);
+                // Phase 2: Bespoke-Seite nachholen (nur wenn nicht schon im Cache geliefert).
+                if (!j.generatedHtml && j.brand && j.brand.domain && j.meta && j.meta.source !== 'reduced') {
+                    // Die in Phase 1 erkannte Branche an Phase 2 durchreichen, damit der Sonnet-
+                    // Prompt dieselbe Branche nutzt (Phase 2 hat keinen Places-Audit). Geht NICHT
+                    // in den Cache-Key ein (der bleibt „auto"), nur in den Generierungs-Prompt.
+                    var p2 = {}; for (var k in payload) p2[k] = payload[k];
+                    if (j.widget) p2.detectedBranche = brancheKeyOf(j.widget);
+                    requestGeneration(p2, runToken);
+                }
             }).catch(function () {
                 clearTimeout(to);
                 fallbackRender(); // stiller Fallback (Brief §3) — das Werkzeug sieht nie kaputt aus
+            });
+        }
+
+        // ── Phase 2: maßgeschneiderte Konzept-Seite (Sonnet, ~60-90s) nachholen ──
+        function requestGeneration(payload, runToken) {
+            var statusEl = document.getElementById('ss-gen-status');
+            if (statusEl) statusEl.hidden = false;
+            var ctrl = new AbortController();
+            var to = setTimeout(function () { ctrl.abort(); }, 110000);
+            fetch(FN_BASE + '/sofortGenerate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                signal: ctrl.signal
+            }).then(function (r) {
+                clearTimeout(to);
+                return r.json().catch(function () { return {}; });
+            }).then(function (j) {
+                if (runToken !== genSeq) return;          // veraltet — inzwischen neu skizziert
+                if (statusEl) statusEl.hidden = true;
+                if (j && j.generatedHtml) {
+                    var dom = (lastData && lastData.brand && lastData.brand.domain) || '';
+                    renderGenerated(j.generatedHtml, dom);
+                    if (lastData) { lastData.generatedHtml = j.generatedHtml; if (lastData.meta) lastData.meta.generated = true; }
+                }
+                // sonst: kein Bespoke-Ergebnis → das Template bleibt stehen (nie schlechter als vorher)
+            }).catch(function () {
+                clearTimeout(to);
+                if (runToken !== genSeq) return;
+                if (statusEl) statusEl.hidden = true;      // still — Template bleibt
             });
         }
 
