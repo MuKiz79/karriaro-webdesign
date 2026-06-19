@@ -12,6 +12,10 @@ test("normalizeBranche: kanonische Keys, Synonyme, Unbekanntes → generic", () 
     assert.equal(ss.normalizeBranche("Gastronomie"), "restaurant");
     assert.equal(ss.normalizeBranche("logistik"), "spedition");
     assert.equal(ss.normalizeBranche("salon"), "friseur");
+    // Lebensmittel-Handwerk ist KEINE Gastronomie → neutraler Anfrage-Assistent (generic)
+    assert.equal(ss.normalizeBranche("Metzgerei"), "generic");
+    assert.equal(ss.normalizeBranche("Bäckerei Schmidt"), "generic");
+    assert.equal(ss.normalizeBranche("Konditorei"), "generic");
     assert.equal(ss.normalizeBranche(""), "generic");
     assert.equal(ss.normalizeBranche("Tierarzt"), "generic");
 });
@@ -78,6 +82,9 @@ test("detectBranche: Keyword zuerst, dann Places-Typ, sonst generic", () => {
     assert.equal(ss.detectBranche("x.de", "", "restaurant"), "restaurant");
     assert.equal(ss.detectBranche("hansgrohe.com", "Faucets for the bathroom", null), "generic");
     assert.equal(ss.detectBranche("randomshop.de", "", "grocery_store"), "generic");
+    // Metzgerei/Bäckerei (Lebensmittel-Handwerk) → generic, AUCH wenn der Text Gastronomie erwähnt
+    assert.equal(ss.detectBranche("metzgerei-mueller.de", "Wir beliefern auch die Gastronomie", null), "generic");
+    assert.equal(ss.detectBranche("baeckerei-schmidt.de", "", null), "generic");
 });
 
 test("extractBrandTokens: Title-Fallback + Logo-Fallback (favicons) + accent null", () => {

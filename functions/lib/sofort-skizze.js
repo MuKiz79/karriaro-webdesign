@@ -64,6 +64,11 @@ const BRANCHE_SYNONYMS = {
     gastronomie: "restaurant", gastro: "restaurant", cafe: "restaurant", bistro: "restaurant", "café": "restaurant",
     logistik: "spedition", transport: "spedition", fuhrunternehmen: "spedition", umzug: "spedition",
     klempner: "sanitaer", installateur: "sanitaer", heizung: "sanitaer", shk: "sanitaer", "sanitär": "sanitaer",
+    // Lebensmittel-Handwerk (Metzgerei/Bäckerei/Konditorei/Feinkost) ist KEINE Gastronomie →
+    // neutraler Anfrage-Assistent statt Wein-Berater (vgl. grocery_store → generic).
+    metzgerei: "generic", metzger: "generic", fleischerei: "generic", fleischer: "generic",
+    "bäckerei": "generic", baeckerei: "generic", "bäcker": "generic", baecker: "generic",
+    konditorei: "generic", feinkost: "generic", hofladen: "generic", lebensmittel: "generic",
     sonstiges: "generic", andere: "generic", "": "generic"
 };
 
@@ -103,6 +108,9 @@ const BRANCHE_RULES = [
     ["sanitaer",   /(sanit[äa]r|klempner|installateur|rohrreinig|badsanierung|heizungsbau|\bshk\b|\bplumber\b|\bplumbing\b)/],
     ["immobilien", /(immobilie|makler|hausverwaltung|real[\s-]?estate|\brealtor\b)/],
     ["friseur",    /(friseur|coiffeur|\bbarber\b|hairdress|hair[\s-]?salon|kosmetikstudio|nagelstudio|beauty[\s-]?salon)/],
+    // Lebensmittel-Handwerk VOR restaurant prüfen: eine Metzgerei/Bäckerei, die irgendwo
+    // „Gastronomie/beliefern" erwähnt, soll NICHT als Restaurant (Wein-Berater) gelten.
+    ["generic",    /(metzger|fleischer|b[äa]cker|konditorei|feinkost|hofladen)/],
     ["restaurant", /(restaurant|gasthof|gasthaus|trattoria|osteria|pizzeria|wirtshaus|\bbistro\b|gastronom|brasserie)/]
 ];
 
