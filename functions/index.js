@@ -58,6 +58,7 @@ const SMTP_PASS = defineSecret("SMTP_PASS");
 const CLAUDE_API_KEY = defineSecret("CLAUDE_API_KEY");
 const PSI_API_KEY = defineSecret("PSI_API_KEY");
 const SHOT_API_KEY = defineSecret("SHOT_API_KEY"); // Screenshot-Dienst (screenshotone) für saubere Ganzseiten-Shots
+const SOFORT_ADMIN_KEY = defineSecret("SOFORT_ADMIN_KEY"); // Founder-Token für die Signal-Ansicht (/sofortSignals)
 
 const DEEP_RESEARCH_MODEL = "claude-sonnet-4-6"; // Sprint 253: sonnet-4-20250514 retired (404) → aktueller Sonnet
 const DEEP_RESEARCH_CACHE_DAYS = 7;
@@ -2661,6 +2662,45 @@ const SOFORT_MODEL = CONCIERGE_MODEL;               // "claude-haiku-4-5-2025100
 const SOFORT_GEN_MODEL = "claude-sonnet-4-6";       // Voll-generativer Konzept-Entwurf (sieht den Screenshot)
 const SOFORT_CACHE_FRESH_MS = 10 * 60 * 1000;       // 10 Min funktionaler Cache (Brief §5)
 const SOFORT_CACHE_TTL_DAYS = 7;                     // Storage-TTL via expiresAt (auch für teilbare Links)
+const SOFORT_SIGNAL_TTL_DAYS = 30;                   // Signal-Log (welche Domains eingetragen wurden) — 30 Tage
+const SOFORT_GEN_DAILY_CAP = 120;                    // Tages-Obergrenze für teure Bespoke-Generierungen (Kostenschutz)
+
+// Lead-Signal: festhalten, WELCHE Domain eingetragen wurde (für die Founder-Auswertung
+// nach einem LinkedIn-Post). Bewusst minimal: Domain + Zeit + Anzahl + Branche + letzter
+// Score — KEIN Ziel-Freitext (DSGVO-Datenminimierung). Dedupe per Domain (Zähler). Best
+// effort: ein Fehler hier darf die Antwort nie stören.
+async function recordSofortSignal(domain, branche, score) {
+    try {
+        const id = crypto.createHash("sha256").update(String(domain || "")).digest("hex").slice(0, 24);
+        await db.collection("sofortSignals").doc(id).set({
+            domain: String(domain || "").slice(0, 120),
+            branche: branche || "auto",
+            lastScore: (typeof score === "number" ? score : null),
+            lastSeenMs: Date.now(),
+            count: admin.firestore.FieldValue.increment(1),
+            expiresAt: new admin.firestore.Timestamp(
+                Math.floor((Date.now() + SOFORT_SIGNAL_TTL_DAYS * 86400000) / 1000), 0
+            )
+        }, { merge: true });
+    } catch (err) { console.warn("recordSofortSignal failed:", err.message); }
+}
+
+// Tages-Budget für die teure Bespoke-Generierung. Liefert true, wenn HEUTE noch Platz ist
+// (und zählt dann hoch). Soft-Cap (kleine Races egal) — schützt vor einem viralen Kostentag.
+async function sofortGenBudgetOk() {
+    try {
+        const day = new Date().toISOString().slice(0, 10);
+        const ref = db.collection("sofortDaily").doc(day);
+        const snap = await ref.get();
+        const c = snap.exists && snap.data() && typeof snap.data().count === "number" ? snap.data().count : 0;
+        if (c >= SOFORT_GEN_DAILY_CAP) return false;
+        await ref.set({
+            count: admin.firestore.FieldValue.increment(1),
+            expiresAt: new admin.firestore.Timestamp(Math.floor((Date.now() + 3 * 86400000) / 1000), 0)
+        }, { merge: true });
+        return true;
+    } catch (err) { console.warn("sofortGenBudget check failed:", err.message); return true; } // im Zweifel zulassen
+}
 
 function sofortCacheKey(domain, brancheKey, ziel) {
     // ziel fließt MIT in den Key: der generierte Text kann den (vom Besucher
@@ -2936,6 +2976,9 @@ exports.sofortSkizze = onRequest(
                 });
             } catch (err) { console.warn("sofortSkizze cache write failed:", err.message); }
 
+            // Lead-Signal festhalten (welche Domain wurde eingetragen) — für die Founder-Auswertung.
+            await recordSofortSignal(domain, brancheKey, audit.score);
+
             return res.json(out);
         } catch (err) {
             // Letzte Verteidigungslinie: 200 mit reduzierten Daten statt 500.
@@ -3002,6 +3045,12 @@ exports.sofortGenerate = onRequest(
             }
         } catch (err) { console.warn("sofortGenerate cache lookup failed:", err.message); }
 
+        // Tages-Obergrenze (Kostenschutz bei viralem LinkedIn-Tag): ist das Budget
+        // erschöpft, KEINE teure Generierung — der Client behält das Template (nie kaputt).
+        if (!(await sofortGenBudgetOk())) {
+            return res.json({ generatedHtml: null, generated: false, capped: true, id: cacheKey });
+        }
+
         try {
             const shotKey = safeSecretValue(SHOT_API_KEY);
             // Seite + Vision-Screenshot parallel (gecappt). Audit NICHT nötig (nur Marken-Fakten).
@@ -3048,6 +3097,62 @@ exports.sofortGenerate = onRequest(
             // Nie 500 vor dem Client — Phase 2 ist optional; Template bleibt stehen.
             console.error("sofortGenerate failed:", String(err && err.message ? err.message : err).slice(0, 160));
             return res.json({ generatedHtml: null, generated: false, id: cacheKey });
+        }
+    }
+);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sprint 253 (Stufe 2) — Founder-Ansicht der Lead-Signale: WELCHE Domains wurden
+// eingetragen (z. B. nach einem LinkedIn-Post). Token-geschützt (Secret
+// SOFORT_ADMIN_KEY), nicht öffentlich, noindex. Schlichte HTML-Tabelle (neueste
+// zuerst). Aufruf: GET /sofortSignals?key=<SOFORT_ADMIN_KEY>.
+// ─────────────────────────────────────────────────────────────────────────────
+exports.sofortSignals = onRequest(
+    {
+        region: "europe-west1",
+        memory: "256MiB",
+        timeoutSeconds: 30,
+        cors: false,
+        secrets: [SOFORT_ADMIN_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res, "GET, OPTIONS")) return;
+        if (req.method !== "GET") return res.status(405).json({ error: "GET only" });
+        if (await enforceRateLimit(db, req, res, "sofortSignals", 60, 3600)) return;
+
+        const adminKey = safeSecretValue(SOFORT_ADMIN_KEY);
+        if (!adminKey) return res.status(503).send("Signal-Ansicht nicht konfiguriert (SOFORT_ADMIN_KEY fehlt).");
+        const given = String((req.query && (req.query.key || req.query.k)) || "");
+        const ok = given.length === adminKey.length &&
+            crypto.timingSafeEqual(Buffer.from(given), Buffer.from(adminKey));
+        if (!ok) return res.status(403).send("Zugriff verweigert.");
+
+        const esc = (s) => String(s == null ? "" : s)
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        try {
+            const snap = await db.collection("sofortSignals").orderBy("lastSeenMs", "desc").limit(300).get();
+            let total = 0;
+            const rows = [];
+            snap.forEach((doc) => {
+                const d = doc.data() || {};
+                total += (d.count || 1);
+                const when = d.lastSeenMs ? new Date(d.lastSeenMs).toISOString().replace("T", " ").slice(0, 16) : "";
+                const dom = esc(d.domain || "");
+                rows.push(`<tr><td>${dom}</td><td>${esc(d.branche || "")}</td><td style="text-align:right">${d.count || 1}&times;</td><td style="text-align:right">${d.lastScore == null ? "&mdash;" : d.lastScore}</td><td>${when}</td><td><a href="https://${dom}" target="_blank" rel="noopener noreferrer nofollow">&#8599;</a></td></tr>`);
+            });
+            const html = `<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sofort-Skizze &middot; Signale</title>
+<style>body{font-family:system-ui,sans-serif;max-width:880px;margin:24px auto;padding:0 16px;color:#16202C}h1{font-size:20px;margin:0 0 4px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid #e3ddd0}th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8a7b5c}tr:hover td{background:#faf8f3}.meta{color:#5a6470;font-size:13px;margin:0 0 16px}</style></head>
+<body><h1>Sofort-Skizze &mdash; eingetragene Seiten</h1>
+<p class="meta">${snap.size} Domains &middot; ${total} Eingaben gesamt &middot; neueste zuerst &middot; max. 300 &middot; Aufbewahrung ${SOFORT_SIGNAL_TTL_DAYS} Tage</p>
+<table><thead><tr><th>Domain</th><th>Branche</th><th>Eingaben</th><th>Score</th><th>Zuletzt (UTC)</th><th></th></tr></thead><tbody>${rows.join("") || '<tr><td colspan="6">Noch keine Eingaben.</td></tr>'}</tbody></table>
+</body></html>`;
+            res.set("Content-Type", "text/html; charset=utf-8");
+            res.set("Cache-Control", "no-store");
+            res.set("X-Robots-Tag", "noindex");
+            return res.status(200).send(html);
+        } catch (err) {
+            console.error("sofortSignals failed:", String(err && err.message ? err.message : err).slice(0, 160));
+            return res.status(500).send("Fehler beim Laden.");
         }
     }
 );
