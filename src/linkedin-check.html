@@ -212,6 +212,26 @@
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function gradeColor(g) { return g === "A" ? "#2e7d32" : g === "B" ? "#C9A24B" : g === "C" ? "#c77800" : "#b00020"; }
 
+  // Robustes Kopieren: Clipboard-API → execCommand-Fallback → klares Feedback.
+  function copyToClipboard(text, btn) {
+    var label = btn.getAttribute("data-label") || btn.textContent;
+    btn.setAttribute("data-label", label);
+    function ok() { btn.textContent = "Kopiert ✓"; setTimeout(function () { btn.textContent = label; }, 2000); }
+    function viaExec() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { ta.setSelectionRange(0, text.length); } catch (e) {}
+      var done = false; try { done = document.execCommand("copy"); } catch (e) { done = false; }
+      document.body.removeChild(ta);
+      if (done) ok(); else btn.textContent = "Bitte Text oben markieren und kopieren";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(viaExec);
+    } else { viaExec(); }
+  }
+
   function render(r) {
     var bars = ORDER.map(function (k) {
       var pct = Math.round((r.parts[k] / MAX[k]) * 100);
@@ -274,7 +294,7 @@
         '<div class="opt-note">Die KI erfindet nichts hinzu — prüfen Sie dennoch, dass jede Aussage stimmt, bevor Sie posten.</div>' +
         "</div>";
       var cb = document.getElementById("copybtn");
-      cb.addEventListener("click", function () { navigator.clipboard.writeText(d.rewritten).then(function () { cb.textContent = "Kopiert ✓"; }); });
+      cb.addEventListener("click", function () { copyToClipboard(d.rewritten, cb); });
       optEl.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (e) {
       optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Fehler</span><div class="txt">Der Optimierer ist gerade nicht erreichbar. Bitte später erneut.</div></div>';
