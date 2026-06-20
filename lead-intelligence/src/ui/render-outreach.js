@@ -15,15 +15,12 @@ import { renderCRM } from './render-crm.js';
 import { createGmailDrafts } from '../outreach/gmail-drafts.js';
 import { exportEml } from '../outreach/eml-export.js';
 import { showToast } from './render-components.js';   // geteilter Toast (kein lokales Duplikat)
+import { escapeHtml as esc } from '../lib/escape-html.js';
 
 let studioController = null;
 let studioResults = [];
 
 const TONE_LABELS = { professionell: 'Professionell', freundlich: 'Freundlich', direkt: 'Direkt' };
-
-function esc(s) {
-    return String(s == null ? '' : s).replace(/[<>&"']/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
-}
 
 /** Einstieg: Leads übernehmen, generieren, Review zeigen.
  *  @param {object[]} leads

@@ -15,11 +15,10 @@ export function renderSetupGate() {
     const el = document.getElementById('setup-gate');
     if (!el) return;
 
-    const missing = [];
-    if (!config.psiKey) missing.push('ein PageSpeed-API-Key');
-    if (!config.fnUrl) missing.push('eine Cloud-Function-URL (für die KI-Analyse)');
-
-    if (missing.length === 0) {
+    // Nur die wirklich nötige Angabe blockiert: die Cloud-Function-URL (hat einen
+    // Default, fehlt also normalerweise nie). Der PageSpeed-Key ist optional —
+    // PageSpeed liefert auch ohne Key Daten (nur mit geringerem Limit für große Scans).
+    if (config.fnUrl) {
         el.classList.add('hidden');
         el.innerHTML = '';
         return;
@@ -29,8 +28,8 @@ export function renderSetupGate() {
     el.innerHTML = `
         <div class="setup-gate-card">
             <p class="setup-gate-eyebrow">Einrichtung</p>
-            <p class="setup-gate-text">Bevor Sie loslegen: Es fehlt noch ${missing.join(' und ')}.
-                Ohne diese Angaben laufen Analysen ins Leere.</p>
+            <p class="setup-gate-text">Es fehlt noch die Cloud-Function-URL.
+                Ohne sie laufen Analysen ins Leere.</p>
             <button class="btn-primary" id="btn-open-settings">Einstellungen öffnen</button>
         </div>`;
     document.getElementById('btn-open-settings')?.addEventListener('click', () => {

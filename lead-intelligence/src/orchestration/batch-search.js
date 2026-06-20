@@ -23,6 +23,9 @@ import { saveLead } from '../crm/leads.js';
 import { showToast } from '../ui/render-components.js';
 import { saveFeedback } from '../learning/score-feedback.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
+import { STADTTEILE } from '../data/stadtteile.js';
+import { getCachedPlaces, setCachedPlaces } from '../api/scan-cache.js';
+import { getAlreadyKnown } from '../crm/known.js';
 
 // Baukasten aus URL erkennbar
 const BAUKASTEN_URL = [
@@ -36,25 +39,7 @@ const BAUKASTEN_URL = [
     { pattern: /\.1und1\.de|\.ionos\./i, name: '1&1/IONOS', penalty: 15 },
 ];
 
-// Stadtteile für Rotation
-const STADTTEILE = {
-    'köln': ['Ehrenfeld', 'Nippes', 'Deutz', 'Sülz', 'Lindenthal', 'Mülheim', 'Porz', 'Kalk'],
-    'berlin': ['Kreuzberg', 'Neukölln', 'Prenzlauer Berg', 'Friedrichshain', 'Charlottenburg', 'Schöneberg', 'Mitte', 'Wedding'],
-    'münchen': ['Schwabing', 'Haidhausen', 'Sendling', 'Bogenhausen', 'Pasing', 'Maxvorstadt'],
-    'hamburg': ['Altona', 'Eimsbüttel', 'Wandsbek', 'Barmbek', 'Eppendorf', 'Ottensen'],
-    'frankfurt': ['Sachsenhausen', 'Bornheim', 'Nordend', 'Bockenheim', 'Westend'],
-    'stuttgart': ['Bad Cannstatt', 'Vaihingen', 'Feuerbach', 'Degerloch'],
-    'düsseldorf': ['Bilk', 'Flingern', 'Pempelfort', 'Oberkassel', 'Derendorf'],
-};
-
-function getAlreadyKnown() {
-    const leads = JSON.parse(localStorage.getItem('karriaro_leads') || '[]');
-    const fb = JSON.parse(localStorage.getItem('karriaro_score_feedback') || '{"entries":[]}');
-    const set = new Set();
-    for (const l of leads) if (l.domain) set.add(l.domain);
-    for (const e of fb.entries) if (e.domain) set.add(e.domain);
-    return set;
-}
+// Stadtteil-Listen liegen zentral in data/stadtteile.js (auch vom Scanner genutzt).
 
 export async function runBatchSearch() {
     const query = document.getElementById('batch-query').value.trim();
@@ -75,15 +60,22 @@ export async function runBatchSearch() {
 
     const queries = [query];
     if (city) {
-        const st = (STADTTEILE[city.toLowerCase()] || []).sort(() => Math.random() - 0.5).slice(0, 5);
+        // Kopie vor sort() — STADTTEILE ist geteilter Modul-Zustand (auch vom Scanner genutzt).
+        const st = [...(STADTTEILE[city.toLowerCase()] || [])].sort(() => Math.random() - 0.5).slice(0, 5);
         for (const s of st) queries.push(`${branch} ${city} ${s}`);
     }
 
-    // Concurrency-Limit 2: schützt Places-API-Quota bei 6-7 Stadtteil-Queries.
-    // Worker absorbiert eigene Fehler — runWithConcurrency liefert null bei Total-Fail.
+    // Concurrency-Limit 2: schützt Places-API-Quota. Cache-first (geteilter Scan-Cache):
+    // bereits gesuchte Gebiete sind gratis — auch über Scanner/Batch hinweg.
     let allPlaces = [];
     try {
-        const results = await runWithConcurrency(queries, 2, q => searchPlaces(q, 10).catch(() => ({ places: [] })));
+        const results = await runWithConcurrency(queries, 2, async q => {
+            const cached = getCachedPlaces(q);
+            if (cached) return { places: cached };
+            const r = await searchPlaces(q, 10).catch(() => ({ places: [] }));
+            if (r?.places?.length) setCachedPlaces(q, r.places);
+            return r;
+        });
         for (const r of results) if (r?.places) allPlaces.push(...r.places);
     } catch { cleanup(); showError('Suche fehlgeschlagen.'); return; }
 

@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "apex-executive"
+  },
+  "targets": {
+    "apex-executive": {
+      "hosting": {
+        "karriaro-leads": [
+          "karriaro-leads"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
