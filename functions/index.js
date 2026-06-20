@@ -2505,6 +2505,89 @@ exports.dachConcierge = onRequest(
 );
 
 // ════════════════════════════════════════════════════════════════════════════
+// LinkedIn-Post-Optimierer — schreibt einen eingefuegten Beitrag so um, dass er
+// auf die VERIFIZIERTEN Reichweiten-Hebel einzahlt (starker Hook <140, Scanbar-
+// keit, echte Schlussfrage, mittlere Laenge, kein Bait, <=3 Hashtags, Link raus).
+// EISERN: keine erfundenen Fakten/Zahlen — nur die Substanz des Originals
+// umformen. Stateless, kein PII-Speichern. Powered by Sonnet (forced tool_use).
+// ════════════════════════════════════════════════════════════════════════════
+const LINKEDIN_REWRITE_MODEL = "claude-sonnet-4-6";
+const LINKEDIN_REWRITE_TOOL = {
+    name: "linkedin_rewrite",
+    description: "Gibt die optimierte Fassung des Beitrags plus eine kurze Liste der Aenderungen zurueck.",
+    input_schema: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            rewritten: { type: "string", description: "Der optimierte Beitrag. Hook in Zeile 1 (unter 140 Zeichen), kurze Absaetze, am Ende eine offene Frage, 0-3 Hashtags, KEIN Link im Text." },
+            changes: { type: "array", items: { type: "string" }, description: "2-4 knappe Stichpunkte, was geaendert wurde und warum (Reichweiten-Hebel)." }
+        },
+        required: ["rewritten", "changes"]
+    }
+};
+const LINKEDIN_REWRITE_SYS = [
+    "Sie sind ein nuechterner LinkedIn-Editor. Sie bekommen einen Beitrag und schreiben ihn so um, dass er auf die NACHWEISLICH belegten Reichweiten-Hebel einzahlt — ohne den Inhalt zu verfaelschen.",
+    "",
+    "EISERNE REGELN:",
+    "1. Erfinden Sie NICHTS. Keine neuen Zahlen, Namen, Ergebnisse oder Behauptungen. Nutzen Sie nur die Substanz des Originals. Fehlt ein Beleg, ergaenzen Sie KEINEN.",
+    "2. Behalten Sie Stimme und Anrede-Register des Originals bei (Sie oder Du, wie im Original).",
+    "3. Hook: erste Zeile unter 140 Zeichen, zieht in den Text (Gegenthese, Szene oder konkrete Zahl aus dem Original). Keine Coaching-Frage als Eroeffnung.",
+    "4. Struktur: kurze Absaetze, viel Weissraum. Wo es passt, eine knappe Liste fuer Scanbarkeit.",
+    "5. Ende: eine echte, offene Frage, die zu Kommentaren einlaedt. KEIN Engagement-Bait ('Kommentiere JA', 'Like fuer', 'markiere jemanden').",
+    "6. Laenge im mittleren Bereich (etwa 800-1500 Zeichen), wenn der Inhalt es traegt.",
+    "7. KEIN Link im Text. 0-3 themenrelevante Hashtags am Ende.",
+    "8. Keine generischen KI-Floskeln, keine UWG-Superlative ('garantiert', 'der beste').",
+    "",
+    "Geben Sie das Ergebnis ueber das Tool zurueck: rewritten + 2-4 changes (knapp, Sie-Form)."
+].join("\n");
+
+// ─── linkedinRewrite ─── POST { post } (30-3000 Zeichen, stateless, kein PII)
+exports.linkedinRewrite = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "linkedinRewrite", 15, 3600,
+            "Sie haben das stuendliche Limit erreicht. Bitte spaeter erneut.")) return;
+
+        let post = (req.body || {}).post;
+        post = typeof post === "string" ? post.trim() : "";
+        if (post.length < 30 || post.length > 3000) {
+            return res.status(400).json({ error: "Bitte fuegen Sie einen Beitrag mit 30 bis 3000 Zeichen ein." });
+        }
+
+        try {
+            const body = {
+                model: LINKEDIN_REWRITE_MODEL,
+                max_tokens: 1200,
+                system: [{ type: "text", text: LINKEDIN_REWRITE_SYS, cache_control: { type: "ephemeral" } }],
+                tools: [LINKEDIN_REWRITE_TOOL],
+                tool_choice: { type: "tool", name: LINKEDIN_REWRITE_TOOL.name },
+                messages: [{ role: "user", content: `Originalbeitrag:\n\n${post}` }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "x-api-key": CLAUDE_API_KEY.value(), "anthropic-version": "2023-06-01" },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(25000)
+            });
+            if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`); }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === LINKEDIN_REWRITE_TOOL.name);
+            if (!tu?.input) throw new Error("kein tool_use-Payload");
+            let { rewritten = "", changes = [] } = tu.input;
+            rewritten = String(rewritten || "").trim().slice(0, 3500);
+            changes = Array.isArray(changes) ? changes.map(c => String(c || "").slice(0, 200)).filter(Boolean).slice(0, 5) : [];
+            if (!rewritten) throw new Error("leere Antwort");
+            return res.json({ ok: true, rewritten, changes });
+        } catch (err) {
+            console.error("linkedinRewrite failed:", err);
+            return res.status(502).json({ error: "Optimierer nicht erreichbar", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
 // Site-Q&A „Frag die Seite" — beantwortet Besucherfragen AUSSCHLIESSLICH aus
 // dem vorgebauten Seiten-Index (functions/data/site-index.json, generiert via
 // `npm run build:site-index`; der firebase-predeploy-Hook baut ihn vor jedem
