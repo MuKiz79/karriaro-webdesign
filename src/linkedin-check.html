@@ -96,7 +96,7 @@
     <input type="file" id="shot" accept="image/png,image/jpeg,image/webp" hidden>
     <span class="charcount" id="cc">0 Zeichen</span>
   </div>
-  <p class="uphint" id="upstatus">Tipp: Mit „Screenshot lesen“ prüfen Sie auch fremde Beiträge — die KI liest den Text aus dem Bild. Das Bild wird nur gelesen, nicht gespeichert.</p>
+  <p class="uphint" id="upstatus">Tipp: Screenshot direkt einfügen (Cmd+V bzw. Strg+V) oder „Screenshot lesen“ wählen — die KI liest den Text aus dem Bild, auch bei fremden Beiträgen. Das Bild wird nur gelesen, nicht gespeichert.</p>
 
   <div id="out" class="hidden"></div>
   <div id="opt"></div>
@@ -327,9 +327,7 @@
       rd.readAsDataURL(file);
     });
   }
-  shot.addEventListener("change", async function () {
-    var file = shot.files && shot.files[0];
-    shot.value = "";
+  async function handleImageFile(file) {
     if (!file) return;
     upstatus.textContent = "Screenshot wird gelesen — einen Moment …";
     try {
@@ -348,6 +346,19 @@
       run();
     } catch (e) {
       upstatus.textContent = (e && e.message === "zu klein") ? "Das Bild ist zu klein — bitte einen größeren Screenshot des Beitrags." : "Screenshot konnte nicht gelesen werden. Bitte später erneut.";
+    }
+  }
+  // Datei-Upload
+  shot.addEventListener("change", function () { var f = shot.files && shot.files[0]; shot.value = ""; handleImageFile(f); });
+  // Screenshot direkt aus der Zwischenablage einfuegen (Cmd/Strg+V). Nur BILDER
+  // abfangen — getippter/eingefuegter TEXT laeuft normal ins Textfeld.
+  document.addEventListener("paste", function (e) {
+    var items = (e.clipboardData && e.clipboardData.items) || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].type && items[i].type.indexOf("image/") === 0) {
+        var f = items[i].getAsFile();
+        if (f) { e.preventDefault(); handleImageFile(f); return; }
+      }
     }
   });
 
