@@ -14,7 +14,7 @@ const INDUSTRIES = {
     'physiotherapist':   { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.mid, avgValue: CUSTOMER_LIFETIME_VALUE.physiotherapist.perVisit, name: 'Physiotherapie' },
     'hair_salon':        { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.high, avgValue: CUSTOMER_LIFETIME_VALUE.hair_salon.perVisit, name: 'Friseur' },
     'beauty_salon':      { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.mid, avgValue: CUSTOMER_LIFETIME_VALUE.beauty_salon.perVisit, name: 'Kosmetikstudio' },
-    'real_estate_agency':{ convRate: 0.03, avgValue: CUSTOMER_LIFETIME_VALUE.real_estate_agency.perVisit, name: 'Immobilienmakler' },
+    'real_estate_agency':{ convRate: 0.006, avgValue: CUSTOMER_LIFETIME_VALUE.real_estate_agency.perVisit, name: 'Immobilienmakler' },
     'lawyer':            { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.low, avgValue: CUSTOMER_LIFETIME_VALUE.lawyer.perVisit, name: 'Rechtsanwalt' },
     'auto_repair':       { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE.auto_repair.perVisit, name: 'KFZ-Werkstatt' },
     'plumber':           { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.high, avgValue: CUSTOMER_LIFETIME_VALUE.plumber.perVisit, name: 'Sanitärbetrieb' },
@@ -24,7 +24,7 @@ const INDUSTRIES = {
     'veterinary_care':   { convRate: WEBSITE_CONVERSION_RATES.appointmentBooking.mid, avgValue: CUSTOMER_LIFETIME_VALUE.veterinary_care.perVisit, name: 'Tierarzt' },
     'bakery':            { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE.bakery.perVisit, name: 'Bäckerei' },
     'florist':           { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE.florist.perVisit, name: 'Florist' },
-    'car_dealer':        { convRate: 0.02, avgValue: CUSTOMER_LIFETIME_VALUE.car_dealer.perVisit, name: 'Autohaus' },
+    'car_dealer':        { convRate: 0.008, avgValue: CUSTOMER_LIFETIME_VALUE.car_dealer.perVisit, name: 'Autohaus' },
     'moving_company':    { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE.moving_company.perVisit, name: 'Umzugsunternehmen' },
     '_default':          { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE._default.perVisit, name: 'Unternehmen' }
 };
