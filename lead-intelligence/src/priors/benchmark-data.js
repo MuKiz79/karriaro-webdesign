@@ -180,7 +180,7 @@ export const CUSTOMER_LIFETIME_VALUE = {
     'veterinary_care':   { perVisit: 120, visitsPerYear: 3,   retentionYears: 10, clv: 3600 },
     'bakery':            { perVisit: 8,   visitsPerYear: 100, retentionYears: 5,  clv: 4000 },
     'florist':           { perVisit: 45,  visitsPerYear: 4,   retentionYears: 5,  clv: 900  },
-    'car_dealer':        { perVisit: 25000,visitsPerYear:0.15,retentionYears: 20, clv: 75000 },
+    'car_dealer':        { perVisit: 2500, visitsPerYear:0.15,retentionYears: 20, clv: 75000 },
     'moving_company':    { perVisit: 900, visitsPerYear: 0.2, retentionYears: 15, clv: 2700  },
     '_default':          { perVisit: 150, visitsPerYear: 3,   retentionYears: 5,  clv: 2250  }
 };
