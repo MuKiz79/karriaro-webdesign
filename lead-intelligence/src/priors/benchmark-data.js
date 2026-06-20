@@ -104,6 +104,44 @@ export const LOCAL_BUSINESS_TRAFFIC = {
 };
 
 // ══════════════════════════════════════
+// WEB-LEAD-SHARE — Anteil der NEUKUNDEN, die ein lokales
+// Unternehmen tatsaechlich UEBER die eigene Website gewinnt
+// (vs. Telefon, Laufkundschaft, Empfehlung, Google-Maps-direkt, Portale).
+// ══════════════════════════════════════
+// Begruendung: estMonthlyVisitors x convRate misst, wie viele BESUCHER auf der
+// Seite eine Aktion abschliessen (UX-/Buchungs-Friktion). Das Modell unterstellt
+// damit implizit, die Website sei der primaere Lead-Kanal — was fuer Telefon-/
+// Notfall-Gewerke (Sanitaer, Elektro, KFZ, Umzug, Autohaus) NICHT stimmt: dort
+// wird ANGERUFEN. webLeadShare korrigiert genau diesen Kanal-Mix und wirkt NUR
+// auf den Euro-Verlust (nicht auf die angezeigten Besucher, nicht auf convRate —
+// sonst Doppel-Zaehlung). convRate bleibt eine reine Besucher->Aktion-Rate.
+// Telefon-getrieben niedrig (~0.15-0.30), Buchungs-/Discovery-getrieben hoeher
+// (~0.40-0.60). Werte noch nicht in eigenen Daten kalibriert; pro Branche
+// anpassen, sobald Outcome-Daten vorliegen.
+export const WEB_LEAD_SHARE = {
+    'restaurant':         0.40,
+    'cafe':               0.25,
+    'dentist':            0.50,
+    'doctor':             0.40,
+    'physiotherapist':    0.60,
+    'hair_salon':         0.50,
+    'beauty_salon':       0.50,
+    'real_estate_agency': 0.30,
+    'lawyer':             0.30,
+    'auto_repair':        0.22,
+    'plumber':            0.18,
+    'electrician':        0.20,
+    'hotel':              0.40,
+    'gym':                0.55,
+    'veterinary_care':    0.45,
+    'bakery':             0.20,
+    'florist':            0.35,
+    'car_dealer':         0.15,
+    'moving_company':     0.25,
+    '_default':           0.35
+};
+
+// ══════════════════════════════════════
 // PAGESPEED SCORES NACH BRANCHE
 // (Illustrate Digital 2024, Brad Holmes)
 // ══════════════════════════════════════

@@ -322,8 +322,9 @@ function buildPainArguments(data, techAge) {
         });
     }
 
-    // 5) Umsatzverlust-Schätzung
-    if (rev?.yearlyLoss > 2000) {
+    // 5) Umsatzverlust-Schätzung (Gate auf 1000€ — passt zum deflationierten Modell
+    //    nach Survival-Cap + webLeadShare; identisch zur single-check-Problemliste).
+    if (rev?.yearlyLoss > 1000) {
         args.push({
             type: 'revenue',
             severity: 4,
