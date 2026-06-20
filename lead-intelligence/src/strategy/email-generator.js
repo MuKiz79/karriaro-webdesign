@@ -20,9 +20,10 @@ export function generatePersonalEmail(data) {
     const contact = data.contactData;
     const p = config.profile;
 
-    // Empfängername
-    const recipientName = contact?.owner || data.place?.displayName?.text || domain;
-    const firstName = recipientName.split(' ')[0];
+    // Empfängername — nur ein echter Inhaber/Ansprechpartner trägt eine personalisierte Anrede.
+    const contactPerson = contact?.owner || null;
+    const recipientName = contactPerson || data.place?.displayName?.text || domain;
+    const firstName = (contactPerson || '').split(' ')[0];
 
     // Stärkstes Argument auswählen
     const args = [];
@@ -34,7 +35,7 @@ export function generatePersonalEmail(data) {
         args.push({ type: 'branch', text: `Ihrer ${cp.branche || 'Branche'}-Website fehlen ${data.branchStandards.missing.length} Standard-Features die Kunden 2026 erwarten — z.B. ${top.name}.`, subject: `${domain}: ${data.branchStandards.missing.length} Features fehlen die Kunden erwarten` });
     }
     if (rev?.yearlyLoss > 2000) {
-        args.push({ type: 'revenue', text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf ~${rev.yearlyLoss.toLocaleString('de-DE')}€.`, subject: `${domain} verliert ~${Math.round(rev.yearlyLoss/1000)}K€/Jahr durch die Website` });
+        args.push({ type: 'revenue', text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf ~${rev.yearlyLoss.toLocaleString('de-DE')}€.`, subject: `${domain}: ungenutztes Umsatzpotenzial Ihrer Website` });
     }
     if (ws.perf < 40) {
         args.push({ type: 'perf', text: `Google bewertet die Ladegeschwindigkeit mit ${ws.perf}/100 — das kostet Sie Sichtbarkeit und Kunden.`, subject: `${domain}: Google-Performance nur ${ws.perf}/100` });
@@ -54,15 +55,17 @@ export function generatePersonalEmail(data) {
     const senderCompany = p.company || 'Karriaro Webdesign';
     const tone = p.tone || 'professionell';
 
+    // Ohne echten Ansprechpartner ist die formelle Sammelanrede korrekt —
+    // "Sehr geehrte/r <Firmenname>" liest sich wie eine Serienmail.
     let greeting, closing;
     if (tone === 'freundlich') {
-        greeting = `Hallo ${firstName},`;
+        greeting = contactPerson ? `Hallo ${firstName},` : `Guten Tag,`;
         closing = `Herzliche Grüße`;
     } else if (tone === 'direkt') {
-        greeting = `Guten Tag ${recipientName},`;
+        greeting = contactPerson ? `Guten Tag ${contactPerson},` : `Guten Tag,`;
         closing = `Mit besten Grüßen`;
     } else {
-        greeting = `Sehr geehrte/r ${recipientName},`;
+        greeting = contactPerson ? `Sehr geehrte/r ${contactPerson},` : `Sehr geehrte Damen und Herren,`;
         closing = `Mit freundlichen Grüßen`;
     }
 

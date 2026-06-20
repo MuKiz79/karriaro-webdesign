@@ -65,12 +65,20 @@ export function showToast(msg) {
 export function renderScore(el, data, explanation) {
     const r = data.result;
     const cp = data.companyProfile || {};
+    // Headline an die KONSOLIDIERTE Empfehlung (decision-engine) koppeln, nicht stur
+    // an den Lead-Score — sonst steht "Vielversprechend/Starker Lead" über "SKIP — EV negativ".
+    const dec = data.decision || null;
+    const decSkip = dec?.action === 'skip';
     const isSkip = r._skipPitch || cp.isCompetitor || cp.isEnterprise;
-    const color = isSkip ? 'var(--muted)' : r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
-    const rawColor = isSkip ? '#86868b' : r.leadScore >= 55 ? '#30d158' : r.leadScore >= 30 ? '#ff9f0a' : '#ff453a';
+    const dim = isSkip || decSkip;
+    const color = dim ? 'var(--muted)' : r.leadScore >= 55 ? 'var(--green)' : r.leadScore >= 30 ? 'var(--orange)' : 'var(--red)';
+    const rawColor = dim ? '#86868b' : r.leadScore >= 55 ? '#30d158' : r.leadScore >= 30 ? '#ff9f0a' : '#ff453a';
+    const DEC_LABEL = { skip: 'Überspringen — EV negativ', contact_now: 'Sofort kontaktieren', contact_soon: 'Bald kontaktieren', watchlist: 'Beobachten — kein Selbstläufer' };
     const label = isSkip
         ? (cp.isCompetitor ? 'Konkurrenz — nicht kontaktieren' : 'Nicht Ihre Zielgruppe')
-        : r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Vielversprechend — Quick-Pitch' : 'Schwacher Lead';
+        : (dec && DEC_LABEL[dec.action])
+            ? DEC_LABEL[dec.action]
+            : (r.leadScore >= 55 ? 'Starker Lead — kontaktieren' : r.leadScore >= 30 ? 'Möglich — kein Selbstläufer' : 'Schwacher Lead');
 
     const circumference = 2 * Math.PI * 70;
     const offset = circumference - (r.leadScore / 100) * circumference;
