@@ -480,7 +480,7 @@ export function renderRevenue(el, data) {
     let html = '';
     if (rev && rev.yearlyLoss > 0) {
         html += `<div class="card anim-in">
-            <div class="revenue-big">~${rev.yearlyLoss.toLocaleString('de-DE')} €<span class="revenue-unit">/Jahr</span></div>
+            <div class="revenue-big">~${(rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE')} €<span class="revenue-unit">/Jahr</span></div>
             <div class="revenue-detail">80%-Intervall: ${rev.yearlyLow?.toLocaleString('de-DE') || '?'} € — ${rev.yearlyHigh?.toLocaleString('de-DE') || '?'} € (Monte-Carlo)</div>
             <div class="revenue-detail">~${rev.estMonthlyVisitors} Besucher/Monat · ROI einer neuen Website: <strong class="good">${rev.roi}x</strong></div>
         </div>`;
