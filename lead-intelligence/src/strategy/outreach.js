@@ -328,7 +328,7 @@ function buildPainArguments(data, techAge) {
             type: 'revenue',
             severity: 4,
             short: `~${Math.round(rev.yearlyLoss / 1000)}K€ Potenzial (gesch.)`,
-            text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf ~${rev.yearlyLoss.toLocaleString('de-DE')}€.`,
+            text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf rund ${(rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE')} €.`,
             subjectAlt: `${domain}: ungenutztes Umsatzpotenzial`
         });
     }

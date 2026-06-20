@@ -39,7 +39,7 @@ export function buildSequence(data = {}) {
         {
             day: 1,
             subject: `${domain} — Ihre Website kostet Sie Kunden`,
-            body: `Performance ${ws.perf}/100, SEO ${ws.seo}/100.${rev?.yearlyLoss > 0 ? ' Geschätzter Verlust: ~' + rev.yearlyLoss.toLocaleString('de-DE') + '€/Jahr.' : ''} Darf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?`
+            body: `Performance ${ws.perf}/100, SEO ${ws.seo}/100.${rev?.yearlyLoss > 0 ? ' Geschätzter Verlust: rund ' + (rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE') + ' €/Jahr.' : ''} Darf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?`
         },
         {
             day: 4,

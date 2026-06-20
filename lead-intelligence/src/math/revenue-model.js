@@ -29,14 +29,31 @@ const INDUSTRIES = {
     '_default':          { convRate: WEBSITE_CONVERSION_RATES.average, avgValue: CUSTOMER_LIFETIME_VALUE._default.perVisit, name: 'Unternehmen' }
 };
 
-// Google-Studie: Bounce-Rate-Anstieg bei Ladezeit
-function bounceIncrease(loadTimeSec) {
-    if (loadTimeSec <= 1) return 0;
-    if (loadTimeSec <= 3) return 0.32;
-    if (loadTimeSec <= 5) return 0.90;
-    if (loadTimeSec <= 6) return 1.06;
-    if (loadTimeSec <= 10) return 1.23;
-    return 1.50;
+// Speed→Conversion-Verlust, direkt aus CONVERSION-Studien (nicht Bounce):
+// Deloitte/Google "Milliseconds Make Millions" 2020 (~8% Conversion-Uplift je 100ms
+// im steilen Band) + Portent 2019 (CR faellt am staerksten 1-4s, flacht ab >5s ab).
+// Stetige, monotone, saettigende Kurve OHNE Schwellen-Cliff (2.99s vs 3.01s kippte
+// die Schaetzung frueher um das ~2.8-fache); gedeckelt bei 18%. Ersetzt die alte
+// Konstruktion bounceIncrease()*0.4, die einen RELATIVEN Bounce-Anstieg faelschlich
+// als ABSOLUTEN Conversion-Verlust behandelte und mit dem unbelegten 0.4 skalierte.
+function speedLossPct(loadTimeSec) {
+    if (loadTimeSec <= 2.5) return 0;
+    if (loadTimeSec >= 8) return 0.18;
+    // Linearer Anstieg 2.5s(0%) -> 8s(18%): 4s≈6.5%, 5s≈9%, 6s≈11.5%
+    return (loadTimeSec - 2.5) / (8 - 2.5) * 0.18;
+}
+
+// Gesamt-Verlustanteil als multiplikatives Survival-Produkt: 1 - ∏(1-p_i).
+// Intrinsisch in [0,1) gedeckelt (nie >100% der Conversions) und ohne Doppelzaehlung
+// (jeder Faktor wirkt nur auf die Besucher, die die vorigen Faktoren ueberlebt haben).
+// EINE reine Helferfunktion -> identisch in Punkt-Schaetzung UND Monte-Carlo verwendet,
+// damit Punkt und Band konsistent und beide beschraenkt sind.
+function lossFraction(lcpSec, mobilePenalty, sslPenalty, seoLostPct) {
+    const pSpeed = speedLossPct(lcpSec);   // absoluter Conversion-Verlust, max 0.18
+    const pMobile = 0.6 * mobilePenalty;   // max 0.09
+    const pSsl = sslPenalty;               // max 0.10
+    const pSeo = seoLostPct;               // max 0.30
+    return 1 - (1 - pSpeed) * (1 - pMobile) * (1 - pSsl) * (1 - pSeo);
 }
 
 export function calculateRevenueLoss(ws, place) {
@@ -47,31 +64,31 @@ export function calculateRevenueLoss(ws, place) {
     // Fix 4: Echte Traffic-Schätzung mit Caps aus BrightLocal-Daten
     const estMonthlyVisitors = LOCAL_BUSINESS_TRAFFIC.estimateMonthlyVisitors(type, reviews);
     const lcpSec = parseFloat(ws.lcp) || 3;
-    const bounceRate = bounceIncrease(lcpSec);
 
     const baselineConversions = estMonthlyVisitors * ind.convRate;
-    // Damage-Faktoren: Anteil der Traffic-Verluste pro Risiko-Faktor.
+    // Damage-Faktoren: Anteil der verlorenen Conversions pro Risiko-Faktor.
     // Quellen-Annahmen:
-    //  - bounceRate stammt aus bounceIncrease() (Google/Akamai-Studien zu LCP→Bounce).
-    //  - mobilePenalty=0.15: ohne Viewport-Tag verliert man laut StatCounter-Daten
-    //    grob 60 % Mobile-Traffic, davon ~25 % bouncen sofort → 0.6×0.25=0.15.
-    //  - sslPenalty=0.10: Browser-Warnung ("Nicht sicher") fuehrt laut HubSpot-
-    //    Studie zu ~10 % Sofort-Absprung.
-    //  - 0.4-Faktor auf bounceRate: Speed-Bounce wirkt nur auf Conversion-relevante
-    //    Sessions (nicht auf bereits verlorene Visits).
-    // Diese Multiplikatoren sind plausible Annahmen, aber nicht in eigenen Daten
-    // kalibriert. Sobald wir Outcome-Daten haben, sollten sie pro Branche
-    // angepasst werden.
+    //  - Speed: speedLossPct() aus Conversion-Studien (Deloitte/Google 2020, Portent 2019).
+    //  - mobilePenalty=0.15: ohne Viewport-Tag grob 60 % Mobile-Traffic betroffen,
+    //    davon ~25 % Sofort-Absprung → 0.6×0.25=0.15 (in lossFraction als 0.6×mobilePenalty).
+    //  - sslPenalty=0.10: Browser-Warnung ("Nicht sicher") ~10 % Sofort-Absprung.
+    //  - seoLostPct: weniger Sichtbarkeit → weniger qualifizierter Traffic.
+    // Zusammengesetzt MULTIPLIKATIV (Survival, lossFraction()) statt additiv: dadurch
+    // intrinsisch <100% und keine Doppelzaehlung desselben verlorenen Besuchers.
+    // Die Einzel-Multiplikatoren sind plausible Annahmen, noch nicht in eigenen Daten
+    // kalibriert; pro Branche anpassen, sobald Outcome-Daten vorliegen.
     const mobilePenalty = ws.viewport ? 0 : 0.15;
     const sslPenalty = ws.isHttps ? 0 : 0.10;
     const seoLostPct = ws.seo < 50 ? 0.30 : ws.seo < 75 ? 0.15 : 0.05;
 
-    const lostSpeed = baselineConversions * bounceRate * 0.4;
+    const totalLossFraction = lossFraction(lcpSec, mobilePenalty, sslPenalty, seoLostPct);
+    const totalLostMonthly = baselineConversions * totalLossFraction;
+    // Einzel-Beitraege nur fuer die Anzeige (marginale Anteile, NICHT aufsummiert).
+    const lostSpeed = baselineConversions * speedLossPct(lcpSec);
     const lostMobile = baselineConversions * 0.6 * mobilePenalty;
     const lostSsl = baselineConversions * sslPenalty;
     const lostSeo = baselineConversions * seoLostPct;
 
-    const totalLostMonthly = lostSpeed + lostMobile + lostSsl + lostSeo;
     const monthlyLoss = Math.round(totalLostMonthly * ind.avgValue);
     const yearlyLoss = monthlyLoss * 12;
 
@@ -94,18 +111,29 @@ export function calculateRevenueLoss(ws, place) {
         const vpr = Math.max(1, baseVPR * (1 + x0 * 0.5));
         const cr = Math.max(0.001, ind.convRate * (1 + x1 * 0.3));
         const av = Math.max(5, ind.avgValue * (1 + x2 * 0.25));
-        const vis = reviews * vpr;
+        // FIX: Besucher-Clamp pro Draw erneut anwenden, damit das obere Band die
+        // model-eigene Traffic-Obergrenze (max/min) nicht ueberschreitet (sonst
+        // unrealistisch hohes yearlyHigh genau bei review-starken Leads).
+        const d = LOCAL_BUSINESS_TRAFFIC.byIndustry[type] || LOCAL_BUSINESS_TRAFFIC.byIndustry._default;
+        const vis = Math.min(d.maxVisitors, Math.max(d.minVisitors, reviews * vpr));
         const base = vis * cr;
-        const lost = base * (bounceRate * 0.4 + mobilePenalty * 0.6 + sslPenalty + seoLostPct);
+        // IDENTISCHE gedeckelte Survival-Fraktion wie in der Punkt-Schaetzung.
+        const lost = base * totalLossFraction;
         samples.push(lost * av * 12);
     }
     samples.sort((a, b) => a - b);
+
+    // Gerundeter Pitch-Wert: keine 5-stellige Schein-Praezision nach aussen
+    // (~9.576 € -> "rund 10.000 €"). Schwellen-Gates/Scoring lesen weiter den
+    // praezisen yearlyLoss; nur die kundenseitige ANZEIGE nutzt pitchValue.
+    const pitchValue = Math.round(yearlyLoss / 1000) * 1000;
 
     return {
         industry: ind,
         estMonthlyVisitors,
         monthlyLoss,
         yearlyLoss,
+        pitchValue,
         yearlyLow: Math.round(samples[Math.floor(samples.length * 0.10)]),
         yearlyHigh: Math.round(samples[Math.floor(samples.length * 0.90)]),
         lostConversions: { speed: lostSpeed, mobile: lostMobile, ssl: lostSsl, seo: lostSeo },

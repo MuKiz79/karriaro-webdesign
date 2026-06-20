@@ -465,8 +465,8 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 
         // ── Umsatzverlust ──
         if (rev?.yearlyLoss > 1000) {
-            problems.push(`<strong>Geschätzter Umsatzverlust: ~${rev.yearlyLoss.toLocaleString('de-DE')} €/Jahr</strong>. Eine neue Website für 990-1.990 € amortisiert sich in ${rev.roi > 0 ? Math.ceil(1990 / (rev.yearlyLoss / 12)) + ' Monaten' : 'kurzer Zeit'}.`);
-            emailArgs.push(`wir schätzen den jährlichen Verlust auf ~${rev.yearlyLoss.toLocaleString('de-DE')} €`);
+            problems.push(`<strong>Geschätzter Umsatzverlust: ~${(rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE')} €/Jahr</strong>. Eine neue Website für 990-1.990 € amortisiert sich in ${rev.roi > 0 ? Math.ceil(1990 / (rev.yearlyLoss / 12)) + ' Monaten' : 'kurzer Zeit'}.`);
+            emailArgs.push(`wir schätzen den jährlichen Verlust auf rund ${(rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE')} €`);
         }
 
         // ── Neue Module (1-10) als Argumente ──
