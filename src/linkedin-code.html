@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Scoring-Report · Der entschluesselte LinkedIn-Code</title>
+<style>
+  :root { --gold:#C9A24B; --ink:#1a1a1a; --muted:#6b6b6b; --bg:#faf8f4; --line:#e7e1d6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:760px; margin:0 auto; padding:48px 22px 80px; }
+  .eyebrow { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:8px; }
+  h1 { font:600 30px/1.2 Georgia,"Times New Roman",serif; margin:4px 0 6px; }
+  .topic { color:var(--muted); margin:0 0 4px; }
+  .meta { color:var(--muted); font-size:13px; margin-bottom:32px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:18px; }
+  .winner-card { display:flex; gap:22px; align-items:flex-start; }
+  .score-badge { flex:0 0 auto; width:124px; text-align:center; border:3px solid var(--gold); border-radius:14px; padding:16px 8px; }
+  .score-num { font:700 46px/1 Georgia,serif; }
+  .score-of { font-size:12px; color:var(--muted); margin-top:4px; }
+  .winner-body { flex:1 1 auto; min-width:0; }
+  .bars { margin:6px 0 16px; }
+  .bar-row { display:flex; align-items:center; gap:10px; margin:5px 0; font-size:13px; }
+  .bar-label { flex:0 0 96px; color:var(--muted); }
+  .bar-track { flex:1 1 auto; height:8px; background:var(--line); border-radius:6px; overflow:hidden; }
+  .bar-fill { display:block; height:100%; background:var(--gold); }
+  .bar-num { flex:0 0 46px; text-align:right; font-variant-numeric:tabular-nums; color:var(--ink); }
+  .post { white-space:pre-wrap; font:15px/1.6 -apple-system,sans-serif; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:16px; margin:6px 0 14px; }
+  .post.comment { background:#fff; }
+  h2 { font:600 18px/1.3 Georgia,serif; margin:30px 0 12px; }
+  .variant { border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px; background:#fff; }
+  .variant.v-winner { border-color:var(--gold); border-width:2px; }
+  .variant-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .winner-tag { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.08em; }
+  .chip { margin-left:auto; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px; }
+  .chip-pass { background:#e8f3e9; color:#2e7d32; }
+  .chip-fail { background:#fbe9ec; color:#b00020; }
+  .reasons { margin-top:8px; }
+  .reason { font-size:13px; color:#b00020; margin:3px 0; }
+  footer { color:var(--muted); font-size:12px; text-align:center; margin-top:34px; line-height:1.7; }
+</style></head>
+<body><div class="wrap">
+  <div class="eyebrow">Der entschluesselte LinkedIn-Code</div>
+  <h1>Scoring-Report</h1>
+  <p class="topic">Niemand kennt LinkedIns Algorithmus von innen, aber man kann ihn rueckentwickeln. Ich habe die belegten Reichweiten-Signale aus den 2026-Studien in pruefbaren Code gegossen und eine Engine gebaut, die jeden Post auf maximale Reichweite optimiert, bevor er rausgeht.</p>
+  <p class="meta">2/6 Varianten haben die harten Gates bestanden · 2026-06-19T22:10:00.018Z</p>
+  <section class="card winner-card">
+        <div class="score-badge" style="border-color:#C9A24B">
+          <div class="score-num" style="color:#C9A24B">81</div>
+          <div class="score-of">/100 · Grade B</div>
+        </div>
+        <div class="winner-body">
+          <div class="eyebrow">Gewinner-Variante · How-To / Framework</div>
+          <div class="bars"><div class="bar-row"><span class="bar-label">Hook</span><span class="bar-track"><span class="bar-fill" style="width:44%"></span></span><span class="bar-num">11/25</span></div><div class="bar-row"><span class="bar-label">Verweildauer</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">20/20</span></div><div class="bar-row"><span class="bar-label">Save-Trigger</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">20/20</span></div><div class="bar-row"><span class="bar-label">Gespraech</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Beweis</span><span class="bar-track"><span class="bar-fill" style="width:50%"></span></span><span class="bar-num">5/10</span></div><div class="bar-row"><span class="bar-label">Hygiene</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">10/10</span></div></div>
+          <pre class="post">Sie koennen LinkedIns Reichweite nicht hacken — aber Sie koennen die Signale, auf die der Feed nachweislich reagiert, vor dem Posten messen.
+
+Genau das habe ich in Code gegossen. Eine Engine, die jeden Entwurf gegen die rueckentwickelten Algorithmus-Signale aus den 2026-Studien prueft, bevor er live geht.
+
+So laeuft ein Durchgang:
+
+1. Sechs Varianten erzeugen — nicht eine, nicht zwoelf. Sechs zwingt zu echter Variation der Hook.
+2. Harte Marken-Gates anwenden. Alles, was Sie-Register, Beweis-Pflicht oder Anti-Bait-Regeln reisst, fliegt sofort raus. Keine Diskussion.
+3. Die Ueberlebenden mit einem deterministischen 0–100-Reach-Score bewerten:
+   Hook 25 · Verweildauer 20 · Save-Trigger 20 · Gespraech 15 · Beweis 10 · Hygiene 10.
+4. Jeder Punkt ist an ein konkretes, belegtes Signal verankert — kein Bauchgefuehl, kein „klingt gut“.
+5. 32 gruene Unit-Tests sichern die Regeln ab. Wenn jemand spaeter eine Regel kippt, faellt der Build.
+
+Der eigentliche Hebel ist nicht der Score. Der Hebel ist, dass jede Entscheidung erklaerbar wird.
+
+Ein Post mit 78 Punkten, der an der Hook scheitert, sagt mir genau, wo ich nachschaerfen muss. Vorher war das eine Geschmacksfrage. Jetzt ist es ein Diff.
+
+Den Screenshot des Score-Runs und die Test-Suite habe ich im ersten Kommentar verlinkt.
+
+Welche Signale wuerden Sie in so einer Gewichtung anders priorisieren?
+
+#LinkedInAlgorithmus #ContentEngineering #AIinPractice</pre>
+          <div class="eyebrow">Erster Kommentar</div><pre class="post comment">Hier der Score-Run und die 32 gruenen Tests zum Mitlesen — Sie sehen jede Regel und ihre Gewichtung im Klartext:</pre>
+        </div>
+      </section>
+  <h2>Alle Varianten — auch die verworfenen</h2>
+  <div class="variant v-fail ">
+    <div class="variant-head"><strong>Build in Public</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
+    <div class="reasons"><div class="reason">✕ Hook zu lang: 142 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
+  </div><div class="variant v-fail ">
+    <div class="variant-head"><strong>Contrarian-Take</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
+    <div class="reasons"><div class="reason">✕ Hook zu lang: 152 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div></div>
+  </div><div class="variant v-pass v-winner">
+    <div class="variant-head"><strong>How-To / Framework</strong> <span class="winner-tag">GEWINNER</span> <span class="chip chip-pass">PASS · Reach 81/100 (B)</span></div>
+    
+  </div><div class="variant v-fail ">
+    <div class="variant-head"><strong>Daten-Punkt</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
+    <div class="reasons"><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
+  </div><div class="variant v-pass ">
+    <div class="variant-head"><strong>Story / Lektion</strong>  <span class="chip chip-pass">PASS · Reach 75/100 (B)</span></div>
+    
+  </div><div class="variant v-fail ">
+    <div class="variant-head"><strong>Beweis-Teardown</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
+    <div class="reasons"><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
+  </div>
+  <footer>
+    Erzeugt von der Karriaro-LinkedIn-Engine.<br>
+    Jeder Reach-Punkt ist an ein rueckentwickeltes 2026-Algorithmus-Signal verankert &middot; deterministisch &middot; durch Unit-Tests abgesichert.
+  </footer>
+</div></body></html>
