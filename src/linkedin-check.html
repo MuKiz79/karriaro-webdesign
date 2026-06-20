@@ -66,6 +66,9 @@
     .badge { width:100%; }
     .bar-label { flex-basis:84px; }
   }
+  .filebtn { display:inline-flex; align-items:center; background:#fff; color:var(--ink); border:1px solid var(--ink); border-radius:10px; padding:13px 26px; font:600 15px sans-serif; cursor:pointer; }
+  .filebtn:hover { background:var(--bg); }
+  .uphint { color:var(--muted); font-size:13px; margin:12px 0 0; }
   footer { color:var(--muted); font-size:12.5px; line-height:1.7; margin-top:30px; border-top:1px solid var(--line); padding-top:18px; }
   footer a { color:var(--gold-d); }
 </style></head>
@@ -89,8 +92,11 @@
   <div class="row">
     <button id="go">Beitrag prüfen</button>
     <button id="optimize" class="ghost">Mit KI optimieren</button>
+    <label class="filebtn" for="shot">Screenshot lesen</label>
+    <input type="file" id="shot" accept="image/png,image/jpeg,image/webp" hidden>
     <span class="charcount" id="cc">0 Zeichen</span>
   </div>
+  <p class="uphint" id="upstatus">Tipp: Mit „Screenshot lesen“ prüfen Sie auch fremde Beiträge — die KI liest den Text aus dem Bild. Das Bild wird nur gelesen, nicht gespeichert.</p>
 
   <div id="out" class="hidden"></div>
   <div id="opt"></div>
@@ -277,6 +283,53 @@
     }
   }
   optBtn.addEventListener("click", optimize);
+
+  // ─── Screenshot lesen (ruft die linkedinVision-Cloud-Function) ───────────────
+  var VISION_FN = "https://europe-west1-apex-executive.cloudfunctions.net/linkedinVision";
+  var shot = document.getElementById("shot");
+  var upstatus = document.getElementById("upstatus");
+  function downscale(file, maxDim, quality) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        var w = img.naturalWidth, h = img.naturalHeight;
+        if (Math.max(w, h) < 320) { reject(new Error("zu klein")); return; }
+        var scale = Math.min(1, maxDim / Math.max(w, h));
+        var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+        var c = document.createElement("canvas"); c.width = cw; c.height = ch;
+        c.getContext("2d").drawImage(img, 0, 0, cw, ch);
+        resolve(c.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = function () { reject(new Error("Bild defekt")); };
+      var rd = new FileReader();
+      rd.onload = function () { img.src = rd.result; };
+      rd.onerror = function () { reject(new Error("Lesefehler")); };
+      rd.readAsDataURL(file);
+    });
+  }
+  shot.addEventListener("change", async function () {
+    var file = shot.files && shot.files[0];
+    shot.value = "";
+    if (!file) return;
+    upstatus.textContent = "Screenshot wird gelesen — einen Moment …";
+    try {
+      var dataUrl = await downscale(file, 1568, 0.85);
+      var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 45000);
+      var r = await fetch(VISION_FN, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: dataUrl }), signal: ctrl.signal });
+      clearTimeout(to);
+      if (r.status === 429) { upstatus.textContent = "Stündliches Limit für Screenshots erreicht. Bitte später erneut."; return; }
+      var d = await r.json();
+      if (!r.ok || !d.ok) throw new Error();
+      if (!d.isLinkedInPost || !d.postText) { upstatus.textContent = "Darauf war kein Beitragstext erkennbar — bitte ein klareres Bild des Beitrags."; return; }
+      post.value = d.postText;
+      if (d.format && fmt.querySelector('option[value="' + d.format + '"]')) fmt.value = d.format;
+      updateCC();
+      upstatus.textContent = "Text aus dem Screenshot übernommen — die Bewertung steht unten.";
+      run();
+    } catch (e) {
+      upstatus.textContent = (e && e.message === "zu klein") ? "Das Bild ist zu klein — bitte einen größeren Screenshot des Beitrags." : "Screenshot konnte nicht gelesen werden. Bitte später erneut.";
+    }
+  });
 
   post.addEventListener("input", updateCC);
   post.addEventListener("keydown", function (e) { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run(); });

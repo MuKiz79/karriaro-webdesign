@@ -2588,6 +2588,88 @@ exports.linkedinRewrite = onRequest(
 );
 
 // ════════════════════════════════════════════════════════════════════════════
+// LinkedIn-Screenshot-Leser — extrahiert aus dem Screenshot eines LinkedIn-
+// Beitrags den reinen Post-Text + das Format, damit auch FREMDE Beitraege
+// (eigene Entwuerfe, Beispiele, Mitbewerber) bewertet werden koennen. Claude
+// Vision (Sonnet, forced tool_use). Bild nur in-memory, wird NICHT gespeichert.
+// Bild-Validierung via parseImage (wiederverwendet aus roof-vision.js).
+// ════════════════════════════════════════════════════════════════════════════
+const LINKEDIN_VISION_MODEL = "claude-sonnet-4-6";
+const LINKEDIN_VISION_TOOL = {
+    name: "linkedin_extract",
+    description: "Gibt den reinen Beitragstext und das erkannte Format aus dem Screenshot zurueck.",
+    input_schema: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            postText: { type: "string", description: "Der reine Text des LinkedIn-Beitrags, Zeile fuer Zeile wie im Bild, OHNE Name, Datum, Reaktions-/Kommentarzahlen, Buttons oder UI-Elemente. Leer, wenn kein Beitragstext erkennbar ist." },
+            format: { type: "string", enum: ["text", "document", "multiimage", "image", "video", "poll", "unknown"], description: "Erkennbares Format: document = PDF/Carousel, multiimage = mehrere Bilder, image = ein Bild, video, poll = Umfrage, text = reiner Text." },
+            isLinkedInPost: { type: "boolean", description: "true, wenn das Bild plausibel einen LinkedIn-Beitrag zeigt." }
+        },
+        required: ["postText", "format", "isLinkedInPost"]
+    }
+};
+const LINKEDIN_VISION_SYS = [
+    "Sie lesen den Screenshot eines LinkedIn-Beitrags und extrahieren ausschliesslich den reinen BEITRAGSTEXT.",
+    "Geben Sie den Text so wieder, wie er im Bild steht (Zeilenumbrueche, Absaetze und Hashtags am Ende uebernehmen).",
+    "Lassen Sie ALLES weg, was nicht zum Beitragstext gehoert: Autorname, Rolle, Datum, Schaltflaechen (Gefaellt mir/Kommentieren/Teilen), Reaktions- und Kommentarzahlen, das Wort mehr am Fold, Seitenleisten.",
+    "Ist der Beitrag abgeschnitten, geben Sie nur den sichtbaren Teil wieder.",
+    "Erkennen Sie das Format (Dokument/Carousel, mehrere Bilder, Einzelbild, Video, Umfrage oder reiner Text).",
+    "Erfinden Sie NICHTS. Ist kein Beitragstext erkennbar, geben Sie postText leer und isLinkedInPost = false zurueck."
+].join("\n");
+
+// ─── linkedinVision ─── POST { image (Data-URL oder Base64), mediaType? } (Vision, 5/h, kein Speichern)
+exports.linkedinVision = onRequest(
+    { region: "europe-west1", memory: "512MiB", timeoutSeconds: 60, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "linkedinVision", 5, 3600,
+            "Sie haben das stuendliche Limit fuer Screenshots erreicht. Bitte spaeter erneut.")) return;
+
+        const { image, mediaType } = req.body || {};
+        let img;
+        try { img = parseImage(image, mediaType); }
+        catch (e) { return res.status(400).json({ error: String(e?.message || "Ungueltiges Bild").slice(0, 160) }); }
+
+        try {
+            const body = {
+                model: LINKEDIN_VISION_MODEL,
+                max_tokens: 1500,
+                system: [{ type: "text", text: LINKEDIN_VISION_SYS, cache_control: { type: "ephemeral" } }],
+                tools: [LINKEDIN_VISION_TOOL],
+                tool_choice: { type: "tool", name: LINKEDIN_VISION_TOOL.name },
+                messages: [{
+                    role: "user",
+                    content: [
+                        { type: "text", text: "Extrahieren Sie den reinen Beitragstext und das Format aus diesem LinkedIn-Screenshot." },
+                        { type: "image", source: { type: "base64", media_type: img.mediaType, data: img.base64 } }
+                    ]
+                }]
+            };
+            const r = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "x-api-key": CLAUDE_API_KEY.value(), "anthropic-version": "2023-06-01" },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(45000)
+            });
+            if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`); }
+            const data = await r.json();
+            const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === LINKEDIN_VISION_TOOL.name);
+            if (!tu?.input) throw new Error("kein tool_use-Payload");
+            let { postText = "", format = "unknown", isLinkedInPost = false } = tu.input;
+            postText = String(postText || "").trim().slice(0, 3500);
+            const validFmt = new Set(["text", "document", "multiimage", "image", "video", "poll"]);
+            if (!validFmt.has(format)) format = "text";
+            return res.json({ ok: true, postText, format, isLinkedInPost: !!isLinkedInPost });
+        } catch (err) {
+            console.error("linkedinVision failed:", err);
+            return res.status(502).json({ error: "Screenshot konnte nicht gelesen werden", details: String(err?.message || err).slice(0, 160) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
 // Site-Q&A „Frag die Seite" — beantwortet Besucherfragen AUSSCHLIESSLICH aus
 // dem vorgebauten Seiten-Index (functions/data/site-index.json, generiert via
 // `npm run build:site-index`; der firebase-predeploy-Hook baut ihn vor jedem
