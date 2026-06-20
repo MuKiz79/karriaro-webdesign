@@ -1,0 +1,38 @@
+{
+  "hosting": {
+    "target": "karriaro-leads",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/api/searchPlaces", "function": { "functionId": "searchPlaces", "region": "us-central1" } },
+      { "source": "/api/nearbyPlaces", "function": { "functionId": "nearbyPlaces", "region": "us-central1" } },
+      { "source": "/api/analyzeContent", "function": { "functionId": "analyzeContent", "region": "us-central1" } },
+      { "source": "/api/analyzeScreenshot", "function": { "functionId": "analyzeScreenshot", "region": "us-central1" } },
+      { "source": "/api/analyzeReviews", "function": { "functionId": "analyzeReviews", "region": "us-central1" } },
+      { "source": "/api/analyzeBranchStandards", "function": { "functionId": "analyzeBranchStandards", "region": "us-central1" } },
+      { "source": "/api/analyzeSocialProfiles", "function": { "functionId": "analyzeSocialProfiles", "region": "us-central1" } },
+      { "source": "/api/domainAge", "function": { "functionId": "domainAge", "region": "us-central1" } },
+      { "source": "/api/domainAuthority", "function": { "functionId": "domainAuthority", "region": "us-central1" } },
+      { "source": "/api/searchVolume", "function": { "functionId": "searchVolume", "region": "us-central1" } },
+      { "source": "/api/checkEmailDeliverability", "function": { "functionId": "checkEmailDeliverability", "region": "us-central1" } },
+      { "source": "/api/generateMockupSuggestion", "function": { "functionId": "generateMockupSuggestion", "region": "us-central1" } },
+      { "source": "/api/enrichContact", "function": { "functionId": "enrichContact", "region": "us-central1" } },
+      { "source": "/api/saveLeadPage", "function": { "functionId": "saveLeadPage", "region": "us-central1" } },
+      { "source": "/api/calendarEvent", "function": { "functionId": "calendarEvent", "region": "us-central1" } },
+      { "source": "/api/deepResearch", "function": { "functionId": "deepResearch", "region": "europe-west1" } },
+      { "source": "/api/generateMockup", "function": { "functionId": "generateMockup", "region": "europe-west1" } },
+      { "source": "/api/securityAudit", "function": { "functionId": "securityAudit", "region": "europe-west1" } },
+      { "source": "**", "destination": "/index.html" }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|woff2)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      }
+    ]
+  }
+}

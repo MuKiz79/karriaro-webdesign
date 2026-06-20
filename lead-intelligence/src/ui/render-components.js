@@ -17,6 +17,7 @@ import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
+import { escapeHtml } from '../lib/escape-html.js';
 import { buildSequence } from '../templates/sequences.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { saveSnapshot } from '../crm/rescan.js';
@@ -1048,10 +1049,7 @@ function renderDeepResearchCard(a, meta) {
     </div>`;
 }
 
-function escapeHtml(s) {
-    if (s == null) return "";
-    return String(s).replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;","\"":"&quot;"}[c]));
-}
+// escapeHtml: zentral aus lib/escape-html.js (siehe Import oben).
 
 
 // ══════════════════════════════════════

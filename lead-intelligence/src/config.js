@@ -21,9 +21,16 @@ export const config = {
     }
 };
 
+// Same-Origin-Proxy: Aufrufe gehen über den Hosting-Rewrite /api/* derselben
+// Domain → kein CORS (die Functions liegen in einem anderen Origin). Direkte
+// cloudfunctions.net-URLs werden bewusst ignoriert (würden vom Browser geblockt)
+// — das heilt auch einen alt zwischengespeicherten Wert automatisch.
+const DEFAULT_FN_URL = '/api';
+
 export function loadConfig() {
     config.psiKey = localStorage.getItem('karriaro_psi_key') || '';
-    config.fnUrl = localStorage.getItem('karriaro_fn_url') || '';
+    const storedFn = localStorage.getItem('karriaro_fn_url') || '';
+    config.fnUrl = (storedFn && !storedFn.includes('cloudfunctions.net')) ? storedFn : DEFAULT_FN_URL;
 
     // Profil laden
     const saved = localStorage.getItem('karriaro_profile');

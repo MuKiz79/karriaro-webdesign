@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedIn-Post-Check — Wie weit reicht Ihr Beitrag? · Karriaro</title>
+<meta name="description" content="Fuegen Sie Ihren LinkedIn-Beitrag ein und sehen Sie in Sekunden, was die Reichweite bremst. Bewertet nach den rueckentwickelten Reichweiten-Signalen 2026. Ihr Text bleibt im Browser.">
+<link rel="canonical" href="https://karriaro-webdesign.de/linkedin-check">
+<style>
+  :root { --gold:#C9A24B; --gold-d:#a8842f; --ink:#1a1a1a; --muted:#6b6b6b; --bg:#faf8f4; --line:#e7e1d6; --pass:#2e7d32; --warn:#c77800; --fail:#b00020; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:740px; margin:0 auto; padding:44px 22px 90px; }
+  .eyebrow { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-d); font-weight:600; }
+  h1 { font:600 32px/1.18 Georgia,"Times New Roman",serif; margin:8px 0 10px; }
+  .lede { color:var(--muted); font-size:17px; margin:0 0 6px; }
+  .privacy { color:var(--muted); font-size:13px; margin:0 0 26px; }
+  textarea { width:100%; min-height:200px; resize:vertical; padding:16px; font:15px/1.6 -apple-system,sans-serif; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:12px; }
+  textarea:focus { outline:none; border-color:var(--gold); }
+  .row { display:flex; align-items:center; gap:14px; margin:12px 0 0; flex-wrap:wrap; }
+  button { background:var(--ink); color:#fff; border:0; border-radius:10px; padding:13px 26px; font:600 15px sans-serif; cursor:pointer; }
+  button:hover { background:#000; }
+  .charcount { color:var(--muted); font-size:13px; }
+  #out { margin-top:34px; }
+  .hidden { display:none; }
+  .scorecard { display:flex; gap:22px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; }
+  .badge { flex:0 0 auto; width:132px; text-align:center; border:3px solid var(--gold); border-radius:14px; padding:16px 8px; }
+  .badge .num { font:700 50px/1 Georgia,serif; }
+  .badge .of { font-size:12px; color:var(--muted); margin-top:4px; }
+  .badge .grade { margin-top:8px; font-size:13px; font-weight:700; letter-spacing:.05em; }
+  .bars { flex:1 1 auto; min-width:0; }
+  .bar-row { display:flex; align-items:center; gap:10px; margin:7px 0; font-size:13px; }
+  .bar-label { flex:0 0 104px; color:var(--muted); }
+  .bar-track { flex:1 1 auto; height:9px; background:var(--line); border-radius:6px; overflow:hidden; }
+  .bar-fill { display:block; height:100%; background:var(--gold); }
+  .bar-num { flex:0 0 48px; text-align:right; font-variant-numeric:tabular-nums; }
+  h2 { font:600 19px/1.3 Georgia,serif; margin:30px 0 12px; }
+  .sugg { background:#fff; border:1px solid var(--line); border-left-width:4px; border-radius:10px; padding:13px 15px; margin-bottom:10px; }
+  .sugg.s-fix { border-left-color:var(--fail); }
+  .sugg.s-lever { border-left-color:var(--gold); }
+  .sugg.s-ok { border-left-color:var(--pass); }
+  .sugg .tag { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .sugg.s-fix .tag { color:var(--fail); }
+  .sugg.s-lever .tag { color:var(--gold-d); }
+  .sugg.s-ok .tag { color:var(--pass); }
+  .sugg .txt { margin-top:3px; }
+  footer { color:var(--muted); font-size:12.5px; line-height:1.7; margin-top:40px; border-top:1px solid var(--line); padding-top:18px; }
+  footer a { color:var(--gold-d); }
+</style></head>
+<body><div class="wrap">
+  <div class="eyebrow">Der entschluesselte LinkedIn-Code</div>
+  <h1>LinkedIn-Post-Check</h1>
+  <p class="lede">Fuegen Sie Ihren Beitrag ein und sehen Sie in Sekunden, was die Reichweite bremst — und was Sie konkret aendern koennen.</p>
+  <p class="privacy">Ihr Text bleibt vollstaendig in Ihrem Browser. Es wird nichts gesendet, nichts gespeichert.</p>
+
+  <textarea id="post" placeholder="Ihren LinkedIn-Beitrag hier einfuegen&#10;&#10;(die erste Zeile zaehlt als Hook)"></textarea>
+  <div class="row">
+    <button id="go">Beitrag pruefen</button>
+    <span class="charcount" id="cc">0 Zeichen</span>
+  </div>
+
+  <div id="out" class="hidden"></div>
+
+  <footer>
+    Bewertet nach oeffentlich rueckentwickelten Reichweiten-Signalen 2026 (u. a. van der Blom / Just Connecting, Socialinsider, Buffer). Die Gewichtung ist eine evidenzbasierte Naeherung, nicht LinkedIns interner Algorithmus.<br>
+    Gebaut von <a href="https://karriaro-webdesign.de">Karriaro</a> — KI, die arbeitet, nicht die redet. Wie diese Bewertung intern entsteht, sehen Sie im <a href="https://karriaro-webdesign.de/linkedin-code">Scoring-Report</a>.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ─── Detektoren (Port aus der Karriaro-LinkedIn-Engine: reach.ts/gates.ts) ──
+  var CLICKABLE_URL = /\bhttps?:\/\/\S+|\bwww\.[^\s)]+/i;
+  var HASHTAG = /(?:^|\s)#[\wäöüßÄÖÜ]+/g;
+  var LIST_ITEM = /^\s*(?:\d+[).]|[-–—•*])\s+\S/m;
+  var FRAMEWORK = /\b(framework|prinzip|regel|schritte|merksatz|checkliste|formel|faustregel)\b/i;
+  var PROOF_NUMBER = /\d+([.,]\d+)?\s*(%|prozent|€|eur|euro|x\b|×|std|stunden?|min|minuten?|tagen?|wochen?|monaten?|user|kunden|leads?|posts?|zeilen|commits?|sekunden?|ms\b|tests?|varianten?)/i;
+  var PROOF_KEYWORD = /\b(screenshot|screen-?recording|demo|live\b|prototyp|repo|repository|commit|github|vorher[\s/-]+nachher|benchmark|messung|gemessen|getestet|reproduzierbar|code\b|datensatz|kennzahl|ergebnis|studie|quelle)\b/i;
+  var BAIT = [
+    /kommentiere?\s+["„]?(ja|yes)["“]?/i, /comment\s+["“]?yes["”]?/i, /\blike[ts]?\s+(f[üu]r|for)\b/i,
+    /(markier|tag)\w*\s+(jemanden|eine[nr]|3|drei)\b/i, /repost\w*\s+(wenn|f[üu]r|to)\b/i, /folg\w*\s+(mir|uns)\s+f[üu]r\b/i
+  ];
+  var HOOK_CONTRARIAN = /\b(alle|die meisten|jeder)\b.*\b(glauben|sagen|reden|denken|falsch|scheitern|irren)\b|\bin der praxis\b|\bdas tueckische\b|\bunbeliebte wahrheit\b/i;
+  var HOOK_SCENE = /\b(\d{1,2}:\d{2}|gestern|letzte woche|vor kurzem|heute morgen|neulich)\b/i;
+  var HOOK_CURIOSITY = /\b(was .* wirklich|der grund|hier ist|so |warum )\b/i;
+  var HOOK_NUMBER = /^\D{0,40}\d/;
+
+  function firstLine(b) { var i = b.indexOf("\n"); return (i === -1 ? b : b.slice(0, i)).trim(); }
+  function paragraphs(b) { return b.split(/\n\s*\n/).map(function (p) { return p.trim(); }).filter(function (p) { return p.length > 0; }); }
+  function lastContentLine(b) { var ls = b.split("\n").map(function (l) { return l.trim(); }).filter(function (l) { return l.length > 0 && l.charAt(0) !== "#"; }); return ls.length ? ls[ls.length - 1] : ""; }
+  function countMatches(t, re) { var g = re.global ? re : new RegExp(re.source, re.flags + "g"); var m = t.match(g); return m ? m.length : 0; }
+  function clamp(n, max) { return Math.max(0, Math.min(max, n)); }
+
+  // ─── Score (identisch zur Engine) ──────────────────────────────────────────
+  function scorePost(body) {
+    body = (body || "").trim();
+    var hook = firstLine(body), paras = paragraphs(body), len = body.length;
+    var fix = [], lever = [], ok = [];
+
+    // HOOK /25
+    var hookPts = 0;
+    if (hook.length > 0 && hook.length <= 140) { hookPts += hook.length <= 100 ? 10 : 6; }
+    else if (hook.length > 140) { fix.push("Ihr Hook ist " + hook.length + " Zeichen lang. LinkedIn kappt nach ~140 vor dem „…mehr“. Kuerzen Sie die erste Zeile auf einen Satz."); }
+    else { fix.push("Es fehlt ein Hook. Die erste Zeile entscheidet ueber ein Viertel der Reichweite."); }
+    var opener = HOOK_CONTRARIAN.test(hook) || HOOK_SCENE.test(hook) || HOOK_NUMBER.test(hook) || HOOK_CURIOSITY.test(hook);
+    if (opener) { hookPts += 15; ok.push("Starker Hook: die erste Zeile stoppt den Scroll."); }
+    else if (hook.length > 0) { hookPts += 5; lever.push("Der Hook hat kein starkes Muster. Eroeffnen Sie mit einer Gegenthese, einer Szene (Zeitpunkt + Handlung) oder einer konkreten Zahl — nicht mit einer allgemeinen Aussage."); }
+    hookPts = clamp(hookPts, 25);
+
+    // DWELL /20
+    var dwellPts = 0;
+    if (len >= 800 && len <= 1500) { dwellPts += 10; }
+    else if ((len >= 600 && len < 800) || (len > 1500 && len <= 2000)) { dwellPts += 6; lever.push("Laenge " + len + " Zeichen — nah am Sweetspot. 800–1500 Zeichen halten die Verweildauer am besten."); }
+    else if (len < 600) { dwellPts += 2; lever.push("Mit " + len + " Zeichen ist der Beitrag kurz. Mehr Substanz (800–1500 Zeichen) erhoeht die Verweildauer — das staerkste Distributions-Signal."); }
+    else { dwellPts += 2; lever.push("Mit " + len + " Zeichen ist der Beitrag sehr lang. Nur sinnvoll, wenn die Substanz die Laenge wirklich traegt."); }
+    if (paras.length >= 5) { dwellPts += 10; }
+    else if (paras.length >= 3) { dwellPts += 6; lever.push("Mehr Absatz-Umbrueche (kurze Absaetze, viel Weissraum) erhoehen die Lesbarkeit und damit die Verweildauer."); }
+    else { dwellPts += 2; lever.push("Der Text ist ein Block. Brechen Sie ihn in kurze Absaetze mit Leerzeilen — das laedt zum Lesen ein."); }
+    dwellPts = clamp(dwellPts, 20);
+
+    // SAVE-TRIGGER /20
+    var savePts = 0;
+    var listItems = countMatches(body, LIST_ITEM);
+    if (listItems >= 3) { savePts += 12; ok.push("Liste erkannt — gut, das ist ein Save-Trigger."); }
+    else if (listItems === 2) { savePts += 8; }
+    if (FRAMEWORK.test(body)) { savePts += 8; }
+    if (savePts === 0) { lever.push("Kein Save-Trigger. Verpacken Sie eine Erkenntnis in eine nummerierte Liste oder ein kleines Framework — das treibt Speichern und Teilen."); }
+    savePts = clamp(savePts, 20);
+
+    // CONVERSATION /15
+    var convPts = 0;
+    var last = lastContentLine(body);
+    if (/\?\s*$/.test(last)) { convPts += 15; ok.push("Klare offene Frage am Ende — treibt Kommentare (zaehlen doppelt)."); }
+    else if (/\?/.test(body.slice(-200))) { convPts += 8; lever.push("Eine echte offene Frage als LETZTE Zeile treibt mehr Kommentare als eine Frage mittendrin."); }
+    else { lever.push("Es fehlt ein Gespraechs-Anstoss. Schliessen Sie mit einer echten, offenen Frage — keine „Stimmen Sie zu?“-Floskel."); }
+    convPts = clamp(convPts, 15);
+
+    // PROOF /10
+    var proofPts = 0;
+    if (PROOF_KEYWORD.test(body)) { proofPts += 5; }
+    var nums = countMatches(body, PROOF_NUMBER);
+    proofPts += clamp(nums * 2, 5);
+    if (proofPts === 0) { lever.push("Kein konkreter Beweis. Eine Zahl, ein Beispiel oder ein gezeigtes Ergebnis schlaegt jede Behauptung — und hebt Sie aus dem generischen KI-Einerlei heraus."); }
+    else { ok.push("Konkreter Beleg vorhanden — das wirkt glaubwuerdig."); }
+    proofPts = clamp(proofPts, 10);
+
+    // HYGIENE /10
+    var hygienePts = 0;
+    if (!CLICKABLE_URL.test(body)) { hygienePts += 5; }
+    else { fix.push("Ein klickbarer Link im Text kostet bis zu 60 % Reichweite. Setzen Sie den Link in den ERSTEN Kommentar."); }
+    var hashtags = countMatches(body, HASHTAG);
+    if (hashtags <= 3) { hygienePts += 5; }
+    else { fix.push(hashtags + " Hashtags — mehr als 3 wirken als Spam-Signal. Reduzieren Sie auf 0–3 themenrelevante."); }
+    hygienePts = clamp(hygienePts, 10);
+
+    // BAIT (harte Warnung)
+    for (var i = 0; i < BAIT.length; i++) { if (BAIT[i].test(body)) { fix.push("Engagement-Bait erkannt („Kommentiere JA“ / „Like fuer…“ / „markiere jemanden“). LinkedIn erkennt und unterdrueckt das seit 2026. Streichen."); break; } }
+
+    var parts = { hook: hookPts, dwell: dwellPts, saveTrigger: savePts, conversation: convPts, proof: proofPts, hygiene: hygienePts };
+    var total = clamp(hookPts + dwellPts + savePts + convPts + proofPts + hygienePts, 100);
+    var grade = total >= 85 ? "A" : total >= 70 ? "B" : total >= 55 ? "C" : "D";
+    return { total: total, grade: grade, parts: parts, fix: fix, lever: lever, ok: ok };
+  }
+
+  // Test-Hook: in Node (kein document) scorePost exponieren + DOM-Wiring ueberspringen.
+  // Im Browser ein No-op (document existiert) → Seite laeuft normal weiter.
+  if (typeof document === "undefined") { globalThis.scorePost = scorePost; return; }
+
+  // ─── Render ─────────────────────────────────────────────────────────────────
+  var LABELS = { hook: "Hook", dwell: "Verweildauer", saveTrigger: "Save-Trigger", conversation: "Gespraech", proof: "Beweis", hygiene: "Hygiene" };
+  var MAX = { hook: 25, dwell: 20, saveTrigger: 20, conversation: 15, proof: 10, hygiene: 10 };
+  var ORDER = ["hook", "dwell", "saveTrigger", "conversation", "proof", "hygiene"];
+
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function gradeColor(g) { return g === "A" ? "#2e7d32" : g === "B" ? "#C9A24B" : g === "C" ? "#c77800" : "#b00020"; }
+
+  function render(r) {
+    var bars = ORDER.map(function (k) {
+      var pct = Math.round((r.parts[k] / MAX[k]) * 100);
+      return '<div class="bar-row"><span class="bar-label">' + LABELS[k] + '</span><span class="bar-track"><span class="bar-fill" style="width:' + pct + '%"></span></span><span class="bar-num">' + r.parts[k] + "/" + MAX[k] + "</span></div>";
+    }).join("");
+
+    function suggBlock(items, cls, tag) {
+      if (!items.length) return "";
+      return items.map(function (t) { return '<div class="sugg ' + cls + '"><span class="tag">' + tag + '</span><div class="txt">' + esc(t) + "</div></div>"; }).join("");
+    }
+
+    var col = gradeColor(r.grade);
+    var html = '<div class="scorecard">' +
+      '<div class="badge" style="border-color:' + col + '"><div class="num" style="color:' + col + '">' + r.total + '</div><div class="of">/100</div><div class="grade" style="color:' + col + '">Grade ' + r.grade + '</div></div>' +
+      '<div class="bars">' + bars + "</div></div>";
+
+    if (r.fix.length) html += "<h2>Pflicht-Fixes (kosten Reichweite)</h2>" + suggBlock(r.fix, "s-fix", "Fix");
+    if (r.lever.length) html += "<h2>Reichweiten-Hebel</h2>" + suggBlock(r.lever, "s-lever", "Hebel");
+    if (r.ok.length) html += "<h2>Das laeuft schon</h2>" + suggBlock(r.ok, "s-ok", "Stark");
+
+    return html;
+  }
+
+  // ─── Wiring ──────────────────────────────────────────────────────────────────
+  var post = document.getElementById("post");
+  var out = document.getElementById("out");
+  var cc = document.getElementById("cc");
+  function updateCC() { cc.textContent = post.value.trim().length + " Zeichen"; }
+  function run() {
+    var text = post.value.trim();
+    if (text.length < 30) { out.className = ""; out.innerHTML = '<div class="sugg s-fix"><span class="tag">Hinweis</span><div class="txt">Bitte fuegen Sie einen vollstaendigen Beitrag ein (mindestens ein paar Saetze).</div></div>'; return; }
+    out.className = "";
+    out.innerHTML = render(scorePost(text));
+    out.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  document.getElementById("go").addEventListener("click", run);
+  post.addEventListener("input", updateCC);
+  post.addEventListener("keydown", function (e) { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run(); });
+  updateCC();
+})();
+</script>
+</body></html>

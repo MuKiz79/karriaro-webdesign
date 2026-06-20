@@ -4,8 +4,10 @@
 import { config } from '../config.js';
 import { cachedFetch } from './client.js';
 
-// Webdesign-Functions (eigener europe-west1 Codebase) — werden absolut adressiert.
-const WEBDESIGN_FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+// Webdesign-Functions (europe-west1 Codebase). Same-Origin über den Hosting-
+// Rewrite /api/* (kein CORS) — die /api/<endpoint>-Routen zeigen je nach Endpoint
+// auf die richtige Region (siehe firebase.json der karriaro-leads-Site).
+const WEBDESIGN_FN_BASE = '/api';
 
 async function call(endpoint, body) {
     if (!config.fnUrl) return null;
@@ -73,11 +75,10 @@ export function enrichContact(url) { return call('enrichContact', { url }); }
 /** #7: Lead-Page speichern (für personalisierte Landingpage) */
 export function saveLeadPage(data) { return call('saveLeadPage', data); }
 
-/** #9: Kalender-Event URL generieren */
+/** #9: Kalender-Event URL generieren — direkt am Endpoint (config.fnUrl ist die Basis, z.B. '/api'). */
 export function getCalendarUrl(title, domain, score, date, time) {
     if (!config.fnUrl) return null;
-    const base = config.fnUrl.replace(/\/[^/]+$/, ''); // Extract base URL
-    return `${config.fnUrl.split('/').slice(0, -1).join('/')}/calendarEvent?title=${encodeURIComponent(title)}&domain=${encodeURIComponent(domain)}&score=${score || ''}&date=${date || ''}&time=${time || ''}`;
+    return `${config.fnUrl}/calendarEvent?title=${encodeURIComponent(title)}&domain=${encodeURIComponent(domain)}&score=${score || ''}&date=${date || ''}&time=${time || ''}`;
 }
 
 /**

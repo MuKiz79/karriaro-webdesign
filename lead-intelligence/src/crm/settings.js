@@ -15,7 +15,9 @@ export async function loadCloudSettings() {
         if (snap.exists()) {
             const data = snap.data();
             if (data.psiKey) { config.psiKey = data.psiKey; localStorage.setItem('karriaro_psi_key', data.psiKey); }
-            if (data.fnUrl) { config.fnUrl = data.fnUrl; localStorage.setItem('karriaro_fn_url', data.fnUrl); }
+            // Direkte cloudfunctions.net-URLs ignorieren — der Same-Origin-Proxy /api
+            // (Default) umgeht CORS. So überschreibt ein alt gespeicherter Wert nichts.
+            if (data.fnUrl && !data.fnUrl.includes('cloudfunctions.net')) { config.fnUrl = data.fnUrl; localStorage.setItem('karriaro_fn_url', data.fnUrl); }
         }
     } catch (e) { console.error('Load settings:', e); }
 }

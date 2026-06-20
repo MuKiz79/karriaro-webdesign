@@ -5,7 +5,9 @@
  * sind 38% interessant", sondern "Friseur Mueller, Score 78, hier kaufen".
  *
  * Pipeline:
- *  1. searchPlaces(branche+stadt, 6) parallel fuer alle 18 Branchen.
+ *  1. searchPlaces(branche+stadt, 20) parallel fuer alle 18 Branchen.
+ *     (20 = Backend-Max pro Anfrage; mehr Tiefe = auch die vernachlaessigten
+ *      Seiten jenseits der prominentesten Top-Treffer, die gute Sites haben.)
  *  2. Pre-Filter: nur Places mit websiteUri, OPERATIONAL, userRatingCount>=5,
  *     keine Enterprise/Konkurrenz-Domain.
  *  3. PSI-Light pro qualifiziertem Place mit Concurrency-Limit 8.
@@ -24,6 +26,10 @@ import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
+import { pickDistricts } from '../data/stadtteile.js';
+import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, PLACES_COST_USD } from '../api/scan-cache.js';
+import { getAlreadyKnown } from '../crm/known.js';
+import { escapeHtml } from '../lib/escape-html.js';
 
 const BRANCHES = [
     { key: 'dentist',           q: 'Zahnarzt',          name: 'Zahnärzte' },
@@ -47,9 +53,78 @@ const BRANCHES = [
 ];
 const BRANCH_BY_TYPE = Object.fromEntries(BRANCHES.map(b => [b.key, b]));
 
-const PLACES_PER_BRANCH = 6;
+const PLACES_PER_BRANCH = 20;
 const PSI_CONCURRENCY = 8;
 const MIN_REVIEWS = 5;
+// Tiefen-Suche: zusätzlich pro Branche in N Stadtteilen suchen (bricht den
+// Prominenz-Bias). Tiefen-Stufen zentral definiert (Modal + Default leiten sich
+// daraus ab). Gedrosselt gegen das Places-Rate-Limit (30/60s im Backend).
+const DEPTH_TIERS = [
+    { label: 'Schnell · stadtweit', districts: 0 },
+    { label: 'Mittel · + 3 Stadtteile', districts: 3 },
+    { label: 'Tief · + 6 Stadtteile', districts: 6 }
+];
+const DISTRICTS_PER_SCAN = Math.max(...DEPTH_TIERS.map(t => t.districts));
+const SEARCH_CONCURRENCY = 2; // niedriger → schont das 30/60s-Backend-Limit
+
+// searchPlaces mit Backoff-Retries gegen Rate-Limit (Tiefen-Scan feuert viele Suchen).
+async function searchPlacesRetry(q, max) {
+    const waits = [3000, 6000];
+    for (let i = 0; ; i++) {
+        try { return await searchPlaces(q, max); }
+        catch {
+            if (i >= waits.length) return null;
+            await new Promise(r => setTimeout(r, waits[i]));
+        }
+    }
+}
+
+// Stadt-weite + Stadtteil-Suchen pro Branche, mit Branchen-Index (für deterministisches Dedup).
+function buildQueriesFor(city, districts) {
+    const out = [];
+    BRANCHES.forEach((b, bi) => {
+        out.push({ branch: b, bi, q: `${b.q} ${city}` });
+        for (const st of districts) out.push({ branch: b, bi, q: `${b.q} ${city} ${st}` });
+    });
+    return out;
+}
+
+// Kosten-Bestätigung mit Tiefen-Wahl. Cache-Treffer sind gratis, neue Suchen ~0,04 $.
+// Liefert das gewählte Stadtteil-Array oder null (Abbruch).
+function confirmScanCost(city) {
+    return new Promise(resolve => {
+        const all = pickDistricts(city, DISTRICTS_PER_SCAN);
+        const opts = DEPTH_TIERS.map(t => {
+            const districts = all.slice(0, t.districts);
+            const qs = buildQueriesFor(city, districts).map(x => x.q);
+            const newN = countUncached(qs);
+            return { label: t.label, districts, total: qs.length, newN, costUsd: +(newN * PLACES_COST_USD).toFixed(2) };
+        });
+
+        const el = document.createElement('div');
+        el.className = 'scan-cost-overlay';
+        el.innerHTML = `
+            <div class="scan-cost-card">
+                <p class="hero-eyebrow">Region-Scan · ${escapeHtml(city)}</p>
+                <h2 class="scan-cost-title">Wie tief soll gesucht werden?</h2>
+                <p class="scan-cost-sub">Jede Google-Suche kostet ~0,04 $. Bereits gecachte Gebiete sind <strong>gratis</strong>, PageSpeed ist immer kostenlos. Mehrere Läufe füllen den Cache — Wiederholungen werden günstiger.</p>
+                <div class="scan-cost-opts">
+                    ${opts.map((o, i) => `
+                        <button class="scan-cost-opt${i === 1 ? ' recommended' : ''}" data-i="${i}">
+                            <span class="sco-label">${escapeHtml(o.label)}</span>
+                            <span class="sco-meta">${o.total} Suchen · ${o.newN} neu${o.newN < o.total ? ` · ${o.total - o.newN} gratis (Cache)` : ''}</span>
+                            <span class="sco-cost">${o.costUsd === 0 ? 'gratis' : '≈ ' + o.costUsd.toFixed(2) + ' $'}</span>
+                        </button>`).join('')}
+                </div>
+                <button class="scan-cost-cancel" data-cancel>Abbrechen</button>
+            </div>`;
+        document.body.appendChild(el);
+        const close = (val) => { el.remove(); resolve(val); };
+        el.querySelectorAll('.scan-cost-opt').forEach(b => b.addEventListener('click', () => close(opts[+b.dataset.i].districts)));
+        el.querySelector('[data-cancel]').addEventListener('click', () => close(null));
+        el.addEventListener('click', (e) => { if (e.target === el) close(null); });
+    });
+}
 
 let lastResults = []; // letzte Scanner-Ausgabe — fuer Filter/Sort ohne Re-Run
 let lastCity = '';
@@ -58,37 +133,55 @@ export async function runScanner() {
     const city = document.getElementById('scanner-city').value.trim();
     if (!city) return;
     if (!config.fnUrl) { showError('Scanner braucht Cloud Function URL.'); return; }
+
+    // Kosten-Bestätigung mit Tiefen-Wahl (Cache-Treffer gratis). Abbruch → raus.
+    const districts = await confirmScanCost(city);
+    if (districts === null) return;
+
     state.aborted = false;
     document.getElementById('btn-scanner').disabled = true;
-
     showProgress(0, `Bitte diesen Tab offen lassen — Scan läuft...`);
 
-    // Phase 1: Alle Places-Suchen parallel
-    showProgress(8, '① Geschäfte in allen Branchen suchen...');
-    const placeResults = await Promise.all(
-        BRANCHES.map(b => searchPlaces(`${b.q} ${city}`, PLACES_PER_BRANCH).catch(() => null))
-    );
+    // Phase 1: Suche (Stadt + gewählte Stadtteile), Cache-first, gedrosselt.
+    // Gegen bereits gespeicherte/abgelehnte Leads gefiltert; Dedup erfolgt
+    // deterministisch NACH allen Suchen (race-frei), nicht im Worker.
+    const queries = buildQueriesFor(city, districts);
+    const known = getAlreadyKnown();
+    showProgress(6, districts.length
+        ? `① Suche in ${districts.length + 1} Gebieten × ${BRANCHES.length} Branchen (${queries.length} Suchen)…`
+        : `① Geschäfte in allen Branchen suchen…`);
+
+    const raw = [];
+    let qDone = 0;
+    await runWithConcurrency(queries, SEARCH_CONCURRENCY, async ({ branch, bi, q }) => {
+        if (state.aborted) return;
+        const cached = getCachedPlaces(q);
+        const res = cached ? { places: cached } : await searchPlacesRetry(q, PLACES_PER_BRANCH);
+        if (!cached && res?.places) setCachedPlaces(q, res.places);
+        for (const p of (res?.places || [])) {
+            if (!p.websiteUri) continue;
+            if ((p.userRatingCount || 0) < MIN_REVIEWS) continue;
+            if (p.businessStatus && p.businessStatus !== 'OPERATIONAL') continue;
+            let host;
+            try { host = new URL(p.websiteUri).hostname.replace(/^www\./, ''); } catch { continue; }
+            if (known.has(host)) continue;
+            const ent = checkEnterpriseDB(host);
+            if (ent.isEnterprise || ent.isCompetitor) continue;
+            raw.push({ branch, bi, host, place: p });
+        }
+        qDone++;
+        showProgress(6 + Math.round((qDone / queries.length) * 22), `① Suche … ${qDone}/${queries.length} Gebiete · ${raw.length} Treffer`);
+    });
     if (state.aborted) { hideProgress(); document.getElementById('btn-scanner').disabled = false; return; }
 
-    // Phase 2: Pre-Filter — sammle alle qualifizierten Leads
-    showProgress(20, '② Pre-Filter (Enterprise raus, ohne Reviews raus)...');
+    // Deterministisches Dedup: niedrigster Branchen-Index gewinnt (stabile Zuordnung,
+    // unabhängig vom Netzwerk-Race der parallelen Suchen).
+    const seen = new Set();
     const candidates = [];
-    for (let i = 0; i < BRANCHES.length; i++) {
-        const branch = BRANCHES[i];
-        const places = (placeResults[i]?.places || []).filter(p => {
-            if (!p.websiteUri) return false;
-            if ((p.userRatingCount || 0) < MIN_REVIEWS) return false;
-            if (p.businessStatus && p.businessStatus !== 'OPERATIONAL') return false;
-            try {
-                const host = new URL(p.websiteUri).hostname.replace(/^www\./, '');
-                const ent = checkEnterpriseDB(host);
-                if (ent.isEnterprise || ent.isCompetitor) return false;
-            } catch { return false; }
-            return true;
-        });
-        for (const p of places) {
-            candidates.push({ branch, place: p });
-        }
+    for (const c of raw.sort((a, b) => a.bi - b.bi)) {
+        if (seen.has(c.host)) continue;
+        seen.add(c.host);
+        candidates.push({ branch: c.branch, place: c.place });
     }
 
     if (candidates.length === 0) {
@@ -106,9 +199,17 @@ export async function runScanner() {
         if (state.aborted) return;
         const { branch, place } = cand;
         try {
-            const psi = await fetchPageSpeed(place.websiteUri);
-            const ws = extractWebsiteScore(psi);
-            const tech = detectTech(psi);
+            const domainKey = hostnameOf(place.websiteUri);
+            // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
+            let ws, tech;
+            const cs = getCachedScore(domainKey);
+            if (cs) { ws = cs.ws; tech = cs.tech; }
+            else {
+                const psi = await fetchPageSpeed(place.websiteUri);
+                ws = extractWebsiteScore(psi);
+                tech = detectTech(psi);
+                setCachedScore(domainKey, ws, tech);
+            }
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
                 key: `${branch.key}::${place.websiteUri}`,
@@ -385,10 +486,7 @@ function bindWorkspaceEvents(el) {
     });
 }
 
-function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":"&#39;"}[c]));
-}
+// escapeHtml kommt zentral aus lib/escape-html.js (Import oben).
 
 function showProgress(pct, t) { document.getElementById('progress').classList.remove('hidden'); document.getElementById('progress-fill').style.width = pct+'%'; document.getElementById('progress-text').textContent = t; }
 function hideProgress() { document.getElementById('progress').classList.add('hidden'); }

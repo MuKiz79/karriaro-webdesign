@@ -111,6 +111,7 @@ function renderUrlHistory() {
 function initButtons() {
     // Analyze (+ URL History)
     document.getElementById('btn-analyze')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
         const url = document.getElementById('url-input')?.value.trim();
         if (url) addToHistory(url.startsWith('http') ? url : 'https://' + url);
         runSingleCheck();
@@ -118,12 +119,14 @@ function initButtons() {
 
     // Batch
     document.getElementById('btn-batch')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
         requestNotificationPermissionOnGesture();
         runBatchSearch();
     });
 
     // Scanner
     document.getElementById('btn-scanner')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
         requestNotificationPermissionOnGesture();
         runScanner();
     });
@@ -135,22 +138,24 @@ function initButtons() {
     // Enter keys
     document.getElementById('url-input')?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
+            if (!ensureAccess()) return;
             const url = e.target.value.trim();
             if (url) addToHistory(url.startsWith('http') ? url : 'https://' + url);
             runSingleCheck();
         }
     });
     document.getElementById('batch-query')?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') runBatchSearch();
+        if (e.key === 'Enter') { if (!ensureAccess()) return; runBatchSearch(); }
     });
     document.getElementById('scanner-city')?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') runScanner();
+        if (e.key === 'Enter') { if (!ensureAccess()) return; runScanner(); }
     });
 
     // Keyboard shortcut: Cmd/Ctrl+Enter anywhere → analyze current mode
     document.addEventListener('keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
             e.preventDefault();
+            if (!ensureAccess()) return;
             if (state.mode === 'single') runSingleCheck();
             else if (state.mode === 'batch') runBatchSearch();
             else if (state.mode === 'scanner') runScanner();
@@ -169,17 +174,85 @@ function initButtons() {
     renderUrlHistory();
 }
 
-// ── Auth ──
-function initAuth() {
+// ── Zugriffsschutz (Login-Gate) ──
+// Internes Werkzeug: nur das Founder-Konto schaltet die Oberfläche frei.
+// Das Overlay #access-gate ist per HTML default-sichtbar (kein Aufblitzen des
+// Tools), wird nur für die erlaubte E-Mail entfernt.
+const ALLOWED_EMAILS = ['muammer.kizilaslan@gmail.com'];
+let accessGranted = false;   // nur true für das freigeschaltete Konto → Aktionen erlaubt
+
+function renderAccessGate(stateName, user) {
+    accessGranted = (stateName === 'ok');
+    const gate = document.getElementById('access-gate');
+    if (!gate) return;
+    if (stateName === 'ok') { gate.classList.add('hidden'); gate.innerHTML = ''; return; }
+    gate.classList.remove('hidden');
+    if (stateName === 'error') {
+        gate.innerHTML = `
+            <div class="access-card">
+                <p class="hero-eyebrow">Anmeldung nicht verfügbar</p>
+                <h1>Bitte Seite neu laden</h1>
+                <p class="access-text">Der Anmeldedienst konnte nicht geladen werden (Netzwerk/Blocker). Bitte laden Sie die Seite neu.</p>
+                <button class="btn-primary" id="gate-reload">Neu laden</button>
+            </div>`;
+        document.getElementById('gate-reload')?.addEventListener('click', () => location.reload());
+    } else if (stateName === 'login') {
+        gate.innerHTML = `
+            <div class="access-card">
+                <p class="hero-eyebrow">Interner Bereich</p>
+                <h1>Lead Intelligence</h1>
+                <p class="access-text">Dieses Werkzeug ist privat. Bitte mit dem berechtigten Google-Konto anmelden.</p>
+                <button class="btn-primary" id="gate-signin">Mit Google anmelden</button>
+            </div>`;
+        document.getElementById('gate-signin')?.addEventListener('click', signIn);
+    } else if (stateName === 'denied') {
+        gate.innerHTML = `
+            <div class="access-card">
+                <p class="hero-eyebrow">Kein Zugriff</p>
+                <h1>Dieses Konto ist nicht freigeschaltet</h1>
+                <p class="access-text">Angemeldet als <strong>${user?.email || ''}</strong>. Dieses Werkzeug ist einem anderen Konto vorbehalten.</p>
+                <button class="btn-primary" id="gate-signout">Abmelden</button>
+            </div>`;
+        document.getElementById('gate-signout')?.addEventListener('click', () => window.__firebase?.fns.signOut(window.__firebase.auth));
+    }
+}
+
+async function signIn() {
     if (!window.__firebase) return;
+    const provider = new window.__firebase.fns.GoogleAuthProvider();
+    await window.__firebase.fns.signInWithPopup(window.__firebase.auth, provider);
+}
+
+// Aktionen (Scanner/Batch/Single) nur für das freigeschaltete Konto — verhindert,
+// dass ein nicht-autorisierter Besucher über Buttons/Cmd+Enter bezahlte API-Calls auslöst.
+function ensureAccess() {
+    if (accessGranted) return true;
+    renderAccessGate(state.user ? 'denied' : 'login', state.user);
+    return false;
+}
+
+// ── Auth ──
+// Wartet kurz auf das (separat per gstatic-Modul gesetzte) window.__firebase,
+// bevor es aufgibt — sonst bliebe das Gate bei langsamem CDN fälschlich auf 'login'.
+function initAuth(retries = 25) {
+    if (!window.__firebase) {
+        if (retries > 0) { setTimeout(() => initAuth(retries - 1), 150); return; }
+        renderAccessGate('error'); return;
+    }
     window.__firebase.fns.onAuthStateChanged(window.__firebase.auth, (user) => {
         state.user = user;
+
+        // Zugriffs-Gate ZUERST — entscheidet, ob die Oberfläche überhaupt sichtbar wird.
+        if (!user) { renderAccessGate('login'); }
+        else if (!ALLOWED_EMAILS.includes((user.email || '').toLowerCase())) { renderAccessGate('denied', user); }
+        else { renderAccessGate('ok'); }
+
         const btn = document.getElementById('auth-btn');
         if (user) {
             btn.textContent = user.email.split('@')[0];
             btn.classList.add('logged-in');
-            // Fix 1: Settings aus Firestore laden
-            loadCloudSettings();
+            // Fix 1: Settings aus Firestore laden — danach Setup-Banner neu bewerten.
+            loadCloudSettings().then(() => renderSetupGate());
             // Fix 3: Reminders prüfen
             showReminders();
         } else {
@@ -253,7 +326,9 @@ function openSettings() {
         `;
         document.getElementById('btn-save-settings').addEventListener('click', () => {
             config.psiKey = document.getElementById('cfg-psi-key').value.trim();
-            config.fnUrl = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
+            // Direkte cloudfunctions.net-URLs würden CORS brechen → auf den Same-Origin-Proxy /api normalisieren.
+            const fnInput = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
+            config.fnUrl = (fnInput && !fnInput.includes('cloudfunctions.net')) ? fnInput : '/api';
             config.profile.name = document.getElementById('cfg-name').value.trim();
             config.profile.company = document.getElementById('cfg-company').value.trim();
             config.profile.role = document.getElementById('cfg-role').value.trim();
