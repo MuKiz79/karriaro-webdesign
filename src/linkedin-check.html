@@ -350,21 +350,44 @@
   }
   // Datei-Upload
   shot.addEventListener("change", function () { var f = shot.files && shot.files[0]; shot.value = ""; handleImageFile(f); });
+  // Bild aus einem DataTransfer ziehen — prueft .files UND .items (Browser
+  // legen pastete Bilder mal hier, mal dort ab).
+  function imageFromTransfer(dt) {
+    if (!dt) return null;
+    if (dt.files && dt.files.length) {
+      for (var j = 0; j < dt.files.length; j++) {
+        if (dt.files[j] && dt.files[j].type && dt.files[j].type.indexOf("image/") === 0) return dt.files[j];
+      }
+    }
+    if (dt.items && dt.items.length) {
+      for (var i = 0; i < dt.items.length; i++) {
+        if (dt.items[i].kind === "file" && dt.items[i].type && dt.items[i].type.indexOf("image/") === 0) {
+          var f = dt.items[i].getAsFile();
+          if (f) return f;
+        }
+      }
+    }
+    return null;
+  }
   // Screenshot direkt aus der Zwischenablage einfuegen (Cmd/Strg+V). Nur BILDER
   // abfangen — getippter/eingefuegter TEXT laeuft normal ins Textfeld.
   document.addEventListener("paste", function (e) {
-    var items = (e.clipboardData && e.clipboardData.items) || [];
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].type && items[i].type.indexOf("image/") === 0) {
-        var f = items[i].getAsFile();
-        if (f) { e.preventDefault(); handleImageFile(f); return; }
-      }
-    }
+    var f = imageFromTransfer(e.clipboardData);
+    if (f) { e.preventDefault(); handleImageFile(f); }
+  });
+  // Auch Drag & Drop eines Bildes aufs Textfeld.
+  post.addEventListener("dragover", function (e) { e.preventDefault(); });
+  post.addEventListener("drop", function (e) {
+    var f = imageFromTransfer(e.dataTransfer);
+    if (f) { e.preventDefault(); handleImageFile(f); }
   });
 
   post.addEventListener("input", updateCC);
   post.addEventListener("keydown", function (e) { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run(); });
   updateCC();
+  // Textfeld fokussieren, damit Cmd/Strg+V sofort ein Ziel hat (nur Desktop,
+  // damit auf Mobil nicht die Tastatur aufspringt).
+  try { if (window.innerWidth > 700) post.focus(); } catch (e) {}
 })();
 </script>
 </body></html>
