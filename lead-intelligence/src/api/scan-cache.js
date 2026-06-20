@@ -18,8 +18,10 @@
 
 const PLACES_KEY = 'kz_places_cache';
 const SCORE_KEY = 'kz_score_cache';
+const VISION_KEY = 'kz_vision_cache';
 const PLACES_TTL = 14 * 86400000; // 14 Tage
 const SCORE_TTL = 7 * 86400000;   // 7 Tage
+const VISION_TTL = 14 * 86400000; // 14 Tage (Design ändert sich langsam)
 const MAX_PLACES_ENTRIES = 600;
 
 /** Geschätzter Listenpreis pro Places-Text-Search (Enterprise+Atmosphere-SKU). */
@@ -130,4 +132,15 @@ export function getCachedScore(domain) {
 export function setCachedScore(domain, ws, tech) {
     map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech };
     scheduleFlush(SCORE_KEY);
+}
+
+// ── Vision-Cache (analyzeScreenshot-Ergebnis je Domain) — Top-N-Verfeinerung gratis bei Re-Scan ──
+export function getCachedVision(domain) {
+    const e = map(VISION_KEY)[domain];
+    if (e && Date.now() - e.at < VISION_TTL) { e.at = Date.now(); scheduleFlush(VISION_KEY); return e.vision; }
+    return null;
+}
+export function setCachedVision(domain, vision) {
+    map(VISION_KEY)[domain] = { at: Date.now(), vision };
+    scheduleFlush(VISION_KEY);
 }
