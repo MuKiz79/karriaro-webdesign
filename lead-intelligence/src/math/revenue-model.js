@@ -3,7 +3,7 @@
  */
 
 import { randn } from './sampling.js';
-import { LOCAL_BUSINESS_TRAFFIC, CUSTOMER_LIFETIME_VALUE, WEBSITE_CONVERSION_RATES } from '../priors/benchmark-data.js';
+import { LOCAL_BUSINESS_TRAFFIC, CUSTOMER_LIFETIME_VALUE, WEBSITE_CONVERSION_RATES, WEB_LEAD_SHARE } from '../priors/benchmark-data.js';
 
 // Fix 4+5: Kalibriert mit echten Traffic-Daten (BrightLocal) und CLV (Branchenberichte)
 const INDUSTRIES = {
@@ -82,7 +82,14 @@ export function calculateRevenueLoss(ws, place) {
     const seoLostPct = ws.seo < 50 ? 0.30 : ws.seo < 75 ? 0.15 : 0.05;
 
     const totalLossFraction = lossFraction(lcpSec, mobilePenalty, sslPenalty, seoLostPct);
-    const totalLostMonthly = baselineConversions * totalLossFraction;
+    // webLeadShare: Anteil der Neukunden, die ueberhaupt UEBER die Website kommen
+    // (vs. Telefon/Empfehlung/Maps-direkt). Skaliert NUR den Euro-Verlust, nicht die
+    // angezeigten Besucher und nicht baselineConversions (sonst schrumpfen auch die
+    // Einzel-Anzeige-Beitraege lostSpeed/lostMobile/... mit). Identische Konstante
+    // wird unten im Monte-Carlo angewendet, damit Punkt-Schaetzung und P10/P90-Band
+    // konsistent skalieren.
+    const webLeadShare = WEB_LEAD_SHARE[type] ?? WEB_LEAD_SHARE._default;
+    const totalLostMonthly = baselineConversions * webLeadShare * totalLossFraction;
     // Einzel-Beitraege nur fuer die Anzeige (marginale Anteile, NICHT aufsummiert).
     const lostSpeed = baselineConversions * speedLossPct(lcpSec);
     const lostMobile = baselineConversions * 0.6 * mobilePenalty;
@@ -117,8 +124,11 @@ export function calculateRevenueLoss(ws, place) {
         const d = LOCAL_BUSINESS_TRAFFIC.byIndustry[type] || LOCAL_BUSINESS_TRAFFIC.byIndustry._default;
         const vis = Math.min(d.maxVisitors, Math.max(d.minVisitors, reviews * vpr));
         const base = vis * cr;
-        // IDENTISCHE gedeckelte Survival-Fraktion wie in der Punkt-Schaetzung.
-        const lost = base * totalLossFraction;
+        // IDENTISCHE gedeckelte Survival-Fraktion UND identischer webLeadShare wie in
+        // der Punkt-Schaetzung, damit das Band eine saubere skalierte Version des
+        // Headline-Werts bleibt (webLeadShare ist eine strukturelle Konstante pro
+        // Branche, KEINE eigene Monte-Carlo-Ziehung).
+        const lost = base * webLeadShare * totalLossFraction;
         samples.push(lost * av * 12);
     }
     samples.sort((a, b) => a - b);

@@ -34,7 +34,7 @@ export function generatePersonalEmail(data) {
         const top = data.branchStandards.missing[0];
         args.push({ type: 'branch', text: `Ihrer ${cp.branche || 'Branche'}-Website fehlen ${data.branchStandards.missing.length} Standard-Features die Kunden 2026 erwarten — z.B. ${top.name}.`, subject: `${domain}: ${data.branchStandards.missing.length} Features fehlen die Kunden erwarten` });
     }
-    if (rev?.yearlyLoss > 2000) {
+    if (rev?.yearlyLoss > 1000) {
         args.push({ type: 'revenue', text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf rund ${(rev.pitchValue ?? rev.yearlyLoss).toLocaleString('de-DE')} €.`, subject: `${domain}: ungenutztes Umsatzpotenzial Ihrer Website` });
     }
     if (ws.perf < 40) {
