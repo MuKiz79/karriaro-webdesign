@@ -41,60 +41,67 @@
 <body><div class="wrap">
   <div class="eyebrow">Der entschluesselte LinkedIn-Code</div>
   <h1>Scoring-Report</h1>
-  <p class="topic">Niemand kennt LinkedIns Algorithmus von innen, aber man kann ihn rueckentwickeln. Ich habe die belegten Reichweiten-Signale aus den 2026-Studien in pruefbaren Code gegossen und eine Engine gebaut, die jeden Post auf maximale Reichweite optimiert, bevor er rausgeht.</p>
-  <p class="meta">2/6 Varianten haben die harten Gates bestanden · 2026-06-19T22:10:00.018Z</p>
+  <p class="topic">Niemand kennt LinkedIns Algorithmus von innen. Eine Tiefenrecherche ueber 25 Behauptungen ergab: nur zwei Hebel sind wirklich belegt — das Format und die erste Stunde. Den Rest verkaufen Tools als Praezision, obwohl er einer Quellenpruefung nicht standhaelt.</p>
+  <p class="meta">5/6 Varianten haben die harten Gates bestanden · 2026-06-20T06:30:36.089Z</p>
   <section class="card winner-card">
-        <div class="score-badge" style="border-color:#C9A24B">
-          <div class="score-num" style="color:#C9A24B">81</div>
-          <div class="score-of">/100 · Grade B</div>
+        <div class="score-badge" style="border-color:#2e7d32">
+          <div class="score-num" style="color:#2e7d32">85</div>
+          <div class="score-of">/100 · Grade A</div>
         </div>
         <div class="winner-body">
-          <div class="eyebrow">Gewinner-Variante · How-To / Framework</div>
-          <div class="bars"><div class="bar-row"><span class="bar-label">Hook</span><span class="bar-track"><span class="bar-fill" style="width:44%"></span></span><span class="bar-num">11/25</span></div><div class="bar-row"><span class="bar-label">Verweildauer</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">20/20</span></div><div class="bar-row"><span class="bar-label">Save-Trigger</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">20/20</span></div><div class="bar-row"><span class="bar-label">Gespraech</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Beweis</span><span class="bar-track"><span class="bar-fill" style="width:50%"></span></span><span class="bar-num">5/10</span></div><div class="bar-row"><span class="bar-label">Hygiene</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">10/10</span></div></div>
-          <pre class="post">Sie koennen LinkedIns Reichweite nicht hacken — aber Sie koennen die Signale, auf die der Feed nachweislich reagiert, vor dem Posten messen.
+          <div class="eyebrow">Gewinner-Variante · Build in Public</div>
+          <div class="bars"><div class="bar-row"><span class="bar-label">Format</span><span class="bar-track"><span class="bar-fill" style="width:52%"></span></span><span class="bar-num">13/25</span></div><div class="bar-row"><span class="bar-label">Hook</span><span class="bar-track"><span class="bar-fill" style="width:85%"></span></span><span class="bar-num">17/20</span></div><div class="bar-row"><span class="bar-label">Struktur</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Gespraech</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Laenge</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">10/10</span></div><div class="bar-row"><span class="bar-label">Hygiene</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div></div>
+          <pre class="post">Samstag, 23:40 Uhr. Ich sitze vor 25 LinkedIn-Reichweiten-Behauptungen und pruefe jede einzelne gegen Primaerquellen.
 
-Genau das habe ich in Code gegossen. Eine Engine, die jeden Entwurf gegen die rueckentwickelten Algorithmus-Signale aus den 2026-Studien prueft, bevor er live geht.
+Ergebnis nach drei Naechten: vier ueberleben die adversariale Verifikation. Einundzwanzig nicht.
 
-So laeuft ein Durchgang:
+Was belegt ist:
+— Dokument/Carousel fuehrt im Format-Vergleich (~1,39× Reach, Basis: 1,8 Mio. Posts, van der Blom).
+— Die ersten 30 bis 60 Minuten entscheiden ueber die weitere Verteilung.
 
-1. Sechs Varianten erzeugen — nicht eine, nicht zwoelf. Sechs zwingt zu echter Variation der Hook.
-2. Harte Marken-Gates anwenden. Alles, was Sie-Register, Beweis-Pflicht oder Anti-Bait-Regeln reisst, fliegt sofort raus. Keine Diskussion.
-3. Die Ueberlebenden mit einem deterministischen 0–100-Reach-Score bewerten:
-   Hook 25 · Verweildauer 20 · Save-Trigger 20 · Gespraech 15 · Beweis 10 · Hygiene 10.
-4. Jeder Punkt ist an ein konkretes, belegtes Signal verankert — kein Bauchgefuehl, kein „klingt gut“.
-5. 32 gruene Unit-Tests sichern die Regeln ab. Wenn jemand spaeter eine Regel kippt, faellt der Build.
+Was nicht haelt:
+— „Save zaehlt 5–10×.“ Keine Primaerquelle.
+— „Kommentar zaehlt 15×.“ Keine Primaerquelle.
+— „71 % weniger Reach durch Hashtags.“ Keine Primaerquelle.
+— Dwell-Time-Multiplikatoren als feste Zahl. Keine Primaerquelle.
 
-Der eigentliche Hebel ist nicht der Score. Der Hebel ist, dass jede Entscheidung erklaerbar wird.
+Die Huerde beim Bauen war nicht die Recherche, sondern das Loslassen. Ich hatte selbst Jahre lang mit „Kommentar zaehlt 15×“ gearbeitet. Diese Zahl aus der eigenen Checkliste zu streichen, kostet mehr Ueberwindung als jede SQL-Abfrage.
 
-Ein Post mit 78 Punkten, der an der Hook scheitert, sagt mir genau, wo ich nachschaerfen muss. Vorher war das eine Geschmacksfrage. Jetzt ist es ein Diff.
+Ein Mini-Framework, das ich seither nutze, bevor ich eine Reichweiten-Regel uebernehme:
 
-Den Screenshot des Score-Runs und die Test-Suite habe ich im ersten Kommentar verlinkt.
+1. Gibt es eine Primaerquelle (Datensatz, Plattform-Statement)?
+2. Ist die Stichprobe nachvollziehbar?
+3. Ueberlebt die Aussage eine Gegenfrage?
 
-Welche Signale wuerden Sie in so einer Gewichtung anders priorisieren?
+Faellt ein Punkt aus, ist es Folklore, nicht Algorithmus.
 
-#LinkedInAlgorithmus #ContentEngineering #AIinPractice</pre>
-          <div class="eyebrow">Erster Kommentar</div><pre class="post comment">Hier der Score-Run und die 32 gruenen Tests zum Mitlesen — Sie sehen jede Regel und ihre Gewichtung im Klartext:</pre>
+Den vollstaendigen Pruefbericht mit allen 25 Behauptungen, Quellen und Gegenfragen finden Sie im ersten Kommentar.
+
+Welche Reichweiten-Regel halten Sie selbst fuer belegt — und woran machen Sie das fest?
+
+#LinkedInAlgorithmus #BuildInPublic</pre>
+          <div class="eyebrow">Erster Kommentar</div><pre class="post comment">Hier der vollstaendige Pruefbericht zu allen 25 Behauptungen, inklusive Quellenlage und Gegenfragen. Ich freue mich, wenn Sie Schwachstellen finden:</pre>
         </div>
       </section>
   <h2>Alle Varianten — auch die verworfenen</h2>
-  <div class="variant v-fail ">
-    <div class="variant-head"><strong>Build in Public</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
-    <div class="reasons"><div class="reason">✕ Hook zu lang: 142 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
-  </div><div class="variant v-fail ">
-    <div class="variant-head"><strong>Contrarian-Take</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
-    <div class="reasons"><div class="reason">✕ Hook zu lang: 152 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div></div>
-  </div><div class="variant v-pass v-winner">
-    <div class="variant-head"><strong>How-To / Framework</strong> <span class="winner-tag">GEWINNER</span> <span class="chip chip-pass">PASS · Reach 81/100 (B)</span></div>
+  <div class="variant v-pass v-winner">
+    <div class="variant-head"><strong>Build in Public</strong> <span class="winner-tag">GEWINNER</span> <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
     
-  </div><div class="variant v-fail ">
-    <div class="variant-head"><strong>Daten-Punkt</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
-    <div class="reasons"><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
   </div><div class="variant v-pass ">
-    <div class="variant-head"><strong>Story / Lektion</strong>  <span class="chip chip-pass">PASS · Reach 75/100 (B)</span></div>
+    <div class="variant-head"><strong>Contrarian-Take</strong>  <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
+    
+  </div><div class="variant v-pass ">
+    <div class="variant-head"><strong>How-To / Framework</strong>  <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
+    
+  </div><div class="variant v-pass ">
+    <div class="variant-head"><strong>Daten-Punkt</strong>  <span class="chip chip-pass">PASS · Reach 88/100 (A)</span></div>
+    
+  </div><div class="variant v-pass ">
+    <div class="variant-head"><strong>Story / Lektion</strong>  <span class="chip chip-pass">PASS · Reach 80/100 (B)</span></div>
     
   </div><div class="variant v-fail ">
     <div class="variant-head"><strong>Beweis-Teardown</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
-    <div class="reasons"><div class="reason">✕ Informelles Du-Register gefunden — Entscheider-Publikum braucht durchgaengig Sie.</div></div>
+    <div class="reasons"><div class="reason">✕ Hook zu lang: 147 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div></div>
   </div>
   <footer>
     Erzeugt von der Karriaro-LinkedIn-Engine.<br>
