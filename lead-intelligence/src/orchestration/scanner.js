@@ -22,12 +22,16 @@ import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
+import { computeOpportunity } from '../scoring/opportunity.js';
+import { analyzeTechAge } from '../analysis/tech-age.js';
+import { siteLooksModern } from '../analysis/claim-verify.js';
+import { analyzeScreenshot } from '../api/cloud-functions.js';
 import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
-import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, PLACES_COST_USD } from '../api/scan-cache.js';
+import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { escapeHtml } from '../lib/escape-html.js';
 
@@ -201,15 +205,20 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech;
+            let ws, tech, screenshot = null;
             const cs = getCachedScore(domainKey);
             if (cs) { ws = cs.ws; tech = cs.tech; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
                 tech = detectTech(psi);
+                screenshot = psi?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
                 setCachedScore(domainKey, ws, tech);
             }
+            const techAge = analyzeTechAge(tech, {});
+            // Transparente Vor-Bewertung (gratis): Opportunity = Schlechtigkeit × Geschäftswert.
+            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge });
+            // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
                 key: `${branch.key}::${place.websiteUri}`,
@@ -224,13 +233,19 @@ export async function runScanner() {
                 primaryType: place.primaryType || branch.key,
                 ws,
                 tech,
-                leadScore: result.leadScore || 0,
-                quickScore: result.quickScore ?? result.leadScore ?? 0,
+                leadScore: opp.opportunity,            // Hauptscore = Opportunity (Founder-facing)
+                opportunity: opp.opportunity,
+                badnessScore: opp.badnessScore,
+                businessStrength: opp.businessStrength,
+                reasons: opp.reasons,
+                looksAlreadyGood: opp.looksAlreadyGood,
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
                 cms: tech.cms || null,
-                version: tech.version || null
+                version: tech.version || null,
+                // Screenshot nur für aussichtsreiche Treffer halten (Stufe-2-Vision, Speicher-schonend).
+                _screenshot: opp.opportunity >= 45 ? screenshot : null
             });
         } catch (err) {
             // Schweigend ignorieren — vermutlich PSI-Quota oder unreachable Site.
@@ -240,6 +255,33 @@ export async function runScanner() {
         const pct = 30 + Math.round((done / candidates.length) * 65);
         showProgress(pct, `③ ${done}/${candidates.length} analysiert...`);
     });
+
+    // Stufe 2: günstige Vision-Verfeinerung der Top-N (aus dem schon vorhandenen
+    // PSI-Screenshot) — fängt "modern aber langsam" ab, bevor du teuer reingehst.
+    if (!state.aborted) {
+        const VISION_TOP_N = 25;
+        const visionCands = leads.filter(l => l.opportunity >= 45)
+            .sort((a, b) => b.opportunity - a.opportunity).slice(0, VISION_TOP_N);
+        if (visionCands.length && config.fnUrl) {
+            let vDone = 0;
+            await runWithConcurrency(visionCands, 3, async (l) => {
+                if (state.aborted) return;
+                let vision = getCachedVision(l.domain);
+                if (!vision && l._screenshot) {
+                    vision = await analyzeScreenshot(l._screenshot).catch(() => null);
+                    if (vision) setCachedVision(l.domain, vision);
+                }
+                if (vision) {
+                    const modern = siteLooksModern(vision);
+                    if (modern === true) { l.opportunity = Math.round(l.opportunity * 0.4); l.leadScore = l.opportunity; l.reasons.push('Bild: modern'); }
+                    else if (modern === false) { l.opportunity = Math.min(100, Math.round(l.opportunity * 1.15)); l.leadScore = l.opportunity; l.reasons.push('Bild: veraltet'); }
+                }
+                vDone++;
+                showProgress(96 + Math.round((vDone / visionCands.length) * 3), `④ Bild-Check Top ${vDone}/${visionCands.length}…`);
+            });
+        }
+    }
+    for (const l of leads) delete l._screenshot; // Speicher freigeben
 
     hideProgress();
     document.getElementById('btn-scanner').disabled = false;
@@ -377,15 +419,12 @@ function renderEmpty(city) {
 
 function renderLeadCard(l) {
     const scoreClass = l.leadScore >= 70 ? 'hot' : l.leadScore >= 50 ? 'warm' : 'cold';
-    const techHint = l.isBaukasten ? `${l.cms} (Baukasten)`
-        : l.cms && l.version ? `${l.cms} ${l.version}`
-        : l.cms || '—';
-    const perfBadge = l.ws?.perf >= 90 ? `<span class="ws-perf-good">Perf ${l.ws.perf}</span>`
-        : l.ws?.perf >= 50 ? `<span class="ws-perf-mid">Perf ${l.ws.perf}</span>`
-        : `<span class="ws-perf-bad">Perf ${l.ws?.perf || '?'}</span>`;
-    const ratingStars = l.rating ? `★ ${l.rating.toFixed(1)}` : '';
-    const sslBadge = l.ws?.isHttps === false ? '<span class="ws-flag-bad">kein SSL</span>' : '';
-    const mobileBadge = l.ws?.viewport === false ? '<span class="ws-flag-bad">nicht mobile</span>' : '';
+    // Begründungs-Chips: zeigen transparent, WARUM der Lead so bewertet ist.
+    // "Bild: modern" ist der Grund fürs Abwerten → gedämpft markiert.
+    const reasons = (l.reasons || []).map(r => {
+        const muted = /Bild: modern/i.test(r) ? ' ws-chip-muted' : '';
+        return `<span class="ws-lead-tech${muted}">${escapeHtml(r)}</span>`;
+    }).join(' ');
 
     return `
         <div class="ws-lead ws-lead-${scoreClass}" data-key="${escapeHtml(l.key)}" data-url="${escapeHtml(l.websiteUri)}">
@@ -397,9 +436,7 @@ function renderLeadCard(l) {
                 </div>
                 <div class="ws-lead-line2">
                     <span class="ws-lead-branch">${escapeHtml(l.branch.name)}</span>
-                    ${ratingStars ? `<span class="ws-lead-rating">${ratingStars} (${l.reviews})</span>` : `<span class="ws-lead-rating">${l.reviews} Bew.</span>`}
-                    <span class="ws-lead-tech">${escapeHtml(techHint)}</span>
-                    ${perfBadge} ${sslBadge} ${mobileBadge}
+                    ${reasons}
                 </div>
                 ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}
             </div>

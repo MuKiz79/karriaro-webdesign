@@ -167,6 +167,9 @@
 }
 .scan-cost-cancel:hover { color: var(--text); }
 
+/* Scanner: gedämpfter Chip (z.B. "Bild: modern" = Grund fürs Abwerten) */
+.ws-chip-muted { opacity: 0.55; text-decoration: line-through; }
+
 /* Mobile: Finder-Karten gestapelt */
 @media (max-width: 640px) {
     .finder-cards { grid-template-columns: 1fr; }
