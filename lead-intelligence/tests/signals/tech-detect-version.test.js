@@ -40,19 +40,32 @@ describe('detectTech — WordPress version single source', () => {
         expect(tech.version).not.toBe('3.7.1');
     });
 
-    it('liefert Modus (haeufigste Version) wenn mehrere Versionen erkannt', () => {
-        // Cache-Kollision: drei Assets mit alter Version, zwei mit neuer.
-        // Modus = 5.6.6 (3x), nicht 6.4.2 (2x).
+    it('liefert Modus (haeufigste Version) bei mehreren CORE-Asset-Versionen', () => {
+        // Nur eindeutige Core-Assets (block-library/blocks/emoji) zaehlen.
+        // Modus = 5.6.6 (3x), nicht 6.4.2 (2x). Generische wp-includes/js/*-Assets
+        // werden bewusst NICHT mehr als Core-Version gewertet (Bug-Vermeidung).
         const psi = psiWithUrls([
-            'https://example.com/wp-includes/js/a.min.js?ver=5.6.6',
-            'https://example.com/wp-includes/js/b.min.js?ver=5.6.6',
-            'https://example.com/wp-includes/js/c.min.js?ver=5.6.6',
-            'https://example.com/wp-includes/js/d.min.js?ver=6.4.2',
-            'https://example.com/wp-includes/js/e.min.js?ver=6.4.2'
+            'https://example.com/wp-includes/css/dist/block-library/a.min.css?ver=5.6.6',
+            'https://example.com/wp-includes/css/dist/components.min.css?ver=5.6.6',
+            'https://example.com/wp-includes/blocks/paragraph/style.min.css?ver=5.6.6',
+            'https://example.com/wp-includes/js/wp-emoji-release.min.js?ver=6.4.2',
+            'https://example.com/wp-includes/css/dist/editor.min.css?ver=6.4.2'
         ]);
         const tech = detectTech(psi);
         expect(tech.version).toBe('5.6.6');
         expect(tech.versionConfidence).toBe('medium');
+    });
+
+    it('ignoriert generische wp-includes/js-Assets (koennen Lib-Versionen tragen)', () => {
+        // wp-includes/js/foo.min.js?ver=X ist NICHT zwingend die Core-Version
+        // (gebuendelte Libs tragen eigene Versionen) → nur Core-Assets zaehlen.
+        const psi = psiWithUrls([
+            'https://example.com/wp-includes/js/some-lib.min.js?ver=1.13.8',
+            'https://example.com/wp-includes/js/wp-emoji-release.min.js?ver=6.5.2'
+        ]);
+        const tech = detectTech(psi);
+        expect(tech.version).toBe('6.5.2');
+        expect(tech.version).not.toBe('1.13.8');
     });
 
     it('ignoriert Plugin-Versions (wp-content/plugins/...)', () => {

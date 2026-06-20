@@ -10,6 +10,7 @@
 
 import { config } from '../config.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
+import { siteLooksModern } from '../analysis/claim-verify.js';
 
 /**
  * Sprint 46 — 4-Tier-Pricing-Architektur (siehe Memory project_karriaro_webdesign_pricing).
@@ -196,6 +197,7 @@ function buildPainArguments(data, techAge) {
     const tech = data.tech || {};
     const rev = data.revenue;
     const domain = new URL(data.url).hostname.replace('www.', '');
+    const visionModern = siteLooksModern(data.screenshotAnalysis) === true; // Vision: Seite wirkt modern?
 
     // -1) Security-Findings — wenn kritisch/hoch, ist das oft der konkreteste,
     //     unwiderruflichste Pitch-Anker. ("Ihr .git-Verzeichnis ist offen.")
@@ -221,7 +223,21 @@ function buildPainArguments(data, techAge) {
     //    keyPitchAngle als Subject-Default.
     const deep = data.deepAssessment || data.deepResearch?.assessment || null;
     if (deep && Array.isArray(deep.weaknesses) && deep.weaknesses.length > 0) {
-        const sorted = [...deep.weaknesses].sort((a, b) => (b.severity || 0) - (a.severity || 0));
+        // Verifikations-Tor: unbestätigte CMS-/Versions-/EOL-Behauptungen verwerfen.
+        // Das LLM (deepResearch) halluziniert mitunter eine konkrete Version
+        // ("WordPress 3.7.1 EOL 2013") — die kommt nur durch, wenn detectTech
+        // verlässlich eine alte Core-Version belegt.
+        const cmsVerified = (techAge?.techSeverity || 0) >= 4 &&
+            (data.tech?.versionConfidence === 'high' || data.tech?.versionConfidence === 'medium');
+        const VERSION_CLAIM = /(wordpress|joomla|drupal|magento|typo3)\s*\d+(\.\d+)*|\bEOL\b|keine\s+sicherheitsupdates|veraltet\w*\s+(cms|tech|wordpress)|(cms|tech-?stack)[^.]*veraltet/i;
+        const DESIGN_AGE = /veraltet\w*\s+design|altmodisch|nicht\s+(mehr\s+)?zeitgem|design[^.]*(veraltet|alt\b)|aus\s+den\s+(2010|2015)/i;
+        const usable = deep.weaknesses.filter(w => {
+            const t = `${w.title || ''} ${w.evidence || ''}`;
+            if (VERSION_CLAIM.test(t) && !cmsVerified) return false;     // unbestätigte Versions-/EOL-Behauptung
+            if (DESIGN_AGE.test(t) && visionModern) return false;        // Vision sagt modern → "Design veraltet" raus
+            return true;
+        });
+        const sorted = usable.sort((a, b) => (b.severity || 0) - (a.severity || 0));
         const top = sorted[0];
         if (top && top.severity >= 4) {
             args.push({
@@ -276,7 +292,10 @@ function buildPainArguments(data, techAge) {
     }
 
     // 3) Tech-Alter — der vom User gewünschte Anker.
-    if (techAge.pitchArg) {
+    // Vision-Tor: wirkt die Seite sichtbar modern UND ist das CMS nicht verlässlich
+    // alt (kein EOL), dann ist "veraltet" widerlegt → kein tech_age-Argument.
+    const cmsReallyOld = !!techAge.cmsEolYear || (techAge.techSeverity || 0) >= 4;
+    if (techAge.pitchArg && !(visionModern && !cmsReallyOld)) {
         args.push({
             type: 'tech_age',
             severity: techAge.severity,
