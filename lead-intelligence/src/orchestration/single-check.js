@@ -30,6 +30,7 @@ import { analyzeDigitalFootprint as analyzeFootprint } from '../signals/digital-
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { calculateRevenueLoss } from '../math/revenue-model.js';
 import { auditUX } from '../analysis/ux-audit.js';
+import { verifyFeatureClaim } from '../analysis/claim-verify.js';
 import { checkFreshness } from '../analysis/wayback-freshness.js';
 import { detectSurgeIntent } from '../analysis/surge-intent.js';
 import { assessDigitalMaturity } from '../analysis/digital-maturity.js';
@@ -367,25 +368,37 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 
         // STATISCHES UX-AUDIT ALS FALLBACK (wenn KI nicht verfügbar)
         else if (uxAudit?.missingCritical?.length > 0) {
-            const missing = uxAudit.missingCritical;
-            let uxText = `<strong>Wichtige Funktionen fehlen auf der Website:</strong><br>`;
-            for (const m of missing) {
-                uxText += `<br>✗ <strong>${m.name}</strong> — ${m.why}`;
-                emailArgs.push(`${m.name} fehlt auf Ihrer Website — ${m.why.split('—')[0].trim()}`);
+            // VERIFIKATIONS-TOR: Das heuristische UX-Audit rendert die Seite NICHT.
+            // Jeder "fehlt"-Befund wird gegen die Deep-Research-Lesung geprüft:
+            //   confirmed → echte Lücke (darf in die Mail) · present → vorhanden (raus)
+            //   unverified → nur als "zu prüfen"-Hinweis (NICHT in die Mail).
+            const deep = data.deepAssessment;
+            const confirmed = [], toCheck = [];
+            for (const m of uxAudit.missingCritical) {
+                const v = verifyFeatureClaim(m.name, deep);
+                if (v === 'present') continue;                 // Deep sah es → "fehlt" ist falsch
+                (v === 'confirmed' ? confirmed : toCheck).push(m);
             }
-            // Auch nicht-kritische fehlende Features erwähnen
-            const missingOptional = uxAudit.missing?.filter(m => !m.critical) || [];
-            if (missingOptional.length > 0) {
-                uxText += `<br><br>Außerdem fehlen: ${missingOptional.map(m => m.name).join(', ')}.`;
+            if (confirmed.length > 0) {
+                let t = `<strong>Bestätigt fehlend (Deep-Research):</strong><br>`;
+                for (const m of confirmed) {
+                    t += `<br>✗ <strong>${m.name}</strong> — ${m.why}`;
+                    emailArgs.push(`${m.name} fehlt auf Ihrer Website — ${m.why.split('—')[0].trim()}`);
+                }
+                problems.push(t);
             }
-            problems.push(uxText);
-
-            // Branchen-spezifischer Pitch
+            if (toCheck.length > 0) {
+                let t = `<strong>Bitte an der echten Seite prüfen</strong> — automatisch nicht gefunden, kann vorhanden sein:<br>`;
+                for (const m of toCheck) t += `<br>? <strong>${m.name}</strong> — ${m.why}`;
+                t += `<br><br><span style="color:var(--muted)">Diese Punkte gehen NICHT automatisch in die Mail.</span>`;
+                problems.push(t);
+            }
+            // Branchen-generischer Pitch (keine seiten-spezifische Behauptung) bleibt.
             if (uxAudit.persona?.missingPitch) {
                 problems.push(`<div style="background:rgba(0,113,227,0.05);padding:12px 16px;border-radius:8px;border-left:3px solid var(--accent);margin:4px 0"><strong>${uxAudit.persona.missingPitch}</strong></div>`);
             }
         } else if (uxAudit?.missing?.length > 0) {
-            problems.push(`Fehlende Features: ${uxAudit.missing.map(m => `<strong>${m.name}</strong>`).join(', ')}. Diese Funktionen erwarten Kunden in der ${branche}-Branche heute als Standard.`);
+            problems.push(`<strong>Zu prüfen</strong> (automatisch nicht gefunden, kann vorhanden sein): ${uxAudit.missing.map(m => `<strong>${m.name}</strong>`).join(', ')}.`);
         }
 
         // ── Basis-Features (gemessen) und Modern-Empfehlungen (nicht gemessen) klar trennen ──

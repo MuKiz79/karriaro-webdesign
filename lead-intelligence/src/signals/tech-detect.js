@@ -72,32 +72,36 @@ export function detectTech(psiData) {
         }
     }
 
-    // 3. WordPress-Version aus wp-includes/-Asset-URLs ermitteln (Single Source)
+    // 3. WordPress-CORE-Version NUR aus eindeutigen Core-Assets.
     //
-    // Hintergrund: Lighthouse-Network-Requests enthalten viele ?ver=X.Y.Z-Tags,
-    // die je nach Asset unterschiedliche Versionen tragen koennen:
-    //  - wp-includes/js/wp-emoji-release.min.js?ver=6.4.2  → WP-Core-Version
-    //  - wp-includes/js/jquery/jquery.min.js?ver=3.7.1     → jQuery-Version (NICHT WP)
-    //  - wp-content/plugins/elementor/.../?ver=3.18.0      → Plugin-Version
+    // Die alte Modus-Heuristik ueber ALLE wp-includes-Assets ist eine Falle:
+    //  - wp-includes/js/jquery/jquery.min.js?ver=3.7.1  → jQuery 3.7.1 sieht aus wie "WP 3.7.1"
+    //  - wp-content/plugins/.../?ver=1.13.8             → Plugin-Version
+    // Beides wurde faelschlich als WP-Core gerendert (echter Fall: Restaurant mit
+    // modernem WP wurde als "WordPress 3.7.1 EOL 2013" gepitcht).
     //
-    // Wir matchen nur Assets unter wp-includes/ (NICHT jquery), sammeln alle Versionen
-    // und nehmen die haeufigste als WP-Core-Version. Das vermeidet, dass eine
-    // Plugin/jQuery-Version faelschlich als WP-Core gerendert wird.
+    // Verlaesslich tragen NUR diese Core-Assets die WP-Core-Version im ?ver=:
+    // wp-emoji-release, block-library, wp-includes/css/dist, wp-includes/blocks.
+    // Finden wir dort keine plausible Core-Version → version=null (lieber nichts
+    // behaupten als eine falsche Version).
+    result.versionConfidence = 'low';
     if ((result.cms && result.cms.includes('WordPress')) || /wp-content|wp-includes/i.test(urls)) {
+        const coreRe = /wp-includes\/(?:js\/wp-emoji-release(?:\.min)?\.js|css\/dist\/[^\s"?]+|blocks\/[^\s"?]+)\?ver=(\d+\.\d+(?:\.\d+)?)/gi;
         const versions = [];
-        const re = /wp-includes\/(?!js\/jquery\/)[^\s"]*?\?ver=(\d+\.\d+(?:\.\d+)?)/gi;
         let m;
-        while ((m = re.exec(urls)) !== null) {
-            versions.push(m[1]);
-        }
+        while ((m = coreRe.exec(urls)) !== null) versions.push(m[1]);
         if (versions.length > 0) {
-            // Modus (haeufigste Version)
             const counts = {};
             for (const v of versions) counts[v] = (counts[v] || 0) + 1;
             const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-            result.version = sorted[0][0];
-            // Confidence-Flag: alle Versionen gleich → 'high', sonst 'medium'
-            result.versionConfidence = sorted.length === 1 ? 'high' : 'medium';
+            const cand = sorted[0][0];
+            const major = parseInt(cand, 10);
+            // Plausibilitaet: WP-Core-Major liegt real zwischen 2 und 8. 1.x (Plugin-Lib)
+            // oder 10.x (WooCommerce) sind KEINE Core-Versionen.
+            if (major >= 2 && major <= 8) {
+                result.version = cand;
+                result.versionConfidence = sorted.length === 1 ? 'high' : 'medium';
+            }
         }
     }
 
