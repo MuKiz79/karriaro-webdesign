@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LinkedIn-Post-Check — Wie weit reicht Ihr Beitrag? · Karriaro</title>
-<meta name="description" content="Fuegen Sie Ihren LinkedIn-Beitrag ein und sehen Sie, was die Reichweite bremst. Bewertet nach den bei grossem Datenvolumen BELEGTEN Reichweiten-Hebeln 2026 — ehrlich getrennt von Folklore. Ihr Text bleibt im Browser.">
+<meta name="description" content="Fügen Sie Ihren LinkedIn-Beitrag ein und sehen Sie, was die Reichweite bremst. Bewertet nach den bei großem Datenvolumen belegten Reichweiten-Hebeln 2026 — ehrlich getrennt von Folklore. Ihr Text bleibt im Browser.">
 <link rel="canonical" href="https://karriaro-webdesign.de/linkedin-check">
 <style>
   :root { --gold:#C9A24B; --gold-d:#a8842f; --ink:#1a1a1a; --muted:#6b6b6b; --bg:#faf8f4; --line:#e7e1d6; --pass:#2e7d32; --warn:#c77800; --fail:#b00020; }
@@ -70,12 +70,12 @@
   footer a { color:var(--gold-d); }
 </style></head>
 <body><div class="wrap">
-  <div class="eyebrow">Der LinkedIn-Code — ehrlich entschluesselt</div>
+  <div class="eyebrow">Der LinkedIn-Code — ehrlich entschlüsselt</div>
   <h1>LinkedIn-Post-Check</h1>
-  <p class="lede">Fuegen Sie Ihren Beitrag ein und sehen Sie, was die Reichweite bremst — und was Sie konkret aendern koennen.</p>
-  <p class="privacy">Ihr Text bleibt vollstaendig in Ihrem Browser. Es wird nichts gesendet, nichts gespeichert.</p>
+  <p class="lede">Fügen Sie Ihren Beitrag ein und sehen Sie, was die Reichweite bremst — und was Sie konkret ändern können.</p>
+  <p class="privacy">Ihr Text bleibt vollständig in Ihrem Browser. Es wird nichts gesendet, nichts gespeichert.</p>
 
-  <label class="fmt" for="format">In welchem Format posten Sie das? (das Format ist der am besten belegte Reichweiten-Hebel)</label>
+  <label class="fmt" for="format">In welchem Format posten Sie diesen Beitrag? Das Format ist der am besten belegte Reichweiten-Hebel.</label>
   <select id="format">
     <option value="text">Nur Text</option>
     <option value="document">Dokument / Carousel (PDF)</option>
@@ -85,10 +85,10 @@
     <option value="poll">Umfrage</option>
   </select>
 
-  <textarea id="post" placeholder="Ihren LinkedIn-Beitrag hier einfuegen&#10;&#10;(die erste Zeile zaehlt als Hook)"></textarea>
+  <textarea id="post" placeholder="Ihren LinkedIn-Beitrag hier einfügen&#10;&#10;(die erste Zeile zählt als Hook)"></textarea>
   <div class="row">
-    <button id="go">Beitrag pruefen</button>
-    <button id="optimize" class="ghost">✨ KI-optimieren</button>
+    <button id="go">Beitrag prüfen</button>
+    <button id="optimize" class="ghost">Mit KI optimieren</button>
     <span class="charcount" id="cc">0 Zeichen</span>
   </div>
 
@@ -96,7 +96,7 @@
   <div id="opt"></div>
 
   <footer>
-    Bewertet nach den bei grossem Datenvolumen BELEGTEN Reichweiten-Hebeln 2026 (van der Blom / Just Connecting, 1,8 Mio. Posts; AuthoredUp, 3 Mio.+; Socialinsider, 1,3 Mio.). Verifiziert sind v. a. zwei Hebel: das Format (Dokument/Carousel vorn) und die fruehe Interaktion in den ersten 30–60 Minuten. Die uebrigen Gewichte sind evidenzbasierte Richtwerte, keine garantierten Schwellen — LinkedIns interner Algorithmus ist nicht oeffentlich.<br>
+    Bewertet nach den bei großem Datenvolumen belegten Reichweiten-Hebeln 2026 (van der Blom / Just Connecting, 1,8 Mio. Posts; AuthoredUp, 3 Mio.+; Socialinsider, 1,3 Mio.). Robust belegt sind vor allem zwei Hebel: das Format (Dokument/Carousel vorn) und die frühe Interaktion in den ersten 30–60 Minuten. Die übrigen Gewichte sind evidenzbasierte Richtwerte, keine garantierten Schwellen — LinkedIns interner Algorithmus ist nicht öffentlich.<br>
     Gebaut von <a href="https://karriaro-webdesign.de">Karriaro</a> — KI, die arbeitet, nicht die redet.
   </footer>
 </div>
@@ -127,11 +127,8 @@
   function clamp(n, max) { return Math.max(0, Math.min(max, n)); }
 
   // ─── Score (Rubrik auf die VERIFIZIERTEN Hebel geankert) ─────────────────────
-  // Format 25 (verifiziert: Dokument/Carousel vorn) · Hook 20 · Struktur 15 ·
-  // Gespraech 15 · Laenge 10 · Hygiene 15. Weiche Signale (Link/Hashtags) sind
-  // bewusst niedrig gewichtet + gehedged — ihre Penalty-Hoehe ist 2026 unbelegt.
+  // Format 25 · Hook 20 · Struktur 15 · Gespraech 15 · Laenge 10 · Hygiene 15.
   var FORMAT_PTS = { document: 25, multiimage: 21, image: 16, video: 15, text: 13, poll: 12 };
-  var FORMAT_NAME = { document: "Dokument/Carousel", multiimage: "Mehrere Bilder", image: "Einzelbild", video: "Video", text: "Nur Text", poll: "Umfrage" };
 
   function scorePost(body, format) {
     body = (body || "").trim();
@@ -141,53 +138,53 @@
 
     // FORMAT /25 — der einzige Hebel mit robust belegtem Reichweiten-Vorsprung.
     var formatPts = FORMAT_PTS[format];
-    if (format === "document") { ok.push("Dokument/Carousel — das Format mit dem am besten belegten Reichweiten-Vorsprung (~1,3–1,4× ggue. Durchschnitt). Starke Wahl."); }
-    else if (format === "multiimage") { ok.push("Mehrere Bilder — zweitstaerkstes Format, dicht hinter Dokument/Carousel."); lever.push("Als Dokument/Carousel (PDF) aufbereitet holt derselbe Inhalt erfahrungsgemaess noch etwas mehr Reichweite."); }
-    else { lever.push("Format-Hebel (am staerksten belegt): Bereiten Sie denselben Inhalt als Dokument/Carousel (PDF) auf — das ist 2026 das reichweitenstaerkste Format. Mehrere Bilder sind die zweitbeste Option."); }
+    if (format === "document") { ok.push("Dokument/Carousel — das Format mit dem am besten belegten Reichweiten-Vorsprung (~1,3–1,4× ggü. Durchschnitt). Starke Wahl."); }
+    else if (format === "multiimage") { ok.push("Mehrere Bilder — zweitstärkstes Format, dicht hinter Dokument/Carousel."); lever.push("Als Dokument/Carousel (PDF) aufbereitet holt derselbe Inhalt erfahrungsgemäß noch etwas mehr Reichweite."); }
+    else { lever.push("Format-Hebel (am stärksten belegt): Bereiten Sie denselben Inhalt als Dokument/Carousel (PDF) auf — das ist 2026 das reichweitenstärkste Format. Mehrere Bilder sind die zweitbeste Option."); }
 
-    // HOOK /20 — Proxy fuer die ersten ~210 Zeichen vor dem "…mehr".
+    // HOOK /20 — Proxy fuer die ersten ~210 Zeichen vor dem Fold.
     var hookPts = 0;
     if (hook.length > 0 && hook.length <= 140) { hookPts += hook.length <= 100 ? 8 : 5; }
-    else if (hook.length > 140) { fix.push("Ihr Hook ist " + hook.length + " Zeichen lang. LinkedIn kappt nach ~140 vor dem „…mehr“. Kuerzen Sie die erste Zeile auf einen praegnanten Satz."); }
-    else { fix.push("Es fehlt ein Hook. Die erste Zeile entscheidet, ob ueberhaupt jemand weiterliest."); }
+    else if (hook.length > 140) { fix.push("Ihr Hook ist " + hook.length + " Zeichen lang. LinkedIn kappt nach rund 140 Zeichen vor dem „…mehr“. Kürzen Sie die erste Zeile auf einen prägnanten Satz."); }
+    else { fix.push("Es fehlt ein Hook. Die erste Zeile entscheidet, ob überhaupt jemand weiterliest."); }
     var opener = HOOK_CONTRARIAN.test(hook) || HOOK_SCENE.test(hook) || HOOK_NUMBER.test(hook) || HOOK_CURIOSITY.test(hook);
     if (opener) { hookPts += 12; ok.push("Starker Hook: die erste Zeile stoppt den Scroll."); }
-    else if (hook.length > 0) { hookPts += 4; lever.push("Der Hook hat kein starkes Muster. Eroeffnen Sie mit einer Gegenthese, einer Szene (Zeitpunkt + Handlung) oder einer konkreten Zahl — nicht mit einer allgemeinen Aussage."); }
+    else if (hook.length > 0) { hookPts += 4; lever.push("Der Hook hat kein starkes Muster. Eröffnen Sie mit einer Gegenthese, einer Szene (Zeitpunkt + Handlung) oder einer konkreten Zahl — nicht mit einer allgemeinen Aussage."); }
     hookPts = clamp(hookPts, 20);
 
     // STRUKTUR /15 — Scanbarkeit hebt die Verweildauer.
     var structPts = 0;
     if (paras.length >= 5) { structPts += 8; }
-    else if (paras.length >= 3) { structPts += 5; lever.push("Mehr Absatz-Umbrueche (kurze Absaetze, viel Weissraum) machen den Beitrag scanbar."); }
-    else { structPts += 2; lever.push("Der Text ist ein Block. Brechen Sie ihn in kurze Absaetze mit Leerzeilen — das laedt zum Lesen ein."); }
-    if (countMatches(body, LIST_ITEM) >= 3 || FRAMEWORK.test(body)) { structPts += 7; ok.push("Klare Struktur (Liste/Framework) — gut scanbar und merkbar."); }
+    else if (paras.length >= 3) { structPts += 5; lever.push("Mehr Absatz-Umbrüche (kurze Absätze, viel Weißraum) machen den Beitrag scanbar."); }
+    else { structPts += 2; lever.push("Der Text ist ein Block. Brechen Sie ihn in kurze Absätze mit Leerzeilen — das lädt zum Lesen ein."); }
+    if (countMatches(body, LIST_ITEM) >= 3 || FRAMEWORK.test(body)) { structPts += 7; ok.push("Klare Struktur (Liste oder Framework) — gut scanbar und merkbar."); }
     else { lever.push("Eine nummerierte Liste oder ein kleines Framework macht den Kern auf einen Blick erfassbar."); }
     structPts = clamp(structPts, 15);
 
     // GESPRAECH /15 — echte Frage treibt fruehe Kommentare (Golden-Hour-Hebel).
     var convPts = 0;
     var last = lastContentLine(body);
-    if (/\?\s*$/.test(last)) { convPts += 15; ok.push("Klare offene Frage am Ende — laedt zu Kommentaren ein (fruehe Interaktion ist der belegte zweite Hebel)."); }
-    else if (/\?/.test(body.slice(-200))) { convPts += 8; lever.push("Eine echte offene Frage als LETZTE Zeile treibt mehr Kommentare als eine Frage mittendrin."); }
-    else { lever.push("Es fehlt ein Gespraechs-Anstoss. Schliessen Sie mit einer echten, offenen Frage — fruehe Kommentare entscheiden ueber die Ausweitung der Reichweite."); }
+    if (/\?\s*$/.test(last)) { convPts += 15; ok.push("Klare offene Frage am Ende — lädt zu Kommentaren ein (frühe Interaktion ist der belegte zweite Hebel)."); }
+    else if (/\?/.test(body.slice(-200))) { convPts += 8; lever.push("Eine echte offene Frage als letzte Zeile treibt mehr Kommentare als eine Frage mittendrin."); }
+    else { lever.push("Es fehlt ein Gesprächs-Anstoß. Schließen Sie mit einer echten, offenen Frage — frühe Kommentare entscheiden über die Ausweitung der Reichweite."); }
     convPts = clamp(convPts, 15);
 
-    // LAENGE /10 — mittlere Laenge (Richtwert, exakte Spanne unbelegt → weit gefasst).
+    // LAENGE /10 — mittlere Laenge (Richtwert, weit gefasst).
     var lenPts = 0;
     if (len >= 800 && len <= 1800) { lenPts += 10; }
     else if ((len >= 400 && len < 800) || (len > 1800 && len <= 2600)) { lenPts += 6; }
     else if (len < 400) { lenPts += 2; lever.push("Mit " + len + " Zeichen ist der Beitrag knapp. Etwas mehr Substanz gibt dem Leser einen Grund zu bleiben (Richtwert, kein fixes Limit)."); }
-    else { lenPts += 4; lever.push("Sehr lang — nur sinnvoll, wenn die Substanz die Laenge wirklich traegt."); }
+    else { lenPts += 4; lever.push("Sehr lang — nur sinnvoll, wenn die Substanz die Länge wirklich trägt."); }
     lenPts = clamp(lenPts, 10);
 
     // HYGIENE /15 — weiche Signale, bewusst niedrig + gehedged.
     var hygPts = 0;
     var baited = false;
     for (var i = 0; i < BAIT.length; i++) { if (BAIT[i].test(body)) { baited = true; break; } }
-    if (!baited) { hygPts += 8; } else { fix.push("Engagement-Bait erkannt („Kommentiere JA“ / „Like fuer…“ / „👇“ / „markiere jemanden“). Das ist eines der wenigen belegt unterdrueckten Muster (LinkedIns Anti-Slop-Massnahmen 2026). Streichen."); }
+    if (!baited) { hygPts += 8; } else { fix.push("Engagement-Bait erkannt (etwa „Kommentiere JA“, „Like für…“ oder „markiere jemanden“). Das ist eines der wenigen belegt unterdrückten Muster (LinkedIns Anti-Slop-Maßnahmen 2026). Bitte streichen."); }
     var hashtags = countMatches(body, HASHTAG);
     if (hashtags <= 3) { hygPts += 4; } else { hygPts += 1; lever.push(hashtags + " Hashtags — viele Hashtags gelten als Spam-Signal. 0–3 themenrelevante reichen (Richtwert; die genaue Penalty ist unbelegt)."); }
-    if (!CLICKABLE_URL.test(body)) { hygPts += 3; } else { hygPts += 1; lever.push("Ein Link im Text KOENNTE Reichweite kosten — das ist 2026 umstritten, nicht gesichert. Wenn Sie auf Nummer sicher gehen wollen: Link in den ersten Kommentar."); }
+    if (!CLICKABLE_URL.test(body)) { hygPts += 3; } else { hygPts += 1; lever.push("Ein Link im Text könnte Reichweite kosten — das ist 2026 umstritten, nicht gesichert. Wenn Sie auf Nummer sicher gehen wollen: Link in den ersten Kommentar setzen."); }
     hygPts = clamp(hygPts, 15);
 
     var parts = { format: formatPts, hook: hookPts, structure: structPts, conversation: convPts, length: lenPts, hygiene: hygPts };
@@ -200,11 +197,11 @@
   if (typeof document === "undefined") { globalThis.scorePost = scorePost; return; }
 
   // ─── Render ─────────────────────────────────────────────────────────────────
-  var LABELS = { format: "Format", hook: "Hook", structure: "Struktur", conversation: "Gespraech", length: "Laenge", hygiene: "Hygiene" };
+  var LABELS = { format: "Format", hook: "Hook", structure: "Struktur", conversation: "Gespräch", length: "Länge", hygiene: "Hygiene" };
   var MAX = { format: 25, hook: 20, structure: 15, conversation: 15, length: 10, hygiene: 15 };
   var ORDER = ["format", "hook", "structure", "conversation", "length", "hygiene"];
-  var GOLDEN = '<div class="tip"><b>⏱ Golden Hour (verifiziert):</b> Die ersten 30–60 Minuten entscheiden die Reichweiten-Kurve. Posten Sie, wenn Ihr Publikum aktiv ist, und beantworten Sie in dieser Zeit jeden Kommentar — fruehe echte Interaktion loest die Ausweitung auf 2./3.-Grad-Kontakte aus. (Im Text selbst nicht messbar — aber der zweite belegte Hebel.)</div>';
-  var HONEST = '<div class="honest">Hinweis zur Ehrlichkeit: Robust belegt sind nur zwei Hebel — das <b>Format</b> und die <b>fruehe Interaktion</b>. Die uebrigen Gewichte sind nachvollziehbare Richtwerte, keine garantierten Schwellen. Verbreitete Praezisionszahlen (Dwell-Multiplikatoren, „Kommentar = 15× Like“, „Save = 5–10×“, „>3 Hashtags = −71%“) haben einer Quellenpruefung NICHT standgehalten und fliessen hier bewusst nicht als harte Regeln ein.</div>';
+  var GOLDEN = '<div class="tip"><b>Golden Hour (verifiziert):</b> Die ersten 30–60 Minuten entscheiden die Reichweiten-Kurve. Posten Sie, wenn Ihr Publikum aktiv ist, und beantworten Sie in dieser Zeit jeden Kommentar — frühe echte Interaktion löst die Ausweitung auf 2.- und 3.-Grad-Kontakte aus. (Im Text selbst nicht messbar, aber der zweite belegte Hebel.)</div>';
+  var HONEST = '<div class="honest">Hinweis zur Ehrlichkeit: Robust belegt sind nur zwei Hebel — das <b>Format</b> und die <b>frühe Interaktion</b>. Die übrigen Gewichte sind nachvollziehbare Richtwerte, keine garantierten Schwellen. Verbreitete Präzisionszahlen (Dwell-Multiplikatoren, „Kommentar = 15× Like“, „Save = 5–10×“, „mehr als 3 Hashtags = −71%“) haben einer Quellenprüfung nicht standgehalten und fließen hier bewusst nicht als harte Regeln ein.</div>';
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
   function gradeColor(g) { return g === "A" ? "#2e7d32" : g === "B" ? "#C9A24B" : g === "C" ? "#c77800" : "#b00020"; }
@@ -224,7 +221,7 @@
       '<div class="bars">' + bars + "</div></div>" + GOLDEN;
     if (r.fix.length) html += "<h2>Pflicht-Fixes</h2>" + suggBlock(r.fix, "s-fix", "Fix");
     if (r.lever.length) html += "<h2>Reichweiten-Hebel</h2>" + suggBlock(r.lever, "s-lever", "Hebel");
-    if (r.ok.length) html += "<h2>Das laeuft schon</h2>" + suggBlock(r.ok, "s-ok", "Stark");
+    if (r.ok.length) html += "<h2>Das läuft schon</h2>" + suggBlock(r.ok, "s-ok", "Stark");
     html += HONEST;
     return html;
   }
@@ -237,27 +234,28 @@
   function updateCC() { cc.textContent = post.value.trim().length + " Zeichen"; }
   function run() {
     var text = post.value.trim();
-    if (text.length < 30) { out.className = ""; out.innerHTML = '<div class="sugg s-fix"><span class="tag">Hinweis</span><div class="txt">Bitte fuegen Sie einen vollstaendigen Beitrag ein (mindestens ein paar Saetze).</div></div>'; return; }
+    if (text.length < 30) { out.className = ""; out.innerHTML = '<div class="sugg s-fix"><span class="tag">Hinweis</span><div class="txt">Bitte fügen Sie einen vollständigen Beitrag ein (mindestens ein paar Sätze).</div></div>'; return; }
     out.className = "";
     out.innerHTML = render(scorePost(text, fmt.value));
     out.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   document.getElementById("go").addEventListener("click", run);
 
-  // ─── KI-Optimieren (ruft die linkedinRewrite-Cloud-Function) ─────────────────
+  // ─── KI-Optimierung (ruft die linkedinRewrite-Cloud-Function) ────────────────
   var REWRITE_FN = "https://europe-west1-apex-executive.cloudfunctions.net/linkedinRewrite";
   var optEl = document.getElementById("opt");
   var optBtn = document.getElementById("optimize");
+  var OPT_LABEL = "Mit KI optimieren";
   async function optimize() {
     var text = post.value.trim();
-    if (text.length < 30) { optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Hinweis</span><div class="txt">Bitte fuegen Sie zuerst einen vollstaendigen Beitrag ein.</div></div>'; return; }
+    if (text.length < 30) { optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Hinweis</span><div class="txt">Bitte fügen Sie zuerst einen vollständigen Beitrag ein.</div></div>'; return; }
     optBtn.disabled = true; optBtn.textContent = "optimiert …";
     optEl.innerHTML = '<p style="color:var(--muted)">Die KI schreibt Ihren Beitrag um — einen Moment …</p>';
     try {
       var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 30000);
       var r = await fetch(REWRITE_FN, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ post: text }), signal: ctrl.signal });
       clearTimeout(to);
-      if (r.status === 429) { optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Limit</span><div class="txt">Stuendliches Limit erreicht. Bitte spaeter erneut.</div></div>'; return; }
+      if (r.status === 429) { optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Limit</span><div class="txt">Stündliches Limit erreicht. Bitte später erneut.</div></div>'; return; }
       var d = await r.json();
       if (!r.ok || !d.ok || !d.rewritten) throw new Error(d && d.error ? d.error : "Fehler");
       var sc = scorePost(d.rewritten, fmt.value);
@@ -267,15 +265,15 @@
         '<pre class="opt-post">' + esc(d.rewritten) + '</pre>' +
         '<button class="copybtn" id="copybtn">In die Zwischenablage</button>' +
         (changes ? '<ul class="opt-changes">' + changes + "</ul>" : "") +
-        '<div class="opt-note">Die KI erfindet nichts hinzu — pruefen Sie dennoch, dass jede Aussage stimmt, bevor Sie posten.</div>' +
+        '<div class="opt-note">Die KI erfindet nichts hinzu — prüfen Sie dennoch, dass jede Aussage stimmt, bevor Sie posten.</div>' +
         "</div>";
       var cb = document.getElementById("copybtn");
       cb.addEventListener("click", function () { navigator.clipboard.writeText(d.rewritten).then(function () { cb.textContent = "Kopiert ✓"; }); });
       optEl.scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (e) {
-      optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Fehler</span><div class="txt">Der Optimierer ist gerade nicht erreichbar. Bitte spaeter erneut.</div></div>';
+      optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Fehler</span><div class="txt">Der Optimierer ist gerade nicht erreichbar. Bitte später erneut.</div></div>';
     } finally {
-      optBtn.disabled = false; optBtn.textContent = "✨ KI-optimieren";
+      optBtn.disabled = false; optBtn.textContent = OPT_LABEL;
     }
   }
   optBtn.addEventListener("click", optimize);
