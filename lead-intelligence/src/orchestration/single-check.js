@@ -49,7 +49,10 @@ import { renderScore, renderFunnel, renderUX, renderFuture, renderScience, rende
 export async function runSingleCheck() {
     let url = document.getElementById('url-input').value.trim();
     if (!url) return;
-    if (!url.startsWith('http')) url = 'https://' + url;
+    // http:// → https:// hochstufen: fast jede Seite unterstützt HTTPS (Redirect),
+    // sonst wird fälschlich "Kein HTTPS" gepitcht, obwohl die Seite sicher ist.
+    url = url.replace(/^http:\/\//i, 'https://');
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
     state.aborted = false;
 
     // Reset UI
@@ -85,7 +88,17 @@ export async function runSingleCheck() {
         if (place?.location && place?.primaryType) {
             try {
                 const nearby = await nearbyPlaces(place.location.latitude, place.location.longitude, place.primaryType, 6);
-                competitors = (nearby?.places || []).filter(p => p.websiteUri);
+                // WICHTIG: den Betrieb SELBST aus der Konkurrenz ausschließen — sonst
+                // steht in der Mail "Ihre Mitbewerber [Ihr eigener Name]".
+                const selfName = (place.displayName?.text || '').toLowerCase().trim();
+                competitors = (nearby?.places || []).filter(p => {
+                    if (!p.websiteUri) return false;
+                    try { if (new URL(p.websiteUri).hostname.replace(/^www\./, '') === domain) return false; } catch { /* ungültige URL */ }
+                    if (place.id && p.id && p.id === place.id) return false;
+                    const pName = (p.displayName?.text || '').toLowerCase().trim();
+                    if (selfName && pName && (pName === selfName || pName.includes(selfName) || selfName.includes(pName))) return false;
+                    return true;
+                });
             } catch (e) { /* optional */ }
         }
         if (state.aborted) return cleanup();

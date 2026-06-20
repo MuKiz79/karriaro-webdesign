@@ -327,9 +327,9 @@ function buildPainArguments(data, techAge) {
         args.push({
             type: 'revenue',
             severity: 4,
-            short: `~${Math.round(rev.yearlyLoss / 1000)}K€ Verlust`,
+            short: `~${Math.round(rev.yearlyLoss / 1000)}K€ Potenzial (gesch.)`,
             text: `Wir schätzen den jährlichen Umsatzverlust durch Website-Probleme auf ~${rev.yearlyLoss.toLocaleString('de-DE')}€.`,
-            subjectAlt: `${domain} verliert ~${Math.round(rev.yearlyLoss / 1000)}K€/Jahr`
+            subjectAlt: `${domain}: ungenutztes Umsatzpotenzial`
         });
     }
 
@@ -373,8 +373,9 @@ function buildPainArguments(data, techAge) {
  */
 function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'professionell', touchNumber = 1) {
     const domain = new URL(data.url).hostname.replace('www.', '');
-    const recipientName = data.contactData?.owner || data.place?.displayName?.text || domain;
-    const firstName = recipientName.split(' ')[0];
+    const contactPerson = data.contactData?.owner || null;
+    const recipientName = contactPerson || data.place?.displayName?.text || domain;
+    const firstName = (contactPerson || '').split(' ')[0];
 
     const senderName = profile.name || 'Muammer Kizilaslan';
     const senderCompany = profile.company || 'Karriaro Webdesign';
@@ -386,10 +387,11 @@ function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'pro
     const usp = profile.usp || tier.deliverable;
     const portfolio = profile.portfolio || 'karriaro-webdesign.de';
 
+    // Ohne echten Ansprechpartner: formelle Sammelanrede statt "Sehr geehrte/r <Firmenname>".
     let greeting, closing;
-    if (tone === 'freundlich') { greeting = `Hallo ${firstName},`; closing = `Herzliche Grüße`; }
-    else if (tone === 'direkt') { greeting = `Guten Tag ${recipientName},`; closing = `Mit besten Grüßen`; }
-    else { greeting = `Sehr geehrte/r ${recipientName},`; closing = `Mit freundlichen Grüßen`; }
+    if (tone === 'freundlich') { greeting = contactPerson ? `Hallo ${firstName},` : `Guten Tag,`; closing = `Herzliche Grüße`; }
+    else if (tone === 'direkt') { greeting = contactPerson ? `Guten Tag ${contactPerson},` : `Guten Tag,`; closing = `Mit besten Grüßen`; }
+    else { greeting = contactPerson ? `Sehr geehrte/r ${contactPerson},` : `Sehr geehrte Damen und Herren,`; closing = `Mit freundlichen Grüßen`; }
 
     const supporting = supportingArgs.length > 0
         ? `Auch aufgefallen: ${supportingArgs.slice(0, 2).map(a => a.text).join(' ')}`
