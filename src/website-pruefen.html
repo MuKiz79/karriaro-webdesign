@@ -449,6 +449,12 @@
             if (branche) {
                 chips.push('<span class="quick-score-chip">Branche <strong>' + branche + '</strong></span>');
             }
+            // Sprint 254 — erwartete Branchen-Werkzeuge (vorhanden/gesamt).
+            const bTools = data && data.branch && Array.isArray(data.branch.tools) ? data.branch.tools : null;
+            if (bTools && bTools.length) {
+                const okT = bTools.filter(function (t) { return t.found === true; }).length;
+                chips.push('<span class="quick-score-chip">Branchen-Werkzeuge <strong>' + okT + '/' + bTools.length + '</strong></span>');
+            }
             const hint = summary
                 ? '<div class="quick-score-hint">' + summary + ' Im Komplettaudit erhalten Sie eine detaillierte Auswertung mit konkreten Empfehlungen.</div>'
                 : '<div class="quick-score-hint">Im Komplettaudit erhalten Sie eine detaillierte Auswertung mit konkreten Empfehlungen.</div>';

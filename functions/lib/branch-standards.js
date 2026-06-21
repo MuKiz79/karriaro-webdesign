@@ -232,7 +232,9 @@ const BRANCH_STANDARDS = {
         shouldHave: [
             { id: 'team', label: 'Maler-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /malermeister\w*|inhaber(in)?|unser team|familienbetrieb/i } },
             { id: 'innung', label: 'Maler-Innung / HWK-Mitgliedschaft', detect: { body: /maler.?innung|innung|handwerkskammer|\bHWK\b|fachverband/i } },
-            { id: 'farb-beratung', label: 'Farb-/Stil-Beratung explizit', detect: { body: /farbberatung|farbkonzept|wandgestaltung|stilberatung|wohnberatung/i } }
+            { id: 'farb-beratung', label: 'Farb-/Stil-Beratung explizit', detect: { body: /farbberatung|farbkonzept|wandgestaltung|stilberatung|wohnberatung/i } },
+            // Sprint 254 — Foto-Anfrage/Festpreis-Tool (mappt auf Karriaros Foto-Festpreis-Demo)
+            { id: 'foto-anfrage', label: 'Foto-Anfrage / Online-Angebot', detect: { body: /festpreis|fixpreis|garantierter.*preis|foto.*anfrage|bild.*hochladen|schadensfoto|online[- ]?kalkul/i } }
         ],
         pitchMissing: 'Privatkunden googeln "Maler + Stadt" + erwarten Vorher-Nachher-Galerie und Region. Wer das nicht zeigt, ruft nicht an.',
         pitchAllOk: 'Ihr Malerbetrieb ist online entscheidbar.'
@@ -247,7 +249,9 @@ const BRANCH_STANDARDS = {
         ],
         shouldHave: [
             { id: 'team', label: 'Meister-/Team-Vorstellung', detect: { subPage: /team|ueber[- ]?uns|über[- ]?uns/i, body: /gärtnermeister\w*|landschaftsgärtner\w*|inhaber(in)?|unser team|familienbetrieb/i } },
-            { id: 'beratung-vorort', label: 'Vor-Ort-Beratung / Gartenplanung', detect: { body: /vor.?ort.?beratung|gartenplanung|kostenfrei.*beratung|individuelle.*planung/i } }
+            { id: 'beratung-vorort', label: 'Vor-Ort-Beratung / Gartenplanung', detect: { body: /vor.?ort.?beratung|gartenplanung|kostenfrei.*beratung|individuelle.*planung/i } },
+            // Sprint 254 — Foto-Anfrage/Festpreis-Tool
+            { id: 'foto-anfrage', label: 'Foto-Anfrage / Online-Angebot', detect: { body: /festpreis|fixpreis|garantierter.*preis|foto.*anfrage|bild.*hochladen|schadensfoto|online[- ]?kalkul/i } }
         ],
         pitchMissing: 'Hausbesitzer googeln „Garten + Pflege + Stadt" + erwarten Foto-Galerie und Region — wer nichts zeigt, ist im Vergleich unsichtbar.',
         pitchAllOk: 'Ihr Garten-Landschaftsbau ist online entscheidbar.'
@@ -262,7 +266,9 @@ const BRANCH_STANDARDS = {
         ],
         shouldHave: [
             { id: 'einsatzgebiet', label: 'Einsatzgebiet / Bauleistungs-Region', detect: { body: /einsatzgebiet|baugebiet|umkreis|region|umgebung/i } },
-            { id: 'innung', label: 'Bau-Innung / HWK-Mitgliedschaft', detect: { body: /bauinnung|innung|handwerkskammer|\bHWK\b|fachverband|gütezeichen|gütesiegel/i } }
+            { id: 'innung', label: 'Bau-Innung / HWK-Mitgliedschaft', detect: { body: /bauinnung|innung|handwerkskammer|\bHWK\b|fachverband|gütezeichen|gütesiegel/i } },
+            // Sprint 254 — Online-Bauanfrage / Foto-Festpreis-Tool
+            { id: 'foto-anfrage', label: 'Foto-Anfrage / Online-Angebot', detect: { body: /festpreis|fixpreis|garantierter.*preis|foto.*anfrage|bild.*hochladen|schadensfoto|online[- ]?kalkul|online[- ]?anfrage/i } }
         ],
         pitchMissing: 'Bauherren entscheiden via Referenzprojekte + Team-Substanz. Wer Bauleitung + Bauten nicht zeigt, ist nicht im Pool.',
         pitchAllOk: 'Ihr Bauunternehmen ist online entscheidbar.'
@@ -277,7 +283,9 @@ const BRANCH_STANDARDS = {
         ],
         shouldHave: [
             { id: 'beratung-vorort', label: 'Vor-Ort-Aufmaß / Beratung', detect: { body: /aufmaß|aufmass|kostenfrei.*beratung|individuelle.*planung|maßgeschneidert|massgeschneidert/i } },
-            { id: 'innung', label: 'Schreiner-Innung / HWK', detect: { body: /schreiner.?innung|tischler.?innung|innung|handwerkskammer|\bHWK\b/i } }
+            { id: 'innung', label: 'Schreiner-Innung / HWK', detect: { body: /schreiner.?innung|tischler.?innung|innung|handwerkskammer|\bHWK\b/i } },
+            // Sprint 254 — Aufmaß-/Foto-Anfrage / Online-Konfigurator
+            { id: 'foto-anfrage', label: 'Foto-/Aufmaß-Anfrage / Online-Angebot', detect: { body: /festpreis|fixpreis|foto.*anfrage|bild.*hochladen|online[- ]?kalkul|online[- ]?anfrage|konfigurator|möbel.*planer|moebel.*planer/i } }
         ],
         pitchMissing: 'Bauherren googeln „Schreiner + Möbel + Stadt" + erwarten Foto-Galerie individueller Arbeiten — wer nichts zeigt, verliert das Erstgespräch.',
         pitchAllOk: 'Ihre Schreinerei ist online entscheidbar.'
@@ -456,11 +464,25 @@ const BRANCH_STANDARDS = {
 };
 
 /**
+ * Sprint 254 — Interaktive Kunden-Werkzeuge (≠ statische Inhaltsseiten wie
+ * Team/Adresse/Öffnungszeiten). Diese werden im Audit als eigene Liste
+ * „Was Kunden in Ihrer Branche erwarten" ausgewiesen — Karriaros USP
+ * „Werkzeuge, die mitarbeiten". Ein Item zählt als Werkzeug, wenn seine id
+ * hier steht (zentral, statt jedes Item zu flaggen).
+ */
+const TOOL_IDS = new Set([
+    'termin-online', 'rezept-online', 'telemedizin', 'sehtest-online',
+    'bewertung', 'objekt-filter', 'direkt-buchen', 'reservierung',
+    'stylist-wahl', 'gutscheine', 'anfrage-formular', 'festpreis', 'foto-anfrage',
+    'vorbestellung', 'bestand-online', 'mandantenportal', 'kosten-rechner'
+]);
+
+/**
  * @param {string|null} primaryType  Google Places primaryType (z.B. 'lawyer'),
  *                                   oder null wenn keine Branche erkannt.
  * @param {object} ctx               { subPages: [{slot, url, anchorText}], body: string }
  * @returns {object}                 { branch, primaryType, mustHave[], shouldHave[],
- *                                     foundCount, totalCount, severity, pitchArg }
+ *                                     tools[], foundCount, totalCount, severity, pitchArg }
  */
 function checkBranchStandards(primaryType, ctx) {
     const standards = BRANCH_STANDARDS[primaryType] || BRANCH_STANDARDS._default;
@@ -477,6 +499,8 @@ function checkBranchStandards(primaryType, ctx) {
 
     const must = standards.mustHave.map(i => ({ id: i.id, label: i.label, found: check(i) }));
     const should = standards.shouldHave.map(i => ({ id: i.id, label: i.label, found: check(i) }));
+    // Sprint 254 — interaktive Werkzeuge separat (für die „Erwartete Werkzeuge"-Liste).
+    const tools = [...must, ...should].filter(i => TOOL_IDS.has(i.id));
     const totalCount = must.length + should.length;
     const foundCount = must.filter(i => i.found).length + should.filter(i => i.found).length;
     const mustMissingCount = must.filter(i => !i.found).length;
@@ -494,6 +518,7 @@ function checkBranchStandards(primaryType, ctx) {
         usedDefault,
         mustHave: must,
         shouldHave: should,
+        tools,
         foundCount,
         totalCount,
         severity,

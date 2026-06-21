@@ -933,3 +933,28 @@ test('detectPainPoints: OG-Tags hinter tiefem <head> werden gefunden (kein False
     assert.deepEqual(pp.socialMeta.missing, [], 'alle OG/Twitter-Tags vorhanden → nichts fehlt');
     assert.equal(pp.socialMeta.ok, true);
 });
+
+// ── Sprint 254 — Branchen-Werkzeuge (tools-Array, „Was Kunden erwarten") ──
+
+test('checkBranchStandards: tools-Array enthält nur interaktive Werkzeuge (keine Inhalts-Items)', () => {
+    const r = checkBranchStandards('doctor', { subPages: [], body: 'Sprechzeiten Mo-Fr. 70173 Stuttgart.' });
+    assert.ok(Array.isArray(r.tools), 'tools ist ein Array');
+    const ids = r.tools.map(t => t.id);
+    assert.ok(ids.includes('termin-online'), 'Arzt-Werkzeuge enthalten Online-Termin');
+    assert.ok(!ids.includes('team') && !ids.includes('sprechzeiten') && !ids.includes('kontakt-adresse'),
+        'Inhalts-Items (Team/Sprechzeiten/Adresse) sind keine Werkzeuge');
+});
+
+test('checkBranchStandards: tools.found erkennt vorhandenes vs. fehlendes Werkzeug', () => {
+    const withTool = checkBranchStandards('doctor', { subPages: [], body: 'Termin online buchen via Doctolib.' });
+    const withoutTool = checkBranchStandards('doctor', { subPages: [], body: 'Rufen Sie uns an.' });
+    assert.equal(withTool.tools.find(t => t.id === 'termin-online').found, true, 'Doctolib → gefunden');
+    assert.equal(withoutTool.tools.find(t => t.id === 'termin-online').found, false, 'kein Hinweis → nicht gefunden');
+});
+
+test('checkBranchStandards: Handwerk-Branchen haben Foto-Anfrage-Werkzeug (Sprint 254)', () => {
+    ['painter', 'landscaper', 'general_contractor', 'carpenter'].forEach(type => {
+        const r = checkBranchStandards(type, { subPages: [], body: 'x' });
+        assert.ok(r.tools.some(t => t.id === 'foto-anfrage'), type + ' hat foto-anfrage-Werkzeug');
+    });
+});

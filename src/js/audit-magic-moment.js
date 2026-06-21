@@ -259,6 +259,32 @@
         '</div>';
     }
 
+    // Sprint 254 — „Was Kunden in Ihrer Branche erwarten": interaktive Branchen-
+    // Werkzeuge mit ✓/✗. Inline-Styles bewusst dark-mode-sicher (currentColor +
+    // neutrale rgba-Overlays); nur die Status-Badges sind semantisch grün/rot.
+    function renderToolsBlock(result) {
+        var b = result && result.branch;
+        var tools = b && b.tools;
+        if (!Array.isArray(tools) || !tools.length) return '';
+        var rows = tools.map(function (t) {
+            var ok = t.found === true;
+            var badge = '<span aria-hidden="true" style="flex:0 0 auto;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:' + (ok ? '#2E9E54' : '#C0392B') + '">' + (ok ? '✓' : '✗') + '</span>';
+            return '<li style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(127,127,127,0.16);font-size:14px">' +
+                badge +
+                '<span style="opacity:' + (ok ? '1' : '0.72') + '">' + escapeHtml(t.label) + (ok ? '' : ' — fehlt') + '</span>' +
+            '</li>';
+        }).join('');
+        var missing = tools.filter(function (t) { return t.found !== true; }).length;
+        var sub = missing > 0
+            ? (missing + ' von ' + tools.length + ' fehlen — genau die Werkzeuge, die eine Website mitarbeiten lassen.')
+            : 'Alle erwarteten Werkzeuge sind vorhanden.';
+        return '<div class="kr-audit-result-tools" style="margin:16px 0;padding:14px 16px;border:1px solid rgba(127,127,127,0.18);border-radius:12px">' +
+            '<p style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.6;margin:0 0 3px">Was Kunden in Ihrer Branche erwarten</p>' +
+            '<p style="font-size:13px;opacity:0.7;margin:0 0 8px">' + escapeHtml(sub) + '</p>' +
+            '<ul style="list-style:none;margin:0;padding:0">' + rows + '</ul>' +
+        '</div>';
+    }
+
     function renderResultHtml(result, url) {
         var domain = (result && result.domain) || deriveDomain(url) || (url || '');
         // Sprint 215 — Bot-Wall/Consent-Wall: gleiches Ergebnis-Format wie ein normales
@@ -312,6 +338,7 @@
             branchHint +
             '<ol class="kr-audit-result-findings">' + findingsHtml + '</ol>' +
             (blocked ? '' : renderGeoBlock(result)) +
+            (blocked ? '' : renderToolsBlock(result)) +
             '<p class="kr-audit-result-note">' + noteText + '</p>' +
             '<form class="kr-audit-result-leadform" data-audit-leadform novalidate>' +
                 '<p class="kr-audit-result-leadform-label">' + leadIntro + '</p>' +
