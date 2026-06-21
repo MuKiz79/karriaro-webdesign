@@ -37,6 +37,7 @@ import { pickDistricts } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { escapeHtml } from '../lib/escape-html.js';
+import { saveSearch } from '../crm/saved-searches.js';
 
 const BRANCHES = [
     { key: 'dentist',           q: 'Zahnarzt',          name: 'Zahnärzte' },
@@ -323,10 +324,40 @@ export async function runScanner() {
     leads.sort((a, b) => b.leadScore - a.leadScore);
     lastResults = leads;
     lastCity = city;
+    // Ergebnis persistieren (Reopen ohne API). _screenshot ist hier schon geloescht.
+    // Schwere place-Felder (Review-Texte/Fotos vom FRISCHEN Pfad) fuer die Persistenz
+    // strippen — Anzeige/Studio/saveLead brauchen sie nicht (sie lesen place.rating/
+    // userRatingCount/primaryType/reviewRecency/...), spart ~10× Speicher pro Lauf.
+    // Die LIVE-leads bleiben unangetastet. Speichern darf den Lauf NIE blockieren.
+    if (leads.length) {
+        try {
+            const slim = leads.map(l => l.place
+                ? { ...l, place: { ...l.place, reviews: undefined, photos: undefined } }
+                : l);
+            saveSearch({ kind: 'scan', label: city, city, payload: slim });
+        } catch { /* Persistenz darf den Scan nie abbrechen */ }
+    }
     persistFilters({}); // setze URL-Hash auf default
     renderLeadWorkspace(city, leads, getActiveFilters());
 
     notifyDone(`Scan fertig: ${leads.length} Leads gefunden, ${leads.filter(l => l.leadScore >= 60).length} mit Score ≥60`);
+}
+
+/**
+ * Oeffnet einen gespeicherten Region-Scan WIEDER — ohne Places/PSI-Call.
+ * Setzt die modul-privaten lastResults/lastCity und rendert den Workspace neu;
+ * dadurch sind Filter, "📨 Beste → Outreach-Studio" und "Tiefe Analyse" identisch
+ * verdrahtet wie nach einem frischen Lauf (bindWorkspaceEvents laeuft im Render).
+ * @param {{label?:string, city?:string, payload:Array}} entry  Record aus saved-searches
+ * @returns {boolean} ob geoeffnet wurde
+ */
+export function reopenScan(entry) {
+    if (!entry || !Array.isArray(entry.payload)) return false;
+    lastResults = entry.payload;
+    lastCity = entry.city || entry.label || '';
+    persistFilters({});                       // URL-Hash auf default → frischer Filterzustand
+    renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+    return true;
 }
 
 // runWithConcurrency lebt jetzt in lib/concurrency.js und wird von batch-search.js mitgenutzt.

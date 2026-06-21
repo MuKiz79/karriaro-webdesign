@@ -11,10 +11,12 @@ import { SEQUENCE_STEPS } from './templates/sequences.js';
 import { openStudio } from './ui/render-outreach.js';
 import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } from './crm/auto-scan.js';
 import { runSingleCheck } from './orchestration/single-check.js';
-import { runBatchSearch } from './orchestration/batch-search.js';
-import { runScanner, requestNotificationPermissionOnGesture } from './orchestration/scanner.js';
+import { runBatchSearch, reopenBatch } from './orchestration/batch-search.js';
+import { runScanner, requestNotificationPermissionOnGesture, reopenScan } from './orchestration/scanner.js';
 import { renderCRM, cleanupInboundListener } from './ui/render-crm.js';
 import { renderSetupGate } from './ui/setup-gate.js';
+import { listSearches, getSearch, deleteSearch, relativeAge } from './crm/saved-searches.js';
+import { escapeHtml } from './lib/escape-html.js';
 
 // ── Config laden ──
 loadConfig();
@@ -27,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     checkOnboarding();
     checkAutoScanAlerts();
     renderSetupGate();
-    showView('finden');
+    initSavedSearches();   // Host + delegierte Klicks + Event-Abo (einmalig)
+    showView('finden');    // ruft renderSavedSearches() ueber den finden-Zweig
 });
 
 // ── Workflow-Router ──
@@ -44,6 +47,7 @@ function showView(name) {
     document.getElementById(VIEW_CONTAINER[name])?.classList.remove('hidden');
     document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('nav-active', b.dataset.view === name));
     state.view = name;
+    if (name === 'finden') renderSavedSearches();   // "Zuletzt gefunden"-Liste aktuell halten
     if (name === 'pipeline') renderCRM();
     if (name === 'outreach') renderOutreachLanding();
     if (name === 'einstellungen') openSettings();
@@ -82,6 +86,63 @@ function initFinderCards() {
             });
         });
     });
+}
+
+// ── Gespeicherte Suchen ("Zuletzt gefunden") ──
+// Host-Container EINMAL ans Ende von #hero haengen (nicht in TRANSIENT_IDS → wird
+// beim View-Wechsel nicht geleert und ueberlebt #batch-results-Overwrites). EIN
+// delegierter Klick-Handler (ueberlebt Re-Renders → kein Doppel-Bind). Re-Render bei
+// jedem Speichern/Loeschen via window-Event aus crm/saved-searches.js (kein Import
+// von main dort → kein Zyklus).
+function initSavedSearches() {
+    const hero = document.getElementById('hero');
+    if (hero && !document.getElementById('saved-searches')) {
+        const box = document.createElement('div');
+        box.id = 'saved-searches';
+        box.className = 'saved-searches hidden';
+        hero.appendChild(box);
+        box.addEventListener('click', onSavedClick);
+    }
+    window.addEventListener('kz:searches-changed', renderSavedSearches);
+}
+
+function renderSavedSearches() {
+    const box = document.getElementById('saved-searches');
+    if (!box) return;
+    const items = listSearches();   // nur Meta (ohne payload), neueste zuerst
+    if (!items.length) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+    box.classList.remove('hidden');
+    box.innerHTML = `
+        <p class="hero-eyebrow saved-eyebrow">Zuletzt gefunden</p>
+        <ul class="saved-list">
+            ${items.map(e => {
+                const kindLabel = e.kind === 'scan' ? 'Region-Scan' : 'Stadt-Suche';
+                return `
+                <li class="saved-row">
+                    <button class="saved-open" data-id="${escapeHtml(e.id)}">
+                        <span class="saved-main">
+                            <span class="saved-label">${escapeHtml(e.label || '—')}</span>
+                            <span class="saved-meta">${kindLabel} · ${e.count} Lead${e.count === 1 ? '' : 's'} · ${escapeHtml(relativeAge(e.at))}</span>
+                        </span>
+                    </button>
+                    <button class="saved-delete" data-del="${escapeHtml(e.id)}" title="Lauf löschen" aria-label="Löschen">✕</button>
+                </li>`;
+            }).join('')}
+        </ul>`;
+}
+
+function onSavedClick(e) {
+    const del = e.target.closest('[data-del]');
+    if (del) { deleteSearch(del.dataset.del); renderSavedSearches(); return; }
+    const open = e.target.closest('.saved-open');
+    if (!open) return;
+    const entry = getSearch(open.dataset.id);
+    if (!entry) { renderSavedSearches(); return; }   // schema-veraltet/geloescht → still neu rendern
+    // KEIN API-Call. Sicherstellen, dass #hero sichtbar ist (Finden); der Reopen-
+    // Render entfernt .hidden an #batch-results und scrollt selbst hin.
+    if (state.view !== 'finden') showView('finden');
+    const ok = entry.kind === 'scan' ? reopenScan(entry) : reopenBatch(entry);
+    if (!ok) { deleteSearch(entry.id); renderSavedSearches(); }   // korruptes Record → wegraeumen, nie crashen
 }
 
 // ── URL History ──

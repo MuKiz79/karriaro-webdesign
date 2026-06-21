@@ -1294,3 +1294,20 @@
     padding-top: 12px;
     border-top: 1px solid rgba(255,255,255,0.04);
 }
+
+/* ══ Gespeicherte Suchen (Finden-View) ══ */
+.saved-searches { max-width: 560px; margin: 36px auto 0; padding: 0 var(--s6); text-align: left; }
+.saved-eyebrow { text-align: left; margin-bottom: 10px; }
+.saved-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.saved-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.saved-row:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+.saved-open { display: flex; min-width: 0; flex: 1; background: none; border: none; cursor: pointer;
+  text-align: left; padding: 11px 14px; font-family: var(--font); }
+.saved-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.saved-label { font-family: var(--font-display); font-weight: 600; font-size: 0.98rem; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saved-meta { font-size: 0.74rem; color: var(--muted); }
+.saved-delete { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.95rem;
+  line-height: 1; padding: 0 14px; border-radius: 6px; transition: color 0.15s; }
+.saved-delete:hover { color: var(--red); }
