@@ -579,6 +579,7 @@ function buildQuickResponse(domain, light, full) {
             usedDefault: light.branch.usedDefault,
             mustHave: light.branch.mustHave,
             shouldHave: light.branch.shouldHave,
+            tools: light.branch.tools,
             foundCount: light.branch.foundCount,
             totalCount: light.branch.totalCount,
             severity: light.branch.severity,
