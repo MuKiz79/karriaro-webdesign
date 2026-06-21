@@ -861,7 +861,27 @@
 .ws-header {
     margin-top: 24px;
     margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
 }
+.ws-studio-btn {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter .15s, transform .1s;
+}
+.ws-studio-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.ws-studio-btn:active { transform: translateY(0); }
 .ws-title h2 {
     margin: 0 0 6px;
     font-size: 1.4rem;

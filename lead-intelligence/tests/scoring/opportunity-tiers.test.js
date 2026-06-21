@@ -117,3 +117,41 @@ describe('computeOpportunity — 27-Profil-Ground-Truth (Scan-Stage-Tiers)', () 
         expect(noRating.opportunity).toBeLessThan(70);
     });
 });
+
+describe('Ad-Intent (Kaufsignal: schaltet Anzeigen)', () => {
+    const qualified = {
+        ws: { perf: 45, seo: 60, a11y: 58, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.7, userRatingCount: 120, primaryType: 'dentist', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 14, velocity: 6, n: 5 }
+    };
+    const dead = {
+        ws: { perf: 30, seo: 45, viewport: false, isHttps: false },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.2, userRatingCount: 40, primaryType: 'plumber', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 700, velocity: 0.2, n: 4 }
+    };
+    const soft = {
+        ws: { perf: 60, seo: 65, viewport: true, isHttps: true },
+        tech: { isBaukasten: false, cms: 'WordPress' },
+        techAge: { cms: 'WordPress', cmsEolYear: null, techSeverity: 1 },
+        place: { rating: 4.6, userRatingCount: 90, primaryType: 'physiotherapist', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 20, velocity: 5, n: 5 }
+    };
+    const ad = { active: true, signals: ['Google Ads aktiv'] };
+
+    it('boostet eine qualifizierte Lead (proven spender + Relaunch-Grund)', () => {
+        const a = computeOpportunity({ ...qualified }).opportunity;
+        const b = computeOpportunity({ ...qualified, adIntent: ad });
+        expect(b.opportunity).toBeGreaterThan(a);
+        expect(b.adIntent).toBe(true);
+    });
+    it('rettet KEIN totes Geschäft (Liveness-Gate dominiert)', () => {
+        expect(computeOpportunity({ ...dead, adIntent: ad }).opportunity).toBeLessThan(50);
+    });
+    it('macht eine soft-Lead ohne hartes Strukturzeichen NICHT HOT (Konvergenz)', () => {
+        expect(computeOpportunity({ ...soft, adIntent: ad }).opportunity).toBeLessThan(70);
+    });
+});
