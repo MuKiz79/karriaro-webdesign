@@ -26,6 +26,7 @@ import { runWithConcurrency } from '../lib/concurrency.js';
 import { STADTTEILE } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
+import { saveSearch } from '../crm/saved-searches.js';
 
 // Baukasten aus URL erkennbar
 const BAUKASTEN_URL = [
@@ -184,6 +185,21 @@ export async function runBatchSearch() {
     state._batchQuery = query;
     state._batchStats = { total: allPlaces.length, unique: seen.size, filtered: filteredCount, scanned: toScan.length };
 
+    // Ergebnis persistieren (Reopen ohne API). Screenshots (grosse base64-data-URIs)
+    // werden hier ABGESTREIFT — sonst sprengt ein Batch-Lauf den Size-Guard; beim
+    // Reopen greift der bestehende 'Kein Screenshot'-Fallback. Stats mitspeichern,
+    // weil renderProspectingResults state._batchStats fuer die Kopfzeile liest.
+    if (results.length) {
+        try {
+            saveSearch({
+                kind: 'batch',
+                label: query,
+                query,
+                payload: { results: results.map(({ screenshot, ...r }) => r), query, stats: state._batchStats }
+            });
+        } catch { /* Persistenz darf die Batch-Suche nie abbrechen */ }
+    }
+
     renderProspectingResults(query, results);
 
     // Benachrichtige wenn Tab im Hintergrund
@@ -193,6 +209,24 @@ export async function runBatchSearch() {
     if (Notification?.permission === 'granted') {
         new Notification('Lead Intelligence', { body: `${results.length} Leads für "${query}" gefunden` });
     }
+}
+
+/**
+ * Oeffnet eine gespeicherte Stadt-Suche WIEDER — ohne Places/PSI-Call.
+ * Stellt den Batch-State wieder her und ruft renderProspectingResults; Sort-Buttons,
+ * Einzel-Analyse, CSV, CRM-Save und Feedback werden im Render frisch verdrahtet.
+ * (Screenshots wurden beim Speichern entfernt → Cards zeigen "Kein Screenshot".)
+ * @param {{payload:{results:Array, query?:string, stats?:object}}} entry
+ * @returns {boolean} ob geoeffnet wurde
+ */
+export function reopenBatch(entry) {
+    if (!entry || !entry.payload || !Array.isArray(entry.payload.results)) return false;
+    const { results, query = '', stats = {} } = entry.payload;
+    state._batchResults = results;
+    state._batchQuery = query;
+    state._batchStats = stats;                // renderProspectingResults liest state._batchStats
+    renderProspectingResults(query, results);
+    return true;
 }
 
 // ══════════════════════════════════════
