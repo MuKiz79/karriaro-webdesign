@@ -70,6 +70,36 @@ function normQ(q) { return String(q || '').trim().toLowerCase().replace(/\s+/g, 
  * (reviews/photos werden bewusst NICHT gecacht — groß und nur vom Single-Check
  * genutzt, der searchPlaces ungecacht aufruft.)
  */
+/**
+ * Liveness aus ≤5 jüngsten Review-Zeitstempeln (Places liefert max. 5). GRATIS:
+ * nur publishTime (kein Review-Text). Liefert einen kompakten, cache-kleinen Wert —
+ * NICHT das reviews[]-Array. In trimPlace EINMAL berechnet, damit ein gecachter
+ * Treffer denselben Score bekommt wie ein frischer.
+ * @param {Array<{publishTime?:string}>} reviews
+ * @returns {{daysSinceLast:number|null, velocity:number|null, n:number}}
+ */
+export function deriveReviewRecency(reviews) {
+    const ms = (Array.isArray(reviews) ? reviews : [])
+        .map(r => Date.parse(r && r.publishTime))    // NaN wenn fehlt/ungültig
+        .filter(t => Number.isFinite(t))
+        .sort((a, b) => b - a);                      // neueste zuerst
+    if (ms.length < 2) {
+        return {
+            daysSinceLast: ms.length === 1 ? Math.max(0, Math.round((Date.now() - ms[0]) / 86400000)) : null,
+            velocity: null,
+            n: ms.length
+        };
+    }
+    const DAY = 86400000;
+    const newest = ms[0];
+    const oldest = ms[ms.length - 1];
+    const daysSinceLast = Math.max(0, Math.round((Date.now() - newest) / DAY));
+    // spanMonths bei 1 Monat gefloort → ein enger Freundes-Burst kann die Velocity NICHT aufblasen.
+    const spanMonths = Math.max(1, ((newest - oldest) / DAY) / 30);
+    const velocity = Math.round((ms.length / spanMonths) * 10) / 10;
+    return { daysSinceLast, velocity, n: ms.length };
+}
+
 function trimPlace(p) {
     return {
         displayName: p.displayName ? { text: p.displayName.text } : null,
@@ -84,7 +114,9 @@ function trimPlace(p) {
         types: p.types || [],
         regularOpeningHours: p.regularOpeningHours || null,
         internationalPhoneNumber: p.internationalPhoneNumber || null,
-        nationalPhoneNumber: p.nationalPhoneNumber || null
+        nationalPhoneNumber: p.nationalPhoneNumber || null,
+        // ── abgeleitete Liveness (klein; reviews[] selbst wird bewusst NICHT gecacht) ──
+        reviewRecency: deriveReviewRecency(p.reviews)
     };
 }
 

@@ -31,7 +31,7 @@ import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
-import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD } from '../api/scan-cache.js';
+import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { escapeHtml } from '../lib/escape-html.js';
 
@@ -59,7 +59,9 @@ const BRANCH_BY_TYPE = Object.fromEntries(BRANCHES.map(b => [b.key, b]));
 
 const PLACES_PER_BRANCH = 20;
 const PSI_CONCURRENCY = 8;
-const MIN_REVIEWS = 5;
+// 8 deckt sich mit dem valueMult-0x-Gate in opportunity.js (kein Lead, der den
+// Eingang passiert, wird allein an der Review-Zahl genullt); Velocity braucht ≥2 datierte Reviews.
+const MIN_REVIEWS = 8;
 // Tiefen-Suche: zusätzlich pro Branche in N Stadtteilen suchen (bricht den
 // Prominenz-Bias). Tiefen-Stufen zentral definiert (Modal + Default leiten sich
 // daraus ab). Gedrosselt gegen das Places-Rate-Limit (30/60s im Backend).
@@ -161,7 +163,12 @@ export async function runScanner() {
         if (state.aborted) return;
         const cached = getCachedPlaces(q);
         const res = cached ? { places: cached } : await searchPlacesRetry(q, PLACES_PER_BRANCH);
-        if (!cached && res?.places) setCachedPlaces(q, res.places);
+        if (!cached && res?.places) {
+            setCachedPlaces(q, res.places);
+            // Frische Places tragen reviews[] aber noch keine abgeleitete reviewRecency →
+            // hier ableiten, damit der FRISCHE Pfad identisch zum gecachten scort.
+            for (const fp of res.places) { if (!fp.reviewRecency) fp.reviewRecency = deriveReviewRecency(fp.reviews); }
+        }
         for (const p of (res?.places || [])) {
             if (!p.websiteUri) continue;
             if ((p.userRatingCount || 0) < MIN_REVIEWS) continue;
@@ -216,8 +223,8 @@ export async function runScanner() {
                 setCachedScore(domainKey, ws, tech);
             }
             const techAge = analyzeTechAge(tech, {});
-            // Transparente Vor-Bewertung (gratis): Opportunity = Schlechtigkeit × Geschäftswert.
-            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge });
+            // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche.
+            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -239,6 +246,7 @@ export async function runScanner() {
                 businessStrength: opp.businessStrength,
                 reasons: opp.reasons,
                 looksAlreadyGood: opp.looksAlreadyGood,
+                hardStructural: opp.hardStructural,
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -273,8 +281,23 @@ export async function runScanner() {
                 }
                 if (vision) {
                     const modern = siteLooksModern(vision);
-                    if (modern === true) { l.opportunity = Math.round(l.opportunity * 0.4); l.leadScore = l.opportunity; l.reasons.push('Bild: modern'); }
-                    else if (modern === false) { l.opportunity = Math.min(100, Math.round(l.opportunity * 1.15)); l.leadScore = l.opportunity; l.reasons.push('Bild: veraltet'); }
+                    if (modern === true) {
+                        // Softened (F0): eine Lead mit hartem Strukturzeichen (Baukasten/EOL/
+                        // no-mobile/no-SSL) hat einen echten Relaunch-Fall, den ein modernes
+                        // AUSSEHEN nicht löscht (SEO/Perf/Scaling-Decke bleibt) → ×1.0, nur nicht
+                        // mehr „veraltet". Eine Lead, deren Badness NUR Perf/Visuelles war, hat
+                        // nichts mehr zu verkaufen, sobald sie modern wirkt → ×0.45.
+                        const mod = (l.hardStructural || 0) >= 1 ? 1.0 : 0.45;
+                        l.opportunity = Math.max(0, Math.min(100, Math.round(l.opportunity * mod)));
+                        l.leadScore = l.opportunity; l.reasons.push('Bild: modern');
+                    } else if (modern === false) {
+                        // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
+                        // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, visionOutdated: true });
+                        l.opportunity = re.opportunity; l.leadScore = re.opportunity;
+                        l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
+                        if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
+                    }
                 }
                 vDone++;
                 showProgress(96 + Math.round((vDone / visionCands.length) * 3), `④ Bild-Check Top ${vDone}/${visionCands.length}…`);
