@@ -19,6 +19,7 @@ const {
     normalizePlacesType,
     guessBranchFromUrl,
     detectPainPoints,
+    extractHead,
     detectBlockedResponse,
     detectAiCrawlerAccess,
     detectEntitySignals,
@@ -896,4 +897,39 @@ test('computeGeoScore: blockierte KI-Crawler senken die Zugänglichkeit', () => 
     const access = r.categories.find(c => c.key === 'access');
     assert.ok(access.points <= 22, `Access ${access.points} sollte um 8 P fallen`);
     assert.ok(r.score < 100);
+});
+
+// ── Sprint 253 — Head-Fenster (extractHead): Page-Builder-Seiten mit tiefem <head> ──
+// Regression: thomas-faisst.de (846 KB WP/Yoast) schob Title/OG/Canonical hinter ~319 KB
+// Inline-CSS → die alten fixen 20–30-KB-Fenster fanden sie nicht → falsches „1 von 6"
+// + „Social-Tags fehlen", obwohl alle vorhanden. extractHead liest bis </head>.
+
+test('extractHead: liest bis </head> auch bei riesigem Inline-CSS-Kopf (>30 KB)', () => {
+    const filler = '<style>' + 'a{color:red}'.repeat(8000) + '</style>'; // ~96 KB, weit über 30 KB
+    const html = '<!DOCTYPE html><html><head>' + filler +
+        '<link rel="canonical" href="https://x.de/"><meta name="description" content="d">' +
+        '</head><body>x</body></html>';
+    const head = extractHead(html);
+    assert.ok(head.includes('rel="canonical"'), 'Canonical jenseits 30 KB muss im Fenster liegen');
+    assert.ok(head.includes('name="description"'), 'Meta-Description jenseits 30 KB muss im Fenster liegen');
+});
+
+test('extractHead: normale Seite — mind. 30 KB Fenster (kein Datenverlust ggü. alt)', () => {
+    const html = '<html><head><title>T</title></head><body>' + 'x'.repeat(50000) + '</body></html>';
+    const head = extractHead(html);
+    assert.ok(head.includes('<title>T</title>'));
+    assert.ok(head.length >= 30000, 'mind. 30 KB (JSON-LD steht teils im oberen Body)');
+});
+
+test('detectPainPoints: OG-Tags hinter tiefem <head> werden gefunden (kein False-„fehlt")', () => {
+    const filler = '<style>' + 'b{margin:0}'.repeat(6000) + '</style>'; // > 30 KB
+    const html = '<html><head>' + filler +
+        '<meta property="og:title" content="t">' +
+        '<meta property="og:image" content="i">' +
+        '<meta property="og:description" content="d">' +
+        '<meta name="twitter:card" content="summary">' +
+        '</head><body>x</body></html>';
+    const pp = detectPainPoints(html, {}, {}, {});
+    assert.deepEqual(pp.socialMeta.missing, [], 'alle OG/Twitter-Tags vorhanden → nichts fehlt');
+    assert.equal(pp.socialMeta.ok, true);
 });

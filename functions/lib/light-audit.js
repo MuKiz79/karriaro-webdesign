@@ -314,6 +314,29 @@ async function fetchPlaceType(url, placesKey) {
  * @param {string} placesKey  Google Places API Key (optional, Default '')
  * @returns {Promise<object>} { ok, light:true, tech, wayback, techAge, bfsg, branch }
  */
+
+/**
+ * Sprint 253 — Head-Fenster für Meta-Tag-/Schema-Checks.
+ *
+ * Früher fixe 20–30 KB. Page-Builder-WordPress-Seiten (Elementor/Divi/Yoast)
+ * schieben Title/OG/Canonical/JSON-LD aber oft hinter riesige Inline-CSS-Blöcke
+ * (>300 KB) — die fixen Fenster fanden sie nicht → Audit meldete fälschlich
+ * „fehlt" (Bsp. thomas-faisst.de: Meta-Tags erst bei Byte ~319.000 → falsches
+ * „1 von 6" + „Social-Tags fehlen", obwohl alle vorhanden).
+ *
+ * Neu: bis </head> lesen, mindestens 30 KB (JSON-LD steht teils im oberen Body),
+ * gedeckelt bei 1 MB gegen pathologische Seiten. Strikt ≥ den alten Fenstern →
+ * kann nur mehr finden, nie weniger (keine Regression bei normalen Seiten).
+ */
+const HEAD_MIN = 30000;
+const HEAD_CAP = 1000000;
+function extractHead(html) {
+    const h = String(html || '');
+    const end = h.search(/<\/head>/i);
+    const limit = end >= 0 ? Math.max(end + 7, HEAD_MIN) : HEAD_MIN;
+    return h.slice(0, Math.min(limit, HEAD_CAP));
+}
+
 /**
  * Sprint 68 — Pain-Points-Detection.
  * Adressiert die 5 typischen Buy-Trigger fuer Mittelstands-Webseiten:
@@ -328,7 +351,7 @@ async function fetchPlaceType(url, placesKey) {
  */
 function detectPainPoints(html, headers, wayback, tech) {
     const h = html || '';
-    const head = h.slice(0, 20000); // Head/upper-body fuer Meta-Tag-Checks
+    const head = extractHead(h); // ganzer <head> (mind. 30 KB) — fasst auch Page-Builder-Seiten mit tiefem <head>
     const hdrs = headers || {};
 
     // P1 — Content-Freshness via Wayback + Copyright-Jahr
@@ -453,7 +476,7 @@ function detectPainPoints(html, headers, wayback, tech) {
  * @returns {Promise<{seo: object, geo: object}>}
  */
 async function detectSeoGeo(html, baseUrl) {
-    const head = (html || '').slice(0, 30000);
+    const head = extractHead(html);
 
     // Schema.org JSON-LD-Blocks parsen
     const jsonLdMatches = head.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
@@ -504,14 +527,27 @@ async function detectSeoGeo(html, baseUrl) {
         try {
             await resolvePublicAddress(probeHost);
             const res = await fetch(origin + path, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(5000) });
-            return res.ok;
+            if (res.ok) return true;
+            // Sprint 253 — 3xx-Redirect zählt als vorhanden, WENN das Ziel dieselbe
+            // Ressource ist (z. B. /sitemap.xml → /sitemap_index.xml bei WordPress/Yoast,
+            // oder /robots.txt → www-Host). Redirect auf die Startseite (Soft-404) zählt NICHT.
+            if (res.status >= 300 && res.status < 400) {
+                const loc = (res.headers.get('location') || '').toLowerCase();
+                const stem = path.replace(/^\//, '').replace(/[._-]?index/, '').replace(/\.[a-z]+$/, ''); // robots | sitemap | llms
+                return !!stem && loc.includes(stem);
+            }
+            return false;
         } catch (_) { return false; }
     }
-    const [hasRobots, hasSitemap, hasLlmsTxt] = await Promise.all([
+    // Sprint 253 — Sitemap zusätzlich unter /sitemap_index.xml prüfen (WordPress/Yoast-
+    // Default; viele Seiten haben kein /sitemap.xml, sondern nur den Index).
+    const [hasRobots, sitemapDirect, sitemapIndex, hasLlmsTxt] = await Promise.all([
         probe('/robots.txt'),
         probe('/sitemap.xml'),
+        probe('/sitemap_index.xml'),
         probe('/llms.txt')
     ]);
+    const hasSitemap = sitemapDirect || sitemapIndex;
 
     // GEO — strukturierte Daten für KI-Crawler
     const hasFaqSchema = schemaTypes.has('FAQPage');
@@ -575,11 +611,11 @@ async function detectSeoGeo(html, baseUrl) {
  */
 function detectBlockedResponse(html, seoGeo) {
     const h = html || '';
-    // detectSeoGeo liest Title/Meta nur aus den ersten 30k Zeichen (head). Die
-    // Bot-Wall-Erkennung MUSS dasselbe Fenster nutzen, sonst widersprechen sich
-    // beide (Akamai-Sensor-Seite schiebt den <title> hinter einen >30k-JS-Blob:
-    // Audit sieht "kein Title", ein Voll-Scan faende ihn → opaque schaltet nie).
-    const head = h.slice(0, 30000);
+    // detectSeoGeo nutzt extractHead (ganzer <head>, mind. 30 KB). Die Bot-Wall-
+    // Erkennung MUSS dasselbe Fenster nutzen, sonst widersprechen sich beide
+    // (Sensor-/Challenge-Hülle schiebt den <title> tief nach unten: Audit sähe
+    // "kein Title", ein Voll-Scan fände ihn → opaque schaltet nie).
+    const head = extractHead(h);
     // 1) Explizite Bot-Wall-/Challenge-Marker grosser WAF/CDN-Anbieter (inkl.
     //    Akamai-Bot-Manager-Sensor-Token, die in der Challenge-Huelle stehen).
     const CHALLENGE = /Access Denied|AkamaiGHost|you don't have permission to access|Just a moment\.\.\.|cf[-_]browser[-_]verification|Checking your browser before|cf-chl-|_Incapsula_|Incapsula incident|Request unsuccessful\. Incapsula|\/_?akam\/|bazadebezolkohpepadr|bm-verify|\bak_bmsc\b/i;
@@ -932,6 +968,7 @@ async function runLightAudit(url, placesKey) {
 
 module.exports = {
     runLightAudit,
+    extractHead,
     detectTechFromHtml,
     bfsgHeuristic,
     fetchHtml,
