@@ -20,6 +20,8 @@ import { config } from '../config.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
+import { detectGoogleAds } from '../signals/google-ads.js';
+import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
@@ -29,6 +31,7 @@ import { analyzeScreenshot } from '../api/cloud-functions.js';
 import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
+import { openStudio } from '../ui/render-outreach.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
@@ -212,19 +215,25 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech, screenshot = null;
+            let ws, tech, screenshot = null, adIntent = null;
             const cs = getCachedScore(domainKey);
-            if (cs) { ws = cs.ws; tech = cs.tech; }
+            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
                 tech = detectTech(psi);
                 screenshot = psi?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
-                setCachedScore(domainKey, ws, tech);
+                // Ad-Intent GRATIS aus denselben PSI-Network-Requests (kein Extra-Call):
+                // schaltet der Betrieb Google-/Meta-Anzeigen? → bewiesener Spender + Pitch-Hook.
+                const ga = detectGoogleAds(psi);
+                const fp = analyzeDigitalFootprint(psi);
+                const signals = [...ga.signals, ...(fp.hasFbPixel ? ['Meta-Pixel (Facebook-Werbung)'] : [])];
+                adIntent = { active: ga.active || fp.hasFbPixel, signals };
+                setCachedScore(domainKey, ws, tech, adIntent);
             }
             const techAge = analyzeTechAge(tech, {});
-            // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche.
-            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency });
+            // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Ad-Intent.
+            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -247,6 +256,7 @@ export async function runScanner() {
                 reasons: opp.reasons,
                 looksAlreadyGood: opp.looksAlreadyGood,
                 hardStructural: opp.hardStructural,
+                adIntent,                              // {active, signals} — Pitch-Hook + Vision-Recompute
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -293,7 +303,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, visionOutdated: true });
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
@@ -388,6 +398,7 @@ function renderLeadWorkspace(city, leads, filters) {
                     <span class="ws-stat-cold">○ ${cold} cold</span>
                 </div>
             </div>
+            <button class="ws-studio-btn" data-action="open-studio" title="Die besten sichtbaren Leads (Score ≥ 50) ins Outreach-Studio übernehmen — je ein personalisierter Pitch + Mockup">📨 Beste → Outreach-Studio</button>
         </div>
 
         <div class="ws-toolbar">
@@ -490,6 +501,16 @@ function bindWorkspaceEvents(el) {
         if (e.target.dataset.action === 'reset-filters') {
             persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+            return;
+        }
+
+        // Beste sichtbare Leads → Outreach-Studio (je personalisierter Pitch + Mockup).
+        // pitchInputs (inkl. Ad-Intent-Hook) aus den Scan-Daten anhängen — die Deep-Lane
+        // re-generiert Mockups für die Top-Treffer (ratenbegrenzt, wie aus dem CRM).
+        if (e.target.dataset.action === 'open-studio') {
+            const top = applyFilters(lastResults, getActiveFilters()).filter(l => l.leadScore >= 50).slice(0, 15);
+            if (!top.length) { showError('Keine Leads mit Score ≥ 50 — erst einen Scan mit stärkeren Treffern.'); return; }
+            openStudio(top.map(l => ({ ...l, pitchInputs: buildPitchInputs(l) })));
             return;
         }
 

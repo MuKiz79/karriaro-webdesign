@@ -25,8 +25,16 @@ export function generatePersonalEmail(data) {
     const recipientName = contactPerson || data.place?.displayName?.text || domain;
     const firstName = (contactPerson || '').split(' ')[0];
 
-    // Stärkstes Argument auswählen
+    // Stärkstes Argument auswählen — Ad-Intent (zahlt für Anzeigen) führt, wenn vorhanden.
     const args = [];
+    if (data.adIntent?.active) {
+        const problem = ws.viewport === false ? 'auf dem Smartphone bricht'
+            : (ws.perf != null && ws.perf < 50) ? 'langsam lädt'
+            : tech.isBaukasten ? `auf ${tech.cms || 'einem Baukasten'} läuft`
+            : ws.isHttps === false ? 'als „nicht sicher" angezeigt wird'
+            : 'die bezahlten Besucher nicht überzeugt';
+        args.push({ type: 'adspend', text: `Sie schalten Online-Anzeigen — aber die Seite, auf der Ihre bezahlten Besucher landen, ${problem}. Jeder bezahlte Klick verliert dadurch unnötig Wirkung.`, subject: `${domain}: Sie zahlen für Klicks, die abspringen` });
+    }
     if (data.bfsgScore?.risk === 'hoch' || data.bfsgScore?.risk === 'kritisch') {
         args.push({ type: 'legal', text: `Ihre Website erfüllt nur ${data.bfsgScore.complianceScore}% der BFSG-Anforderungen. Seit Juni 2025 drohen Bußgelder bis ${data.bfsgScore.fine}.`, subject: `BFSG: ${domain} hat ein Compliance-Problem` });
     }

@@ -365,6 +365,22 @@ function buildPainArguments(data, techAge) {
             subjectAlt: `${domain}: Browser warnt Ihre Besucher`
         });
     }
+    // Ad-Intent = stärkster Hook (severity 6 → führt): zahlt für Anzeigen, leitet
+    // sie aber auf eine schwache Seite. Konkretes Problem aus den Scan-Signalen.
+    if (data.adIntent?.active) {
+        const problem = ws.viewport === false ? 'auf dem Smartphone bricht'
+            : (ws.perf != null && ws.perf < 50) ? 'langsam lädt und Besucher abspringen'
+            : tech.isBaukasten ? `auf ${tech.cms || 'einem Baukasten'} läuft und dadurch limitiert ist`
+            : ws.isHttps === false ? 'als „nicht sicher" angezeigt wird'
+            : 'die bezahlten Besucher nicht überzeugt';
+        args.push({
+            type: 'adspend',
+            severity: 6,
+            short: 'Anzeigen + schwache Seite',
+            text: `Sie schalten Online-Anzeigen — aber die Seite, auf der Ihre bezahlten Besucher landen, ${problem}. Jeder Klick, den Sie bezahlen, verliert dadurch unnötig Wirkung.`,
+            subjectAlt: `${domain}: Sie zahlen für Klicks, die abspringen`
+        });
+    }
 
     return args.sort((a, b) => b.severity - a.severity);
 }

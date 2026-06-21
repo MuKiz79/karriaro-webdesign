@@ -108,6 +108,8 @@ export function buildPitchInputs(src = {}) {
             primaryType: place.primaryType ?? null,
             displayName: { text: place.displayName?.text ?? null }
         } : null,
+        // Ad-Intent (schaltet Anzeigen) — stärkster Pitch-Hook, aus dem Scan abgeleitet.
+        adIntent: src.adIntent?.active ? { active: true, signals: (src.adIntent.signals || []).slice(0, 3) } : null,
         tier: src.tier ?? null,
         leadScore: src.result?.leadScore ?? src.leadScore ?? 0
     };
@@ -142,6 +144,7 @@ export function mapToOutreachData(pitchInputs, { contactData = null, touchNumber
         competitors: pitchInputs.competitors || [],
         branchStandards: pitchInputs.branchStandards || null,
         place: pitchInputs.place || null,
+        adIntent: pitchInputs.adIntent || null,
         tier: pitchInputs.tier || null,
         contactData,
         touchNumber,
