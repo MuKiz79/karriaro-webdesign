@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=428">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=428" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=428"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=429">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=429" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=429"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -343,10 +343,12 @@ function rewriteHeroHeadline(html) {
 
 function rewriteHeroDemoTease(html) {
     // Sprint 151 — Demo-Brücke ohne Stagger (radikal-Apple). Tappable Anchor
-    // zu Section 02 (#demos) bleibt, Voice gestrippt von „Manufaktur"-Doppelung.
+    // zu Section 02 (#demos), Voice gestrippt von „Manufaktur"-Doppelung.
+    // Hero-Subline wieder sichtbar → Demo-Tease NACH der Subline platzieren:
+    // Reihenfolge H1 → Subline (Wertversprechen) → Demo-Tease (Handlungsimpuls).
     return html.replace(
-        /<\/h1>/,
-        '</h1>' +
+        /(<p class="subhead"[^>]*>[\s\S]*?<\/p>)/,
+        '$1' +
         '<a href="#demos" class="m-hero-demos-tease" ' +
             'data-track-event="HERO_DEMO_TEASE">' +
             '<span class="m-hero-demos-tease-text">' +

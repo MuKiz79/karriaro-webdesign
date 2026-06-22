@@ -176,9 +176,17 @@
         display: none !important;
     }
 
-    /* Subhead auf Mobile hidden (Hero-Inhalt ist H1 + Demo-Tease + Trust-List) */
+    /* Hero-Subline auf Mobile sichtbar: Wertversprechen „ein Unikat, das
+       mitarbeitet" — steht über dem Demo-Tease (H1 → Subline → Demo-Tease).
+       Gutter wie Eyebrow/Demo-Tease/Price (am Hero-Inner-Rand, 0 horizontal). */
     .hero-with-photo .subhead {
-        display: none;
+        display: block;
+        margin: 6px 0 14px;
+        max-width: none;
+        font-size: 16px;
+        line-height: 1.5;
+        text-align: left;
+        color: var(--color-graphite-soft);
     }
 
     /* Folio-Marker geleert in Sprint 151 — Element bleibt zu HTML-Konsistenz,
