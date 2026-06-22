@@ -329,14 +329,14 @@ function rewriteHeroHeadline(html) {
     // i-Punkt) auch auf Mobil: Dropcap-Markup 1:1 aus der Desktop-Quelle übernehmen
     // (die Hero-Animations-CSS ist im Mobile-Build bereits enthalten). Fallback: schlichtes „I".
     const dc = html.match(/<span class="hero-dropcap">[\s\S]*?<\/span>(?=hre Website)/);
-    const lead = dc ? dc[0] + 'hre Website fürs KI-Zeitalter.' : 'Ihre Website fürs KI-Zeitalter.';
+    const lead = dc ? dc[0] + 'hre Website' : 'Ihre Website';
     // Sprint 226 — wenn die Blüte-Signatur drin ist, oben Platz reservieren, damit der
     // i-Punkt (über dem „I") nicht in die Eyebrow-Zeile ragt (.hero-headline--seal).
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline' + (dc ? ' hero-headline--seal' : '') + '">' +
         '<span class="hero-h1-line">' + lead + '</span>' +
-        '<span class="hero-h1-line">Ein Unikat, das mitarbeitet.</span>' +
+        '<span class="hero-h1-line">fürs KI-Zeitalter.</span>' +
         '</h1>'
     );
 }
@@ -359,12 +359,13 @@ function rewriteHeroDemoTease(html) {
 }
 
 function rewriteHeroSubhead(html) {
-    // Sprint 151 — Subhead ist auf Mobile per CSS hidden (display:none).
-    // Inhalts-Rewrite bleibt zu Fallback-Zwecken.
+    // Mobile-spezifische, kürzere Hero-Subline (sichtbar — siehe .hero-with-photo
+    // .subhead). Trägt den Marken-Anker „Handcodiert" (die Mobile-Eyebrow hat ihn,
+    // anders als Desktop, NICHT) + die Marken-Phrase „ein Unikat, das mitarbeitet".
     return html.replace(
         /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
         '<p class="subhead">' +
-        'Handcodiert, BFSG-konform, für die KI-Ära gemacht.' +
+        'Handcodiert — jede Seite ein Unikat, das mitarbeitet, mit eingebauten Werkzeugen.' +
         '</p>'
     );
 }
