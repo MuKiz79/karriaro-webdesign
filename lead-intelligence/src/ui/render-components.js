@@ -15,7 +15,7 @@ import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
-import { printLetter, copyLinkedIn, showCallSheet } from './render-channels.js';
+import { printLetter, copyLinkedIn, showCallSheet, runPitch } from './render-channels.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { escapeHtml } from '../lib/escape-html.js';
@@ -674,7 +674,11 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             ${mockupBlock}
 
             <div class="outreach-channels">
-                <div class="outreach-block-label">Legal &amp; wirkungsvoll — empfohlen statt Kalt-Mail</div>
+                <div class="outreach-block-label">Pitch-Fabrik — volle bespoke Seite + Neva-Mail (wie Avenius)</div>
+                <div class="channel-btn-row">
+                    <button class="channel-btn channel-btn-primary" id="ch-pitch">✨ Pitch-Seite erzeugen</button>
+                </div>
+                <div class="outreach-block-label" style="margin-top:14px">Legal &amp; wirkungsvoll — empfohlen statt Kalt-Mail</div>
                 <div class="channel-btn-row">
                     <button class="channel-btn" id="ch-letter">📄 Werbebrief drucken</button>
                     <button class="channel-btn" id="ch-call">📞 Anruf-Leitfaden</button>
@@ -723,6 +727,8 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
                 showToast('E-Mail in Zwischenablage kopiert');
             });
         });
+        // Pitch-Fabrik: volle bespoke Seite generieren → Link + Neva-Mail.
+        document.getElementById('ch-pitch')?.addEventListener('click', function() { runPitch(data, this); });
         // Legale Kanäle (Brief/Anruf/LinkedIn) — bauen aus demselben pack.
         document.getElementById('ch-letter')?.addEventListener('click', () => printLetter(data, pack));
         document.getElementById('ch-call')?.addEventListener('click', () => showCallSheet(data, pack));
