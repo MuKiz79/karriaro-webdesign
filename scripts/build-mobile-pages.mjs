@@ -328,8 +328,8 @@ function rewriteHeroHeadline(html) {
     // Sprint 226 — die animierte „I"-Signatur (Gold-Foil-„I" + Phyllotaxis-Blüte als
     // i-Punkt) auch auf Mobil: Dropcap-Markup 1:1 aus der Desktop-Quelle übernehmen
     // (die Hero-Animations-CSS ist im Mobile-Build bereits enthalten). Fallback: schlichtes „I".
-    const dc = html.match(/<span class="hero-dropcap">[\s\S]*?<\/span>(?=hre Website\.)/);
-    const lead = dc ? dc[0] + 'hre Website.' : 'Ihre Website.';
+    const dc = html.match(/<span class="hero-dropcap">[\s\S]*?<\/span>(?=hre Website)/);
+    const lead = dc ? dc[0] + 'hre Website fürs KI-Zeitalter.' : 'Ihre Website fürs KI-Zeitalter.';
     // Sprint 226 — wenn die Blüte-Signatur drin ist, oben Platz reservieren, damit der
     // i-Punkt (über dem „I") nicht in die Eyebrow-Zeile ragt (.hero-headline--seal).
     return html.replace(
