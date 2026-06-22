@@ -14,6 +14,7 @@ import { updateLead } from '../crm/leads.js';
 import { renderCRM } from './render-crm.js';
 import { createGmailDrafts } from '../outreach/gmail-drafts.js';
 import { exportEml } from '../outreach/eml-export.js';
+import { budgetStatus, noteCreated } from '../outreach/send-budget.js';
 import { showToast } from './render-components.js';   // geteilter Toast (kein lokales Duplikat)
 import { escapeHtml as esc } from '../lib/escape-html.js';
 
@@ -112,9 +113,15 @@ function renderReview(el, signal) {
             <div class="studio-nocontact">${noContact.map(r => `<div class="studio-nc-item">${esc(r.name || r.domain)} <span>${esc(r.contact?.note || 'kein Impressum-Kontakt')}</span></div>`).join('')}</div>`;
     }
 
+    // UWG-Hinweis (Bulk = höchstes Risiko) + Domain-Schutz-Budget über dem Footer.
+    html += `<p class="uwg-note">⚠️ Bulk-Mail an Firmen <strong>ohne deren Einwilligung</strong> ist in DE abmahnfähig (UWG §7) — bevorzugt einzeln, relevant und an Firmen mit mutmaßlichem Interesse. Entwürfe werden NICHT automatisch gesendet.</p>`;
+
     // Sticky-Footer-Versand
     html += `<div class="studio-footer">
-        <div class="studio-footer-info" id="studio-footer-info">0 freigegeben</div>
+        <div class="studio-footer-info">
+            <span id="studio-footer-info">0 freigegeben</span>
+            <span class="studio-budget" id="studio-budget"></span>
+        </div>
         <div class="studio-footer-actions">
             <button class="btn-primary studio-send-gmail" data-action="gmail">→ Gmail-Entwürfe</button>
             <button class="crm-btn-export" data-action="eml">→ .eml exportieren</button>
@@ -125,6 +132,7 @@ function renderReview(el, signal) {
     el.querySelector('[data-action="back"]').addEventListener('click', backToCrm, { signal });
     // wireReviewEvents NICHT hier — wird einmalig in openStudio gebunden (Delegation).
     updateApprovedCount(el);
+    renderBudgetLine(el);
 }
 
 function reviewCardHtml(r) {
@@ -276,6 +284,31 @@ function updateApprovedCount(el) {
     if (cnt) cnt.textContent = n ? `${n} freigegeben` : '';
 }
 
+// Domain-Schutz: heute empfohlenes Restvolumen sichtbar machen (Warmlauf-Rampe).
+function renderBudgetLine(el) {
+    const b = budgetStatus();
+    const node = el.querySelector('#studio-budget');
+    if (!node) return;
+    node.textContent = b.remaining > 0
+        ? `· Domain-Schutz: heute noch ~${b.remaining} von ${b.cap} empfohlen`
+        : `· Tagesempfehlung erreicht (${b.cap}) — morgen weiter, Domain schonen`;
+    node.classList.toggle('is-maxed', b.remaining <= 0);
+}
+
+// Volumen-Gate vor dem Versand: bei Überschreitung der Tagesempfehlung nachfragen
+// (kein harter Block — der Gründer entscheidet das Risiko). true = fortfahren.
+function confirmVolume(count) {
+    const b = budgetStatus();
+    if (count <= b.remaining) return true;
+    return window.confirm(
+        `Du gibst ${count} Entwürfe frei. Für den Schutz deiner Domain-Reputation sind heute noch ` +
+        `~${b.remaining} empfohlen (max. ${b.cap}/Tag im Warmlauf).\n\n` +
+        `Zu viele Kalt-Mails auf einmal → Spam-Markierung, schlechtere Zustellbarkeit auch für deine ` +
+        `echten Mails, und bei Kalt-Mail an DE-Firmen UWG-§7-Risiko.\n\n` +
+        `Trotzdem alle ${count} Entwürfe erstellen?`
+    );
+}
+
 // Re-rendert nur eine Karte (vermeidet Full-Re-Render → Edit-Fokus bleibt erhalten)
 function rerenderCard(el, r, signal) {
     const card = el.querySelector(`[data-card="${r.id}"]`);
@@ -294,12 +327,15 @@ async function markApprovedContacted() {
 async function sendViaGmail(el) {
     const drafts = approvedDrafts();
     if (!drafts.length) { showToast('Keine freigegebenen Entwürfe.'); return; }
+    if (!confirmVolume(drafts.length)) return;
     const btn = el.querySelector('[data-action="gmail"]');
     if (btn) { btn.disabled = true; btn.textContent = 'Erstelle Entwürfe…'; }
     try {
         const res = await createGmailDrafts(drafts, (done, total) => {
             if (btn) btn.textContent = `Gmail-Entwürfe ${done}/${total}…`;
         });
+        noteCreated(res.created);
+        renderBudgetLine(el);
         await markApprovedContacted();
         showToast(`${res.created} Gmail-Entwürfe erstellt${res.failed ? `, ${res.failed} fehlgeschlagen` : ''}. Prüfen & senden in Gmail.`);
     } catch (err) {
@@ -312,7 +348,10 @@ async function sendViaGmail(el) {
 async function sendViaEml(el) {
     const drafts = approvedDrafts();
     if (!drafts.length) { showToast('Keine freigegebenen Entwürfe.'); return; }
+    if (!confirmVolume(drafts.length)) return;
     exportEml(drafts);
+    noteCreated(drafts.length);
+    renderBudgetLine(el);
     await markApprovedContacted();
     showToast(`${drafts.length} Entwürfe als .eml exportiert.`);
 }
