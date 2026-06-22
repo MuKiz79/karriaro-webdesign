@@ -361,15 +361,10 @@ function rewriteHeroDemoTease(html) {
 }
 
 function rewriteHeroSubhead(html) {
-    // Mobile-spezifische, kürzere Hero-Subline (sichtbar — siehe .hero-with-photo
-    // .subhead). Trägt den Marken-Anker „Handcodiert" (die Mobile-Eyebrow hat ihn,
-    // anders als Desktop, NICHT) + die Marken-Phrase „ein Unikat, das mitarbeitet".
-    return html.replace(
-        /<p class="subhead"[^>]*>[\s\S]*?<\/p>/,
-        '<p class="subhead">' +
-        'Handcodiert — jede Seite ein Unikat, das mitarbeitet, mit eingebauten Werkzeugen.' +
-        '</p>'
-    );
+    // Mobile übernimmt die Hero-Subline 1:1 aus der Desktop-Quelle (Single-Source,
+    // verhindert Desktop/Mobile-Drift). Sichtbar via ".hero-with-photo .subhead" in
+    // mobile-overrides.css. Kein mobile-spezifischer Text-Rewrite mehr.
+    return html;
 }
 
 function rewriteHeroCta(html) {
