@@ -1311,3 +1311,28 @@
 .saved-delete { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.95rem;
   line-height: 1; padding: 0 14px; border-radius: 6px; transition: color 0.15s; }
 .saved-delete:hover { color: var(--red); }
+
+/* ══ Legale Kanal-Outputs (Brief / Anruf / LinkedIn) ══ */
+.outreach-channels { margin: 14px 0 6px; }
+.channel-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.channel-btn { padding: 10px 16px; background: var(--card); color: var(--text); border: 1px solid var(--accent);
+  border-radius: 999px; font-family: var(--font); font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: background .15s, transform .1s; }
+.channel-btn:hover { background: color-mix(in srgb, var(--accent) 14%, var(--card)); transform: translateY(-1px); }
+.uwg-note { margin: 8px 0 0; padding: 8px 12px; font-size: 12px; line-height: 1.45; color: var(--text);
+  background: color-mix(in srgb, var(--orange, #ff9f0a) 12%, var(--card)); border-left: 3px solid var(--orange, #ff9f0a);
+  border-radius: 6px; }
+.channel-overlay { position: fixed; inset: 0; z-index: 320; background: rgba(22,32,44,0.45);
+  display: flex; align-items: flex-start; justify-content: center; padding: 24px; overflow-y: auto; }
+.channel-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px 26px; max-width: 540px; width: 100%; margin: auto; }
+.channel-title { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; margin: 4px 0 8px; }
+.call-phone { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
+.call-phone a { color: var(--accent); text-decoration: none; }
+.call-legal { font-size: 11.5px; color: var(--muted); margin-bottom: 14px; }
+.call-sec { margin-bottom: 14px; }
+.call-sec ul { margin: 4px 0 0; padding-left: 18px; }
+.call-sec li, .call-sec p { font-size: 13.5px; line-height: 1.5; }
+.channel-actions { display: flex; gap: 10px; margin-top: 6px; }
+.channel-close { background: none; border: 1px solid var(--border); }
+@media print { body > *:not(.channel-overlay) { display: none !important; } .channel-overlay { position: static; background: none; padding: 0; } .channel-actions { display: none; } }

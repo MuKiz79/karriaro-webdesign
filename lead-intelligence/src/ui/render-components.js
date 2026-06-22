@@ -15,6 +15,7 @@ import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
+import { printLetter, copyLinkedIn, showCallSheet } from './render-channels.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { escapeHtml } from '../lib/escape-html.js';
@@ -672,8 +673,18 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             ${competitorsList}
             ${mockupBlock}
 
+            <div class="outreach-channels">
+                <div class="outreach-block-label">Legal &amp; wirkungsvoll — empfohlen statt Kalt-Mail</div>
+                <div class="channel-btn-row">
+                    <button class="channel-btn" id="ch-letter">📄 Werbebrief drucken</button>
+                    <button class="channel-btn" id="ch-call">📞 Anruf-Leitfaden</button>
+                    <button class="channel-btn" id="ch-linkedin">💼 LinkedIn-Nachricht</button>
+                </div>
+            </div>
+
             <div class="outreach-email">
                 <div class="outreach-block-label">E-Mail-Variante <span class="outreach-tonebar">${tonesHtml}</span></div>
+                <p class="uwg-note">⚠️ Kalt-E-Mail an Firmen ohne Einwilligung ist in DE abmahnfähig (UWG §7). Bevorzugen Sie Brief, LinkedIn oder Anruf — die E-Mail nur bei bestehendem Kontakt/Einwilligung.</p>
                 <div class="outreach-subject" id="outreach-subject">${variant.subject}</div>
                 <pre class="outreach-body" id="outreach-body">${variant.body}</pre>
                 <div class="outreach-actions">
@@ -712,6 +723,10 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
                 showToast('E-Mail in Zwischenablage kopiert');
             });
         });
+        // Legale Kanäle (Brief/Anruf/LinkedIn) — bauen aus demselben pack.
+        document.getElementById('ch-letter')?.addEventListener('click', () => printLetter(data, pack));
+        document.getElementById('ch-call')?.addEventListener('click', () => showCallSheet(data, pack));
+        document.getElementById('ch-linkedin')?.addEventListener('click', function() { copyLinkedIn(data, pack, this); });
     }
 
     // Copy Email (Legacy — falls vorhanden)

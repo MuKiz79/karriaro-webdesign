@@ -6,6 +6,27 @@
  */
 
 /**
+ * Saisonale Trigger je Branche (Monate 0-basiert = Vor-Saison: jetzt bauen = rechtzeitig
+ * fertig). Exportiert → auch der Scanner nutzt sie für den billigen Timing-Chip, ohne den
+ * ganzen Detektor (der teure Deep-Daten braucht) erneut zu fahren.
+ */
+export const SEASONAL_TRIGGERS = {
+    'restaurant': { months: [1, 2, 3], label: 'Vor der Sommersaison — neue Website jetzt = rechtzeitig für Outdoor-Geschäft' },
+    'cafe': { months: [1, 2, 3], label: 'Vor der Sommersaison' },
+    'hotel': { months: [0, 1, 2], label: 'Vor der Buchungssaison — Gäste buchen jetzt für Sommer' },
+    'hair_salon': { months: [9, 10], label: 'Vor Weihnachten/Silvester — Hochsaison steht bevor' },
+    'beauty_salon': { months: [9, 10], label: 'Vor der Weihnachts-Hochsaison' },
+    'florist': { months: [0, 1, 4], label: 'Vor Valentinstag / Muttertag' },
+    'gym': { months: [11, 0], label: 'Neujahrsvorsätze — größter Ansturm des Jahres steht bevor' },
+};
+
+/** Aktiver Saison-Trigger für Branche+Monat, sonst null. (month 0-basiert; Default = jetzt) */
+export function seasonalTriggerFor(type, month = new Date().getMonth()) {
+    const s = SEASONAL_TRIGGERS[type];
+    return (s && s.months.includes(month)) ? s : null;
+}
+
+/**
  * Erkennt Trigger-Events aus verfügbaren Daten
  * @param {Object} params - Alle verfügbaren Signal-Daten
  * @returns {Object} Erkannte Trigger-Events mit Dringlichkeit
@@ -18,18 +39,8 @@ export function detectTriggerEvents(params) {
     const month = new Date().getMonth();
     const type = place?.primaryType || '';
 
-    // Vor-Saison: Website JETZT machen = rechtzeitig fertig
-    const seasonalTriggers = {
-        'restaurant': { months: [1, 2, 3], label: 'Vor der Sommersaison — neue Website jetzt = rechtzeitig für Outdoor-Geschäft' },
-        'cafe': { months: [1, 2, 3], label: 'Vor der Sommersaison' },
-        'hotel': { months: [0, 1, 2], label: 'Vor der Buchungssaison — Gäste buchen jetzt für Sommer' },
-        'hair_salon': { months: [9, 10], label: 'Vor Weihnachten/Silvester — Hochsaison steht bevor' },
-        'beauty_salon': { months: [9, 10], label: 'Vor der Weihnachts-Hochsaison' },
-        'florist': { months: [0, 1, 4], label: 'Vor Valentinstag / Muttertag' },
-        'gym': { months: [11, 0], label: 'Neujahrsvorsätze — größter Ansturm des Jahres steht bevor' },
-    };
-    const seasonal = seasonalTriggers[type];
-    if (seasonal && seasonal.months.includes(month)) {
+    const seasonal = seasonalTriggerFor(type, month);
+    if (seasonal) {
         events.push({ type: 'seasonal', urgency: 'hoch', label: seasonal.label, timing: 'jetzt', impact: 3 });
     }
 

@@ -155,3 +155,29 @@ describe('Ad-Intent (Kaufsignal: schaltet Anzeigen)', () => {
         expect(computeOpportunity({ ...soft, adIntent: ad }).opportunity).toBeLessThan(70);
     });
 });
+
+describe('Timing/Saison-Boost', () => {
+    const hair = {
+        ws: { perf: 45, seo: 60, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.7, userRatingCount: 120, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 14, velocity: 6, n: 5 }
+    };
+    const season = { months: [9, 10], label: 'Saison' };
+
+    it('boostet eine qualifizierte Lead im Saison-Fenster', () => {
+        const a = computeOpportunity({ ...hair }).opportunity;
+        const b = computeOpportunity({ ...hair, seasonal: season }).opportunity;
+        expect(b).toBeGreaterThan(a);
+    });
+    it('rettet KEIN totes Geschäft per Saison-Boost', () => {
+        const dead = {
+            ws: { perf: 30, viewport: false, isHttps: false }, tech: { isBaukasten: true, cms: 'Wix' },
+            techAge: { techSeverity: 3 },
+            place: { rating: 4, userRatingCount: 40, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' },
+            reviewRecency: { daysSinceLast: 700, velocity: 0.2, n: 4 }
+        };
+        expect(computeOpportunity({ ...dead, seasonal: season }).opportunity).toBeLessThan(50);
+    });
+});
