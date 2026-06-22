@@ -106,7 +106,7 @@ export const MIN_REVIEWS_VALUE = 8;
  * @returns {{opportunity:number, badnessScore:number, businessStrength:number,
  *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number, adIntent:boolean}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, seasonal = null }) {
     const perf = typeof ws.perf === 'number' ? ws.perf : 50;
     const isHttps = ws.isHttps !== false;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
@@ -159,11 +159,15 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     //    Seite leitet. Boost (×1.25) auf eine bereits qualifizierte Lead — KEIN Junk-Rescue
     //    (die Konvergenz-Schranke unten greift weiter, ad-intent allein macht nicht HOT). ──
     const adActive = !!(adIntent && adIntent.active);
+    // Saison-Timing (Vor-Saison der Branche = jetzt bauen = rechtzeitig fertig): leichter
+    // Boost auf eine qualifizierte Lead — KEIN Junk-Rescue (Konvergenz greift weiter).
+    const seasonalActive = !!seasonal;
 
     // ── Multiplikativer Kern (F2: Matrix von Achsen mit Gates, KEINE gewichtete Summe). ──
     const lg = livenessGate(reviewRecency, place);
     const vm = valueMult(businessStrength, rating, reviews, MIN_REVIEWS_VALUE);
-    let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType) * (adActive ? 1.25 : 1.0);
+    let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
+        * (adActive ? 1.25 : 1.0) * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -175,6 +179,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // ── Begründungs-Chips (Transparenz; Ad-Intent prominent für Founder-Triage) ──
     const reasons = [];
     if (adActive) reasons.push('💸 Anzeigen aktiv');     // bewiesener Spender — zuerst
+    if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
     reasons.push(`Perf ${perf}`);
