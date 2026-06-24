@@ -25,12 +25,12 @@
 
     // ── Styles ──
     var css = '' +
-        '.krc-fab{position:fixed;bottom:24px;right:24px;z-index:2147483600;display:inline-flex;align-items:center;gap:9px;' +
+        '.krc-fab{position:fixed;bottom:24px;right:24px;z-index:2147483600;display:inline-flex;align-items:center;gap:9px;box-sizing:border-box;min-height:44px;' +
         'padding:13px 20px;border:none;border-radius:999px;background:' + ACCENT + ';color:#fff;font:500 14px/1 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif;' +
         'cursor:pointer;box-shadow:0 12px 32px rgba(20,40,60,.30);transition:transform .18s ease,box-shadow .18s ease}' +
         '.krc-fab:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(20,40,60,.38)}' +
         '.krc-fab svg{width:18px;height:18px}' +
-        '.krc-fab.krc-hide{display:none}' +
+        '.krc-fab.krc-hide,.krc-fab.krc-hero-hide{display:none}' +
         '.krc-panel{position:fixed;bottom:24px;right:24px;z-index:2147483601;width:370px;max-width:calc(100vw - 28px);height:540px;max-height:calc(100vh - 48px);' +
         'background:#fff;border-radius:16px;box-shadow:0 28px 70px rgba(20,40,60,.30);display:none;flex-direction:column;overflow:hidden;' +
         'border:1px solid rgba(20,32,43,.1);font-family:-apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif}' +
@@ -231,6 +231,18 @@
     fab.addEventListener('click', openPanel);
     panel.querySelector('.krc-close').addEventListener('click', closePanel);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('krc-open')) closePanel(); });
+
+    // Hero-Schutz: FAB ausblenden, solange der primäre Hero-CTA im Viewport ist,
+    // damit die Bubble den Kauf-Button nie überlagert. Erscheint, sobald der
+    // Nutzer am Hero vorbeigescrollt ist. (Die alte krc-raised-Logik greift nur
+    // gegen fixed/sticky-Elemente, nicht gegen den statischen In-Hero-CTA.)
+    var krcHeroCta = document.querySelector('.hero-with-photo .hero-cta-row .btn, .hero-with-photo .hero-cta-row a, .hero-with-photo .btn');
+    if (krcHeroCta && 'IntersectionObserver' in window) {
+        fab.classList.add('krc-hero-hide'); // Default am Hero versteckt; Observer korrigiert
+        new IntersectionObserver(function (entries) {
+            fab.classList.toggle('krc-hero-hide', entries[0].isIntersecting);
+        }, { threshold: 0 }).observe(krcHeroCta);
+    }
 
     // Auto-grow textarea + Enter to send (Shift+Enter = newline)
     inputEl.addEventListener('input', function () { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(90, inputEl.scrollHeight) + 'px'; });
