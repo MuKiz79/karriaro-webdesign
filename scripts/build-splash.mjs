@@ -65,7 +65,10 @@ const FRAGMENT = `<!-- ═══ SPLASH „Der goldene Faden näht das Siegel" (
         <div class="kr-splash-word">Karriaro</div>
         <div class="kr-splash-product">Webdesign</div>
       </div>
-      <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
+      <div class="kr-splash-eyebrows">
+        <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
+        <div class="kr-splash-eyebrow kr-splash-cred">Über 20 Jahre in der Techbranche</div>
+      </div>
     </div>
   </div>
 </div>
@@ -99,6 +102,9 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 .kr-splash-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(8px,1.2vw,10px);
   letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:${CREAM};opacity:0;
   animation:kr-eyebrow-in .8s ease-out 2150ms forwards}
+/* Zweite Eyebrow-Zeile = Erfahrungs-/Vertrauens-Marker; eng unter der ersten, Messing-Akzent. */
+.kr-splash-eyebrows{display:flex;flex-direction:column;align-items:center;gap:7px}
+.kr-splash-cred{color:${GOLD}}
 /* Morph-Phase: die Caption (Lockup + Eyebrow) weicht, damit das Siegel allein in die Nav
    fliegt. Der Eck-Rahmen bleibt im Siegel und skaliert mit (Nav-Marke hat denselben Rahmen). */
 .kr-splash.kr-morph .kr-splash-caption{opacity:0;transition:opacity .35s ease}
@@ -179,7 +185,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     setTimeout(function(){s.style.transition='opacity .5s ease';s.style.opacity='0';},540);
     setTimeout(remove,1050);
   }
-  var hold=reduce?1100:3050; // Aufbau + 200ms Stille, dann die Finale-Geste
+  var hold=reduce?1100:3400; // Aufbau + Lese-Beat für die zwei Eyebrow-Zeilen, dann die Finale-Geste
   var timer=setTimeout(morphToNav,hold);
   // Überspringen (ungeduldig): kein Morph, schnelles Fade.
   function skip(){clearTimeout(timer);fadeOut();}
