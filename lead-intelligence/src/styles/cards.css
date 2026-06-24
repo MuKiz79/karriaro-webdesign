@@ -1319,6 +1319,11 @@
   border-radius: 999px; font-family: var(--font); font-size: 13.5px; font-weight: 600; cursor: pointer;
   transition: background .15s, transform .1s; }
 .channel-btn:hover { background: color-mix(in srgb, var(--accent) 14%, var(--card)); transform: translateY(-1px); }
+.channel-btn-primary { background: var(--accent); color: #16202C; border-color: var(--accent); font-size: 14.5px; padding: 11px 22px; }
+.channel-btn-primary:hover { background: color-mix(in srgb, var(--accent) 80%, #fff); }
+.channel-btn:disabled { opacity: .6; cursor: progress; }
+.pitch-result .studio-body { width: 100%; box-sizing: border-box; font-size: 12.5px; line-height: 1.5; }
+.pitch-result .channel-actions { flex-wrap: wrap; gap: 8px; }
 .uwg-note { margin: 8px 0 0; padding: 8px 12px; font-size: 12px; line-height: 1.45; color: var(--text);
   background: color-mix(in srgb, var(--orange, #ff9f0a) 12%, var(--card)); border-left: 3px solid var(--orange, #ff9f0a);
   border-radius: 6px; }

@@ -101,6 +101,37 @@ export function generateMockup({ url, branche = null, businessName = null, curre
 }
 
 /**
+ * Pitch-Fabrik — Sonnet generiert aus echten Lead-Fakten eine volle, eigenständige,
+ * teilbare Premium-Pitch-Seite (Avenius-Register). Liefert { ok, id, url, businessName }.
+ *
+ * WICHTIG: Direkt-Call an die Function-URL, NICHT über den /api-Hosting-Rewrite —
+ * der Fastly-Edge cappt Rewrites bei ~60s, die Generierung dauert aber länger (502
+ * trotz erfolgreicher Function). Der Direkt-Call respektiert das 120s-Function-Timeout.
+ * CORS ist serverseitig für die karriaro-leads-Origin freigegeben.
+ */
+const PITCH_FN_URL = 'https://europe-west1-apex-executive.cloudfunctions.net/generatePitch';
+
+export async function generatePitch({ businessName, branche = null, brancheLabel = null, rating = null, reviewCount = null, address = null, city = null, websiteUri = null, services = [], priceFrom = null, force = false } = {}) {
+    if (!businessName) return null;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 185000);
+    try {
+        const res = await fetch(PITCH_FN_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ businessName, branche, brancheLabel, rating, reviewCount, address, city, websiteUri, services, priceFrom, force }),
+            signal: ctrl.signal
+        });
+        const data = await res.json().catch(() => null);
+        return data;   // {ok,id,url,...} bei Erfolg, sonst {error} → UI zeigt Detail
+    } catch (e) {
+        return { error: e?.name === 'AbortError' ? 'Zeitüberschreitung — bitte erneut versuchen.' : (e?.message || 'Netzwerkfehler') };
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+/**
  * Security Audit — HTTP-Header, TLS, DNS, Sensitive Files, Outdated Libs.
  * Liefert { ok, cached, findings, summary, severityScore, meta }.
  */
