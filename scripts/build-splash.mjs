@@ -65,7 +65,7 @@ const FRAGMENT = `<!-- ═══ SPLASH „Der goldene Faden näht das Siegel" (
         <div class="kr-splash-word">Karriaro</div>
         <div class="kr-splash-product">Webdesign</div>
       </div>
-      <div class="kr-splash-eyebrow kr-splash-cred">Über 20 Jahre in der Techbranche</div>
+      <div class="kr-splash-eyebrow kr-splash-cred">Über 20 Jahre in der Tech-Branche</div>
     </div>
   </div>
 </div>
