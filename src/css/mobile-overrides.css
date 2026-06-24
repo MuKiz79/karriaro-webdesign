@@ -428,22 +428,23 @@
     /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
        respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
     .hero-headline {
-        /* Apple SF Pro statt Fraunces-Serif + größer. !important gegen die
-           verschachtelte Multi-Datei-Kaskade (hero-couture .hero-single-column
-           .hero-headline (0,2,0) + hero-polish/modern-2026/--font-display). */
-        font-family: var(--apple-font-display) !important;
-        font-size: clamp(50px, 14vw, 60px) !important;
-        font-weight: 700 !important;
-        font-variation-settings: normal;
-        line-height: 1.04;
-        letter-spacing: -0.028em;
+        /* Marken-Serif Fraunces (Kodex: Headlines = Fraunces, NICHT Apple-Sans —
+           die alte SF-Pro-Override verriet den Manufaktur-Charakter). Kleiner als
+           zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
+           Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
+        font-family: var(--font-display) !important;
+        font-size: clamp(38px, 10.5vw, 50px) !important;
+        font-weight: 500 !important;
+        font-variation-settings: 'opsz' 144;
+        line-height: 1.06;
+        letter-spacing: -0.012em;
         color: var(--apple-ink);
         margin: 0 0 24px;
     }
     .hero-headline .hero-h1-line {
         display: block;
         color: var(--apple-ink);
-        font-weight: 700;
+        font-weight: 500;
     }
 
     /* Italic-Sub — Apple Sub-Display, graphite weight 500, non-italic */

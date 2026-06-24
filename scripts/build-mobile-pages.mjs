@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=429">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=429" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=429"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=430">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=430" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=430"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -336,7 +336,7 @@ function rewriteHeroHeadline(html) {
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline' + (dc ? ' hero-headline--seal' : '') + '">' +
         '<span class="hero-h1-line">' + lead + '</span>' +
-        '<span class="hero-h1-line">fürs KI-Zeitalter.</span>' +
+        '<span class="hero-h1-line">fürs KI‑Zeitalter.</span>' +
         '</h1>'
     );
 }
