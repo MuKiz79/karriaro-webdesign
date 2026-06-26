@@ -400,7 +400,7 @@
        Fold-Density. CTA + Trust-List rücken näher an H1 — iPhone 15 Pro
        Hero füllt nun ~60% Above-Fold statt 45%. */
     .hero-with-photo {
-        padding: clamp(60px, 8svh, 64px) var(--apple-section-pad-x) 48px;
+        padding: clamp(50px, 7svh, 54px) var(--apple-section-pad-x) 48px;
         min-height: auto;
         background: var(--apple-snow);
         display: block;
