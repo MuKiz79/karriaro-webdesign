@@ -183,8 +183,8 @@
         display: block;
         margin: 6px 0 14px;
         max-width: none;
-        font-size: 16px;
-        line-height: 1.5;
+        font-size: 14px;
+        line-height: 1.45;
         text-align: left;
         color: var(--color-graphite-soft);
     }
@@ -433,7 +433,7 @@
            zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
            Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
         font-family: var(--font-display) !important;
-        font-size: clamp(38px, 10.5vw, 50px) !important;
+        font-size: clamp(42px, 11.8vw, 54px) !important;
         font-weight: 500 !important;
         font-variation-settings: 'opsz' 144;
         line-height: 1.06;
