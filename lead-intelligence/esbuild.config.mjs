@@ -1,6 +1,7 @@
 import { build, context } from 'esbuild';
 import { readdir, readFile, writeFile, mkdir, copyFile } from 'fs/promises';
 import { join } from 'path';
+import { createHash } from 'crypto';
 
 const isWatch = process.argv.includes('--watch');
 
@@ -43,13 +44,26 @@ async function copyFonts() {
     } catch (e) { /* keine Fonts → CSS fällt auf System-Stack zurück */ }
 }
 
-// HTML: Kopiere index.html
+// HTML: Kopiere index.html + Content-Hash-Cache-Bust.
+// KRITISCH: app.js/app.css werden von firebase.json als `immutable, max-age=1yr`
+// ausgeliefert. Ohne versionierte URL bekommt JEDER wiederkehrende Besucher das
+// ALTE Bundle (Deploys unsichtbar). Wir hängen einen Content-Hash an die Refs →
+// neue URL nur bei echter Änderung (Cache bleibt bei No-Op-Builds gültig).
 async function copyHTML() {
     try {
-        // Versicherung: falls die Source-Referenz je wieder auf src/main.js zeigt,
-        // im dist-Output auf das gebündelte app.js umschreiben (dist hat kein src/).
+        let hash = 'dev';
+        try {
+            const [js, css] = await Promise.all([
+                readFile('dist/app.js', 'utf-8'),
+                readFile('dist/app.css', 'utf-8').catch(() => '')
+            ]);
+            hash = createHash('sha256').update(js).update(css).digest('hex').slice(0, 10);
+        } catch (e) { /* Hash optional — schlimmstenfalls kein Bust */ }
+
         const html = (await readFile('index.html', 'utf-8'))
-            .replace(/src=["']src\/main\.js["']/, 'src="app.js"');
+            .replace(/src=["']src\/main\.js["']/, 'src="app.js"')
+            .replace(/src=["']app\.js(\?[^"']*)?["']/, `src="app.js?v=${hash}"`)
+            .replace(/href=["']app\.css(\?[^"']*)?["']/, `href="app.css?v=${hash}"`);
         await writeFile('dist/index.html', html);
     } catch (e) { console.error('HTML copy failed:', e.message); }
 }

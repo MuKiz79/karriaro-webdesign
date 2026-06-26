@@ -911,11 +911,13 @@
 .agg-pick { font-size: 12px; padding: 5px 12px; border: 1px solid var(--accent); background: transparent; color: var(--accent); border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .agg-pick:hover { background: var(--accent); color: #fff; }
 
-/* Regionen-Radar */
-.btn-secondary { padding: 11px 18px; background: var(--card); color: var(--text); border: 1px solid var(--accent);
-  border-radius: var(--radius-sm, 8px); font-family: var(--font); font-size: 14px; font-weight: 600; cursor: pointer;
-  transition: background .15s, transform .1s; white-space: nowrap; }
-.btn-secondary:hover { background: color-mix(in srgb, var(--accent) 12%, var(--card)); transform: translateY(-1px); }
+/* Regionen-Radar — eigene Zeile, dezenter Sekundär-Knopf */
+.btn-radar { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; padding: 9px 16px;
+  background: transparent; color: var(--accent); border: 1px solid var(--border);
+  border-radius: 999px; font-family: var(--font); font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: background .15s, border-color .15s, transform .1s; }
+.btn-radar svg { flex-shrink: 0; }
+.btn-radar:hover { background: color-mix(in srgb, var(--accent) 8%, var(--card)); border-color: var(--accent); transform: translateY(-1px); }
 .radar-card { max-width: 760px; width: 92vw; }
 .radar-label { display: block; font-size: 12px; font-weight: 600; color: var(--muted, #6e6e73); margin: 6px 0 4px; }
 .radar-input { width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 14px; font-family: var(--font);
