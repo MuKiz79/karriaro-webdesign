@@ -433,13 +433,13 @@
            zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
            Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
         font-family: var(--font-display) !important;
-        font-size: clamp(42px, 11.8vw, 54px) !important;
+        font-size: clamp(46px, 13vw, 60px) !important;
         font-weight: 500 !important;
         font-variation-settings: 'opsz' 144;
-        line-height: 1.06;
-        letter-spacing: -0.012em;
+        line-height: 1.0;
+        letter-spacing: -0.02em;
         color: var(--apple-ink);
-        margin: 0 0 24px;
+        margin: 0 0 12px;
     }
     .hero-headline .hero-h1-line {
         display: block;
