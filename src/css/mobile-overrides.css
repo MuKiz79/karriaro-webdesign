@@ -183,7 +183,7 @@
         display: block;
         margin: 6px 0 14px;
         max-width: none;
-        font-size: 14px;
+        font-size: 12.5px;
         line-height: 1.45;
         text-align: left;
         color: var(--color-graphite-soft);
@@ -416,7 +416,7 @@
     /* Hero-Eyebrow — Apple-Tag-Pattern, klein über H1 */
     .hero-folio-eyebrow {
         font-family: var(--apple-font-text);
-        font-size: 13px;
+        font-size: 11.5px;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -433,11 +433,11 @@
            zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
            Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
         font-family: var(--font-display) !important;
-        font-size: clamp(46px, 13vw, 60px) !important;
+        font-size: clamp(48px, 14vw, 60px) !important;
         font-weight: 500 !important;
         font-variation-settings: 'opsz' 144;
         line-height: 1.0;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em;
         color: var(--apple-ink);
         margin: 0 0 12px;
     }
@@ -457,9 +457,11 @@
     .m-hero-demo-chrome .dg { background: #5CBE69; }
     .m-hero-demo-url { margin-left: 6px; font: 500 11px/1 var(--apple-font-text); letter-spacing: .02em; color: #525E6B; }
     .m-hero-demo-card img { display: block; width: 100%; height: 174px; object-fit: cover; object-position: top center; }
-    .m-hero-demo-caption { display: block; margin-top: 10px; color: #6E5F3F; font: 500 13.5px/1.5 var(--apple-font-text); }
+    .m-hero-demo-caption { display: block; margin-top: 10px; color: #6E5F3F; font: 500 12px/1.5 var(--apple-font-text); }
     .m-hero-demo-caption em { font-style: italic; }
     .m-hero-demo-arrow { font-style: normal; }
+    /* Begleittexte kleiner (mehr Kontrast zur großen H1, Founder 2026-06-26). */
+    .hero-with-photo .hero-audit-link { font-size: 12.5px !important; }
 
     /* Italic-Sub — Apple Sub-Display, graphite weight 500, non-italic */
     .hero-headline .hero-h1-line.m-hero-accent {
