@@ -400,7 +400,7 @@
        Fold-Density. CTA + Trust-List rücken näher an H1 — iPhone 15 Pro
        Hero füllt nun ~60% Above-Fold statt 45%. */
     .hero-with-photo {
-        padding: clamp(50px, 7svh, 54px) var(--apple-section-pad-x) 48px;
+        padding: clamp(40px, 6svh, 44px) var(--apple-section-pad-x) 48px;
         min-height: auto;
         background: var(--apple-snow);
         display: block;
@@ -424,6 +424,8 @@
         margin: 0 0 8px;
         line-height: 1.2;
     }
+    /* Hero-Eyebrow auf Mobile weggelassen (Founder 2026-06-26): H1 rückt nach oben. */
+    .hero-with-photo .hero-folio-eyebrow { display: none; }
 
     /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
        respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
