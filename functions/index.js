@@ -1550,6 +1550,69 @@ exports.pitchPage = onRequest(
 );
 
 // ═══════════════════════════════════════════════════════════════
+// JOB-SIGNALE (2026-06-26): offene Stellen je Branche×Ort bzw. je Arbeitgeber
+// über die OFFIZIELLE Arbeitsagentur-Jobsuche-API (gratis, statische Public-
+// clientId, kein Account). „stellt ein" = Wachstums-/Budget-Signal (akquise-reif).
+// ═══════════════════════════════════════════════════════════════
+
+const JOBS_API_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs";
+const JOBS_API_KEY = "jobboerse-jobsuche";   // offizielle statische Public-clientId der Bundesagentur
+const JOBS_CACHE_HOURS = 6;
+
+// ─── jobSignals ─── POST {was?, wo?, arbeitgeber?, size?}
+exports.jobSignals = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "jobSignals", 90, 3600)) return;
+
+        const b = req.body || {};
+        const was = String(b.was || "").trim().slice(0, 80);
+        const wo = String(b.wo || "").trim().slice(0, 80);
+        const arbeitgeber = String(b.arbeitgeber || "").trim().slice(0, 120);
+        const size = Math.min(Math.max(parseInt(b.size, 10) || 5, 1), 25);
+        if (!was && !arbeitgeber) return res.status(400).json({ error: "was oder arbeitgeber erforderlich" });
+
+        const cacheKey = crypto.createHash("sha256").update(`${was}|${wo}|${arbeitgeber}|${size}`).digest("hex").slice(0, 24);
+        try {
+            const snap = await db.collection("jobSignals").doc(cacheKey).get();
+            if (snap.exists && (snap.data().expiresAtMs || 0) > Date.now()) {
+                return res.json({ ...snap.data().payload, cached: true });
+            }
+        } catch (e) { /* cache miss → live */ }
+
+        try {
+            const url = new URL(JOBS_API_URL);
+            if (was) url.searchParams.set("was", was);
+            if (wo) { url.searchParams.set("wo", wo); url.searchParams.set("umkreis", "25"); }
+            if (arbeitgeber) url.searchParams.set("arbeitgeber", arbeitgeber);
+            url.searchParams.set("size", String(size));
+            const r = await fetch(url, { headers: { "X-API-Key": JOBS_API_KEY }, signal: AbortSignal.timeout(20000) });
+            if (!r.ok) return res.status(502).json({ error: `Jobsuche ${r.status}` });
+            const data = await r.json();
+            const jobs = (data.stellenangebote || []).map(s => ({
+                titel: s.titel || null,
+                arbeitgeber: s.arbeitgeber || null,
+                ort: (s.arbeitsort && s.arbeitsort.ort) || null,
+                eintrittsdatum: s.eintrittsdatum || null
+            }));
+            const employers = [...new Set(jobs.map(j => j.arbeitgeber).filter(Boolean))];
+            const payload = { ok: true, total: data.maxErgebnisse || jobs.length, count: jobs.length, employers, jobs };
+            const expiresAtMs = Date.now() + JOBS_CACHE_HOURS * 3600000;
+            db.collection("jobSignals").doc(cacheKey).set({
+                payload, expiresAtMs,
+                expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+            }).catch(() => {});
+            res.json(payload);
+        } catch (err) {
+            console.error("jobSignals failed:", err);
+            res.status(500).json({ error: "Jobsuche fehlgeschlagen", details: String(err && err.message || err) });
+        }
+    }
+);
+
+// ═══════════════════════════════════════════════════════════════
 // SECURITY AUDIT: HTTP-Header, TLS, DNS, Sensitive Files, Libraries
 // ═══════════════════════════════════════════════════════════════
 

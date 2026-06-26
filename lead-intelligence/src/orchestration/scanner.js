@@ -33,6 +33,7 @@ import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { openStudio } from '../ui/render-outreach.js';
+import { showAggregateReport } from '../ui/render-aggregate.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
@@ -430,7 +431,10 @@ function renderLeadWorkspace(city, leads, filters) {
                     <span class="ws-stat-cold">○ ${cold} cold</span>
                 </div>
             </div>
-            <button class="ws-studio-btn" data-action="open-studio" title="Die besten sichtbaren Leads (Score ≥ 50) ins Outreach-Studio übernehmen — je ein personalisierter Pitch + Mockup">📨 Beste → Outreach-Studio</button>
+            <div class="ws-header-actions">
+                <button class="ws-aggregate-btn" data-action="aggregate" title="Voranalyse: welche Branchen in dieser Stadt am meisten werbende, schwache, erreichbare Betriebe haben">🎯 Voranalyse</button>
+                <button class="ws-studio-btn" data-action="open-studio" title="Die besten sichtbaren Leads (Score ≥ 50) ins Outreach-Studio übernehmen — je ein personalisierter Pitch + Mockup">📨 Beste → Outreach-Studio</button>
+            </div>
         </div>
 
         <div class="ws-toolbar">
@@ -539,6 +543,15 @@ function bindWorkspaceEvents(el) {
         // Beste sichtbare Leads → Outreach-Studio (je personalisierter Pitch + Mockup).
         // pitchInputs (inkl. Ad-Intent-Hook) aus den Scan-Daten anhängen — die Deep-Lane
         // re-generiert Mockups für die Top-Treffer (ratenbegrenzt, wie aus dem CRM).
+        // Voranalyse: verdichtet den ganzen Scan zu „welche Branche lohnt" → Klick filtert.
+        if (e.target.dataset.action === 'aggregate') {
+            showAggregateReport(lastResults, lastCity, (branchKey) => {
+                persistFilters({ branch: branchKey });
+                renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+            });
+            return;
+        }
+
         if (e.target.dataset.action === 'open-studio') {
             const top = applyFilters(lastResults, getActiveFilters()).filter(l => l.leadScore >= 50).slice(0, 15);
             if (!top.length) { showError('Keine Leads mit Score ≥ 50 — erst einen Scan mit stärkeren Treffern.'); return; }

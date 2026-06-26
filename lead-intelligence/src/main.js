@@ -15,6 +15,7 @@ import { runBatchSearch, reopenBatch } from './orchestration/batch-search.js';
 import { runScanner, requestNotificationPermissionOnGesture, reopenScan } from './orchestration/scanner.js';
 import { renderCRM, cleanupInboundListener } from './ui/render-crm.js';
 import { renderSetupGate } from './ui/setup-gate.js';
+import { showRegionRadar } from './ui/render-radar.js';
 import { listSearches, getSearch, deleteSearch, relativeAge } from './crm/saved-searches.js';
 import { escapeHtml } from './lib/escape-html.js';
 
@@ -190,6 +191,15 @@ function initButtons() {
         if (!ensureAccess()) return;
         requestNotificationPermissionOnGesture();
         runScanner();
+    });
+
+    // Regionen-Radar: welche Stadt lohnt? (live Stellen-Aktivität) → füllt das Stadt-Feld.
+    document.getElementById('btn-radar')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
+        showRegionRadar((city) => {
+            const inp = document.getElementById('scanner-city');
+            if (inp) { inp.value = city; inp.focus(); }
+        });
     });
 
     // Abort
