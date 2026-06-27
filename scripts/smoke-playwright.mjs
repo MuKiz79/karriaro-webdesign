@@ -48,6 +48,7 @@ const PAGES = [
     { path: '/en/', name: 'Hauptseite EN' },
     { path: '/gruender.html', name: 'Gruender-Story' },
     { path: '/werkschau.html', name: 'Werkschau' },
+    { path: '/labor.html', name: 'Labor' },
     // Money-Page + Branchen-Landingpages (Sprint 252)
     { path: '/webseite-erstellen-lassen.html', name: 'Money · Webseite erstellen lassen' },
     { path: '/webdesign-fuer-friseur.html', name: 'Branche · Friseur' },
