@@ -5,8 +5,8 @@
  * @module ui/render-radar
  */
 import { runRegionRadar } from '../analysis/region-radar.js';
+import { escapeHtml as esc } from '../lib/escape-html.js';   // escaped auch Quotes → Attribut-sicher (data-city aus User-Eingabe)
 
-const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const DEFAULT_CITIES = 'Stuttgart, München, Frankfurt, Köln, Hamburg, Düsseldorf, Nürnberg, Mannheim';
 
 /** @param {(city:string)=>void} onPickCity */

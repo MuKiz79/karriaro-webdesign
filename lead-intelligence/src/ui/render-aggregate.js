@@ -5,8 +5,8 @@
  * @module ui/render-aggregate
  */
 import { aggregateScan } from '../analysis/scan-aggregate.js';
+import { escapeHtml as esc } from '../lib/escape-html.js';   // escaped auch Quotes → Attribut-sicher
 
-const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const pct = (x) => Math.round((x || 0) * 100) + '%';
 
 /**
