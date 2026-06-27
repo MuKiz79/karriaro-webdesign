@@ -684,14 +684,14 @@ const PERSONA_ICON_WRENCH = '<svg class="m-persona-icon" viewBox="0 0 24 24" fil
 // Reihenfolge im Grid (2×4) — Top-Conversion-Personas zuerst.
 // data-demo-target = Index in DEMO_SWIPER_SLIDES (für Tap → Scroll + Sheet-Open).
 const PERSONAS = [
-    { slug: 'immobilien', icon: PERSONA_ICON_HOUSE,    name: 'Immobilien',   headline: 'Eigener Marktauftritt',   body: 'Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.',     demoTarget: 1 },
-    { slug: 'praxis',     icon: PERSONA_ICON_STETHO,   name: 'Praxis',       headline: 'Termine ohne Hotline',    body: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',             demoTarget: 2 },
-    { slug: 'friseur',    icon: PERSONA_ICON_SCISSORS, name: 'Friseur',      headline: 'Termine die füllen',      body: 'Online-Buchung, Style-Galerie, weniger No-Shows.',              demoTarget: 3 },
-    { slug: 'dachdecker', icon: PERSONA_ICON_HARDHAT,  name: 'Dachdecker',   headline: 'Förderung & Angebot',     body: 'BAFA-Rechner zeigt sofort die Förderhöhe.',                     demoTarget: 4 },
+    { slug: 'immobilien', icon: PERSONA_ICON_HOUSE,    name: 'Immobilien',   headline: 'Eigener Marktauftritt',   body: 'Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.',     demoTarget: 7 },
+    { slug: 'praxis',     icon: PERSONA_ICON_STETHO,   name: 'Praxis',       headline: 'Termine ohne Hotline',    body: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',             demoTarget: 1 },
+    { slug: 'friseur',    icon: PERSONA_ICON_SCISSORS, name: 'Friseur',      headline: 'Termine die füllen',      body: 'Online-Buchung, Style-Galerie, weniger No-Shows.',              demoTarget: 2 },
+    { slug: 'dachdecker', icon: PERSONA_ICON_HARDHAT,  name: 'Dachdecker',   headline: 'Förderung & Angebot',     body: 'BAFA-Rechner zeigt sofort die Förderhöhe.',                     demoTarget: 3 },
     { slug: 'coaching',   icon: PERSONA_ICON_CHAT,     name: 'Coaching',     headline: 'Erstgespräch direkt',     body: 'Vita, Methodik, Buchungs-Button der konvertiert.',              demoTarget: 0 },
-    { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 5 },
-    { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 6 },
-    { slug: 'sanitaer',   icon: PERSONA_ICON_WRENCH,   name: 'Sanitär',      headline: 'Notdienst & Festpreis',   body: '3D-Bad-Konfigurator, Foto-Schaden → Festpreis-Antwort.',        demoTarget: 7 },
+    { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 4 },
+    { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 5 },
+    { slug: 'sanitaer',   icon: PERSONA_ICON_WRENCH,   name: 'Sanitär',      headline: 'Notdienst & Festpreis',   body: '3D-Bad-Konfigurator, Foto-Schaden → Festpreis-Antwort.',        demoTarget: 6 },
 ];
 
 function buildPersonaSectionHtml() {
@@ -757,13 +757,13 @@ function injectScrollAnimations(html) {
 // gelöscht, da Sprint 126/127 Live-Hero-Capture statt Editorial-Poster rendert.
 const DEMO_SWIPER_SLIDES = [
     { slug: 'coaching-lehmann',       eyebrow: 'Coaching · Essential',     title: 'Lehmann Beratung',      domain: 'lehmann-beratung.de',          href: '/portfolio/coaching-lehmann',          personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.' },
-    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de',     href: '/portfolio/immobilien-makler',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
     { slug: 'praxis-weber',           eyebrow: 'Praxis · Professional',    title: 'Dr. Weber',             domain: 'praxis-weber.de',              href: '/portfolio/praxis-weber',              personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.' },
     { slug: 'friseur-mueller',        eyebrow: 'Beauty · Essential',       title: 'Salon Müller',          domain: 'salon-mueller.de',             href: '/portfolio/friseur-salon',             personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.' },
     { slug: 'dachdecker-meister',     eyebrow: 'Handwerk · Professional',  title: 'Dachdecker-Meister',    domain: 'dachdecker-meisterbetrieb.de', href: '/portfolio/dachdecker-meisterbetrieb', personaContext: 'BAFA-Förderrechner zeigt sofort die Förderhöhe — vor-qualifizierte Anfragen.' },
     { slug: 'gastro-hirsch',          eyebrow: 'Gastronomie · Professional', title: 'Hirsch',              domain: 'gasthof-hirsch.de',            href: '/portfolio/restaurant-template',       personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
     { slug: 'logistik-schwaben',      eyebrow: 'Spedition · Premium',      title: 'Schwaben Logistik',     domain: 'schwaben-logistik.de',         href: '/portfolio/spedition-schwaben',        personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
     { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',          href: '/portfolio/meisterbetrieb-mueller',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.' },
+    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de',     href: '/portfolio/immobilien-makler',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
 ];
 
 // Sprint 126 — Image-Dims pro Mockup für intrinsic <img width="W" height="H">.
