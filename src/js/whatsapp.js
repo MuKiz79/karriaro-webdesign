@@ -45,7 +45,16 @@
         'transition:transform .2s ease,box-shadow .2s ease}' +
         '.whatsapp-fab:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(37,211,102,.42),0 4px 12px rgba(16,32,44,.2)}' +
         '.whatsapp-fab:focus-visible{outline:3px solid #16202C;outline-offset:3px}' +
+        '.whatsapp-fab svg{flex:none;width:30px;height:30px}' +
+        '.whatsapp-fab-label{display:none;white-space:nowrap;font:500 14px/1 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif}' +
+        // Mobile (≤1023px): beschriftete Pille im Stil der Concierge-FAB „Fragen Sie uns" — beide als Paar sichtbar.
+        '@media (max-width:1023px){' +
+            '.whatsapp-fab{width:auto;height:auto;min-height:44px;border-radius:999px;padding:13px 20px;gap:9px;justify-content:flex-start}' +
+            '.whatsapp-fab svg{width:18px;height:18px}' +
+            '.whatsapp-fab-label{display:inline}' +
+        '}' +
         '@media (prefers-reduced-motion:reduce){.whatsapp-fab{transition:none}}' +
+        '.whatsapp-fab.whatsapp-fab--hero-hide{display:none}' +
         'html.screenshot-mode .whatsapp-fab{display:none!important}';
 
     var style = document.createElement('style');
@@ -58,7 +67,7 @@
     a.rel = 'noopener';
     a.setAttribute('aria-label', 'Per WhatsApp kontaktieren');
     a.title = 'Per WhatsApp schreiben';
-    a.innerHTML = GLYPH;
+    a.innerHTML = GLYPH + '<span class="whatsapp-fab-label">WhatsApp</span>';
 
     // Cookieloses Tracking (Lighthouse/Plausible-Bridge), falls vorhanden.
     a.addEventListener('click', function () {
@@ -69,6 +78,15 @@
         if (document.querySelector('.whatsapp-fab')) return;   // schon da (z.B. statisch)
         document.head.appendChild(style);
         document.body.appendChild(a);
+        // Hero-Guard identisch zur Concierge-FAB („Fragen Sie uns"): am Hero versteckt,
+        // erscheint synchron mit ihr beim Scrollen (gleicher Selektor + threshold:0).
+        var heroCta = document.querySelector('.hero-with-photo .hero-cta-row .btn, .hero-with-photo .hero-cta-row a, .hero-with-photo .btn');
+        if (heroCta && 'IntersectionObserver' in window) {
+            a.classList.add('whatsapp-fab--hero-hide');
+            new IntersectionObserver(function (entries) {
+                a.classList.toggle('whatsapp-fab--hero-hide', entries[0].isIntersecting);
+            }, { threshold: 0 }).observe(heroCta);
+        }
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', mount);
