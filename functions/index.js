@@ -2513,7 +2513,7 @@ exports.dachConcierge = onRequest(
 // hohle Schlussfrage, generische Hashtags). EISERN: keine erfundenen Fakten/Zahlen
 // — nur die Substanz des Originals. Echte Umlaute. Stateless, kein PII-Speichern.
 // ════════════════════════════════════════════════════════════════════════════
-const LINKEDIN_REWRITE_MODEL = "claude-sonnet-4-6";
+const LINKEDIN_REWRITE_MODEL = "claude-opus-4-8";
 const LINKEDIN_REWRITE_TOOL = {
     name: "linkedin_rewrite",
     description: "Gibt die geschärfte Fassung des Beitrags plus eine kurze Liste der wichtigsten Änderungen zurück.",
@@ -2566,7 +2566,7 @@ const LINKEDIN_REWRITE_SYS = [
 
 // ─── linkedinRewrite ─── POST { post } (30-3000 Zeichen, stateless, kein PII)
 exports.linkedinRewrite = onRequest(
-    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 60, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
@@ -2583,6 +2583,7 @@ exports.linkedinRewrite = onRequest(
             const body = {
                 model: LINKEDIN_REWRITE_MODEL,
                 max_tokens: 1600,
+                thinking: { type: "disabled" }, // forced tool_use vertraegt kein aktives Thinking (Opus 4.8 -> sonst 400)
                 system: [{ type: "text", text: LINKEDIN_REWRITE_SYS, cache_control: { type: "ephemeral" } }],
                 tools: [LINKEDIN_REWRITE_TOOL],
                 tool_choice: { type: "tool", name: LINKEDIN_REWRITE_TOOL.name },
@@ -2592,15 +2593,16 @@ exports.linkedinRewrite = onRequest(
                 method: "POST",
                 headers: { "Content-Type": "application/json", "x-api-key": CLAUDE_API_KEY.value(), "anthropic-version": "2023-06-01" },
                 body: JSON.stringify(body),
-                signal: AbortSignal.timeout(25000)
+                signal: AbortSignal.timeout(50000)
             });
             if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`); }
             const data = await r.json();
             const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === LINKEDIN_REWRITE_TOOL.name);
             if (!tu?.input) throw new Error("kein tool_use-Payload");
             let { rewritten = "", changes = [] } = tu.input;
-            rewritten = String(rewritten || "").trim().slice(0, 3500);
-            changes = Array.isArray(changes) ? changes.map(c => String(c || "").slice(0, 200)).filter(Boolean).slice(0, 5) : [];
+            // Modell streut gelegentlich verirrte HTML-Reste ein (z. B. </br>) -> raus.
+            rewritten = String(rewritten || "").replace(/<\/?br\s*\/?>/gi, "").trim().slice(0, 3500);
+            changes = Array.isArray(changes) ? changes.map(c => String(c || "").replace(/<[^>]*>/g, "").trim().slice(0, 200)).filter(Boolean).slice(0, 5) : [];
             if (!rewritten) throw new Error("leere Antwort");
             return res.json({ ok: true, rewritten, changes });
         } catch (err) {

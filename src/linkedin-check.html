@@ -278,7 +278,7 @@
     optBtn.disabled = true; optBtn.textContent = "optimiert …";
     optEl.innerHTML = '<p style="color:var(--muted)">Die KI schreibt Ihren Beitrag um — einen Moment …</p>';
     try {
-      var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 30000);
+      var ctrl = new AbortController(); var to = setTimeout(function () { ctrl.abort(); }, 50000);
       var r = await fetch(REWRITE_FN, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ post: text }), signal: ctrl.signal });
       clearTimeout(to);
       if (r.status === 429) { optEl.innerHTML = '<div class="sugg s-fix"><span class="tag">Limit</span><div class="txt">Stündliches Limit erreicht. Bitte später erneut.</div></div>'; return; }
