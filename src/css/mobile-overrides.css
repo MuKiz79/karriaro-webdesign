@@ -451,21 +451,52 @@
     }
     /* „fürs KI-Zeitalter." = goldener Höhepunkt (warmes Gold #6E5F3F, AA 5,97:1). */
     .hero-headline .hero-h1-line:last-child { color: #6E5F3F; }
-    /* „I" schlicht in Tinte (V1 — klar statt unruhig): das gebürstete Messing-Foil
-       (background-clip:text-Gradient, Sprint 222) + Kursiv-Pull-Quote-Schrift + 1.18em
-       komplett neutralisieren → normaler Fraunces-Tinte-Buchstabe wie „hre Website". */
-    .hero-headline .hero-i-glyph {
-        font-family: var(--font-display) !important;
-        font-style: normal !important;
-        font-size: 1em !important;
-        background: none !important;
-        -webkit-background-clip: border-box !important;
-        background-clip: border-box !important;
-        -webkit-text-fill-color: var(--apple-ink) !important;
-        color: var(--apple-ink) !important;
-        text-shadow: none !important;
+
+    /* ── „Keimung"-Animation (Founder „Wow", 2026-06-28) — Leitidee „die Seite, die
+       wächst, während man sie liest". Jede Zeile keimt aus ihrem MITTELPUNKT (Keimen
+       statt Gleiten — nie translate; MOTION.md Regel 1), --ease-grow-Overshoot,
+       Fibonacci-gestaffelt. „KI-Zeitalter" wird zuletzt von der Phyllotaxis-Goldblüte
+       gekrönt (die Signatur wandert vom „I" auf das bedeutungstragende Wort). ── */
+    .hero-headline--keim { animation: none !important; }  /* opsz-Reveal aus → Keimung führt */
+    .hero-headline--keim .hero-h1-line {
+        opacity: 0;
+        transform-origin: 50% 50%;
+        animation: hero-keim var(--t-5, 630ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) both;
+        will-change: transform, opacity;
     }
-    .hero-headline .hero-grow { display: none !important; }
+    .hero-headline--keim .hero-h1-line:nth-child(1) { animation-delay: 100ms; }
+    .hero-headline--keim .hero-h1-line:nth-child(2) { animation-delay: 380ms; }
+    .hero-headline--keim .hero-h1-line:nth-child(3) { animation-delay: 660ms; }
+    @keyframes hero-keim {
+        from { opacity: 0; transform: scale(0.72); }
+        to   { opacity: 1; transform: scale(1); }
+    }
+    /* Höhepunkt-Blüte über „KI-Zeitalter": Punkte poppen golden-angle-gestaffelt als
+       Kranz über dem Wort auf (--ease-grow), lösen sich dann nach oben auf (--ease-settle). */
+    .hero-headline--keim .hero-h1-climax { position: relative; }
+    .hero-climax-bloom {
+        position: absolute; left: 50%; top: 50%;
+        width: 106%; height: 150%;
+        transform: translate(-50%, -50%);
+        pointer-events: none; z-index: 2;
+    }
+    .hero-climax-bloom svg { width: 100%; height: 100%; overflow: visible; display: block; }
+    .hero-kbloom-dot {
+        fill: #C9A24B;
+        opacity: 0;
+        mix-blend-mode: multiply;          /* sitzt edel im Wort statt grell davor */
+        transform-box: fill-box;
+        transform-origin: center;
+        animation:
+            hero-kbloom-pop var(--t-3, 240ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) calc(1180ms + var(--i, 0) * 34ms) both,
+            hero-kbloom-out var(--t-5, 630ms) var(--ease-settle, cubic-bezier(.22, 1, .36, 1)) calc(1860ms + var(--i, 0) * 20ms) forwards;
+    }
+    @keyframes hero-kbloom-pop { from { opacity: 0; transform: scale(0); } to { opacity: 0.62; transform: scale(1); } }
+    @keyframes hero-kbloom-out { from { opacity: 0.62; transform: scale(1); } to { opacity: 0; transform: scale(0.35); } }
+    @media (prefers-reduced-motion: reduce) {
+        .hero-headline--keim .hero-h1-line { opacity: 1; animation: none; transform: none; }
+        .hero-kbloom-dot { animation: none; opacity: 0; }
+    }
     /* Eine echte Beispielseite (Browser-Frame) als Beweis im Hero, tappt zu #demos.
        (Founder 2026-06-25: Beispielseiten in den Hero; fokussiert = EINE Demo.) */
     .m-hero-demo-card { display: block; margin: 18px 0 2px; text-decoration: none; -webkit-tap-highlight-color: transparent; }

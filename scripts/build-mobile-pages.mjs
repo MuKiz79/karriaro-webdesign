@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=439">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=439" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=439"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=440">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=440" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=440"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -322,21 +322,36 @@ function isIndex(relPath) {
     return relPath === 'index.html';
 }
 
+// Phyllotaxis-Goldblüte (goldener Winkel 137.5°) als Höhepunkt über „KI-Zeitalter".
+// Deterministisch generiert; jeder Punkt trägt --i für die golden-angle-Staffelung
+// (= dieselbe Regel wie Logo/Siegel; MOTION.md „Phyllotaxis in Motion").
+function buildClimaxBloomSvg() {
+    const GOLDEN = Math.PI * (3 - Math.sqrt(5));
+    const N = 18; // Fibonacci-nah — über die Wortbreite verteilt (kein Mittel-Klumpen)
+    let dots = '';
+    for (let i = 0; i < N; i++) {
+        const rad = 5 + 7 * Math.sqrt(i);
+        const ang = i * GOLDEN - Math.PI / 2;
+        const cx = (120 + rad * Math.cos(ang) * 1.85).toFixed(2);   // horizontal über das ganze Wort prickeln
+        const cy = (40 + rad * Math.sin(ang) * 0.40).toFixed(2);    // vertikal gestaucht → in Wort-Höhe
+        const dr = (1.8 + 1.8 * (1 - i / N)).toFixed(2);            // 1.8–3.6
+        dots += '<circle class="hero-kbloom-dot" cx="' + cx + '" cy="' + cy + '" r="' + dr + '" style="--i:' + i + '"></circle>';
+    }
+    return '<span class="hero-climax-bloom" aria-hidden="true"><svg viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet">' + dots + '</svg></span>';
+}
+
 function rewriteHeroHeadline(html) {
-    // Sprint 203 — Mobile-H1 an Desktop angeglichen (war „Webdesign./Manufaktur./…",
-    // löst die Hero-Divergenz). Ohne Stagger-Animation (radikal-Apple).
-    // Sprint 226 — die animierte „I"-Signatur (Gold-Foil-„I" + Phyllotaxis-Blüte als
-    // i-Punkt) auch auf Mobil: Dropcap-Markup 1:1 aus der Desktop-Quelle übernehmen
-    // (die Hero-Animations-CSS ist im Mobile-Build bereits enthalten). Fallback: schlichtes „I".
-    const dc = html.match(/<span class="hero-dropcap">[\s\S]*?<\/span>(?=hre Website)/);
-    const lead = dc ? dc[0] + 'hre Website' : 'Ihre Website';
-    // Sprint 226 — wenn die Blüte-Signatur drin ist, oben Platz reservieren, damit der
-    // i-Punkt (über dem „I") nicht in die Eyebrow-Zeile ragt (.hero-headline--seal).
+    // V1 + „Keimung"-Animation (2026-06-28, Founder „Wow"): Mobile-Hero keimt zeilenweise
+    // (Keimen statt Gleiten, --ease-grow, Fibonacci-Staffel — Leitidee „die Seite, die
+    // wächst, während man sie liest"). „KI-Zeitalter" ist der goldene Höhepunkt, gekrönt
+    // von der Phyllotaxis-Goldblüte (eure Signatur — wandert vom dekorativen „I" auf das
+    // bedeutungstragende Wort). Dropcap-„I" entfällt auf Mobil (V1 = schlichte Tinte).
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
-        '<h1 class="hero-headline' + (dc ? ' hero-headline--seal' : '') + '">' +
-        '<span class="hero-h1-line">' + lead + '</span>' +
-        '<span class="hero-h1-line">fürs KI‑Zeitalter.</span>' +
+        '<h1 class="hero-headline hero-headline--keim">' +
+        '<span class="hero-h1-line">Ihre Website</span>' +
+        '<span class="hero-h1-line">fürs</span>' +
+        '<span class="hero-h1-line hero-h1-climax">KI‑Zeitalter.' + buildClimaxBloomSvg() + '</span>' +
         '</h1>'
     );
 }
