@@ -430,24 +430,42 @@
     /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
        respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
     .hero-headline {
-        /* Marken-Serif Fraunces (Kodex: Headlines = Fraunces, NICHT Apple-Sans —
-           die alte SF-Pro-Override verriet den Manufaktur-Charakter). Kleiner als
-           zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
-           Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
+        /* V1 (2026-06-28, Founder-Wunsch „größer & besser"): Marken-Serif Fraunces,
+           deutlich größer & dichter. Gold wandert vom dekorativen „I" auf den Begriff
+           „KI-Zeitalter" (die Aussage führt). Blüten-Signatur verlässt die Headline
+           (Nav-Logo trägt sie weiter). Bricht bewusst 3-zeilig mit „KI-Zeitalter." als
+           goldenem Höhepunkt. !important gegen die Multi-Datei-Kaskade. */
         font-family: var(--font-display) !important;
-        font-size: clamp(48px, 14vw, 60px) !important;
+        font-size: clamp(54px, 16.5vw, 72px) !important;
         font-weight: 500 !important;
         font-variation-settings: 'opsz' 144;
-        line-height: 1.0;
-        letter-spacing: -0.025em;
+        line-height: 0.92 !important;
+        letter-spacing: -0.035em !important;
         color: var(--apple-ink);
-        margin: 0 0 12px;
+        margin: 0 0 16px;
     }
     .hero-headline .hero-h1-line {
         display: block;
         color: var(--apple-ink);
         font-weight: 500;
     }
+    /* „fürs KI-Zeitalter." = goldener Höhepunkt (warmes Gold #6E5F3F, AA 5,97:1). */
+    .hero-headline .hero-h1-line:last-child { color: #6E5F3F; }
+    /* „I" schlicht in Tinte (V1 — klar statt unruhig): das gebürstete Messing-Foil
+       (background-clip:text-Gradient, Sprint 222) + Kursiv-Pull-Quote-Schrift + 1.18em
+       komplett neutralisieren → normaler Fraunces-Tinte-Buchstabe wie „hre Website". */
+    .hero-headline .hero-i-glyph {
+        font-family: var(--font-display) !important;
+        font-style: normal !important;
+        font-size: 1em !important;
+        background: none !important;
+        -webkit-background-clip: border-box !important;
+        background-clip: border-box !important;
+        -webkit-text-fill-color: var(--apple-ink) !important;
+        color: var(--apple-ink) !important;
+        text-shadow: none !important;
+    }
+    .hero-headline .hero-grow { display: none !important; }
     /* Eine echte Beispielseite (Browser-Frame) als Beweis im Hero, tappt zu #demos.
        (Founder 2026-06-25: Beispielseiten in den Hero; fokussiert = EINE Demo.) */
     .m-hero-demo-card { display: block; margin: 18px 0 2px; text-decoration: none; -webkit-tap-highlight-color: transparent; }
