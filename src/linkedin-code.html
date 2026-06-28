@@ -2,109 +2,123 @@
 <html lang="de"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Scoring-Report · Der entschluesselte LinkedIn-Code</title>
+<title>Der LinkedIn-Code, ehrlich entschlüsselt · Karriaro</title>
+<meta name="description" content="Im März 2026 hat LinkedIn sein Feed-Ranking auf große Sprachmodelle umgestellt. Wir haben die Quellen gelesen statt der Gurus: Was wirklich belegt ist, was umstritten ist und was schlicht niemand weiß.">
 <style>
-  :root { --gold:#C9A24B; --ink:#1a1a1a; --muted:#6b6b6b; --bg:#faf8f4; --line:#e7e1d6; }
+  :root { --gold:#C9A24B; --ink:#1a1a1a; --muted:#6b6b6b; --bg:#faf8f4; --line:#e7e1d6;
+          --green:#2e7d32; --green-bg:#eaf4ea; --amber:#9a6a00; --amber-bg:#fbf2dd;
+          --red:#b00020; --red-bg:#fbe9ec; --grey:#5b6470; --grey-bg:#eef0f2; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
   .wrap { max-width:760px; margin:0 auto; padding:48px 22px 80px; }
   .eyebrow { font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); font-weight:600; margin-bottom:8px; }
-  h1 { font:600 30px/1.2 Georgia,"Times New Roman",serif; margin:4px 0 6px; }
-  .topic { color:var(--muted); margin:0 0 4px; }
-  .meta { color:var(--muted); font-size:13px; margin-bottom:32px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; margin-bottom:18px; }
-  .winner-card { display:flex; gap:22px; align-items:flex-start; }
-  .score-badge { flex:0 0 auto; width:124px; text-align:center; border:3px solid var(--gold); border-radius:14px; padding:16px 8px; }
-  .score-num { font:700 46px/1 Georgia,serif; }
-  .score-of { font-size:12px; color:var(--muted); margin-top:4px; }
-  .winner-body { flex:1 1 auto; min-width:0; }
-  .bars { margin:6px 0 16px; }
-  .bar-row { display:flex; align-items:center; gap:10px; margin:5px 0; font-size:13px; }
-  .bar-label { flex:0 0 96px; color:var(--muted); }
-  .bar-track { flex:1 1 auto; height:8px; background:var(--line); border-radius:6px; overflow:hidden; }
-  .bar-fill { display:block; height:100%; background:var(--gold); }
-  .bar-num { flex:0 0 46px; text-align:right; font-variant-numeric:tabular-nums; color:var(--ink); }
-  .post { white-space:pre-wrap; font:15px/1.6 -apple-system,sans-serif; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:16px; margin:6px 0 14px; }
-  .post.comment { background:#fff; }
-  h2 { font:600 18px/1.3 Georgia,serif; margin:30px 0 12px; }
-  .variant { border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px; background:#fff; }
-  .variant.v-winner { border-color:var(--gold); border-width:2px; }
-  .variant-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .winner-tag { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:.08em; }
-  .chip { margin-left:auto; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px; }
-  .chip-pass { background:#e8f3e9; color:#2e7d32; }
-  .chip-fail { background:#fbe9ec; color:#b00020; }
-  .reasons { margin-top:8px; }
-  .reason { font-size:13px; color:#b00020; margin:3px 0; }
-  footer { color:var(--muted); font-size:12px; text-align:center; margin-top:34px; line-height:1.7; }
+  h1 { font:600 32px/1.18 Georgia,"Times New Roman",serif; margin:4px 0 14px; letter-spacing:-.01em; }
+  h2 { font:600 21px/1.3 Georgia,serif; margin:0 0 12px; }
+  .lead { font-size:18px; line-height:1.6; color:#33312d; margin:0 0 14px; }
+  .meta { color:var(--muted); font-size:13px; margin:0 0 30px; padding-bottom:24px; border-bottom:1px solid var(--line); }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px 26px; margin-bottom:18px; }
+  .card p { margin:0 0 12px; }
+  .card p:last-child { margin-bottom:0; }
+  .machine { background:linear-gradient(180deg,#fffdf8,#fff); border-color:#ecdcb6; }
+  .machine .big { font:600 19px/1.45 Georgia,serif; margin:0 0 12px; }
+  .machine .num { color:var(--gold); font-weight:700; }
+  .src { font-size:12.5px; color:var(--muted); font-style:italic; margin-top:14px; }
+  .tier-badge { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:5px 12px; border-radius:999px; margin-bottom:14px; }
+  .tier-proven   .tier-badge { background:var(--green-bg); color:var(--green); }
+  .tier-disputed .tier-badge { background:var(--amber-bg); color:var(--amber); }
+  .tier-myth     .tier-badge { background:var(--red-bg);   color:var(--red); }
+  .tier-unknown  .tier-badge { background:var(--grey-bg);  color:var(--grey); }
+  .tier-proven   { border-left:4px solid var(--green); }
+  .tier-disputed { border-left:4px solid var(--amber); }
+  .tier-myth     { border-left:4px solid var(--red); }
+  .tier-unknown  { border-left:4px solid var(--grey); }
+  ul.facts { list-style:none; margin:0; padding:0; }
+  ul.facts li { position:relative; padding:8px 0 8px 26px; border-top:1px solid var(--line); font-size:15.5px; }
+  ul.facts li:first-child { border-top:none; }
+  ul.facts li::before { content:""; position:absolute; left:2px; top:15px; width:9px; height:9px; border-radius:50%; }
+  .tier-proven   ul.facts li::before { background:var(--green); }
+  .tier-disputed ul.facts li::before { background:var(--amber); }
+  .tier-unknown  ul.facts li::before { background:var(--grey); }
+  ul.myth { }
+  ul.myth li { color:#4a4a4a; }
+  ul.myth li::before { content:"✕"; left:0; top:7px; width:auto; height:auto; color:var(--red); font-weight:700; background:none; }
+  ul.myth li s, ul.myth li .q { color:#8a8a8a; }
+  .cta { text-align:center; background:var(--ink); color:#fff; border-color:var(--ink); padding:34px 26px; }
+  .cta .eyebrow { color:var(--gold); }
+  .cta h2 { color:#fff; max-width:540px; margin:0 auto 12px; }
+  .cta p { color:#d9d6cf; max-width:520px; margin:0 auto 22px; }
+  .btn { display:inline-block; background:var(--gold); color:#1a1a1a; font-weight:700; text-decoration:none; padding:14px 30px; border-radius:999px; font-size:16px; }
+  .btn:hover { filter:brightness(1.05); }
+  footer { color:var(--muted); font-size:12.5px; text-align:center; margin-top:30px; line-height:1.7; }
+  @media (max-width:560px){ .wrap{padding:34px 18px 64px;} h1{font-size:27px;} .lead{font-size:16.5px;} }
 </style></head>
 <body><div class="wrap">
-  <div class="eyebrow">Der entschluesselte LinkedIn-Code</div>
-  <h1>Scoring-Report</h1>
-  <p class="topic">Niemand kennt LinkedIns Algorithmus von innen. Eine Tiefenrecherche ueber 25 Behauptungen ergab: nur zwei Hebel sind wirklich belegt — das Format und die erste Stunde. Den Rest verkaufen Tools als Praezision, obwohl er einer Quellenpruefung nicht standhaelt.</p>
-  <p class="meta">5/6 Varianten haben die harten Gates bestanden · 2026-06-20T06:30:36.089Z</p>
-  <section class="card winner-card">
-        <div class="score-badge" style="border-color:#2e7d32">
-          <div class="score-num" style="color:#2e7d32">85</div>
-          <div class="score-of">/100 · Grade A</div>
-        </div>
-        <div class="winner-body">
-          <div class="eyebrow">Gewinner-Variante · Build in Public</div>
-          <div class="bars"><div class="bar-row"><span class="bar-label">Format</span><span class="bar-track"><span class="bar-fill" style="width:52%"></span></span><span class="bar-num">13/25</span></div><div class="bar-row"><span class="bar-label">Hook</span><span class="bar-track"><span class="bar-fill" style="width:85%"></span></span><span class="bar-num">17/20</span></div><div class="bar-row"><span class="bar-label">Struktur</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Gespraech</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div><div class="bar-row"><span class="bar-label">Laenge</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">10/10</span></div><div class="bar-row"><span class="bar-label">Hygiene</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-num">15/15</span></div></div>
-          <pre class="post">Samstag, 23:40 Uhr. Ich sitze vor 25 LinkedIn-Reichweiten-Behauptungen und pruefe jede einzelne gegen Primaerquellen.
 
-Ergebnis nach drei Naechten: vier ueberleben die adversariale Verifikation. Einundzwanzig nicht.
+  <div class="eyebrow">Karriaro · Der LinkedIn-Code</div>
+  <h1>Der LinkedIn-Code, ehrlich entschlüsselt</h1>
+  <p class="lead">Im März 2026 hat LinkedIn sein Feed-Ranking offiziell auf große Sprachmodelle umgestellt. Wir haben die Quellen gelesen — den Engineering-Blog und die technischen Papers — statt den nächsten Guru-Thread. Hier steht, was wirklich belegt ist, was umstritten ist und was schlicht niemand weiß.</p>
+  <p class="meta">Stand: Juni 2026 · Tiefenrecherche über 21 Quellen und 105 Behauptungen · jede Aussage adversarial gegengeprüft · Primärquellen vor kommerziellen Datensätzen.</p>
 
-Was belegt ist:
-— Dokument/Carousel fuehrt im Format-Vergleich (~1,39× Reach, Basis: 1,8 Mio. Posts, van der Blom).
-— Die ersten 30 bis 60 Minuten entscheiden ueber die weitere Verteilung.
+  <section class="card machine">
+    <div class="eyebrow">Die Maschine</div>
+    <h2>Ihr Feed wird von einem Sprachmodell gerankt</h2>
+    <p class="big">LinkedIn hat rund <span class="num">30 spezialisierte Modelle</span> durch <span class="num">ein</span> großes Sprachmodell ersetzt — nach den eigenen Papers in der Größenordnung von <span class="num">150 Milliarden Parametern</span>.</p>
+    <p>Es liest und <em>versteht</em> den Inhalt Ihres Beitrags semantisch — und zeigt ihn Menschen, die das Thema interessiert, auch ohne dass sie Ihnen folgen. Keyword-Stuffing ist damit tot; thematische Substanz schlägt Schlagworte.</p>
+    <p class="src">Quellen: LinkedIn Engineering, „Engineering the Next Generation of LinkedIn's Feed" (12.03.2026) · arXiv 2602.12354 · 360Brew, arXiv 2501.16450.</p>
+  </section>
 
-Was nicht haelt:
-— „Save zaehlt 5–10×.“ Keine Primaerquelle.
-— „Kommentar zaehlt 15×.“ Keine Primaerquelle.
-— „71 % weniger Reach durch Hashtags.“ Keine Primaerquelle.
-— Dwell-Time-Multiplikatoren als feste Zahl. Keine Primaerquelle.
+  <section class="card tier tier-proven">
+    <div class="tier-badge">Belegt — von LinkedIn selbst</div>
+    <ul class="facts">
+      <li><strong>Verweildauer zählt.</strong> Ob jemand stehenbleibt und liest, ist ein offizielles, modelliertes Ranking-Signal — seit 2020. Nicht der schnelle Like, sondern ob Ihr Beitrag <em>gelesen</em> wird.</li>
+      <li><strong>Relevanz schlägt Tricks.</strong> Das Modell bewertet, worum es thematisch geht. Konsistente Themen und echter Fachwert werden bevorzugt — vor reiner Aktualität.</li>
+      <li><strong>Maschen werden gedrosselt.</strong> Engagement-Bait („Kommentiere JA"), Kommentar-Bots, Engagement-Pods und recycelter KI-Brei werden offiziell heruntergestuft.</li>
+    </ul>
+    <p class="src">LinkedIn Engineering-Blog · LinkedIn Newsroom · Statements von Tim Jurka und Gyanda Sachdeva (LinkedIn).</p>
+  </section>
 
-Die Huerde beim Bauen war nicht die Recherche, sondern das Loslassen. Ich hatte selbst Jahre lang mit „Kommentar zaehlt 15×“ gearbeitet. Diese Zahl aus der eigenen Checkliste zu streichen, kostet mehr Ueberwindung als jede SQL-Abfrage.
+  <section class="card tier tier-disputed">
+    <div class="tier-badge">Umstritten — Richtung plausibel, Zahl wackelig</div>
+    <ul class="facts">
+      <li><strong>Hashtags bringen keinen Reichweiten-Vorteil mehr.</strong> Beiträge ohne schneiden tendenziell minimal besser ab — die genaue Zahl ist selbstberichtet, ohne offengelegte Methodik.</li>
+      <li><strong>Externe Links:</strong> eine große Auswertung zeigt rund <strong>−19 %</strong> Reichweite für Links im Beitragstext — eine andere widerspricht direkt. Unentschieden. Im Zweifel den Link in den ersten Kommentar; das schadet messbar nicht.</li>
+      <li><strong>Dokument / Carousel</strong> eignet sich für Lehr- und Autoritäts-Inhalte (Sweetspot um die neun Seiten, kurzer Text). Aber harte Format-Ranglisten widersprechen sich von Quelle zu Quelle.</li>
+    </ul>
+    <p class="src">van der Blom, „Algorithm Insights Report 2026" (kommerziell, selbstberichtet) · diverse Anbieter-Datensätze.</p>
+  </section>
 
-Ein Mini-Framework, das ich seither nutze, bevor ich eine Reichweiten-Regel uebernehme:
+  <section class="card tier tier-myth">
+    <div class="tier-badge">Mythos — hält der Prüfung nicht stand</div>
+    <ul class="facts myth">
+      <li><span class="q">„Karussell = 6× mehr Reichweite als Text."</span> Je nach Quelle das genaue Gegenteil — die Format-Zahlen widersprechen sich krass.</li>
+      <li><span class="q">„Ein Kommentar zählt 15× ein Like."</span> Die seriöseste Schätzung liegt eher bei <strong>2×</strong>; feste Interaktions-Gewichte sind im Modell nicht belegt.</li>
+      <li><span class="q">„Follower zählen nicht mehr."</span> Der Shift zum Interessen-Graph ist real, aber graduell — das Netzwerk bleibt relevant.</li>
+      <li><span class="q">„Dokumente = 7 % Engagement, bestes Format."</span> Das misst Unternehmens-<em>Seiten</em>, nicht persönliche Profile — bis zu 5× Unterschied.</li>
+    </ul>
+  </section>
 
-1. Gibt es eine Primaerquelle (Datensatz, Plattform-Statement)?
-2. Ist die Stichprobe nachvollziehbar?
-3. Ueberlebt die Aussage eine Gegenfrage?
+  <section class="card tier tier-unknown">
+    <div class="tier-badge">Was schlicht niemand weiß</div>
+    <p>Für diese viel-zitierten Regeln fand die Recherche <strong>keinen</strong> belastbaren Beleg. „Nicht geprüft" heißt nicht „unwichtig" — es heißt: Niemand hat es sauber gemessen. Wer dazu Gewissheit verkauft, rät.</p>
+    <ul class="facts">
+      <li>Die perfekte Uhrzeit und der beste Wochentag (Aktivität schwankt, aber als Reichweiten-Hebel unbelegt)</li>
+      <li>Die „goldene erste Stunde" in konkreten Zahlen</li>
+      <li>Mindestabstand zwischen Beiträgen — „nicht zweimal am Tag posten"</li>
+      <li>Eine Strafe fürs Editieren nach dem Posten</li>
+      <li>Mentions und Markierungen als Reichweiten-Hebel</li>
+    </ul>
+  </section>
 
-Faellt ein Punkt aus, ist es Folklore, nicht Algorithmus.
+  <section class="card cta">
+    <div class="eyebrow">Der Unterschied</div>
+    <h2>Die ganze Ratgeber-Industrie verkauft Gewissheit über ein System, das sie nicht kennt.</h2>
+    <p>Unser Werkzeug bewertet Ihren Beitrag nur nach dem, was belegt ist — und kennzeichnet ehrlich, was Folklore ist. Kein Reichweiten-Versprechen. Ein ehrlicher Spiegel.</p>
+    <a class="btn" href="/linkedin-check">Beitrag prüfen — kostenlos</a>
+  </section>
 
-Den vollstaendigen Pruefbericht mit allen 25 Behauptungen, Quellen und Gegenfragen finden Sie im ersten Kommentar.
-
-Welche Reichweiten-Regel halten Sie selbst fuer belegt — und woran machen Sie das fest?
-
-#LinkedInAlgorithmus #BuildInPublic</pre>
-          <div class="eyebrow">Erster Kommentar</div><pre class="post comment">Hier der vollstaendige Pruefbericht zu allen 25 Behauptungen, inklusive Quellenlage und Gegenfragen. Ich freue mich, wenn Sie Schwachstellen finden:</pre>
-        </div>
-      </section>
-  <h2>Alle Varianten — auch die verworfenen</h2>
-  <div class="variant v-pass v-winner">
-    <div class="variant-head"><strong>Build in Public</strong> <span class="winner-tag">GEWINNER</span> <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
-    
-  </div><div class="variant v-pass ">
-    <div class="variant-head"><strong>Contrarian-Take</strong>  <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
-    
-  </div><div class="variant v-pass ">
-    <div class="variant-head"><strong>How-To / Framework</strong>  <span class="chip chip-pass">PASS · Reach 85/100 (A)</span></div>
-    
-  </div><div class="variant v-pass ">
-    <div class="variant-head"><strong>Daten-Punkt</strong>  <span class="chip chip-pass">PASS · Reach 88/100 (A)</span></div>
-    
-  </div><div class="variant v-pass ">
-    <div class="variant-head"><strong>Story / Lektion</strong>  <span class="chip chip-pass">PASS · Reach 80/100 (B)</span></div>
-    
-  </div><div class="variant v-fail ">
-    <div class="variant-head"><strong>Beweis-Teardown</strong>  <span class="chip chip-fail">VERWORFEN</span></div>
-    <div class="reasons"><div class="reason">✕ Hook zu lang: 147 Zeichen (max. 140). Wird vor dem &quot;…mehr&quot;-Fold abgeschnitten.</div></div>
-  </div>
   <footer>
-    Erzeugt von der Karriaro-LinkedIn-Engine.<br>
-    Jeder Reach-Punkt ist an ein rueckentwickeltes 2026-Algorithmus-Signal verankert &middot; deterministisch &middot; durch Unit-Tests abgesichert.
+    Karriaro · Handcodierte Werkzeuge, die mitarbeiten.<br>
+    Methodik: Tiefenrecherche mit adversarialer Drei-Stimmen-Verifikation, Primärquellen vor kommerziellen Datensätzen. Stand Juni 2026 — der Algorithmus verändert sich; wir aktualisieren bei neuen offiziellen Statements.
   </footer>
+
 </div></body></html>
