@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=440">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=440" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=440"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=441">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=441" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=441"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -322,36 +322,38 @@ function isIndex(relPath) {
     return relPath === 'index.html';
 }
 
-// Phyllotaxis-Goldblüte (goldener Winkel 137.5°) als Höhepunkt über „KI-Zeitalter".
-// Deterministisch generiert; jeder Punkt trägt --i für die golden-angle-Staffelung
-// (= dieselbe Regel wie Logo/Siegel; MOTION.md „Phyllotaxis in Motion").
-function buildClimaxBloomSvg() {
+// GROSSE Phyllotaxis-Goldblüte (goldener Winkel 137.5° — dieselbe Regel wie Logo/Siegel)
+// als generativer Reveal HINTER der ganzen Headline: öffnet sich aus einem Saatkorn,
+// die Headline wächst heraus, dann löst sie sich auf. „Aus einem Kern wächst alles."
+function buildHeroBloomSvg() {
     const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-    const N = 18; // Fibonacci-nah — über die Wortbreite verteilt (kein Mittel-Klumpen)
+    const N = 84; // dicht wie das Siegel — der „Wow"-Kopf, der sich auffächert
     let dots = '';
     for (let i = 0; i < N; i++) {
-        const rad = 5 + 7 * Math.sqrt(i);
-        const ang = i * GOLDEN - Math.PI / 2;
-        const cx = (120 + rad * Math.cos(ang) * 1.85).toFixed(2);   // horizontal über das ganze Wort prickeln
-        const cy = (40 + rad * Math.sin(ang) * 0.40).toFixed(2);    // vertikal gestaucht → in Wort-Höhe
-        const dr = (1.8 + 1.8 * (1 - i / N)).toFixed(2);            // 1.8–3.6
-        dots += '<circle class="hero-kbloom-dot" cx="' + cx + '" cy="' + cy + '" r="' + dr + '" style="--i:' + i + '"></circle>';
+        const rad = 3 + 9.4 * Math.sqrt(i);
+        const ang = i * GOLDEN;
+        const cx = (150 + rad * Math.cos(ang)).toFixed(2);
+        const cy = (74 + rad * Math.sin(ang) * 0.62).toFixed(2);   // breite Ellipse über der Headline
+        const dr = (0.9 + 2.4 * (1 - i / N)).toFixed(2);           // Kern groß → Rand fein
+        const fill = (i % 8 === 0) ? '#E7C878' : '#C9A24B';        // helle Glanz-Akzente (Fibonacci-Idee)
+        dots += '<circle class="hero-kbloom-dot" cx="' + cx + '" cy="' + cy + '" r="' + dr + '" fill="' + fill + '" style="--i:' + i + '"></circle>';
     }
-    return '<span class="hero-climax-bloom" aria-hidden="true"><svg viewBox="0 0 240 80" preserveAspectRatio="xMidYMid meet">' + dots + '</svg></span>';
+    return '<span class="hero-keim-bloom" aria-hidden="true"><svg viewBox="0 0 300 148" preserveAspectRatio="xMidYMid meet">' + dots + '</svg></span>';
 }
 
 function rewriteHeroHeadline(html) {
-    // V1 + „Keimung"-Animation (2026-06-28, Founder „Wow"): Mobile-Hero keimt zeilenweise
-    // (Keimen statt Gleiten, --ease-grow, Fibonacci-Staffel — Leitidee „die Seite, die
-    // wächst, während man sie liest"). „KI-Zeitalter" ist der goldene Höhepunkt, gekrönt
-    // von der Phyllotaxis-Goldblüte (eure Signatur — wandert vom dekorativen „I" auf das
-    // bedeutungstragende Wort). Dropcap-„I" entfällt auf Mobil (V1 = schlichte Tinte).
+    // „Goldblüte öffnet sich → Headline wächst heraus" (2026-06-29, Founder „echtes Wow"):
+    // Reihenfolge umgedreht — zuerst öffnet sich die große Phyllotaxis-Goldblüte aus einem
+    // Saatkorn (golden-angle-Auffächerung = Logo-DNA), DARAUS keimt die Headline, dann löst
+    // sich die Blüte auf. Leitidee „Aus einem Kern wächst alles" — groß & wörtlich.
+    // 3 Zeilen, Dropcap-„I" entfällt auf Mobil (V1 = schlichte Tinte).
     return html.replace(
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline hero-headline--keim">' +
+        buildHeroBloomSvg() +
         '<span class="hero-h1-line">Ihre Website</span>' +
         '<span class="hero-h1-line">fürs</span>' +
-        '<span class="hero-h1-line hero-h1-climax">KI‑Zeitalter.' + buildClimaxBloomSvg() + '</span>' +
+        '<span class="hero-h1-line hero-h1-climax">KI‑Zeitalter.</span>' +
         '</h1>'
     );
 }

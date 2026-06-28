@@ -452,50 +452,58 @@
     /* „fürs KI-Zeitalter." = goldener Höhepunkt (warmes Gold #6E5F3F, AA 5,97:1). */
     .hero-headline .hero-h1-line:last-child { color: #6E5F3F; }
 
-    /* ── „Keimung"-Animation (Founder „Wow", 2026-06-28) — Leitidee „die Seite, die
-       wächst, während man sie liest". Jede Zeile keimt aus ihrem MITTELPUNKT (Keimen
-       statt Gleiten — nie translate; MOTION.md Regel 1), --ease-grow-Overshoot,
-       Fibonacci-gestaffelt. „KI-Zeitalter" wird zuletzt von der Phyllotaxis-Goldblüte
-       gekrönt (die Signatur wandert vom „I" auf das bedeutungstragende Wort). ── */
-    .hero-headline--keim { animation: none !important; }  /* opsz-Reveal aus → Keimung führt */
+    /* ── „Goldblüte öffnet sich → Headline wächst heraus" (Founder „echtes Wow", 2026-06-29).
+       Reihenfolge umgedreht: ZUERST fächert die große Phyllotaxis-Goldblüte (Logo-DNA,
+       84 Punkte) aus einem Saatkorn auf (golden-angle-gestaffelt), DARAUS keimt die
+       Headline, dann birst die Blüte nach außen auf. „Aus einem Kern wächst alles". ── */
+    .hero-headline--keim { position: relative; isolation: isolate; animation: none !important; }
+
+    /* Headline wächst HERAUS (kräftiger Scale 0.55, erst NACHDEM die Blüte offen ist). */
     .hero-headline--keim .hero-h1-line {
         opacity: 0;
         transform-origin: 50% 50%;
         animation: hero-keim var(--t-5, 630ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) both;
         will-change: transform, opacity;
     }
-    .hero-headline--keim .hero-h1-line:nth-child(1) { animation-delay: 100ms; }
-    .hero-headline--keim .hero-h1-line:nth-child(2) { animation-delay: 380ms; }
-    .hero-headline--keim .hero-h1-line:nth-child(3) { animation-delay: 660ms; }
+    .hero-headline--keim .hero-h1-line:nth-child(2) { animation-delay: 320ms; }  /* Ihre Website */
+    .hero-headline--keim .hero-h1-line:nth-child(3) { animation-delay: 520ms; }  /* fürs */
+    .hero-headline--keim .hero-h1-line:nth-child(4) { animation-delay: 720ms; }  /* KI-Zeitalter */
     @keyframes hero-keim {
-        from { opacity: 0; transform: scale(0.72); }
+        from { opacity: 0; transform: scale(0.55); }
         to   { opacity: 1; transform: scale(1); }
     }
-    /* Höhepunkt-Blüte über „KI-Zeitalter": Punkte poppen golden-angle-gestaffelt als
-       Kranz über dem Wort auf (--ease-grow), lösen sich dann nach oben auf (--ease-settle). */
-    .hero-headline--keim .hero-h1-climax { position: relative; }
-    .hero-climax-bloom {
-        position: absolute; left: 50%; top: 50%;
-        width: 106%; height: 150%;
+
+    /* Die große Goldblüte HINTER der Headline (z-index:-1, von isolation contained). */
+    .hero-keim-bloom {
+        position: absolute; left: 50%; top: 44%;
+        width: 124%; height: 158%;
         transform: translate(-50%, -50%);
-        pointer-events: none; z-index: 2;
+        z-index: -1; pointer-events: none;
     }
-    .hero-climax-bloom svg { width: 100%; height: 100%; overflow: visible; display: block; }
+    .hero-keim-bloom svg {
+        width: 100%; height: 100%; overflow: visible; display: block;
+        transform-origin: 50% 50%;
+        animation: hero-bloom-open 760ms var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) both;
+        will-change: transform;
+    }
+    @keyframes hero-bloom-open {
+        from { transform: scale(0.05); opacity: 0; }
+        22%  { opacity: 1; }
+        to   { transform: scale(1); opacity: 1; }
+    }
     .hero-kbloom-dot {
-        fill: #C9A24B;
         opacity: 0;
-        mix-blend-mode: multiply;          /* sitzt edel im Wort statt grell davor */
         transform-box: fill-box;
         transform-origin: center;
         animation:
-            hero-kbloom-pop var(--t-3, 240ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) calc(1180ms + var(--i, 0) * 34ms) both,
-            hero-kbloom-out var(--t-5, 630ms) var(--ease-settle, cubic-bezier(.22, 1, .36, 1)) calc(1860ms + var(--i, 0) * 20ms) forwards;
+            hero-kbloom-pop var(--t-2, 150ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) calc(40ms + var(--i, 0) * 8ms) both,
+            hero-kbloom-out var(--t-5, 630ms) var(--ease-settle, cubic-bezier(.22, 1, .36, 1)) calc(1040ms + var(--i, 0) * 6ms) forwards;
     }
-    @keyframes hero-kbloom-pop { from { opacity: 0; transform: scale(0); } to { opacity: 0.62; transform: scale(1); } }
-    @keyframes hero-kbloom-out { from { opacity: 0.62; transform: scale(1); } to { opacity: 0; transform: scale(0.35); } }
+    @keyframes hero-kbloom-pop { from { opacity: 0; transform: scale(0); } to { opacity: 0.9; transform: scale(1); } }
+    @keyframes hero-kbloom-out { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(1.55); } }
     @media (prefers-reduced-motion: reduce) {
         .hero-headline--keim .hero-h1-line { opacity: 1; animation: none; transform: none; }
-        .hero-kbloom-dot { animation: none; opacity: 0; }
+        .hero-keim-bloom { display: none; }
     }
     /* Eine echte Beispielseite (Browser-Frame) als Beweis im Hero, tappt zu #demos.
        (Founder 2026-06-25: Beispielseiten in den Hero; fokussiert = EINE Demo.) */
