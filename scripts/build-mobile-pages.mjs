@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=429">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=429" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=429"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=438">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=438" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=438"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -336,26 +336,30 @@ function rewriteHeroHeadline(html) {
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline' + (dc ? ' hero-headline--seal' : '') + '">' +
         '<span class="hero-h1-line">' + lead + '</span>' +
-        '<span class="hero-h1-line">fürs KI-Zeitalter.</span>' +
+        '<span class="hero-h1-line">fürs KI‑Zeitalter.</span>' +
         '</h1>'
     );
 }
 
 function rewriteHeroDemoTease(html) {
-    // Sprint 151 — Demo-Brücke ohne Stagger (radikal-Apple). Tappable Anchor
-    // zu Section 02 (#demos), Voice gestrippt von „Manufaktur"-Doppelung.
-    // Hero-Subline wieder sichtbar → Demo-Tease NACH der Subline platzieren:
-    // Reihenfolge H1 → Subline (Wertversprechen) → Demo-Tease (Handlungsimpuls).
+    // Eine ECHTE Beispielseite (Browser-Frame) als Beweis in den Hero, direkt nach
+    // der Subline — tappt zu Section 02 (#demos = volles 8-Branchen-Karussell).
+    // Reihenfolge H1 → Subline → Demo-Vorschau → Preis → CTA. (Founder 2026-06-25:
+    // „Beispielseiten in den Hero" — fokussierte Variante: EINE Demo, nicht alle.)
     return html.replace(
         /(<p class="subhead"[^>]*>[\s\S]*?<\/p>)/,
         '$1' +
-        '<a href="#demos" class="m-hero-demos-tease" ' +
-            'data-track-event="HERO_DEMO_TEASE">' +
-            '<span class="m-hero-demos-tease-text">' +
-                'Acht Branchen, acht echte Demos. ' +
-                '<em>Eine Wischgeste entfernt.</em>' +
+        '<a href="#demos" class="m-hero-demo-card" data-track-event="HERO_DEMO_PREVIEW" aria-label="Acht echte Beispielseiten ansehen">' +
+            '<span class="m-hero-demo-frame">' +
+                '<span class="m-hero-demo-chrome"><i class="dr"></i><i class="dy"></i><i class="dg"></i>' +
+                    '<span class="m-hero-demo-url">stadtmakler-stuttgart.de</span></span>' +
+                '<img src="/images/immobilien-stadtmakler-mockup-fold.avif?v=411" ' +
+                    'alt="Beispielseite Stadtmakler Stuttgart — eine von acht echten Demos" ' +
+                    'width="1440" height="900" loading="lazy" decoding="async">' +
             '</span>' +
-            '<span class="m-hero-demos-tease-arrow" aria-hidden="true">↓</span>' +
+            '<span class="m-hero-demo-caption">Acht Branchen, acht echte Demos. ' +
+                '<em>Eine Wischgeste entfernt.</em>' +
+                '<span class="m-hero-demo-arrow" aria-hidden="true">&rarr;</span></span>' +
         '</a>'
     );
 }
@@ -680,14 +684,14 @@ const PERSONA_ICON_WRENCH = '<svg class="m-persona-icon" viewBox="0 0 24 24" fil
 // Reihenfolge im Grid (2×4) — Top-Conversion-Personas zuerst.
 // data-demo-target = Index in DEMO_SWIPER_SLIDES (für Tap → Scroll + Sheet-Open).
 const PERSONAS = [
-    { slug: 'immobilien', icon: PERSONA_ICON_HOUSE,    name: 'Immobilien',   headline: 'Eigener Marktauftritt',   body: 'Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.',     demoTarget: 0 },
-    { slug: 'praxis',     icon: PERSONA_ICON_STETHO,   name: 'Praxis',       headline: 'Termine ohne Hotline',    body: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',             demoTarget: 2 },
-    { slug: 'friseur',    icon: PERSONA_ICON_SCISSORS, name: 'Friseur',      headline: 'Termine die füllen',      body: 'Online-Buchung, Style-Galerie, weniger No-Shows.',              demoTarget: 3 },
-    { slug: 'dachdecker', icon: PERSONA_ICON_HARDHAT,  name: 'Dachdecker',   headline: 'Förderung & Angebot',     body: 'BAFA-Rechner zeigt sofort die Förderhöhe.',                     demoTarget: 4 },
-    { slug: 'coaching',   icon: PERSONA_ICON_CHAT,     name: 'Coaching',     headline: 'Erstgespräch direkt',     body: 'Vita, Methodik, Buchungs-Button der konvertiert.',              demoTarget: 1 },
-    { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 5 },
-    { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 6 },
-    { slug: 'sanitaer',   icon: PERSONA_ICON_WRENCH,   name: 'Sanitär',      headline: 'Notdienst & Festpreis',   body: '3D-Bad-Konfigurator, Foto-Schaden → Festpreis-Antwort.',        demoTarget: 7 },
+    { slug: 'immobilien', icon: PERSONA_ICON_HOUSE,    name: 'Immobilien',   headline: 'Eigener Marktauftritt',   body: 'Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.',     demoTarget: 7 },
+    { slug: 'praxis',     icon: PERSONA_ICON_STETHO,   name: 'Praxis',       headline: 'Termine ohne Hotline',    body: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.',             demoTarget: 1 },
+    { slug: 'friseur',    icon: PERSONA_ICON_SCISSORS, name: 'Friseur',      headline: 'Termine die füllen',      body: 'Online-Buchung, Style-Galerie, weniger No-Shows.',              demoTarget: 2 },
+    { slug: 'dachdecker', icon: PERSONA_ICON_HARDHAT,  name: 'Dachdecker',   headline: 'Förderung & Angebot',     body: 'BAFA-Rechner zeigt sofort die Förderhöhe.',                     demoTarget: 3 },
+    { slug: 'coaching',   icon: PERSONA_ICON_CHAT,     name: 'Coaching',     headline: 'Erstgespräch direkt',     body: 'Vita, Methodik, Buchungs-Button der konvertiert.',              demoTarget: 0 },
+    { slug: 'gastro',     icon: PERSONA_ICON_FORK,     name: 'Gastronomie',  headline: 'Wie OpenTable',           body: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.',               demoTarget: 4 },
+    { slug: 'logistik',   icon: PERSONA_ICON_TRUCK,    name: 'Logistik',     headline: 'Frachtquote sofort',      body: 'PLZ + Gewicht → Preis in 3 Sekunden.',                          demoTarget: 5 },
+    { slug: 'sanitaer',   icon: PERSONA_ICON_WRENCH,   name: 'Sanitär',      headline: 'Notdienst & Festpreis',   body: '3D-Bad-Konfigurator, Foto-Schaden → Festpreis-Antwort.',        demoTarget: 6 },
 ];
 
 function buildPersonaSectionHtml() {
@@ -752,7 +756,6 @@ function injectScrollAnimations(html) {
 // Sprint 128 — Editorial-Poster-Felder (headline/italicSub/brandColor/signet/signetClass)
 // gelöscht, da Sprint 126/127 Live-Hero-Capture statt Editorial-Poster rendert.
 const DEMO_SWIPER_SLIDES = [
-    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de',     href: '/portfolio/immobilien-makler',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
     { slug: 'coaching-lehmann',       eyebrow: 'Coaching · Essential',     title: 'Lehmann Beratung',      domain: 'lehmann-beratung.de',          href: '/portfolio/coaching-lehmann',          personaContext: 'Vita, Methodik, Buchungs-Button der konvertiert.' },
     { slug: 'praxis-weber',           eyebrow: 'Praxis · Professional',    title: 'Dr. Weber',             domain: 'praxis-weber.de',              href: '/portfolio/praxis-weber',              personaContext: 'Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.' },
     { slug: 'friseur-mueller',        eyebrow: 'Beauty · Essential',       title: 'Salon Müller',          domain: 'salon-mueller.de',             href: '/portfolio/friseur-salon',             personaContext: 'Online-Buchung, Style-Galerie, weniger No-Shows.' },
@@ -760,6 +763,7 @@ const DEMO_SWIPER_SLIDES = [
     { slug: 'gastro-hirsch',          eyebrow: 'Gastronomie · Professional', title: 'Hirsch',              domain: 'gasthof-hirsch.de',            href: '/portfolio/restaurant-template',       personaContext: 'Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.' },
     { slug: 'logistik-schwaben',      eyebrow: 'Spedition · Premium',      title: 'Schwaben Logistik',     domain: 'schwaben-logistik.de',         href: '/portfolio/spedition-schwaben',        personaContext: 'PLZ + Gewicht → Frachtquote in 3 Sekunden. Keine Rückrufe nötig.' },
     { slug: 'handwerk-mueller',       eyebrow: 'Sanitär · Professional',   title: 'Müller Meisterbetrieb', domain: 'sanitaer-mueller.de',          href: '/portfolio/meisterbetrieb-mueller',    personaContext: '3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.' },
+    { slug: 'immobilien-stadtmakler', eyebrow: 'Immobilien · Premium',     title: 'Stadtmakler Stuttgart', domain: 'stadtmakler-stuttgart.de',     href: '/portfolio/immobilien-makler',         personaContext: 'Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.' },
 ];
 
 // Sprint 126 — Image-Dims pro Mockup für intrinsic <img width="W" height="H">.

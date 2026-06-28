@@ -6,7 +6,7 @@
  * Importiert die ECHTE computeOpportunity — kein Re-Implement.
  */
 import { describe, it, expect } from 'vitest';
-import { computeOpportunity } from '../../src/scoring/opportunity.js';
+import { computeOpportunity, builderTier } from '../../src/scoring/opportunity.js';
 
 // Scanner-Vision-Schritt 1:1 wie in orchestration/scanner.js nach dem Patch:
 //  modern  → ×1.0 wenn ein hartes Strukturzeichen existiert (Relaunch-Fall bleibt),
@@ -45,7 +45,9 @@ const TESTSET = [
   { id:'T03', expectedTier:'HOT',  ws:{perf:48,seo:62,a11y:70,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Wix',version:null}, techAge:{cms:'Wix',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:95,primaryType:'real_estate_agency',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:21,velocity:4,n:5}, visionModern:false },
   { id:'T04', expectedTier:'HOT',  ws:{perf:52,seo:68,a11y:66,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Jimdo',version:null}, techAge:{cms:'Jimdo',cmsEolYear:null,techSeverity:3}, place:{rating:4.9,userRatingCount:140,primaryType:'physiotherapist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:7,velocity:9,n:5}, visionModern:null },
   { id:'T05', expectedTier:'HOT',  ws:{perf:45,seo:60,a11y:58,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.4'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.4,userRatingCount:320,primaryType:'car_dealer',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:5,velocity:14,n:5}, visionModern:false },
-  { id:'T06', expectedTier:'HOT',  ws:{perf:55,seo:70,a11y:72,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:110,primaryType:'veterinary_care',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:15,velocity:5,n:5}, visionModern:null },
+  // T06 (Founder-Kalibrierung 2026-06-27): polierter Baukasten (Squarespace) mit guter Perf +
+  // ohne echte Schwäche ist KEIN HOT-Lead mehr (Seite sieht gut aus) → WARM. War HOT (alte These).
+  { id:'T06', expectedTier:'WARM', ws:{perf:55,seo:70,a11y:72,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:110,primaryType:'veterinary_care',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:15,velocity:5,n:5}, visionModern:null },
   { id:'T07', expectedTier:'HOT',  ws:{perf:38,seo:54,a11y:52,viewport:false,isHttps:false}, tech:{isBaukasten:false,cms:'WordPress',version:'5.2'}, techAge:{cms:'WordPress',cmsEolYear:null,techSeverity:2}, place:{rating:4.5,userRatingCount:88,primaryType:'roofing_contractor',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:18,velocity:4,n:5}, visionModern:false },
   { id:'T08', expectedTier:'HOT',  ws:{perf:50,seo:66,a11y:64,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.1'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.3,userRatingCount:130,primaryType:'plumber',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:28,velocity:3,n:5}, visionModern:null },
   { id:'T26', expectedTier:'HOT',  ws:{perf:43,seo:58,a11y:56,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.6'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.6,userRatingCount:900,primaryType:'hotel',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:4,velocity:12,n:5}, visionModern:false },
@@ -54,7 +56,10 @@ const TESTSET = [
   { id:'T10', expectedTier:'WARM', ws:{perf:47,seo:62,a11y:60,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Jimdo',version:null}, techAge:{cms:'Jimdo',cmsEolYear:null,techSeverity:3}, place:{rating:4.6,userRatingCount:75,primaryType:'hair_salon',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:14,velocity:5,n:5}, visionModern:null },
   { id:'T11', expectedTier:'WARM', ws:{perf:40,seo:56,a11y:55,viewport:true,isHttps:false}, tech:{isBaukasten:false,cms:'WordPress',version:'4.0'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.4,userRatingCount:65,primaryType:'cafe',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:25,velocity:3,n:5}, visionModern:false },
   { id:'T12', expectedTier:'WARM', ws:{perf:36,seo:52,a11y:54,viewport:false,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.3'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.5,userRatingCount:140,primaryType:'bakery',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:19,velocity:4,n:5}, visionModern:false },
-  { id:'T13', expectedTier:'WARM', ws:{perf:58,seo:70,a11y:68,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.7,userRatingCount:90,primaryType:'florist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:11,velocity:6,n:5}, visionModern:true },
+  // T13 (Founder-Kalibrierung 2026-06-27): polierter Baukasten (Squarespace) der LAUT VISION
+  // modern aussieht + ordentliche Werte → kein Lead (gute Seite, kein Relaunch-Anlass) → JUNK.
+  // War WARM (alte These: Baukasten = immer Relaunch, Vision-modern ignoriert).
+  { id:'T13', expectedTier:'JUNK', ws:{perf:58,seo:70,a11y:68,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.7,userRatingCount:90,primaryType:'florist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:11,velocity:6,n:5}, visionModern:true },
   { id:'T14', expectedTier:'WARM', ws:{perf:60,seo:72,a11y:70,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'6.1'}, techAge:{cms:'WordPress',cmsEolYear:null,techSeverity:0}, place:{rating:4.4,userRatingCount:115,primaryType:'electrician',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:16,velocity:5,n:5}, visionModern:null },
 
   { id:'T15', expectedTier:'JUNK', ws:{perf:30,seo:45,a11y:48,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.2'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:3.1,userRatingCount:7,primaryType:'dentist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:540,velocity:0.2,n:3}, visionModern:false },
@@ -179,5 +184,54 @@ describe('Timing/Saison-Boost', () => {
             reviewRecency: { daysSinceLast: 700, velocity: 0.2, n: 4 }
         };
         expect(computeOpportunity({ ...dead, seasonal: season }).opportunity).toBeLessThan(50);
+    });
+});
+
+describe('Baukasten-Abstufung (Founder-Kalibrierung 2026-06-27)', () => {
+    // Identische Makler-Lead, NUR der Baukasten-Typ unterscheidet sich.
+    const makler = (cms) => ({
+        ws: { perf: 55, seo: 66, a11y: 64, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms },
+        techAge: { cms, cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.8, userRatingCount: 160, primaryType: 'real_estate_agency', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 10, velocity: 7, n: 5 }
+    });
+
+    it('builderTier klassifiziert: Squarespace/Shopify/Webflow = polished, Rest = basic', () => {
+        expect(builderTier('Squarespace')).toBe('polished');
+        expect(builderTier('Shopify')).toBe('polished');
+        expect(builderTier('Webflow')).toBe('polished');
+        expect(builderTier('Jimdo')).toBe('basic');
+        expect(builderTier('Wix')).toBe('basic');
+        expect(builderTier('IONOS')).toBe('basic');
+        expect(builderTier(null)).toBe(null);
+    });
+
+    it('BASIC-Baukasten (Jimdo) = Avenius-Muster bleibt HOT; POLISHED (Squarespace) gleicher Lead NICHT HOT', () => {
+        const jimdo = computeOpportunity(makler('Jimdo'));
+        const squarespace = computeOpportunity(makler('Squarespace'));
+        expect(jimdo.opportunity).toBeGreaterThanOrEqual(70);          // basic = stark
+        expect(squarespace.opportunity).toBeLessThan(70);              // poliert + keine Schwäche → max WARM
+        expect(jimdo.opportunity).toBeGreaterThan(squarespace.opportunity);
+        // Mechanismus: basic zählt als hartes Strukturzeichen, polished (mit guter Perf) nicht.
+        expect(jimdo.hardStructural).toBeGreaterThanOrEqual(1);
+        expect(squarespace.hardStructural).toBe(0);
+    });
+
+    it('POLISHED + spürbar langsam (perf<50) = echte Schwäche → zählt wieder hart (HOT-fähig)', () => {
+        const slow = computeOpportunity({ ...makler('Squarespace'), ws: { perf: 38, seo: 60, a11y: 58, viewport: true, isHttps: true } });
+        const fine = computeOpportunity(makler('Squarespace'));        // perf 55 → weich
+        expect(slow.hardStructural).toBeGreaterThanOrEqual(1);
+        expect(fine.hardStructural).toBe(0);
+        expect(slow.opportunity).toBeGreaterThan(fine.opportunity);
+    });
+
+    it('POLISHED mit guter Perf (>=70) darf „eigentlich gut" sein (×0.35); BASIC nie', () => {
+        const good = { ws: { perf: 78, seo: 80, a11y: 80, viewport: true, isHttps: true }, place: { rating: 4.7, userRatingCount: 140, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' }, reviewRecency: { daysSinceLast: 12, velocity: 6, n: 5 } };
+        const squarespace = computeOpportunity({ ...good, tech: { isBaukasten: true, cms: 'Squarespace' }, techAge: { cms: 'Squarespace', cmsEolYear: null, techSeverity: 1 } });
+        const jimdo = computeOpportunity({ ...good, tech: { isBaukasten: true, cms: 'Jimdo' }, techAge: { cms: 'Jimdo', cmsEolYear: null, techSeverity: 1 } });
+        expect(squarespace.looksAlreadyGood).toBe(true);
+        expect(jimdo.looksAlreadyGood).toBe(false);
+        expect(squarespace.opportunity).toBeLessThan(jimdo.opportunity);
     });
 });

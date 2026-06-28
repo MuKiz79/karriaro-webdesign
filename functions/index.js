@@ -1550,6 +1550,69 @@ exports.pitchPage = onRequest(
 );
 
 // ═══════════════════════════════════════════════════════════════
+// JOB-SIGNALE (2026-06-26): offene Stellen je Branche×Ort bzw. je Arbeitgeber
+// über die OFFIZIELLE Arbeitsagentur-Jobsuche-API (gratis, statische Public-
+// clientId, kein Account). „stellt ein" = Wachstums-/Budget-Signal (akquise-reif).
+// ═══════════════════════════════════════════════════════════════
+
+const JOBS_API_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs";
+const JOBS_API_KEY = "jobboerse-jobsuche";   // offizielle statische Public-clientId der Bundesagentur
+const JOBS_CACHE_HOURS = 6;
+
+// ─── jobSignals ─── POST {was?, wo?, arbeitgeber?, size?}
+exports.jobSignals = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "jobSignals", 90, 3600)) return;
+
+        const b = req.body || {};
+        const was = String(b.was || "").trim().slice(0, 80);
+        const wo = String(b.wo || "").trim().slice(0, 80);
+        const arbeitgeber = String(b.arbeitgeber || "").trim().slice(0, 120);
+        const size = Math.min(Math.max(parseInt(b.size, 10) || 5, 1), 25);
+        if (!was && !arbeitgeber) return res.status(400).json({ error: "was oder arbeitgeber erforderlich" });
+
+        const cacheKey = crypto.createHash("sha256").update(`${was}|${wo}|${arbeitgeber}|${size}`).digest("hex").slice(0, 24);
+        try {
+            const snap = await db.collection("jobSignals").doc(cacheKey).get();
+            if (snap.exists && (snap.data().expiresAtMs || 0) > Date.now()) {
+                return res.json({ ...snap.data().payload, cached: true });
+            }
+        } catch (e) { /* cache miss → live */ }
+
+        try {
+            const url = new URL(JOBS_API_URL);
+            if (was) url.searchParams.set("was", was);
+            if (wo) { url.searchParams.set("wo", wo); url.searchParams.set("umkreis", "25"); }
+            if (arbeitgeber) url.searchParams.set("arbeitgeber", arbeitgeber);
+            url.searchParams.set("size", String(size));
+            const r = await fetch(url, { headers: { "X-API-Key": JOBS_API_KEY }, signal: AbortSignal.timeout(20000) });
+            if (!r.ok) return res.status(502).json({ error: `Jobsuche ${r.status}` });
+            const data = await r.json();
+            const jobs = (data.stellenangebote || []).map(s => ({
+                titel: s.titel || null,
+                arbeitgeber: s.arbeitgeber || null,
+                ort: (s.arbeitsort && s.arbeitsort.ort) || null,
+                eintrittsdatum: s.eintrittsdatum || null
+            }));
+            const employers = [...new Set(jobs.map(j => j.arbeitgeber).filter(Boolean))];
+            const payload = { ok: true, total: data.maxErgebnisse || jobs.length, count: jobs.length, employers, jobs };
+            const expiresAtMs = Date.now() + JOBS_CACHE_HOURS * 3600000;
+            db.collection("jobSignals").doc(cacheKey).set({
+                payload, expiresAtMs,
+                expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+            }).catch(() => {});
+            res.json(payload);
+        } catch (err) {
+            console.error("jobSignals failed:", err);
+            res.status(500).json({ error: "Jobsuche fehlgeschlagen", details: String(err && err.message || err) });
+        }
+    }
+);
+
+// ═══════════════════════════════════════════════════════════════
 // SECURITY AUDIT: HTTP-Header, TLS, DNS, Sensitive Files, Libraries
 // ═══════════════════════════════════════════════════════════════
 
@@ -1590,6 +1653,60 @@ async function saveSecurityCache(url, payload) {
     }
 }
 
+// Content-Freshness aus der Homepage: Copyright-Jahr (Body) + Last-Modified (Header).
+// „Seit Jahren unverändert + trotzdem im Geschäft" = die Seite ist oft NICHT der Engpass
+// (Disqualifikations-/Stagnations-Signal, Deep-Research 2026-06-27).
+function computeFreshness(html, headers) {
+    const currentYear = new Date().getFullYear();
+    const m = String(html || "").match(/©\s*(20\d{2})|\bcopyright\b[^\d]{0,20}(20\d{2})/i);
+    let copyrightYear = m ? parseInt(m[1] || m[2], 10) : null;
+    if (!(copyrightYear >= 2000 && copyrightYear <= currentYear + 1)) copyrightYear = null;  // Müll filtern
+    const lm = headers && headers['last-modified'];
+    let lastModified = null, lastModifiedYear = null;
+    if (lm) { const dt = new Date(lm); if (!isNaN(dt.getTime())) { lastModified = lm; lastModifiedYear = dt.getFullYear(); } }
+    if (!(lastModifiedYear > 2000)) lastModifiedYear = null;
+    const staleByCopyright = !!(copyrightYear && copyrightYear < currentYear - 1);
+    const staleByLastModified = !!(lastModifiedYear && lastModifiedYear < currentYear - 1);
+    const refYear = copyrightYear || lastModifiedYear || null;
+    return {
+        copyrightYear, lastModified, lastModifiedYear,
+        stale: staleByCopyright || staleByLastModified,
+        yearsStale: refYear ? Math.max(0, currentYear - refYear) : null
+    };
+}
+
+// Wayback-CDX-Stagnation: das VERLÄSSLICHE Stagnations-Signal (Copyright-Jahr wird oft
+// auto-aktualisiert, Last-Modified fehlt bei CDN). collapse=digest → distinkte Inhalts-
+// Versionen; lange ohne neue Version = Seite seit langem unverändert (heuristisch).
+// Gratis, kein Auth. Gebounded, darf den Audit nie kippen. (Deep-Research 2026-06-27)
+async function checkWaybackStagnation(url) {
+    try {
+        const host = new URL(/^https?:\/\//i.test(url) ? url : "https://" + url).hostname.replace(/^www\./, "");
+        const api = `https://web.archive.org/cdx/search/cdx?url=${encodeURIComponent(host)}&output=json&fl=timestamp,digest&collapse=digest&limit=300`;
+        // CDX ist berüchtigt langsam/flaky → großzügiger Timeout + ein Retry; bleibt best-effort.
+        let res = null;
+        for (let attempt = 0; attempt < 2 && !(res && res.ok); attempt++) {
+            res = await fetch(api, { signal: AbortSignal.timeout(13000), headers: { "User-Agent": "KarriaroAudit/1.0" } }).catch(() => null);
+        }
+        if (!res || !res.ok) return null;
+        const rows = await res.json();
+        if (!Array.isArray(rows) || rows.length < 2) return null;
+        const data = rows.slice(1);                         // Header-Zeile weg
+        const ts = data.map(r => r[0]).filter(t => /^\d{8}/.test(t)).sort();
+        if (!ts.length) return null;
+        const last = ts[ts.length - 1];
+        const lastDate = new Date(`${last.slice(0, 4)}-${last.slice(4, 6)}-${last.slice(6, 8)}T00:00:00Z`);
+        const daysSince = Math.round((Date.now() - lastDate.getTime()) / 86400000);
+        const distinctVersions = data.length;               // distinkte Inhalts-Versionen im Archiv
+        return {
+            distinctVersions,
+            lastContentChange: lastDate.toISOString().slice(0, 10),
+            daysSinceContentChange: daysSince,
+            stagnant: daysSince > 540                        // >18 Mon ohne neue Inhalts-Version
+        };
+    } catch (e) { return null; }
+}
+
 // ─── securityAudit ─── POST {url, psiData?, force?}
 exports.securityAudit = onRequest(
     {
@@ -1619,6 +1736,7 @@ exports.securityAudit = onRequest(
                     findings: cached.findings,
                     summary: cached.summary,
                     severityScore: cached.severityScore,
+                    freshness: cached.freshness || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
             }
@@ -1626,10 +1744,25 @@ exports.securityAudit = onRequest(
 
         try {
             const result = await runSecurityAudit(url, psiData);
+            // Content-Freshness (Copyright-Jahr + Last-Modified) über den sicheren fetchHtml-Pfad
+            // — optional, darf den Security-Audit nie kippen.
+            let freshness = null;
+            try {
+                const [page, wb] = await Promise.all([
+                    fetchHtml(url).catch(() => null),
+                    checkWaybackStagnation(url).catch(() => null)
+                ]);
+                const base = (page && page.html) ? computeFreshness(page.html, page.headers) : { copyrightYear: null, lastModified: null, lastModifiedYear: null, stale: false, yearsStale: null };
+                if ((page && page.html) || wb) {
+                    // Wayback ist das VERLÄSSLICHE Stagnations-Signal (Copyright wird oft auto-aktualisiert).
+                    freshness = { ...base, wayback: wb || null, stale: !!(base.stale || (wb && wb.stagnant)) };
+                }
+            } catch (e) { /* freshness optional */ }
             const payload = {
                 findings: result.findings,
                 summary: result.summary,
                 severityScore: result.severityScore,
+                freshness,
                 meta: { ...result.meta, durationMs: result.durationMs }
             };
             await saveSecurityCache(url, payload);
@@ -2648,45 +2781,67 @@ exports.dachConcierge = onRequest(
 );
 
 // ════════════════════════════════════════════════════════════════════════════
-// LinkedIn-Post-Optimierer — schreibt einen eingefuegten Beitrag so um, dass er
-// auf die VERIFIZIERTEN Reichweiten-Hebel einzahlt (starker Hook <140, Scanbar-
-// keit, echte Schlussfrage, mittlere Laenge, kein Bait, <=3 Hashtags, Link raus).
-// EISERN: keine erfundenen Fakten/Zahlen — nur die Substanz des Originals
-// umformen. Stateless, kein PII-Speichern. Powered by Sonnet (forced tool_use).
+// LinkedIn-Post-Optimierer — VEREDELT einen eingefuegten Beitrag: schaerft die
+// eigene Stimme des Autors zur besten Fassung (editorial, souveraen), statt ihn
+// in die generische LinkedIn-Schablone zu pressen. Anti-Slop-Prompt mit Vorher/
+// Nachher-Beispiel + Verbotsliste (inszenierte Dramatik, Stakkato, Pflicht-Liste,
+// hohle Schlussfrage, generische Hashtags). EISERN: keine erfundenen Fakten/Zahlen
+// — nur die Substanz des Originals. Echte Umlaute. Stateless, kein PII-Speichern.
 // ════════════════════════════════════════════════════════════════════════════
-const LINKEDIN_REWRITE_MODEL = "claude-sonnet-4-6";
+const LINKEDIN_REWRITE_MODEL = "claude-opus-4-8";
 const LINKEDIN_REWRITE_TOOL = {
     name: "linkedin_rewrite",
-    description: "Gibt die optimierte Fassung des Beitrags plus eine kurze Liste der Aenderungen zurueck.",
+    description: "Gibt die geschärfte Fassung des Beitrags plus eine kurze Liste der wichtigsten Änderungen zurück.",
     input_schema: {
         type: "object",
         additionalProperties: false,
         properties: {
-            rewritten: { type: "string", description: "Der optimierte Beitrag. Hook in Zeile 1 (unter 140 Zeichen), kurze Absaetze, am Ende eine offene Frage, 0-3 Hashtags, KEIN Link im Text." },
-            changes: { type: "array", items: { type: "string" }, description: "2-4 knappe Stichpunkte, was geaendert wurde und warum (Reichweiten-Hebel)." }
+            rewritten: { type: "string", description: "Die beste Fassung des Beitrags: präzise, eigenständig, in der Stimme des Autors, mit korrekten deutschen Umlauten. Keine Schablone, keine künstliche Dramatik, keine erfundenen Fakten, kein Link im Text, höchstens 2 spezifische Hashtags." },
+            changes: { type: "array", items: { type: "string" }, description: "2 bis 4 knappe Stichpunkte (Sie-Form), was Sie konkret verbessert haben und warum es den Beitrag stärker macht." }
         },
         required: ["rewritten", "changes"]
     }
 };
 const LINKEDIN_REWRITE_SYS = [
-    "Sie sind ein nuechterner LinkedIn-Editor. Sie bekommen einen Beitrag und schreiben ihn so um, dass er auf die NACHWEISLICH belegten Reichweiten-Hebel einzahlt — ohne den Inhalt zu verfaelschen.",
+    "Sie sind Ghostwriter für anspruchsvolle LinkedIn-Beiträge. Ihre Aufgabe: den eingereichten Beitrag zu seiner besten, eigenständigsten Fassung schärfen — präziser, lesenswerter, mit klarer Haltung — OHNE ihn in eine Schablone zu pressen und OHNE etwas zu erfinden.",
     "",
-    "EISERNE REGELN:",
-    "1. Erfinden Sie NICHTS. Keine neuen Zahlen, Namen, Ergebnisse oder Behauptungen. Nutzen Sie nur die Substanz des Originals. Fehlt ein Beleg, ergaenzen Sie KEINEN.",
-    "2. Behalten Sie Stimme und Anrede-Register des Originals bei (Sie oder Du, wie im Original).",
-    "3. Hook: erste Zeile unter 140 Zeichen, zieht in den Text (Gegenthese, Szene oder konkrete Zahl aus dem Original). Keine Coaching-Frage als Eroeffnung.",
-    "4. Struktur: kurze Absaetze, viel Weissraum. Wo es passt, eine knappe Liste fuer Scanbarkeit.",
-    "5. Ende: eine echte, offene Frage, die zu Kommentaren einlaedt. KEIN Engagement-Bait ('Kommentiere JA', 'Like fuer', 'markiere jemanden').",
-    "6. Laenge im mittleren Bereich (etwa 800-1500 Zeichen), wenn der Inhalt es traegt.",
-    "7. KEIN Link im Text. 0-3 themenrelevante Hashtags am Ende.",
-    "8. Keine generischen KI-Floskeln, keine UWG-Superlative ('garantiert', 'der beste').",
+    "HALTUNG (das Wichtigste): Schreiben Sie editorial und souverän, nicht marktschreierisch. Vorbild ist die Stimme guter Magazine — klar, konkret, zurückhaltend — NICHT der übliche LinkedIn-Ton mit künstlicher Dramatik und Wachstums-Hacks. Der Beitrag soll nach einem klugen Menschen klingen, der wirklich etwas zu sagen hat. Erhalten und verstärken Sie die eigene Stimme des Autors; ersetzen Sie sie niemals durch generische LinkedIn-Sprache.",
     "",
-    "Geben Sie das Ergebnis ueber das Tool zurueck: rewritten + 2-4 changes (knapp, Sie-Form)."
+    "VERBOTEN (die typischen KI-LinkedIn-Maschen — jede lässt den Beitrag billig wirken):",
+    "- Inszenierte Spannungszeilen wie 'Das Ergebnis war ernüchternd:', 'Plot Twist:', 'Und dann passierte etwas Unerwartetes'. Keine künstliche Dramaturgie.",
+    "- Stakkato aus lauter Ein-Satz-Zeilen, nur um Weißraum zu erzeugen. Absätze dürfen atmen, aber natürlich bleiben.",
+    "- Eine Aufzählungsliste, wo Fließtext besser trägt. Listen nur, wenn der Inhalt wirklich aus klaren Einzelpunkten besteht.",
+    "- Eine hohle Pflicht-Schlussfrage ('Wie seht ihr das?'). Engagement-Köder ('Kommentiere JA', 'Markiere jemanden', 'Like für…') sind ganz verboten.",
+    "- Generische Hashtags (#Motivation, #Leadership, #SocialMedia, #ContentStrategy) und Emoji-Girlanden.",
+    "",
+    "SO ARBEITEN SIE:",
+    "1. Substanz: Nutzen Sie ausschließlich die Fakten, Zahlen und Beispiele aus dem Original. Erfinden Sie NICHTS hinzu — keine neuen Zahlen, Namen, Szenen oder Ergebnisse. Fehlt ein Beleg, schärfen Sie die Sprache, statt einen zu erfinden.",
+    "2. Erster Satz: Er muss sitzen — eine präzise Beobachtung, eine klare These oder ein konkretes Detail aus dem Original. Kein Clickbait.",
+    "3. Aufbau: ein roter Faden statt Versatzstücke; kurze, aber vollständige Absätze. Kein Link im Fließtext (Links gehören in den ersten Kommentar).",
+    "4. Schluss: entweder eine echte, spezifische Frage, die zu ernsthaften Antworten einlädt — oder ein klarer, nachklingender Schlusssatz. Eine Frage ist NICHT Pflicht.",
+    "5. Länge: so lang, wie der Inhalt trägt, nicht länger. Kürze ist edel.",
+    "6. Register: Behalten Sie die Anrede des Originals (Sie oder Du). Ist sie unklar, wählen Sie das förmliche 'Sie'.",
+    "7. Sprache: korrektes Deutsch mit echten Umlauten (ä, ö, ü, ß), niemals ae/oe/ue. Höchstens 2 Hashtags, nur wenn spezifisch und substanziell; im Zweifel keine. Keine UWG-Superlative ('garantiert', 'der beste').",
+    "",
+    "BEISPIEL — zeigt nur den STIL der Veredelung (Sie arbeiten immer mit dem echten Beitrag, nie mit diesem Text):",
+    "VORHER: 'Heute ein Gedanke zum Delegieren. Als Gründer will man alles selbst machen. Aber das skaliert nicht. Man muss lernen abzugeben. Wie haltet ihr das?'",
+    "NACHHER:",
+    "Als Gründer will man alles selbst machen. Genau diese Haltung bremst irgendwann das Wachstum.",
+    "",
+    "Abgeben fällt schwer — nicht, weil andere es nicht könnten, sondern weil Kontrolle sich nach Sicherheit anfühlt. Das tut sie aber nur, solange das Team klein genug ist, dass eine Person alles überblickt.",
+    "",
+    "Delegieren ist keine Schwäche. Es ist die Entscheidung, die eigene Zeit dort einzusetzen, wo sie am meisten wert ist.",
+    "",
+    "Welche Aufgabe fiel Ihnen bisher am schwersten abzugeben?",
+    "",
+    "(Beachten Sie am Beispiel: keine erfundenen Fakten, keine inszenierte Dramatik, kein generischer Hashtag — dieselbe Aussage, nur schärfer und souveräner.)",
+    "",
+    "Geben Sie das Ergebnis ausschließlich über das Tool zurück: rewritten + 2 bis 4 changes (knapp, in der Sie-Form)."
 ].join("\n");
 
 // ─── linkedinRewrite ─── POST { post } (30-3000 Zeichen, stateless, kein PII)
 exports.linkedinRewrite = onRequest(
-    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 60, cors: false, invoker: "public", secrets: [CLAUDE_API_KEY] },
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
@@ -2702,7 +2857,8 @@ exports.linkedinRewrite = onRequest(
         try {
             const body = {
                 model: LINKEDIN_REWRITE_MODEL,
-                max_tokens: 1200,
+                max_tokens: 1600,
+                thinking: { type: "disabled" }, // forced tool_use vertraegt kein aktives Thinking (Opus 4.8 -> sonst 400)
                 system: [{ type: "text", text: LINKEDIN_REWRITE_SYS, cache_control: { type: "ephemeral" } }],
                 tools: [LINKEDIN_REWRITE_TOOL],
                 tool_choice: { type: "tool", name: LINKEDIN_REWRITE_TOOL.name },
@@ -2712,15 +2868,16 @@ exports.linkedinRewrite = onRequest(
                 method: "POST",
                 headers: { "Content-Type": "application/json", "x-api-key": CLAUDE_API_KEY.value(), "anthropic-version": "2023-06-01" },
                 body: JSON.stringify(body),
-                signal: AbortSignal.timeout(25000)
+                signal: AbortSignal.timeout(50000)
             });
             if (!r.ok) { const t = await r.text().catch(() => ""); throw new Error(`Claude API ${r.status}: ${t.slice(0, 180)}`); }
             const data = await r.json();
             const tu = (data.content || []).find(c => c.type === "tool_use" && c.name === LINKEDIN_REWRITE_TOOL.name);
             if (!tu?.input) throw new Error("kein tool_use-Payload");
             let { rewritten = "", changes = [] } = tu.input;
-            rewritten = String(rewritten || "").trim().slice(0, 3500);
-            changes = Array.isArray(changes) ? changes.map(c => String(c || "").slice(0, 200)).filter(Boolean).slice(0, 5) : [];
+            // Modell streut gelegentlich verirrte HTML-Reste ein (z. B. </br>) -> raus.
+            rewritten = String(rewritten || "").replace(/<\/?br\s*\/?>/gi, "").trim().slice(0, 3500);
+            changes = Array.isArray(changes) ? changes.map(c => String(c || "").replace(/<[^>]*>/g, "").trim().slice(0, 200)).filter(Boolean).slice(0, 5) : [];
             if (!rewritten) throw new Error("leere Antwort");
             return res.json({ ok: true, rewritten, changes });
         } catch (err) {

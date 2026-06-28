@@ -30,6 +30,19 @@ export function urlBaukasten(url) {
     return null;
 }
 
+// Design-starke, moderne Baukästen — sehen oft GUT aus (Founder-Befund 2026-06-27).
+const POLISHED_BUILDERS = /squarespace|shopify|webflow/i;
+/**
+ * Baukasten-Stufe für die Kalibrierung:
+ *   'polished' = Squarespace/Shopify/Webflow (design-stark → schwächeres Kaufsignal),
+ *   'basic'    = Jimdo/Wix/1&1/Strato/… (template-haft/angestaubt → starkes Relaunch-Signal).
+ * @returns {'polished'|'basic'|null}
+ */
+export function builderTier(name) {
+    if (!name) return null;
+    return POLISHED_BUILDERS.test(name) ? 'polished' : 'basic';
+}
+
 // Geschäftswert-Gewicht nach Branche. Premium-Heilberufe/Recht/Immobilien lohnen
 // mehr; Low-Value-Branchen bekommen einen ECHTEN <1.0-Abschlag (F2/Rang-Inversion),
 // in zwei Stufen nach typischem Projektwert/Marge:
@@ -40,7 +53,7 @@ const PROFESSIONAL = new Set(['roofing_contractor', 'plumber', 'electrician', 'm
     'physiotherapist', 'veterinary_care', 'lodging', 'hotel', 'car_dealer', 'car_repair', 'auto_repair']);
 const LOW_VALUE_GASTRO = new Set(['restaurant', 'cafe', 'bakery']);
 const LOW_VALUE_RETAIL = new Set(['hair_salon', 'beauty_salon', 'florist', 'gym']);
-function dealFactor(primaryType) {
+export function dealFactor(primaryType) {
     if (PREMIUM.has(primaryType)) return 1.25;
     if (PROFESSIONAL.has(primaryType)) return 1.10;
     if (LOW_VALUE_GASTRO.has(primaryType)) return 0.68;
@@ -112,6 +125,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
     const ub = urlBaukasten(websiteUri);
     const baukasten = !!tech.isBaukasten || !!ub;
+    // Baukasten-Stufe (Founder-Kalibrierung): unbekannter Baukasten → konservativ 'basic'.
+    const builderName = ub || tech.cms || (baukasten ? 'Baukasten' : null);
+    const tier = baukasten ? builderTier(builderName) : null;   // 'basic' | 'polished' | null
+    const basicBuilder = tier === 'basic';
     const ta = techAge || analyzeTechAge(tech, {});
     const reviews = place.userRatingCount || 0;
     const rating = place.rating || 0;
@@ -120,7 +137,13 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     //    Perf DEMOTIERT (F0). hardStructural zählt harte Signale für Konvergenz (F1/F7/F8). ──
     let b = 0;
     let hardStructural = 0;
-    if (baukasten) { b += 34; hardStructural++; }                 // F4: ~94% zuverlässig
+    // Baukasten ABGESTUFT (Founder-Kalibrierung 2026-06-27): ein BASIC-Baukasten
+    // (Jimdo/Wix/1&1/Strato …) wirkt template-haft/angestaubt = starkes Relaunch-Signal
+    // (das Avenius-Muster). Ein POLIERTER Baukasten (Squarespace/Shopify/Webflow) sieht
+    // oft gut aus → nur WEICHES Signal, NICHT automatisch HOT — außer die Seite ist auch
+    // spürbar langsam (perf<50 = echte, verkaufbare Schwäche → zählt dann hart).
+    if (basicBuilder) { b += 34; hardStructural++; }              // F4: ~94% zuverlässig
+    else if (tier === 'polished') { b += 12; if (perf < 50) hardStructural++; }
     if (ta.cmsEolYear) { b += 34; hardStructural++; }             // F4: sicherheits-totes EOL-CMS
     else if ((ta.techSeverity || 0) >= 4) { b += 22; hardStructural++; }
     else if ((ta.techSeverity || 0) >= 2) b += 9;                 // weich, KEIN hartes Signal
@@ -151,7 +174,9 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     //    als gesättigter Multiplikator ein, nicht additiv. ──
     const businessStrength = Math.min(100, Math.round(Math.log2(Math.max(1, reviews)) * (rating || 3) * 3));
 
-    const looksAlreadyGood = perf >= 70 && isHttps && !baukasten && !ta.cmsEolYear
+    // Ein POLIERTER Baukasten mit guter Performance darf als „eigentlich gut" gelten
+    // (×0.35) — nur ein BASIC-Baukasten blockt das (der ist nie „schon gut").
+    const looksAlreadyGood = perf >= 70 && isHttps && !basicBuilder && !ta.cmsEolYear
         && (ta.techSeverity || 0) < 2 && hardStructural === 0;
 
     // ── Ad-Intent (stärkstes billiges KAUFSIGNAL): zahlt für Google-/Meta-Anzeigen →
@@ -180,7 +205,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const reasons = [];
     if (adActive) reasons.push('💸 Anzeigen aktiv');     // bewiesener Spender — zuerst
     if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
-    if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
+    if (baukasten) reasons.push((ub || tech.cms || 'Baukasten') + (tier === 'polished' ? ' (modern)' : ''));
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
     reasons.push(`Perf ${perf}`);
     if (!isHttps) reasons.push('kein SSL');

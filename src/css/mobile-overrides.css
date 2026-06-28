@@ -183,8 +183,8 @@
         display: block;
         margin: 6px 0 14px;
         max-width: none;
-        font-size: 16px;
-        line-height: 1.5;
+        font-size: 12.5px;
+        line-height: 1.45;
         text-align: left;
         color: var(--color-graphite-soft);
     }
@@ -400,7 +400,7 @@
        Fold-Density. CTA + Trust-List rücken näher an H1 — iPhone 15 Pro
        Hero füllt nun ~60% Above-Fold statt 45%. */
     .hero-with-photo {
-        padding: clamp(64px, 10svh, 80px) var(--apple-section-pad-x) 48px;
+        padding: clamp(66px, 9svh, 72px) var(--apple-section-pad-x) 48px;
         min-height: auto;
         background: var(--apple-snow);
         display: block;
@@ -416,35 +416,54 @@
     /* Hero-Eyebrow — Apple-Tag-Pattern, klein über H1 */
     .hero-folio-eyebrow {
         font-family: var(--apple-font-text);
-        font-size: 13px;
+        font-size: 9.5px;
         font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--apple-graphite);
-        margin: 0 0 16px;
+        margin: 0 0 8px;
         line-height: 1.2;
     }
+    /* Hero-Eyebrow auf Mobile weggelassen (Founder 2026-06-26): H1 rückt nach oben. */
+    .hero-with-photo .hero-folio-eyebrow { display: none; }
 
     /* Hero-H1 — Apple-Display, Sprint 153 Alan-Dye: clamp(48-56px / 13vw)
        respektiert kleine Viewports (iPhone SE 375px = ~49px statt 56px). */
     .hero-headline {
-        /* Apple SF Pro statt Fraunces-Serif + größer. !important gegen die
-           verschachtelte Multi-Datei-Kaskade (hero-couture .hero-single-column
-           .hero-headline (0,2,0) + hero-polish/modern-2026/--font-display). */
-        font-family: var(--apple-font-display) !important;
-        font-size: clamp(50px, 14vw, 60px) !important;
-        font-weight: 700 !important;
-        font-variation-settings: normal;
-        line-height: 1.04;
-        letter-spacing: -0.028em;
+        /* Marken-Serif Fraunces (Kodex: Headlines = Fraunces, NICHT Apple-Sans —
+           die alte SF-Pro-Override verriet den Manufaktur-Charakter). Kleiner als
+           zuvor, damit „fürs KI-Zeitalter." sauber in 2 Zeilen passt statt am
+           Bindestrich zu brechen. !important gegen die Multi-Datei-Kaskade. */
+        font-family: var(--font-display) !important;
+        font-size: clamp(48px, 14vw, 60px) !important;
+        font-weight: 500 !important;
+        font-variation-settings: 'opsz' 144;
+        line-height: 1.0;
+        letter-spacing: -0.025em;
         color: var(--apple-ink);
-        margin: 0 0 24px;
+        margin: 0 0 12px;
     }
     .hero-headline .hero-h1-line {
         display: block;
         color: var(--apple-ink);
-        font-weight: 700;
+        font-weight: 500;
     }
+    /* Eine echte Beispielseite (Browser-Frame) als Beweis im Hero, tappt zu #demos.
+       (Founder 2026-06-25: Beispielseiten in den Hero; fokussiert = EINE Demo.) */
+    .m-hero-demo-card { display: block; margin: 18px 0 2px; text-decoration: none; -webkit-tap-highlight-color: transparent; }
+    .m-hero-demo-frame { border-radius: 14px; overflow: hidden; border: 1px solid rgba(20,32,43,.12); box-shadow: 0 16px 36px -20px rgba(20,40,60,.5); background: #fff; }
+    .m-hero-demo-chrome { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #f4f3ef; border-bottom: 1px solid rgba(20,32,43,.08); }
+    .m-hero-demo-chrome i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+    .m-hero-demo-chrome .dr { background: #E6675B; }
+    .m-hero-demo-chrome .dy { background: #E7BE46; }
+    .m-hero-demo-chrome .dg { background: #5CBE69; }
+    .m-hero-demo-url { margin-left: 6px; font: 500 11px/1 var(--apple-font-text); letter-spacing: .02em; color: #525E6B; }
+    .m-hero-demo-card img { display: block; width: 100%; height: 174px; object-fit: cover; object-position: top center; }
+    .m-hero-demo-caption { display: block; margin-top: 10px; color: #6E5F3F; font: 500 12px/1.5 var(--apple-font-text); }
+    .m-hero-demo-caption em { font-style: italic; }
+    .m-hero-demo-arrow { font-style: normal; }
+    /* Begleittexte kleiner (mehr Kontrast zur großen H1, Founder 2026-06-26). */
+    .hero-with-photo .hero-audit-link { font-size: 12.5px !important; }
 
     /* Italic-Sub — Apple Sub-Display, graphite weight 500, non-italic */
     .hero-headline .hero-h1-line.m-hero-accent {

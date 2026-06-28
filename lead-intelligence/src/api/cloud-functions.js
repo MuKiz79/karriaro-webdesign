@@ -132,6 +132,16 @@ export async function generatePitch({ businessName, branche = null, brancheLabel
 }
 
 /**
+ * Job-Signale — offene Stellen je Branche×Ort (oder je Arbeitgeber) über die
+ * gratis Arbeitsagentur-Jobsuche-API. „stellt ein" = Wachstums-/Budget-Signal.
+ * Liefert { ok, total, count, employers, jobs }.
+ */
+export function jobSignals({ was = '', wo = '', arbeitgeber = '', size = 5 } = {}) {
+    if (!was && !arbeitgeber) return Promise.resolve(null);
+    return callWebdesign('jobSignals', { was, wo, arbeitgeber, size }, { timeout: 25000, retries: 0 });
+}
+
+/**
  * Security Audit — HTTP-Header, TLS, DNS, Sensitive Files, Outdated Libs.
  * Liefert { ok, cached, findings, summary, severityScore, meta }.
  */

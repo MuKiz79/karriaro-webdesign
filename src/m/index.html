@@ -3963,9 +3963,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     }
     </script>
     <!--KR_REVIEWS_END-->
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=429">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=429" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=429"></noscript>
+    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=438">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=438" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=438"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>
     <link rel="manifest" href="/manifest.json">
@@ -4002,7 +4002,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <div class="kr-splash-word">Karriaro</div>
         <div class="kr-splash-product">Webdesign</div>
       </div>
-      <div class="kr-splash-eyebrow">Manufaktur · Köln · Handcodiert</div>
+      <div class="kr-splash-eyebrow kr-splash-cred">Über 20 Jahre in der Tech-Branche</div>
     </div>
   </div>
 </div>
@@ -4036,6 +4036,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 .kr-splash-eyebrow{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:clamp(8px,1.2vw,10px);
   letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:#F1EFE7;opacity:0;
   animation:kr-eyebrow-in .8s ease-out 2150ms forwards}
+/* Erfahrungs-/Vertrauens-Marker als Eyebrow-Zeile, Messing-Akzent. */
+.kr-splash-cred{color:#C9A24B}
 /* Morph-Phase: die Caption (Lockup + Eyebrow) weicht, damit das Siegel allein in die Nav
    fliegt. Der Eck-Rahmen bleibt im Siegel und skaliert mit (Nav-Marke hat denselben Rahmen). */
 .kr-splash.kr-morph .kr-splash-caption{opacity:0;transition:opacity .35s ease}
@@ -4116,7 +4118,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     setTimeout(function(){s.style.transition='opacity .5s ease';s.style.opacity='0';},540);
     setTimeout(remove,1050);
   }
-  var hold=reduce?1100:3050; // Aufbau + 200ms Stille, dann die Finale-Geste
+  var hold=reduce?1100:3400; // Aufbau + Lese-Beat für die zwei Eyebrow-Zeilen, dann die Finale-Geste
   var timer=setTimeout(morphToNav,hold);
   // Überspringen (ungeduldig): kein Morph, schnelles Fade.
   function skip(){clearTimeout(timer);fadeOut();}
@@ -4170,10 +4172,10 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
         <div class="hero-inner">
             <div class="hero-text-block">
                 <p class="hero-folio-eyebrow"><span>Für jede Profession</span><span class="dot">·</span><span>Ein Atelier</span></p>
-                <h1 class="hero-headline hero-headline--seal"><span class="hero-h1-line"><span class="hero-dropcap"><span class="hero-i-glyph">I</span><span class="hero-grow" aria-hidden="true"><span class="hero-seed2"></span><svg class="hero-tittle" viewBox="0 0 60 60"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.59" cy="33.13" r="2.32" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.57" cy="23.48" r="2.32" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="34.88" cy="36.36" r="2.32" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="20.88" cy="28.39" r="2.32" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="38.74" cy="24.44" r="2.32" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="27.06" cy="40.95" r="2.32" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="24.35" cy="19.13" r="2.32" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="42.30" cy="34.49" r="2.32" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="17.16" cy="35.30" r="2.32" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="36.21" cy="16.74" r="2.32" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="34.60" cy="44.65" r="2.32" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="16.12" cy="21.96" r="2.32" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="46.31" cy="26.42" r="2.32" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="20.04" cy="44.17" r="2.32" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="27.70" cy="12.22" r="2.32" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="44.16" cy="41.94" r="2.32" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="10.92" cy="30.79" r="2.32" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="43.93" cy="16.14" r="2.32" fill="#B89968" style="--i:18"/><circle class="hero-bloom-dot" cx="29.07" cy="50.16" r="2.32" fill="#B89968" style="--i:19"/><circle class="hero-bloom-dot" cx="16.73" cy="14.10" r="2.32" fill="#B89968" style="--i:20"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="51.03" cy="32.83" r="2.32" fill="#C9A24B" style="--i:21"/><circle class="hero-bloom-dot" cx="12.17" cy="42.40" r="2.32" fill="#B89968" style="--i:22"/><circle class="hero-bloom-dot" cx="34.87" cy="8.33" r="2.32" fill="#B89968" style="--i:23"/><circle class="hero-bloom-dot" cx="41.28" cy="49.68" r="2.32" fill="#B89968" style="--i:24"/><circle class="hero-bloom-dot" cx="7.94" cy="22.96" r="2.32" fill="#B89968" style="--i:25"/><circle class="hero-bloom-dot" cx="51.43" cy="20.10" r="2.32" fill="#B89968" style="--i:26"/><circle class="hero-bloom-dot" cx="20.71" cy="52.20" r="2.32" fill="#B89968" style="--i:27"/><circle class="hero-bloom-dot" cx="21.71" cy="6.94" r="2.32" fill="#B89968" style="--i:28"/><circle class="hero-bloom-dot" cx="52.07" cy="41.60" r="2.32" fill="#B89968" style="--i:29"/><circle class="hero-bloom-dot" cx="5.48" cy="36.46" r="2.32" fill="#B89968" style="--i:30"/><circle class="hero-bloom-dot" cx="43.94" cy="8.31" r="2.32" fill="#B89968" style="--i:31"/><circle class="hero-bloom-dot" cx="34.44" cy="55.82" r="2.32" fill="#B89968" style="--i:32"/><circle class="hero-bloom-dot" cx="8.97" cy="13.71" r="2.32" fill="#B89968" style="--i:33"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="56.91" cy="27.77" r="2.32" fill="#C9A24B" style="--i:34"/></svg></span></span>hre Website</span><span class="hero-h1-line">fürs KI-Zeitalter.</span></h1>
+                <h1 class="hero-headline hero-headline--seal"><span class="hero-h1-line"><span class="hero-dropcap"><span class="hero-i-glyph">I</span><span class="hero-grow" aria-hidden="true"><span class="hero-seed2"></span><svg class="hero-tittle" viewBox="0 0 60 60"><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="26.59" cy="33.13" r="2.32" fill="#C9A24B" style="--i:1"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="30.57" cy="23.48" r="2.32" fill="#C9A24B" style="--i:2"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="34.88" cy="36.36" r="2.32" fill="#C9A24B" style="--i:3"/><circle class="hero-bloom-dot" cx="20.88" cy="28.39" r="2.32" fill="#B89968" style="--i:4"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="38.74" cy="24.44" r="2.32" fill="#C9A24B" style="--i:5"/><circle class="hero-bloom-dot" cx="27.06" cy="40.95" r="2.32" fill="#B89968" style="--i:6"/><circle class="hero-bloom-dot" cx="24.35" cy="19.13" r="2.32" fill="#B89968" style="--i:7"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="42.30" cy="34.49" r="2.32" fill="#C9A24B" style="--i:8"/><circle class="hero-bloom-dot" cx="17.16" cy="35.30" r="2.32" fill="#B89968" style="--i:9"/><circle class="hero-bloom-dot" cx="36.21" cy="16.74" r="2.32" fill="#B89968" style="--i:10"/><circle class="hero-bloom-dot" cx="34.60" cy="44.65" r="2.32" fill="#B89968" style="--i:11"/><circle class="hero-bloom-dot" cx="16.12" cy="21.96" r="2.32" fill="#B89968" style="--i:12"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="46.31" cy="26.42" r="2.32" fill="#C9A24B" style="--i:13"/><circle class="hero-bloom-dot" cx="20.04" cy="44.17" r="2.32" fill="#B89968" style="--i:14"/><circle class="hero-bloom-dot" cx="27.70" cy="12.22" r="2.32" fill="#B89968" style="--i:15"/><circle class="hero-bloom-dot" cx="44.16" cy="41.94" r="2.32" fill="#B89968" style="--i:16"/><circle class="hero-bloom-dot" cx="10.92" cy="30.79" r="2.32" fill="#B89968" style="--i:17"/><circle class="hero-bloom-dot" cx="43.93" cy="16.14" r="2.32" fill="#B89968" style="--i:18"/><circle class="hero-bloom-dot" cx="29.07" cy="50.16" r="2.32" fill="#B89968" style="--i:19"/><circle class="hero-bloom-dot" cx="16.73" cy="14.10" r="2.32" fill="#B89968" style="--i:20"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="51.03" cy="32.83" r="2.32" fill="#C9A24B" style="--i:21"/><circle class="hero-bloom-dot" cx="12.17" cy="42.40" r="2.32" fill="#B89968" style="--i:22"/><circle class="hero-bloom-dot" cx="34.87" cy="8.33" r="2.32" fill="#B89968" style="--i:23"/><circle class="hero-bloom-dot" cx="41.28" cy="49.68" r="2.32" fill="#B89968" style="--i:24"/><circle class="hero-bloom-dot" cx="7.94" cy="22.96" r="2.32" fill="#B89968" style="--i:25"/><circle class="hero-bloom-dot" cx="51.43" cy="20.10" r="2.32" fill="#B89968" style="--i:26"/><circle class="hero-bloom-dot" cx="20.71" cy="52.20" r="2.32" fill="#B89968" style="--i:27"/><circle class="hero-bloom-dot" cx="21.71" cy="6.94" r="2.32" fill="#B89968" style="--i:28"/><circle class="hero-bloom-dot" cx="52.07" cy="41.60" r="2.32" fill="#B89968" style="--i:29"/><circle class="hero-bloom-dot" cx="5.48" cy="36.46" r="2.32" fill="#B89968" style="--i:30"/><circle class="hero-bloom-dot" cx="43.94" cy="8.31" r="2.32" fill="#B89968" style="--i:31"/><circle class="hero-bloom-dot" cx="34.44" cy="55.82" r="2.32" fill="#B89968" style="--i:32"/><circle class="hero-bloom-dot" cx="8.97" cy="13.71" r="2.32" fill="#B89968" style="--i:33"/><circle class="hero-bloom-dot hero-bloom-dot--gold" cx="56.91" cy="27.77" r="2.32" fill="#C9A24B" style="--i:34"/></svg></span></span>hre Website</span><span class="hero-h1-line">fürs KI‑Zeitalter.</span></h1>
                 <p class="subhead">
                     Jede Seite ein Unikat, das mitarbeitet — mit eingebauten Werkzeugen, Besucher-Cockpit und KI-Auffindbarkeit.
-                </p><a href="#demos" class="m-hero-demos-tease" data-track-event="HERO_DEMO_TEASE"><span class="m-hero-demos-tease-text">Acht Branchen, acht echte Demos. <em>Eine Wischgeste entfernt.</em></span><span class="m-hero-demos-tease-arrow" aria-hidden="true">↓</span></a>
+                </p><a href="#demos" class="m-hero-demo-card" data-track-event="HERO_DEMO_PREVIEW" aria-label="Acht echte Beispielseiten ansehen"><span class="m-hero-demo-frame"><span class="m-hero-demo-chrome"><i class="dr"></i><i class="dy"></i><i class="dg"></i><span class="m-hero-demo-url">stadtmakler-stuttgart.de</span></span><img src="/images/immobilien-stadtmakler-mockup-fold.avif?v=411" alt="Beispielseite Stadtmakler Stuttgart — eine von acht echten Demos" width="1440" height="900" loading="lazy" decoding="async"></span><span class="m-hero-demo-caption">Acht Branchen, acht echte Demos. <em>Eine Wischgeste entfernt.</em><span class="m-hero-demo-arrow" aria-hidden="true">&rarr;</span></span></a>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt.</p>
                 <div class="hero-cta-row">
                     <a href="#kontakt" class="btn">Erstgespräch buchen — Antwort in 24 h</a>
@@ -4248,27 +4250,6 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     <p class="m-demo-swiper-section-hint" aria-hidden="true">↓ scrollen ·  tippen zum Öffnen</p>
     <div class="m-demo-swiper-rail" data-m-demo-rail>
         <article class="m-demo-swiper-slide" data-m-demo-slide="0">
-            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/immobilien-makler" data-m-demo-title="Stadtmakler Stuttgart" data-m-demo-domain="stadtmakler-stuttgart.de" aria-label="Stadtmakler Stuttgart Live-Demo öffnen">
-                <div class="m-poster-chrome" aria-hidden="true">
-                    <span class="m-poster-chrome-buttons">
-                        <span class="m-poster-chrome-btn m-poster-chrome-btn--close"></span>
-                        <span class="m-poster-chrome-btn m-poster-chrome-btn--min"></span>
-                        <span class="m-poster-chrome-btn m-poster-chrome-btn--max"></span>
-                    </span>
-                    <span class="m-poster-chrome-url">stadtmakler-stuttgart.de</span>
-                </div>
-                <div class="m-poster-stage" data-m-poster-stage>
-                    <iframe class="m-poster-frame" src="/portfolio/immobilien-makler" title="Stadtmakler Stuttgart Desktop-Hero-Vorschau" width="1280" height="1024" loading="eager" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="high"></iframe>
-                </div>
-            </button>
-            <div class="m-demo-swiper-meta">
-                <span class="m-demo-swiper-eyebrow">Immobilien · Premium</span>
-                <h3 class="m-demo-swiper-title">Stadtmakler Stuttgart</h3>
-                <p class="m-demo-swiper-persona-context">Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.</p>
-                <a href="/portfolio/immobilien-makler" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Stadtmakler Stuttgart Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
-            </div>
-        </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="1">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/coaching-lehmann" data-m-demo-title="Lehmann Beratung" data-m-demo-domain="lehmann-beratung.de" aria-label="Lehmann Beratung Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4289,7 +4270,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/coaching-lehmann" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Lehmann Beratung Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="2">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="1">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/praxis-weber" data-m-demo-title="Dr. Weber" data-m-demo-domain="praxis-weber.de" aria-label="Dr. Weber Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4310,7 +4291,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/praxis-weber" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Dr. Weber Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="3">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="2">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/friseur-salon" data-m-demo-title="Salon Müller" data-m-demo-domain="salon-mueller.de" aria-label="Salon Müller Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4331,7 +4312,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/friseur-salon" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Salon Müller Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="4">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="3">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/dachdecker-meisterbetrieb" data-m-demo-title="Dachdecker-Meister" data-m-demo-domain="dachdecker-meisterbetrieb.de" aria-label="Dachdecker-Meister Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4352,7 +4333,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/dachdecker-meisterbetrieb" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Dachdecker-Meister Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="5">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="4">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/restaurant-template" data-m-demo-title="Hirsch" data-m-demo-domain="gasthof-hirsch.de" aria-label="Hirsch Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4373,7 +4354,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/restaurant-template" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Hirsch Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="6">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="5">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/spedition-schwaben" data-m-demo-title="Schwaben Logistik" data-m-demo-domain="schwaben-logistik.de" aria-label="Schwaben Logistik Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4394,7 +4375,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/portfolio/spedition-schwaben" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Schwaben Logistik Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
-        <article class="m-demo-swiper-slide" data-m-demo-slide="7">
+        <article class="m-demo-swiper-slide" data-m-demo-slide="6">
             <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/meisterbetrieb-mueller" data-m-demo-title="Müller Meisterbetrieb" data-m-demo-domain="sanitaer-mueller.de" aria-label="Müller Meisterbetrieb Live-Demo öffnen">
                 <div class="m-poster-chrome" aria-hidden="true">
                     <span class="m-poster-chrome-buttons">
@@ -4413,6 +4394,27 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <h3 class="m-demo-swiper-title">Müller Meisterbetrieb</h3>
                 <p class="m-demo-swiper-persona-context">3D-Bad-Konfigurator, Notdienst-Live-Status, Foto-Schaden → Festpreis.</p>
                 <a href="/portfolio/meisterbetrieb-mueller" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Müller Meisterbetrieb Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
+            </div>
+        </article>
+        <article class="m-demo-swiper-slide" data-m-demo-slide="7">
+            <button type="button" class="m-demo-swiper-card m-poster" data-m-demo-open data-m-demo-href="/portfolio/immobilien-makler" data-m-demo-title="Stadtmakler Stuttgart" data-m-demo-domain="stadtmakler-stuttgart.de" aria-label="Stadtmakler Stuttgart Live-Demo öffnen">
+                <div class="m-poster-chrome" aria-hidden="true">
+                    <span class="m-poster-chrome-buttons">
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--close"></span>
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--min"></span>
+                        <span class="m-poster-chrome-btn m-poster-chrome-btn--max"></span>
+                    </span>
+                    <span class="m-poster-chrome-url">stadtmakler-stuttgart.de</span>
+                </div>
+                <div class="m-poster-stage" data-m-poster-stage>
+                    <iframe class="m-poster-frame" src="/portfolio/immobilien-makler" title="Stadtmakler Stuttgart Desktop-Hero-Vorschau" width="1280" height="1024" loading="eager" sandbox="allow-same-origin allow-scripts" tabindex="-1" aria-hidden="true" fetchpriority="high"></iframe>
+                </div>
+            </button>
+            <div class="m-demo-swiper-meta">
+                <span class="m-demo-swiper-eyebrow">Immobilien · Premium</span>
+                <h3 class="m-demo-swiper-title">Stadtmakler Stuttgart</h3>
+                <p class="m-demo-swiper-persona-context">Wertermittlung & Marktdaten direkt im Eigenauftritt — nicht bei ImmoScout.</p>
+                <a href="/portfolio/immobilien-makler" class="m-demo-swiper-cta" target="_blank" rel="noopener" aria-label="Stadtmakler Stuttgart Live-Demo in neuem Tab öffnen">Live ansehen ↗</a>
             </div>
         </article>
     </div>
@@ -4452,49 +4454,49 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     <p class="m-mag-eyebrow">№&nbsp;03 · Branchenpassung</p>
     <h2 class="m-mag-personas-title">Für welche Branche bauen wir?</h2>
     <div class="m-mag-personas-grid">
-        <button type="button" class="m-persona-tile" data-m-persona-target="0" aria-label="Immobilien: Eigener Marktauftritt — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="7" aria-label="Immobilien: Eigener Marktauftritt — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
             <span class="m-persona-name">Immobilien</span>
             <span class="m-persona-headline">Eigener Marktauftritt</span>
             <span class="m-persona-body">Wertermittlung & Marktdaten direkt — nicht bei ImmoScout.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="2" aria-label="Praxis: Termine ohne Hotline — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="1" aria-label="Praxis: Termine ohne Hotline — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="11" r="2"/></svg>
             <span class="m-persona-name">Praxis</span>
             <span class="m-persona-headline">Termine ohne Hotline</span>
             <span class="m-persona-body">Online-Buchung, Symptom-Check, 24/7-Sprechzeiten.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="3" aria-label="Friseur: Termine die füllen — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="2" aria-label="Friseur: Termine die füllen — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/></svg>
             <span class="m-persona-name">Friseur</span>
             <span class="m-persona-headline">Termine die füllen</span>
             <span class="m-persona-body">Online-Buchung, Style-Galerie, weniger No-Shows.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="4" aria-label="Dachdecker: Förderung & Angebot — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="3" aria-label="Dachdecker: Förderung & Angebot — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18h18"/><path d="M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M10 11V5h4v6"/></svg>
             <span class="m-persona-name">Dachdecker</span>
             <span class="m-persona-headline">Förderung & Angebot</span>
             <span class="m-persona-body">BAFA-Rechner zeigt sofort die Förderhöhe.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="1" aria-label="Coaching: Erstgespräch direkt — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="0" aria-label="Coaching: Erstgespräch direkt — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             <span class="m-persona-name">Coaching</span>
             <span class="m-persona-headline">Erstgespräch direkt</span>
             <span class="m-persona-body">Vita, Methodik, Buchungs-Button der konvertiert.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="5" aria-label="Gastronomie: Wie OpenTable — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="4" aria-label="Gastronomie: Wie OpenTable — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v18M6 11h2M6 7h2M18 3v18M14 3v6a4 4 0 0 0 4 4"/></svg>
             <span class="m-persona-name">Gastronomie</span>
             <span class="m-persona-headline">Wie OpenTable</span>
             <span class="m-persona-body">Tisch-Buchung, KI-Wein-Empfehlung, Saison-Menü.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="6" aria-label="Logistik: Frachtquote sofort — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="5" aria-label="Logistik: Frachtquote sofort — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="6" width="14" height="10" rx="1"/><path d="M15 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg>
             <span class="m-persona-name">Logistik</span>
             <span class="m-persona-headline">Frachtquote sofort</span>
             <span class="m-persona-body">PLZ + Gewicht → Preis in 3 Sekunden.</span>
         </button>
-        <button type="button" class="m-persona-tile" data-m-persona-target="7" aria-label="Sanitär: Notdienst & Festpreis — Demo öffnen">
+        <button type="button" class="m-persona-tile" data-m-persona-target="6" aria-label="Sanitär: Notdienst & Festpreis — Demo öffnen">
             <svg class="m-persona-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
             <span class="m-persona-name">Sanitär</span>
             <span class="m-persona-headline">Notdienst & Festpreis</span>
@@ -6821,7 +6823,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 
     <!-- Karriaro-eigener KI-Concierge (KI-Werkzeug #2, eigene Website). Links positioniert,
          damit der „Erstgespräch"-Float-Button rechts frei bleibt. -->
-    <script src="/js/concierge.js" data-branche="karriaro" data-name="Karriaro Webdesign" data-accent="#1A2E40" data-position="right" data-greeting="Hallo! Ich bin der KI-Assistent von Karriaro. Fragen Sie mich zu Preisen, Ablauf, Branchen-Werkzeugen oder KI-Auffindbarkeit — oder lassen Sie uns ein Erstgespräch finden." defer></script>
+    <script src="/js/concierge.js?v=2" data-branche="karriaro" data-name="Karriaro Webdesign" data-accent="#1A2E40" data-position="right" data-greeting="Hallo! Ich bin der KI-Assistent von Karriaro. Fragen Sie mich zu Preisen, Ablauf, Branchen-Werkzeugen oder KI-Auffindbarkeit — oder lassen Sie uns ein Erstgespräch finden." defer></script>
 
 <script src="/js/m-interactions.js?v=425" defer></script>
 </body>

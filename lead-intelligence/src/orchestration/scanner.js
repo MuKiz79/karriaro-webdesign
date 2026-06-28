@@ -25,6 +25,8 @@ import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
+import { computeBuyerFit, gesamtScore } from '../scoring/buyer-fit.js';
+import { computeDisqualifiers } from '../scoring/disqualify.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { seasonalTriggerFor } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
@@ -33,6 +35,7 @@ import { checkEnterpriseDB } from '../priors/enterprise-db.js';
 import { saveLead } from '../crm/leads.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { openStudio } from '../ui/render-outreach.js';
+import { showAggregateReport } from '../ui/render-aggregate.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
@@ -217,9 +220,9 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech, screenshot = null, adIntent = null;
+            let ws, tech, screenshot = null, adIntent = null, salesPlatforms = [];
             const cs = getCachedScore(domainKey);
-            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; }
+            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; salesPlatforms = cs.salesPlatforms || []; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
@@ -231,11 +234,16 @@ export async function runScanner() {
                 const fp = analyzeDigitalFootprint(psi);
                 const signals = [...ga.signals, ...(fp.hasFbPixel ? ['Meta-Pixel (Facebook-Werbung)'] : [])];
                 adIntent = { active: ga.active || fp.hasFbPixel, signals };
-                setCachedScore(domainKey, ws, tech, adIntent);
+                salesPlatforms = fp.salesPlatforms || [];   // eingebettete Verkaufs-/Buchungs-Plattformen (Disqualifikation)
+                setCachedScore(domainKey, ws, tech, adIntent, salesPlatforms);
             }
             const techAge = analyzeTechAge(tech, {});
             // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Ad-Intent.
             const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, seasonal: seasonalTriggerFor(place.primaryType) });
+            // Buyer-Fit (2. Achse, gratis aus denselben Signalen): kauft DIESER Betrieb?
+            const bf = computeBuyerFit({ adIntent, reviewRecency: place.reviewRecency, businessStrength: opp.businessStrength, rating: place.rating, reviews: place.userRatingCount, primaryType: place.primaryType });
+            // Disqualifikations-Multiplikator (Negativ-Schicht): „Website ist nicht der Engpass"-Muster.
+            const dq = computeDisqualifiers({ salesPlatforms, reviewRecency: place.reviewRecency });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -259,6 +267,12 @@ export async function runScanner() {
                 looksAlreadyGood: opp.looksAlreadyGood,
                 hardStructural: opp.hardStructural,
                 adIntent,                              // {active, signals} — Pitch-Hook + Vision-Recompute
+                buyerFit: bf.score,                    // 2. Achse: kauft DIESER Betrieb? (0–100)
+                buyerFitLabel: bf.label,
+                buyerFitReasons: bf.reasons,
+                disqualifyMult: dq.multiplier,         // Negativ-Schicht (Website nicht der Engpass)
+                disqualifyReasons: dq.reasons,
+                gesamt: Math.round(gesamtScore(opp.opportunity, bf.score) * dq.multiplier),  // Opportunity × Fit × Disqualifikation
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -310,6 +324,8 @@ export async function runScanner() {
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
                     }
+                    // Vision hat l.opportunity verändert → Gesamt-Chance (inkl. Disqualifikation) nachziehen.
+                    l.gesamt = Math.round(gesamtScore(l.opportunity, l.buyerFit) * (l.disqualifyMult || 1));
                 }
                 vDone++;
                 showProgress(96 + Math.round((vDone / visionCands.length) * 3), `④ Bild-Check Top ${vDone}/${visionCands.length}…`);
@@ -375,7 +391,7 @@ function getActiveFilters() {
     return {
         minScore: parseInt(h.get('min') || '0', 10),
         branch:   h.get('branch') || 'all',
-        sort:     h.get('sort') || 'score',
+        sort:     h.get('sort') || 'gesamt',   // Default: Opportunity × Buyer-Fit
         baukasten: h.get('baukasten') === '1'
     };
 }
@@ -386,7 +402,7 @@ function persistFilters(updates) {
     const h = new URLSearchParams();
     if (next.minScore > 0) h.set('min', String(next.minScore));
     if (next.branch && next.branch !== 'all') h.set('branch', next.branch);
-    if (next.sort && next.sort !== 'score') h.set('sort', next.sort);
+    if (next.sort && next.sort !== 'gesamt') h.set('sort', next.sort);
     if (next.baukasten) h.set('baukasten', '1');
     const str = h.toString();
     location.hash = str ? '#' + str : '';
@@ -397,10 +413,12 @@ function applyFilters(leads, f) {
     if (f.minScore > 0) out = out.filter(l => l.leadScore >= f.minScore);
     if (f.branch && f.branch !== 'all') out = out.filter(l => l.branch.key === f.branch);
     if (f.baukasten) out = out.filter(l => l.isBaukasten);
-    if (f.sort === 'reviews') out.sort((a, b) => b.reviews - a.reviews);
+    if (f.sort === 'buyerfit')   out.sort((a, b) => (b.buyerFit || 0) - (a.buyerFit || 0));
+    else if (f.sort === 'score') out.sort((a, b) => b.leadScore - a.leadScore);
+    else if (f.sort === 'reviews') out.sort((a, b) => b.reviews - a.reviews);
     else if (f.sort === 'name')  out.sort((a, b) => a.name.localeCompare(b.name));
     else if (f.sort === 'perf')  out.sort((a, b) => (a.ws?.perf || 0) - (b.ws?.perf || 0));
-    else /* score */              out.sort((a, b) => b.leadScore - a.leadScore);
+    else /* gesamt (default): Opportunity × Buyer-Fit */ out.sort((a, b) => (b.gesamt ?? b.leadScore) - (a.gesamt ?? a.leadScore));
     return out;
 }
 
@@ -430,7 +448,10 @@ function renderLeadWorkspace(city, leads, filters) {
                     <span class="ws-stat-cold">○ ${cold} cold</span>
                 </div>
             </div>
-            <button class="ws-studio-btn" data-action="open-studio" title="Die besten sichtbaren Leads (Score ≥ 50) ins Outreach-Studio übernehmen — je ein personalisierter Pitch + Mockup">📨 Beste → Outreach-Studio</button>
+            <div class="ws-header-actions">
+                <button class="ws-aggregate-btn" data-action="aggregate" title="Voranalyse: welche Branchen in dieser Stadt am meisten werbende, schwache, erreichbare Betriebe haben">🎯 Voranalyse</button>
+                <button class="ws-studio-btn" data-action="open-studio" title="Die besten sichtbaren Leads (Score ≥ 50) ins Outreach-Studio übernehmen — je ein personalisierter Pitch + Mockup">📨 Beste → Outreach-Studio</button>
+            </div>
         </div>
 
         <div class="ws-toolbar">
@@ -449,7 +470,9 @@ function renderLeadWorkspace(city, leads, filters) {
                     ${branchOptions.map(b => `<option value="${b.key}"${filters.branch === b.key ? ' selected' : ''}>${escapeHtml(b.name)} (${branchCounts[b.key]})</option>`).join('')}
                 </select>
                 <select class="ws-select" data-action="sort">
-                    <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Score ↓</option>
+                    <option value="gesamt"${filters.sort === 'gesamt' ? ' selected' : ''}>Sort: Gesamt (Chance × Fit) ↓</option>
+                    <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Chance ↓</option>
+                    <option value="buyerfit"${filters.sort === 'buyerfit' ? ' selected' : ''}>Sort: Buyer-Fit 🤝 ↓</option>
                     <option value="reviews"${filters.sort === 'reviews' ? ' selected' : ''}>Sort: Reviews ↓</option>
                     <option value="perf"${filters.sort === 'perf' ? ' selected' : ''}>Sort: Performance ↑</option>
                     <option value="name"${filters.sort === 'name' ? ' selected' : ''}>Sort: A-Z</option>
@@ -491,6 +514,15 @@ function renderLeadCard(l) {
         const muted = /Bild: modern/i.test(r) ? ' ws-chip-muted' : '';
         return `<span class="ws-lead-tech${muted}">${escapeHtml(r)}</span>`;
     }).join(' ');
+    // Buyer-Fit-Chip (2. Achse): kauft DIESER Betrieb wahrscheinlich? Farbe = Ampel.
+    const fitClass = l.buyerFit >= 70 ? 'fit-hoch' : l.buyerFit >= 45 ? 'fit-mittel' : 'fit-niedrig';
+    const fitChip = typeof l.buyerFit === 'number'
+        ? `<span class="ws-lead-fit ${fitClass}" title="Buyer-Fit ${l.buyerFit}/100 — kauft dieser Betrieb wahrscheinlich? ${escapeHtml((l.buyerFitReasons || []).join(' · '))}">🤝 ${l.buyerFit}</span>`
+        : '';
+    // Disqualifikations-Hinweise (Website nicht der Engpass) — gedämpfter Lead, klar markiert.
+    const dqChips = (l.disqualifyReasons || []).map(r =>
+        `<span class="ws-lead-dq" title="Dämpft die Gesamt-Chance (×${l.disqualifyMult}) — die Website ist vermutlich nicht der Engpass">${escapeHtml(r)}</span>`
+    ).join(' ');
 
     return `
         <div class="ws-lead ws-lead-${scoreClass}" data-key="${escapeHtml(l.key)}" data-url="${escapeHtml(l.websiteUri)}">
@@ -502,6 +534,8 @@ function renderLeadCard(l) {
                 </div>
                 <div class="ws-lead-line2">
                     <span class="ws-lead-branch">${escapeHtml(l.branch.name)}</span>
+                    ${fitChip}
+                    ${dqChips}
                     ${reasons}
                 </div>
                 ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}
@@ -539,6 +573,15 @@ function bindWorkspaceEvents(el) {
         // Beste sichtbare Leads → Outreach-Studio (je personalisierter Pitch + Mockup).
         // pitchInputs (inkl. Ad-Intent-Hook) aus den Scan-Daten anhängen — die Deep-Lane
         // re-generiert Mockups für die Top-Treffer (ratenbegrenzt, wie aus dem CRM).
+        // Voranalyse: verdichtet den ganzen Scan zu „welche Branche lohnt" → Klick filtert.
+        if (e.target.dataset.action === 'aggregate') {
+            showAggregateReport(lastResults, lastCity, (branchKey) => {
+                persistFilters({ branch: branchKey });
+                renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
+            });
+            return;
+        }
+
         if (e.target.dataset.action === 'open-studio') {
             const top = applyFilters(lastResults, getActiveFilters()).filter(l => l.leadScore >= 50).slice(0, 15);
             if (!top.length) { showError('Keine Leads mit Score ≥ 50 — erst einen Scan mit stärkeren Treffern.'); return; }

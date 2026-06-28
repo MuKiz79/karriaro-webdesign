@@ -154,8 +154,12 @@ export async function runSingleCheck() {
 
         // Deep Research liefert {ok, cached, assessment, meta} — wir extrahieren das Assessment
         const deepAssessment = deepResearchResult?.assessment || null;
-        // contentAnalysis / branchStandards halten wir für UI-Kompat noch leer — Deep Research ersetzt sie
-        const contentAnalysis = null;
+        // Content-Freshness aus dem securityAudit (Copyright-Jahr + Last-Modified) → speist den
+        // Stale-/Stagnations-Trigger (Stufe ②): „seit Jahren unverändert" = Seite oft nicht der Engpass.
+        const fr = securityResult?.freshness || null;
+        const contentAnalysis = fr
+            ? { copyrightYear: fr.copyrightYear || null, lastModified: fr.lastModified || null, stale: !!fr.stale, yearsStale: fr.yearsStale ?? null }
+            : null;
         const branchStandards = null;
 
         // Phase 5: Scoring — NACH KI-Analyse (Design-Qualität fließt ein)
@@ -191,7 +195,13 @@ export async function runSingleCheck() {
         // ── Phase 6: Lokale Analyse (synchron, kein await) ──
         const abTest = sv();
         const drift = cd(domain, result.leadScore);
-        const wayback = null; // Wayback ist zu langsam — wird nicht mehr blockierend aufgerufen
+        // Wayback-Stagnation kommt serverseitig aus dem securityAudit (CDX) — KEIN neuer
+        // Client-Call (deshalb nicht mehr „zu langsam"). Mapping auf die Consumer-Shape →
+        // detectTriggerEvents/analyzeContentFreshness feuern „Seite seit X Jahren unverändert".
+        const _wb = fr && fr.wayback;
+        const wayback = (_wb && typeof _wb.daysSinceContentChange === 'number')
+            ? { available: true, daysSince: _wb.daysSinceContentChange, yearsSince: Math.round((_wb.daysSinceContentChange / 365) * 10) / 10, lastChanged: _wb.lastContentChange || null }
+            : null;
         const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
 
         // ── SOFORT rendern — der User soll nicht länger warten ──
