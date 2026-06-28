@@ -1061,6 +1061,11 @@
 .ws-lead-fit.fit-hoch   { background: color-mix(in srgb, var(--green) 22%, transparent); color: var(--green); }
 .ws-lead-fit.fit-mittel { background: color-mix(in srgb, var(--orange) 20%, transparent); color: var(--orange); }
 .ws-lead-fit.fit-niedrig{ background: color-mix(in srgb, var(--red) 18%, transparent); color: var(--red); }
+.ws-lead-dq {
+    padding: 1px 8px; border-radius: 9px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; cursor: help;
+    background: color-mix(in srgb, var(--orange) 16%, transparent); color: var(--orange);
+    border: 1px solid color-mix(in srgb, var(--orange) 40%, transparent);
+}
 .ws-perf-good { color: var(--green); font-weight: 500; }
 .ws-perf-mid  { color: var(--orange); font-weight: 500; }
 .ws-perf-bad  { color: var(--red); font-weight: 500; }

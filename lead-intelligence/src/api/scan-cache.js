@@ -158,11 +158,11 @@ export function countUncached(queries) {
 export function getCachedScore(domain) {
     const m = map(SCORE_KEY);
     const e = m[domain];
-    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null }; }
+    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null, salesPlatforms: e.salesPlatforms || [] }; }
     return null;
 }
-export function setCachedScore(domain, ws, tech, adIntent = null) {
-    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent };
+export function setCachedScore(domain, ws, tech, adIntent = null, salesPlatforms = []) {
+    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent, salesPlatforms };
     scheduleFlush(SCORE_KEY);
 }
 

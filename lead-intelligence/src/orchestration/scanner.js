@@ -26,6 +26,7 @@ import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
 import { computeBuyerFit, gesamtScore } from '../scoring/buyer-fit.js';
+import { computeDisqualifiers } from '../scoring/disqualify.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { seasonalTriggerFor } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
@@ -219,9 +220,9 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech, screenshot = null, adIntent = null;
+            let ws, tech, screenshot = null, adIntent = null, salesPlatforms = [];
             const cs = getCachedScore(domainKey);
-            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; }
+            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; salesPlatforms = cs.salesPlatforms || []; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
@@ -233,13 +234,16 @@ export async function runScanner() {
                 const fp = analyzeDigitalFootprint(psi);
                 const signals = [...ga.signals, ...(fp.hasFbPixel ? ['Meta-Pixel (Facebook-Werbung)'] : [])];
                 adIntent = { active: ga.active || fp.hasFbPixel, signals };
-                setCachedScore(domainKey, ws, tech, adIntent);
+                salesPlatforms = fp.salesPlatforms || [];   // eingebettete Verkaufs-/Buchungs-Plattformen (Disqualifikation)
+                setCachedScore(domainKey, ws, tech, adIntent, salesPlatforms);
             }
             const techAge = analyzeTechAge(tech, {});
             // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Ad-Intent.
             const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, seasonal: seasonalTriggerFor(place.primaryType) });
             // Buyer-Fit (2. Achse, gratis aus denselben Signalen): kauft DIESER Betrieb?
             const bf = computeBuyerFit({ adIntent, reviewRecency: place.reviewRecency, businessStrength: opp.businessStrength, rating: place.rating, reviews: place.userRatingCount, primaryType: place.primaryType });
+            // Disqualifikations-Multiplikator (Negativ-Schicht): „Website ist nicht der Engpass"-Muster.
+            const dq = computeDisqualifiers({ salesPlatforms, reviewRecency: place.reviewRecency });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -266,7 +270,9 @@ export async function runScanner() {
                 buyerFit: bf.score,                    // 2. Achse: kauft DIESER Betrieb? (0–100)
                 buyerFitLabel: bf.label,
                 buyerFitReasons: bf.reasons,
-                gesamt: gesamtScore(opp.opportunity, bf.score),  // Opportunity moduliert durch Buyer-Fit
+                disqualifyMult: dq.multiplier,         // Negativ-Schicht (Website nicht der Engpass)
+                disqualifyReasons: dq.reasons,
+                gesamt: Math.round(gesamtScore(opp.opportunity, bf.score) * dq.multiplier),  // Opportunity × Fit × Disqualifikation
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -318,8 +324,8 @@ export async function runScanner() {
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
                     }
-                    // Vision hat l.opportunity verändert → Gesamt-Chance nachziehen.
-                    l.gesamt = gesamtScore(l.opportunity, l.buyerFit);
+                    // Vision hat l.opportunity verändert → Gesamt-Chance (inkl. Disqualifikation) nachziehen.
+                    l.gesamt = Math.round(gesamtScore(l.opportunity, l.buyerFit) * (l.disqualifyMult || 1));
                 }
                 vDone++;
                 showProgress(96 + Math.round((vDone / visionCands.length) * 3), `④ Bild-Check Top ${vDone}/${visionCands.length}…`);
@@ -513,6 +519,10 @@ function renderLeadCard(l) {
     const fitChip = typeof l.buyerFit === 'number'
         ? `<span class="ws-lead-fit ${fitClass}" title="Buyer-Fit ${l.buyerFit}/100 — kauft dieser Betrieb wahrscheinlich? ${escapeHtml((l.buyerFitReasons || []).join(' · '))}">🤝 ${l.buyerFit}</span>`
         : '';
+    // Disqualifikations-Hinweise (Website nicht der Engpass) — gedämpfter Lead, klar markiert.
+    const dqChips = (l.disqualifyReasons || []).map(r =>
+        `<span class="ws-lead-dq" title="Dämpft die Gesamt-Chance (×${l.disqualifyMult}) — die Website ist vermutlich nicht der Engpass">${escapeHtml(r)}</span>`
+    ).join(' ');
 
     return `
         <div class="ws-lead ws-lead-${scoreClass}" data-key="${escapeHtml(l.key)}" data-url="${escapeHtml(l.websiteUri)}">
@@ -525,6 +535,7 @@ function renderLeadCard(l) {
                 <div class="ws-lead-line2">
                     <span class="ws-lead-branch">${escapeHtml(l.branch.name)}</span>
                     ${fitChip}
+                    ${dqChips}
                     ${reasons}
                 </div>
                 ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}

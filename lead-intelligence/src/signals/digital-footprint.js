@@ -36,6 +36,22 @@ const PIXELS = [
 ];
 
 /**
+ * Verkaufs-/Buchungs-Plattformen: lädt die Seite Ressourcen von diesen Domains
+ * (eingebettetes Widget/Listing/iframe), läuft das Geschäft (auch) ÜBER die Plattform
+ * → die eigene Website ist seltener der Engpass = Disqualifikations-Signal
+ * (Deep-Research/Founder-Befund Makler-Fall). ⚠️ nur EMBEDS erkennbar, nicht reine Links.
+ * @type {Array<{re:RegExp, name:string}>}
+ */
+const SALES_PLATFORMS = [
+    { re: /immobilienscout24|immowelt\.|immonet\./i,                         name: 'ImmoScout/Immowelt' },
+    { re: /lieferando|ubereats|uber-eats|wolt\.com|takeaway\.com/i,          name: 'Lieferdienst' },
+    { re: /opentable|quandoo|resmio|bookatable|formitable|opentable/i,       name: 'Reservierungs-Plattform' },
+    { re: /booking\.com|hrs\.de|expedia|hotels\.com|trivago/i,               name: 'Booking/HRS' },
+    { re: /treatwell|doctolib|jameda|samedi\.|dr-flex|shore\.com/i,          name: 'Termin-Plattform' },
+    { re: /etsy\.com|amazon\.(de|com)\/shops|dawanda/i,                      name: 'Marktplatz' }
+];
+
+/**
  * Analysiert den digitalen Fussabdruck aus PageSpeed-Daten
  *
  * @param {Object} psiData - PageSpeed Insights API Response
@@ -87,6 +103,12 @@ export function analyzeDigitalFootprint(psiData) {
         if (sp.pattern.test(urlJoined)) socialProof.push(sp);
     }
 
+    // Verkaufs-/Buchungs-Plattform-Embeds (Disqualifikations-Signal)
+    const salesPlatforms = [];
+    for (const sp of SALES_PLATFORMS) {
+        if (sp.re.test(urlJoined)) salesPlatforms.push(sp.name);
+    }
+
     // Scoring
     const platformCount = found.length;
     const hasInstagram = found.some(f => f.key === 'instagram');
@@ -126,6 +148,8 @@ export function analyzeDigitalFootprint(psiData) {
         pixels: activePixels,
         socialProof,
         hasSocialProof: socialProof.length > 0,
+        salesPlatforms,                       // Verkauf läuft (auch) über diese Plattform-Embeds
+        hasSalesPlatform: salesPlatforms.length > 0,
         platformCount,
         maturity: Math.round(maturity * 100) / 100,
         hasInstagram, hasLinkedIn, hasFbPixel, hasAnalytics,
