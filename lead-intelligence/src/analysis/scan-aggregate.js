@@ -59,6 +59,7 @@ export function aggregateScan(leads, city = '', month = new Date().getMonth()) {
     for (const g of groups.values()) {
         const ls = g.leads;
         const opps = ls.map(oppOf);
+        const fits = ls.map(l => l.buyerFit).filter(x => x != null);
         const ratings = ls.map(l => l.rating).filter(r => r != null);
         const adActive = ls.filter(l => l.adIntent && l.adIntent.active).length;
         const qualified = ls.filter(l => oppOf(l) >= QUALIFIED).length;
@@ -71,6 +72,7 @@ export function aggregateScan(leads, city = '', month = new Date().getMonth()) {
             qualified,
             hot,
             medianOpportunity: Math.round(median(opps)),
+            medianBuyerFit: fits.length ? Math.round(median(fits)) : null,
             adActive,
             adQuote: ls.length ? adActive / ls.length : 0,
             adWeakCount,

@@ -1054,6 +1054,13 @@
 .ws-lead-tech {
     font-style: italic;
 }
+.ws-lead-fit {
+    padding: 1px 8px; border-radius: 9px; font-size: 0.72rem; font-weight: 700;
+    white-space: nowrap; cursor: help;
+}
+.ws-lead-fit.fit-hoch   { background: color-mix(in srgb, var(--green) 22%, transparent); color: var(--green); }
+.ws-lead-fit.fit-mittel { background: color-mix(in srgb, var(--orange) 20%, transparent); color: var(--orange); }
+.ws-lead-fit.fit-niedrig{ background: color-mix(in srgb, var(--red) 18%, transparent); color: var(--red); }
 .ws-perf-good { color: var(--green); font-weight: 500; }
 .ws-perf-mid  { color: var(--orange); font-weight: 500; }
 .ws-perf-bad  { color: var(--red); font-weight: 500; }

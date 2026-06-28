@@ -27,6 +27,7 @@ export function showAggregateReport(leads, city, onPickBranch) {
             <td class="agg-num">${pct(b.adQuote)}</td>
             <td class="agg-num agg-strong">${b.adWeakCount}</td>
             <td class="agg-num">${b.medianOpportunity}</td>
+            <td class="agg-num">${b.medianBuyerFit != null ? '🤝 ' + b.medianBuyerFit : '–'}</td>
             <td class="agg-num">${b.medianRating != null ? b.medianRating.toFixed(1).replace('.', ',') : '–'} · ${b.medianReviews}</td>
             <td><button class="agg-pick" data-branch="${esc(b.key)}">Filtern →</button></td>
         </tr>`;
@@ -50,9 +51,9 @@ export function showAggregateReport(leads, city, onPickBranch) {
                 <thead><tr>
                     <th>#</th><th>Branche</th><th>lohnend/total</th><th>Anzeigen-Quote</th>
                     <th title="Betriebe, die werben UND eine schwache Seite haben">wirbt+schwach</th>
-                    <th>Ø-Score</th><th>Ø ★ · Bew.</th><th></th>
+                    <th>Ø-Chance</th><th title="Buyer-Fit: kauft wahrscheinlich?">Ø-Fit</th><th>Ø ★ · Bew.</th><th></th>
                 </tr></thead>
-                <tbody>${rows || '<tr><td colspan="8">Keine Leads im Scan.</td></tr>'}</tbody>
+                <tbody>${rows || '<tr><td colspan="9">Keine Leads im Scan.</td></tr>'}</tbody>
             </table>
             </div>
             <div class="channel-actions">

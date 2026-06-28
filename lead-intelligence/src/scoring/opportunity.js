@@ -53,7 +53,7 @@ const PROFESSIONAL = new Set(['roofing_contractor', 'plumber', 'electrician', 'm
     'physiotherapist', 'veterinary_care', 'lodging', 'hotel', 'car_dealer', 'car_repair', 'auto_repair']);
 const LOW_VALUE_GASTRO = new Set(['restaurant', 'cafe', 'bakery']);
 const LOW_VALUE_RETAIL = new Set(['hair_salon', 'beauty_salon', 'florist', 'gym']);
-function dealFactor(primaryType) {
+export function dealFactor(primaryType) {
     if (PREMIUM.has(primaryType)) return 1.25;
     if (PROFESSIONAL.has(primaryType)) return 1.10;
     if (LOW_VALUE_GASTRO.has(primaryType)) return 0.68;
