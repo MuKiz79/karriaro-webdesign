@@ -130,6 +130,20 @@
         .kz-cta h3 { font-family: var(--kz-serif); font-weight: 400; font-size: clamp(22px, 3.6vw, 30px); color: #fff; margin-bottom: 8px; }
         .kz-cta p { color: rgba(241, 239, 231, 0.8); max-width: 48ch; margin: 0 auto 18px; font-size: 15px; }
         .kz-cta a { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; background: var(--kz-gold); color: #16202C; font-weight: 600; border-radius: 2px; }
+        .kz-cta-eyebrow { font-family: var(--kz-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--kz-gold); margin-bottom: 10px; }
+        .kz-lead-form { max-width: 30rem; margin: 0 auto; text-align: left; }
+        .kz-lead-label { display: block; font-family: var(--kz-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(241, 239, 231, 0.72); margin-bottom: 8px; }
+        .kz-lead-row { display: flex; gap: 10px; }
+        @media (max-width: 480px) { .kz-lead-row { flex-direction: column; } }
+        .kz-lead-row input { flex: 1; min-width: 0; padding: 14px 16px; font-family: var(--kz-sans); font-size: 16px; color: var(--kz-ink); background: #fff; border: 1px solid transparent; border-radius: 2px; }
+        .kz-lead-row input:focus { outline: none; box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.45); }
+        .kz-lead-submit { display: inline-flex; align-items: center; justify-content: center; padding: 14px 22px; font-family: var(--kz-sans); font-size: 15px; font-weight: 600; color: #16202C; background: var(--kz-gold); border: none; border-radius: 2px; cursor: pointer; white-space: nowrap; transition: filter 160ms ease; }
+        .kz-lead-submit:hover { filter: brightness(1.06); }
+        .kz-lead-submit:disabled { opacity: 0.55; cursor: progress; }
+        .kz-lead-note { margin: 12px 0 0; font-size: 14px; color: rgba(241, 239, 231, 0.92); }
+        .kz-cta-secondary { display: flex; flex-wrap: wrap; gap: 14px 26px; justify-content: center; align-items: center; margin-top: 22px; }
+        .kz-cta-secondary a { display: inline; background: none; padding: 0; border-radius: 0; font-weight: 500; font-size: 15px; color: rgba(241, 239, 231, 0.9); border-bottom: 1px solid rgba(201, 162, 75, 0.55); }
+        .kz-cta-secondary a.kz-cta-money { color: var(--kz-gold); font-weight: 600; }
         .kz-disclaimer { margin-top: 26px; font-family: var(--kz-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--kz-graphite); text-align: center; }
         .kz-error { margin-top: 30px; padding: 20px 24px; border: 1px solid rgba(138, 58, 51, 0.4); border-radius: 6px; color: #8a3a33; background: rgba(138, 58, 51, 0.04); display: none; }
         .kz-error.is-on { display: block; }
@@ -287,10 +301,29 @@
                     <a class="kz-more-link" id="kz-to-spiegel" href="/ki-sichtbarkeit">Website &amp; Trainingswissen prüfen <span aria-hidden="true">→</span></a>
                 </div>
 
-                <div class="kz-cta">
-                    <h3>Soll die KI Sie beim Namen nennen?</h3>
-                    <p>Genau daran arbeitet Karriaro: eine eindeutige Entität, konsistente Profile und eine handcodierte Website, die Antwortmaschinen lesen können.</p>
-                    <a href="/#kontakt">Erstgespräch buchen →</a>
+                <div class="kz-cta" id="kz-cta">
+                    <p class="kz-cta-eyebrow">Ihr Maßnahmenplan</p>
+                    <h3>Damit die KI Sie beim Namen nennt.</h3>
+                    <p>Wir senden Ihnen Ihren vollständigen KI-Sichtbarkeits-Report mit priorisierten Schritten — und wie eine handcodierte Website fürs KI-Zeitalter Sie zitierfähig macht.</p>
+                    <form id="kz-lead-form" data-lead="kwd-zitier-check-lead" class="kz-lead-form" novalidate>
+                        <input type="hidden" name="quelle" value="ki-zitier-check">
+                        <input type="hidden" name="firma" id="kz-lead-firma">
+                        <input type="hidden" name="ort" id="kz-lead-ort">
+                        <input type="hidden" name="domain" id="kz-lead-domain">
+                        <input type="hidden" name="branche" id="kz-lead-branche">
+                        <input type="hidden" name="ki_score" id="kz-lead-score">
+                        <input type="hidden" name="ki_zusammenfassung" id="kz-lead-summary">
+                        <label class="kz-lead-label" for="kz-lead-email">Ihre E-Mail für Report &amp; Maßnahmenplan</label>
+                        <div class="kz-lead-row">
+                            <input id="kz-lead-email" name="email" type="email" required placeholder="name@firma.de" autocomplete="email" autocapitalize="none" spellcheck="false" />
+                            <button type="submit" class="kz-lead-submit" id="kz-lead-submit"><span>Report anfordern</span></button>
+                        </div>
+                        <p class="kz-lead-note" id="kz-lead-note" hidden></p>
+                    </form>
+                    <div class="kz-cta-secondary">
+                        <a href="/webseite-erstellen-lassen" class="kz-cta-money" id="kz-cta-money">Website fürs KI-Zeitalter — ab 1.290 € →</a>
+                        <a href="/#kontakt" id="kz-cta-call">Lieber direkt sprechen →</a>
+                    </div>
                 </div>
 
                 <p class="kz-disclaimer">Stichprobe einer Engine (Claude) · Momentaufnahme · Verzeichnis-Checks best-effort</p>
@@ -551,6 +584,27 @@
                         cross.href = '/ki-sichtbarkeit?' + qp.toString();
                     }
 
+                    // Lead-Capture: Ergebnis-Kontext in versteckte Felder + Money-CTA verankern.
+                    try {
+                        var setVal = function (id, v) { var el = document.getElementById(id); if (el) el.value = (v == null ? '' : String(v)); };
+                        setVal('kz-lead-firma', j.business || business);
+                        setVal('kz-lead-ort', j.ort || ort);
+                        setVal('kz-lead-domain', domainRaw || '');
+                        setVal('kz-lead-branche', branche || '');
+                        setVal('kz-lead-score', hasScore ? Math.round(j.score) : 'nicht belastbar messbar');
+                        var gapTxt = (j.gaps || []).map(function (g) { return '• ' + (g && g.gap ? g.gap : g); }).join('  ');
+                        setVal('kz-lead-summary', (j.scoreLabel ? j.scoreLabel + ' — ' : '') + gapTxt);
+                        var money = document.getElementById('kz-cta-money');
+                        if (money) {
+                            var mp = new URLSearchParams();
+                            mp.set('quelle', 'ki-zitier-check');
+                            mp.set('firma', business);
+                            mp.set('ort', ort);
+                            if (hasScore) mp.set('ki_score', String(Math.round(j.score)));
+                            money.href = '/webseite-erstellen-lassen?' + mp.toString();
+                        }
+                    } catch (e) {}
+
                     result.classList.add('is-on');
                     submit.disabled = false;
                     submitting = false;
@@ -562,7 +616,35 @@
                     showError(err.name === 'AbortError' ? 'Zeitüberschreitung — die Prüfung hat zu lange gedauert. Bitte erneut versuchen.' : (err.message === 'Failed to fetch' ? 'Keine Verbindung — die Prüfung konnte nicht gestartet werden. Bitte prüfen Sie Ihre Internetverbindung.' : (err.message || 'Der Zitier-Check ist fehlgeschlagen.')));
                 });
             });
+
+            // Lead-Capture im Ergebnis → Formspree (Konvention f/mjggbdre), inline Success.
+            var leadForm = document.getElementById('kz-lead-form');
+            if (leadForm) {
+                leadForm.addEventListener('submit', function (ev) {
+                    ev.preventDefault();
+                    var lbtn = document.getElementById('kz-lead-submit');
+                    var note = document.getElementById('kz-lead-note');
+                    var email = document.getElementById('kz-lead-email');
+                    if (email && !email.checkValidity()) { email.reportValidity(); return; }
+                    lbtn.disabled = true; lbtn.querySelector('span').textContent = 'Wird gesendet …';
+                    var fd = new FormData(leadForm);
+                    try { if (window.krAttributionFlat) { var a = window.krAttributionFlat(); Object.keys(a).forEach(function (k) { fd.append(k, a[k]); }); } } catch (e) {}
+                    try { if (window.krTrack) window.krTrack('Lead KI-Zitier-Check', { quelle: 'ki-zitier-check', score: (document.getElementById('kz-lead-score') || {}).value || '' }); } catch (e) {}
+                    fetch('https://formspree.io/f/mjggbdre', { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+                        .then(function (r) {
+                            if (r.ok) {
+                                var row = leadForm.querySelector('.kz-lead-row');
+                                if (row) row.style.display = 'none';
+                                var lbl = leadForm.querySelector('.kz-lead-label');
+                                if (lbl) lbl.style.display = 'none';
+                                if (note) { note.hidden = false; note.textContent = 'Danke — Ihr Report ist unterwegs. Wir melden uns persönlich, meist innerhalb von 24 Stunden.'; }
+                            } else { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; }
+                        })
+                        .catch(function () { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; });
+                });
+            }
         })();
     </script>
+    <script src="/js/attribution.js" defer></script>
 </body>
 </html>
