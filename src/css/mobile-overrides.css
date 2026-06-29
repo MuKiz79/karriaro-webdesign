@@ -480,27 +480,26 @@
         transform: translate(-50%, -50%);
         z-index: -1; pointer-events: none;
     }
-    .hero-keim-bloom svg {
-        width: 100%; height: 100%; overflow: visible; display: block;
+    /* PERFORMANCE: NUR EINE HTML-Ebene (.hkb-anim) animieren → GPU-composited, butterweich.
+       Die 84 Punkte werden 1× gerastert und als Gruppe rotiert/skaliert/ausgeblendet
+       (statt 84 SVG-Transforms = Mobile-Safari-Ruckeln). Eine Keyframe-Sequenz:
+       öffnen (Spirale dreht auf) → offen halten (Headline wächst) → nach außen zerstreuen. */
+    .hkb-anim {
+        display: block; width: 100%; height: 100%;
         transform-origin: 50% 50%;
-        animation: hero-bloom-open 760ms var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) both;
-        will-change: transform;
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+        animation: hero-bloom-life 2200ms both;
     }
-    @keyframes hero-bloom-open {
-        from { transform: scale(0.05); opacity: 0; }
-        22%  { opacity: 1; }
-        to   { transform: scale(1); opacity: 1; }
+    .hkb-anim svg { width: 100%; height: 100%; overflow: visible; display: block; }
+    .hero-kbloom-dot { opacity: 1; }   /* statisch — die GRUPPE animiert, nicht die Punkte */
+    @keyframes hero-bloom-life {
+        0%   { transform: rotate(-30deg) scale(0.06); opacity: 0; animation-timing-function: cubic-bezier(.34, 1.56, .64, 1); }
+        13%  { opacity: 1; }
+        32%  { transform: rotate(0deg) scale(1);       opacity: 1; animation-timing-function: cubic-bezier(.4, 0, .5, 1); }
+        46%  { transform: rotate(0deg) scale(1);       opacity: 1; }
+        100% { transform: rotate(6deg) scale(1.5);     opacity: 0; }
     }
-    .hero-kbloom-dot {
-        opacity: 0;
-        transform-box: fill-box;
-        transform-origin: center;
-        animation:
-            hero-kbloom-pop var(--t-2, 150ms) var(--ease-grow, cubic-bezier(.34, 1.56, .64, 1)) calc(40ms + var(--i, 0) * 8ms) both,
-            hero-kbloom-out var(--t-5, 630ms) var(--ease-settle, cubic-bezier(.22, 1, .36, 1)) calc(1040ms + var(--i, 0) * 6ms) forwards;
-    }
-    @keyframes hero-kbloom-pop { from { opacity: 0; transform: scale(0); } to { opacity: 0.9; transform: scale(1); } }
-    @keyframes hero-kbloom-out { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(1.55); } }
     @media (prefers-reduced-motion: reduce) {
         .hero-headline--keim .hero-h1-line { opacity: 1; animation: none; transform: none; }
         .hero-keim-bloom { display: none; }

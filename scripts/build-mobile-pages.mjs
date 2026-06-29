@@ -60,9 +60,9 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=441">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=441" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=441"></noscript>
+const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=442">
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=442" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=442"></noscript>
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -338,7 +338,9 @@ function buildHeroBloomSvg() {
         const fill = (i % 8 === 0) ? '#E7C878' : '#C9A24B';        // helle Glanz-Akzente (Fibonacci-Idee)
         dots += '<circle class="hero-kbloom-dot" cx="' + cx + '" cy="' + cy + '" r="' + dr + '" fill="' + fill + '" style="--i:' + i + '"></circle>';
     }
-    return '<span class="hero-keim-bloom" aria-hidden="true"><svg viewBox="0 0 300 148" preserveAspectRatio="xMidYMid meet">' + dots + '</svg></span>';
+    // Innerer .hkb-anim-Wrapper = EINE animierte HTML-Ebene (GPU-composited); die 84 Punkte
+    // werden 1× gerastert und als Gruppe transformiert → butterweich statt 84 SVG-Repaints.
+    return '<span class="hero-keim-bloom" aria-hidden="true"><span class="hkb-anim"><svg viewBox="0 0 300 148" preserveAspectRatio="xMidYMid meet">' + dots + '</svg></span></span>';
 }
 
 function rewriteHeroHeadline(html) {
