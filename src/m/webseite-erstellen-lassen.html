@@ -134,6 +134,16 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         nav .nav-right { display: flex; align-items: center; gap: 18px; }
         section { padding: 120px 0; }
         @media (max-width: 640px) { section { padding: 84px 0; } }
+        .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: #86868b; margin-bottom: 20px; }
+        .gold { color: #C9A24B; }
+        @keyframes heroUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+        .hero-in > * { opacity: 0; animation: heroUp 0.7s cubic-bezier(0.2,0.7,0.2,1) forwards; }
+        .hero-in > *:nth-child(2) { animation-delay: 0.08s; }
+        .hero-in > *:nth-child(3) { animation-delay: 0.16s; }
+        .hero-in > *:nth-child(4) { animation-delay: 0.24s; }
+        .hero-in > *:nth-child(5) { animation-delay: 0.32s; }
+        .hero-in > *:nth-child(6) { animation-delay: 0.40s; }
+        @media (prefers-reduced-motion: reduce) { .hero-in > * { opacity: 1; animation: none; } }
         h1 { font-size: clamp(38px, 5.6vw, 64px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.06; }
         h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; }
         .subhead { font-size: clamp(17px, 2.2vw, 23px); color: #86868b; line-height: 1.5; max-width: 560px; margin: 24px auto 0; }
@@ -170,6 +180,30 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .proof-card h3 { font-size: 18px; font-weight: 600; margin: 8px 0 6px; }
         .proof-card p { font-size: 14px; color: #86868b; line-height: 1.6; }
         .proof-card .arrow { color: #1A2E40; font-size: 14px; margin-top: 10px; display: inline-block; }
+        .shot { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 12px; margin-bottom: 16px; background: #e9e9ec; }
+        .shot picture { display: block; width: 100%; height: 100%; }
+        .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+        .shot-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(15,18,23,0.82) 0%, rgba(15,18,23,0.15) 45%, rgba(15,18,23,0) 70%); }
+        .shot-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 15px 18px; color: #fff; text-align: left; }
+        .shot-cap .tag { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.82; }
+        .shot-cap .ttl { display: block; font-size: 18px; font-weight: 600; margin-top: 2px; }
+        .more-card { background: #1A2E40; border-color: #1A2E40; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .more-card:hover { background: #0F1F2E; border-color: #0F1F2E; transform: translateY(-2px); }
+        .more-card .more-plus { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid rgba(201,162,75,0.55); color: #C9A24B; font-size: 24px; line-height: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+        .more-card h3 { font-size: 19px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+        .more-card p { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.72); }
+        .more-card .arrow { color: #C9A24B; margin-top: 14px; }
+        @media (prefers-color-scheme: dark) and (min-width: 1024px) { .more-card { background: #1E3346; border-color: rgba(201,162,75,0.25); } }
+        .wa-float { position: fixed; right: 20px; bottom: 20px; z-index: 60; width: 56px; height: 56px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(0,0,0,0.22); transition: transform 0.25s; }
+        .wa-float:hover { transform: scale(1.06); }
+        .wa-float svg { width: 30px; height: 30px; fill: #fff; }
+        @media (max-width: 640px) { .wa-float { right: 16px; bottom: 16px; width: 52px; height: 52px; } }
+        .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: left; max-width: 920px; margin: 48px auto 0; }
+        @media (max-width: 700px) { .value-grid { grid-template-columns: 1fr; } }
+        .value-card { background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 26px; }
+        .value-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .value-card p { font-size: 14px; color: #86868b; line-height: 1.65; }
+        @media (prefers-color-scheme: dark) and (min-width: 1024px) { .value-card { background: #161A20; border-color: rgba(255,255,255,0.08); } .value-card p { color: #9BA3AD; } }
         .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; text-align: left; max-width: 880px; margin: 52px auto 0; }
         @media (max-width: 640px) { .faq-grid { grid-template-columns: 1fr; gap: 28px; } }
         .faq-grid h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
@@ -195,7 +229,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @media (prefers-color-scheme: dark) and (min-width: 1024px) {
             :root { --c-hero: #0F1217; --c-alt: #161A20; --c-ink-muted: #B8BCC3; --c-ink: #F5F3EE; }
             body { background: #0F1217; color: #F5F3EE; }
-            .muted, .subhead { color: #9BA3AD; }
+            .muted, .subhead, .eyebrow { color: #9BA3AD; }
             nav { background: rgba(15,18,23,0.92); border-bottom-color: rgba(255,255,255,0.07); }
             nav a { color: #F5F3EE; }
             nav .cta, .btn, .submit-btn { background: #2C4257; color: #fff; }
@@ -284,12 +318,17 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </nav>
 
+    <a class="wa-float" href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Webseite." target="_blank" rel="noopener" data-cta="whatsapp-float" aria-label="Per WhatsApp schreiben">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.485 3.488"/></svg>
+    </a>
+
     <main>
 
     <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: center; padding-top: 48px; background: var(--c-hero);">
-        <div style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
-            <h1>Webseite erstellen lassen —<br>handcodiert, als Unikat.</h1>
-            <p class="subhead">Sie bekommen keine Vorlage von der Stange, sondern eine handcodierte Website, die zu Ihrem Betrieb passt — schnell, barrierefrei und so gebaut, dass Kunden Sie bei Google und KI finden.</p>
+        <div class="hero-in" style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
+            <p class="eyebrow">Webseite erstellen lassen</p>
+            <h1>Webseite fürs <span class="gold">KI-Zeitalter</span> — die für Sie arbeitet.</h1>
+            <p class="subhead">Sehen Sie unten, wie das für Ihre Branche aussieht — mit eingebauten Werkzeugen, die Anfragen bringen und auch in KI-Antworten gefunden werden.</p>
             <div style="margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                 <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch — Antwort in 24 h</a>
                 <a href="tel:+491742796784" class="btn-ghost" data-cta="tel-hero">Anrufen: +49 174 2796784</a>
@@ -304,7 +343,161 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
+    <section class="fade-in" style="background: var(--c-alt); border-top: 1px solid rgba(0,0,0,0.05);">
+        <div class="wrap" style="text-align: center;">
+            <h2>So könnte Ihre Seite aussehen.</h2>
+            <p class="subhead" style="margin-bottom: 0;">Beispiele aus echten Branchen — handcodiert, mit eingebauten Werkzeugen, die Anfragen erzeugen statt nur zu zeigen.</p>
+            <div class="proof-grid">
+                <a class="proof-card" href="/portfolio/friseur-salon">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/friseur-mueller-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/friseur-mueller-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für einen Friseursalon mit Online-Terminbuchung">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Friseur &amp; Beauty</span></span>
+                    </span>
+                    <p>Online-Buchung rund um die Uhr, Wunsch-Stylist wählbar, Live-Verfügbarkeit.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/dachdecker-meisterbetrieb">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/dachdecker-meister-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/dachdecker-meister-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für einen Dachdecker-Meisterbetrieb">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Dachdecker &amp; Handwerk</span></span>
+                    </span>
+                    <p>Foto vom Dach hochladen, Festpreis in 48 Stunden — plus Sturm-Notdienst.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/immobilien-makler">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/immobilien-stadtmakler-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/immobilien-stadtmakler-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für einen Immobilienmakler mit Sofort-Wertermittlung">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Immobilienmakler</span></span>
+                    </span>
+                    <p>Wertermittlung in 60 Sekunden und Objektsuche mit Live-Filter.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/praxis-weber">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/praxis-weber-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/praxis-weber-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für eine Arzt- und Zahnarztpraxis mit Online-Terminbuchung">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Arzt- &amp; Zahnarztpraxis</span></span>
+                    </span>
+                    <p>Online-Terminbuchung, digitale Rezept-Anfrage und transparente Sprechzeiten.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/meisterbetrieb-mueller">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/handwerk-mueller-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/handwerk-mueller-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für einen Sanitär- und Heizungs-Meisterbetrieb">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Sanitär &amp; Heizung</span></span>
+                    </span>
+                    <p>Anfrage-Formular statt Telefon, Notdienst-Status und Festpreis-Rechner.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/restaurant-template">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/gastro-hirsch-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/gastro-hirsch-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für ein Restaurant mit Online-Reservierung">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Restaurant &amp; Gastronomie</span></span>
+                    </span>
+                    <p>Tisch-Reservierung online, Speisekarte mit Filter und Veranstaltungs-Anfragen.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/coaching-lehmann">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/coaching-lehmann-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/coaching-lehmann-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für Coaching und Beratung mit Online-Terminbuchung">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Coaching &amp; Beratung</span></span>
+                    </span>
+                    <p>Erstgespräch direkt buchbar (Kalender-Integration), Methoden und Referenzen.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card" href="/portfolio/spedition-schwaben">
+                    <span class="shot">
+                        <picture>
+                            <source srcset="/images/logistik-schwaben-mockup-fold.avif" type="image/avif">
+                            <img src="/images/mockups-opt/logistik-schwaben-mockup-fold-800.jpg" width="800" height="500" loading="lazy" alt="Beispiel-Website für eine Spedition mit Tarif-Rechner">
+                        </picture>
+                        <span class="shot-overlay"></span>
+                        <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Spedition &amp; Logistik</span></span>
+                    </span>
+                    <p>Tarif-Rechner, Frachtanfrage-Formular und Sendungs-Tracking.</p>
+                    <span class="arrow">Demo ansehen &rarr;</span>
+                </a>
+                <a class="proof-card more-card" href="#kontakt">
+                    <span class="more-plus">+</span>
+                    <h3>Ihre Branche nicht dabei?</h3>
+                    <p>Wir setzen viele weitere Branchen um — und begleiten auch Gründer beim Start ins Netz. Schreiben Sie uns kurz, was Sie vorhaben.</p>
+                    <span class="arrow">Anfrage stellen &rarr;</span>
+                </a>
+            </div>
+            <p class="muted" style="font-size: 13px; margin-top: 24px;">Die gezeigten Betriebe sind beispielhafte Demos, keine realen Kunden — sie zeigen, wie Ihre Branche umgesetzt aussehen kann.</p>
+        </div>
+    </section>
+
+    <section class="fade-in">
+        <div class="wrap" style="text-align: center;">
+            <h2>Mehr als eine schöne Seite — eine, die mitarbeitet.</h2>
+            <p class="subhead" style="margin-bottom: 0;">Im KI-Zeitalter reicht „online sein" nicht. Ihre Seite soll gefunden werden, Anfragen bringen und Ihnen Routine abnehmen.</p>
+            <div class="value-grid">
+                <div class="value-card">
+                    <h3>Werkzeuge, die Anfragen bringen</h3>
+                    <p>Online-Termine, Förder-Rechner oder Wertermittlung: eingebaute Werkzeuge nehmen Routine ab und machen aus Besuchern Anfragen — rund um die Uhr.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Gefunden, wo heute gesucht wird</h3>
+                    <p>Sauber, schnell und maschinenlesbar gebaut — damit Suchmaschinen und KI-Antwortdienste Ihre Inhalte lesen und Sie als Quelle nennen können.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Schlank statt Ballast</h3>
+                    <p>Handcodiert, ohne Plugin-Ballast: schnell, barrierefrei nach BFSG und vorbereitet auf das, was kommt. Der Quellcode gehört Ihnen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="fade-in" style="background: var(--c-alt);">
+        <div class="wrap" style="text-align: center;">
+            <h2>Eine Stimme, die zählt.</h2>
+            <div class="review" style="margin-top: 40px;">
+                <div class="review-stars" role="img" aria-label="5 von 5 Sternen">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+                <blockquote>
+                    <p>„Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!"</p>
+                </blockquote>
+                <div class="review-cite">
+                    <span class="name">Ilyas Kablan</span> · Google Local Guide · <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener">Auf Google ansehen ↗</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="fade-in">
         <div class="wrap" style="text-align: center;">
             <h2>So läuft es ab.</h2>
             <p class="subhead" style="margin-bottom: 0;">Vier Schritte, kein Risiko: Sie zahlen erst, wenn der Entwurf steht und Sie ihn freigeben.</p>
@@ -333,7 +526,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
-    <section class="fade-in">
+    <section class="fade-in" style="background: var(--c-alt);">
         <div class="wrap" style="text-align: center;">
             <h2>Festpreise. Einmalig.</h2>
             <p class="subhead" style="margin-bottom: 0;">Keine Abo-Gebühren, kein Baukasten-Zwang. Der Preis richtet sich nach Umfang — nicht nach Ihrem Standort.</p>
@@ -363,56 +556,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
-    <section class="fade-in" style="background: var(--c-alt);">
-        <div class="wrap" style="text-align: center;">
-            <h2>Eine Stimme, die zählt.</h2>
-            <div class="review" style="margin-top: 40px;">
-                <div class="review-stars" role="img" aria-label="5 von 5 Sternen">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                </div>
-                <blockquote>
-                    <p>„Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!"</p>
-                </blockquote>
-                <div class="review-cite">
-                    <span class="name">Ilyas Kablan</span> · Google Local Guide · <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener">Auf Google ansehen ↗</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="fade-in">
-        <div class="wrap" style="text-align: center;">
-            <h2>So könnte Ihre Seite arbeiten.</h2>
-            <p class="subhead" style="margin-bottom: 0;">Beispiel-Demos aus echten Branchen — mit eingebauten Werkzeugen, die Anfragen erzeugen statt nur zu zeigen.</p>
-            <div class="proof-grid">
-                <a class="proof-card" href="/webdesign-fuer-friseur">
-                    <span class="demo-tag">Branche · Demo</span>
-                    <h3>Friseur &amp; Beauty</h3>
-                    <p>Online-Terminbuchung gegen No-Shows, Stil-Empfehlung, Galerie — eine Seite, die rund um die Uhr Termine annimmt.</p>
-                    <span class="arrow">Friseur-Website ansehen &rarr;</span>
-                </a>
-                <a class="proof-card" href="/webdesign-fuer-dachdecker">
-                    <span class="demo-tag">Branche · Demo</span>
-                    <h3>Dachdecker &amp; Handwerk</h3>
-                    <p>Förder-Rechner (BAFA/KfW) und Foto-Anfrage, die Interessenten vorqualifizieren — bevor das Telefon klingelt.</p>
-                    <span class="arrow">Dachdecker-Website ansehen &rarr;</span>
-                </a>
-                <a class="proof-card" href="/webdesign-fuer-immobilienmakler">
-                    <span class="demo-tag">Branche · Demo</span>
-                    <h3>Immobilienmakler</h3>
-                    <p>Sofort-Wertermittlung und Live-Filter, die aus Besuchern echte Eigentümer-Anfragen machen.</p>
-                    <span class="arrow">Makler-Website ansehen &rarr;</span>
-                </a>
-            </div>
-            <p class="muted" style="font-size: 13px; margin-top: 24px;">Die gezeigten Betriebe sind beispielhafte Demos, keine realen Kunden — sie zeigen, wie Ihre Branche umgesetzt aussehen kann.</p>
-        </div>
-    </section>
-
-    <section class="fade-in" style="background: var(--c-alt);">
         <div class="wrap" style="text-align: center;">
             <h2>Häufige Fragen.</h2>
             <div class="faq-grid">
@@ -436,7 +580,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
-    <section class="fade-in" id="kontakt">
+    <section class="fade-in" id="kontakt" style="background: var(--c-alt);">
         <div class="wrap-xs" style="text-align: center;">
             <h2>Webseite erstellen lassen.</h2>
             <p class="subhead" style="margin-bottom: 36px;">Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich.</p>
@@ -452,7 +596,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </label>
                 <button type="submit" class="submit-btn">Kostenlose Einschätzung anfordern</button>
             </form>
-            <p class="muted" style="font-size: 13px; margin-top: 18px;">Lieber telefonisch? <a href="tel:+491742796784" class="link-arrow" style="font-size: 13px;" data-cta="tel-form">+49 174 2796784</a></p>
+            <p class="muted" style="font-size: 13px; margin-top: 18px;">Lieber telefonisch oder per WhatsApp? <a href="tel:+491742796784" class="link-arrow" style="font-size: 13px;" data-cta="tel-form">+49 174 2796784</a> · <a href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Webseite." class="link-arrow" style="font-size: 13px;" target="_blank" rel="noopener" data-cta="whatsapp-form">WhatsApp schreiben</a></p>
         </div>
     </section>
 
