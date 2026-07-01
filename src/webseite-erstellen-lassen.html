@@ -112,6 +112,12 @@
         @media (max-width: 640px) { section[aria-label="Hero"] { align-items: flex-start !important; padding-top: 76px !important; } }
         .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: #86868b; margin-bottom: 20px; }
         .gold { color: #C9A24B; white-space: nowrap; }
+        .promo-bar { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 24px; padding: 8px 18px; border-radius: 24px; background: rgba(201,162,75,0.12); border: 1px solid rgba(201,162,75,0.5); font-size: 13px; font-weight: 600; letter-spacing: 0.01em; color: #9a7b2e; }
+        .promo-bar::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #C9A24B; display: inline-block; }
+        .hero-rating { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; font-size: 13px; color: #424245; }
+        .hero-rating .hr-stars { display: inline-flex; gap: 2px; }
+        .hero-rating .hr-stars svg { width: 15px; height: 15px; fill: #C9A24B; }
+        .hero-rating a { color: #1A2E40; text-decoration: underline; }
         @keyframes heroUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
         .hero-in > * { opacity: 0; animation: heroUp 0.7s cubic-bezier(0.2,0.7,0.2,1) forwards; }
         .hero-in > *:nth-child(2) { animation-delay: 0.08s; }
@@ -217,6 +223,9 @@
             .review blockquote p { color: #F5F3EE; }
             .review-cite .name { color: #F5F3EE; }
             .price-anchor, .trust-strip { color: #B8BCC3; }
+            .promo-bar { color: #D9B968; background: rgba(201,162,75,0.14); border-color: rgba(201,162,75,0.42); }
+            .hero-rating { color: #9BA3AD; }
+            .hero-rating a { color: #8FB0C9; }
             input[type="text"], input[type="email"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
             input:focus, textarea:focus { border-color: #6B8AA3; }
             ::placeholder { color: #8B93A0; }
@@ -278,9 +287,20 @@
 
     <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: center; padding-top: 48px; background: var(--c-hero);">
         <div class="hero-in" style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
+            <div class="promo-bar">Gründungs-Angebot 2026 · begrenzte Projekt-Plätze</div>
             <p class="eyebrow">Webseite erstellen lassen</p>
-            <h1>Webseite fürs <span class="gold">KI-Zeitalter</span> — die für Sie arbeitet.</h1>
+            <h1>Ihre Webseite fürs <span class="gold">KI-Zeitalter</span> — die für Sie arbeitet.</h1>
             <p class="subhead">Sehen Sie unten, wie das für Ihre Branche aussieht — mit eingebauten Werkzeugen, die Anfragen bringen und auch in KI-Antworten gefunden werden.</p>
+            <div class="hero-rating">
+                <span class="hr-stars" role="img" aria-label="5 von 5 Sternen">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </span>
+                <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener" data-cta="rating-hero">Echte Google-Bewertung</a>
+            </div>
             <div style="margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                 <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch anfragen</a>
                 <a href="tel:+491742796784" class="btn-ghost" data-cta="tel-hero">Anrufen: +49 174 2796784</a>
