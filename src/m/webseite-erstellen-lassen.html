@@ -138,8 +138,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @media (max-width: 640px) { section[aria-label="Hero"] { align-items: flex-start !important; padding-top: 76px !important; } }
         .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; color: #86868b; margin-bottom: 20px; }
         .gold { color: #C9A24B; white-space: nowrap; }
-        .promo-bar { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 24px; padding: 8px 18px; border-radius: 24px; background: rgba(201,162,75,0.12); border: 1px solid rgba(201,162,75,0.5); font-size: 13px; font-weight: 600; letter-spacing: 0.01em; color: #9a7b2e; }
-        .promo-bar::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #C9A24B; display: inline-block; }
+        .promo-bar { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 24px; padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(201,162,75,0.42); background: linear-gradient(180deg, rgba(201,162,75,0.10), rgba(201,162,75,0.035)); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: #A8823A; text-align: center; }
+        .promo-bar svg { width: 12px; height: 12px; fill: #C9A24B; flex: none; }
+        @media (max-width: 640px) { .promo-bar { letter-spacing: 0.1em; padding: 8px 16px; } }
         .hero-rating { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; font-size: 13px; color: #424245; }
         .hero-rating .hr-stars { display: inline-flex; gap: 2px; }
         .hero-rating .hr-stars svg { width: 15px; height: 15px; fill: #C9A24B; }
@@ -337,7 +338,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: center; padding-top: 48px; background: var(--c-hero);">
         <div class="hero-in" style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
-            <div class="promo-bar">Gründungs-Angebot 2026 · begrenzte Projekt-Plätze</div>
+            <div class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot 2026 · begrenzte Plätze</div>
             <p class="eyebrow">Webseite erstellen lassen</p>
             <h1>Ihre Webseite fürs <span class="gold">KI-Zeitalter</span> — die für Sie arbeitet.</h1>
             <p class="subhead">Sehen Sie unten, wie das für Ihre Branche aussieht — mit eingebauten Werkzeugen, die Anfragen bringen und auch in KI-Antworten gefunden werden.</p>
