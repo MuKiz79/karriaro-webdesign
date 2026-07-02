@@ -167,6 +167,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .btn-ghost:hover { border-color: #1A2E40; }
         .price-anchor { display: inline-block; margin-top: 22px; font-size: 15px; color: #424245; }
         .price-anchor strong { color: #14202B; }
+        .hero-cred { margin-top: 12px; font-size: 13px; color: #6E6E73; letter-spacing: 0.02em; }
+        .consent { font-size: 12px; color: #86868b; display: flex; gap: 10px; align-items: flex-start; margin: 4px 0; text-align: left; }
+        #kontakt .consent input[type="checkbox"] { flex: none; appearance: none; -webkit-appearance: none; width: 18px; height: 18px; min-height: 0; padding: 0; margin: 1px 0 0; border: 1.5px solid #c7c7cc; border-radius: 5px; background: #fff; box-sizing: border-box; cursor: pointer; position: relative; transition: background 0.2s, border-color 0.2s; }
+        #kontakt .consent input[type="checkbox"]:checked { background: #1A2E40; border-color: #1A2E40; }
+        #kontakt .consent input[type="checkbox"]:checked::after { content: ""; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        #kontakt .consent input[type="checkbox"]:focus-visible { outline: 2px solid #1A2E40; outline-offset: 2px; }
+        .consent span { line-height: 1.5; }
         .link-arrow { color: #1A2E40; font-size: 17px; transition: color 0.3s; }
         .link-arrow:hover { text-decoration: underline; }
         .trust-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin-top: 36px; font-size: 13px; color: #424245; }
@@ -261,6 +268,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .price-card .reg s { color: #6f7681; }
             .hero-rating { color: #9BA3AD; }
             .hero-rating a { color: #8FB0C9; }
+            .hero-cred { color: #8A9199; }
+            #kontakt .consent input[type="checkbox"] { background: #161A20; border-color: rgba(255,255,255,0.25); }
+            #kontakt .consent input[type="checkbox"]:checked { background: #2C4257; border-color: #2C4257; }
             input[type="text"], input[type="email"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
             input:focus, textarea:focus { border-color: #6B8AA3; }
             ::placeholder { color: #8B93A0; }
@@ -344,7 +354,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <main>
 
-    <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: center; padding-top: 48px; background: var(--c-hero);">
+    <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: flex-start; padding-top: 96px; background: var(--c-hero);">
         <div class="hero-in" style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
             <a href="#preise" class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot · bis 31. Juli 2026</a>
             <p class="eyebrow">Webseite erstellen lassen</p>
@@ -360,6 +370,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 </span>
                 <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener" data-cta="rating-hero">Echte Google-Bewertung</a>
             </div>
+            <p class="hero-cred">Über 20 Jahre Erfahrung in der Tech-Branche</p>
             <div style="margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
                 <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch anfragen</a>
                 <a href="tel:+491742796784" class="btn-ghost" data-cta="tel-hero">Anrufen: +49 174 2796784</a>
@@ -626,9 +637,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
                 <textarea name="message" rows="3" placeholder="Was möchten Sie erreichen?"></textarea>
-                <label style="font-size: 12px; color: #86868b; display: flex; gap: 8px; align-items: flex-start; margin: 4px 0;">
-                    <input type="checkbox" name="privacy" required style="margin-top: 3px;">
-                    Ich stimme der <a href="/datenschutz" style="color: var(--c-ink-muted); text-decoration: underline;">Datenschutzerklärung</a> zu.
+                <label class="consent">
+                    <input type="checkbox" name="privacy" required>
+                    <span>Ich stimme der <a href="/datenschutz" style="color: var(--c-ink-muted); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
                 </label>
                 <button type="submit" class="submit-btn">Kostenlose Einschätzung anfordern</button>
             </form>
