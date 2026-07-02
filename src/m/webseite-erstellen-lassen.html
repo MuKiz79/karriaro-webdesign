@@ -141,6 +141,11 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .promo-bar { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 24px; padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(201,162,75,0.42); background: linear-gradient(180deg, rgba(201,162,75,0.10), rgba(201,162,75,0.035)); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: #A8823A; text-align: center; }
         .promo-bar svg { width: 12px; height: 12px; fill: #C9A24B; flex: none; }
         @media (max-width: 640px) { .promo-bar { letter-spacing: 0.1em; padding: 8px 16px; } }
+        a.promo-bar { transition: border-color 0.3s, background 0.3s; }
+        a.promo-bar:hover { border-color: rgba(201,162,75,0.78); }
+        .price-card .reg { font-size: 12px; color: #86868b; margin: -2px 0 12px; }
+        .price-card .reg s { color: #a1a1a6; }
+        .founding-note { display: inline-block; margin-top: 18px; font-size: 14px; line-height: 1.55; color: #A8823A; font-weight: 500; max-width: 620px; }
         .hero-rating { display: inline-flex; align-items: center; gap: 9px; margin-top: 22px; font-size: 13px; color: #424245; }
         .hero-rating .hr-stars { display: inline-flex; gap: 2px; }
         .hero-rating .hr-stars svg { width: 15px; height: 15px; fill: #C9A24B; }
@@ -251,6 +256,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .review-cite .name { color: #F5F3EE; }
             .price-anchor, .trust-strip { color: #B8BCC3; }
             .promo-bar { color: #D9B968; background: rgba(201,162,75,0.14); border-color: rgba(201,162,75,0.42); }
+            .founding-note { color: #D9B968; }
+            .price-card .reg { color: #9BA3AD; }
+            .price-card .reg s { color: #6f7681; }
             .hero-rating { color: #9BA3AD; }
             .hero-rating a { color: #8FB0C9; }
             input[type="text"], input[type="email"], textarea { background: #161A20; border-color: rgba(255,255,255,0.14); color: #F5F3EE; }
@@ -338,7 +346,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: center; padding-top: 48px; background: var(--c-hero);">
         <div class="hero-in" style="max-width: 1080px; margin: 0 auto; padding: 0 24px; text-align: center;">
-            <div class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot 2026 · begrenzte Plätze</div>
+            <a href="#preise" class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot · 15 % bis 31. Juli 2026</a>
             <p class="eyebrow">Webseite erstellen lassen</p>
             <h1>Ihre Webseite fürs <span class="gold">KI-Zeitalter</span> — die für Sie arbeitet.</h1>
             <p class="subhead">Sehen Sie unten, wie das für Ihre Branche aussieht — mit eingebauten Werkzeugen, die Anfragen bringen und auch in KI-Antworten gefunden werden.</p>
@@ -356,7 +364,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch anfragen</a>
                 <a href="tel:+491742796784" class="btn-ghost" data-cta="tel-hero">Anrufen: +49 174 2796784</a>
             </div>
-            <span class="price-anchor"><strong>Festpreis ab 1.290 €</strong>, einmalig — kein Abo. Erst Entwurf ansehen, dann zahlen.</span>
+            <span class="price-anchor"><strong>Festpreis ab 1.290 €</strong> · als Gründungskunde ab 1.090 €. Einmalig, kein Abo — erst Entwurf ansehen, dann zahlen.</span>
             <div class="trust-strip">
                 <span><span class="dot"></span> Erst Entwurf, dann Zahlung</span>
                 <span><span class="dot"></span> barrierefrei nach BFSG gebaut</span>
@@ -549,29 +557,34 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
-    <section class="fade-in" style="background: var(--c-alt);">
+    <section class="fade-in" id="preise" style="background: var(--c-alt);">
         <div class="wrap" style="text-align: center;">
             <h2>Festpreise. Einmalig.</h2>
             <p class="subhead" style="margin-bottom: 0;">Keine Abo-Gebühren, kein Baukasten-Zwang. Der Preis richtet sich nach Umfang — nicht nach Ihrem Standort.</p>
+            <p class="founding-note">Gründungs-Angebot 2026: 15 % auf alle Pakete — im Gegenzug dürfen wir Ihre fertige Seite als Referenz zeigen. Nur bis 31. Juli 2026.</p>
             <div class="price-grid">
                 <div class="price-card">
                     <div class="tier">Essential</div>
-                    <div class="amount">1.290 €</div>
+                    <div class="amount">1.090 €</div>
+                    <div class="reg">statt <s>1.290 €</s> · Gründungspreis</div>
                     <p>Eine Seite, die alles zeigt — barrierefrei gebaut. Für Handwerk, Beauty, Café, Florist, Studio.</p>
                 </div>
                 <div class="price-card">
                     <div class="tier">Professional</div>
-                    <div class="amount">1.990 €</div>
+                    <div class="amount">1.690 €</div>
+                    <div class="reg">statt <s>1.990 €</s> · Gründungspreis</div>
                     <p>Bis zu 5 Unterseiten, lokale SEO und ein Branchen-Werkzeug. Für Dachdecker, Spedition, Praxis, Hotel.</p>
                 </div>
                 <div class="price-card">
                     <div class="tier">Premium</div>
-                    <div class="amount">2.990 €</div>
+                    <div class="amount">2.490 €</div>
+                    <div class="reg">statt <s>2.990 €</s> · Gründungspreis</div>
                     <p>Großzügiger Umfang nach Absprache, Branchen-Werkzeuge, Editorial-Layout. Für Zahnarzt, Makler, Kanzlei.</p>
                 </div>
                 <div class="price-card">
                     <div class="tier">Premium+</div>
-                    <div class="amount">3.990 €</div>
+                    <div class="amount">3.390 €</div>
+                    <div class="reg">statt <s>3.990 €</s> · Gründungspreis</div>
                     <p>Premium plus Mandantenportal und technische Datenschutz-Pflege. Der Pilot für anspruchsvolle Kanzleien.</p>
                 </div>
             </div>
