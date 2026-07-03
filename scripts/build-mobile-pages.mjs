@@ -60,9 +60,11 @@ const SKIP = new Set([
 // HTML-Snippets
 // ────────────────────────────────────────────────────────────────
 
-const MOBILE_OVERRIDES_LINK = `    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=442">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=442" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=442"></noscript>
+// Sprint (Perf-Rollout 2026-07-03): mobile-overrides.css RENDER-BLOCKING statt async
+// (media=print→all). Das späte Anwenden der 62-KB-CSS snappte das Hero-<main> nach
+// First-Paint (CLS 0,119–0,195, bisektiert). 14 KB gzip render-blocking, LCP-Headroom
+// vorhanden. Verifiziert: CLS→0 auf Money-Page + Content-Seiten.
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=442">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -76,9 +78,6 @@ const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
          in Lean-Embed-iframes brauchen DNS+TLS-Handshake). Spart 200-400ms. -->
     <link rel="preconnect" href="https://karriaro-webdesign.de" crossorigin>
     <link rel="dns-prefetch" href="https://karriaro-webdesign.de">
-    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
-    <link rel="prefetch" href="/portfolio/immobilien-makler-embed-desktop.html">
-    <link rel="prefetch" href="/portfolio/coaching-lehmann-embed-desktop.html">
     <meta name="theme-color" content="#FFFFFF">
     <meta name="color-scheme" content="light">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -88,11 +87,22 @@ const PWA_HEAD_BLOCK = `    <link rel="manifest" href="/manifest.json">
     <meta name="format-detection" content="telephone=no">
     <script>(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();</script>`;
 
-function injectPwaHead(html) {
+// Sprint (Perf-Rollout 2026-07-03): Demo-Swiper-Prefetches NUR auf der Startseite.
+// Auf den anderen ~65 Mobile-Seiten waren sie (samt einem 399-KB-JPG-Preload)
+// reine Verschwendung (~419 KB/Seite, nie gerendert → Transfer ~477→58 KiB).
+// Der 399-KB-JPG-Preload ist GANZ raus: die Startseite preloadet ihren Hero
+// bereits als AVIF (Source, fetchpriority=high) — der JPG-Preload war ein
+// redundanter Doppel-Download (auch auf index, AVIF-Browser nutzen ihn nie).
+const INDEX_HERO_HINTS = `    <link rel="prefetch" href="/portfolio/immobilien-makler-embed-desktop.html">
+    <link rel="prefetch" href="/portfolio/coaching-lehmann-embed-desktop.html">
+`;
+
+function injectPwaHead(html, isIndexPage) {
     if (html.includes('rel="manifest"')) return html;
     const closeHeadIdx = html.lastIndexOf('</head>');
     if (closeHeadIdx === -1) return html;
-    return html.slice(0, closeHeadIdx) + PWA_HEAD_BLOCK + '\n' + html.slice(closeHeadIdx);
+    const heroHints = isIndexPage ? INDEX_HERO_HINTS : '';
+    return html.slice(0, closeHeadIdx) + PWA_HEAD_BLOCK + '\n' + heroHints + html.slice(closeHeadIdx);
 }
 
 // Sprint 135 — Mobile-OG-Image (1200×630 Editorial-Spread, Cream+Indigo)
@@ -1077,7 +1087,7 @@ function buildPage(relPath) {
     html = injectInterFont(html);
     // Sprint 134 — PWA-Foundation (Manifest + Apple-Meta + SW-Registration)
     // auf JEDER Mobile-Page, nicht nur Index. Macht Sub-Pages installable.
-    html = injectPwaHead(html);
+    html = injectPwaHead(html, isIndex(relPath));
     // Sprint 135 — Mobile-OG-Image (Editorial-Spread) statt Desktop-generic.
     html = rewriteOgImage(html);
     if (isSelling(relPath)) {
