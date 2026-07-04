@@ -13,12 +13,15 @@
     <meta property="og:url" content="https://karriaro-webdesign.de/webseite-erstellen-lassen">
     <meta property="og:title" content="Webseite erstellen lassen — handcodiert, Festpreis ab 1.290 € | Karriaro">
     <meta property="og:description" content="Handcodierte Website als Unikat, zum Festpreis. Erst Entwurf ansehen, dann entscheiden. In 2–4 Wochen online.">
-    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-money.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Muammer Kızılaslan, Gründer von Karriaro — Website handcodiert zum Festpreis ab 1.290 €">
     <meta property="og:locale" content="de_DE">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Webseite erstellen lassen — handcodiert, Festpreis ab 1.290 €">
     <meta name="twitter:description" content="Handcodierte Website als Unikat, zum Festpreis. Erst Entwurf, dann entscheiden.">
-    <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-money.jpg">
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=9">
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -323,6 +326,13 @@
             footer a { color: #B8BCC3; }
             footer a:hover { color: #F5F3EE; }
         }
+        .founder-block { display: flex; gap: 40px; align-items: flex-start; max-width: 940px; margin: 0 auto; text-align: left; }
+        .founder-photo { flex: 0 0 auto; }
+        .founder-photo img { width: 184px; height: 184px; border-radius: 16px; object-fit: cover; filter: grayscale(1) contrast(1.03); box-shadow: 0 14px 34px rgba(0,0,0,0.14); border: 1px solid rgba(201,162,75,0.28); display: block; }
+        .founder-block h2 { margin: 0 0 14px; }
+        .founder-block .eyebrow { margin-bottom: 12px; }
+        .founder-block .subhead { margin-bottom: 22px; }
+        @media (max-width: 640px) { .founder-block { flex-direction: column; align-items: center; text-align: center; gap: 22px; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <script src="/js/attribution.js?v=199" defer></script>
@@ -677,6 +687,25 @@
                 <div>
                     <h3>Gibt es laufende Kosten oder ein Abo?</h3>
                     <p>Nein. Der Festpreis ist einmalig, der Quellcode gehört Ihnen. Optionale Wartung gibt es ab 99 €/Monat — freiwillig, kein Zwang.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="fade-in" aria-label="Gründer">
+        <div class="wrap">
+            <div class="founder-block">
+                <div class="founder-photo">
+                    <picture>
+                        <source srcset="/images/muammer-portrait.avif" type="image/avif">
+                        <img src="/images/muammer-portrait.jpg" width="184" height="184" alt="Muammer Kızılaslan, Gründer von Karriaro Webdesign" loading="lazy" decoding="async">
+                    </picture>
+                </div>
+                <div class="founder-text">
+                    <p class="eyebrow">Ihr Ansprechpartner</p>
+                    <h2>Sie sprechen direkt mit dem, der Ihre Seite baut.</h2>
+                    <p class="subhead">Ich bin Muammer Kızılaslan, Gründer von Karriaro. Über 20 Jahre in der Tech-Branche — und jede Website entsteht handcodiert und persönlich begleitet. Kein Baukasten, keine anonyme Agentur-Kette: ein Ansprechpartner, vom ersten Entwurf bis zum Livegang.</p>
+                    <a href="/gruender" class="btn-ghost" data-cta="founder-story">Meine Geschichte →</a>
                 </div>
             </div>
         </div>
