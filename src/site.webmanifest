@@ -1,0 +1,10 @@
+{
+  "name": "Karriaro Webdesign",
+  "short_name": "Karriaro",
+  "icons": [
+    { "src": "/images/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/images/favicon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#16202C",
+  "background_color": "#16202C"
+}

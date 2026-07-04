@@ -37,17 +37,26 @@ function frame(cx, cy, s, stroke, w) {
   return arms.map(d => `<path d="${d}" stroke="${stroke}" stroke-width="${w}" fill="none"/>`).join('');
 }
 
-// Favicon (16-32px): wenige + kräftige Punkte, sonst Matsch.
-const COMPACT_N = 28, COMPACT_S = 0.45;
 // Nav (~48px): dicht wie das Voll-Logo (Founder „zu wenige Punkte"), aber noch sauber. 89 = Fibonacci.
 const NAV_N = 89, NAV_S = 0.38;
 
-// ---- favicon.svg (Compact-Mark im dunklen Rounded-Square) ----
+// ---- favicon.svg (Bold-Blüte: Zentrum + 6 Blätter — SERP-lesbar) ----
+// Die dichte ~110-Punkt-Phyllotaxis (Voll-Logo/Nav) zerfällt bei 16-32px zu einem Matsch-Klecks im
+// Google-Suchergebnis. Fürs winzige Favicon deshalb eine REDUZIERTE Marke: 1 Gold-Zentrum + 6 Blätter
+// (Creme/Gold alternierend), lesbar ab 16px. Palette bleibt Navy/Creme/Messing. Die Desktop-Raster
+// (favicon.ico, favicon-48/96/192/512.png, apple-touch-icon.png, root /favicon.ico) werden aus DERSELBEN
+// Geometrie von scripts/build-favicon-rasters.py erzeugt — bei Änderung hier BEIDE angleichen.
+function compactBloom() {
+  let s = `<circle cx="50" cy="50" r="12.5" fill="${GOLD}"/>`;
+  for (let i = 0; i < 6; i++) {
+    const a = (-90 + i * 60) * Math.PI / 180;
+    const x = (50 + 27 * Math.cos(a)).toFixed(2), y = (50 + 27 * Math.sin(a)).toFixed(2);
+    s += `<circle cx="${x}" cy="${y}" r="9.2" fill="${i % 2 === 0 ? CREAM : GOLD}"/>`;
+  }
+  return s;
+}
 const favicon = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Karriaro">
-  <rect width="32" height="32" rx="5" fill="${INDIGO}"/>
-  ${dots(16, 16, 13, COMPACT_N, CREAM, GOLD, COMPACT_S)}
-</svg>`;
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Karriaro"><rect width="100" height="100" rx="22" fill="${INDIGO}"/>${compactBloom()}</svg>`;
 writeFileSync('src/images/favicon.svg', favicon);
 
 // ---- Nav-Inline-Mark (Compact, currentColor → theme-adaptiv; Gold fest) ----
