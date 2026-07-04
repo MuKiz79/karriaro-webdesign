@@ -55,9 +55,12 @@ function compactBloom() {
   }
   return s;
 }
+// HINWEIS (2026-07-04): favicon.svg ist jetzt das GRÜNDER-GESICHT (Founder-Entscheidung),
+// erzeugt von scripts/build-favicon-rasters.py. Die Bold-Blüte hier NICHT mehr schreiben,
+// sonst überschreibt ein Re-Gen das Gesichts-Favicon. compactBloom() bleibt als Referenz.
 const favicon = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Karriaro"><rect width="100" height="100" rx="22" fill="${INDIGO}"/>${compactBloom()}</svg>`;
-writeFileSync('src/images/favicon.svg', favicon);
+void favicon; // absichtlich NICHT nach src/images/favicon.svg geschrieben (siehe build-favicon-rasters.py)
 
 // ---- Nav-Inline-Mark (Compact, currentColor → theme-adaptiv; Gold fest) ----
 const navMark = `<svg class="nav-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">${frame(20, 20, 18.5, 'currentColor', 1)}${dots(20, 20, 16.5, NAV_N, 'currentColor', GOLD, NAV_S)}</svg>`;

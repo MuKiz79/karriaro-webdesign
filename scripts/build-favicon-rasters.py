@@ -1,38 +1,28 @@
 #!/usr/bin/env python3
-# build-favicon-rasters.py — Desktop-Raster-Favicons aus der Bold-Bluete (SERP-lesbar).
-# Single source fuer: favicon.ico (16/32/48), favicon-48/96/192/512.png, apple-touch-icon.png,
-# root /favicon.ico. Geometrie identisch zur Compact-Mark in scripts/build-logo-assets.mjs
-# (dort favicon.svg). Bewusst REDUZIERT ggue. der dichten Phyllotaxis: die ~110-Punkt-Bluete
-# zerfaellt bei 16-32px zu Matsch → Zentrum + 6 Blaetter lesen scharf. Palette Navy/Creme/Messing.
+# build-favicon-rasters.py — Favicon = GRÜNDER-GESICHT (Founder-Entscheidung 2026-07-04).
+# Ersetzt die Bold-Blüte: ein Gesicht im Google-Suchergebnis schlägt für Trust/Klickrate
+# ein abstraktes Zeichen (wie Wettbewerber lisakoch.de). Quelle: src/images/muammer-portrait.jpg
+# (512² Graustufen). Enger Face-Crop ("Crop B"), damit der Kopf den SERP-Kreis füllt.
+# Erzeugt: favicon.ico (16/32/48), favicon-48/96/192/512.png, apple-touch-icon.png (180),
+# root /favicon.ico, favicon.svg (Foto als <image> eingebettet -> bestehende svg-Links greifen).
+# WICHTIG: build-logo-assets.mjs schreibt favicon.svg NICHT mehr (Gesicht ist kein SVG-Mark).
 # Run: python3 scripts/build-favicon-rasters.py
-from PIL import Image, ImageDraw
-import math, os
-
-NAVY=(22,32,44,255)      # #16202C
-GOLD=(201,162,75,255)    # #C9A24B (Messing)
-CREME=(241,239,231,255)  # #F1EFE7
+from PIL import Image
+import base64, io, os
 IMG='src/images'; os.makedirs(IMG, exist_ok=True)
-
-def draw_bloom(S, rounded=True, ss=4):
-    W=S*ss
-    im=Image.new('RGBA',(W,W),(0,0,0,0))
-    d=ImageDraw.Draw(im)
-    if rounded:
-        d.rounded_rectangle([0,0,W-1,W-1], radius=int(0.22*W), fill=NAVY)
-    else:
-        d.rectangle([0,0,W-1,W-1], fill=NAVY)  # apple-touch: iOS maskiert selbst
-    c=W/2
-    d.ellipse([c-0.125*W,c-0.125*W,c+0.125*W,c+0.125*W], fill=GOLD)     # Zentrum
-    R=0.27*W; pr=0.092*W
-    for i in range(6):
-        a=math.radians(-90+i*60); x=c+R*math.cos(a); y=c+R*math.sin(a)
-        d.ellipse([x-pr,y-pr,x+pr,y+pr], fill=CREME if i%2==0 else GOLD)
-    return im.resize((S,S), Image.LANCZOS)
-
-master = draw_bloom(1024, rounded=True)
+port = Image.open('src/images/muammer-portrait.jpg').convert('L')  # 512 grayscale
+face = port.crop((120, 60, 392, 332))  # Crop B - enger Kopf-Ausschnitt
+master = face.resize((1024, 1024), Image.LANCZOS).convert('RGB')
 for s in (512,192,96,48):
     master.resize((s,s), Image.LANCZOS).save(f'{IMG}/favicon-{s}.png')
-draw_bloom(180, rounded=False).save(f'{IMG}/apple-touch-icon.png')
+master.resize((180,180), Image.LANCZOS).save(f'{IMG}/apple-touch-icon.png')  # iOS maskiert selbst
 master.save(f'{IMG}/favicon.ico', sizes=[(16,16),(32,32),(48,48)])
 master.save('src/favicon.ico', sizes=[(16,16),(32,32),(48,48)])
-print('favicon rasters written (bold-bloom, Navy/Creme/Messing)')
+# favicon.svg: 256px-JPEG als data-URI (bestehende <link rel=icon svg> zeigen das Gesicht)
+buf=io.BytesIO(); master.resize((256,256), Image.LANCZOS).save(buf, format='JPEG', quality=86)
+b64=base64.b64encode(buf.getvalue()).decode()
+svg=('<?xml version="1.0" encoding="UTF-8"?>\n'
+     '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Muammer Kizilaslan, Gruender Karriaro">'
+     f'<image href="data:image/jpeg;base64,{b64}" width="256" height="256" preserveAspectRatio="xMidYMid slice"/></svg>\n')
+open(f'{IMG}/favicon.svg','w').write(svg)
+print('Gesichts-Favicon (Crop B) erzeugt: ico/png/apple-touch/svg  svg-bytes=', len(svg))
