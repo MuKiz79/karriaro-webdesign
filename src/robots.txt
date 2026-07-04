@@ -117,3 +117,4 @@ Sitemap: https://karriaro-webdesign.de/sitemap.xml
 # https://llmstxt.org/ Standard
 # https://karriaro-webdesign.de/llms.txt
 # https://karriaro-webdesign.de/llms-full.txt
+Disallow: /downloads/
