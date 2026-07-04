@@ -35,3 +35,14 @@ aktuelle Quelle ist nur 512² Graustufen.
 
 `og-gruender.jpg` → `src/images/` (wird ausgeliefert, ist das og:image von `gruender.html`).
 `.cache/` = Zwischenprodukte, nicht versioniert.
+
+## atelier/ — „Das Atelier"-Komposition (Manufaktur-Positionierung)
+
+Editoriale Atelier-Szene: **echtes Gründer-Porträt zentral, umgeben von echten Portfolio-Projekten** (Browser-Frames) + Blüte. Löst den „Team/Manufaktur-Wirkung ohne Solo-Optik"-Wunsch **ehrlich**: das „Team" ist als **Disziplinen** formuliert („Ein Kopf. Viele Disziplinen." — Webdesign · KI · Auffindbarkeit · Barrierefreiheit), **KEINE erfundenen Kollegen/Fake-Gesichter, kein Fake-Raum, kein Werkstatt-Klischee** (Aesop/Monocle-Editorial).
+
+| Datei | Format | Verwendung |
+|---|---|---|
+| `atelier-quer-1600x1000.jpg` | 16:10 quer | „Über uns", LinkedIn, Web |
+| `atelier-quadrat-1200.jpg` | 1:1 | GBP-Foto, Instagram |
+
+Komponiert aus `src/images/muammer-portrait.jpg` (echtes Foto) + 3 Live-Portfolio-Screenshots (Stadtmakler/Dachdecker/Coaching) via Playwright. **Regel:** Team-Wirkung IMMER über „wir/Manufaktur/Disziplinen" + Gründer-als-Gesicht — NIE über generierte fremde Personen (UWG-Irreführung + gegen den „keine Attrappen"-Ethos).
