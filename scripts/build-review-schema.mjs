@@ -32,7 +32,7 @@ function avg(rs) { return rs.reduce((s, r) => s + (Number(r.rating) || 0), 0) / 
 function buildNode() {
   const node = {
     '@context': 'https://schema.org',
-    '@type': 'WebDesignAgency',
+    '@type': 'ProfessionalService',
     '@id': ORG_ID,
     name: 'Karriaro Webdesign',
     review: reviews.map(r => ({
