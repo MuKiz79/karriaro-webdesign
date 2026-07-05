@@ -48,7 +48,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <meta name="twitter:image" content="https://karriaro-webdesign.de/images/og-image-mobile.jpg">
     <link rel="alternate" hreflang="de" href="https://karriaro-webdesign.de/">
     <link rel="alternate" hreflang="en" href="https://karriaro-webdesign.de/en">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=10">
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <!-- Performance — LCP-Preloads: Hero-Bild (AVIF) + H1-Display-Schrift, so früh wie möglich,
          damit sie nicht erst bei Render-Discovery / hinter render-blockierendem CSS starten. -->
@@ -1380,6 +1383,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             100% { font-variation-settings: "opsz" 144; opacity: 1;    letter-spacing: -0.03em; }
         }
         .hero-h1-line { display: block; }
+        /* Hero auf Money-Botschaft „Webdesign fürs KI-Zeitalter" umgestellt.
+           Gold-Akzent (Messing #C9A24B) auf dem Schlüsselbegriff; Promise-Zeile als
+           zweite, leichtere H1-Ebene. Die an das führende „I" gekoppelte Phyllotaxis-
+           Blüte (Sprint 221–227) entfällt mit diesem Copy — „Webdesign" hat kein I. */
+        .hero-h1-gold { color: #C9A24B; white-space: nowrap; }
+        .hero-h1-promise {
+            display: block;
+            font-weight: 400;
+            font-size: 0.54em;
+            letter-spacing: -0.018em;
+            line-height: 1.14;
+            color: var(--color-indigo-strong);
+            margin-top: 0.3em;
+        }
         .hero-dropcap {
             position: relative;
             display: inline-block;
@@ -3963,29 +3980,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     }
     </script>
     <!--KR_REVIEWS_END-->
-    <link rel="preload" as="style" href="/css/mobile-overrides.css?v=442">
-    <link rel="stylesheet" href="/css/mobile-overrides.css?v=442" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="/css/mobile-overrides.css?v=442"></noscript>
+    <link rel="stylesheet" href="/css/mobile-overrides.css?v=442">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>
-    <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
-    <!-- Sprint 166 — Preconnect zu karriaro-webdesign.de (Cross-Origin-Bilder
-         in Lean-Embed-iframes brauchen DNS+TLS-Handshake). Spart 200-400ms. -->
-    <link rel="preconnect" href="https://karriaro-webdesign.de" crossorigin>
-    <link rel="dns-prefetch" href="https://karriaro-webdesign.de">
-    <link rel="preload" as="image" href="/images/immobilien-stadtmakler-mockup-fold.jpg?v=139" fetchpriority="high">
-    <link rel="prefetch" href="/portfolio/immobilien-makler-embed-desktop.html">
-    <link rel="prefetch" href="/portfolio/coaching-lehmann-embed-desktop.html">
-    <meta name="theme-color" content="#FFFFFF">
-    <meta name="color-scheme" content="light">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Karriaro">
-    <meta name="format-detection" content="telephone=no">
-    <script>(function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){});}})();</script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Zum Hauptinhalt</a>
@@ -4174,7 +4171,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <p class="hero-folio-eyebrow"><span>Für jede Profession</span><span class="dot">·</span><span>Ein Atelier</span></p>
                 <h1 class="hero-headline hero-headline--keim"><span class="hero-keim-bloom" aria-hidden="true"><span class="hkb-anim"><svg viewBox="0 0 300 148" preserveAspectRatio="xMidYMid meet"><circle class="hero-kbloom-dot" cx="153.00" cy="74.00" r="3.30" fill="#E7C878" style="--i:0"></circle><circle class="hero-kbloom-dot" cx="140.86" cy="79.19" r="3.27" fill="#C9A24B" style="--i:1"></circle><circle class="hero-kbloom-dot" cx="151.42" cy="63.94" r="3.24" fill="#C9A24B" style="--i:2"></circle><circle class="hero-kbloom-dot" cx="161.73" cy="83.49" r="3.21" fill="#C9A24B" style="--i:3"></circle><circle class="hero-kbloom-dot" cx="128.53" cy="71.65" r="3.19" fill="#C9A24B" style="--i:4"></circle><circle class="hero-kbloom-dot" cx="170.27" cy="66.01" r="3.16" fill="#C9A24B" style="--i:5"></circle><circle class="hero-kbloom-dot" cx="143.24" cy="89.58" r="3.13" fill="#C9A24B" style="--i:6"></circle><circle class="hero-kbloom-dot" cx="137.15" cy="58.67" r="3.10" fill="#C9A24B" style="--i:7"></circle><circle class="hero-kbloom-dot" cx="177.79" cy="80.29" r="3.07" fill="#E7C878" style="--i:8"></circle><circle class="hero-kbloom-dot" cx="121.16" cy="81.38" r="3.04" fill="#C9A24B" style="--i:9"></circle><circle class="hero-kbloom-dot" cx="163.87" cy="55.62" r="3.01" fill="#C9A24B" style="--i:10"></circle><circle class="hero-kbloom-dot" cx="160.23" cy="94.22" r="2.99" fill="#C9A24B" style="--i:11"></circle><circle class="hero-kbloom-dot" cx="119.23" cy="62.94" r="2.96" fill="#C9A24B" style="--i:12"></circle><circle class="hero-kbloom-dot" cx="186.03" cy="69.09" r="2.93" fill="#C9A24B" style="--i:13"></circle><circle class="hero-kbloom-dot" cx="128.05" cy="93.36" r="2.90" fill="#C9A24B" style="--i:14"></circle><circle class="hero-kbloom-dot" cx="144.94" cy="49.77" r="2.87" fill="#C9A24B" style="--i:15"></circle><circle class="hero-kbloom-dot" cx="181.04" cy="90.22" r="2.84" fill="#E7C878" style="--i:16"></circle><circle class="hero-kbloom-dot" cx="108.28" cy="75.07" r="2.81" fill="#C9A24B" style="--i:17"></circle><circle class="hero-kbloom-dot" cx="180.40" cy="55.25" r="2.79" fill="#C9A24B" style="--i:18"></circle><circle class="hero-kbloom-dot" cx="147.97" cy="101.23" r="2.76" fill="#C9A24B" style="--i:19"></circle><circle class="hero-kbloom-dot" cx="121.14" cy="52.56" r="2.73" fill="#C9A24B" style="--i:20"></circle><circle class="hero-kbloom-dot" cx="195.66" cy="77.81" r="2.70" fill="#C9A24B" style="--i:21"></circle><circle class="hero-kbloom-dot" cx="111.35" cy="90.67" r="2.67" fill="#C9A24B" style="--i:22"></circle><circle class="hero-kbloom-dot" cx="160.55" cy="44.92" r="2.64" fill="#C9A24B" style="--i:23"></circle><circle class="hero-kbloom-dot" cx="174.39" cy="100.39" r="2.61" fill="#E7C878" style="--i:24"></circle><circle class="hero-kbloom-dot" cx="102.37" cy="64.58" r="2.59" fill="#C9A24B" style="--i:25"></circle><circle class="hero-kbloom-dot" cx="196.23" cy="60.76" r="2.56" fill="#C9A24B" style="--i:26"></circle><circle class="hero-kbloom-dot" cx="129.99" cy="103.65" r="2.53" fill="#C9A24B" style="--i:27"></circle><circle class="hero-kbloom-dot" cx="132.15" cy="43.23" r="2.50" fill="#C9A24B" style="--i:28"></circle><circle class="hero-kbloom-dot" cx="197.46" cy="89.47" r="2.47" fill="#C9A24B" style="--i:29"></circle><circle class="hero-kbloom-dot" cx="97.31" cy="82.61" r="2.44" fill="#C9A24B" style="--i:30"></circle><circle class="hero-kbloom-dot" cx="179.93" cy="45.14" r="2.41" fill="#C9A24B" style="--i:31"></circle><circle class="hero-kbloom-dot" cx="159.51" cy="108.32" r="2.39" fill="#E7C878" style="--i:32"></circle><circle class="hero-kbloom-dot" cx="104.94" cy="52.36" r="2.36" fill="#C9A24B" style="--i:33"></circle><circle class="hero-kbloom-dot" cx="207.61" cy="71.04" r="2.33" fill="#C9A24B" style="--i:34"></circle><circle class="hero-kbloom-dot" cx="110.20" cy="100.68" r="2.30" fill="#C9A24B" style="--i:35"></circle><circle class="hero-kbloom-dot" cx="150.29" cy="37.17" r="2.27" fill="#C9A24B" style="--i:36"></circle><circle class="hero-kbloom-dot" cx="190.43" cy="101.63" r="2.24" fill="#C9A24B" style="--i:37"></circle><circle class="hero-kbloom-dot" cx="89.31" cy="70.51" r="2.21" fill="#C9A24B" style="--i:38"></circle><circle class="hero-kbloom-dot" cx="199.15" cy="50.87" r="2.19" fill="#C9A24B" style="--i:39"></circle><circle class="hero-kbloom-dot" cx="138.82" cy="112.09" r="2.16" fill="#E7C878" style="--i:40"></circle><circle class="hero-kbloom-dot" cx="116.34" cy="40.84" r="2.13" fill="#C9A24B" style="--i:41"></circle><circle class="hero-kbloom-dot" cx="211.65" cy="84.47" r="2.10" fill="#C9A24B" style="--i:42"></circle><circle class="hero-kbloom-dot" cx="92.49" cy="92.30" r="2.07" fill="#C9A24B" style="--i:43"></circle><circle class="hero-kbloom-dot" cx="172.72" cy="36.01" r="2.04" fill="#C9A24B" style="--i:44"></circle><circle class="hero-kbloom-dot" cx="174.91" cy="111.93" r="2.01" fill="#C9A24B" style="--i:45"></circle><circle class="hero-kbloom-dot" cx="89.68" cy="56.28" r="1.99" fill="#C9A24B" style="--i:46"></circle><circle class="hero-kbloom-dot" cx="214.45" cy="61.68" r="1.96" fill="#C9A24B" style="--i:47"></circle><circle class="hero-kbloom-dot" cx="115.55" cy="110.44" r="1.93" fill="#E7C878" style="--i:48"></circle><circle class="hero-kbloom-dot" cx="135.56" cy="32.29" r="1.90" fill="#C9A24B" style="--i:49"></circle><circle class="hero-kbloom-dot" cx="206.63" cy="98.94" r="1.87" fill="#C9A24B" style="--i:50"></circle><circle class="hero-kbloom-dot" cx="80.41" cy="79.38" r="1.84" fill="#C9A24B" style="--i:51"></circle><circle class="hero-kbloom-dot" cx="195.88" cy="40.58" r="1.81" fill="#C9A24B" style="--i:52"></circle><circle class="hero-kbloom-dot" cx="152.60" cy="118.26" r="1.79" fill="#C9A24B" style="--i:53"></circle><circle class="hero-kbloom-dot" cx="99.41" cy="42.17" r="1.76" fill="#C9A24B" style="--i:54"></circle><circle class="hero-kbloom-dot" cx="222.62" cy="76.30" r="1.73" fill="#C9A24B" style="--i:55"></circle><circle class="hero-kbloom-dot" cx="93.46" cy="102.96" r="1.70" fill="#E7C878" style="--i:56"></circle><circle class="hero-kbloom-dot" cx="160.22" cy="28.58" r="1.67" fill="#C9A24B" style="--i:57"></circle><circle class="hero-kbloom-dot" cx="192.30" cy="112.09" r="1.64" fill="#C9A24B" style="--i:58"></circle><circle class="hero-kbloom-dot" cx="76.71" cy="63.54" r="1.61" fill="#C9A24B" style="--i:59"></circle><circle class="hero-kbloom-dot" cx="215.96" cy="50.83" r="1.59" fill="#C9A24B" style="--i:60"></circle><circle class="hero-kbloom-dot" cx="126.42" cy="119.07" r="1.56" fill="#C9A24B" style="--i:61"></circle><circle class="hero-kbloom-dot" cx="118.04" cy="30.56" r="1.53" fill="#C9A24B" style="--i:62"></circle><circle class="hero-kbloom-dot" cx="221.45" cy="92.79" r="1.50" fill="#C9A24B" style="--i:63"></circle><circle class="hero-kbloom-dot" cx="76.29" cy="90.19" r="1.47" fill="#E7C878" style="--i:64"></circle><circle class="hero-kbloom-dot" cx="186.99" cy="30.87" r="1.44" fill="#C9A24B" style="--i:65"></circle><circle class="hero-kbloom-dot" cx="169.85" cy="121.64" r="1.41" fill="#C9A24B" style="--i:66"></circle><circle class="hero-kbloom-dot" cx="82.97" cy="46.99" r="1.39" fill="#C9A24B" style="--i:67"></circle><circle class="hero-kbloom-dot" cx="229.42" cy="65.79" r="1.36" fill="#C9A24B" style="--i:68"></circle><circle class="hero-kbloom-dot" cx="100.04" cy="113.59" r="1.33" fill="#C9A24B" style="--i:69"></circle><circle class="hero-kbloom-dot" cx="143.66" cy="23.53" r="1.30" fill="#C9A24B" style="--i:70"></circle><circle class="hero-kbloom-dot" cx="210.07" cy="108.79" r="1.27" fill="#C9A24B" style="--i:71"></circle><circle class="hero-kbloom-dot" cx="67.24" cy="73.50" r="1.24" fill="#E7C878" style="--i:72"></circle><circle class="hero-kbloom-dot" cx="211.98" cy="39.48" r="1.21" fill="#C9A24B" style="--i:73"></circle><circle class="hero-kbloom-dot" cx="141.85" cy="125.75" r="1.19" fill="#C9A24B" style="--i:74"></circle><circle class="hero-kbloom-dot" cx="99.30" cy="32.16" r="1.16" fill="#C9A24B" style="--i:75"></circle><circle class="hero-kbloom-dot" cx="233.50" cy="83.68" r="1.13" fill="#C9A24B" style="--i:76"></circle><circle class="hero-kbloom-dot" cx="77.43" cy="102.01" r="1.10" fill="#C9A24B" style="--i:77"></circle><circle class="hero-kbloom-dot" cx="173.14" cy="22.63" r="1.07" fill="#C9A24B" style="--i:78"></circle><circle class="hero-kbloom-dot" cx="189.14" cy="121.86" r="1.04" fill="#C9A24B" style="--i:79"></circle><circle class="hero-kbloom-dot" cx="68.50" cy="54.99" r="1.01" fill="#E7C878" style="--i:80"></circle><circle class="hero-kbloom-dot" cx="231.29" cy="53.77" r="0.99" fill="#C9A24B" style="--i:81"></circle><circle class="hero-kbloom-dot" cx="111.87" cy="123.26" r="0.96" fill="#C9A24B" style="--i:82"></circle><circle class="hero-kbloom-dot" cx="124.30" cy="21.41" r="0.93" fill="#C9A24B" style="--i:83"></circle></svg></span></span><span class="hero-h1-line">Keine ordinären</span><span class="hero-h1-line">Webseiten.</span><span class="hero-h1-line hero-h1-climax">Unikate, die mitarbeiten.</span></h1>
                 <p class="subhead">
-                    Jede Seite ein Unikat, das mitarbeitet — mit eingebauten Werkzeugen, Besucher-Cockpit und KI-Auffindbarkeit.
+                    Mit eingebauten Werkzeugen, die Besucher führen, Anfragen vorbereiten und Ihre Sichtbarkeit in Google und KI‑Suche stärken.
                 </p><a href="#demos" class="m-hero-demo-card" data-track-event="HERO_DEMO_PREVIEW" aria-label="Acht echte Beispielseiten ansehen"><span class="m-hero-demo-frame"><span class="m-hero-demo-chrome"><i class="dr"></i><i class="dy"></i><i class="dg"></i><span class="m-hero-demo-url">stadtmakler-stuttgart.de</span></span><img src="/images/immobilien-stadtmakler-mockup-fold.avif?v=411" alt="Beispielseite Stadtmakler Stuttgart — eine von acht echten Demos" width="1440" height="900" loading="lazy" decoding="async"></span><span class="m-hero-demo-caption">Acht Branchen, acht echte Demos. <em>Eine Wischgeste entfernt.</em><span class="m-hero-demo-arrow" aria-hidden="true">&rarr;</span></span></a>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt.</p>
                 <div class="hero-cta-row">
@@ -4238,6 +4235,47 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             </div>
         </div>
         <div class="hero-folio-marker" aria-hidden="true"></div>
+    </section>
+
+    <style>
+    .kr-quickask{padding:clamp(38px,5.5vw,68px) 20px;background:linear-gradient(180deg,#FBFAF6,#F4F1E9);border-top:2px solid var(--color-gold,#C9A24B)}
+    .kr-quickask-inner{max-width:720px;margin:0 auto}
+    .kr-quickask-h{font-family:'Fraunces',Georgia,serif;font-size:clamp(27px,3.8vw,40px);font-weight:500;line-height:1.08;text-align:center;margin:10px 0 12px}
+    .kr-quickask-sub{text-align:center;max-width:560px;margin:0 auto 26px;opacity:.82;font-size:clamp(15px,1.6vw,17px);line-height:1.5}
+    .kr-quickask-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .kr-quickask-msg{grid-column:1/-1}
+    .kr-quickask-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:20px}
+    .kr-quickask-foot .submit-btn{white-space:nowrap}
+    .kr-quickask-privacy{margin:0;font-size:13px;flex:1;min-width:210px}
+    .kr-quickask-reassure{margin:16px 0 0;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;letter-spacing:.02em;opacity:.72;text-align:center}
+    .kr-quickask-reassure a,.kr-letter-reassure a,.kr-letter-alt a{color:var(--color-indigo-strong,#2a3f6b);text-decoration:underline}
+    .kr-letter-reassure{margin:16px 0 0;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;letter-spacing:.02em;opacity:.72;text-align:center}
+    .kr-letter-alt{margin:8px 0 0;text-align:center;font-size:14px;opacity:.85}
+    @media(max-width:640px){.kr-quickask-grid{grid-template-columns:1fr}.kr-quickask-foot{flex-direction:column;align-items:stretch}.kr-quickask-foot .submit-btn{width:100%}.kr-quickask-privacy{min-width:0}}
+    </style>
+    <!-- CRO 2026-07-05 — Kurz-Anfrage direkt nach dem Hero: fängt kalten Ads-Intent sofort, statt ihn erst nach ~11 Sektionen zum Formular scrollen zu lassen -->
+    <section id="kurz-anfrage" aria-label="Schnelle Anfrage" class="kr-quickask">
+        <div class="kr-quickask-inner">
+            <p class="hero-eyebrow" style="text-align:center;">Anfrage · Antwort in 24 h</p>
+            <h2 class="kr-quickask-h">Erzählen Sie uns kurz, worum es geht.</h2>
+            <p class="kr-quickask-sub">Ein Satz genügt. Sie erhalten binnen 24 Stunden konkrete Vorschläge — unverbindlich, erst der Entwurf, dann Ihre Entscheidung.</p>
+            <form data-lead="kwd-quickask" class="kr-quickask-form">
+                <div class="kr-quickask-grid">
+                    <label class="kr-letter-field"><span>Ihr Name</span><input type="text" name="name" required></label>
+                    <label class="kr-letter-field"><span>E-Mail</span><input type="email" name="email" required></label>
+                    <label class="kr-letter-field kr-quickask-msg"><span>Worum geht es? <em>(ein Satz genügt)</em></span><input type="text" name="message" placeholder="z. B. Neue Website für meinen Friseursalon — aktuell nur Facebook."></label>
+                </div>
+                <div class="kontakt-honeypot" aria-hidden="true" style="position:absolute;left:-9999px;">
+                    <label for="quick-firma">Firma</label>
+                    <input type="text" id="quick-firma" name="firma" tabindex="-1" autocomplete="off">
+                </div>
+                <div class="kr-quickask-foot">
+                    <button type="submit" class="submit-btn" data-kr-magnetic><span>Unverbindlich anfragen — Antwort in 24 h</span></button>
+                    <label class="kr-letter-privacy kr-quickask-privacy"><input type="checkbox" name="privacy" required><span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span></label>
+                </div>
+                <p class="kr-quickask-reassure">Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? <a href="https://wa.me/491742796784?text=Guten%20Tag%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Website." rel="nofollow">WhatsApp</a> oder <a href="tel:+491742796784">anrufen</a>.</p>
+            </form>
+        </div>
     </section>
 
 
@@ -5953,7 +5991,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         Wir antworten binnen 24 Stunden mit <strong>konkreten Vorschlägen</strong> statt einer Discovery-Call-Einladung in drei Wochen.
                     </p>
                     <p>
-                        Wenn die Substanz passt, gehen wir in den 30-Minuten-Brief. Wenn nicht, sagen wir es Ihnen sofort — Sie verlieren maximal eine halbe Stunde, nicht ein Quartal.
+                        Schreiben Sie in zwei Sätzen, worum es geht — ein Satz zu Ihrer Website genügt. Passt es nicht, sagen wir es Ihnen offen und unverbindlich.
                     </p>
                     <p class="kr-letter-sig-line">— Karriaro Team</p>
                     <svg class="kr-letter-signature" viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -5986,8 +6024,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                             <input type="text" name="empfehlung" placeholder="z. B. Steuerberater Müller, Köln">
                         </label>
                         <label class="kr-letter-field kr-letter-field--full">
-                            <span>Was möchten Sie erreichen?</span>
-                            <textarea name="message" rows="4"></textarea>
+                            <span>Worum geht es? <em>(ein Satz genügt)</em></span>
+                            <textarea name="message" rows="4" placeholder="Ein Satz genügt — z. B. Neue Website für meinen Friseursalon, aktuell nur eine Facebook-Seite."></textarea>
                         </label>
                     </div>
                     <div class="kontakt-honeypot" aria-hidden="true" style="position: absolute; left: -9999px;">
@@ -5999,11 +6037,13 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span>
                     </label>
                     <button type="submit" class="submit-btn kr-letter-submit" data-kr-magnetic>
-                        <span>Slot anfragen — Antwort in 24 h</span>
+                        <span>Unverbindlich anfragen — Antwort in 24 h</span>
                         <span class="kr-letter-submit-stamp" aria-hidden="true">
                             <svg viewBox="0 0 36 36" width="20" height="20"><circle cx="18" cy="18" r="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/><path d="M11,18 L16,23 L25,13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                     </button>
+                    <p class="kr-letter-reassure">Unverbindliche Anfrage · Festpreis ab 1.290 €, einmalig · erst der Entwurf, dann Ihre Entscheidung.</p>
+                    <p class="kr-letter-alt">Lieber direkt? Schreiben Sie uns per <a href="https://wa.me/491742796784?text=Guten%20Tag%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Website." rel="nofollow">WhatsApp</a> oder rufen Sie an — <a href="tel:+491742796784">+49 174 2796784</a>.</p>
                 </form>
             </article>
         </div>
@@ -6163,8 +6203,9 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             }, { passive: true });
         })();
 
-        // Form submit via AJAX + redirect to success.html
-        document.getElementById('kontakt-form').addEventListener('submit', function(e) {
+        // Form submit via AJAX + redirect to success.html — bindet ALLE Lead-Formulare (data-lead), damit auch die Kurz-Anfrage oben feuert
+        document.querySelectorAll('form[data-lead]').forEach(function(leadForm) {
+        leadForm.addEventListener('submit', function(e) {
             e.preventDefault();
             var form = this;
             var btn = form.querySelector('button');
@@ -6200,6 +6241,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 btn.textContent = 'Fehler — bitte erneut versuchen';
                 btn.disabled = false;
             });
+        });
         });
 
         // Paket selection from pricing CTAs
