@@ -1,19 +1,9 @@
-/* Google Ads Basis-Tag (AW-18260891602) — Conversion-Tracking. Laedt gtag auf
- * allen Seiten mit attribution.js (Landingpages), faengt gclid -> _gcl_aw-Cookie,
- * damit das Conversion-Snippet auf success.html die Anfrage der Anzeige zuordnet. */
-(function () {
-    if (window.__krGtagAds) return; window.__krGtagAds = true;
-    try {
-        var s = document.createElement('script');
-        s.async = true;
-        s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18260891602';
-        (document.head || document.documentElement).appendChild(s);
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
-        window.gtag('js', new Date());
-        window.gtag('config', 'AW-18260891602');
-    } catch (e) {}
-})();
+/* Google-Ads-Basis-Tag ENTFERNT (2026-07-06, Founder-Entscheidung „cookiefrei").
+ * Der gtag/AW-18260891602 setzte den Werbe-Cookie _gcl_au + kontaktierte DoubleClick
+ * OHNE Einwilligung (§ 25 TDDDG) — jetzt raus. Conversion-Messung läuft cookiefrei
+ * über den unten erfassten gclid (sessionStorage) + Google-Ads-Offline-/Enhanced-
+ * Conversions (Einrichtung im Google-Ads-Konto, nicht clientseitig). Kein gtag,
+ * kein 3rd-Party-Werbe-Cookie mehr — im Einklang mit der Marken-/Engineering-Regel. */
 
 /* Karriaro — First-Touch-Attribution + cookiefreier Track-Bridge (Sprint 199).
  *
