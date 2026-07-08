@@ -486,6 +486,33 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
+    <!-- CRO — Kurz-Anfrage DIREKT nach dem Hero (Ads-Traffic sah das Formular sonst erst
+         ~7 Bildschirme unten). Reuse der Money-Page-Klassen, kein .fade-in (above-fold sofort
+         sichtbar). data-lead="kwd-quickask" → gebunden vom generalisierten Submit-Handler unten. -->
+    <section aria-label="Schnelle Anfrage" id="kurz-anfrage" style="border-top: 1px solid rgba(0,0,0,0.05);">
+        <div class="wrap-xs" style="text-align: center;">
+            <p class="eyebrow">Anfrage · Antwort in 24 h</p>
+            <h2 style="margin-bottom: 10px;">Erzählen Sie uns kurz, worum es geht.</h2>
+            <p class="subhead" style="margin-bottom: 28px;">Ein Satz genügt. Sie erhalten binnen 24 Stunden eine ehrliche Einschätzung — unverbindlich, erst der Entwurf, dann Ihre Entscheidung.</p>
+            <form data-lead="kwd-quickask" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                <input type="hidden" name="quelle" value="webseite-erstellen-lassen-kurzanfrage">
+                <input type="text" name="name" required placeholder="Ihr Name">
+                <input type="email" name="email" required placeholder="E-Mail">
+                <input type="text" name="message" required placeholder="Worum geht es? Ein Satz genügt — z. B. Neue Website für meinen Friseursalon.">
+                <div aria-hidden="true" style="position:absolute;left:-9999px;">
+                    <label for="quick-firma">Firma</label>
+                    <input type="text" id="quick-firma" name="firma" tabindex="-1" autocomplete="off">
+                </div>
+                <label class="consent">
+                    <input type="checkbox" name="privacy" required>
+                    <span>Ich stimme der <a href="/datenschutz" style="color: var(--c-ink-muted); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
+                </label>
+                <button type="submit" class="submit-btn">Unverbindlich anfragen — Antwort in 24 h</button>
+            </form>
+            <p class="muted" style="font-size: 13px; margin-top: 16px;">Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? <a href="tel:+491742796784" class="link-arrow" style="font-size: 13px;" data-cta="tel-kurzanfrage">+49 174 2796784</a> · <a href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Webseite." class="link-arrow" style="font-size: 13px;" target="_blank" rel="noopener" data-cta="whatsapp-kurzanfrage">WhatsApp</a></p>
+        </div>
+    </section>
+
     <section class="fade-in" style="background: var(--c-alt); border-top: 1px solid rgba(0,0,0,0.05);">
         <div class="wrap" style="text-align: center;">
             <h2>So könnte Ihre Seite aussehen.</h2>
@@ -785,7 +812,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <script>
         // Form submit via AJAX + Attribution (gclid landet in der Lead-Mail) + Conversion-Signal.
-        document.getElementById('kontakt-form').addEventListener('submit', function(e) {
+        // CRO — Handler auf ALLE form[data-lead] generalisiert: bindet die neue Kurz-Anfrage
+        // nach dem Hero (kwd-quickask) + das bestehende #kontakt-Formular unten.
+        document.querySelectorAll('form[data-lead]').forEach(function (leadForm) {
+        leadForm.addEventListener('submit', function(e) {
             e.preventDefault();
             var form = this;
             var btn = form.querySelector('button');
@@ -807,6 +837,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 if (response.ok) { window.location.href = '/success.html'; }
                 else { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; }
             }).catch(function() { btn.textContent = 'Fehler — bitte erneut versuchen'; btn.disabled = false; });
+        });
         });
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
