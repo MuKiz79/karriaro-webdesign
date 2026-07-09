@@ -86,8 +86,20 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         nav .back { color: #1A2E40; font-size: 14px; }
 
         .hero { padding: 80px 0 40px; text-align: center; }
-        .hero .photo { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; background: #14202B; margin: 0 auto 28px; display: block; }
+        .hero .photo { width: 176px; height: 176px; border-radius: 50%; overflow: hidden; background: #14202B; margin: 0 auto 22px; display: block; box-shadow: 0 14px 34px rgba(20,32,44,0.18); outline: 1px solid rgba(201,162,75,0.38); outline-offset: 3px; }
         .hero .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .hero .owner-led { font-size: 13px; color: #6e6e73; margin: 8px auto 0; max-width: 480px; line-height: 1.55; }
+        .founder-review { padding: 4px 0 8px; }
+        .founder-review .fr-in { max-width: 640px; margin: 0 auto; text-align: center; }
+        .founder-review .fr-stars { color: #C9A24B; font-size: 20px; letter-spacing: 4px; margin-bottom: 14px; }
+        .founder-review blockquote { margin: 0; font-size: 19px; line-height: 1.5; color: #16202C; font-weight: 500; }
+        .founder-review .fr-name { margin: 16px 0 4px; font-weight: 600; font-size: 15px; color: #16202C; }
+        .founder-review .fr-meta { margin: 0; font-size: 13px; color: #6e6e73; }
+        .founder-review .fr-link { display: inline-block; margin-top: 14px; font-size: 13px; color: #16202C; border-bottom: 1px solid #C9A24B; padding-bottom: 2px; }
+        @media (prefers-color-scheme: dark) {
+            .founder-review blockquote, .founder-review .fr-name, .founder-review .fr-link { color: #F5F3EE; }
+            .founder-review .fr-meta, .hero .owner-led { color: #9BA3AD; }
+        }
         .hero h1 { font-size: clamp(32px, 5vw, 48px); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 14px; }
         .hero .role { font-size: 15px; color: #6e6e73; }
 
@@ -183,9 +195,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 
     <main class="wrap">
         <section class="hero">
-            <picture class="photo"><source srcset="/images/muammer-portrait.avif" type="image/avif"><img src="/images/muammer-portrait.jpg" alt="Muammer Kızılaslan, Gründer von Karriaro" width="96" height="96"></picture>
+            <picture class="photo"><source srcset="/images/muammer-portrait.avif" type="image/avif"><img src="/images/muammer-portrait.jpg" alt="Muammer Kızılaslan, Gründer von Karriaro" width="176" height="176"></picture>
             <h1>Warum es Karriaro gibt.</h1>
             <p class="role">Muammer Kızılaslan · Gründer Karriaro</p>
+            <p class="owner-led">Inhabergeführt · ein Ansprechpartner, keine Zwischenschicht — persönlich verantwortlich, von der ersten Skizze bis zur Live-Schaltung.</p>
         </section>
 
         <article>
@@ -277,6 +290,16 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
         </article>
     </main>
+
+        <section class="founder-review" aria-label="Kundenstimme">
+        <div class="fr-in">
+            <div class="fr-stars" role="img" aria-label="5 von 5 Sternen">★★★★★</div>
+            <blockquote>„Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!"</blockquote>
+            <p class="fr-name">Ilyas Kablan</p>
+            <p class="fr-meta">Google Local Guide · 58 Bewertungen</p>
+            <a class="fr-link" href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener">Echte Bewertung auf Google ansehen ↗</a>
+        </div>
+    </section>
 
     <section class="cta-bar">
         <div class="wrap">
