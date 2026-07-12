@@ -225,6 +225,31 @@
     .float{display:none!important}
     .modal-card{padding:26px 22px}
   }
+
+  /* Anfahrt / Standort */
+  .loc-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:44px;align-items:stretch}
+  .loc-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:36px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;justify-content:center}
+  .loc-card h3{font-size:1.6rem;margin-bottom:20px}
+  .loc-line{display:flex;gap:13px;align-items:flex-start;margin-bottom:15px;font-size:1rem;color:var(--ink-soft)}
+  .loc-line svg{flex:none;margin-top:2px}
+  .loc-line b{color:var(--ink);font-weight:600}
+  .loc-map{position:relative;border-radius:24px;overflow:hidden;min-height:340px;box-shadow:var(--shadow-sm);border:1px solid var(--line)}
+  .loc-pin-label{position:absolute;left:16px;bottom:16px;background:#fff;padding:8px 14px;border-radius:999px;font-size:.82rem;font-weight:600;box-shadow:var(--shadow-sm)}
+
+  /* Einblicke / Instagram */
+  .insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  .insta-tile{aspect-ratio:1/1;border-radius:18px;display:grid;place-items:center;box-shadow:var(--shadow-sm);transition:transform .2s}
+  .insta-tile:hover{transform:translateY(-3px) rotate(-1.5deg)}
+  @media (max-width:760px){.insta-grid{grid-template-columns:repeat(3,1fr)}.loc-grid{grid-template-columns:1fr}}
+
+  /* Druck: nur die Speisekarte -> als PDF speichern */
+  @media print{
+    header.nav, footer, .draft, .toast, .modal-overlay, .menu-pdf{display:none !important}
+    section:not(#speisekarte){display:none !important}
+    #speisekarte{display:block !important;padding:10px 0 !important}
+    body{background:#fff !important}
+    .menu-item .p{color:#000}
+  }
 </style>
 </head>
 <body>
@@ -406,7 +431,9 @@
         <div class="menu-item"><span class="n">Butterkekse (hausgemacht)</span><span class="menu-dots"></span><span class="p">2,80</span></div>
       </div>
     </div>
-    <p style="text-align:center;margin-top:34px;color:var(--ink-soft);font-size:.9rem">Alle Speisen auch glutenfrei &amp; vegan möglich — sprechen Sie uns gern an.</p>
+    <div style="text-align:center;margin-top:36px" class="menu-pdf"><button class="btn btn-ghost" type="button" id="menuPdf">Speisekarte als PDF speichern
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8m0 0l3-3m-3 3L5 7M3 12v1.5A1.5 1.5 0 0 0 4.5 15h7A1.5 1.5 0 0 0 13 13.5V12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <p style="text-align:center;margin-top:16px;color:var(--ink-soft);font-size:.9rem">Alle Speisen auch glutenfrei &amp; vegan möglich — sprechen Sie uns gern an.</p>
   </div>
 </section>
 
@@ -500,6 +527,18 @@
   </div>
 </section>
 
+<section class="block" id="gutschein" style="background:var(--cream-2)">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow center">Gutscheine</p>
+      <h2>Freude verschenken</h2>
+      <p>Ein Gutschein für unser Café — für Lunchboxen, einen Workshop, ein Stück Kuchen oder einfach einen gemütlichen Nachmittag. Passt zu jedem Anlass.</p>
+    </div>
+    <div style="text-align:center"><button class="btn btn-primary" type="button" id="voucherBtn">Gutschein anfragen
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  </div>
+</section>
+
 <section class="block" id="faq">
   <div class="wrap">
     <div class="sec-head center">
@@ -538,6 +577,58 @@
   </div>
 </section>
 
+<section class="block" id="einblicke">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow center">Einblicke</p>
+      <h2>Aus unserem Café</h2>
+      <p>Kleine Momente aus Backstube, Werkstatt und Spielecke — folgen Sie uns für mehr.</p>
+    </div>
+    <div class="insta-grid">
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#FBD9A6,#F2B27A)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M13 16h14v7a7 7 0 0 1-7 7 7 7 0 0 1-7-7v-7Z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M27 18h3.5a3 3 0 0 1 0 6H27" stroke="#fff" stroke-width="2.4"/></svg></div>
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#CFE0C4,#A9C295)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M21 30V18M21 18c0-3-2-5-5-5m5 5c0-3 2-5 5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M14 30h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#F3C6D2,#DE9BAF)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M13 22h16l-1.5 8a1 1 0 0 1-1 .8H15.5a1 1 0 0 1-1-.8L13 22Z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 22h18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M21 22v-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="21" cy="14" r="1.6" fill="#fff"/></svg></div>
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#FBE3B0,#E6A84B)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="10" stroke="#fff" stroke-width="2.4"/><circle cx="18" cy="19" r="1.4" fill="#fff"/><circle cx="24" cy="18" r="1.4" fill="#fff"/><circle cx="23" cy="24" r="1.4" fill="#fff"/><circle cx="17" cy="24" r="1.2" fill="#fff"/></svg></div>
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#CFE0E6,#9CC0CB)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><ellipse cx="21" cy="17" rx="7" ry="8" stroke="#fff" stroke-width="2.4"/><path d="M21 25v6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+      <div class="insta-tile" style="background:radial-gradient(90% 90% at 30% 25%,#F2B27A,#C96B47)"><svg width="42" height="42" viewBox="0 0 42 42" fill="none"><path d="M25 13l4 4-11 11-4 1 1-4 10-12Z" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div style="text-align:center;margin-top:32px"><a class="btn btn-ghost" data-insta>@kruemel_klecks auf Instagram</a></div>
+  </div>
+</section>
+
+<section class="block" id="anfahrt" style="background:var(--cream-2)">
+  <div class="wrap loc-grid">
+    <div class="loc-card">
+      <p class="eyebrow">So finden Sie uns</p>
+      <h3>Mitten in Musterstadt</h3>
+      <div class="loc-line"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 18s6-5 6-9.5A6 6 0 0 0 4 8.5C4 13 10 18 10 18Z" stroke="#C96B47" stroke-width="1.8" stroke-linejoin="round"/><circle cx="10" cy="8.2" r="1.9" stroke="#C96B47" stroke-width="1.8"/></svg><span><b>Musterstraße 12</b><br>12345 Musterstadt</span></div>
+      <div class="loc-line"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="#C96B47" stroke-width="1.8"/><path d="M10 6v4l2.6 1.6" stroke="#C96B47" stroke-width="1.8" stroke-linecap="round"/></svg><span><b>Täglich 9 – 18 Uhr</b><br>Küche bis 17:30 Uhr</span></div>
+      <div class="loc-line"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="3" width="12" height="12" rx="2.5" stroke="#C96B47" stroke-width="1.8"/><path d="M4 11h12" stroke="#C96B47" stroke-width="1.8"/><circle cx="7" cy="13.5" r="1.3" fill="#C96B47"/><circle cx="13" cy="13.5" r="1.3" fill="#C96B47"/><path d="M7 17l-1 1M13 17l1 1" stroke="#C96B47" stroke-width="1.8" stroke-linecap="round"/></svg><span>Bushaltestelle „Musterplatz" · 2 Min.<br>Parkhaus Musterstraße gleich nebenan</span></div>
+      <a class="btn btn-primary" style="margin-top:14px;align-self:flex-start" href="https://www.google.com/maps/dir/?api=1&amp;destination=Musterstra%C3%9Fe+12+Musterstadt" target="_blank" rel="noopener">Route planen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="loc-map">
+      <svg viewBox="0 0 400 340" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0" fill="none">
+        <rect width="400" height="340" fill="#EAE2D2"/>
+        <rect x="26" y="26" width="120" height="86" rx="8" fill="#D9E2CD"/>
+        <rect x="256" y="196" width="122" height="118" rx="8" fill="#D9E2CD"/>
+        <rect x="256" y="30" width="120" height="70" rx="8" fill="#EFE7D8"/>
+        <path d="M0 160H400" stroke="#FBF5EB" stroke-width="20"/>
+        <path d="M182 0V340" stroke="#FBF5EB" stroke-width="20"/>
+        <path d="M0 64H400" stroke="#FBF5EB" stroke-width="10"/>
+        <path d="M304 0V340" stroke="#FBF5EB" stroke-width="10"/>
+        <path d="M84 160V340" stroke="#FBF5EB" stroke-width="10"/>
+        <path d="M0 258C120 236 168 306 400 268" stroke="#BFD3D9" stroke-width="16" fill="none"/>
+        <g transform="translate(182 146)">
+          <path d="M0 34C-16 9 -20 -2 -20 -13A20 20 0 1 1 20 -13C20 -2 16 9 0 34Z" fill="#C96B47" stroke="#fff" stroke-width="3.5"/>
+          <circle cx="0" cy="-13" r="6.5" fill="#fff"/>
+        </g>
+      </svg>
+      <div class="loc-pin-label">📍 Krümel &amp; Klecks</div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="foot-grid">
@@ -549,12 +640,13 @@
         <h5>Besuchen</h5>
         <p>Musterstraße 12<br>12345 Musterstadt</p>
         <p>Täglich 9 – 18 Uhr</p>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Musterstra%C3%9Fe+12+Musterstadt" target="_blank" rel="noopener">Route planen →</a>
       </div>
       <div class="fcol">
         <h5>Kontakt</h5>
         <a data-mail>hallo@kruemel-und-klecks.de</a>
         <a data-wa>WhatsApp schreiben</a>
-        <a href="#">Instagram</a>
+        <a data-insta>Instagram</a>
       </div>
     </div>
     <div class="foot-bottom">
@@ -597,6 +689,10 @@
   // ---- Modal ----
   var modal = $('#modal'), modalBody = $('#modalBody');
   function openModal(html){
+    // frischen Body-Knoten setzen -> alte, an modalBody gebundene Listener fallen weg
+    var fresh = modalBody.cloneNode(false);
+    modalBody.parentNode.replaceChild(fresh, modalBody);
+    modalBody = fresh;
     modalBody.innerHTML = html;
     modal.hidden = false;
     requestAnimationFrame(function(){ modal.classList.add('show'); });
@@ -831,6 +927,42 @@
   // ---- Footer-Kontaktlinks ----
   $$('[data-mail]').forEach(function(a){ a.href = 'mailto:' + MAIL; });
   $$('[data-wa]').forEach(function(a){ a.href = 'https://wa.me/' + WA; a.target = '_blank'; a.rel = 'noopener'; });
+
+  // ---- Gutschein-Anfrage ----
+  var voucherBtn = $('#voucherBtn');
+  if(voucherBtn) voucherBtn.addEventListener('click', function(){
+    openModal(
+      '<h3>Gutschein verschenken</h3><p class="sub">Ein Gutschein für Krümel &amp; Klecks — Betrag frei wählbar, einlösbar für alles im Café.</p>' +
+      '<span class="f-label">Betrag</span><div class="chips" id="vAmount">' +
+        '<button type="button" class="chip" data-amount="25 €">25 €</button>' +
+        '<button type="button" class="chip sel" data-amount="50 €">50 €</button>' +
+        '<button type="button" class="chip" data-amount="75 €">75 €</button>' +
+        '<button type="button" class="chip" data-amount="individueller Betrag">individuell</button></div>' +
+      '<div class="f-row"><div><span class="f-label">Für wen?</span><input class="f-input" id="vTo" placeholder="Name"></div><div><span class="f-label">Von</span><input class="f-input" id="vFrom" placeholder="Ihr Name"></div></div>' +
+      '<span class="f-label">Anlass / kurze Widmung</span><input class="f-input" id="vMsg" placeholder="z. B. Alles Gute zum Geburtstag">' +
+      '<div class="modal-actions"><button class="btn btn-primary" type="button" id="vSubmit">Gutschein anfragen</button></div>'
+    );
+    var amount = '50 €';
+    $('#vAmount').addEventListener('click', function(e){
+      var b = e.target.closest('.chip'); if(!b) return;
+      $$('#vAmount .chip').forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel'); amount = b.getAttribute('data-amount');
+    });
+    $('#vSubmit').addEventListener('click', function(){
+      var to = $('#vTo').value || '—', from = $('#vFrom').value || '—', msg = $('#vMsg').value || '—';
+      var rows = [['Betrag', amount], ['Für', to], ['Von', from], ['Widmung', msg]];
+      var m = 'Gutschein-Anfrage – Krümel & Klecks\n\nBetrag: ' + amount + '\nFür: ' + to + '\nVon: ' + from + '\nWidmung: ' + msg +
+        '\n\nBitte teilen Sie mir mit, wie ich den Gutschein erhalte. Vielen Dank!';
+      confirmView('Gutschein bereit', 'Gutschein-Anfrage', rows, m);
+    });
+  });
+
+  // ---- Speisekarte als PDF (Browser-Druck -> als PDF speichern) ----
+  var menuPdf = $('#menuPdf');
+  if(menuPdf) menuPdf.addEventListener('click', function(){ window.print(); });
+
+  // ---- Instagram-Links (Platzhalter-Profil) ----
+  $$('[data-insta]').forEach(function(a){ a.href = 'https://instagram.com/'; a.target = '_blank'; a.rel = 'noopener'; });
 
   // ---- sanfte Anker-Scrolls für Nav (falls scroll-behavior nicht greift) ----
   $$('a[href^="#"]').forEach(function(a){
