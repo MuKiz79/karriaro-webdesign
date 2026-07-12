@@ -10,17 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#FBF5EB;
-    --cream-2:#F4E8D6;
-    --cream-3:#EFE0CB;
-    --ink:#33291E;
-    --ink-soft:#6E5F4E;
-    --terra:#C96B47;
-    --terra-deep:#A9512F;
-    --honey:#E6A84B;
-    --sage:#7F9A6B;
-    --berry:#C56B84;
-    --sky:#6E93A6;
+    --cream:#FBF5EB; --cream-2:#F4E8D6; --cream-3:#EFE0CB;
+    --ink:#33291E; --ink-soft:#6E5F4E;
+    --terra:#C96B47; --terra-deep:#A9512F; --honey:#E6A84B;
+    --sage:#7F9A6B; --berry:#C56B84; --sky:#6E93A6;
     --line:rgba(51,41,30,.12);
     --shadow:0 18px 50px -24px rgba(51,41,30,.45);
     --shadow-sm:0 10px 30px -18px rgba(51,41,30,.4);
@@ -29,54 +22,33 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:var(--sans);
-    color:var(--ink);
-    background:var(--cream);
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
+  body{font-family:var(--sans);color:var(--ink);background:var(--cream);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.01em}
   a{color:inherit;text-decoration:none}
+  button{font-family:inherit}
   .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-  .eyebrow{
-    font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--terra-deep);font-weight:600;margin-bottom:16px;
-    display:flex;align-items:center;gap:10px;
-  }
+  .eyebrow{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--terra-deep);font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
   .eyebrow::before{content:"";width:26px;height:2px;background:var(--terra);border-radius:2px;display:inline-block}
   .eyebrow.center{justify-content:center}
+  .eyebrow.center::before{display:none}
 
-  /* ---------- Buttons ---------- */
-  .btn{
-    display:inline-flex;align-items:center;gap:9px;
-    font-family:var(--sans);font-weight:600;font-size:.98rem;
-    padding:14px 26px;border-radius:999px;cursor:pointer;border:none;
-    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
-  }
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--sans);font-weight:600;font-size:.98rem;padding:14px 26px;border-radius:999px;cursor:pointer;border:none;transition:transform .18s ease, box-shadow .18s ease, background .18s ease}
   .btn-primary{background:var(--terra);color:#fff;box-shadow:0 12px 26px -12px rgba(169,81,47,.7)}
   .btn-primary:hover{transform:translateY(-2px);background:var(--terra-deep);box-shadow:0 16px 32px -12px rgba(169,81,47,.8)}
   .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
   .btn-ghost:hover{border-color:var(--terra);color:var(--terra-deep);transform:translateY(-2px)}
   .btn-cream{background:#fff;color:var(--ink);box-shadow:var(--shadow-sm)}
   .btn-cream:hover{transform:translateY(-2px)}
+  .btn-sm{padding:10px 18px;font-size:.9rem}
 
-  /* ---------- Nav ---------- */
-  header.nav{
-    position:sticky;top:0;z-index:40;
-    background:rgba(251,245,235,.86);backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
+  header.nav{position:sticky;top:0;z-index:40;background:rgba(251,245,235,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:76px}
   .brand{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-weight:600;font-size:1.32rem}
   .brand small{display:block;font-family:var(--sans);font-weight:500;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
-  .nav-links{display:flex;align-items:center;gap:30px}
-  .nav-links a{font-size:.96rem;font-weight:500;color:var(--ink-soft);transition:color .16s}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{font-size:.95rem;font-weight:500;color:var(--ink-soft);transition:color .16s;cursor:pointer}
   .nav-links a:hover{color:var(--terra-deep)}
-  .nav-cta{display:flex;align-items:center;gap:16px}
 
-  /* ---------- Hero ---------- */
   .hero{position:relative;padding:74px 0 90px}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
   .hero h1{font-size:clamp(2.7rem,5.4vw,4.05rem);margin-bottom:22px}
@@ -86,178 +58,196 @@
   .hero-facts{display:flex;gap:22px;flex-wrap:wrap;font-size:.9rem;color:var(--ink-soft)}
   .hero-facts span{display:flex;align-items:center;gap:8px}
   .hero-facts svg{flex:none}
+  .status-dot{width:9px;height:9px;border-radius:50%;background:var(--ink-soft);display:inline-block}
+  .status-dot.is-open{background:var(--sage);box-shadow:0 0 0 0 rgba(127,154,107,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(127,154,107,.5)}70%{box-shadow:0 0 0 8px rgba(127,154,107,0)}100%{box-shadow:0 0 0 0 rgba(127,154,107,0)}}
 
-  /* Hero illustration */
   .hero-art{position:relative;aspect-ratio:1/1;max-width:520px;margin-left:auto;width:100%}
-  .blob{position:absolute;inset:0;background:
-     radial-gradient(120% 120% at 30% 20%, #FBD9A6 0%, #F2B27A 42%, #E39463 100%);
-     border-radius:46% 54% 58% 42% / 52% 44% 56% 48%;box-shadow:var(--shadow)}
+  .blob{position:absolute;inset:0;background:radial-gradient(120% 120% at 30% 20%, #FBD9A6 0%, #F2B27A 42%, #E39463 100%);border-radius:46% 54% 58% 42% / 52% 44% 56% 48%;box-shadow:var(--shadow)}
   .hero-art .float{position:absolute;background:#fff;border-radius:18px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:.86rem;font-weight:600}
-  .float.f1{top:6%;left:-6%}
-  .float.f2{bottom:12%;right:-8%}
-  .float.f3{bottom:-4%;left:16%}
+  .float.f1{top:6%;left:-6%}.float.f2{bottom:12%;right:-8%}.float.f3{bottom:-4%;left:16%}
   .dot{width:11px;height:11px;border-radius:50%}
 
-  /* ---------- Section base ---------- */
   section.block{padding:96px 0}
   .sec-head{max-width:640px;margin-bottom:52px}
   .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
   .sec-head h2{font-size:clamp(2rem,3.6vw,2.85rem);margin-bottom:14px}
   .sec-head p{font-size:1.08rem;color:var(--ink-soft)}
 
-  /* ---------- Offerings ---------- */
   .offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-  .card{
-    background:#fff;border-radius:24px;padding:34px 32px;border:1px solid var(--line);
-    box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease;
-    display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
-  }
+  .card{background:#fff;border-radius:24px;padding:34px 32px;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
   .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
   .card .ico{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;flex:none}
   .card h3{font-size:1.42rem}
   .card p{color:var(--ink-soft);font-size:1rem;flex:1}
-  .card .go{font-weight:600;color:var(--terra-deep);font-size:.95rem;display:inline-flex;align-items:center;gap:7px}
+  .card .go{font-weight:600;color:var(--terra-deep);font-size:.95rem;display:inline-flex;align-items:center;gap:7px;cursor:pointer;background:none;border:none;padding:0}
   .card:hover .go svg{transform:translateX(4px)}
   .card .go svg{transition:transform .18s}
-  .i-terra{background:rgba(201,107,71,.13)}
-  .i-sage{background:rgba(127,154,107,.16)}
-  .i-berry{background:rgba(197,107,132,.14)}
-  .i-honey{background:rgba(230,168,75,.18)}
+  .i-terra{background:rgba(201,107,71,.13)}.i-sage{background:rgba(127,154,107,.16)}.i-berry{background:rgba(197,107,132,.14)}.i-honey{background:rgba(230,168,75,.18)}
 
-  /* ---------- Reservation ---------- */
   .reserve{background:var(--cream-2)}
   .reserve-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:52px;align-items:center}
   .res-card{background:#fff;border-radius:28px;padding:34px;box-shadow:var(--shadow);border:1px solid var(--line)}
-  .res-row{margin-bottom:22px}
+  .res-row{margin-bottom:22px;border-radius:14px;transition:box-shadow .2s}
   .res-row:last-child{margin-bottom:0}
-  .res-label{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:11px;display:block}
+  .res-row.missing{box-shadow:0 0 0 2px var(--terra);padding:12px;margin:-12px -12px 10px}
+  .res-label{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:11px;display:flex;justify-content:space-between;align-items:center}
+  .res-label .req{color:var(--terra);font-size:.7rem;letter-spacing:.05em;text-transform:none}
   .chips{display:flex;flex-wrap:wrap;gap:9px}
-  .chip{
-    padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);
-    font-size:.9rem;font-weight:500;color:var(--ink-soft);background:var(--cream);
-  }
+  .chip{padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);font-size:.9rem;font-weight:500;color:var(--ink-soft);background:var(--cream);cursor:pointer;transition:all .15s}
+  .chip:hover{border-color:var(--terra)}
   .chip.sel{background:var(--terra);border-color:var(--terra);color:#fff}
   .chip.add{background:#fff}
   .chip.add.sel{background:var(--sage);border-color:var(--sage);color:#fff}
-  .res-field{display:flex;align-items:center;justify-content:space-between;
-    padding:14px 18px;border:1.5px solid var(--line);border-radius:14px;background:var(--cream)}
-  .res-field .v{font-weight:600}
+  .res-field{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border:1.5px solid var(--line);border-radius:14px;background:var(--cream)}
+  .res-field input[type=date]{border:none;background:none;font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--ink);width:100%}
   .stepper{display:flex;align-items:center;gap:16px}
-  .stepper button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:1.1rem;color:var(--ink);cursor:pointer;line-height:1}
+  .stepper button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:1.1rem;color:var(--ink);cursor:pointer;line-height:1;transition:all .15s}
+  .stepper button:hover{border-color:var(--terra);color:var(--terra-deep)}
   .res-two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   .res-submit{width:100%;justify-content:center;margin-top:6px}
   .res-note{font-size:.82rem;color:var(--ink-soft);text-align:center;margin-top:14px}
 
-  /* ---------- Lunchboxes ---------- */
+  /* Menu */
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+  .menu-col h3{font-size:1.35rem;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid var(--line);display:flex;align-items:center;gap:10px}
+  .menu-item{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0}
+  .menu-item .n{font-weight:500}
+  .menu-item .n small{display:block;font-size:.82rem;color:var(--ink-soft);font-weight:400}
+  .menu-item .p{font-family:var(--serif);font-weight:600;color:var(--terra-deep);white-space:nowrap}
+  .menu-dots{flex:1;border-bottom:1px dotted var(--line);margin:0 4px 5px}
+
   .box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-  .box{background:#fff;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .2s}
+  .box{background:#fff;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .2s;display:flex;flex-direction:column}
   .box:hover{transform:translateY(-4px)}
   .box-top{height:150px;display:grid;place-items:center;position:relative}
-  .box-body{padding:24px 24px 26px}
+  .box-body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
   .box h3{font-size:1.28rem;margin-bottom:8px}
-  .box p{color:var(--ink-soft);font-size:.94rem;margin-bottom:16px}
-  .box .price{font-weight:600;color:var(--terra-deep)}
+  .box p{color:var(--ink-soft);font-size:.94rem;margin-bottom:16px;flex:1}
+  .box .price{font-weight:600;color:var(--terra-deep);margin-bottom:14px}
   .box .price b{font-family:var(--serif);font-size:1.15rem}
 
-  /* ---------- Workshops ---------- */
-  .ws-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
-  .ws-item{display:grid;grid-template-columns:132px 1fr auto;gap:26px;align-items:center;
-    padding:26px 6px;border-bottom:1px solid var(--line);transition:background .16s;border-radius:12px}
+  .ws-list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .ws-item{display:grid;grid-template-columns:120px 1fr auto auto;gap:22px;align-items:center;padding:24px 6px;border-bottom:1px solid var(--line);transition:background .16s;border-radius:12px}
   .ws-item:hover{background:#fff}
   .ws-date{font-family:var(--serif);font-weight:600}
   .ws-date .d{font-size:1.5rem;color:var(--terra);display:block;line-height:1}
   .ws-date .m{font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
-  .ws-title{font-family:var(--serif);font-size:1.35rem;font-weight:600}
+  .ws-title{font-family:var(--serif);font-size:1.3rem;font-weight:600}
   .ws-title small{display:block;font-family:var(--sans);font-weight:500;font-size:.88rem;color:var(--ink-soft);margin-top:4px}
   .ws-age{font-size:.82rem;font-weight:600;color:var(--sage);white-space:nowrap;background:rgba(127,154,107,.14);padding:7px 14px;border-radius:999px}
 
-  /* ---------- Birthday ---------- */
   .bday{background:linear-gradient(160deg,#33291E 0%,#4A3826 100%);color:#FBF5EB}
-  .bday .sec-head h2{color:#fff}
-  .bday .sec-head p{color:rgba(251,245,235,.8)}
+  .bday .sec-head h2{color:#fff}.bday .sec-head p{color:rgba(251,245,235,.8)}
   .bday-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:12px}
-  .pkg{background:rgba(255,255,255,.06);border:1px solid rgba(251,245,235,.16);border-radius:24px;padding:32px}
+  .pkg{background:rgba(255,255,255,.06);border:1px solid rgba(251,245,235,.16);border-radius:24px;padding:32px;display:flex;flex-direction:column}
   .pkg h3{color:#fff;font-size:1.5rem;margin-bottom:8px}
   .pkg .from{color:var(--honey);font-weight:600;margin-bottom:16px}
-  .pkg ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .pkg ul{list-style:none;display:flex;flex-direction:column;gap:9px;flex:1;margin-bottom:22px}
   .pkg li{font-size:.96rem;color:rgba(251,245,235,.86);display:flex;gap:11px;align-items:flex-start}
   .pkg li svg{flex:none;margin-top:3px}
-  .bday-cta{text-align:center;margin-top:40px}
 
-  /* ---------- About ---------- */
+  /* FAQ */
+  .faq-list{max-width:820px;margin:0 auto;border-top:1px solid var(--line)}
+  .faq-item{border-bottom:1px solid var(--line)}
+  .faq-q{width:100%;text-align:left;background:none;border:none;padding:22px 4px;font-family:var(--serif);font-size:1.2rem;font-weight:600;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .faq-q .ic{flex:none;width:26px;height:26px;border-radius:50%;background:var(--cream-2);display:grid;place-items:center;transition:transform .25s, background .2s;font-size:1.1rem}
+  .faq-item.open .faq-q .ic{transform:rotate(45deg);background:var(--terra);color:#fff}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--ink-soft)}
+  .faq-a p{padding:0 4px 22px;font-size:1rem}
+
   .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-  .about-art{aspect-ratio:4/3;border-radius:28px;background:
-    radial-gradient(90% 90% at 70% 20%, #CFE0C4 0%, #A9C295 55%, #7F9A6B 100%);
-    box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .about-art{aspect-ratio:4/3;border-radius:28px;background:radial-gradient(90% 90% at 70% 20%, #CFE0C4 0%, #A9C295 55%, #7F9A6B 100%);box-shadow:var(--shadow);position:relative;overflow:hidden}
   .about blockquote{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.32;margin-bottom:22px}
   .about .sig{font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--terra-deep)}
   .about .sig small{display:block;font-family:var(--sans);font-style:normal;font-size:.85rem;color:var(--ink-soft);letter-spacing:.08em;margin-top:4px}
 
-  /* ---------- Footer ---------- */
   footer{background:var(--ink);color:rgba(251,245,235,.82);padding:74px 0 32px}
   .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;margin-bottom:52px}
   footer h4{font-family:var(--serif);color:#fff;font-size:1.4rem;margin-bottom:14px}
   footer .fcol h5{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--honey);margin-bottom:16px;font-weight:600}
   footer .fcol p, footer .fcol a{display:block;font-size:.95rem;margin-bottom:9px;color:rgba(251,245,235,.78)}
+  footer .fcol a{cursor:pointer}
   footer .fcol a:hover{color:#fff}
   .foot-bottom{border-top:1px solid rgba(251,245,235,.14);padding-top:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.82rem;color:rgba(251,245,235,.55)}
-  .credit{display:inline-flex;align-items:center;gap:8px}
   .credit b{color:rgba(251,245,235,.8);font-weight:600}
 
-  /* draft badge */
-  .draft{position:fixed;bottom:22px;right:22px;z-index:60;background:var(--ink);color:#FBF5EB;
-    font-size:.76rem;font-weight:600;letter-spacing:.05em;padding:10px 18px;border-radius:999px;
-    box-shadow:var(--shadow);border:1px solid rgba(251,245,235,.2)}
+  /* Modal */
+  .modal-overlay{position:fixed;inset:0;z-index:80;background:rgba(51,41,30,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .2s}
+  .modal-overlay.show{opacity:1}
+  .modal-overlay[hidden]{display:none}
+  .modal-card{background:var(--cream);border-radius:26px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;padding:36px;box-shadow:var(--shadow);position:relative;transform:translateY(12px);transition:transform .22s}
+  .modal-overlay.show .modal-card{transform:translateY(0)}
+  .modal-close{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:none;background:#fff;box-shadow:var(--shadow-sm);font-size:1.4rem;line-height:1;cursor:pointer;color:var(--ink-soft)}
+  .modal-close:hover{color:var(--terra-deep)}
+  .modal-card h3{font-size:1.6rem;margin-bottom:6px}
+  .modal-card .sub{color:var(--ink-soft);font-size:.96rem;margin-bottom:22px}
+  .f-label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin:16px 0 8px;display:block}
+  .f-input{width:100%;padding:12px 15px;border:1.5px solid var(--line);border-radius:12px;background:#fff;font-family:var(--sans);font-size:1rem;color:var(--ink)}
+  .f-input:focus{outline:none;border-color:var(--terra)}
+  .f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 15px;border:1.5px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;margin-bottom:9px;transition:all .15s}
+  .opt:hover{border-color:var(--terra)}
+  .opt.sel{border-color:var(--sage);background:rgba(127,154,107,.08)}
+  .opt .op{font-weight:600;color:var(--terra-deep)}
+  .opt .check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;color:#fff}
+  .opt.sel .check{background:var(--sage);border-color:var(--sage)}
+  .modal-total{display:flex;justify-content:space-between;align-items:center;margin:20px 0 6px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--serif);font-size:1.3rem;font-weight:600}
+  .modal-total b{color:var(--terra-deep)}
+  .modal-actions{display:flex;flex-direction:column;gap:10px;margin-top:22px}
+  .modal-summary{background:#fff;border-radius:16px;padding:18px 20px;margin-bottom:8px;border:1px solid var(--line)}
+  .modal-summary .row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:.95rem}
+  .modal-summary .row span:first-child{color:var(--ink-soft)}
+  .modal-summary .row span:last-child{font-weight:600;text-align:right}
+  .btn-wa{background:#25D366;color:#fff}
+  .btn-wa:hover{background:#1da851;transform:translateY(-2px)}
+  .ok-badge{width:60px;height:60px;border-radius:50%;background:var(--sage);display:grid;place-items:center;margin:0 auto 16px}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#FBF5EB;padding:13px 24px;border-radius:999px;font-size:.9rem;font-weight:500;z-index:90;opacity:0;transition:all .25s;pointer-events:none;box-shadow:var(--shadow)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  /* ---------- Responsive ---------- */
+  .draft{position:fixed;bottom:22px;right:22px;z-index:60;background:var(--ink);color:#FBF5EB;font-size:.76rem;font-weight:600;letter-spacing:.05em;padding:10px 18px;border-radius:999px;box-shadow:var(--shadow);border:1px solid rgba(251,245,235,.2)}
+
   @media (max-width:900px){
     .hero-grid,.reserve-grid,.about-grid{grid-template-columns:1fr;gap:40px}
     .hero-art{max-width:400px;margin:0 auto}
-    .offer-grid,.box-grid,.bday-grid,.res-two{grid-template-columns:1fr}
+    .offer-grid,.box-grid,.bday-grid,.res-two,.menu-grid,.f-row{grid-template-columns:1fr}
+    .menu-grid{gap:28px}
     .nav-links{display:none}
     .foot-grid{grid-template-columns:1fr;gap:32px}
     section.block{padding:70px 0}
-    .ws-item{grid-template-columns:90px 1fr;gap:16px}
-    .ws-age{grid-column:2}
+    .ws-item{grid-template-columns:74px 1fr;gap:14px}
+    .ws-age{grid-column:2;justify-self:start}
+    .ws-item .btn{grid-column:2;justify-self:start}
   }
   @media (max-width:560px){
     .wrap{padding:0 20px}
     .hero-cta{flex-direction:column;align-items:stretch}
-    .hero-cta .btn{justify-content:center}
     .float{display:none!important}
+    .modal-card{padding:26px 22px}
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="brand" href="#">
-      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-        <rect x="2" y="2" width="36" height="36" rx="12" fill="#C96B47"/>
-        <path d="M12 17h13v6a5 5 0 0 1-5 5h-3a5 5 0 0 1-5-5v-6Z" stroke="#FBF5EB" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M25 19h2.5a2.5 2.5 0 0 1 0 5H25" stroke="#FBF5EB" stroke-width="2"/>
-        <circle cx="15.5" cy="12.5" r="1.6" fill="#FBD9A6"/>
-        <circle cx="20" cy="11" r="1.6" fill="#FBD9A6"/>
-        <circle cx="24.5" cy="12.5" r="1.6" fill="#FBD9A6"/>
-      </svg>
+    <a class="brand" href="#top">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="2" y="2" width="36" height="36" rx="12" fill="#C96B47"/><path d="M12 17h13v6a5 5 0 0 1-5 5h-3a5 5 0 0 1-5-5v-6Z" stroke="#FBF5EB" stroke-width="2" stroke-linejoin="round"/><path d="M25 19h2.5a2.5 2.5 0 0 1 0 5H25" stroke="#FBF5EB" stroke-width="2"/><circle cx="15.5" cy="12.5" r="1.6" fill="#FBD9A6"/><circle cx="20" cy="11" r="1.6" fill="#FBD9A6"/><circle cx="24.5" cy="12.5" r="1.6" fill="#FBD9A6"/></svg>
       <span>Krümel &amp; Klecks<small>Kindercafé</small></span>
     </a>
     <nav class="nav-links">
-      <a href="#cafe">Café</a>
+      <a href="#angebote">Angebote</a>
+      <a href="#speisekarte">Speisekarte</a>
       <a href="#lunchboxen">Lunchboxen</a>
       <a href="#workshops">Workshops</a>
       <a href="#geburtstage">Geburtstage</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="nav-cta">
-      <a class="btn btn-primary" href="#reservierung">Tisch reservieren</a>
-    </div>
+    <a class="btn btn-primary btn-sm" href="#reservierung">Tisch reservieren</a>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
+<section class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
       <p class="eyebrow">Kindercafé · Lunch-Manufaktur · Werkstatt</p>
@@ -265,45 +255,30 @@
       <p class="lead">Frisch belegte Lunchboxen, ein Café zum Verweilen, Workshops zum Staunen und Geburtstage, die in Erinnerung bleiben.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#reservierung">Tisch reservieren
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <a class="btn btn-ghost" href="#lunchboxen">Lunchbox bestellen</a>
       </div>
       <div class="hero-facts">
-        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="6.5" stroke="#C96B47" stroke-width="1.6"/><path d="M8.5 5v3.5L11 10" stroke="#C96B47" stroke-width="1.6" stroke-linecap="round"/></svg> Täglich 9–18 Uhr</span>
+        <span><span class="status-dot" id="statusDot"></span><span id="openStatus">Täglich 9–18 Uhr</span></span>
         <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 15s5-4.2 5-8.1A5 5 0 0 0 3.5 6.9C3.5 10.8 8.5 15 8.5 15Z" stroke="#C96B47" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8.5" cy="6.8" r="1.6" stroke="#C96B47" stroke-width="1.6"/></svg> Musterstraße 12, Musterstadt</span>
         <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2.5 12.5v-6l6-3 6 3v6" stroke="#C96B47" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 12.5v-3h5v3" stroke="#C96B47" stroke-width="1.6"/></svg> Spielecke &amp; Wickelraum</span>
       </div>
     </div>
     <div class="hero-art">
       <div class="blob"></div>
-      <!-- central scene -->
       <svg viewBox="0 0 300 300" width="100%" style="position:absolute;inset:0" fill="none">
-        <!-- plate -->
         <ellipse cx="150" cy="205" rx="95" ry="20" fill="#33291E" opacity=".12"/>
-        <!-- cup -->
         <path d="M108 150h62v30a26 26 0 0 1-26 26h-10a26 26 0 0 1-26-26v-30Z" fill="#FBF5EB" stroke="#33291E" stroke-width="3" stroke-linejoin="round"/>
         <path d="M170 158h11a12 12 0 0 1 0 24h-11" fill="#FBF5EB" stroke="#33291E" stroke-width="3"/>
         <path d="M108 150h62" stroke="#C96B47" stroke-width="6" stroke-linecap="round"/>
-        <!-- heart on cup -->
         <path d="M139 172c0-4 6-5 6-1 0-4 6-3 6 1 0 4-6 8-6 8s-6-4-6-8Z" fill="#C56B84"/>
-        <!-- steam -->
         <path d="M128 138c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
         <path d="M150 134c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
         <path d="M172 138c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
-        <!-- crayon -->
-        <g transform="rotate(-24 70 210)">
-          <rect x="46" y="196" width="52" height="15" rx="4" fill="#7F9A6B"/>
-          <path d="M98 196l14 7.5-14 7.5z" fill="#E6A84B"/>
-        </g>
-        <!-- cookie -->
+        <g transform="rotate(-24 70 210)"><rect x="46" y="196" width="52" height="15" rx="4" fill="#7F9A6B"/><path d="M98 196l14 7.5-14 7.5z" fill="#E6A84B"/></g>
         <circle cx="228" cy="196" r="19" fill="#E6A84B" stroke="#33291E" stroke-width="2.5"/>
         <circle cx="222" cy="192" r="2.4" fill="#7A4B2E"/><circle cx="233" cy="190" r="2.4" fill="#7A4B2E"/><circle cx="230" cy="201" r="2.4" fill="#7A4B2E"/><circle cx="221" cy="201" r="2.2" fill="#7A4B2E"/>
-        <!-- balloon -->
-        <ellipse cx="86" cy="86" rx="20" ry="24" fill="#C56B84"/>
-        <path d="M86 110l-2 8" stroke="#33291E" stroke-width="2" stroke-linecap="round"/>
-        <path d="M86 110l4 2-4 2" fill="#C56B84"/>
-        <!-- star -->
+        <ellipse cx="86" cy="86" rx="20" ry="24" fill="#C56B84"/><path d="M86 110l-2 8" stroke="#33291E" stroke-width="2" stroke-linecap="round"/>
         <path d="M228 92l3.4 7 7.6 1-5.5 5.4 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6-5.5-5.4 7.6-1z" fill="#E6A84B"/>
       </svg>
       <div class="float f1"><span class="dot" style="background:var(--sage)"></span>Frisch gebacken</div>
@@ -313,7 +288,6 @@
   </div>
 </section>
 
-<!-- OFFERINGS -->
 <section class="block" id="angebote">
   <div class="wrap">
     <div class="sec-head center">
@@ -322,97 +296,121 @@
       <p>Von der schnellen Lunchbox bis zum ganzen Kindergeburtstag — alles an einem herzlichen Ort.</p>
     </div>
     <div class="offer-grid">
-      <a class="card" id="cafe" href="#reservierung">
-        <div class="ico i-terra">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M7 12h13v6a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-6Z" stroke="#C96B47" stroke-width="2" stroke-linejoin="round"/><path d="M20 14h3a3 3 0 0 1 0 6h-3" stroke="#C96B47" stroke-width="2"/><path d="M11 8c-1-2 1-2 0-4M15 8c-1-2 1-2 0-4" stroke="#C96B47" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
+      <div class="card">
+        <div class="ico i-terra"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M7 12h13v6a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-6Z" stroke="#C96B47" stroke-width="2" stroke-linejoin="round"/><path d="M20 14h3a3 3 0 0 1 0 6h-3" stroke="#C96B47" stroke-width="2"/><path d="M11 8c-1-2 1-2 0-4M15 8c-1-2 1-2 0-4" stroke="#C96B47" stroke-width="2" stroke-linecap="round"/></svg></div>
         <h3>Kindercafé &amp; Reservierung</h3>
         <p>Gemütliche Tische, eine Spielecke und Kuchen wie bei Oma. Reservieren Sie Ihren Lieblingsplatz — mit Extras ganz nach Wunsch.</p>
-        <span class="go">Tisch reservieren <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
-      <a class="card" href="#lunchboxen">
-        <div class="ico i-sage">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="5" y="10" width="20" height="15" rx="3" stroke="#7F9A6B" stroke-width="2"/><path d="M11 10V8a4 4 0 0 1 8 0v2" stroke="#7F9A6B" stroke-width="2"/><path d="M5 16h20" stroke="#7F9A6B" stroke-width="2"/><path d="M15 16v9" stroke="#7F9A6B" stroke-width="2"/></svg>
-        </div>
+        <a class="go" href="#reservierung">Tisch reservieren <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="card">
+        <div class="ico i-sage"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="5" y="10" width="20" height="15" rx="3" stroke="#7F9A6B" stroke-width="2"/><path d="M11 10V8a4 4 0 0 1 8 0v2" stroke="#7F9A6B" stroke-width="2"/><path d="M5 16h20" stroke="#7F9A6B" stroke-width="2"/><path d="M15 16v9" stroke="#7F9A6B" stroke-width="2"/></svg></div>
         <h3>Individuelle Lunchboxen</h3>
         <p>Frisch, bunt und genau nach Geschmack. Stellen Sie die Box für Kita, Schule oder Ausflug ganz einfach selbst zusammen.</p>
-        <span class="go">Box zusammenstellen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
-      <a class="card" href="#workshops">
-        <div class="ico i-berry">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 5a10 10 0 1 0 0 20c1.7 0 2-1.5 1.2-2.5-.8-1-.3-2.5 1.3-2.5H20a5 5 0 0 0 5-5c0-5.5-4.7-10-10-10Z" stroke="#C56B84" stroke-width="2" stroke-linejoin="round"/><circle cx="10.5" cy="12" r="1.5" fill="#C56B84"/><circle cx="15" cy="9.5" r="1.5" fill="#C56B84"/><circle cx="19.5" cy="12" r="1.5" fill="#C56B84"/></svg>
-        </div>
+        <button class="go" type="button" data-builder>Box zusammenstellen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div class="card">
+        <div class="ico i-berry"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 5a10 10 0 1 0 0 20c1.7 0 2-1.5 1.2-2.5-.8-1-.3-2.5 1.3-2.5H20a5 5 0 0 0 5-5c0-5.5-4.7-10-10-10Z" stroke="#C56B84" stroke-width="2" stroke-linejoin="round"/><circle cx="10.5" cy="12" r="1.5" fill="#C56B84"/><circle cx="15" cy="9.5" r="1.5" fill="#C56B84"/><circle cx="19.5" cy="12" r="1.5" fill="#C56B84"/></svg></div>
         <h3>Workshops</h3>
         <p>Backen, Basteln, Entdecken. Kleine Kurse für kleine Hände — mit viel Platz und Zeit zum Ausprobieren.</p>
-        <span class="go">Zu den Terminen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
-      <a class="card" href="#geburtstage">
-        <div class="ico i-honey">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M6 15h18v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-9Z" stroke="#E6A84B" stroke-width="2" stroke-linejoin="round"/><path d="M6 19h18" stroke="#E6A84B" stroke-width="2"/><path d="M15 15v-4" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="8" r="1.8" fill="#E6A84B"/><path d="M10 15v-3M20 15v-3" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
+        <a class="go" href="#workshops">Zu den Terminen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="card">
+        <div class="ico i-honey"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M6 15h18v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-9Z" stroke="#E6A84B" stroke-width="2" stroke-linejoin="round"/><path d="M6 19h18" stroke="#E6A84B" stroke-width="2"/><path d="M15 15v-4" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="8" r="1.8" fill="#E6A84B"/><path d="M10 15v-3M20 15v-3" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/></svg></div>
         <h3>Geburtstagsfeiern</h3>
         <p>Ihr Kind feiert, wir kümmern uns um den Rest. Von der Deko bis zur Torte — liebevoll und ganz nach Ihrem Wunsch.</p>
-        <span class="go">Feier anfragen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </a>
+        <a class="go" href="#geburtstage">Feier anfragen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- RESERVATION -->
 <section class="block reserve" id="reservierung">
   <div class="wrap reserve-grid">
     <div>
       <p class="eyebrow">Reservierung</p>
       <h2 style="font-size:clamp(2rem,3.6vw,2.85rem);margin-bottom:16px">Ihren Platz sichern — in wenigen Schritten</h2>
-      <p style="font-size:1.08rem;color:var(--ink-soft);margin-bottom:24px">Wählen Sie Datum, Uhrzeit und Tisch — und ergänzen Sie Extras wie einen Geburtstagskuchen oder einen Platz in der Spielecke. Ihre Anfrage landet direkt bei uns, wir bestätigen persönlich.</p>
+      <p style="font-size:1.08rem;color:var(--ink-soft);margin-bottom:24px">Wählen Sie Datum, Uhrzeit und Tisch — und ergänzen Sie Extras wie einen Geburtstagskuchen oder einen Platz in der Spielecke. Ihre Anfrage geht direkt per WhatsApp oder E-Mail an uns, wir bestätigen persönlich.</p>
       <div class="hero-facts" style="gap:16px">
         <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M4 8.5l3 3 6-6.5" stroke="#7F9A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Familientische am Fenster</span>
         <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M4 8.5l3 3 6-6.5" stroke="#7F9A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Extras frei wählbar</span>
       </div>
     </div>
     <div class="res-card">
-      <div class="res-row">
-        <span class="res-label">Datum &amp; Gäste</span>
+      <div class="res-row" data-field="date">
+        <span class="res-label">Datum &amp; Gäste <span class="req">Pflicht</span></span>
         <div class="res-two">
-          <div class="res-field"><span>📅 Sa. 12. Juli</span></div>
-          <div class="res-field"><span>Gäste</span><span class="stepper"><button aria-hidden="true">−</button><span class="v">4</span><button aria-hidden="true">+</button></span></div>
+          <div class="res-field"><input type="date" id="resDate" aria-label="Datum"></div>
+          <div class="res-field"><span>Gäste</span><span class="stepper"><button type="button" id="guestMinus" aria-label="weniger">−</button><span class="v" id="guestVal">4</span><button type="button" id="guestPlus" aria-label="mehr">+</button></span></div>
         </div>
       </div>
-      <div class="res-row">
-        <span class="res-label">Uhrzeit</span>
-        <div class="chips">
-          <span class="chip">09:30</span>
-          <span class="chip">11:00</span>
-          <span class="chip sel">12:30</span>
-          <span class="chip">14:00</span>
-          <span class="chip">15:30</span>
+      <div class="res-row" data-field="time">
+        <span class="res-label">Uhrzeit <span class="req">Pflicht</span></span>
+        <div class="chips" id="timeChips">
+          <button type="button" class="chip" data-time="09:30">09:30</button>
+          <button type="button" class="chip" data-time="11:00">11:00</button>
+          <button type="button" class="chip sel" data-time="12:30">12:30</button>
+          <button type="button" class="chip" data-time="14:00">14:00</button>
+          <button type="button" class="chip" data-time="15:30">15:30</button>
         </div>
       </div>
-      <div class="res-row">
-        <span class="res-label">Tisch</span>
-        <div class="chips">
-          <span class="chip sel">Familientisch am Fenster</span>
-          <span class="chip">Runder Tisch</span>
-          <span class="chip">Sofaecke</span>
+      <div class="res-row" data-field="table">
+        <span class="res-label">Tisch <span class="req">Pflicht</span></span>
+        <div class="chips" id="tableChips">
+          <button type="button" class="chip sel" data-table="Familientisch am Fenster">Familientisch am Fenster</button>
+          <button type="button" class="chip" data-table="Runder Tisch">Runder Tisch</button>
+          <button type="button" class="chip" data-table="Sofaecke">Sofaecke</button>
         </div>
       </div>
       <div class="res-row">
         <span class="res-label">Extras (Add-ins)</span>
-        <div class="chips">
-          <span class="chip add sel">🎂 Geburtstagskuchen</span>
-          <span class="chip add sel">🧸 Spielecke reservieren</span>
-          <span class="chip add">🍼 Kinderhochstuhl</span>
-          <span class="chip add">🌱 Glutenfrei</span>
+        <div class="chips" id="addinChips">
+          <button type="button" class="chip add sel" data-addin="Geburtstagskuchen">🎂 Geburtstagskuchen</button>
+          <button type="button" class="chip add sel" data-addin="Spielecke reservieren">🧸 Spielecke reservieren</button>
+          <button type="button" class="chip add" data-addin="Kinderhochstuhl">🍼 Kinderhochstuhl</button>
+          <button type="button" class="chip add" data-addin="Glutenfrei">🌱 Glutenfrei</button>
         </div>
       </div>
-      <button class="btn btn-primary res-submit">Reservierung anfragen</button>
-      <p class="res-note">Unverbindlich — Sie erhalten unsere Bestätigung persönlich.</p>
+      <button class="btn btn-primary res-submit" type="button" id="resSubmit">Reservierung anfragen</button>
+      <p class="res-note" id="resNote">Unverbindlich — Sie erhalten unsere Bestätigung persönlich.</p>
     </div>
   </div>
 </section>
 
-<!-- LUNCHBOXES -->
-<section class="block" id="lunchboxen">
+<section class="block" id="speisekarte">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Aus unserer Küche</p>
+      <h2>Die kleine Karte</h2>
+      <p>Alles frisch, saisonal und mit Liebe gemacht — für kleine und große Gäste.</p>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-col">
+        <h3>☕ Für die Großen</h3>
+        <div class="menu-item"><span class="n">Cappuccino</span><span class="menu-dots"></span><span class="p">3,40</span></div>
+        <div class="menu-item"><span class="n">Chai Latte<small>auch mit Hafermilch</small></span><span class="menu-dots"></span><span class="p">3,90</span></div>
+        <div class="menu-item"><span class="n">Heiße Schokolade</span><span class="menu-dots"></span><span class="p">3,60</span></div>
+        <div class="menu-item"><span class="n">Kanne Tee</span><span class="menu-dots"></span><span class="p">3,20</span></div>
+      </div>
+      <div class="menu-col">
+        <h3>🧃 Für die Kleinen</h3>
+        <div class="menu-item"><span class="n">Bio-Apfelschorle</span><span class="menu-dots"></span><span class="p">2,20</span></div>
+        <div class="menu-item"><span class="n">Warme Milch mit Honig</span><span class="menu-dots"></span><span class="p">2,40</span></div>
+        <div class="menu-item"><span class="n">Kinder-Kakao</span><span class="menu-dots"></span><span class="p">2,60</span></div>
+        <div class="menu-item"><span class="n">Obst-Smoothie<small>Banane &amp; Beeren</small></span><span class="menu-dots"></span><span class="p">3,40</span></div>
+      </div>
+      <div class="menu-col">
+        <h3>🍰 Süßes &amp; Snacks</h3>
+        <div class="menu-item"><span class="n">Karottenkuchen</span><span class="menu-dots"></span><span class="p">3,80</span></div>
+        <div class="menu-item"><span class="n">Käse-Sandwich<small>warm, mit Vollkornbrot</small></span><span class="menu-dots"></span><span class="p">4,50</span></div>
+        <div class="menu-item"><span class="n">Obstteller</span><span class="menu-dots"></span><span class="p">3,90</span></div>
+        <div class="menu-item"><span class="n">Butterkekse (hausgemacht)</span><span class="menu-dots"></span><span class="p">2,80</span></div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:34px;color:var(--ink-soft);font-size:.9rem">Alle Speisen auch glutenfrei &amp; vegan möglich — sprechen Sie uns gern an.</p>
+  </div>
+</section>
+
+<section class="block" id="lunchboxen" style="background:var(--cream-2)">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Lunchboxen</p>
@@ -421,76 +419,55 @@
     </div>
     <div class="box-grid">
       <div class="box">
-        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#FBD9A6,#F2B27A)">
-          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="16" y="26" width="48" height="36" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M16 40h48M40 40v22" stroke="#33291E" stroke-width="2.5"/><circle cx="28" cy="33" r="3" fill="#C56B84"/><circle cx="52" cy="33" r="3" fill="#7F9A6B"/><rect x="22" y="46" width="12" height="10" rx="2" fill="#E6A84B"/><path d="M48 46l8 4-8 4z" fill="#C96B47"/></svg>
-        </div>
-        <div class="box-body">
-          <h3>Die kleine Weltreise</h3>
-          <p>Mini-Wraps, bunte Obstspieße und knackige Gemüsesticks mit Dip.</p>
-          <p class="price">ab <b>6,50 €</b></p>
-        </div>
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#FBD9A6,#F2B27A)"><svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="16" y="26" width="48" height="36" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M16 40h48M40 40v22" stroke="#33291E" stroke-width="2.5"/><circle cx="28" cy="33" r="3" fill="#C56B84"/><circle cx="52" cy="33" r="3" fill="#7F9A6B"/><rect x="22" y="46" width="12" height="10" rx="2" fill="#E6A84B"/><path d="M48 46l8 4-8 4z" fill="#C96B47"/></svg></div>
+        <div class="box-body"><h3>Die kleine Weltreise</h3><p>Mini-Wraps, bunte Obstspieße und knackige Gemüsesticks mit Dip.</p><p class="price">ab <b>6,50 €</b></p><button class="btn btn-ghost btn-sm" type="button" data-builder data-preset="Die kleine Weltreise">Diese Box anfragen</button></div>
       </div>
       <div class="box">
-        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#CFE0C4,#A9C295)">
-          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="18" y="24" width="44" height="40" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M26 34h28M26 42h28M26 50h18" stroke="#7F9A6B" stroke-width="3" stroke-linecap="round"/><circle cx="54" cy="52" r="5" fill="#C96B47"/></svg>
-        </div>
-        <div class="box-body">
-          <h3>Der Znüni-Klassiker</h3>
-          <p>Vollkornbrot mit Käse, ein knackiger Apfel und ein Butterkeks.</p>
-          <p class="price">ab <b>5,50 €</b></p>
-        </div>
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#CFE0C4,#A9C295)"><svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="18" y="24" width="44" height="40" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M26 34h28M26 42h28M26 50h18" stroke="#7F9A6B" stroke-width="3" stroke-linecap="round"/><circle cx="54" cy="52" r="5" fill="#C96B47"/></svg></div>
+        <div class="box-body"><h3>Der Znüni-Klassiker</h3><p>Vollkornbrot mit Käse, ein knackiger Apfel und ein Butterkeks.</p><p class="price">ab <b>5,50 €</b></p><button class="btn btn-ghost btn-sm" type="button" data-builder data-preset="Der Znüni-Klassiker">Diese Box anfragen</button></div>
       </div>
       <div class="box">
-        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#F3C6D2,#DE9BAF)">
-          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><path d="M26 30h28l-3 30a4 4 0 0 1-4 4H33a4 4 0 0 1-4-4l-3-30Z" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M24 30h32" stroke="#C56B84" stroke-width="4" stroke-linecap="round"/><circle cx="36" cy="44" r="2.6" fill="#C56B84"/><circle cx="44" cy="40" r="2.6" fill="#7F9A6B"/><circle cx="42" cy="50" r="2.6" fill="#E6A84B"/></svg>
-        </div>
-        <div class="box-body">
-          <h3>Die Naschkatze</h3>
-          <p>Cremiger Joghurt mit Beeren, knusprigem Müsli und kleinem Gebäck.</p>
-          <p class="price">ab <b>6,00 €</b></p>
-        </div>
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#F3C6D2,#DE9BAF)"><svg width="80" height="80" viewBox="0 0 80 80" fill="none"><path d="M26 30h28l-3 30a4 4 0 0 1-4 4H33a4 4 0 0 1-4-4l-3-30Z" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M24 30h32" stroke="#C56B84" stroke-width="4" stroke-linecap="round"/><circle cx="36" cy="44" r="2.6" fill="#C56B84"/><circle cx="44" cy="40" r="2.6" fill="#7F9A6B"/><circle cx="42" cy="50" r="2.6" fill="#E6A84B"/></svg></div>
+        <div class="box-body"><h3>Die Naschkatze</h3><p>Cremiger Joghurt mit Beeren, knusprigem Müsli und kleinem Gebäck.</p><p class="price">ab <b>6,00 €</b></p><button class="btn btn-ghost btn-sm" type="button" data-builder data-preset="Die Naschkatze">Diese Box anfragen</button></div>
       </div>
     </div>
     <div style="text-align:center;margin-top:40px">
-      <a class="btn btn-primary" href="#">Eigene Box zusammenstellen
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <button class="btn btn-primary" type="button" data-builder>Eigene Box zusammenstellen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </div>
 </section>
 
-<!-- WORKSHOPS -->
-<section class="block" id="workshops" style="background:var(--cream-2)">
+<section class="block" id="workshops">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Workshops</p>
       <h2>Kleine Kurse, große Augen</h2>
-      <p>Jede Woche etwas Neues zum Entdecken — in kleiner Runde und mit viel Zeit.</p>
+      <p>Jede Woche etwas Neues zum Entdecken — in kleiner Runde und mit viel Zeit. Melden Sie Ihr Kind direkt an.</p>
     </div>
-    <div class="ws-list">
+    <div class="ws-list" id="wsList">
       <div class="ws-item">
         <div class="ws-date"><span class="d">19</span><span class="m">Juli · Sa</span></div>
         <div class="ws-title">Wir backen Butterkekse<small>10:00 – 11:30 Uhr · mit Schürze &amp; Ausstechern</small></div>
         <div class="ws-age">ab 4 Jahren</div>
+        <button class="btn btn-ghost btn-sm" type="button" data-workshop="Wir backen Butterkekse" data-wdate="Sa. 19. Juli, 10:00 Uhr">Anmelden</button>
       </div>
       <div class="ws-item">
         <div class="ws-date"><span class="d">23</span><span class="m">Juli · Mi</span></div>
         <div class="ws-title">Filzen für kleine Hände<small>15:00 – 16:30 Uhr · bunte Wolle zum Mitnehmen</small></div>
         <div class="ws-age">ab 5 Jahren</div>
+        <button class="btn btn-ghost btn-sm" type="button" data-workshop="Filzen für kleine Hände" data-wdate="Mi. 23. Juli, 15:00 Uhr">Anmelden</button>
       </div>
       <div class="ws-item">
         <div class="ws-date"><span class="d">26</span><span class="m">Juli · Sa</span></div>
         <div class="ws-title">Kleine Gärtner: Kresse säen<small>10:00 – 11:00 Uhr · eigenes Töpfchen inklusive</small></div>
         <div class="ws-age">ab 3 Jahren</div>
+        <button class="btn btn-ghost btn-sm" type="button" data-workshop="Kleine Gärtner: Kresse säen" data-wdate="Sa. 26. Juli, 10:00 Uhr">Anmelden</button>
       </div>
-    </div>
-    <div style="text-align:center;margin-top:40px">
-      <a class="btn btn-ghost" href="#">Alle Workshops ansehen</a>
     </div>
   </div>
 </section>
 
-<!-- BIRTHDAY -->
 <section class="block bday" id="geburtstage">
   <div class="wrap">
     <div class="sec-head center">
@@ -507,6 +484,7 @@
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Tischdeko &amp; Luftballons</li>
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Kuchen &amp; Getränke für die Kleinen</li>
         </ul>
+        <button class="btn btn-cream" type="button" data-package="Das kleine Fest">Dieses Paket anfragen</button>
       </div>
       <div class="pkg">
         <h3>Das große Fest</h3>
@@ -516,23 +494,33 @@
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Eigener Mini-Workshop nach Wahl</li>
           <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Individuelle Wunschtorte</li>
         </ul>
+        <button class="btn btn-cream" type="button" data-package="Das große Fest">Dieses Paket anfragen</button>
       </div>
-    </div>
-    <div class="bday-cta">
-      <a class="btn btn-cream" href="#">Feier anfragen
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#33291E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="block about" id="ueber-uns">
+<section class="block" id="faq">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow center">Gut zu wissen</p>
+      <h2>Häufige Fragen</h2>
+    </div>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item"><button class="faq-q" type="button">Sind Kinderhochstühle und ein Wickelraum vorhanden?<span class="ic">+</span></button><div class="faq-a"><p>Ja, selbstverständlich. Wir haben mehrere Hochstühle, einen Wickelraum und eine große Spielecke. Kinderwagen können Sie bequem im Eingangsbereich abstellen.</p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Berücksichtigen Sie Allergien und Unverträglichkeiten?<span class="ic">+</span></button><div class="faq-a"><p>Sehr gern. Fast alle Speisen und Lunchboxen sind auch glutenfrei, laktosefrei oder vegan möglich. Geben Sie uns bei der Anfrage einfach Bescheid — wir kennzeichnen alle Allergene.</p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Kann man ohne Reservierung vorbeikommen?<span class="ic">+</span></button><div class="faq-a"><p>Aber natürlich — spontane Gäste sind jederzeit willkommen. Gerade an Wochenenden und für größere Gruppen empfehlen wir aber eine Reservierung, damit Ihr Wunschtisch frei ist.</p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Wie weit im Voraus sollte ich einen Geburtstag buchen?<span class="ic">+</span></button><div class="faq-a"><p>Am besten 2 bis 3 Wochen vorher. So können wir Ihre Wunschtorte, das Programm und die Deko in Ruhe vorbereiten. Kurzfristige Anfragen versuchen wir immer möglich zu machen.</p></div></div>
+      <div class="faq-item"><button class="faq-q" type="button">Gibt es Parkmöglichkeiten in der Nähe?<span class="ic">+</span></button><div class="faq-a"><p>Direkt vor dem Café gibt es Kurzzeitparkplätze, und das Parkhaus Musterstraße ist nur zwei Minuten entfernt. Die Bushaltestelle „Musterplatz" liegt gleich um die Ecke.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block about" id="ueber-uns" style="background:var(--cream-2)">
   <div class="wrap about-grid">
     <div class="about-art">
       <svg viewBox="0 0 300 220" width="100%" style="position:absolute;inset:0" fill="none">
-        <circle cx="110" cy="95" r="34" fill="#FBF5EB"/>
-        <circle cx="185" cy="105" r="26" fill="#FBF5EB"/>
+        <circle cx="110" cy="95" r="34" fill="#FBF5EB"/><circle cx="185" cy="105" r="26" fill="#FBF5EB"/>
         <path d="M60 190c8-30 34-46 62-46s54 16 62 46" stroke="#FBF5EB" stroke-width="6" stroke-linecap="round"/>
         <circle cx="110" cy="88" r="6" fill="#33291E"/><circle cx="128" cy="90" r="6" fill="#33291E"/>
         <path d="M107 104c6 5 16 5 22 0" stroke="#C96B47" stroke-width="4" stroke-linecap="round"/>
@@ -550,7 +538,6 @@
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="wrap">
     <div class="foot-grid">
@@ -565,19 +552,295 @@
       </div>
       <div class="fcol">
         <h5>Kontakt</h5>
-        <a href="#">hallo@kruemel-und-klecks.de</a>
-        <a href="#">030 · 12 34 56</a>
+        <a data-mail>hallo@kruemel-und-klecks.de</a>
+        <a data-wa>WhatsApp schreiben</a>
         <a href="#">Instagram</a>
       </div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 Krümel &amp; Klecks · Impressum · Datenschutz</span>
-      <span class="credit">Unverbindlicher Entwurf — mit Sorgfalt handcodiert von <b>Karriaro Webdesign</b></span>
+      <span class="credit">Interaktiver Entwurf — handcodiert von <b>Karriaro Webdesign</b></span>
     </div>
   </div>
 </footer>
 
-<div class="draft">✦ Entwurf · Krümel &amp; Klecks</div>
+<div class="modal-overlay" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="Anfrage">
+    <button class="modal-close" id="modalClose" type="button" aria-label="Schließen">×</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
 
+<div class="toast" id="toast"></div>
+<div class="draft">✦ Interaktiver Entwurf · Krümel &amp; Klecks</div>
+
+<script>
+(function(){
+  'use strict';
+  // ---- Platzhalter-Kontaktdaten (im Live-Betrieb durch echte ersetzen) ----
+  var WA = '4915100000000';
+  var MAIL = 'hallo@kruemel-und-klecks.de';
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+
+  // ---- Öffnungsstatus (täglich 9–18 Uhr) ----
+  (function openStatus(){
+    var el = $('#openStatus'), dot = $('#statusDot');
+    if(!el) return;
+    var now = new Date(), h = now.getHours() + now.getMinutes()/60;
+    var open = h >= 9 && h < 18;
+    if(open){ el.textContent = 'Jetzt geöffnet · bis 18:00 Uhr'; dot.classList.add('is-open'); }
+    else if(h < 9){ el.textContent = 'Öffnet heute um 9:00 Uhr'; }
+    else { el.textContent = 'Öffnet morgen um 9:00 Uhr'; }
+  })();
+
+  // ---- Modal ----
+  var modal = $('#modal'), modalBody = $('#modalBody');
+  function openModal(html){
+    modalBody.innerHTML = html;
+    modal.hidden = false;
+    requestAnimationFrame(function(){ modal.classList.add('show'); });
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    setTimeout(function(){ modal.hidden = true; modalBody.innerHTML = ''; }, 200);
+  }
+  $('#modalClose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+  var toast = $('#toast');
+  function showToast(msg){
+    toast.textContent = msg; toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); }, 2600);
+  }
+
+  function esc(s){ return String(s).replace(/[<>&]/g, function(c){ return ({'<':'&lt;','>':'&gt;','&':'&amp;'})[c]; }); }
+  function waLink(text){ return 'https://wa.me/' + WA + '?text=' + encodeURIComponent(text); }
+  function mailLink(subj, text){ return 'mailto:' + MAIL + '?subject=' + encodeURIComponent(subj) + '&body=' + encodeURIComponent(text); }
+
+  // Bestätigungs-/Absende-Ansicht
+  function confirmView(title, subject, rows, message){
+    var summary = rows.map(function(r){
+      return '<div class="row"><span>' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>';
+    }).join('');
+    openModal(
+      '<div class="ok-badge"><svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M8 15.5l4.5 4.5L22 9.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>' +
+      '<h3 style="text-align:center">' + esc(title) + '</h3>' +
+      '<p class="sub" style="text-align:center">So geht Ihre Anfrage bei uns ein — bitte über einen Kanal absenden:</p>' +
+      '<div class="modal-summary">' + summary + '</div>' +
+      '<div class="modal-actions">' +
+        '<a class="btn btn-wa" href="' + waLink(message) + '" target="_blank" rel="noopener">Per WhatsApp senden</a>' +
+        '<a class="btn btn-ghost" href="' + mailLink(subject, message) + '">Per E-Mail senden</a>' +
+      '</div>' +
+      '<p class="res-note" style="margin-top:16px">Vorschau-Entwurf · im Live-Betrieb geht Ihre Anfrage direkt bei uns ein.</p>'
+    );
+  }
+
+  // ---- Reservierung ----
+  var state = { date:'', time:'12:30', guests:4, table:'Familientisch am Fenster', addins:{} };
+  var dateInput = $('#resDate');
+  if(dateInput){
+    var today = new Date(); var iso = today.toISOString().slice(0,10);
+    dateInput.min = iso; dateInput.value = iso; state.date = iso;
+    dateInput.addEventListener('change', function(){ state.date = dateInput.value; clearMissing('date'); });
+  }
+  // Standard-Extras vorbelegen
+  ['Geburtstagskuchen','Spielecke reservieren'].forEach(function(a){ state.addins[a] = true; });
+
+  function singleSelect(containerId, attr, key){
+    var c = $('#' + containerId); if(!c) return;
+    c.addEventListener('click', function(e){
+      var b = e.target.closest('.chip'); if(!b) return;
+      $$('.chip', c).forEach(function(x){ x.classList.remove('sel'); });
+      b.classList.add('sel'); state[key] = b.getAttribute(attr); clearMissing(key);
+    });
+  }
+  singleSelect('timeChips', 'data-time', 'time');
+  singleSelect('tableChips', 'data-table', 'table');
+
+  var addinC = $('#addinChips');
+  if(addinC) addinC.addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    var a = b.getAttribute('data-addin'); b.classList.toggle('sel');
+    if(b.classList.contains('sel')) state.addins[a] = true; else delete state.addins[a];
+  });
+
+  function step(delta){ state.guests = Math.max(1, Math.min(20, state.guests + delta)); $('#guestVal').textContent = state.guests; }
+  if($('#guestPlus')) $('#guestPlus').addEventListener('click', function(){ step(1); });
+  if($('#guestMinus')) $('#guestMinus').addEventListener('click', function(){ step(-1); });
+
+  function clearMissing(field){ var r = $('.res-row[data-field="' + field + '"]'); if(r) r.classList.remove('missing'); }
+  function markMissing(field){ var r = $('.res-row[data-field="' + field + '"]'); if(r) r.classList.add('missing'); }
+
+  if($('#resSubmit')) $('#resSubmit').addEventListener('click', function(){
+    var missing = [];
+    if(!state.date) missing.push('date');
+    if(!state.time) missing.push('time');
+    if(!state.table) missing.push('table');
+    ['date','time','table'].forEach(clearMissing);
+    if(missing.length){
+      missing.forEach(markMissing);
+      var note = $('#resNote'); note.textContent = 'Bitte wählen Sie noch Datum, Uhrzeit und Tisch.'; note.style.color = 'var(--terra-deep)';
+      return;
+    }
+    var addins = Object.keys(state.addins);
+    var dateFmt = state.date;
+    try { dateFmt = new Date(state.date).toLocaleDateString('de-DE', {weekday:'long', day:'numeric', month:'long'}); } catch(e){}
+    var rows = [
+      ['Datum', dateFmt],
+      ['Uhrzeit', state.time + ' Uhr'],
+      ['Gäste', String(state.guests)],
+      ['Tisch', state.table],
+      ['Extras', addins.length ? addins.join(', ') : 'keine']
+    ];
+    var msg = 'Reservierungsanfrage – Krümel & Klecks\n\n' +
+      'Datum: ' + dateFmt + '\nUhrzeit: ' + state.time + ' Uhr\nGäste: ' + state.guests +
+      '\nTisch: ' + state.table + '\nExtras: ' + (addins.length ? addins.join(', ') : 'keine') +
+      '\n\nBitte bestätigen Sie mir den Termin. Vielen Dank!';
+    confirmView('Reservierung bereit', 'Reservierungsanfrage', rows, msg);
+  });
+
+  // ---- Lunchbox-Konfigurator ----
+  var boxBase = [
+    { n:'Vollkornbrot', p:4.50 },
+    { n:'Weizen-Wrap', p:4.80 },
+    { n:'Bagel', p:5.00 }
+  ];
+  var boxItems = [
+    { n:'Käse & Frischkäse', p:0.80 },
+    { n:'Putenbrust', p:1.20 },
+    { n:'Obstspieße', p:1.00 },
+    { n:'Gemüsesticks & Dip', p:0.90 },
+    { n:'Joghurt mit Beeren', p:1.10 },
+    { n:'Hausgemachter Keks', p:0.60 },
+    { n:'Bio-Apfelschorle', p:1.20 }
+  ];
+  function openBuilder(preset){
+    var baseHtml = boxBase.map(function(b,i){
+      return '<div class="opt' + (i===0?' sel':'') + '" data-base="' + i + '"><span>' + b.n + '</span><span class="op">' + b.p.toFixed(2).replace('.',',') + ' €</span></div>';
+    }).join('');
+    var itemHtml = boxItems.map(function(it,i){
+      return '<div class="opt" data-item="' + i + '"><span>' + it.n + ' <small style="color:var(--ink-soft)">+' + it.p.toFixed(2).replace('.',',') + ' €</small></span><span class="check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>';
+    }).join('');
+    openModal(
+      '<h3>Eigene Lunchbox</h3>' +
+      '<p class="sub">' + (preset ? 'Als Basis: „' + esc(preset) + '" — passen Sie sie frei an.' : 'Wählen Sie Grundlage und Zutaten — der Preis rechnet sich live.') + '</p>' +
+      '<span class="f-label">Grundlage</span>' + baseHtml +
+      '<span class="f-label">Zutaten (beliebig viele)</span>' + itemHtml +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px"><span class="f-label" style="margin:0">Anzahl Boxen</span>' +
+        '<span class="stepper"><button type="button" id="bxMinus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:1.1rem;cursor:pointer">−</button><span class="v" id="bxQty" style="font-weight:600">1</span><button type="button" id="bxPlus" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:1.1rem;cursor:pointer">+</button></span></div>' +
+      '<div class="modal-total"><span>Gesamt</span><b id="bxTotal">4,50 €</b></div>' +
+      '<div class="modal-actions"><button class="btn btn-primary" type="button" id="bxSubmit">Box anfragen</button></div>'
+    );
+    var sel = { base:0, items:{}, qty:1 };
+    // Preset: ein paar Zutaten vorwählen
+    if(preset === 'Die Naschkatze'){ sel.items[4]=true; sel.items[5]=true; }
+    else if(preset === 'Der Znüni-Klassiker'){ sel.items[0]=true; sel.items[5]=true; }
+    else if(preset === 'Die kleine Weltreise'){ sel.items[2]=true; sel.items[3]=true; }
+    Object.keys(sel.items).forEach(function(i){ var el = $('.opt[data-item="'+i+'"]'); if(el) el.classList.add('sel'); });
+
+    function total(){
+      var t = boxBase[sel.base].p;
+      Object.keys(sel.items).forEach(function(i){ t += boxItems[i].p; });
+      return t * sel.qty;
+    }
+    function render(){ $('#bxTotal').textContent = total().toFixed(2).replace('.',',') + ' €'; }
+    modalBody.addEventListener('click', function(e){
+      var base = e.target.closest('.opt[data-base]');
+      if(base){ sel.base = +base.getAttribute('data-base'); $$('.opt[data-base]').forEach(function(x){ x.classList.remove('sel'); }); base.classList.add('sel'); render(); return; }
+      var item = e.target.closest('.opt[data-item]');
+      if(item){ var idx = item.getAttribute('data-item'); if(sel.items[idx]){ delete sel.items[idx]; item.classList.remove('sel'); } else { sel.items[idx] = true; item.classList.add('sel'); } render(); return; }
+    });
+    $('#bxPlus').addEventListener('click', function(){ sel.qty = Math.min(50, sel.qty+1); $('#bxQty').textContent = sel.qty; render(); });
+    $('#bxMinus').addEventListener('click', function(){ sel.qty = Math.max(1, sel.qty-1); $('#bxQty').textContent = sel.qty; render(); });
+    render();
+    $('#bxSubmit').addEventListener('click', function(){
+      var items = Object.keys(sel.items).map(function(i){ return boxItems[i].n; });
+      var rows = [
+        ['Grundlage', boxBase[sel.base].n],
+        ['Zutaten', items.length ? items.join(', ') : 'nur Grundlage'],
+        ['Anzahl', sel.qty + ' Box(en)'],
+        ['Gesamt', total().toFixed(2).replace('.',',') + ' €']
+      ];
+      var msg = 'Lunchbox-Bestellung – Krümel & Klecks\n\n' +
+        'Grundlage: ' + boxBase[sel.base].n + '\nZutaten: ' + (items.length ? items.join(', ') : 'nur Grundlage') +
+        '\nAnzahl: ' + sel.qty + '\nGesamt: ' + total().toFixed(2).replace('.',',') + ' €' +
+        '\n\nWunschtermin zur Abholung/Lieferung: \nVielen Dank!';
+      confirmView('Ihre Box ist fertig', 'Lunchbox-Bestellung', rows, msg);
+    });
+  }
+  $$('[data-builder]').forEach(function(b){ b.addEventListener('click', function(){ openBuilder(b.getAttribute('data-preset')); }); });
+
+  // ---- Workshop-Anmeldung ----
+  $$('[data-workshop]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var w = b.getAttribute('data-workshop'), d = b.getAttribute('data-wdate');
+      openModal(
+        '<h3>Anmeldung</h3><p class="sub">' + esc(w) + ' · ' + esc(d) + '</p>' +
+        '<span class="f-label">Name des Kindes</span><input class="f-input" id="wKid" placeholder="z. B. Mia">' +
+        '<div class="f-row"><div><span class="f-label">Alter</span><input class="f-input" id="wAge" placeholder="4"></div><div><span class="f-label">Anzahl Kinder</span><input class="f-input" id="wNum" value="1"></div></div>' +
+        '<span class="f-label">Ihr Kontakt (Name / Telefon)</span><input class="f-input" id="wContact" placeholder="Ihr Name, Rückrufnummer">' +
+        '<div class="modal-actions"><button class="btn btn-primary" type="button" id="wSubmit">Anmeldung senden</button></div>'
+      );
+      $('#wSubmit').addEventListener('click', function(){
+        var kid = $('#wKid').value || '—', age = $('#wAge').value || '—', num = $('#wNum').value || '1', c = $('#wContact').value || '—';
+        var rows = [['Workshop', w], ['Termin', d], ['Kind', kid + ' (' + age + ' J.)'], ['Anzahl', num], ['Kontakt', c]];
+        var msg = 'Workshop-Anmeldung – Krümel & Klecks\n\nWorkshop: ' + w + '\nTermin: ' + d +
+          '\nKind: ' + kid + ' (' + age + ' Jahre)\nAnzahl Kinder: ' + num + '\nKontakt: ' + c + '\n\nBitte bestätigen Sie den Platz. Danke!';
+        confirmView('Anmeldung bereit', 'Workshop-Anmeldung', rows, msg);
+      });
+    });
+  });
+
+  // ---- Geburtstags-Anfrage ----
+  $$('[data-package]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var pkg = b.getAttribute('data-package');
+      openModal(
+        '<h3>Geburtstag anfragen</h3><p class="sub">Paket: ' + esc(pkg) + '</p>' +
+        '<div class="f-row"><div><span class="f-label">Wunschdatum</span><input class="f-input" type="date" id="gDate"></div><div><span class="f-label">Anzahl Kinder</span><input class="f-input" id="gNum" placeholder="8"></div></div>' +
+        '<div class="f-row"><div><span class="f-label">Alter Geburtstagskind</span><input class="f-input" id="gAge" placeholder="5"></div><div><span class="f-label">Ihr Telefon</span><input class="f-input" id="gTel" placeholder="Rückrufnummer"></div></div>' +
+        '<span class="f-label">Besondere Wünsche</span><input class="f-input" id="gWish" placeholder="z. B. Wunschtorte, Motto, Allergien">' +
+        '<div class="modal-actions"><button class="btn btn-primary" type="button" id="gSubmit">Anfrage senden</button></div>'
+      );
+      var gd = $('#gDate'); if(gd){ gd.min = new Date().toISOString().slice(0,10); }
+      $('#gSubmit').addEventListener('click', function(){
+        var date = $('#gDate').value || '—', num = $('#gNum').value || '—', age = $('#gAge').value || '—', tel = $('#gTel').value || '—', wish = $('#gWish').value || '—';
+        var dateFmt = date; try { if(date !== '—') dateFmt = new Date(date).toLocaleDateString('de-DE', {weekday:'long', day:'numeric', month:'long'}); } catch(e){}
+        var rows = [['Paket', pkg], ['Wunschdatum', dateFmt], ['Kinder', num], ['Alter', age + ' J.'], ['Wünsche', wish], ['Telefon', tel]];
+        var msg = 'Geburtstags-Anfrage – Krümel & Klecks\n\nPaket: ' + pkg + '\nWunschdatum: ' + dateFmt +
+          '\nAnzahl Kinder: ' + num + '\nAlter Geburtstagskind: ' + age + '\nBesondere Wünsche: ' + wish + '\nTelefon: ' + tel +
+          '\n\nBitte melden Sie sich zur Abstimmung. Vielen Dank!';
+        confirmView('Anfrage bereit', 'Geburtstags-Anfrage', rows, msg);
+      });
+    });
+  });
+
+  // ---- FAQ ----
+  var faq = $('#faqList');
+  if(faq) faq.addEventListener('click', function(e){
+    var q = e.target.closest('.faq-q'); if(!q) return;
+    var item = q.parentElement, a = q.nextElementSibling, open = item.classList.contains('open');
+    $$('.faq-item', faq).forEach(function(x){ x.classList.remove('open'); var aa = $('.faq-a', x); if(aa) aa.style.maxHeight = null; });
+    if(!open){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+  });
+
+  // ---- Footer-Kontaktlinks ----
+  $$('[data-mail]').forEach(function(a){ a.href = 'mailto:' + MAIL; });
+  $$('[data-wa]').forEach(function(a){ a.href = 'https://wa.me/' + WA; a.target = '_blank'; a.rel = 'noopener'; });
+
+  // ---- sanfte Anker-Scrolls für Nav (falls scroll-behavior nicht greift) ----
+  $$('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href'); if(id.length < 2) return;
+      var t = document.querySelector(id);
+      if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+})();
+</script>
 </body>
 </html>
