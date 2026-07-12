@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krümel &amp; Klecks — Kindercafé, Lunchboxen, Workshops &amp; Geburtstage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF5EB;
+    --cream-2:#F4E8D6;
+    --cream-3:#EFE0CB;
+    --ink:#33291E;
+    --ink-soft:#6E5F4E;
+    --terra:#C96B47;
+    --terra-deep:#A9512F;
+    --honey:#E6A84B;
+    --sage:#7F9A6B;
+    --berry:#C56B84;
+    --sky:#6E93A6;
+    --line:rgba(51,41,30,.12);
+    --shadow:0 18px 50px -24px rgba(51,41,30,.45);
+    --shadow-sm:0 10px 30px -18px rgba(51,41,30,.4);
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:var(--cream);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:-.01em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .eyebrow{
+    font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--terra-deep);font-weight:600;margin-bottom:16px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--terra);border-radius:2px;display:inline-block}
+  .eyebrow.center{justify-content:center}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:var(--sans);font-weight:600;font-size:.98rem;
+    padding:14px 26px;border-radius:999px;cursor:pointer;border:none;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-primary{background:var(--terra);color:#fff;box-shadow:0 12px 26px -12px rgba(169,81,47,.7)}
+  .btn-primary:hover{transform:translateY(-2px);background:var(--terra-deep);box-shadow:0 16px 32px -12px rgba(169,81,47,.8)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--terra);color:var(--terra-deep);transform:translateY(-2px)}
+  .btn-cream{background:#fff;color:var(--ink);box-shadow:var(--shadow-sm)}
+  .btn-cream:hover{transform:translateY(-2px)}
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:40;
+    background:rgba(251,245,235,.86);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:var(--serif);font-weight:600;font-size:1.32rem}
+  .brand small{display:block;font-family:var(--sans);font-weight:500;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:.96rem;font-weight:500;color:var(--ink-soft);transition:color .16s}
+  .nav-links a:hover{color:var(--terra-deep)}
+  .nav-cta{display:flex;align-items:center;gap:16px}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:74px 0 90px}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .hero h1{font-size:clamp(2.7rem,5.4vw,4.05rem);margin-bottom:22px}
+  .hero h1 .accent{color:var(--terra);font-style:italic}
+  .hero p.lead{font-size:1.2rem;color:var(--ink-soft);max-width:30ch;margin-bottom:34px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:30px}
+  .hero-facts{display:flex;gap:22px;flex-wrap:wrap;font-size:.9rem;color:var(--ink-soft)}
+  .hero-facts span{display:flex;align-items:center;gap:8px}
+  .hero-facts svg{flex:none}
+
+  /* Hero illustration */
+  .hero-art{position:relative;aspect-ratio:1/1;max-width:520px;margin-left:auto;width:100%}
+  .blob{position:absolute;inset:0;background:
+     radial-gradient(120% 120% at 30% 20%, #FBD9A6 0%, #F2B27A 42%, #E39463 100%);
+     border-radius:46% 54% 58% 42% / 52% 44% 56% 48%;box-shadow:var(--shadow)}
+  .hero-art .float{position:absolute;background:#fff;border-radius:18px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:.86rem;font-weight:600}
+  .float.f1{top:6%;left:-6%}
+  .float.f2{bottom:12%;right:-8%}
+  .float.f3{bottom:-4%;left:16%}
+  .dot{width:11px;height:11px;border-radius:50%}
+
+  /* ---------- Section base ---------- */
+  section.block{padding:96px 0}
+  .sec-head{max-width:640px;margin-bottom:52px}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+  .sec-head h2{font-size:clamp(2rem,3.6vw,2.85rem);margin-bottom:14px}
+  .sec-head p{font-size:1.08rem;color:var(--ink-soft)}
+
+  /* ---------- Offerings ---------- */
+  .offer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .card{
+    background:#fff;border-radius:24px;padding:34px 32px;border:1px solid var(--line);
+    box-shadow:var(--shadow-sm);transition:transform .2s ease, box-shadow .2s ease;
+    display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .card .ico{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;flex:none}
+  .card h3{font-size:1.42rem}
+  .card p{color:var(--ink-soft);font-size:1rem;flex:1}
+  .card .go{font-weight:600;color:var(--terra-deep);font-size:.95rem;display:inline-flex;align-items:center;gap:7px}
+  .card:hover .go svg{transform:translateX(4px)}
+  .card .go svg{transition:transform .18s}
+  .i-terra{background:rgba(201,107,71,.13)}
+  .i-sage{background:rgba(127,154,107,.16)}
+  .i-berry{background:rgba(197,107,132,.14)}
+  .i-honey{background:rgba(230,168,75,.18)}
+
+  /* ---------- Reservation ---------- */
+  .reserve{background:var(--cream-2)}
+  .reserve-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:52px;align-items:center}
+  .res-card{background:#fff;border-radius:28px;padding:34px;box-shadow:var(--shadow);border:1px solid var(--line)}
+  .res-row{margin-bottom:22px}
+  .res-row:last-child{margin-bottom:0}
+  .res-label{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-bottom:11px;display:block}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chip{
+    padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);
+    font-size:.9rem;font-weight:500;color:var(--ink-soft);background:var(--cream);
+  }
+  .chip.sel{background:var(--terra);border-color:var(--terra);color:#fff}
+  .chip.add{background:#fff}
+  .chip.add.sel{background:var(--sage);border-color:var(--sage);color:#fff}
+  .res-field{display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;border:1.5px solid var(--line);border-radius:14px;background:var(--cream)}
+  .res-field .v{font-weight:600}
+  .stepper{display:flex;align-items:center;gap:16px}
+  .stepper button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font-size:1.1rem;color:var(--ink);cursor:pointer;line-height:1}
+  .res-two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .res-submit{width:100%;justify-content:center;margin-top:6px}
+  .res-note{font-size:.82rem;color:var(--ink-soft);text-align:center;margin-top:14px}
+
+  /* ---------- Lunchboxes ---------- */
+  .box-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .box{background:#fff;border-radius:24px;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .2s}
+  .box:hover{transform:translateY(-4px)}
+  .box-top{height:150px;display:grid;place-items:center;position:relative}
+  .box-body{padding:24px 24px 26px}
+  .box h3{font-size:1.28rem;margin-bottom:8px}
+  .box p{color:var(--ink-soft);font-size:.94rem;margin-bottom:16px}
+  .box .price{font-weight:600;color:var(--terra-deep)}
+  .box .price b{font-family:var(--serif);font-size:1.15rem}
+
+  /* ---------- Workshops ---------- */
+  .ws-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+  .ws-item{display:grid;grid-template-columns:132px 1fr auto;gap:26px;align-items:center;
+    padding:26px 6px;border-bottom:1px solid var(--line);transition:background .16s;border-radius:12px}
+  .ws-item:hover{background:#fff}
+  .ws-date{font-family:var(--serif);font-weight:600}
+  .ws-date .d{font-size:1.5rem;color:var(--terra);display:block;line-height:1}
+  .ws-date .m{font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .ws-title{font-family:var(--serif);font-size:1.35rem;font-weight:600}
+  .ws-title small{display:block;font-family:var(--sans);font-weight:500;font-size:.88rem;color:var(--ink-soft);margin-top:4px}
+  .ws-age{font-size:.82rem;font-weight:600;color:var(--sage);white-space:nowrap;background:rgba(127,154,107,.14);padding:7px 14px;border-radius:999px}
+
+  /* ---------- Birthday ---------- */
+  .bday{background:linear-gradient(160deg,#33291E 0%,#4A3826 100%);color:#FBF5EB}
+  .bday .sec-head h2{color:#fff}
+  .bday .sec-head p{color:rgba(251,245,235,.8)}
+  .bday-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:12px}
+  .pkg{background:rgba(255,255,255,.06);border:1px solid rgba(251,245,235,.16);border-radius:24px;padding:32px}
+  .pkg h3{color:#fff;font-size:1.5rem;margin-bottom:8px}
+  .pkg .from{color:var(--honey);font-weight:600;margin-bottom:16px}
+  .pkg ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .pkg li{font-size:.96rem;color:rgba(251,245,235,.86);display:flex;gap:11px;align-items:flex-start}
+  .pkg li svg{flex:none;margin-top:3px}
+  .bday-cta{text-align:center;margin-top:40px}
+
+  /* ---------- About ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .about-art{aspect-ratio:4/3;border-radius:28px;background:
+    radial-gradient(90% 90% at 70% 20%, #CFE0C4 0%, #A9C295 55%, #7F9A6B 100%);
+    box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .about blockquote{font-family:var(--serif);font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.32;margin-bottom:22px}
+  .about .sig{font-family:var(--serif);font-style:italic;font-size:1.2rem;color:var(--terra-deep)}
+  .about .sig small{display:block;font-family:var(--sans);font-style:normal;font-size:.85rem;color:var(--ink-soft);letter-spacing:.08em;margin-top:4px}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--ink);color:rgba(251,245,235,.82);padding:74px 0 32px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;margin-bottom:52px}
+  footer h4{font-family:var(--serif);color:#fff;font-size:1.4rem;margin-bottom:14px}
+  footer .fcol h5{font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--honey);margin-bottom:16px;font-weight:600}
+  footer .fcol p, footer .fcol a{display:block;font-size:.95rem;margin-bottom:9px;color:rgba(251,245,235,.78)}
+  footer .fcol a:hover{color:#fff}
+  .foot-bottom{border-top:1px solid rgba(251,245,235,.14);padding-top:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:.82rem;color:rgba(251,245,235,.55)}
+  .credit{display:inline-flex;align-items:center;gap:8px}
+  .credit b{color:rgba(251,245,235,.8);font-weight:600}
+
+  /* draft badge */
+  .draft{position:fixed;bottom:22px;right:22px;z-index:60;background:var(--ink);color:#FBF5EB;
+    font-size:.76rem;font-weight:600;letter-spacing:.05em;padding:10px 18px;border-radius:999px;
+    box-shadow:var(--shadow);border:1px solid rgba(251,245,235,.2)}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .hero-grid,.reserve-grid,.about-grid{grid-template-columns:1fr;gap:40px}
+    .hero-art{max-width:400px;margin:0 auto}
+    .offer-grid,.box-grid,.bday-grid,.res-two{grid-template-columns:1fr}
+    .nav-links{display:none}
+    .foot-grid{grid-template-columns:1fr;gap:32px}
+    section.block{padding:70px 0}
+    .ws-item{grid-template-columns:90px 1fr;gap:16px}
+    .ws-age{grid-column:2}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px}
+    .hero-cta{flex-direction:column;align-items:stretch}
+    .hero-cta .btn{justify-content:center}
+    .float{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <rect x="2" y="2" width="36" height="36" rx="12" fill="#C96B47"/>
+        <path d="M12 17h13v6a5 5 0 0 1-5 5h-3a5 5 0 0 1-5-5v-6Z" stroke="#FBF5EB" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M25 19h2.5a2.5 2.5 0 0 1 0 5H25" stroke="#FBF5EB" stroke-width="2"/>
+        <circle cx="15.5" cy="12.5" r="1.6" fill="#FBD9A6"/>
+        <circle cx="20" cy="11" r="1.6" fill="#FBD9A6"/>
+        <circle cx="24.5" cy="12.5" r="1.6" fill="#FBD9A6"/>
+      </svg>
+      <span>Krümel &amp; Klecks<small>Kindercafé</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#cafe">Café</a>
+      <a href="#lunchboxen">Lunchboxen</a>
+      <a href="#workshops">Workshops</a>
+      <a href="#geburtstage">Geburtstage</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-primary" href="#reservierung">Tisch reservieren</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Kindercafé · Lunch-Manufaktur · Werkstatt</p>
+      <h1>Ein warmer Ort für <span class="accent">kleine Entdecker</span> und ihre Großen.</h1>
+      <p class="lead">Frisch belegte Lunchboxen, ein Café zum Verweilen, Workshops zum Staunen und Geburtstage, die in Erinnerung bleiben.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#reservierung">Tisch reservieren
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#lunchboxen">Lunchbox bestellen</a>
+      </div>
+      <div class="hero-facts">
+        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="6.5" stroke="#C96B47" stroke-width="1.6"/><path d="M8.5 5v3.5L11 10" stroke="#C96B47" stroke-width="1.6" stroke-linecap="round"/></svg> Täglich 9–18 Uhr</span>
+        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M8.5 15s5-4.2 5-8.1A5 5 0 0 0 3.5 6.9C3.5 10.8 8.5 15 8.5 15Z" stroke="#C96B47" stroke-width="1.6" stroke-linejoin="round"/><circle cx="8.5" cy="6.8" r="1.6" stroke="#C96B47" stroke-width="1.6"/></svg> Musterstraße 12, Musterstadt</span>
+        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2.5 12.5v-6l6-3 6 3v6" stroke="#C96B47" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 12.5v-3h5v3" stroke="#C96B47" stroke-width="1.6"/></svg> Spielecke &amp; Wickelraum</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="blob"></div>
+      <!-- central scene -->
+      <svg viewBox="0 0 300 300" width="100%" style="position:absolute;inset:0" fill="none">
+        <!-- plate -->
+        <ellipse cx="150" cy="205" rx="95" ry="20" fill="#33291E" opacity=".12"/>
+        <!-- cup -->
+        <path d="M108 150h62v30a26 26 0 0 1-26 26h-10a26 26 0 0 1-26-26v-30Z" fill="#FBF5EB" stroke="#33291E" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M170 158h11a12 12 0 0 1 0 24h-11" fill="#FBF5EB" stroke="#33291E" stroke-width="3"/>
+        <path d="M108 150h62" stroke="#C96B47" stroke-width="6" stroke-linecap="round"/>
+        <!-- heart on cup -->
+        <path d="M139 172c0-4 6-5 6-1 0-4 6-3 6 1 0 4-6 8-6 8s-6-4-6-8Z" fill="#C56B84"/>
+        <!-- steam -->
+        <path d="M128 138c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+        <path d="M150 134c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+        <path d="M172 138c-4-6 4-9 0-15" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".85"/>
+        <!-- crayon -->
+        <g transform="rotate(-24 70 210)">
+          <rect x="46" y="196" width="52" height="15" rx="4" fill="#7F9A6B"/>
+          <path d="M98 196l14 7.5-14 7.5z" fill="#E6A84B"/>
+        </g>
+        <!-- cookie -->
+        <circle cx="228" cy="196" r="19" fill="#E6A84B" stroke="#33291E" stroke-width="2.5"/>
+        <circle cx="222" cy="192" r="2.4" fill="#7A4B2E"/><circle cx="233" cy="190" r="2.4" fill="#7A4B2E"/><circle cx="230" cy="201" r="2.4" fill="#7A4B2E"/><circle cx="221" cy="201" r="2.2" fill="#7A4B2E"/>
+        <!-- balloon -->
+        <ellipse cx="86" cy="86" rx="20" ry="24" fill="#C56B84"/>
+        <path d="M86 110l-2 8" stroke="#33291E" stroke-width="2" stroke-linecap="round"/>
+        <path d="M86 110l4 2-4 2" fill="#C56B84"/>
+        <!-- star -->
+        <path d="M228 92l3.4 7 7.6 1-5.5 5.4 1.3 7.6-6.8-3.6-6.8 3.6 1.3-7.6-5.5-5.4 7.6-1z" fill="#E6A84B"/>
+      </svg>
+      <div class="float f1"><span class="dot" style="background:var(--sage)"></span>Frisch gebacken</div>
+      <div class="float f2"><span class="dot" style="background:var(--berry)"></span>Platz für kleine Feste</div>
+      <div class="float f3"><span class="dot" style="background:var(--honey)"></span>Bio &amp; regional</div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFERINGS -->
+<section class="block" id="angebote">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow center">Was Sie bei uns finden</p>
+      <h2>Vier Angebote unter einem Dach</h2>
+      <p>Von der schnellen Lunchbox bis zum ganzen Kindergeburtstag — alles an einem herzlichen Ort.</p>
+    </div>
+    <div class="offer-grid">
+      <a class="card" id="cafe" href="#reservierung">
+        <div class="ico i-terra">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M7 12h13v6a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6v-6Z" stroke="#C96B47" stroke-width="2" stroke-linejoin="round"/><path d="M20 14h3a3 3 0 0 1 0 6h-3" stroke="#C96B47" stroke-width="2"/><path d="M11 8c-1-2 1-2 0-4M15 8c-1-2 1-2 0-4" stroke="#C96B47" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Kindercafé &amp; Reservierung</h3>
+        <p>Gemütliche Tische, eine Spielecke und Kuchen wie bei Oma. Reservieren Sie Ihren Lieblingsplatz — mit Extras ganz nach Wunsch.</p>
+        <span class="go">Tisch reservieren <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="card" href="#lunchboxen">
+        <div class="ico i-sage">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><rect x="5" y="10" width="20" height="15" rx="3" stroke="#7F9A6B" stroke-width="2"/><path d="M11 10V8a4 4 0 0 1 8 0v2" stroke="#7F9A6B" stroke-width="2"/><path d="M5 16h20" stroke="#7F9A6B" stroke-width="2"/><path d="M15 16v9" stroke="#7F9A6B" stroke-width="2"/></svg>
+        </div>
+        <h3>Individuelle Lunchboxen</h3>
+        <p>Frisch, bunt und genau nach Geschmack. Stellen Sie die Box für Kita, Schule oder Ausflug ganz einfach selbst zusammen.</p>
+        <span class="go">Box zusammenstellen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="card" href="#workshops">
+        <div class="ico i-berry">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M15 5a10 10 0 1 0 0 20c1.7 0 2-1.5 1.2-2.5-.8-1-.3-2.5 1.3-2.5H20a5 5 0 0 0 5-5c0-5.5-4.7-10-10-10Z" stroke="#C56B84" stroke-width="2" stroke-linejoin="round"/><circle cx="10.5" cy="12" r="1.5" fill="#C56B84"/><circle cx="15" cy="9.5" r="1.5" fill="#C56B84"/><circle cx="19.5" cy="12" r="1.5" fill="#C56B84"/></svg>
+        </div>
+        <h3>Workshops</h3>
+        <p>Backen, Basteln, Entdecken. Kleine Kurse für kleine Hände — mit viel Platz und Zeit zum Ausprobieren.</p>
+        <span class="go">Zu den Terminen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+      <a class="card" href="#geburtstage">
+        <div class="ico i-honey">
+          <svg width="30" height="30" viewBox="0 0 30 30" fill="none"><path d="M6 15h18v9a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-9Z" stroke="#E6A84B" stroke-width="2" stroke-linejoin="round"/><path d="M6 19h18" stroke="#E6A84B" stroke-width="2"/><path d="M15 15v-4" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="8" r="1.8" fill="#E6A84B"/><path d="M10 15v-3M20 15v-3" stroke="#E6A84B" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Geburtstagsfeiern</h3>
+        <p>Ihr Kind feiert, wir kümmern uns um den Rest. Von der Deko bis zur Torte — liebevoll und ganz nach Ihrem Wunsch.</p>
+        <span class="go">Feier anfragen <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5h8M8 4l3.5 3.5L8 11" stroke="#A9512F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVATION -->
+<section class="block reserve" id="reservierung">
+  <div class="wrap reserve-grid">
+    <div>
+      <p class="eyebrow">Reservierung</p>
+      <h2 style="font-size:clamp(2rem,3.6vw,2.85rem);margin-bottom:16px">Ihren Platz sichern — in wenigen Schritten</h2>
+      <p style="font-size:1.08rem;color:var(--ink-soft);margin-bottom:24px">Wählen Sie Datum, Uhrzeit und Tisch — und ergänzen Sie Extras wie einen Geburtstagskuchen oder einen Platz in der Spielecke. Ihre Anfrage landet direkt bei uns, wir bestätigen persönlich.</p>
+      <div class="hero-facts" style="gap:16px">
+        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M4 8.5l3 3 6-6.5" stroke="#7F9A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Familientische am Fenster</span>
+        <span><svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M4 8.5l3 3 6-6.5" stroke="#7F9A6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Extras frei wählbar</span>
+      </div>
+    </div>
+    <div class="res-card">
+      <div class="res-row">
+        <span class="res-label">Datum &amp; Gäste</span>
+        <div class="res-two">
+          <div class="res-field"><span>📅 Sa. 12. Juli</span></div>
+          <div class="res-field"><span>Gäste</span><span class="stepper"><button aria-hidden="true">−</button><span class="v">4</span><button aria-hidden="true">+</button></span></div>
+        </div>
+      </div>
+      <div class="res-row">
+        <span class="res-label">Uhrzeit</span>
+        <div class="chips">
+          <span class="chip">09:30</span>
+          <span class="chip">11:00</span>
+          <span class="chip sel">12:30</span>
+          <span class="chip">14:00</span>
+          <span class="chip">15:30</span>
+        </div>
+      </div>
+      <div class="res-row">
+        <span class="res-label">Tisch</span>
+        <div class="chips">
+          <span class="chip sel">Familientisch am Fenster</span>
+          <span class="chip">Runder Tisch</span>
+          <span class="chip">Sofaecke</span>
+        </div>
+      </div>
+      <div class="res-row">
+        <span class="res-label">Extras (Add-ins)</span>
+        <div class="chips">
+          <span class="chip add sel">🎂 Geburtstagskuchen</span>
+          <span class="chip add sel">🧸 Spielecke reservieren</span>
+          <span class="chip add">🍼 Kinderhochstuhl</span>
+          <span class="chip add">🌱 Glutenfrei</span>
+        </div>
+      </div>
+      <button class="btn btn-primary res-submit">Reservierung anfragen</button>
+      <p class="res-note">Unverbindlich — Sie erhalten unsere Bestätigung persönlich.</p>
+    </div>
+  </div>
+</section>
+
+<!-- LUNCHBOXES -->
+<section class="block" id="lunchboxen">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Lunchboxen</p>
+      <h2>Jeden Tag frisch zusammengestellt</h2>
+      <p>Unsere Lieblingsboxen als Anregung — oder Sie stellen Ihre eigene ganz nach Geschmack zusammen.</p>
+    </div>
+    <div class="box-grid">
+      <div class="box">
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#FBD9A6,#F2B27A)">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="16" y="26" width="48" height="36" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M16 40h48M40 40v22" stroke="#33291E" stroke-width="2.5"/><circle cx="28" cy="33" r="3" fill="#C56B84"/><circle cx="52" cy="33" r="3" fill="#7F9A6B"/><rect x="22" y="46" width="12" height="10" rx="2" fill="#E6A84B"/><path d="M48 46l8 4-8 4z" fill="#C96B47"/></svg>
+        </div>
+        <div class="box-body">
+          <h3>Die kleine Weltreise</h3>
+          <p>Mini-Wraps, bunte Obstspieße und knackige Gemüsesticks mit Dip.</p>
+          <p class="price">ab <b>6,50 €</b></p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#CFE0C4,#A9C295)">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><rect x="18" y="24" width="44" height="40" rx="6" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M26 34h28M26 42h28M26 50h18" stroke="#7F9A6B" stroke-width="3" stroke-linecap="round"/><circle cx="54" cy="52" r="5" fill="#C96B47"/></svg>
+        </div>
+        <div class="box-body">
+          <h3>Der Znüni-Klassiker</h3>
+          <p>Vollkornbrot mit Käse, ein knackiger Apfel und ein Butterkeks.</p>
+          <p class="price">ab <b>5,50 €</b></p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-top" style="background:radial-gradient(90% 90% at 30% 25%,#F3C6D2,#DE9BAF)">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none"><path d="M26 30h28l-3 30a4 4 0 0 1-4 4H33a4 4 0 0 1-4-4l-3-30Z" fill="#fff" stroke="#33291E" stroke-width="2.5"/><path d="M24 30h32" stroke="#C56B84" stroke-width="4" stroke-linecap="round"/><circle cx="36" cy="44" r="2.6" fill="#C56B84"/><circle cx="44" cy="40" r="2.6" fill="#7F9A6B"/><circle cx="42" cy="50" r="2.6" fill="#E6A84B"/></svg>
+        </div>
+        <div class="box-body">
+          <h3>Die Naschkatze</h3>
+          <p>Cremiger Joghurt mit Beeren, knusprigem Müsli und kleinem Gebäck.</p>
+          <p class="price">ab <b>6,00 €</b></p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a class="btn btn-primary" href="#">Eigene Box zusammenstellen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WORKSHOPS -->
+<section class="block" id="workshops" style="background:var(--cream-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Workshops</p>
+      <h2>Kleine Kurse, große Augen</h2>
+      <p>Jede Woche etwas Neues zum Entdecken — in kleiner Runde und mit viel Zeit.</p>
+    </div>
+    <div class="ws-list">
+      <div class="ws-item">
+        <div class="ws-date"><span class="d">19</span><span class="m">Juli · Sa</span></div>
+        <div class="ws-title">Wir backen Butterkekse<small>10:00 – 11:30 Uhr · mit Schürze &amp; Ausstechern</small></div>
+        <div class="ws-age">ab 4 Jahren</div>
+      </div>
+      <div class="ws-item">
+        <div class="ws-date"><span class="d">23</span><span class="m">Juli · Mi</span></div>
+        <div class="ws-title">Filzen für kleine Hände<small>15:00 – 16:30 Uhr · bunte Wolle zum Mitnehmen</small></div>
+        <div class="ws-age">ab 5 Jahren</div>
+      </div>
+      <div class="ws-item">
+        <div class="ws-date"><span class="d">26</span><span class="m">Juli · Sa</span></div>
+        <div class="ws-title">Kleine Gärtner: Kresse säen<small>10:00 – 11:00 Uhr · eigenes Töpfchen inklusive</small></div>
+        <div class="ws-age">ab 3 Jahren</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a class="btn btn-ghost" href="#">Alle Workshops ansehen</a>
+    </div>
+  </div>
+</section>
+
+<!-- BIRTHDAY -->
+<section class="block bday" id="geburtstage">
+  <div class="wrap">
+    <div class="sec-head center">
+      <p class="eyebrow center" style="color:var(--honey)">Geburtstagsfeiern</p>
+      <h2>Ein Fest, an das sich alle erinnern</h2>
+      <p>Sie bringen das Geburtstagskind, wir bereiten alles vor — Tisch, Deko, Kuchen und ein kleines Programm.</p>
+    </div>
+    <div class="bday-grid">
+      <div class="pkg">
+        <h3>Das kleine Fest</h3>
+        <p class="from">ab 149 € · bis 8 Kinder</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Reservierter Bereich für 2 Stunden</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Tischdeko &amp; Luftballons</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Kuchen &amp; Getränke für die Kleinen</li>
+        </ul>
+      </div>
+      <div class="pkg">
+        <h3>Das große Fest</h3>
+        <p class="from">ab 249 € · bis 14 Kinder</p>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Alles aus „Das kleine Fest"</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Eigener Mini-Workshop nach Wahl</li>
+          <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 8l3 3 6-6.5" stroke="#E6A84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Individuelle Wunschtorte</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bday-cta">
+      <a class="btn btn-cream" href="#">Feier anfragen
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h9M9 4l4 4-4 4" stroke="#33291E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="block about" id="ueber-uns">
+  <div class="wrap about-grid">
+    <div class="about-art">
+      <svg viewBox="0 0 300 220" width="100%" style="position:absolute;inset:0" fill="none">
+        <circle cx="110" cy="95" r="34" fill="#FBF5EB"/>
+        <circle cx="185" cy="105" r="26" fill="#FBF5EB"/>
+        <path d="M60 190c8-30 34-46 62-46s54 16 62 46" stroke="#FBF5EB" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="110" cy="88" r="6" fill="#33291E"/><circle cx="128" cy="90" r="6" fill="#33291E"/>
+        <path d="M107 104c6 5 16 5 22 0" stroke="#C96B47" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="185" cy="100" r="5" fill="#33291E"/><circle cx="197" cy="101" r="5" fill="#33291E"/>
+        <path d="M183 112c5 4 12 4 17 0" stroke="#C96B47" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M230 60l3 6 6.5 1-5 4.5 1.2 6.5-5.7-3-5.7 3 1.2-6.5-5-4.5 6.5-1z" fill="#E6A84B"/>
+      </svg>
+    </div>
+    <div>
+      <p class="eyebrow">Über uns</p>
+      <blockquote>„Wir wollten einen Ort schaffen, an dem Kinder essen, spielen und staunen dürfen — und Eltern einfach mal durchatmen."</blockquote>
+      <p style="color:var(--ink-soft);margin-bottom:20px;font-size:1.05rem">Alles bei uns ist frisch, saisonal und mit Liebe gemacht. Zwischen Spielecke und Backstube ist immer etwas los — kommen Sie vorbei und bleiben Sie ein Weilchen.</p>
+      <p class="sig">Familie Musterfrau<small>Ihre Gastgeber im Krümel &amp; Klecks</small></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="fcol">
+        <h4>Krümel &amp; Klecks</h4>
+        <p style="max-width:34ch">Ein herzliches Kindercafé mit Lunch-Manufaktur, Werkstatt und Platz für kleine Feste — mitten in Musterstadt.</p>
+      </div>
+      <div class="fcol">
+        <h5>Besuchen</h5>
+        <p>Musterstraße 12<br>12345 Musterstadt</p>
+        <p>Täglich 9 – 18 Uhr</p>
+      </div>
+      <div class="fcol">
+        <h5>Kontakt</h5>
+        <a href="#">hallo@kruemel-und-klecks.de</a>
+        <a href="#">030 · 12 34 56</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Krümel &amp; Klecks · Impressum · Datenschutz</span>
+      <span class="credit">Unverbindlicher Entwurf — mit Sorgfalt handcodiert von <b>Karriaro Webdesign</b></span>
+    </div>
+  </div>
+</footer>
+
+<div class="draft">✦ Entwurf · Krümel &amp; Klecks</div>
+
+</body>
+</html>
