@@ -304,7 +304,7 @@
                 <div class="kz-cta" id="kz-cta">
                     <p class="kz-cta-eyebrow">Ihr Maßnahmenplan</p>
                     <h3>Damit die KI Sie beim Namen nennt.</h3>
-                    <p>Wir senden Ihnen Ihren vollständigen KI-Sichtbarkeits-Report mit priorisierten Schritten — und wie eine handcodierte Website fürs KI-Zeitalter Sie zitierfähig macht.</p>
+                    <p>Wir melden uns persönlich binnen 24 Stunden mit Ihrem Maßnahmenplan: priorisierte Schritte, damit die KI Sie zitiert — auf Wunsch inklusive eines kostenfreien Entwurfs Ihrer neuen Website in 48 Stunden.</p>
                     <form id="kz-lead-form" data-lead="kwd-zitier-check-lead" class="kz-lead-form" novalidate>
                         <input type="hidden" name="quelle" value="ki-zitier-check">
                         <input type="hidden" name="firma" id="kz-lead-firma">
@@ -313,10 +313,10 @@
                         <input type="hidden" name="branche" id="kz-lead-branche">
                         <input type="hidden" name="ki_score" id="kz-lead-score">
                         <input type="hidden" name="ki_zusammenfassung" id="kz-lead-summary">
-                        <label class="kz-lead-label" for="kz-lead-email">Ihre E-Mail für Report &amp; Maßnahmenplan</label>
+                        <label class="kz-lead-label" for="kz-lead-email">Ihre E-Mail für Ihren Maßnahmenplan</label>
                         <div class="kz-lead-row">
                             <input id="kz-lead-email" name="email" type="email" required placeholder="name@firma.de" autocomplete="email" autocapitalize="none" spellcheck="false" />
-                            <button type="submit" class="kz-lead-submit" id="kz-lead-submit"><span>Report anfordern</span></button>
+                            <button type="submit" class="kz-lead-submit" id="kz-lead-submit"><span>Maßnahmenplan anfordern</span></button>
                         </div>
                         <p class="kz-lead-note" id="kz-lead-note" hidden></p>
                     </form>
@@ -637,7 +637,7 @@
                                 if (row) row.style.display = 'none';
                                 var lbl = leadForm.querySelector('.kz-lead-label');
                                 if (lbl) lbl.style.display = 'none';
-                                if (note) { note.hidden = false; note.textContent = 'Danke — Ihr Report ist unterwegs. Wir melden uns persönlich, meist innerhalb von 24 Stunden.'; }
+                                if (note) { note.hidden = false; note.textContent = 'Danke — wir melden uns persönlich binnen 24 Stunden mit Ihrem Maßnahmenplan.'; }
                             } else { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; }
                         })
                         .catch(function () { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; });
