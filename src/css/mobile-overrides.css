@@ -436,7 +436,11 @@
            (Nav-Logo trägt sie weiter). Bricht bewusst 3-zeilig mit „KI-Zeitalter." als
            goldenem Höhepunkt. !important gegen die Multi-Datei-Kaskade. */
         font-family: var(--font-display) !important;
-        font-size: clamp(54px, 16.5vw, 72px) !important;
+        /* 2026-07-19: 16.5vw war für die Juni-H1 („Ihre Website/fürs/KI-Zeitalter",
+           max. 12 Zeichen) getunt — „Keine Websites/von der Stange." (14-15 Zeichen)
+           brach damit JEDE Zeile um (6-zeilige H1, CTA unter dem Fold). Neu kalibriert:
+           Zeile 1+2 einzeilig auf 375-430px, Gold-Klimax bricht bewusst 2-zeilig. */
+        font-size: clamp(38px, 11.2vw, 48px) !important;
         font-weight: 500 !important;
         font-variation-settings: 'opsz' 144;
         line-height: 0.92 !important;
