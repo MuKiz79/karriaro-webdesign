@@ -1731,6 +1731,7 @@
         .kr-gp-title { font-family: var(--font-display, 'Fraunces', serif); font-weight: 500; font-size: clamp(26px, 4vw, 32px); line-height: 1.12; color: #16202C; letter-spacing: -0.01em; }
         .kr-gp-title em { font-style: normal; color: var(--color-gold-text, #6E5F3F); }
         .kr-gp-text { margin-top: 14px; font-size: 15px; line-height: 1.55; color: #515154; }
+        .kr-gp-meta { margin-top: 12px; font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a8a8f; }
         .kr-gp-cta { display: block; margin-top: 22px; text-align: center; background: var(--color-indigo, #1A2E40); color: #fff; text-decoration: none; font-weight: 600; font-size: 15.5px; border-radius: 999px; padding: 15px 22px; }
         .kr-gp-cta:hover { background: #0F1F2E; }
         .kr-gp-later { display: block; margin: 14px auto 0; background: none; border: none; font-size: 13px; color: #8a8a8f; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
@@ -4179,8 +4180,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <a href="/ki-zitier-check" class="hero-audit-link">
                     Kennt die KI Ihren Betrieb? <span>Live prüfen →</span>
                 </a>
-                <a href="/gruendungsplaetze" class="hero-audit-link hero-gruendung-link">
-                    Gründungsprogramm: 10 Websites zum Wunschpreis. <span>Jetzt bewerben →</span>
+                <a href="/referenzprogramm" class="hero-audit-link hero-gruendung-link">
+                    Referenzprogramm: Ihre Website. Ihr Preis. <span>Für einen Platz bewerben →</span>
                 </a>
                 <!-- Sprint 204 — Trias entfernt (Dopplung mit neuer Subline „Werkzeuge,
                      Cockpit, KI"). Weniger Text → H1 darf groß sein; Vielfalt trägt die
@@ -4952,8 +4953,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <h3>Karriaro · Webdesign-Manufaktur</h3>
                 <p>
                     Handcodierte Premium-Websites für den deutschen Mittelstand.
-                    Festpreis 1.290–3.990 € einmalig. Zum Start: zehn
-                    <a href="/gruendungsplaetze">Gründungsplätze zum Wunschpreis</a>.
+                    Festpreis 1.290–3.990 € einmalig. Zum Start: zehn Plätze im
+                    <a href="/referenzprogramm">Referenzprogramm</a> — Ihre Website, Ihr Preis.
                     Performance, die wir vor dem Launch prüfen — messbar.
                 </p>
                 <a href="#kontakt">Entwurf anfordern →</a>
@@ -6562,16 +6563,17 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
          rechts weicht via .whatsapp-fab-Erkennung kollisionssicher aus. -->
     <script src="/js/whatsapp.js?v=2" defer></script>
 
-    <!-- Gründungsprogramm-Popup (2026-07-19, Founder). Einmal pro Session,
+    <!-- Referenzprogramm-Popup (2026-07-19, Founder; umbenannt von Gründungsprogramm). Einmal pro Session,
          verzögert; Mobile als Bottom-Sheet nach der Hero-Animation. -->
     <div class="kr-gp-popup" id="kr-gp-popup" role="dialog" aria-modal="true" aria-labelledby="kr-gp-title" hidden>
         <div class="kr-gp-backdrop" data-gp-close></div>
         <div class="kr-gp-card">
             <button type="button" class="kr-gp-close" data-gp-close aria-label="Schließen">×</button>
-            <p class="kr-gp-eyebrow">Gründungsprogramm · 10 Plätze</p>
-            <h2 class="kr-gp-title" id="kr-gp-title">Zehn Websites.<br><em>Sie bestimmen den Preis.</em></h2>
-            <p class="kr-gp-text">Die volle Manufaktur-Arbeit zum Beitrag, den Sie für angemessen halten — auch null Euro. Im Gegenzug dürfen wir Ihre fertige Website als echte Referenz zeigen. Bewerbung in fünf Minuten, persönliche Antwort binnen 48 Stunden.</p>
-            <a class="kr-gp-cta" href="/gruendungsplaetze" id="kr-gp-cta">Zum Gründungsprogramm →</a>
+            <p class="kr-gp-eyebrow">Referenzprogramm · Nur 10 Plätze</p>
+            <h2 class="kr-gp-title" id="kr-gp-title">Ihre Website.<br><em>Ihr Preis.</em></h2>
+            <p class="kr-gp-text">Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren.</p>
+            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort innerhalb von 48 Stunden</p>
+            <a class="kr-gp-cta" href="/referenzprogramm" id="kr-gp-cta">Für einen Platz bewerben</a>
             <button type="button" class="kr-gp-later" data-gp-close>Vielleicht später</button>
         </div>
     </div>
@@ -6594,14 +6596,14 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 popup.hidden = false;
                 popup.classList.add('is-open');
                 document.addEventListener('keydown', onKey);
-                try { if (window.krTrack) window.krTrack('Gruendung Popup gezeigt', {}); } catch (e) {}
+                try { if (window.krTrack) window.krTrack('Referenzprogramm Popup gezeigt', {}); } catch (e) {}
             }, delay);
             popup.querySelectorAll('[data-gp-close]').forEach(function (el) {
                 el.addEventListener('click', close);
             });
             var cta = document.getElementById('kr-gp-cta');
             if (cta) cta.addEventListener('click', function () {
-                try { if (window.krTrack) window.krTrack('Gruendung Popup Klick', {}); } catch (e) {}
+                try { if (window.krTrack) window.krTrack('Referenzprogramm Popup Klick', {}); } catch (e) {}
             });
         })();
     </script>
