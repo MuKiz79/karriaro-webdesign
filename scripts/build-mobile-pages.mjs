@@ -64,7 +64,7 @@ const SKIP = new Set([
 // (media=print→all). Das späte Anwenden der 62-KB-CSS snappte das Hero-<main> nach
 // First-Paint (CLS 0,119–0,195, bisektiert). 14 KB gzip render-blocking, LCP-Headroom
 // vorhanden. Verifiziert: CLS→0 auf Money-Page + Content-Seiten.
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=443">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=444">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 

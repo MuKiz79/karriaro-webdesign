@@ -460,6 +460,18 @@
        Reihenfolge umgedreht: ZUERST fächert die große Phyllotaxis-Goldblüte (Logo-DNA,
        84 Punkte) aus einem Saatkorn auf (golden-angle-gestaffelt), DARAUS keimt die
        Headline, dann birst die Blüte nach außen auf. „Aus einem Kern wächst alles". ── */
+
+    /* 2026-07-19: Die Blüte endet bei scale(1.5)+opacity:0 mit fill-mode:both — die
+       unsichtbare 672px-Ebene bleibt dauerhaft stehen und weitete die Seite auf 531px
+       (horizontales Wischen ins Leere, Layout rendert ~27% zu klein).
+       ⚠️ clip/hidden auf <html> reicht NICHT: Mobile-Chromium expandiert den
+       Layout-Viewport trotzdem (beides empirisch 531px, computed korrekt).
+       Der Clip muss UNTERHALB der Wurzel sitzen: auf <main> fängt er auch
+       künftige Ausreißer; der Demo-Swiper scrollt in seinem eigenen
+       overflow-x:auto-Container unverändert. `hidden` auf html bleibt als
+       Backstop für echtes iOS-Safari (dort wirksam). */
+    main { overflow-x: clip; }
+    html { overflow-x: hidden; }
     .hero-headline--keim { position: relative; isolation: isolate; animation: none !important; }
 
     /* Headline wächst HERAUS (kräftiger Scale 0.55, erst NACHDEM die Blüte offen ist). */
