@@ -339,6 +339,29 @@
         .founder-block .subhead { margin-bottom: 18px; }
         .founder-sign { font-size: 17px; font-weight: 600; color: #C9A24B; letter-spacing: 0.01em; margin: 0 0 22px; }
         @media (max-width: 640px) { .founder-block { flex-direction: column; align-items: center; text-align: center; gap: 22px; } }
+
+        /* ── Referenzprogramm-Popup (2026-07-19, Founder: auch auf der Bezahlseite).
+           Bei jedem Seitenaufruf, verzögert, Esc/Backdrop/X schließbar; alle Farben
+           mit Fallback, da diese Seite die Marken-Tokens nicht lädt. ── */
+        .kr-gp-popup { position: fixed; inset: 0; z-index: 2147483640; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .kr-gp-popup.is-open { display: flex; }
+        .kr-gp-backdrop { position: absolute; inset: 0; background: rgba(16, 26, 36, 0.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+        .kr-gp-card { position: relative; max-width: 480px; width: 100%; background: #FBFAF7; border-radius: 18px; padding: 34px 30px 28px; box-shadow: 0 32px 80px rgba(10, 20, 30, 0.45); animation: kr-gp-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes kr-gp-in { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .kr-gp-card { animation: none; } }
+        .kr-gp-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border: none; border-radius: 50%; background: rgba(20, 32, 43, 0.06); color: #16202C; font-size: 20px; line-height: 1; cursor: pointer; }
+        .kr-gp-close:hover { background: rgba(20, 32, 43, 0.12); }
+        .kr-gp-eyebrow { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-gold-text, #6E5F3F); margin-bottom: 12px; padding-right: 44px; line-height: 1.7; }
+        .kr-gp-title { font-family: var(--font-display, 'Fraunces', serif); font-weight: 500; font-size: clamp(26px, 4vw, 32px); line-height: 1.12; color: #16202C; letter-spacing: -0.01em; }
+        .kr-gp-title em { font-style: normal; color: var(--color-gold-text, #6E5F3F); }
+        .kr-gp-text { margin-top: 14px; font-size: 15px; line-height: 1.55; color: #515154; }
+        .kr-gp-deadline { margin-top: 12px; font-size: 13px; line-height: 1.5; color: #8a8a8f; }
+        .kr-gp-meta { margin-top: 12px; font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a8a8f; }
+        .kr-gp-cta { display: block; margin-top: 22px; text-align: center; background: var(--color-indigo, #1A2E40); color: #fff; text-decoration: none; font-weight: 600; font-size: 15.5px; border-radius: 999px; padding: 15px 22px; }
+        .kr-gp-cta:hover { background: #0F1F2E; }
+        .kr-gp-later { display: block; margin: 14px auto 0; background: none; border: none; font-size: 13px; color: #8a8a8f; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+        @media (max-width: 640px) { .kr-gp-popup { align-items: flex-end; padding: 0; } .kr-gp-card { max-width: none; border-radius: 18px 18px 0 0; padding: 30px 24px calc(24px + env(safe-area-inset-bottom)); animation-name: kr-gp-in-sheet; } }
+        @keyframes kr-gp-in-sheet { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
     <script src="/js/attribution.js?v=200" defer></script>
@@ -898,5 +921,47 @@
   }
 })();
 </script>
+    <!-- Referenzprogramm-Popup (2026-07-19, Founder: auch auf der Bezahlseite).
+         Bei jedem Seitenaufruf, verzögert; Mobile als Bottom-Sheet. -->
+    <div class="kr-gp-popup" id="kr-gp-popup" role="dialog" aria-modal="true" aria-labelledby="kr-gp-title" hidden>
+        <div class="kr-gp-backdrop" data-gp-close></div>
+        <div class="kr-gp-card">
+            <button type="button" class="kr-gp-close" data-gp-close aria-label="Schließen">×</button>
+            <p class="kr-gp-eyebrow">Referenzprogramm · 10&nbsp;Plätze · Vergabe&nbsp;ab&nbsp;sofort</p>
+            <h2 class="kr-gp-title" id="kr-gp-title">Ihre Website.<br><em>Ihr Preis.</em></h2>
+            <p class="kr-gp-text">Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren.</p>
+            <p class="kr-gp-deadline">Bewerbungen werden laufend geprüft. Das Programm endet, sobald alle Plätze vergeben sind — spätestens am 16. August 2026.</p>
+            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort innerhalb von 48 Stunden</p>
+            <a class="kr-gp-cta" href="/referenzprogramm#bewerben" id="kr-gp-cta">Für einen Platz bewerben</a>
+            <button type="button" class="kr-gp-later" data-gp-close>Vielleicht später</button>
+        </div>
+    </div>
+    <script>
+        (function () {
+            // Founder: bei JEDEM Seitenaufruf zeigen (keine Session-Sperre).
+            var popup = document.getElementById('kr-gp-popup');
+            if (!popup) return;
+            function close() {
+                popup.classList.remove('is-open');
+                popup.hidden = true;
+                document.removeEventListener('keydown', onKey);
+            }
+            function onKey(e) { if (e.key === 'Escape') close(); }
+            var delay = window.matchMedia('(max-width: 1023px)').matches ? 3500 : 2500;
+            setTimeout(function () {
+                popup.hidden = false;
+                popup.classList.add('is-open');
+                document.addEventListener('keydown', onKey);
+                try { if (window.krTrack) window.krTrack('Referenzprogramm Popup gezeigt', { seite: 'money' }); } catch (e) {}
+            }, delay);
+            popup.querySelectorAll('[data-gp-close]').forEach(function (el) {
+                el.addEventListener('click', close);
+            });
+            var cta = document.getElementById('kr-gp-cta');
+            if (cta) cta.addEventListener('click', function () {
+                try { if (window.krTrack) window.krTrack('Referenzprogramm Popup Klick', { seite: 'money' }); } catch (e) {}
+            });
+        })();
+    </script>
 </body>
 </html>
