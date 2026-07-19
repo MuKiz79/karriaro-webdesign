@@ -754,7 +754,7 @@ function buildPersonaSectionHtml() {
         <a class="m-persona-tile m-persona-tile--wide" href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20meine%20Branche%20steht%20nicht%20in%20der%20Liste%20%E2%80%94%20k%C3%B6nnen%20wir%20kurz%20sprechen%3F" target="_blank" rel="noopener" aria-label="Andere Branche — WhatsApp öffnen">
             ${PERSONA_ICON_PLUS}
             <span class="m-persona-name">Ihre Branche fehlt?</span>
-            <span class="m-persona-headline">Wir bauen für alle Mittelständler.</span>
+            <span class="m-persona-headline">Wir bauen für alle.</span>
             <span class="m-persona-body">Sprechen Sie uns an — Antwort per WhatsApp.</span>
         </a>`;
 
