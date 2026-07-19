@@ -236,12 +236,24 @@
     // damit die Bubble den Kauf-Button nie überlagert. Erscheint, sobald der
     // Nutzer am Hero vorbeigescrollt ist. (Die alte krc-raised-Logik greift nur
     // gegen fixed/sticky-Elemente, nicht gegen den statischen In-Hero-CTA.)
-    var krcHeroCta = document.querySelector('.hero-with-photo .hero-cta-row .btn, .hero-with-photo .hero-cta-row a, .hero-with-photo .btn');
+    // 2026-07-19: Selektor um `.hero-ctas` erweitert — die 8 Portfolio-Demos haben
+    // den Hero-CTA dort (nicht in `.hero-with-photo`), sonst überlagerte die FAB
+    // „Fragen Sie uns" auf Mobil den Hero-„Erstgespräch buchen"-Button (Founder-Report).
+    var krcHeroCta = document.querySelector('.hero-with-photo .hero-cta-row .btn, .hero-with-photo .hero-cta-row a, .hero-with-photo .btn, .hero-ctas .btn-primary, .hero-ctas .btn, .hero-ctas a');
     if (krcHeroCta && 'IntersectionObserver' in window) {
         fab.classList.add('krc-hero-hide'); // Default am Hero versteckt; Observer korrigiert
         new IntersectionObserver(function (entries) {
             fab.classList.toggle('krc-hero-hide', entries[0].isIntersecting);
         }, { threshold: 0 }).observe(krcHeroCta);
+    } else if ('IntersectionObserver' in window) {
+        // Fallback (Seite ohne erkennbaren Hero-CTA): FAB erst nach dem ersten
+        // Viewport zeigen, damit sie oben nichts überlagert.
+        fab.classList.add('krc-hero-hide');
+        var krcScrollReveal = function () {
+            fab.classList.toggle('krc-hero-hide', window.scrollY < window.innerHeight * 0.6);
+        };
+        krcScrollReveal();
+        window.addEventListener('scroll', krcScrollReveal, { passive: true });
     }
 
     // Auto-grow textarea + Enter to send (Shift+Enter = newline)
