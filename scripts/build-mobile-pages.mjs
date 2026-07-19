@@ -64,7 +64,7 @@ const SKIP = new Set([
 // (media=print→all). Das späte Anwenden der 62-KB-CSS snappte das Hero-<main> nach
 // First-Paint (CLS 0,119–0,195, bisektiert). 14 KB gzip render-blocking, LCP-Headroom
 // vorhanden. Verifiziert: CLS→0 auf Money-Page + Content-Seiten.
-const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=444">
+const MOBILE_OVERRIDES_LINK = `    <link rel="stylesheet" href="/css/mobile-overrides.css?v=445">
     <script>(function(){if(/[?&]screenshot=1/.test(location.search))document.documentElement.classList.add('screenshot-mode');})();</script>
     <style>html.screenshot-mode .topbar,html.screenshot-mode header,html.screenshot-mode nav,html.screenshot-mode .kr-strip,html.screenshot-mode .kr-footer-card{display:none!important}</style>`;
 
@@ -390,6 +390,24 @@ function rewriteHeroDemoTease(html) {
                 '<em>Eine Wischgeste entfernt.</em>' +
                 '<span class="m-hero-demo-arrow" aria-hidden="true">&rarr;</span></span>' +
         '</a>'
+    );
+}
+
+function raiseHeroCtaAboveFold(html) {
+    // 2026-07-19: Auf ~664px-Viewports (iPhone 13 mit Safari-Leisten) lag der
+    // 48-h-Entwurf-Button ~50px unterm Fold — und die Hero-Guards von WhatsApp/
+    // Concierge hielten ihn deshalb für „nicht im Viewport" und blendeten ihre
+    // Pillen mitten am Fold ein. Mobile-Reihenfolge: Demo-Karte → CTA →
+    // Preiszeile (als Reassurance „Zahlung erst nach Ihrem Entwurf" direkt
+    // unterm Button). Desktop behält Preis → CTA.
+    return html.replace(
+        /(<p class="hero-price-spec">[\s\S]*?<\/p>)(\s*)(<div class="hero-cta-row">[\s\S]*?<\/div>)/,
+        '$3$2$1'
+    ).replace(
+        // Einzeilig auf 390px (der Desktop-Volltext bricht 2-zeilig = +20px Fold-Höhe);
+        // Versprechen identisch, Register wie Trust-Strip („Entwurf in 48 h, …").
+        '>Ihr Entwurf in 48 Stunden — kostenfrei anfordern</a>',
+        '>Entwurf in 48 h — kostenfrei anfordern</a>'
     );
 }
 
@@ -1105,6 +1123,8 @@ function buildPage(relPath) {
         html = compactHeroEyebrow(html);
         // Sprint 148.10 — Demo-Tease zwischen H1 und Trust-Liste (Brücke zu Section 02)
         html = rewriteHeroDemoTease(html);
+        // 2026-07-19 — CTA vor die Preiszeile (Button über den Fold, Hero-Guards greifen)
+        html = raiseHeroCtaAboveFold(html);
         // Sprint 98 — Hero ist Apple-Pure (Headline + Sub + CTA), keine Sub-Inserts mehr
         html = rewriteHeroSubhead(html);  // no-op
         html = rewriteHeroCta(html);

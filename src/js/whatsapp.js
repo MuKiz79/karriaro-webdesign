@@ -47,12 +47,10 @@
         '.whatsapp-fab:focus-visible{outline:3px solid #16202C;outline-offset:3px}' +
         '.whatsapp-fab svg{flex:none;width:30px;height:30px}' +
         '.whatsapp-fab-label{display:none;white-space:nowrap;font:500 14px/1 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif}' +
-        // Mobile (≤1023px): beschriftete Pille im Stil der Concierge-FAB „Fragen Sie uns" — beide als Paar sichtbar.
-        '@media (max-width:1023px){' +
-            '.whatsapp-fab{width:auto;height:auto;min-height:44px;border-radius:999px;padding:13px 20px;gap:9px;justify-content:flex-start}' +
-            '.whatsapp-fab svg{width:18px;height:18px}' +
-            '.whatsapp-fab-label{display:inline}' +
-        '}' +
+        // 2026-07-19: Mobile-Pille zurückgebaut — zwei fast bildschirmbreite Pillen
+        // (WhatsApp + „Fragen Sie uns") konkurrierten um die Aktion. Das WhatsApp-Glyph
+        // ist ohne Label universell erkennbar → Icon-Kreis auf ALLEN Viewports;
+        // „Fragen Sie uns" bleibt die einzige beschriftete Pille.
         '@media (prefers-reduced-motion:reduce){.whatsapp-fab{transition:none}}' +
         '.whatsapp-fab.whatsapp-fab--hero-hide{display:none}' +
         'html.screenshot-mode .whatsapp-fab{display:none!important}';
