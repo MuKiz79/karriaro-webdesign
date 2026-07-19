@@ -6902,8 +6902,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
          rechts weicht via .whatsapp-fab-Erkennung kollisionssicher aus. -->
     <script src="/js/whatsapp.js?v=2" defer></script>
 
-    <!-- Referenzprogramm-Popup (2026-07-19, Founder; umbenannt von Gründungsprogramm). Einmal pro Session,
-         verzögert; Mobile als Bottom-Sheet nach der Hero-Animation. -->
+    <!-- Referenzprogramm-Popup (2026-07-19, Founder; umbenannt von Gründungsprogramm).
+         Bei jedem Seitenaufruf, verzögert; Mobile als Bottom-Sheet nach der Hero-Animation. -->
     <div class="kr-gp-popup" id="kr-gp-popup" role="dialog" aria-modal="true" aria-labelledby="kr-gp-title" hidden>
         <div class="kr-gp-backdrop" data-gp-close></div>
         <div class="kr-gp-card">
@@ -6919,8 +6919,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     </div>
     <script>
         (function () {
-            var KEY = 'kr-gruendung-popup';
-            try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
+            // 2026-07-19 Founder: bei JEDEM Seitenaufruf zeigen (keine Session-Sperre).
             var popup = document.getElementById('kr-gp-popup');
             if (!popup) return;
             function close() {
@@ -6932,7 +6931,6 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             // Mobile: erst nach Splash + Blüten-Animation (~4 s), Desktop früher.
             var delay = window.matchMedia('(max-width: 1023px)').matches ? 4200 : 2500;
             setTimeout(function () {
-                try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
                 popup.hidden = false;
                 popup.classList.add('is-open');
                 document.addEventListener('keydown', onKey);
