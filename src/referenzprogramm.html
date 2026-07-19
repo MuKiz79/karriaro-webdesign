@@ -96,6 +96,39 @@
         .gp-faq p { margin-top: 10px; font-size: 14.5px; }
 
         .gp-footer { margin-top: 64px; border-top: 1px solid var(--gp-border); padding-top: 20px; font-size: 13px; display: flex; gap: 18px; flex-wrap: wrap; }
+
+        /* ── 3-Schritt-Wizard (2026-07-19, Founder-Spezifikation): ein Schritt je
+           Ansicht, Preisfrage bewusst zuletzt, Bestätigung statt Weiterleitung. ── */
+        .gp-step-ind { font-family: var(--gp-mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gp-gold); margin-bottom: 10px; }
+        .gp-step-title { font-family: var(--gp-serif); font-weight: 500; font-size: clamp(20px, 3.4vw, 26px); color: #fff; margin-bottom: 18px; line-height: 1.2; }
+        .gp-group-label { font-size: 13px; color: rgba(255, 255, 255, 0.7); margin: 4px 0 10px; }
+        .gp-field--gap { margin: 18px 0; display: block; }
+        .gp-chips { display: flex; flex-wrap: wrap; gap: 9px; }
+        .gp-chip input { position: absolute; opacity: 0; pointer-events: none; }
+        .gp-chip span { display: inline-block; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 999px; padding: 10px 16px; font-size: 14px; color: rgba(255, 255, 255, 0.85); cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease; -webkit-tap-highlight-color: transparent; }
+        .gp-chip input:checked + span { border-color: var(--gp-gold); background: rgba(201, 162, 75, 0.18); color: #fff; }
+        .gp-chip input:focus-visible + span { outline: 2px solid var(--gp-gold); outline-offset: 2px; }
+        .gp-note { font-size: 14px; color: rgba(255, 255, 255, 0.65); border-left: 2px solid var(--gp-gold); padding-left: 12px; margin-bottom: 16px; }
+        .gp-step-nav { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-top: 24px; }
+        .gp-next { margin-left: auto; border: none; border-radius: 999px; background: var(--gp-gold); color: var(--gp-ink); font: 600 15.5px/1 var(--gp-sans); padding: 15px 28px; cursor: pointer; transition: transform 0.18s ease; }
+        .gp-next:hover { transform: translateY(-1px); }
+        .gp-back { background: none; border: none; font-size: 14px; color: rgba(255, 255, 255, 0.6); cursor: pointer; padding: 10px 0; }
+        .gp-back:hover { color: #fff; }
+        .gp-step-nav .gp-submit { flex: 1; margin-top: 0; width: auto; }
+        .gp-step[hidden] { display: none; }
+        .gp-step { animation: gp-step-in 0.28s ease both; }
+        @keyframes gp-step-in { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .gp-step { animation: none; } }
+        #gp-done { text-align: left; }
+        .gp-done-title { font-family: var(--gp-serif); font-weight: 500; font-size: clamp(24px, 4vw, 30px); color: #fff; margin-bottom: 10px; }
+        .gp-done-text { font-size: 15px; margin-bottom: 22px; }
+        .gp-done-cta { display: inline-block; background: var(--gp-gold); color: var(--gp-ink); font-weight: 600; font-size: 15px; border-radius: 999px; padding: 14px 24px; }
+        /* Mobil: Bewerbung bildschirmfüllend (Popup-CTA springt auf #bewerben) */
+        @media (max-width: 640px) {
+            /* max-width:none + calc-Breite: die generischen Mobile-Overrides setzen
+               section auf max-width:100% und kappen sonst den Vollbleed bei 342px. */
+            .gp-form-section { min-height: 100svh; margin-left: -24px; margin-right: -24px; max-width: none; width: calc(100% + 48px); border-radius: 0; scroll-margin-top: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+        }
     </style>
 </head>
 <body>
@@ -157,57 +190,108 @@
             </div>
         </section>
 
-        <section class="gp-form-section" aria-labelledby="gp-apply">
+        <section class="gp-form-section" id="bewerben" aria-labelledby="gp-apply">
             <h2 id="gp-apply">Die Bewerbung</h2>
-            <p class="gp-form-sub">Sieben Felder, fünf Minuten. Persönliche Antwort binnen 48 Stunden.</p>
+            <p class="gp-form-sub">Drei kurze Schritte, fünf Minuten. Unverbindlich.</p>
             <form id="gp-form" data-lead="kwd-referenz-form">
                 <input type="hidden" name="angebot" value="Referenzprogramm-Bewerbung">
                 <input type="hidden" name="_subject" value="Referenzprogramm-Bewerbung">
-                <div class="gp-form-grid">
-                    <label class="gp-field">
-                        <span>Ihr Name</span>
-                        <input type="text" name="name" required>
-                    </label>
-                    <label class="gp-field">
-                        <span>E-Mail</span>
-                        <input type="email" name="email" required>
-                    </label>
-                    <label class="gp-field">
-                        <span>Betrieb &amp; Branche</span>
-                        <input type="text" name="betrieb" placeholder="z. B. Friseursalon Demir" required>
-                    </label>
-                    <label class="gp-field">
-                        <span>Ort</span>
-                        <input type="text" name="ort" required>
-                    </label>
-                    <label class="gp-field gp-field--full">
-                        <span>Ihre aktuelle Website <em>(falls vorhanden)</em></span>
-                        <input type="text" name="website">
-                    </label>
-                    <label class="gp-field gp-field--full">
-                        <span>Was soll die neue Website für Sie leisten?</span>
-                        <textarea name="ziel" rows="3" placeholder="z. B. Termine bringen, bei Google und ChatGPT gefunden werden, Preise zeigen …" required></textarea>
-                    </label>
-                    <label class="gp-field gp-field--full">
-                        <span>Warum Ihr Betrieb? <em>(zwei Sätze genügen)</em></span>
-                        <textarea name="warum" rows="3" required></textarea>
-                    </label>
-                    <label class="gp-field gp-field--full">
-                        <span>Ihr Wunschbeitrag <em>(optional — Sie dürfen das auch nach dem Livegang entscheiden)</em></span>
-                        <input type="text" name="wunschbeitrag" placeholder="z. B. 200 €, oder: entscheide ich später">
-                    </label>
+
+                <div class="gp-step" data-step="1">
+                    <p class="gp-step-ind">Schritt 1 von 3 · Über Sie</p>
+                    <h3 class="gp-step-title">Erzählen Sie uns kurz, für wen wir gestalten dürfen.</h3>
+                    <div class="gp-form-grid">
+                        <label class="gp-field">
+                            <span>Vor- und Nachname</span>
+                            <input type="text" name="name" placeholder="Max Mustermann" required>
+                        </label>
+                        <label class="gp-field">
+                            <span>Unternehmen / Projektname</span>
+                            <input type="text" name="unternehmen" placeholder="Muster &amp; Partner" required>
+                        </label>
+                        <label class="gp-field gp-field--full">
+                            <span>E-Mail-Adresse</span>
+                            <input type="email" name="email" placeholder="max@unternehmen.de" required>
+                        </label>
+                        <label class="gp-field gp-field--full">
+                            <span>Aktuelle Website <em>(kann freigelassen werden, wenn noch keine vorhanden ist)</em></span>
+                            <input type="text" name="website" placeholder="www.unternehmen.de">
+                        </label>
+                    </div>
+                    <div class="gp-step-nav">
+                        <button type="button" class="gp-next">Weiter →</button>
+                    </div>
                 </div>
-                <div class="gp-honeypot" aria-hidden="true">
-                    <label for="gp-firma">Firma</label>
-                    <input type="text" id="gp-firma" name="firma" tabindex="-1" autocomplete="off">
+
+                <div class="gp-step" data-step="2" hidden>
+                    <p class="gp-step-ind">Schritt 2 von 3 · Ihr Vorhaben</p>
+                    <h3 class="gp-step-title">Was soll Ihre neue Website für Sie erreichen?</h3>
+                    <p class="gp-group-label">Mehrfachauswahl möglich</p>
+                    <div class="gp-chips">
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="Mehr Anfragen gewinnen"><span>Mehr Anfragen gewinnen</span></label>
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="Leistungen professionell präsentieren"><span>Leistungen professionell präsentieren</span></label>
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="Bei Google besser gefunden werden"><span>Bei Google besser gefunden werden</span></label>
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="In KI-Suchen sichtbar werden"><span>In KI-Suchen sichtbar werden</span></label>
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="Bestehende Website modernisieren"><span>Bestehende Website modernisieren</span></label>
+                        <label class="gp-chip"><input type="checkbox" name="ziele" value="Neues Unternehmen oder Angebot starten"><span>Neues Unternehmen oder Angebot starten</span></label>
+                    </div>
+                    <label class="gp-field gp-field--full gp-field--gap">
+                        <span>Beschreiben Sie Ihr Vorhaben in wenigen Sätzen.</span>
+                        <textarea name="vorhaben" rows="4" placeholder="Was bieten Sie an, wen möchten Sie erreichen und was soll die neue Website bewirken?" required></textarea>
+                    </label>
+                    <p class="gp-group-label">Wann möchten Sie starten?</p>
+                    <div class="gp-chips">
+                        <label class="gp-chip"><input type="radio" name="start" value="So bald wie möglich"><span>So bald wie möglich</span></label>
+                        <label class="gp-chip"><input type="radio" name="start" value="Innerhalb der nächsten 4 Wochen"><span>Innerhalb der nächsten 4 Wochen</span></label>
+                        <label class="gp-chip"><input type="radio" name="start" value="In den nächsten 2–3 Monaten"><span>In den nächsten 2–3 Monaten</span></label>
+                        <label class="gp-chip"><input type="radio" name="start" value="Noch offen"><span>Noch offen</span></label>
+                    </div>
+                    <div class="gp-step-nav">
+                        <button type="button" class="gp-back">← Zurück</button>
+                        <button type="button" class="gp-next">Weiter →</button>
+                    </div>
                 </div>
-                <label class="gp-privacy">
-                    <input type="checkbox" name="privacy" required>
-                    <span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span>
-                </label>
-                <button type="submit" class="gp-submit">Für einen Platz bewerben — Antwort in 48 Stunden</button>
-                <p class="gp-form-note">Ihre Angaben gehen direkt an den Gründer. Kein Newsletter, keine Weitergabe.</p>
+
+                <div class="gp-step" data-step="3" hidden>
+                    <p class="gp-step-ind">Schritt 3 von 3 · Ihre Bewerbung</p>
+                    <h3 class="gp-step-title">Was wäre Ihnen die Website wert?</h3>
+                    <p class="gp-note">Sie bestimmen Ihren Beitrag selbst. Auch 0 € ist möglich und beeinflusst nicht automatisch unsere Entscheidung.</p>
+                    <div class="gp-chips">
+                        <label class="gp-chip"><input type="radio" name="beitrag" value="0 €"><span>0 €</span></label>
+                        <label class="gp-chip"><input type="radio" name="beitrag" value="bis 500 €"><span>bis 500 €</span></label>
+                        <label class="gp-chip"><input type="radio" name="beitrag" value="500–1.000 €"><span>500–1.000 €</span></label>
+                        <label class="gp-chip"><input type="radio" name="beitrag" value="über 1.000 €"><span>über 1.000 €</span></label>
+                        <label class="gp-chip"><input type="radio" name="beitrag" value="möchte ich persönlich besprechen"><span>möchte ich persönlich besprechen</span></label>
+                    </div>
+                    <label class="gp-field gp-field--full gp-field--gap">
+                        <span>Warum passt Ihr Projekt gut zu unserem Referenzprogramm?</span>
+                        <textarea name="warum" rows="4" placeholder="Zum Beispiel: besondere Branche, spannendes Angebot, starke Geschichte oder konkretes Wachstumsvorhaben." required></textarea>
+                    </label>
+                    <div class="gp-honeypot" aria-hidden="true">
+                        <label for="gp-firma">Firma</label>
+                        <input type="text" id="gp-firma" name="firma" tabindex="-1" autocomplete="off">
+                    </div>
+                    <label class="gp-privacy">
+                        <input type="checkbox" name="referenz_erlaubnis" value="ja" required>
+                        <span>Ich bin damit einverstanden, dass Karriaro die fertige Website nach Veröffentlichung als Referenz präsentieren darf.</span>
+                    </label>
+                    <label class="gp-privacy">
+                        <input type="checkbox" name="privacy" required>
+                        <span>Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Angaben zur Bearbeitung meiner Bewerbung zu.</span>
+                    </label>
+                    <div class="gp-step-nav">
+                        <button type="button" class="gp-back">← Zurück</button>
+                        <button type="submit" class="gp-submit">Für einen Platz bewerben</button>
+                    </div>
+                    <p class="gp-form-note">Unverbindliche Bewerbung · Persönliche Antwort innerhalb von 48 Stunden</p>
+                </div>
             </form>
+
+            <div id="gp-done" hidden>
+                <h2 class="gp-done-title">Ihre Bewerbung ist bei uns.</h2>
+                <p class="gp-done-text">Wir sehen uns Ihr Unternehmen und Ihr Vorhaben persönlich an. Innerhalb von 48 Stunden erhalten Sie von uns eine Rückmeldung.</p>
+                <a class="gp-done-cta" href="https://wa.me/491742796784?text=Guten%20Tag%2C%20ich%20habe%20mich%20soeben%20f%C3%BCr%20das%20Referenzprogramm%20beworben%20und%20m%C3%B6chte%20ein%20Erstgespr%C3%A4ch%20vormerken." target="_blank" rel="noopener">Erstgespräch direkt vormerken</a>
+            </div>
         </section>
 
         <section class="gp-section" aria-labelledby="gp-faq-title">
@@ -237,38 +321,69 @@
 
     <script src="/js/attribution.js" defer></script>
     <script>
-        // Submit-Muster der Startseiten-Formulare (AJAX → Formspree → /success.html),
-        // inkl. Attribution (gclid/UTM) für den späteren Offline-Conversion-Import.
-        document.getElementById('gp-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            var form = this;
-            var btn = form.querySelector('button');
-            btn.textContent = 'Wird gesendet…';
-            btn.disabled = true;
-            var fd = new FormData(form);
-            try {
-                if (window.krAttributionFlat) {
-                    var attr = window.krAttributionFlat();
-                    Object.keys(attr).forEach(function (k) { fd.append(k, attr[k]); });
+        // 3-Schritt-Wizard (Founder-Spezifikation 2026-07-19): pro Schritt validieren,
+        // Preisfrage zuletzt, Bestätigung in der Seite statt Weiterleitung.
+        // Submit wie die Startseiten-Formulare: AJAX → Formspree, inkl. Attribution
+        // (gclid/UTM) für den späteren Offline-Conversion-Import.
+        (function () {
+            var form = document.getElementById('gp-form');
+            var steps = Array.prototype.slice.call(form.querySelectorAll('.gp-step'));
+            var current = 0;
+
+            function show(i) {
+                steps.forEach(function (st, j) { st.hidden = j !== i; });
+                current = i;
+                var section = document.getElementById('bewerben');
+                if (section && section.getBoundingClientRect().top < -10) section.scrollIntoView({ block: 'start' });
+            }
+            function validateStep(i) {
+                var fields = steps[i].querySelectorAll('input, textarea');
+                for (var k = 0; k < fields.length; k++) {
+                    if (!fields[k].checkValidity()) { fields[k].reportValidity(); return false; }
                 }
-            } catch (err) {}
-            try { if (window.krTrack) { window.krTrack('Lead Referenzprogramm', {}); } } catch (err) {}
-            fetch('https://formspree.io/f/mjggbdre', {
-                method: 'POST',
-                body: fd,
-                headers: { 'Accept': 'application/json' }
-            }).then(function (response) {
-                if (response.ok) {
-                    window.location.href = '/success.html';
-                } else {
+                return true;
+            }
+            form.querySelectorAll('.gp-next').forEach(function (btn) {
+                btn.addEventListener('click', function () { if (validateStep(current)) show(current + 1); });
+            });
+            form.querySelectorAll('.gp-back').forEach(function (btn) {
+                btn.addEventListener('click', function () { show(current - 1); });
+            });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (!validateStep(current)) return;
+                var btn = form.querySelector('.gp-submit');
+                btn.textContent = 'Wird gesendet…';
+                btn.disabled = true;
+                var fd = new FormData(form);
+                try {
+                    if (window.krAttributionFlat) {
+                        var attr = window.krAttributionFlat();
+                        Object.keys(attr).forEach(function (k) { fd.append(k, attr[k]); });
+                    }
+                } catch (err) {}
+                try { if (window.krTrack) { window.krTrack('Lead Referenzprogramm', {}); } } catch (err) {}
+                fetch('https://formspree.io/f/mjggbdre', {
+                    method: 'POST',
+                    body: fd,
+                    headers: { 'Accept': 'application/json' }
+                }).then(function (response) {
+                    if (response.ok) {
+                        form.hidden = true;
+                        var done = document.getElementById('gp-done');
+                        done.hidden = false;
+                        document.getElementById('bewerben').scrollIntoView({ block: 'start' });
+                    } else {
+                        btn.textContent = 'Fehler — bitte erneut versuchen';
+                        btn.disabled = false;
+                    }
+                }).catch(function () {
                     btn.textContent = 'Fehler — bitte erneut versuchen';
                     btn.disabled = false;
-                }
-            }).catch(function () {
-                btn.textContent = 'Fehler — bitte erneut versuchen';
-                btn.disabled = false;
+                });
             });
-        });
+        })();
     </script>
 </body>
 </html>
