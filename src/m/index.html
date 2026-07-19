@@ -1741,6 +1741,27 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         /* Gründungsprogramm-Zeile: zweite Hero-Zeile unter dem Zitier-Check-Link,
            Gold-Register (2026-07-19, Founder-Entscheid: 10 Plätze, Wunschpreis). */
         .hero-gruendung-link { display: flex; margin-top: 2px; color: var(--color-gold-text, #6E5F3F); }
+
+        /* ── Gründungsprogramm-Popup (2026-07-19, Founder: „als Pop-up, sonst geht
+           es verloren"). Einmal pro Session, verzögert (Mobile: nach der Blüten-
+           Animation), Esc/Backdrop/X schließbar. z-index über den Schwebe-FABs. ── */
+        .kr-gp-popup { position: fixed; inset: 0; z-index: 2147483640; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .kr-gp-popup.is-open { display: flex; }
+        .kr-gp-backdrop { position: absolute; inset: 0; background: rgba(16, 26, 36, 0.55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+        .kr-gp-card { position: relative; max-width: 480px; width: 100%; background: #FBFAF7; border-radius: 18px; padding: 34px 30px 28px; box-shadow: 0 32px 80px rgba(10, 20, 30, 0.45); animation: kr-gp-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes kr-gp-in { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .kr-gp-card { animation: none; } }
+        .kr-gp-close { position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border: none; border-radius: 50%; background: rgba(20, 32, 43, 0.06); color: #16202C; font-size: 20px; line-height: 1; cursor: pointer; }
+        .kr-gp-close:hover { background: rgba(20, 32, 43, 0.12); }
+        .kr-gp-eyebrow { font-family: var(--font-mono, 'JetBrains Mono', monospace); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-gold-text, #6E5F3F); margin-bottom: 12px; }
+        .kr-gp-title { font-family: var(--font-display, 'Fraunces', serif); font-weight: 500; font-size: clamp(26px, 4vw, 32px); line-height: 1.12; color: #16202C; letter-spacing: -0.01em; }
+        .kr-gp-title em { font-style: normal; color: var(--color-gold-text, #6E5F3F); }
+        .kr-gp-text { margin-top: 14px; font-size: 15px; line-height: 1.55; color: #515154; }
+        .kr-gp-cta { display: block; margin-top: 22px; text-align: center; background: var(--color-indigo, #1A2E40); color: #fff; text-decoration: none; font-weight: 600; font-size: 15.5px; border-radius: 999px; padding: 15px 22px; }
+        .kr-gp-cta:hover { background: #0F1F2E; }
+        .kr-gp-later { display: block; margin: 14px auto 0; background: none; border: none; font-size: 13px; color: #8a8a8f; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+        @media (max-width: 640px) { .kr-gp-popup { align-items: flex-end; padding: 0; } .kr-gp-card { max-width: none; border-radius: 18px 18px 0 0; padding: 30px 24px calc(24px + env(safe-area-inset-bottom)); animation-name: kr-gp-in-sheet; } }
+        @keyframes kr-gp-in-sheet { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
         .hero-audit-link span { color: var(--color-indigo); text-decoration: underline; text-decoration-color: rgba(26,46,64,0.3); text-underline-offset: 3px; transition: text-decoration-color 0.2s ease; }
         .hero-audit-link:hover { color: var(--color-onyx); }
         .hero-audit-link:hover span { text-decoration-color: var(--color-indigo); }
@@ -6878,6 +6899,50 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     <!-- WhatsApp-Kontakt (schwebend, unten-links). Vorgefertigte Nachricht; Concierge
          rechts weicht via .whatsapp-fab-Erkennung kollisionssicher aus. -->
     <script src="/js/whatsapp.js?v=2" defer></script>
+
+    <!-- Gründungsprogramm-Popup (2026-07-19, Founder). Einmal pro Session,
+         verzögert; Mobile als Bottom-Sheet nach der Hero-Animation. -->
+    <div class="kr-gp-popup" id="kr-gp-popup" role="dialog" aria-modal="true" aria-labelledby="kr-gp-title" hidden>
+        <div class="kr-gp-backdrop" data-gp-close></div>
+        <div class="kr-gp-card">
+            <button type="button" class="kr-gp-close" data-gp-close aria-label="Schließen">×</button>
+            <p class="kr-gp-eyebrow">Gründungsprogramm · 10 Plätze</p>
+            <h2 class="kr-gp-title" id="kr-gp-title">Zehn Websites.<br><em>Sie bestimmen den Preis.</em></h2>
+            <p class="kr-gp-text">Die volle Manufaktur-Arbeit zum Beitrag, den Sie für angemessen halten — auch null Euro. Im Gegenzug dürfen wir Ihre fertige Website als echte Referenz zeigen. Bewerbung in fünf Minuten, persönliche Antwort binnen 48 Stunden.</p>
+            <a class="kr-gp-cta" href="/gruendungsplaetze" id="kr-gp-cta">Zum Gründungsprogramm →</a>
+            <button type="button" class="kr-gp-later" data-gp-close>Vielleicht später</button>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var KEY = 'kr-gruendung-popup';
+            try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
+            var popup = document.getElementById('kr-gp-popup');
+            if (!popup) return;
+            function close() {
+                popup.classList.remove('is-open');
+                popup.hidden = true;
+                document.removeEventListener('keydown', onKey);
+            }
+            function onKey(e) { if (e.key === 'Escape') close(); }
+            // Mobile: erst nach Splash + Blüten-Animation (~4 s), Desktop früher.
+            var delay = window.matchMedia('(max-width: 1023px)').matches ? 4200 : 2500;
+            setTimeout(function () {
+                try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+                popup.hidden = false;
+                popup.classList.add('is-open');
+                document.addEventListener('keydown', onKey);
+                try { if (window.krTrack) window.krTrack('Gruendung Popup gezeigt', {}); } catch (e) {}
+            }, delay);
+            popup.querySelectorAll('[data-gp-close]').forEach(function (el) {
+                el.addEventListener('click', close);
+            });
+            var cta = document.getElementById('kr-gp-cta');
+            if (cta) cta.addEventListener('click', function () {
+                try { if (window.krTrack) window.krTrack('Gruendung Popup Klick', {}); } catch (e) {}
+            });
+        })();
+    </script>
 
 <script src="/js/m-interactions.js?v=425" defer></script>
 </body>
