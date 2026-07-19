@@ -4308,6 +4308,124 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     </section>
 
 
+    <!-- 2026-07-19 — KI-Wandel-Sektion (Founder: „Animation, wie sich das Suchverhalten ändert").
+         Scroll-getriggert (IntersectionObserver, einmalig), reduced-motion-fest, UWG-sicher:
+         die KI-Karten sind als „Illustration" gekennzeichnet, echte Copy nutzt Fähigkeits-
+         Formulierung („findet", „zitieren kann") statt Empfehlungs-Garantie. -->
+    <style>
+      .kiw{background:var(--surface-warm,#F6F3EC);border-top:1px solid var(--color-line,rgba(20,32,43,.1));border-bottom:1px solid var(--color-line,rgba(20,32,43,.1))}
+      .kiw-inner{max-width:1080px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px}
+      .kiw-eyebrow{font-family:var(--font-mono,'JetBrains Mono',ui-monospace,monospace);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-gold-text,#6E5F3F);margin-bottom:18px}
+      .kiw-h2{font-family:var(--font-display,'Fraunces',Georgia,serif);font-weight:500;font-size:clamp(26px,4.4vw,42px);line-height:1.12;letter-spacing:-.01em;color:var(--color-onyx,#16202C);max-width:20ch}
+      .kiw-h2 em{font-style:normal;color:var(--color-gold-text,#6E5F3F)}
+      .kiw-lede{margin-top:16px;font-size:clamp(15px,1.6vw,17px);color:var(--color-graphite,#515154);max-width:56ch;line-height:1.6}
+      .kiw-cards{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+      .kiw-card{position:relative;background:#fff;border:1px solid var(--color-line,rgba(20,32,43,.12));border-radius:16px;overflow:hidden;box-shadow:0 24px 60px -40px rgba(20,40,60,.5)}
+      .kiw-card--old{opacity:.62;filter:saturate(.55)}
+      .kiw-bar{display:flex;align-items:center;gap:7px;padding:12px 14px;border-bottom:1px solid var(--color-line,rgba(20,32,43,.1));background:#F5F5F2}
+      .kiw-dot{width:10px;height:10px;border-radius:50%}
+      .kiw-dot.r{background:#E86A5E}.kiw-dot.y{background:#E7B94F}.kiw-dot.g{background:#5FB56A}
+      .kiw-url{margin-left:6px;font-family:var(--font-mono,ui-monospace,monospace);font-size:11.5px;color:#8a8a8f}
+      .kiw-tag{margin-left:auto;font-family:var(--font-mono,ui-monospace,monospace);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#a9a9ad;border:1px solid var(--color-line,rgba(20,32,43,.14));border-radius:999px;padding:3px 8px}
+      .kiw-body{padding:18px}
+      .kiw-cardlabel{font-family:var(--font-mono,ui-monospace,monospace);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-gold-text,#6E5F3F);margin-bottom:12px}
+      .kiw-links{display:flex;flex-direction:column;gap:13px}
+      .kiw-link{opacity:0;transform:translateY(6px)}
+      .kiw.is-on .kiw-link{opacity:1;transform:none;transition:opacity .4s ease,transform .4s ease}
+      .kiw-link .l-url{height:8px;width:42%;background:#cfe0cf;border-radius:3px;margin-bottom:6px}
+      .kiw-link .l-title{height:11px;width:78%;background:#c3d0ea;border-radius:3px;margin-bottom:6px}
+      .kiw-link .l-desc{height:7px;width:92%;background:#e6e6e8;border-radius:3px}
+      .kiw-morelinks{margin-top:14px;font-family:var(--font-mono,ui-monospace,monospace);font-size:11px;color:#b04a3d;opacity:0}
+      .kiw.is-on .kiw-morelinks{opacity:1;transition:opacity .5s ease .5s}
+      .kiw-q{border:1px solid var(--color-line,rgba(20,32,43,.14));border-radius:12px;padding:12px 15px;font-size:14.5px;color:var(--color-onyx,#16202C);line-height:1.45;margin-bottom:16px}
+      .kiw-a{display:flex;gap:12px;align-items:flex-start;min-height:96px}
+      .kiw-amark{flex:none;width:32px;height:32px;border-radius:9px;background:var(--color-indigo,#1A2E40);color:#fff;display:flex;align-items:center;justify-content:center}
+      .kiw-amark svg{width:18px;height:18px}
+      .kiw-atext{position:relative;flex:1;font-size:15px;line-height:1.55;color:var(--color-onyx,#16202C)}
+      .kiw-answer{opacity:0;transition:opacity .5s ease}
+      .kiw-answer.show{opacity:1}
+      .kiw-answer--sol{position:absolute;inset:0}
+      .kiw-miss{color:#b04a3d;font-weight:600}
+      .kiw-good{background:linear-gradient(transparent 60%,rgba(201,162,75,.35) 0);font-weight:600}
+      .kiw-tools{margin-top:30px;display:flex;flex-wrap:wrap;gap:10px}
+      .kiw-tool{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--color-line,rgba(20,32,43,.14));border-radius:999px;padding:9px 15px;font-size:13.5px;color:var(--color-onyx,#16202C);background:#fff;opacity:0;transform:translateY(8px)}
+      .kiw.is-on .kiw-tool{opacity:1;transform:none;transition:opacity .45s ease,transform .45s ease}
+      .kiw-tool i{width:6px;height:6px;border-radius:50%;background:var(--color-gold,#C9A24B)}
+      .kiw-payoff{margin-top:34px;font-family:var(--font-display,'Fraunces',Georgia,serif);font-weight:500;font-size:clamp(20px,3vw,28px);line-height:1.22;color:var(--color-onyx,#16202C);max-width:26ch}
+      .kiw-payoff em{font-style:normal;color:var(--color-gold-text,#6E5F3F)}
+      .kiw-cta{margin-top:22px;display:inline-flex;align-items:center;gap:8px;color:var(--color-indigo,#1A2E40);font-weight:600;font-size:15px;text-decoration:none}
+      .kiw-cta span{text-decoration:underline;text-underline-offset:3px}
+      @media(max-width:820px){.kiw-cards{grid-template-columns:1fr}.kiw-card--old{display:none}}
+      @media(prefers-reduced-motion:reduce){.kiw-link,.kiw-tool,.kiw-morelinks{opacity:1!important;transform:none!important;transition:none!important}}
+    </style>
+    <section class="kiw" aria-labelledby="kiw-title" id="ki-wandel">
+      <div class="kiw-inner">
+        <p class="kiw-eyebrow">Der Wandel · Google&nbsp;→&nbsp;KI</p>
+        <h2 class="kiw-h2" id="kiw-title">Ihre Kunden fragen heute die KI. <em>Kennt sie Ihren Betrieb?</em></h2>
+        <p class="kiw-lede">Immer mehr Menschen suchen nicht mehr in einer langen Trefferliste, sondern fragen ChatGPT direkt nach einer Empfehlung — und bekommen einen einzigen Rat statt zehn blauer Links. Wer dort nicht auftaucht, existiert für sie nicht.</p>
+        <div class="kiw-cards">
+          <div class="kiw-card kiw-card--old" aria-hidden="true">
+            <div class="kiw-bar"><span class="kiw-dot r"></span><span class="kiw-dot y"></span><span class="kiw-dot g"></span><span class="kiw-url">google.de</span></div>
+            <div class="kiw-body">
+              <p class="kiw-cardlabel">Gestern · Zehn blaue Links</p>
+              <div class="kiw-links">
+                <div class="kiw-link" style="transition-delay:.05s"><div class="l-url"></div><div class="l-title"></div><div class="l-desc"></div></div>
+                <div class="kiw-link" style="transition-delay:.15s"><div class="l-url"></div><div class="l-title"></div><div class="l-desc"></div></div>
+                <div class="kiw-link" style="transition-delay:.25s"><div class="l-url"></div><div class="l-title"></div><div class="l-desc"></div></div>
+                <div class="kiw-link" style="transition-delay:.35s"><div class="l-url"></div><div class="l-title"></div><div class="l-desc"></div></div>
+              </div>
+              <p class="kiw-morelinks">↓ 46 weitere Ergebnisse — die kaum jemand sieht.</p>
+            </div>
+          </div>
+          <div class="kiw-card">
+            <div class="kiw-bar"><span class="kiw-dot r"></span><span class="kiw-dot y"></span><span class="kiw-dot g"></span><span class="kiw-url">chatgpt.com</span><span class="kiw-tag">Illustration</span></div>
+            <div class="kiw-body">
+              <p class="kiw-cardlabel">Heute · Eine Empfehlung</p>
+              <div class="kiw-q">„Welchen Webdesigner empfiehlst du für mein Café?"</div>
+              <div class="kiw-a">
+                <span class="kiw-amark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.4 2.4M15.3 15.3l2.4 2.4M17.7 6.3l-2.4 2.4M8.7 15.3l-2.4 2.4"/></svg></span>
+                <span class="kiw-atext">
+                  <span class="kiw-answer kiw-answer--prob" data-kiw-prob>Für ein Café empfehle ich einen lokalen Anbieter — zu Ihrem Betrieb finde ich allerdings <span class="kiw-miss">keine Informationen.</span></span>
+                  <span class="kiw-answer kiw-answer--sol" data-kiw-sol>Für ein Café empfehle ich <span class="kiw-good">Ihren Betrieb</span> — handcodiert, schnell, mit passenden Referenzen.</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="kiw-tools" aria-label="Eingebaute Werkzeuge für KI-Auffindbarkeit">
+          <span class="kiw-tool" style="transition-delay:0s"><i></i>Strukturierte Daten</span>
+          <span class="kiw-tool" style="transition-delay:.07s"><i></i>KI-Concierge</span>
+          <span class="kiw-tool" style="transition-delay:.14s"><i></i>Maschinenlesbare Fakten</span>
+          <span class="kiw-tool" style="transition-delay:.21s"><i></i>Editorial-Content</span>
+          <span class="kiw-tool" style="transition-delay:.28s"><i></i>Blitzschnelle Ladezeit</span>
+        </div>
+        <p class="kiw-payoff">Wir bauen die Grundlage, damit die KI Ihren Betrieb findet — <em>und Ihre Seite zitieren kann.</em></p>
+        <a class="kiw-cta" href="/ki-zitier-check">Kennt die KI Ihren Betrieb? <span>Live prüfen →</span></a>
+      </div>
+    </section>
+    <script>
+      (function(){
+        var sec=document.getElementById('ki-wandel');
+        if(!sec) return;
+        var prob=sec.querySelector('[data-kiw-prob]'), sol=sec.querySelector('[data-kiw-sol]');
+        var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+        function run(){
+          sec.classList.add('is-on');
+          if(reduce){ prob.style.display='none'; sol.classList.add('show'); return; }
+          // 1) Problem-Antwort einblenden
+          setTimeout(function(){ prob.classList.add('show'); }, 500);
+          // 2) nach den Werkzeug-Chips: auf die Lösung überblenden
+          setTimeout(function(){ prob.classList.remove('show'); }, 2600);
+          setTimeout(function(){ sol.classList.add('show'); }, 3000);
+        }
+        if('IntersectionObserver' in window){
+          var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ run(); io.disconnect(); } }); }, {threshold:.3});
+          io.observe(sec);
+        } else { run(); }
+      })();
+    </script>
+
+
     <!-- Sprint 168 — Audit-Magic-Moment (Editorial-stille Erste Einschätzung) -->
     
 <!-- Mobile Demo-Swiper (Sprint 129 — Editorial-Page № 02, show-don't-tell) -->
