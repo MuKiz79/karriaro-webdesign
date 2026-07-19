@@ -74,7 +74,7 @@
         .gp-form-section { margin-top: 56px; background: var(--gp-navy); border-radius: 16px; padding: clamp(24px, 5vw, 44px); color: rgba(255, 255, 255, 0.82); }
         .gp-form-section h2 { color: #fff; font-family: var(--gp-serif); font-weight: 500; font-size: clamp(24px, 4vw, 30px); margin-bottom: 8px; }
         .gp-form-sub { font-size: 15px; margin-bottom: 26px; }
-        .gp-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .gp-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: end; }
         @media (max-width: 640px) { .gp-form-grid { grid-template-columns: 1fr; } }
         .gp-field { display: block; }
         .gp-field--full { grid-column: 1 / -1; }
@@ -214,7 +214,7 @@
                             <input type="email" name="email" placeholder="max@unternehmen.de" required>
                         </label>
                         <label class="gp-field">
-                            <span>Telefon <em>(optional — für eine persönliche Rückmeldung)</em></span>
+                            <span>Telefon <em>(optional)</em></span>
                             <input type="tel" name="telefon" placeholder="0170 1234567" autocomplete="tel">
                         </label>
                         <label class="gp-field gp-field--full">
