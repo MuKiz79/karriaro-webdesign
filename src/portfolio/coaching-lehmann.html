@@ -230,8 +230,8 @@ html.embed-hero .hero-h1-line{display:block}
         .k-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
         @media (max-width: 920px) { .k-grid { grid-template-columns: 1fr; } }
         .k-form { display: grid; gap: 18px; }
-        .k-form label { font-size: 13px; color: var(--text-soft); }
-        .k-form input, .k-form textarea { padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--p-radius); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s; background: var(--bg); }
+        .k-form label { font-size: 13px; color: var(--text-soft); display: flex; flex-direction: column; gap: 8px; }
+        .k-form input, .k-form textarea { width: 100%; box-sizing: border-box; padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--p-radius); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s; background: var(--bg); }
         .k-form input:focus, .k-form textarea:focus { border-color: var(--accent); }
         .k-form textarea { resize: vertical; min-height: 130px; }
         .k-form button { background: var(--accent); color: #fff; padding: 16px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; align-self: start; }
@@ -437,7 +437,7 @@ html.embed-hero .hero-h1-line{display:block}
                             <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--accent); font-weight:600; min-width:24px;">→</span><span style="font-size:15px; color:var(--text-soft);"><strong style="color:var(--text);">Keine Hotline.</strong> Wir sprechen direkt. Wenn ich Ihnen nicht antworte, telefoniert auch keiner aus meinem Team mit Ihnen.</span></li>
                         </ul>
                     </div>
-                    <div class="cal-widget" role="region" aria-label="Calendly-Buchungsdemo">
+                    <div class="cal-widget" role="region" aria-label="Buchungs-Demo">
                         <div class="cal-widget-head">
                             <div class="cal-widget-avatar">L</div>
                             <div class="cal-widget-info">
@@ -458,7 +458,7 @@ html.embed-hero .hero-h1-line{display:block}
                         </div>
                         <div class="cal-foot">
                             <span>Zeitzone · Frankfurt</span>
-                            <span>Calendly →</span>
+                            <span>Direkt buchen →</span>
                         </div>
                     </div>
                 </div>
@@ -517,7 +517,7 @@ html.embed-hero .hero-h1-line{display:block}
                         <p class="eyebrow">So läuft Ihr Erstgespräch</p>
                         <h2>Vier Schritte. <em>Eine ehrliche Stunde.</em></h2>
                         <div class="online-steps">
-                            <div class="online-step"><span class="online-step-num">1</span><div><h4>Slot wählen</h4><p>Im Calendly-Widget oben buchen Sie 45 Minuten direkt. Zoom-Link kommt per Mail.</p></div></div>
+                            <div class="online-step"><span class="online-step-num">1</span><div><h4>Slot wählen</h4><p>Im Buchungs-Widget oben buchen Sie 45 Minuten direkt. Zoom-Link kommt per Mail.</p></div></div>
                             <div class="online-step"><span class="online-step-num">2</span><div><h4>Vorab-Brief</h4><p>Sie bekommen drei Fragen, die ich Ihnen vorher schicke. Antworten sind freiwillig — aber sparen uns 10 Minuten Smalltalk.</p></div></div>
                             <div class="online-step"><span class="online-step-num">3</span><div><h4>Das Gespräch</h4><p>Sie erzählen, ich höre zu. Ich frage, Sie schärfen. Am Ende: Eine klare Einschätzung, ob und wie ich helfen kann.</p></div></div>
                             <div class="online-step"><span class="online-step-num">4</span><div><h4>Ihre Entscheidung</h4><p>Kein Vertrag wird im Termin unterschrieben. Sie überlegen 48 Stunden, ich auch. Erst dann entscheiden wir gemeinsam.</p></div></div>
@@ -641,7 +641,7 @@ html.embed-hero .hero-h1-line{display:block}
                         <p class="eyebrow">Direkter Kontakt</p>
                         <h2 style="margin-bottom:24px;">Schreiben Sie mir. <em>Ich melde mich.</em></h2>
                         <p>Eine kurze Mail reicht. Ich antworte innerhalb von 24 Stunden — auch am Wochenende, falls dringend.</p>
-                        <p>Wenn Sie lieber direkt buchen wollen, geht das oben im Calendly-Widget.</p>
+                        <p>Wenn Sie lieber direkt buchen wollen, geht das oben im Buchungs-Widget.</p>
                         <div class="k-direct">
                             <h4>Direkt</h4>
                             <div class="k-direct-item"><span>Telefon</span><a href="tel:+496995201240">069 9520 1240</a></div>
