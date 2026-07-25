@@ -22,6 +22,8 @@
       { "source": "/api/deepResearch", "function": { "functionId": "deepResearch", "region": "europe-west1" } },
       { "source": "/api/generateMockup", "function": { "functionId": "generateMockup", "region": "europe-west1" } },
       { "source": "/api/securityAudit", "function": { "functionId": "securityAudit", "region": "europe-west1" } },
+      { "source": "/api/adEvidence", "function": { "functionId": "adEvidence", "region": "europe-west1" } },
+      { "source": "/api/jobSignals", "function": { "functionId": "jobSignals", "region": "europe-west1" } },
       { "source": "**", "destination": "/index.html" }
     ],
     "headers": [

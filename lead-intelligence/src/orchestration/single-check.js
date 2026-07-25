@@ -4,7 +4,7 @@
 import { state } from '../state.js';
 import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces, nearbyPlaces } from '../api/places.js';
-import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch, generateMockup, securityAudit } from '../api/cloud-functions.js';
+import { analyzeScreenshot, analyzeReviews, getDomainAge, getDomainAuthority, getSearchVolume, analyzeSocialProfiles, checkEmailDeliverability, generateMockupSuggestion, enrichContact, deepResearch, generateMockup, securityAudit, adEvidence, jobSignals } from '../api/cloud-functions.js';
 import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
@@ -35,6 +35,7 @@ import { checkFreshness } from '../analysis/wayback-freshness.js';
 import { detectSurgeIntent } from '../analysis/surge-intent.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
+import { deriveJobOpenings } from '../signals/employer-match.js';
 import { assessBuyingIntent, computeAdWaste } from '../analysis/buying-intent.js';
 import { assessDigitalMaturity } from '../analysis/digital-maturity.js';
 import { assessConversationReadiness } from '../analysis/conversation-ready.js';
@@ -136,14 +137,29 @@ export async function runSingleCheck() {
             psiData
         }).catch(err => { console.warn('securityAudit promise rejected:', err?.message || err); return null; });
 
+        // Ad-Evidence: statischer Werbe-Nachweis aus Quelltext + GTM-Container.
+        // Repariert die Consent-Blindheit der PSI-Erkennung (Ad-Tags feuern in DE
+        // erst nach dem Cookie-Banner, das Lighthouse nie wegklickt).
+        const adEvidencePromise = adEvidence({ url })
+            .catch(err => { console.warn('adEvidence promise rejected:', err?.message || err); return null; });
+
+        // Job-Signale: offene Stellen beim Betrieb (Arbeitsagentur, gratis).
+        // Zweites hartes Kaufsignal — wer einstellt, hat Budget und wächst.
+        const cityGuess = (place?.formattedAddress || '').match(/\b\d{5}\s+([^,]+)/)?.[1]?.trim() || '';
+        const jobSignalsPromise = businessName
+            ? jobSignals({ arbeitgeber: businessName, wo: cityGuess, size: 25 })
+                .catch(err => { console.warn('jobSignals promise rejected:', err?.message || err); return null; })
+            : Promise.resolve(null);
+
         // Phase 4: KI-Analyse parallel — analyzeContent + analyzeBranchStandards entfernt (Deep Research absorbiert beides)
         showLoading('④ KI-Analyse (Screenshot + Reviews + Domain + Deep Research)...');
         const screenshot = psiData?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
 
         let screenshotAnalysis = null, reviewSentiment = null,
-            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null, mockupResult = null, securityResult = null;
+            domainAge = null, domainAuthority = null, searchVolume = null, deepResearchResult = null, mockupResult = null, securityResult = null,
+            adEvidenceResult = null, jobsApiResult = null;
         try {
-            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult, mockupResult, securityResult] = await Promise.all([
+            [screenshotAnalysis, reviewSentiment, domainAge, domainAuthority, searchVolume, deepResearchResult, mockupResult, securityResult, adEvidenceResult, jobsApiResult] = await Promise.all([
                 analyzeScreenshot(screenshot).catch(() => null),
                 analyzeReviews(domain).catch(() => null),
                 getDomainAge(domain).catch(() => null),
@@ -151,7 +167,9 @@ export async function runSingleCheck() {
                 getSearchVolume(`${brancheForAI} ${place?.formattedAddress?.split(',').pop()?.trim() || ''}`.trim() || domain).catch(() => null),
                 deepResearchPromise,
                 mockupPromise,
-                securityAuditPromise
+                securityAuditPromise,
+                adEvidencePromise,
+                jobSignalsPromise
             ]);
         } catch(e) { console.error('KI-Analyse failed:', e); }
 
@@ -195,7 +213,7 @@ export async function runSingleCheck() {
         const abTest = sv();
         const drift = cd(domain, result.leadScore);
         const wayback = null; // Wayback ist zu langsam — wird nicht mehr blockierend aufgerufen
-        const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile });
+        const localAnalysis = runLocalAnalysis({ ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile, adEvidenceResult, jobsApiResult, businessName });
 
         // ── SOFORT rendern — der User soll nicht länger warten ──
         hideLoading();
@@ -308,7 +326,7 @@ function renderResult(data) {
  * Keine DOM-Zugriffe, keine API-Calls — pure Berechnung.
  */
 function runLocalAnalysis(p) {
-    const { ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile } = p;
+    const { ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile, adEvidenceResult = null, jobsApiResult = null, businessName = null } = p;
 
     // Ads- und Job-Signale kommen GRATIS aus denselben PSI-Network-Requests.
     // Sie wurden bis 2026-07-25 zwar berechnet, aber nur im Tab "Experimentell"
@@ -316,7 +334,7 @@ function runLocalAnalysis(p) {
     // uebergeben. Damit waren die beiden staerksten Kaufsignale (Anzeigen laufen,
     // Betrieb stellt ein) strukturell tot: von 15 moeglichen Surge-Punkten waren
     // 7 unerreichbar, und `hasSurge` (>=5) sprang praktisch nie an.
-    const googleAds = detectGoogleAds(psiData);
+    const googleAds = detectGoogleAds(psiData, adEvidenceResult);
     const jobSignal = detectJobSignals(psiData);
 
     const surgeIntent = detectSurgeIntent(footprint, jobSignal, googleAds, place);
@@ -345,11 +363,23 @@ function runLocalAnalysis(p) {
 
     // ── Kaufsignal-Achse: gibt der Betrieb JETZT Geld fuer Kundengewinnung aus? ──
     // Bewusst getrennt vom Problem-Beleg (siehe analysis/buying-intent.js).
+    // Echte Stellenzahl aus der Arbeitsagentur — konservativ gematcht, damit ein
+    // Gattungsname wie "Zahnarztpraxis Koeln" nicht fremde Stellen einsammelt.
+    const { openings: jobOpenings, employer: matchedEmployer } =
+        deriveJobOpenings(jobsApiResult, businessName || place?.displayName?.text || '',
+            (place?.formattedAddress || '').match(/\b\d{5}\s+([^,]+)/)?.[1]?.trim() || '');
+
+    // Meta-Pixel kann ebenfalls erst im GTM-Container stehen — dann kennt der
+    // PSI-basierte Footprint ihn nicht. Statische Evidenz reicht ihn nach.
+    const fp = (googleAds.metaPixel?.found && !footprint?.hasFbPixel)
+        ? { ...(footprint || {}), hasFbPixel: true, fbPixelSource: googleAds.metaPixel.source }
+        : footprint;
+
     const buyingIntent = assessBuyingIntent({
         googleAds,
-        footprint,
+        footprint: fp,
         jobSignal,
-        jobOpenings: null, // echte Stellenzahl (Arbeitsagentur-API) noch nicht auf main
+        jobOpenings,
         reviewRecency: reviewVelocity?.available
             ? { daysSinceLast: reviewVelocity.daysSinceLastReview, velocity: reviewVelocity.velocity, n: reviewVelocity.n }
             : null
@@ -369,7 +399,8 @@ function runLocalAnalysis(p) {
         cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
         pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight,
         reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad, decision,
-        googleAds, jobSignal, buyingIntent, adWaste
+        googleAds, jobSignal, buyingIntent, adWaste,
+        adEvidence: adEvidenceResult, jobsApi: jobsApiResult, jobOpenings, matchedEmployer
     };
 }
 

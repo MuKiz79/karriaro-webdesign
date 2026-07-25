@@ -14,6 +14,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
 const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
+const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
 const {
     extractSubPages,
     htmlToText,
@@ -1501,6 +1502,208 @@ exports.securityAudit = onRequest(
         } catch (err) {
             console.error("securityAudit failed:", err);
             res.status(500).json({ error: "Security-Audit fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// AD-EVIDENCE (2026-07-25) — statischer Werbe-Nachweis ohne Cookie-Einwilligung.
+//
+// Die Werbe-Erkennung des Lead-Tools las bisher die PSI-Network-Requests. Auf
+// deutschen Seiten ist das blind: empirisch an fünf Betrieben gemessen, die
+// nachweislich Google Ads schalten — 0 von 5 lieferten ein Ad-Tag aus, weil die
+// Tags nach DSGVO im Tag-Manager liegen und erst nach Einwilligung feuern.
+// Dieser Endpoint liest stattdessen den Seiten-Quelltext UND den öffentlich
+// abrufbaren GTM-Container. Nachher: 3 von 5 (2 harte Funde, 1 Indiz), die
+// beiden nicht erkannten Fälle sind eine Bot-Wall und eine Seite ganz ohne
+// Tag-Infrastruktur. Analyse-Logik: lib/ad-evidence.js (rein, ohne Netz).
+// ════════════════════════════════════════════════════════════════════════════
+
+const AD_EVIDENCE_CACHE_HOURS = 168;         // 7 Tage — Werbeverhalten ändert sich langsam
+const AD_EVIDENCE_BLOCKED_CACHE_HOURS = 24;  // Bot-Wall kann temporär sein → kürzer halten
+
+function adEvidenceCacheKey(url) {
+    const u = String(url || "").toLowerCase().replace(/\/+$/, "");
+    return crypto.createHash("sha256").update(u).digest("hex").slice(0, 24);
+}
+
+async function loadAdEvidenceCache(url) {
+    try {
+        const snap = await db.collection("adEvidence").doc(adEvidenceCacheKey(url)).get();
+        if (!snap.exists) return null;
+        const data = snap.data();
+        if ((data.expiresAtMs || 0) < Date.now()) return null;
+        return data;
+    } catch (err) {
+        console.warn("adEvidence cache read failed:", err.message);
+        return null;
+    }
+}
+
+async function saveAdEvidenceCache(url, payload, hours) {
+    try {
+        const expiresAtMs = Date.now() + hours * 3600000;
+        await db.collection("adEvidence").doc(adEvidenceCacheKey(url)).set({
+            ...payload,
+            cachedUrl: url,
+            cachedAtMs: Date.now(),
+            expiresAtMs,
+            expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+        });
+    } catch (err) {
+        console.warn("adEvidence cache write failed:", err.message);
+    }
+}
+
+// ─── adEvidence ─── POST {url, force?}
+exports.adEvidence = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 45, cors: false },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "adEvidence", 60, 3600)) return;
+
+        const startMs = Date.now();
+        let { url, force = false } = req.body || {};
+        if (!url || typeof url !== "string") return res.status(400).json({ error: "url required" });
+        if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+        if (!force) {
+            const cached = await loadAdEvidenceCache(url);
+            if (cached?.adEvidence) {
+                return res.json({
+                    ok: true, cached: true, cachedAtMs: cached.cachedAtMs,
+                    adEvidence: cached.adEvidence,
+                    gtmContainers: cached.gtmContainers || [],
+                    cmp: cached.cmp || null,
+                    blocked: cached.blocked || null,
+                    fetchedAt: cached.fetchedAt || null,
+                    meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
+                });
+            }
+        }
+
+        try {
+            const { html, finalUrl } = await fetchHtml(url, 8000);
+
+            // Bot-Wall ist NICHT "keine Werbung" — sonst entsteht dieselbe
+            // Falsch-Negativ-Klasse wie beim Consent-Gating. Leere Evidenz,
+            // blocked-Flag, kurze TTL.
+            const blocked = detectBlockedResponse(html, null);
+            if (blocked) {
+                const payload = {
+                    adEvidence: buildAdEvidence({}, []),
+                    gtmContainers: [], cmp: null, blocked,
+                    fetchedAt: new Date().toISOString(),
+                    meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
+                };
+                await saveAdEvidenceCache(url, payload, AD_EVIDENCE_BLOCKED_CACHE_HOURS);
+                return res.json({ ok: true, cached: false, ...payload });
+            }
+
+            const htmlScan = scanHtmlForAdTags(html);
+
+            // Container parallel — seriell würden 3×8 s + HTML-Fetch das
+            // Zeitbudget reißen. allSettled: ein 404 darf die anderen nicht kippen.
+            const ids = htmlScan.gtmIds.slice(0, MAX_CONTAINERS);
+            const settled = await Promise.allSettled(ids.map(id =>
+                fetchHtml(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`, 8000)
+            ));
+            const gtmContainers = settled.map((r, i) => {
+                if (r.status !== "fulfilled") {
+                    return {
+                        id: ids[i], fetched: false,
+                        reason: "Container nicht öffentlich abrufbar (Server-side GTM?)"
+                    };
+                }
+                const js = r.value.html || "";
+                const hits = scanGtmContainer(js);
+                return {
+                    id: ids[i], fetched: true,
+                    sizeKb: Math.round(js.length / 1024),
+                    hits,
+                    consentModeDenied: hits.consentModeDenied
+                };
+            });
+
+            const payload = {
+                adEvidence: buildAdEvidence(htmlScan, gtmContainers),
+                gtmContainers,
+                cmp: htmlScan.cmp,
+                blocked: null,
+                fetchedAt: new Date().toISOString(),
+                meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
+            };
+            await saveAdEvidenceCache(url, payload, AD_EVIDENCE_CACHE_HOURS);
+            res.json({ ok: true, cached: false, ...payload });
+        } catch (err) {
+            console.error("adEvidence failed:", err);
+            // Generische Meldung nach außen (kein SSRF-/DNS-Detail-Leak).
+            res.status(502).json({ error: "Seite nicht abrufbar" });
+        }
+    }
+);
+
+// ════════════════════════════════════════════════════════════════════════════
+// JOB-SIGNALE (2026-06-26, auf main portiert 2026-07-25): offene Stellen je
+// Branche×Ort bzw. je Arbeitgeber über die OFFIZIELLE Arbeitsagentur-Jobsuche-API
+// (gratis, statische Public-clientId, kein Account). "stellt ein" = Wachstums-
+// und Budget-Signal und damit ein echtes Kaufsignal.
+// ════════════════════════════════════════════════════════════════════════════
+
+const JOBS_API_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs";
+const JOBS_API_KEY = "jobboerse-jobsuche";   // offizielle statische Public-clientId der Bundesagentur
+const JOBS_CACHE_HOURS = 6;
+
+// ─── jobSignals ─── POST {was?, wo?, arbeitgeber?, size?}
+exports.jobSignals = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 30, cors: false },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        if (await enforceRateLimit(db, req, res, "jobSignals", 90, 3600)) return;
+
+        const b = req.body || {};
+        const was = String(b.was || "").trim().slice(0, 80);
+        const wo = String(b.wo || "").trim().slice(0, 80);
+        const arbeitgeber = String(b.arbeitgeber || "").trim().slice(0, 120);
+        const size = Math.min(Math.max(parseInt(b.size, 10) || 5, 1), 25);
+        if (!was && !arbeitgeber) return res.status(400).json({ error: "was oder arbeitgeber erforderlich" });
+
+        const cacheKey = crypto.createHash("sha256").update(`${was}|${wo}|${arbeitgeber}|${size}`).digest("hex").slice(0, 24);
+        try {
+            const snap = await db.collection("jobSignals").doc(cacheKey).get();
+            if (snap.exists && (snap.data().expiresAtMs || 0) > Date.now()) {
+                return res.json({ ...snap.data().payload, cached: true });
+            }
+        } catch (e) { /* cache miss → live */ }
+
+        try {
+            const url = new URL(JOBS_API_URL);
+            if (was) url.searchParams.set("was", was);
+            if (wo) { url.searchParams.set("wo", wo); url.searchParams.set("umkreis", "25"); }
+            if (arbeitgeber) url.searchParams.set("arbeitgeber", arbeitgeber);
+            url.searchParams.set("size", String(size));
+            const r = await fetch(url, { headers: { "X-API-Key": JOBS_API_KEY }, signal: AbortSignal.timeout(20000) });
+            if (!r.ok) return res.status(502).json({ error: `Jobsuche ${r.status}` });
+            const data = await r.json();
+            const jobs = (data.stellenangebote || []).map(s => ({
+                titel: s.titel || null,
+                arbeitgeber: s.arbeitgeber || null,
+                ort: (s.arbeitsort && s.arbeitsort.ort) || null,
+                eintrittsdatum: s.eintrittsdatum || null
+            }));
+            const employers = [...new Set(jobs.map(j => j.arbeitgeber).filter(Boolean))];
+            const payload = { ok: true, total: data.maxErgebnisse || jobs.length, count: jobs.length, employers, jobs };
+            const expiresAtMs = Date.now() + JOBS_CACHE_HOURS * 3600000;
+            db.collection("jobSignals").doc(cacheKey).set({
+                payload, expiresAtMs,
+                expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+            }).catch(() => {});
+            res.json(payload);
+        } catch (err) {
+            console.error("jobSignals failed:", err);
+            res.status(500).json({ error: "Jobsuche fehlgeschlagen", details: String(err && err.message || err) });
         }
     }
 );

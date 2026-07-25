@@ -88,6 +88,36 @@ describe('assessBuyingIntent — bewiesenes Geldausgeben', () => {
         expect(r.missing.join(' ')).toMatch(/Keine bezahlte Werbung/);
     });
 
+    it('Werbe-Consent-Mode wiegt staerker als blanker Tag-Manager, bleibt aber Indiz', () => {
+        const acm = assessBuyingIntent({
+            googleAds: { active: false, signals: [], hasTagManager: true, adConsentMode: { found: true, params: ['ad_storage'], redaction: true } }
+        });
+        const gtmOnly = assessBuyingIntent({
+            googleAds: { active: false, signals: [], hasTagManager: true }
+        });
+        const echt = assessBuyingIntent({ googleAds: { active: true, signals: ['Google Ads aktiv'] } });
+
+        expect(acm.signals.some(s => s.key === 'ad_consent_mode')).toBe(true);
+        expect(acm.score).toBeGreaterThan(gtmOnly.score);
+        expect(acm.score).toBeLessThan(echt.score);
+        expect(acm.isProvenSpender).toBe(false);
+        expect(acm.missing.join(' ')).toMatch(/nicht belegt/);
+    });
+
+    it('eine Bot-Wall erzeugt weder Signal noch Strafe', () => {
+        const r = assessBuyingIntent({
+            googleAds: { active: false, signals: [], hasTagManager: false, blocked: 'challenge' }
+        });
+        expect(r.signals).toEqual([]);
+        expect(r.missing.join(' ')).toMatch(/blockiert/);
+    });
+
+    it('Meta-Pixel aus dem Container weist die Quelle korrekt aus', () => {
+        const r = assessBuyingIntent({ footprint: { hasFbPixel: true, fbPixelSource: 'gtm-container' } });
+        const s = r.signals.find(x => x.key === 'meta_ads');
+        expect(s.proof).toMatch(/GTM-Container/);
+    });
+
     it('Score ist bei 100 gedeckelt und Signale sind nach Gewicht sortiert', () => {
         const r = assessBuyingIntent({
             googleAds: { active: true, signals: ['Google Ads aktiv', 'Google Display Network', 'Microsoft Ads'] },

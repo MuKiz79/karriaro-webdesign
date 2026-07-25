@@ -108,3 +108,24 @@ export function securityAudit({ url, psiData = null, force = false } = {}) {
     if (!url) return Promise.resolve(null);
     return callWebdesign('securityAudit', { url, psiData, force }, { timeout: 45000 });
 }
+
+/**
+ * Ad-Evidence — statischer Werbe-Nachweis aus Seiten-Quelltext und öffentlichem
+ * GTM-Container. Repariert die Consent-Blindheit der PSI-basierten Erkennung
+ * (Ad-Tags feuern in DE erst nach Cookie-Einwilligung).
+ * Liefert { ok, cached, adEvidence, gtmContainers, cmp, blocked, meta }.
+ */
+export function adEvidence({ url, force = false } = {}) {
+    if (!url) return Promise.resolve(null);
+    return callWebdesign('adEvidence', { url, force }, { timeout: 30000 });
+}
+
+/**
+ * Job-Signale — offene Stellen je Arbeitgeber (oder Branche×Ort) über die
+ * gratis Arbeitsagentur-Jobsuche-API. „stellt ein" = Wachstums- und Budget-Signal.
+ * Liefert { ok, total, count, employers, jobs }.
+ */
+export function jobSignals({ was = '', wo = '', arbeitgeber = '', size = 5 } = {}) {
+    if (!was && !arbeitgeber) return Promise.resolve(null);
+    return callWebdesign('jobSignals', { was, wo, arbeitgeber, size }, { timeout: 25000 });
+}

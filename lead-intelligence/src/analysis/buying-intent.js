@@ -50,7 +50,8 @@ const W = {
     reviewsVelocity: 8, // >= 5 Bewertungen/Monat
     analytics: 8,       // misst bereits — versteht Zahlen
     socialBreadth: 8,   // >= 3 gepflegte Kanäle
-    tagManager: 12      // GTM ohne sichtbare Ad-Tags — Werbung wahrscheinlich, nicht bewiesen
+    tagManager: 12,     // GTM ohne sichtbare Ad-Tags — Werbung wahrscheinlich, nicht bewiesen
+    adConsentMode: 16   // Werbe-Consent-Mode konfiguriert — staerkeres Indiz, weiter kein Beweis
 };
 
 /** Ab hier gilt Kaufbereitschaft als BEWIESEN (nicht nur wahrscheinlich). */
@@ -97,7 +98,10 @@ export function assessBuyingIntent({
     if (hasMetaPixel) {
         add('meta_ads', 'Meta-Pixel aktiv',
             'Facebook-/Instagram-Werbung läuft oder ist vorbereitet.',
-            W.metaAds, 'Meta-Pixel in den Network-Requests der Startseite');
+            W.metaAds,
+            footprint?.fbPixelSource === 'gtm-container'
+                ? 'Meta-Pixel im GTM-Container konfiguriert'
+                : 'Meta-Pixel in den Network-Requests der Startseite');
     }
     if (hasBing) {
         add('bing_ads', 'Microsoft Ads aktiv',
@@ -108,7 +112,19 @@ export function assessBuyingIntent({
         // professionell, die Werbung ist nur hinter dem Cookie-Banner unsichtbar
         // (siehe signals/google-ads.js — empirisch belegte Consent-Blindheit).
         // Zaehlt als schwaches Signal, NICHT als bewiesenes Werbebudget.
-        if (googleAds?.hasTagManager) {
+        if (googleAds?.blocked) {
+            // Bot-Wall: daraus folgt gar nichts. Kein Signal, keine Strafe.
+            missing.push('Seite hat die Prüfung blockiert (Bot-Schutz) — Werbung weder belegt noch ausgeschlossen');
+        } else if (googleAds?.adConsentMode?.found) {
+            // Werbe-Einwilligung konfiguriert: stärkeres Indiz als ein blanker
+            // Tag-Manager, aber weiterhin kein Nachweis (Consent-Tools schreiben
+            // den Block oft als Vorlage mit).
+            add('ad_consent_mode', 'Werbe-Einwilligung konfiguriert',
+                'Consent Mode steuert Werbe-Cookies — der Betrieb hat Werbe-Tags, die er steuern muss.',
+                W.adConsentMode,
+                `Consent-Parameter: ${(googleAds.adConsentMode.params || []).join(', ')}${googleAds.adConsentMode.redaction ? ', ads_data_redaction' : ''}`);
+            missing.push('Keine Conversion-ID gefunden — Werbung wahrscheinlich, aber nicht belegt');
+        } else if (googleAds?.hasTagManager) {
             add('tag_manager', 'Marketing-Tags verwaltet',
                 'Google Tag Manager im Einsatz — Anzeigen sind wahrscheinlich, aber hinter dem Cookie-Banner nicht messbar.',
                 W.tagManager, 'googletagmanager.com in den Network-Requests');

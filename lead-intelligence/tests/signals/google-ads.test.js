@@ -61,3 +61,69 @@ describe('detectGoogleAds', () => {
         expect(detectGoogleAds({}).consentBlind).toBe(false);
     });
 });
+
+describe('detectGoogleAds mit statischer Ad-Evidenz', () => {
+    // PSI sieht nur den Tag-Manager — der reale DE-Normalfall.
+    const psiConsentBlind = psi([
+        'https://beispiel.de/',
+        'https://www.googletagmanager.com/gtm.js?id=GTM-K23ZMF3'
+    ]);
+    const evidence = (over = {}) => ({
+        ok: true, blocked: null,
+        gtmContainers: [{ id: 'GTM-K23ZMF3', fetched: true }],
+        adEvidence: {
+            googleAds: { found: false, ids: [], source: null, confidence: null },
+            metaPixel: { found: false, ids: [], source: null, confidence: null },
+            microsoftAds: { found: false, ids: [], source: null, confidence: null },
+            display: { found: false, source: null },
+            adConsentMode: { found: false, params: [], redaction: false },
+            ...over
+        }
+    });
+
+    it('Container-Fund loest die Consent-Blindheit auf', () => {
+        const r = detectGoogleAds(psiConsentBlind, evidence({
+            googleAds: { found: true, ids: ['AW-636243025'], source: 'gtm-container', confidence: 'konfiguriert' }
+        }));
+        expect(r.active).toBe(true);
+        expect(r.consentBlind).toBe(false);
+        expect(r.signals.join(' ')).toMatch(/konfiguriert \(im GTM-Container/);
+        expect(r.evidence).toMatchObject({ source: 'gtm-container', confidence: 'konfiguriert' });
+        expect(r.insight).toMatch(/GTM-Container konfiguriert/);
+    });
+
+    it('Quelltext-Fund wird als "aktiv" ausgewiesen', () => {
+        const r = detectGoogleAds(psiConsentBlind, evidence({
+            googleAds: { found: true, ids: ['AW-111222333'], source: 'html', confidence: 'aktiv' }
+        }));
+        expect(r.evidence.confidence).toBe('aktiv');
+        expect(r.signals.join(' ')).toMatch(/Conversion-Tag im Quelltext/);
+    });
+
+    it('Werbe-Consent-Mode macht NICHT active — Indiz bleibt Indiz', () => {
+        const r = detectGoogleAds(psiConsentBlind, evidence({
+            adConsentMode: { found: true, params: ['ad_storage'], redaction: true }
+        }));
+        expect(r.active).toBe(false);
+        expect(r.adConsentMode.found).toBe(true);
+        expect(r.insight).toMatch(/kein Nachweis/);
+    });
+
+    it('eine Bot-Wall wird ignoriert und NICHT als "keine Werbung" gelesen', () => {
+        const r = detectGoogleAds(psiConsentBlind, {
+            ok: true, blocked: 'challenge',
+            adEvidence: { googleAds: { found: true, ids: ['AW-1'], source: 'html', confidence: 'aktiv' } }
+        });
+        expect(r.active).toBe(false);       // geblockte Evidenz zaehlt nicht
+        expect(r.blocked).toBe('challenge');
+        expect(r.insight).toMatch(/blockiert/);
+    });
+
+    it('ohne adEvidence bleibt das Verhalten unveraendert', () => {
+        const a = detectGoogleAds(psiConsentBlind);
+        const b = detectGoogleAds(psiConsentBlind, null);
+        expect(a.active).toBe(false);
+        expect(a.consentBlind).toBe(true);
+        expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+    });
+});

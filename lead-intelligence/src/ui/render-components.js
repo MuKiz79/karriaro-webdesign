@@ -834,6 +834,12 @@ export function renderSignals(el, data) {
                 <span class="feature-detail" title="${escapeHtml(s.proof || '')}">+${s.weight}</span>
             </div>`).join('')}
             ${(bi.missing || []).map(m => `<div class="feature-row"><span class="stat-label" style="opacity:0.55">${escapeHtml(m)}</span></div>`).join('')}
+            ${data.googleAds?.evidence ? `<div class="metric-desc" style="margin-top:8px;font-size:11px;opacity:0.75">
+                Beleg: ${escapeHtml(data.googleAds.evidence.ids.slice(0, 3).join(', '))}
+                ${data.googleAds.evidence.source === 'gtm-container' ? '— im öffentlichen GTM-Container gefunden' : '— im Seiten-Quelltext gefunden'}
+                ${(data.adEvidence?.gtmContainers || []).filter(c => c.fetched).map(c => ` · Container ${escapeHtml(c.id)} (${c.sizeKb} KB)`).join('')}
+            </div>` : ''}
+            ${data.matchedEmployer ? `<div class="metric-desc" style="margin-top:4px;font-size:11px;opacity:0.75">Stellen-Treffer: ${escapeHtml(data.matchedEmployer)}</div>` : ''}
             ${aw?.active ? `<div class="pitch-box" style="margin-top:12px">
                 <h3>Anzeigen laufen auf eine schwache Seite</h3>
                 <p>${escapeHtml(aw.pitch)}</p>

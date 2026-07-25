@@ -19,9 +19,11 @@
 const PLACES_KEY = 'kz_places_cache';
 const SCORE_KEY = 'kz_score_cache';
 const VISION_KEY = 'kz_vision_cache';
+const ADEV_KEY = 'kz_adev_cache';
 const PLACES_TTL = 14 * 86400000; // 14 Tage
 const SCORE_TTL = 7 * 86400000;   // 7 Tage
 const VISION_TTL = 14 * 86400000; // 14 Tage (Design ändert sich langsam)
+const ADEV_TTL = 7 * 86400000;    // 7 Tage — identisch zur serverseitigen TTL
 const MAX_PLACES_ENTRIES = 600;
 
 /** Geschätzter Listenpreis pro Places-Text-Search (Enterprise+Atmosphere-SKU). */
@@ -158,7 +160,7 @@ export function countUncached(queries) {
 export function getCachedScore(domain) {
     const m = map(SCORE_KEY);
     const e = m[domain];
-    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null }; }
+    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null, jobIntent: e.jobIntent || null }; }
     return null;
 }
 // jobIntent kam 2026-07-25 dazu. Aeltere Cache-Eintraege haben das Feld nicht —
@@ -178,4 +180,18 @@ export function getCachedVision(domain) {
 export function setCachedVision(domain, vision) {
     map(VISION_KEY)[domain] = { at: Date.now(), vision };
     scheduleFlush(VISION_KEY);
+}
+
+// ── Ad-Evidence-Cache (statischer Werbe-Nachweis je Domain) ──────────────────
+// Der Scan lädt beim Nachfassen der Top-Treffer je Lead das Seiten-HTML plus bis
+// zu drei GTM-Container. Das ist der teuerste Einzelschritt im Scanner, ändert
+// sich aber kaum — deshalb dieselbe 7-Tage-TTL wie serverseitig.
+export function getCachedAdEvidence(domain) {
+    const e = map(ADEV_KEY)[domain];
+    if (e && Date.now() - e.at < ADEV_TTL) { e.at = Date.now(); scheduleFlush(ADEV_KEY); return e.ev; }
+    return null;
+}
+export function setCachedAdEvidence(domain, ev) {
+    map(ADEV_KEY)[domain] = { at: Date.now(), ev };
+    scheduleFlush(ADEV_KEY);
 }

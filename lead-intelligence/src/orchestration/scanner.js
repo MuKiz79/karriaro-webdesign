@@ -22,6 +22,7 @@ import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
+import { adEvidence } from '../api/cloud-functions.js';
 import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
@@ -36,7 +37,7 @@ import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { openStudio } from '../ui/render-outreach.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { pickDistricts } from '../data/stadtteile.js';
-import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency } from '../api/scan-cache.js';
+import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCachedScore, getCachedVision, setCachedVision, PLACES_COST_USD, deriveReviewRecency, getCachedAdEvidence, setCachedAdEvidence } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { escapeHtml } from '../lib/escape-html.js';
 import { saveSearch } from '../crm/saved-searches.js';
@@ -282,6 +283,50 @@ export async function runScanner() {
         showProgress(pct, `③ ${done}/${candidates.length} analysiert...`);
     });
 
+    // Stufe 2a: statischer Werbe-Nachweis für die Top-N.
+    // Die PSI-Ad-Erkennung ist auf deutschen Seiten blind (empirisch 0/5 echte
+    // Werbetreibende), weil Ad-Tags im GTM-Container liegen und erst nach dem
+    // Cookie-Banner feuern. Der adEvidence-Endpoint liest Quelltext + Container
+    // statisch. Bewusst NUR für aussichtsreiche Treffer: pro Lead ein HTML- plus
+    // bis zu drei Container-Fetches — der teuerste Schritt im Scanner.
+    // Läuft VOR dem Bild-Check, damit dessen Neuberechnung das aktualisierte
+    // adIntent mitnimmt (sonst ginge die Vision-Dämpfung verloren).
+    if (!state.aborted) {
+        const AD_EVIDENCE_TOP_N = 15;
+        const adCands = leads.filter(l => l.opportunity >= 45 && !l.adIntent?.active)
+            .sort((a, b) => b.opportunity - a.opportunity).slice(0, AD_EVIDENCE_TOP_N);
+        if (adCands.length) {
+            let aDone = 0;
+            await runWithConcurrency(adCands, 3, async (l) => {
+                if (state.aborted) return;
+                let ev = getCachedAdEvidence(l.domain);
+                if (!ev) {
+                    ev = await adEvidence({ url: l.websiteUri }).catch(() => null);
+                    if (ev?.ok) setCachedAdEvidence(l.domain, ev);
+                }
+                const e = (ev?.ok && !ev.blocked) ? ev.adEvidence : null;
+                if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
+                    const sig = [];
+                    if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
+                    if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
+                    if (e.microsoftAds?.found) sig.push('Microsoft Ads');
+                    l.adIntent = { active: true, signals: sig };
+                    const re = computeOpportunity({
+                        ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
+                        techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
+                        adIntent: l.adIntent, jobIntent: l.jobIntent,
+                        seasonal: seasonalTriggerFor(l.place.primaryType)
+                    });
+                    l.opportunity = re.opportunity; l.leadScore = re.opportunity;
+                    l.badnessScore = re.badnessScore; l.reasons = re.reasons;
+                    l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
+                }
+                aDone++;
+                showProgress(95 + Math.round((aDone / adCands.length) * 1), `④ Werbe-Check Top ${aDone}/${adCands.length}…`);
+            });
+        }
+    }
+
     // Stufe 2: günstige Vision-Verfeinerung der Top-N (aus dem schon vorhandenen
     // PSI-Screenshot) — fängt "modern aber langsam" ab, bevor du teuer reingehst.
     if (!state.aborted) {
@@ -311,7 +356,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
