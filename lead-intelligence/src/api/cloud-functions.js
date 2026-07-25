@@ -125,9 +125,12 @@ export function adEvidence({ url, force = false } = {}) {
  * gratis Arbeitsagentur-Jobsuche-API. „stellt ein" = Wachstums- und Budget-Signal.
  * Liefert { ok, total, count, employers, jobs }.
  */
-export function jobSignals({ was = '', wo = '', arbeitgeber = '', size = 5 } = {}) {
+export function jobSignals({ was = '', wo = '', arbeitgeber = '', size = 5, retries = 1 } = {}) {
     if (!was && !arbeitgeber) return Promise.resolve(null);
-    return callWebdesign('jobSignals', { was, wo, arbeitgeber, size }, { timeout: 25000 });
+    // retries ist konfigurierbar, weil der Regionen-Radar viele Calls in Serie
+    // feuert: das Backend erlaubt 90/h, ein Fehlversuch kostet mit retries=1
+    // zwei davon. Der Radar setzt deshalb retries:0 (siehe region-radar.js).
+    return callWebdesign('jobSignals', { was, wo, arbeitgeber, size }, { timeout: 25000, retries });
 }
 
 const PITCH_FN_URL = 'https://europe-west1-apex-executive.cloudfunctions.net/generatePitch';
