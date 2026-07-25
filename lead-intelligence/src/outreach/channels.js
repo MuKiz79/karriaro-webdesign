@@ -30,9 +30,75 @@ function sender() {
         company: p.company || 'Karriaro Webdesign',
         location: p.location || '',
         portfolio: p.portfolio || 'karriaro-webdesign.de',
-        priceRange: p.priceRange || 'ab 1.290 €'
+        priceRange: p.priceRange || 'ab 1.290 €',
+        email: p.email || 'kontakt@karriaro.de',
+        phone: p.phone || ''
     };
 }
+// Branche → die eingebauten Werkzeuge, die in der Pitch-Mail genannt werden
+// (knapp, ehrlich; gleiche Logik wie die generierte Seite).
+function toolsClauseFor(branche) {
+    const b = String(branche || '').toLowerCase();
+    if (/makler|immobil/.test(b)) return 'eine Sofort-Wertermittlung, eine Objekt-Galerie und ein Marktbarometer';
+    if (/arzt|praxis|zahn|thera|medizin/.test(b)) return 'eine Online-Terminanfrage und eine klare Leistungsübersicht';
+    if (/anwalt|kanzlei|recht|steuer/.test(b)) return 'eine diskrete Erstanfrage und eine klare Leistungsübersicht';
+    if (/restaurant|gastro|café|cafe|hotel/.test(b)) return 'eine Tisch-/Reservierungsanfrage und eine ansprechende Speisekarte';
+    if (/friseur|beauty|kosmet|spa/.test(b)) return 'eine Online-Terminanfrage und eine Stil-Galerie';
+    if (/dach|sanit|elektr|handwerk|maler|bau|tischler|schreiner/.test(b)) return 'ein Foto-Anfrage-Werkzeug und ein Angebots-Assistent';
+    return 'ein Anfrage-Assistent und eine klare Leistungsübersicht';
+}
+
+/**
+ * Pitch-Mail im Avenius-Register — verweist auf die GENERIERTE,
+ * teilbare Pitch-Seite. Liefert {subject, body, recipientEmail}. Reine Funktion.
+ */
+export function buildPitchEmail(data, pitchUrl) {
+    const s = sender();
+    const biz = businessName(data);
+    const person = recipientPerson(data);
+    const branche = data?.companyProfile?.branche || data?.place?.primaryTypeDisplayName?.text || data?.place?.primaryType || '';
+    const city = (data?.place?.formattedAddress || '').split(',').pop()?.trim() || 'Ihrer Region';
+    const rating = data?.place?.rating;
+    const reviews = data?.place?.userRatingCount;
+    const greeting = person ? `Sehr geehrte/r ${person},` : 'Sehr geehrte Damen und Herren,';
+
+    const substanz = (rating && reviews)
+        ? `${biz} gehört mit ${String(rating).replace('.', ',')} Sternen aus rund ${reviews} Bewertungen zu den gut bewerteten Adressen in ${city}. Das ist Substanz, die man online sehen sollte.`
+        : `${biz} hat sich in ${city} eine echte Reputation erarbeitet — Substanz, die man online sehen sollte.`;
+
+    const body = [
+        greeting,
+        '',
+        `mein Name ist ${s.name} von ${s.company} — wir bauen handcodierte Websites für das KI-Zeitalter und achten darauf, wie sich Betriebe in der Region online präsentieren. ${biz} ist uns dabei aufgefallen.`,
+        '',
+        substanz,
+        '',
+        'Was online davon zu sehen ist, wird dem noch nicht ganz gerecht. Deshalb haben wir Ihnen nicht beschrieben, wie es aussehen könnte, sondern einen ersten Entwurf gebaut — als unverbindliche Gesprächsgrundlage:',
+        '',
+        pitchUrl,
+        '',
+        `Entscheidend ist nicht das Aussehen allein — die Seite arbeitet mit: ${toolsClauseFor(branche)}. Werkzeuge, die Ihnen Anfragen bringen, nicht nur ein neues Gewand.`,
+        '',
+        'Vor allem ist sie auf das vorbereitet, was gerade beginnt: Immer mehr Menschen fragen heute nicht Google, sondern ChatGPT oder Perplexity. Damit diese KI-Assistenten Sie verstehen und empfehlen können, haben wir Ihr Haus maschinenlesbar hinterlegt — daran arbeiten heute die wenigsten.',
+        '',
+        `Wir sind eine kleine Manufaktur — kein Baukasten, jede Seite ein handcodiertes Unikat. Der Entwurf ist unverbindlich und gehört Ihnen als Gesprächsgrundlage. Eine solche Seite ist ein einmaliges Projekt, kein Abo — ${s.priceRange.replace(/^ab\s*/, 'je nach Umfang ab ')}.`,
+        '',
+        'Hätten Sie in den nächsten Tagen 15 Minuten für ein kurzes Telefonat?',
+        '',
+        'Mit besten Grüßen',
+        s.name,
+        `${s.company} — handcodierte Websites für das KI-Zeitalter`,
+        [s.email, s.portfolio].filter(Boolean).join(' · '),
+        s.phone
+    ].filter(l => l !== undefined && l !== null).join('\n');
+
+    return {
+        subject: `Ein Entwurf für ${biz} — als Gesprächsgrundlage`,
+        body,
+        recipientEmail: data?.contactData?.allEmails?.[0] || data?.contactData?.email || null
+    };
+}
+
 function esc(s) {
     return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }

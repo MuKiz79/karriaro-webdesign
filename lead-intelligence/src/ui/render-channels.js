@@ -4,7 +4,8 @@
  * diese Funktionen an die Single-Check-Buttons).
  * @module ui/render-channels
  */
-import { buildLetter, buildCallSheet, buildLinkedIn } from '../outreach/channels.js';
+import { buildLetter, buildCallSheet, buildLinkedIn, buildPitchEmail } from '../outreach/channels.js';
+import { generatePitch } from '../api/cloud-functions.js';
 
 /** Werbebrief in eigenem Fenster oeffnen (isolierter A4-Druck). Popup-Fallback: neuer Tab. */
 export function printLetter(data, pack) {
@@ -56,5 +57,89 @@ export function showCallSheet(data, pack) {
     const close = () => el.remove();
     el.querySelector('[data-close]').addEventListener('click', close);
     el.querySelector('[data-print]').addEventListener('click', () => window.print());
+    el.addEventListener('click', (e) => { if (e.target === el) close(); });
+}
+
+const escHtml = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** Lead-Fakten aus dem Single-Check-`data` für die Pitch-Generierung ziehen. */
+function pitchFactsFrom(data) {
+    let domain = '';
+    try { domain = new URL(data.url).hostname.replace(/^www\./, ''); } catch { /* — */ }
+    return {
+        businessName: data?.place?.displayName?.text || data?.companyProfile?.name || domain || 'Ihr Unternehmen',
+        branche: data?.companyProfile?.branche || data?.place?.primaryType || null,
+        brancheLabel: data?.place?.primaryTypeDisplayName?.text || data?.companyProfile?.branche || null,
+        rating: data?.place?.rating ?? null,
+        reviewCount: data?.place?.userRatingCount ?? null,
+        address: data?.place?.formattedAddress || null,
+        city: (data?.place?.formattedAddress || '').split(',').pop()?.trim() || null,
+        websiteUri: data?.url || (domain ? `https://${domain}` : null),
+        services: Array.isArray(data?.companyProfile?.services) ? data.companyProfile.services : []
+    };
+}
+
+/**
+ * Pitch-Seite erzeugen (volle bespoke Seite via generatePitch), dann Ergebnis
+ * zeigen: teilbarer Link + die fertige Neva-Voice-Pitch-Mail (kopieren/öffnen).
+ */
+export async function runPitch(data, btn) {
+    const original = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Erzeuge Pitch-Seite… (~1–2 Min)'; }
+    try {
+        const res = await generatePitch(pitchFactsFrom(data));
+        if (!res || !res.ok || !res.url) {
+            window.alert(res?.error
+                ? `Pitch-Seite nicht erzeugt: ${res.error}`
+                : 'Die Pitch-Seite konnte nicht erzeugt werden. Bitte in einer Minute erneut versuchen (KI-Limit oder Überlast).');
+            return;
+        }
+        showPitchResult(data, res.url, res.cached);
+    } catch (e) {
+        window.alert('Pitch-Generierung fehlgeschlagen: ' + (e?.message || e));
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+    }
+}
+
+/** Overlay mit teilbarer Pitch-URL + fertiger Neva-Voice-Mail. */
+function showPitchResult(data, pitchUrl, cached) {
+    const mail = buildPitchEmail(data, pitchUrl);
+    const mailto = `mailto:${mail.recipientEmail ? encodeURIComponent(mail.recipientEmail) : ''}?subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}`;
+    const el = document.createElement('div');
+    el.className = 'channel-overlay';
+    el.innerHTML = `
+        <div class="channel-card pitch-result">
+            <p class="hero-eyebrow">Pitch-Seite${cached ? ' (bereits erzeugt)' : ' erzeugt'}</p>
+            <h2 class="channel-title">${escHtml(mail.subject)}</h2>
+            <div class="call-sec">
+                <div class="section-label">Teilbare Seite</div>
+                <p><a href="${escHtml(pitchUrl)}" target="_blank" rel="noopener">${escHtml(pitchUrl)}</a></p>
+                <div class="channel-btn-row">
+                    <button class="channel-btn" data-open>Seite öffnen</button>
+                    <button class="channel-btn" data-copyurl>Link kopieren</button>
+                </div>
+                <p class="call-legal">Hinweis: Der Entwurf ist auf <code>noindex</code> gesetzt — er wird nicht von Google indexiert und ist nur über diesen Link erreichbar.</p>
+            </div>
+            <div class="call-sec">
+                <div class="section-label">Pitch-Mail (Neva-Voice) — prüfen, dann senden</div>
+                <textarea class="studio-body" rows="12" data-mailbody readonly>${escHtml(mail.body)}</textarea>
+            </div>
+            <div class="channel-actions">
+                <button class="btn-copy-large" data-copymail>E-Mail kopieren</button>
+                <a class="btn-copy-large" style="text-decoration:none;text-align:center" href="${mailto}" data-mailto>In E-Mail-App öffnen</a>
+                <button class="btn-copy-large channel-close" data-close>Schließen</button>
+            </div>
+        </div>`;
+    document.body.appendChild(el);
+    const close = () => el.remove();
+    el.querySelector('[data-close]').addEventListener('click', close);
+    el.querySelector('[data-open]').addEventListener('click', () => window.open(pitchUrl, '_blank', 'noopener'));
+    el.querySelector('[data-copyurl]').addEventListener('click', (e) => {
+        navigator.clipboard.writeText(pitchUrl).then(() => { e.target.textContent = 'Kopiert ✓'; setTimeout(() => { e.target.textContent = 'Link kopieren'; }, 1600); });
+    });
+    el.querySelector('[data-copymail]').addEventListener('click', (e) => {
+        navigator.clipboard.writeText(`Betreff: ${mail.subject}\n\n${mail.body}`).then(() => { e.target.textContent = 'Kopiert ✓'; setTimeout(() => { e.target.textContent = 'E-Mail kopieren'; }, 1600); });
+    });
     el.addEventListener('click', (e) => { if (e.target === el) close(); });
 }

@@ -16,6 +16,9 @@ const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pi
 const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
 const {
+    PITCH_SYS, PITCH_CSP, buildPitchUserMessage, sanitizePitchHtml, pitchId, pitchNotFoundHtml
+} = require("./lib/pitch-generator.js");
+const {
     extractSubPages,
     htmlToText,
     fetchPagesParallel,
@@ -64,7 +67,7 @@ const SOFORT_ADMIN_KEY = defineSecret("SOFORT_ADMIN_KEY"); // Founder-Token für
 const DEEP_RESEARCH_MODEL = "claude-sonnet-4-6"; // Sprint 253: sonnet-4-20250514 retired (404) → aktueller Sonnet
 const DEEP_RESEARCH_CACHE_DAYS = 7;
 
-const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "https://m.karriaro-webdesign.de", "https://karriaro.de", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080", "http://localhost:8780"];
+const ALLOWED_ORIGINS = ["https://karriaro-webdesign.de", "https://www.karriaro-webdesign.de", "https://m.karriaro-webdesign.de", "https://karriaro.de", "https://karriaro-leads.web.app", "https://karriaro-leads.firebaseapp.com", "http://localhost:3000", "http://localhost:5000", "http://localhost:8080", "http://localhost:8780"];
 const PLACES_BASE = "https://places.googleapis.com/v1/places";
 
 const AUDIT_FROM = '"Karriaro Webdesign" <noreply@karriaro.de>';
@@ -1410,6 +1413,145 @@ exports.generateMockup = onRequest(
         } catch (err) {
             console.error("generateMockup failed:", err);
             res.status(500).json({ error: "Mockup-Generierung fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
+
+// ═══════════════════════════════════════════════════════════════
+// PITCH-FABRIK (2026-06-22): generatePitch erzeugt aus echten Lead-Fakten eine
+// volle, eigenständige, TEILBARE Premium-Pitch-Seite (Avenius-Register); pitchPage
+// liefert sie unter /pitch/<id> aus (noindex + strenge CSP, kein Script-Run).
+// ═══════════════════════════════════════════════════════════════
+
+const PITCH_MODEL = "claude-sonnet-4-6";
+const PITCH_TTL_DAYS = 90;
+// Öffentlich abrufbare Basis-URL — die karriaro-leads-Site rewritet /pitch/** auf
+// pitchPage (europe-west1). Stage 2: auf karriaro-webdesign.de/pitch heben.
+const PITCH_PUBLIC_BASE = "https://karriaro-leads.web.app";
+
+async function callClaudeForPitch(userText) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-key": CLAUDE_API_KEY.value(),
+            "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+            model: PITCH_MODEL,
+            max_tokens: 12000,          // volle eigenständige Seite (Hero + 5 Abschnitte + Footer)
+            system: [{ type: "text", text: PITCH_SYS, cache_control: { type: "ephemeral" } }],
+            messages: [{ role: "user", content: userText }]
+        }),
+        signal: AbortSignal.timeout(170000)
+    });
+    if (!res.ok) {
+        const t = await res.text().catch(() => "");
+        throw new Error(`Claude PITCH ${res.status}: ${t.slice(0, 160)}`);
+    }
+    const data = await res.json();
+    const text = (Array.isArray(data.content) ? data.content : [])
+        .filter((b) => b && b.type === "text").map((b) => b.text).join("");
+    return { html: text, usage: data.usage || null };
+}
+
+// ─── generatePitch ─── POST {businessName, branche?, rating?, reviewCount?, address?, city?, websiteUri?, services?, priceFrom?, force?}
+exports.generatePitch = onRequest(
+    {
+        region: "europe-west1",
+        memory: "512MiB",
+        timeoutSeconds: 180,   // Direkt-Call (kein Fastly-60s-Cap) → großzügige Decke für die volle Sonnet-Generierung
+        cors: false,
+        secrets: [CLAUDE_API_KEY]
+    },
+    async (req, res) => {
+        if (cors(req, res)) return;
+        if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
+        // Sonnet-Volltext = teuer/langsam → strenges Limit.
+        if (await enforceRateLimit(db, req, res, "generatePitch", 6, 3600,
+            "Stündliches Limit erreicht — die Pitch-Seite nutzt eine vollständige KI-Generierung. Bitte später erneut.")) return;
+
+        const startMs = Date.now();
+        const b = req.body || {};
+        const businessName = String(b.businessName || "").trim().slice(0, 160);
+        if (!businessName) return res.status(400).json({ error: "businessName required" });
+
+        const facts = {
+            name: businessName,
+            branche: b.branche || null,
+            brancheLabel: b.brancheLabel || b.branche || null,
+            rating: (b.rating != null && isFinite(b.rating)) ? Number(b.rating) : null,
+            reviewCount: (b.reviewCount != null && isFinite(b.reviewCount)) ? Number(b.reviewCount) : null,
+            address: b.address ? String(b.address).slice(0, 200) : null,
+            city: b.city ? String(b.city).slice(0, 80) : null,
+            websiteUri: b.websiteUri ? String(b.websiteUri).slice(0, 300) : null,
+            services: Array.isArray(b.services) ? b.services.filter(s => typeof s === "string").slice(0, 8) : [],
+            priceFrom: b.priceFrom ? String(b.priceFrom).slice(0, 40) : "ab 2.990 €",
+            accent: b.accent ? String(b.accent).slice(0, 24) : null
+        };
+        const id = pitchId(businessName, facts.websiteUri);
+
+        // Cache (deterministische ID) — derselbe Lead ergibt dieselbe URL.
+        if (!b.force) {
+            try {
+                const snap = await db.collection("pitches").doc(id).get();
+                if (snap.exists && (snap.data().expiresAtMs || 0) > Date.now()) {
+                    return res.json({ ok: true, cached: true, id, url: `${PITCH_PUBLIC_BASE}/pitch/${id}`, businessName, meta: { durationMs: Date.now() - startMs } });
+                }
+            } catch (e) { /* cache miss → generieren */ }
+        }
+
+        try {
+            const claude = await callClaudeForPitch(buildPitchUserMessage(facts));
+            let html = sanitizePitchHtml(claude.html);
+            if (!html) return res.status(502).json({ error: "Generierung lieferte keine verwertbare Seite. Bitte erneut versuchen." });
+            html = scrubGeneratedHtml(html);   // 2. Schicht: UWG-Superlativ-Scrub auf sichtbarem Text
+
+            const expiresAtMs = Date.now() + PITCH_TTL_DAYS * 86400000;
+            await db.collection("pitches").doc(id).set({
+                html,
+                businessName,
+                branche: facts.branche || null,
+                facts,
+                model: PITCH_MODEL,
+                usage: claude.usage,
+                createdAtMs: Date.now(),
+                expiresAtMs,
+                expiresAt: new admin.firestore.Timestamp(Math.floor(expiresAtMs / 1000), 0)
+            });
+            res.json({ ok: true, cached: false, id, url: `${PITCH_PUBLIC_BASE}/pitch/${id}`, businessName, meta: { durationMs: Date.now() - startMs, usage: claude.usage } });
+        } catch (err) {
+            console.error("generatePitch failed:", err);
+            res.status(500).json({ error: "Pitch-Generierung fehlgeschlagen", details: String(err?.message || err) });
+        }
+    }
+);
+
+// ─── pitchPage ─── GET /pitch/<id> → liefert die gespeicherte Pitch-Seite (noindex + CSP)
+exports.pitchPage = onRequest(
+    { region: "europe-west1", memory: "256MiB", timeoutSeconds: 20, cors: false },
+    async (req, res) => {
+        if (req.method !== "GET") { res.status(405).send("GET only"); return; }
+        const id = String(req.path || "").replace(/^\/+/, "").replace(/^pitch\//, "").replace(/[^a-z0-9-]/gi, "").slice(0, 80);
+        // Untrusted LLM-HTML wird top-level ausgeliefert → CSP neutralisiert jeden Script.
+        res.set("Content-Security-Policy", PITCH_CSP);
+        res.set("X-Robots-Tag", "noindex, nofollow");
+        res.set("X-Content-Type-Options", "nosniff");
+        res.set("Referrer-Policy", "strict-origin-when-cross-origin");
+        res.set("Content-Type", "text/html; charset=utf-8");
+        if (!id) { res.status(404).send(pitchNotFoundHtml()); return; }
+        try {
+            const snap = await db.collection("pitches").doc(id).get();
+            const data = snap.exists ? snap.data() : null;
+            if (!data || !data.html || (data.expiresAtMs || 0) < Date.now()) {
+                res.status(404).send(pitchNotFoundHtml());
+                return;
+            }
+            res.set("Cache-Control", "public, max-age=300");
+            res.status(200).send(data.html);
+        } catch (err) {
+            console.error("pitchPage failed:", err);
+            res.status(500).send(pitchNotFoundHtml());
         }
     }
 );

@@ -1336,3 +1336,8 @@
 .channel-actions { display: flex; gap: 10px; margin-top: 6px; }
 .channel-close { background: none; border: 1px solid var(--border); }
 @media print { body > *:not(.channel-overlay) { display: none !important; } .channel-overlay { position: static; background: none; padding: 0; } .channel-actions { display: none; } }
+
+/* Pitch-Fabrik — Primaer-Button und Ergebnis-Overlay */
+.channel-btn-primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.pitch-result .studio-body { width: 100%; box-sizing: border-box; font-size: 12.5px; line-height: 1.5; }
+.pitch-result .channel-actions { flex-wrap: wrap; gap: 8px; }

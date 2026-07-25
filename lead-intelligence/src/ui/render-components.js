@@ -15,7 +15,7 @@ import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
-import { printLetter, copyLinkedIn, showCallSheet } from './render-channels.js';
+import { printLetter, copyLinkedIn, showCallSheet, runPitch } from './render-channels.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { escapeHtml } from '../lib/escape-html.js';
@@ -424,8 +424,11 @@ export function renderScience(el, data) {
     const entropy = calculateEntropy(data.psiData, data.tech);
     const activation = calculateActivation(data.ws, data.tech, data.place, data.competitors, data.revenue);
     const r0 = calculateEpidemic(data.place, data.competitors);
-    const ads = detectGoogleAds(data.psiData);
-    const jobs = detectJobSignals(data.psiData);
+    // Den im Einzel-Check angereicherten Wert nutzen (inkl. statischer
+    // Ad-Evidenz) — sonst zeigt diese Karte "Nein", waehrend die
+    // Kaufsignal-Karte den Beleg fuehrt.
+    const ads = data.googleAds || detectGoogleAds(data.psiData, data.adEvidence);
+    const jobs = data.jobSignal || detectJobSignals(data.psiData);
     const kahneman = calculateKahneman(data.ws, data.tech, data.place, data.revenue, activation);
 
     const sc = v => v >= 0.6 ? 'good' : v >= 0.3 ? 'ok' : 'bad';
@@ -681,6 +684,7 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
                     <button class="channel-btn" id="ch-letter">📄 Werbebrief drucken</button>
                     <button class="channel-btn" id="ch-call">📞 Anruf-Leitfaden</button>
                     <button class="channel-btn" id="ch-linkedin">💼 LinkedIn-Nachricht</button>
+                    <button class="channel-btn channel-btn-primary" id="ch-pitch">✨ Pitch-Seite erzeugen</button>
                 </div>
             </div>
 
@@ -729,6 +733,7 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
         document.getElementById('ch-letter')?.addEventListener('click', () => printLetter(data, pack));
         document.getElementById('ch-call')?.addEventListener('click', () => showCallSheet(data, pack));
         document.getElementById('ch-linkedin')?.addEventListener('click', function() { copyLinkedIn(data, pack, this); });
+        document.getElementById('ch-pitch')?.addEventListener('click', function() { runPitch(data, this); });
     }
 
     // Copy Email (Legacy — falls vorhanden)

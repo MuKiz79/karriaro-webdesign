@@ -129,3 +129,25 @@ export function jobSignals({ was = '', wo = '', arbeitgeber = '', size = 5 } = {
     if (!was && !arbeitgeber) return Promise.resolve(null);
     return callWebdesign('jobSignals', { was, wo, arbeitgeber, size }, { timeout: 25000 });
 }
+
+const PITCH_FN_URL = 'https://europe-west1-apex-executive.cloudfunctions.net/generatePitch';
+
+export async function generatePitch({ businessName, branche = null, brancheLabel = null, rating = null, reviewCount = null, address = null, city = null, websiteUri = null, services = [], priceFrom = null, force = false } = {}) {
+    if (!businessName) return null;
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 185000);
+    try {
+        const res = await fetch(PITCH_FN_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ businessName, branche, brancheLabel, rating, reviewCount, address, city, websiteUri, services, priceFrom, force }),
+            signal: ctrl.signal
+        });
+        const data = await res.json().catch(() => null);
+        return data;   // {ok,id,url,...} bei Erfolg, sonst {error} → UI zeigt Detail
+    } catch (e) {
+        return { error: e?.name === 'AbortError' ? 'Zeitüberschreitung — bitte erneut versuchen.' : (e?.message || 'Netzwerkfehler') };
+    } finally {
+        clearTimeout(timer);
+    }
+}

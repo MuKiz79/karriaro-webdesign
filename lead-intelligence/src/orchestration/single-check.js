@@ -337,8 +337,14 @@ function runLocalAnalysis(p) {
     const googleAds = detectGoogleAds(psiData, adEvidenceResult);
     const jobSignal = detectJobSignals(psiData);
 
-    const surgeIntent = detectSurgeIntent(footprint, jobSignal, googleAds, place);
-    const digitalMaturity = assessDigitalMaturity(footprint, googleAds, psiData);
+    // Meta-Pixel kann ebenfalls erst im GTM-Container stehen — dann kennt der
+    // PSI-basierte Footprint ihn nicht. Statische Evidenz reicht ihn nach.
+    const fp = (googleAds.metaPixel?.found && !footprint?.hasFbPixel)
+        ? { ...(footprint || {}), hasFbPixel: true, fbPixelSource: googleAds.metaPixel.source }
+        : footprint;
+
+    const surgeIntent = detectSurgeIntent(fp, jobSignal, googleAds, place);
+    const digitalMaturity = assessDigitalMaturity(fp, googleAds, psiData);
     const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
     const stakeholder = detectStakeholder(psiData, place);
     const techTrajectory = assessTechTrajectory(tech, wayback);
@@ -359,7 +365,7 @@ function runLocalAnalysis(p) {
     const gbpDynamics = analyzeGBPDynamics(place);
     const wpSecurity = assessWPSecurity(psiData, tech);
     const cognitiveLoad = assessCognitiveLoad(psiData);
-    const signalStack = analyzeSignalStack({ ws, tech, place, footprint, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
+    const signalStack = analyzeSignalStack({ ws, tech, place, footprint: fp, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
 
     // ── Kaufsignal-Achse: gibt der Betrieb JETZT Geld fuer Kundengewinnung aus? ──
     // Bewusst getrennt vom Problem-Beleg (siehe analysis/buying-intent.js).
@@ -368,12 +374,6 @@ function runLocalAnalysis(p) {
     const { openings: jobOpenings, employer: matchedEmployer } =
         deriveJobOpenings(jobsApiResult, businessName || place?.displayName?.text || '',
             (place?.formattedAddress || '').match(/\b\d{5}\s+([^,]+)/)?.[1]?.trim() || '');
-
-    // Meta-Pixel kann ebenfalls erst im GTM-Container stehen — dann kennt der
-    // PSI-basierte Footprint ihn nicht. Statische Evidenz reicht ihn nach.
-    const fp = (googleAds.metaPixel?.found && !footprint?.hasFbPixel)
-        ? { ...(footprint || {}), hasFbPixel: true, fbPixelSource: googleAds.metaPixel.source }
-        : footprint;
 
     const buyingIntent = assessBuyingIntent({
         googleAds,
