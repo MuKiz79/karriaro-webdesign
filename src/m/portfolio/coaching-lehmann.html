@@ -171,11 +171,26 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .cal-widget-info h3 { font-size: 17px; margin-bottom: 4px; }
         .cal-widget-info p { font-size: 13px; color: var(--text-light); }
         .cal-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .cal-slot { padding: 14px; border: 1px solid var(--border); border-radius: var(--p-radius); font-size: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        /* Slots sind echte Buttons (Tastatur + Screenreader); font/color erben nicht automatisch */
+        .cal-slot { width: 100%; font-family: inherit; color: var(--text); background: transparent; padding: 14px; border: 1px solid var(--border); border-radius: var(--p-radius); font-size: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .cal-slot:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .cal-slot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
         .cal-slot.taken { color: var(--text-light); text-decoration: line-through; cursor: not-allowed; opacity: 0.5; }
         .cal-slot.taken:hover { border-color: var(--border); background: transparent; }
-        .cal-foot { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-light); display: flex; justify-content: space-between; }
+        .cal-foot { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-light); display: flex; justify-content: space-between; align-items: center; }
+        .cal-book { font-family: inherit; font-size: 13px; color: var(--accent); background: transparent; border: 0; padding: 0; cursor: pointer; font-weight: 600; }
+        .cal-book:hover { text-decoration: underline; }
+        .cal-book:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+        /* Demo-Hinweis: die Musterseite zeigt den Ablauf, sie bucht nicht — das sagt sie auch */
+        .demo-modal { position: fixed; inset: 0; background: rgba(20,20,20,0.78); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+        .demo-modal.is-open { display: flex; }
+        .demo-modal-card { background: var(--bg); border-radius: var(--p-radius-lg); padding: 48px; max-width: 520px; width: 100%; text-align: center; box-shadow: var(--p-shadow-lg); }
+        .demo-modal-card .icon { width: 64px; height: 64px; margin: 0 auto 20px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .demo-modal-card .icon svg { width: 32px; height: 32px; }
+        .demo-modal-card h3 { font-family: var(--serif); font-size: 28px; margin-bottom: 14px; }
+        .demo-modal-card p { color: var(--text-soft); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+        .demo-modal-card button { font-family: inherit; padding: 12px 28px; background: var(--accent); color: #fff; border: 0; border-radius: var(--p-radius); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+        .demo-modal-card button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
         .ref { background: var(--bg-soft); }
         .ref-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
@@ -255,8 +270,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .k-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
         @media (max-width: 920px) { .k-grid { grid-template-columns: 1fr; } }
         .k-form { display: grid; gap: 18px; }
-        .k-form label { font-size: 13px; color: var(--text-soft); }
-        .k-form input, .k-form textarea { padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--p-radius); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s; background: var(--bg); }
+        .k-form label { font-size: 13px; color: var(--text-soft); display: flex; flex-direction: column; gap: 8px; }
+        .k-form input, .k-form textarea { width: 100%; box-sizing: border-box; padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--p-radius); font-family: inherit; font-size: 15px; outline: none; transition: border-color 0.2s; background: var(--bg); }
         .k-form input:focus, .k-form textarea:focus { border-color: var(--accent); }
         .k-form textarea { resize: vertical; min-height: 130px; }
         .k-form button { background: var(--accent); color: #fff; padding: 16px 26px; border-radius: 999px; font-size: 15px; font-weight: 500; align-self: start; }
@@ -480,7 +495,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                             <li style="display:flex; gap:12px; align-items:flex-start;"><span style="color:var(--accent); font-weight:600; min-width:24px;">→</span><span style="font-size:15px; color:var(--text-soft);"><strong style="color:var(--text);">Keine Hotline.</strong> Wir sprechen direkt. Wenn ich Ihnen nicht antworte, telefoniert auch keiner aus meinem Team mit Ihnen.</span></li>
                         </ul>
                     </div>
-                    <div class="cal-widget" role="region" aria-label="Calendly-Buchungsdemo">
+                    <div class="cal-widget" role="region" aria-label="Buchungs-Demo">
                         <div class="cal-widget-head">
                             <div class="cal-widget-avatar">L</div>
                             <div class="cal-widget-info">
@@ -490,18 +505,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         </div>
                         <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">Verfügbare Slots · diese Woche</p>
                         <div class="cal-slots">
-                            <div class="cal-slot taken">Mo 9:00</div>
-                            <div class="cal-slot">Mo 14:30</div>
-                            <div class="cal-slot">Di 10:00</div>
-                            <div class="cal-slot taken">Di 16:00</div>
-                            <div class="cal-slot">Mi 11:30</div>
-                            <div class="cal-slot">Do 9:30</div>
-                            <div class="cal-slot taken">Do 15:00</div>
-                            <div class="cal-slot">Fr 13:00</div>
+                            <button type="button" class="cal-slot taken" disabled aria-label="Montag 9:00 Uhr — bereits vergeben">Mo 9:00</button>
+                            <button type="button" class="cal-slot" onclick="openDemo('slot', 'Mo 14:30')">Mo 14:30</button>
+                            <button type="button" class="cal-slot" onclick="openDemo('slot', 'Di 10:00')">Di 10:00</button>
+                            <button type="button" class="cal-slot taken" disabled aria-label="Dienstag 16:00 Uhr — bereits vergeben">Di 16:00</button>
+                            <button type="button" class="cal-slot" onclick="openDemo('slot', 'Mi 11:30')">Mi 11:30</button>
+                            <button type="button" class="cal-slot" onclick="openDemo('slot', 'Do 9:30')">Do 9:30</button>
+                            <button type="button" class="cal-slot taken" disabled aria-label="Donnerstag 15:00 Uhr — bereits vergeben">Do 15:00</button>
+                            <button type="button" class="cal-slot" onclick="openDemo('slot', 'Fr 13:00')">Fr 13:00</button>
                         </div>
                         <div class="cal-foot">
                             <span>Zeitzone · Frankfurt</span>
-                            <span>Calendly →</span>
+                            <button type="button" class="cal-book" onclick="openDemo('book')">Direkt buchen →</button>
                         </div>
                     </div>
                 </div>
@@ -560,7 +575,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <p class="eyebrow">So läuft Ihr Erstgespräch</p>
                         <h2>Vier Schritte. <em>Eine ehrliche Stunde.</em></h2>
                         <div class="online-steps">
-                            <div class="online-step"><span class="online-step-num">1</span><div><h4>Slot wählen</h4><p>Im Calendly-Widget oben buchen Sie 45 Minuten direkt. Zoom-Link kommt per Mail.</p></div></div>
+                            <div class="online-step"><span class="online-step-num">1</span><div><h4>Slot wählen</h4><p>Im Buchungs-Widget oben buchen Sie 45 Minuten direkt. Zoom-Link kommt per Mail.</p></div></div>
                             <div class="online-step"><span class="online-step-num">2</span><div><h4>Vorab-Brief</h4><p>Sie bekommen drei Fragen, die ich Ihnen vorher schicke. Antworten sind freiwillig — aber sparen uns 10 Minuten Smalltalk.</p></div></div>
                             <div class="online-step"><span class="online-step-num">3</span><div><h4>Das Gespräch</h4><p>Sie erzählen, ich höre zu. Ich frage, Sie schärfen. Am Ende: Eine klare Einschätzung, ob und wie ich helfen kann.</p></div></div>
                             <div class="online-step"><span class="online-step-num">4</span><div><h4>Ihre Entscheidung</h4><p>Kein Vertrag wird im Termin unterschrieben. Sie überlegen 48 Stunden, ich auch. Erst dann entscheiden wir gemeinsam.</p></div></div>
@@ -684,7 +699,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <p class="eyebrow">Direkter Kontakt</p>
                         <h2 style="margin-bottom:24px;">Schreiben Sie mir. <em>Ich melde mich.</em></h2>
                         <p>Eine kurze Mail reicht. Ich antworte innerhalb von 24 Stunden — auch am Wochenende, falls dringend.</p>
-                        <p>Wenn Sie lieber direkt buchen wollen, geht das oben im Calendly-Widget.</p>
+                        <p>Wenn Sie lieber direkt buchen wollen, geht das oben im Buchungs-Widget.</p>
                         <div class="k-direct">
                             <h4>Direkt</h4>
                             <div class="k-direct-item"><span>Telefon</span><a href="tel:+496995201240">069 9520 1240</a></div>
@@ -798,6 +813,45 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
         </div>
     </footer>
+
+    <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle" aria-describedby="demoMsg">
+        <div class="demo-modal-card">
+            <div class="icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 id="demoTitle">Termin gewählt — Demo</h3>
+            <p id="demoMsg">Diese Musterseite zeigt den Ablauf, sie bucht nicht.</p>
+            <button type="button" id="demoClose" onclick="closeDemo()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        /* Buchungs-Demo: Die Slots sind bewusst ohne Backend — statt eines toten Klicks
+           sagt die Seite ehrlich, was in der Live-Version passieren würde. */
+        function openDemo(key, slot) {
+            var titel = key === 'book' ? 'Direkt buchen — Demo' : 'Termin gewählt — Demo';
+            var text = key === 'book'
+                ? 'In der Live-Version öffnet sich hier der Kalender mit allen freien Terminen. Sie wählen einen Slot, tragen Name und E-Mail ein und erhalten die Bestätigung samt Kalender-Eintrag. Diese Musterseite zeigt den Ablauf, sie bucht nicht.'
+                : 'In der Live-Version tragen Sie jetzt Name und E-Mail ein und erhalten für ' + (slot || 'diesen Termin') + ' die Bestätigung samt Kalender-Eintrag und Zoom-Link. Diese Musterseite zeigt den Ablauf, sie bucht nicht.';
+            document.getElementById('demoTitle').textContent = titel;
+            document.getElementById('demoMsg').textContent = text;
+            var m = document.getElementById('demoModal');
+            m._opener = document.activeElement;
+            m.classList.add('is-open');
+            document.getElementById('demoClose').focus();
+        }
+        function closeDemo() {
+            var m = document.getElementById('demoModal');
+            m.classList.remove('is-open');
+            if (m._opener && document.contains(m._opener)) m._opener.focus(); /* Fokus zurück zum Slot */
+        }
+        document.getElementById('demoModal').addEventListener('click', function (e) {
+            if (e.target.id === 'demoModal') closeDemo();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.getElementById('demoModal').classList.contains('is-open')) closeDemo();
+        });
+    </script>
 
     <!-- data-site konsistent karriaro-webdesign (wie die 7 anderen Demos); 'karriaro-coaching-demo'
          war ein unregistrierter Ausreißer-Slug → 404 auf /api/track/pageview, sobald die Demo im

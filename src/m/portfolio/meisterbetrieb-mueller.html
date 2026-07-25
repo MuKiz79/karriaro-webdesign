@@ -136,7 +136,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .bad-slider-row { display: flex; flex-direction: column; gap: 10px; padding: 18px 0; border-top: 1px solid var(--border); }
         .bad-slider-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text); }
         .bad-slider-label .val { color: var(--accent); font-variant-numeric: tabular-nums; }
-        .bad-slider-row input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .bad-slider-row input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px; background: var(--border-strong); outline: none; cursor: pointer; margin: 12px 0; }
+        .bad-slider-row input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: transparent; }
+        .bad-slider-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.06); margin-top: -8px; transition: border-color 0.15s, box-shadow 0.15s; }
+        .bad-slider-row input[type="range"]:hover::-webkit-slider-thumb { border-color: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,0.22), 0 3px 10px rgba(0,0,0,0.08); }
+        .bad-slider-row input[type="range"]::-moz-range-track { height: 4px; border-radius: 999px; background: var(--border-strong); }
+        .bad-slider-row input[type="range"]::-moz-range-progress { height: 4px; border-radius: 999px; background: var(--accent); }
+        .bad-slider-row input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+        .bad-config-canvas { flex-direction: column; gap: 4px; text-align: center; padding: 0 24px; }
+        .bad-canvas-price { font-size: 0.6em; opacity: 0.82; letter-spacing: 0; font-weight: 600; }
         .bad-config-output { background: var(--accent); color: var(--bg); padding: 24px 28px; border-radius: var(--p-radius-lg); margin-top: 8px; }
         .bad-config-output-label { font-size: 11px; opacity: 0.75; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 8px; }
         .bad-config-output-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(36px, 4.4vw, 56px); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; margin-bottom: 6px; }
@@ -267,8 +275,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .ai-trigger:hover { background: rgba(180,112,69,0.16); }
         .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
         .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
-        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
-        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-trigger .ai-text > span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent-dark); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
         .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
         .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
         .ai-result.is-loading { display: block; }
@@ -644,7 +652,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <p style="font-size:18px; color:var(--text-soft); margin-top:16px; max-width:620px; font-weight:300; line-height:1.55;">Stil wählen, Größe und Budget anpassen — die Live-Vorschau zeigt die Richtung. Bei realer Beratung ersetzen wir die Visualisierung durch eine maßstäblich gerechte 3D-Skizze Ihres Bads.</p>
                 </div>
                 <div class="bad-config-grid">
-                    <div class="bad-config-canvas" id="bad-canvas" data-style="spa">Spa · 8 m² · ca. 18.500 €</div>
+                    <div class="bad-config-canvas" id="bad-canvas" data-style="spa"><span class="bad-canvas-main">Spa · 8 m²</span><span class="bad-canvas-price">ca. 18.500 €</span></div>
                     <div class="bad-config-controls">
                         <div class="bad-style-toggles" id="bad-style-toggles">
                             <button type="button" class="bad-style-btn is-active" data-style="spa" data-label="Spa">
@@ -1170,8 +1178,15 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             badSizeVal.textContent = size;
             badBudgetVal.textContent = BUDGET_LABEL[budget];
             badPrice.textContent = price.toLocaleString('de-DE') + ' €';
-            var label = (badStyle.charAt(0).toUpperCase() + badStyle.slice(1)) + ' · ' + size + ' m² · ca. ' + price.toLocaleString('de-DE') + ' €';
-            badCanvas.textContent = label;
+            var styleCap = badStyle.charAt(0).toUpperCase() + badStyle.slice(1);
+            badCanvas.innerHTML = '<span class="bad-canvas-main">' + styleCap + ' · ' + size + ' m²</span><span class="bad-canvas-price">ca. ' + price.toLocaleString('de-DE') + ' €</span>';
+            sliderFill(badSize); sliderFill(badBudget);
+        }
+        function sliderFill(el) {
+            if (!el) return;
+            var min = +el.min || 0, max = +el.max || 100, v = +el.value;
+            var pct = max > min ? ((v - min) / (max - min)) * 100 : 0;
+            el.style.background = 'linear-gradient(90deg, var(--accent) 0%, var(--accent) ' + pct + '%, var(--border-strong) ' + pct + '%, var(--border-strong) 100%)';
         }
         document.querySelectorAll('#bad-style-toggles .bad-style-btn').forEach(function (b) {
             b.addEventListener('click', function () {
@@ -1184,6 +1199,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         });
         if (badSize) badSize.addEventListener('input', badRecalc);
         if (badBudget) badBudget.addEventListener('input', badRecalc);
+        if (badSize && badBudget && badCanvas) badRecalc();
+        else { sliderFill(badSize); sliderFill(badBudget); }
 
         // S2 Wärmepumpe + KfW
         function wpCalc() {
