@@ -67,6 +67,27 @@ describe('assessBuyingIntent — bewiesenes Geldausgeben', () => {
         expect(r.signals.some(s => s.key === 'reviews_fresh')).toBe(false);
     });
 
+    it('Tag-Manager ohne Ad-Tags zaehlt schwach — und sagt, dass die Messung blind ist', () => {
+        // Kritisch fuer die Ehrlichkeit: der Founder darf "keine Anzeigen erkannt"
+        // NICHT als "schaltet keine Anzeigen" lesen. Empirisch belegt an 5 echten
+        // deutschen Werbetreibenden, die alle 0 Ad-Tags auslieferten (2026-07-25).
+        const r = assessBuyingIntent({
+            googleAds: { active: false, signals: [], hasTagManager: true, consentBlind: true }
+        });
+        expect(r.signals.some(s => s.key === 'tag_manager')).toBe(true);
+        expect(r.isProvenSpender).toBe(false);   // wahrscheinlich, aber nicht bewiesen
+        expect(r.missing.join(' ')).toMatch(/nicht messbar/);
+        // Muss schwaecher wiegen als ein echter Ad-Nachweis.
+        const echt = assessBuyingIntent({ googleAds: { active: true, signals: ['Google Ads aktiv'] } });
+        expect(r.score).toBeLessThan(echt.score);
+    });
+
+    it('ohne Tag-Manager ist es echte Abwesenheit, nicht Blindheit', () => {
+        const r = assessBuyingIntent({ googleAds: { active: false, signals: [], hasTagManager: false } });
+        expect(r.signals.some(s => s.key === 'tag_manager')).toBe(false);
+        expect(r.missing.join(' ')).toMatch(/Keine bezahlte Werbung/);
+    });
+
     it('Score ist bei 100 gedeckelt und Signale sind nach Gewicht sortiert', () => {
         const r = assessBuyingIntent({
             googleAds: { active: true, signals: ['Google Ads aktiv', 'Google Display Network', 'Microsoft Ads'] },

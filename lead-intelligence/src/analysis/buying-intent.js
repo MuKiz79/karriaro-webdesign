@@ -49,7 +49,8 @@ const W = {
     reviewsFresh: 14,   // juengste Bewertung <= 45 Tage
     reviewsVelocity: 8, // >= 5 Bewertungen/Monat
     analytics: 8,       // misst bereits — versteht Zahlen
-    socialBreadth: 8    // >= 3 gepflegte Kanäle
+    socialBreadth: 8,   // >= 3 gepflegte Kanäle
+    tagManager: 12      // GTM ohne sichtbare Ad-Tags — Werbung wahrscheinlich, nicht bewiesen
 };
 
 /** Ab hier gilt Kaufbereitschaft als BEWIESEN (nicht nur wahrscheinlich). */
@@ -103,7 +104,18 @@ export function assessBuyingIntent({
             'Zusätzlicher bezahlter Kanal.', W.bingAds, 'Bing-Conversion-Tag erkannt');
     }
     if (!hasSearchAds && !hasDisplay && !hasMetaPixel && !hasBing) {
-        missing.push('Keine bezahlte Werbung auf der Startseite erkennbar');
+        // Tag-Manager ohne sichtbare Ad-Tags: der Betrieb verwaltet Marketing-Tags
+        // professionell, die Werbung ist nur hinter dem Cookie-Banner unsichtbar
+        // (siehe signals/google-ads.js — empirisch belegte Consent-Blindheit).
+        // Zaehlt als schwaches Signal, NICHT als bewiesenes Werbebudget.
+        if (googleAds?.hasTagManager) {
+            add('tag_manager', 'Marketing-Tags verwaltet',
+                'Google Tag Manager im Einsatz — Anzeigen sind wahrscheinlich, aber hinter dem Cookie-Banner nicht messbar.',
+                W.tagManager, 'googletagmanager.com in den Network-Requests');
+            missing.push('Anzeigen nicht messbar — Ad-Tags feuern erst nach Cookie-Einwilligung (kein Beweis für „schaltet nichts")');
+        } else {
+            missing.push('Keine bezahlte Werbung auf der Startseite erkennbar');
+        }
     }
 
     // ── 2. Stellt ein: Wachstum + Budget ──
