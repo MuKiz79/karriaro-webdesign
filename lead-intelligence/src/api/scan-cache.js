@@ -161,8 +161,11 @@ export function getCachedScore(domain) {
     if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null }; }
     return null;
 }
-export function setCachedScore(domain, ws, tech, adIntent = null) {
-    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent };
+// jobIntent kam 2026-07-25 dazu. Aeltere Cache-Eintraege haben das Feld nicht —
+// der Aufrufer liest dann `undefined` und behandelt es als "kein Signal" (kein
+// Fehler, nur ein fehlender Bonus bis der Eintrag neu geschrieben wird).
+export function setCachedScore(domain, ws, tech, adIntent = null, jobIntent = null) {
+    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent, jobIntent };
     scheduleFlush(SCORE_KEY);
 }
 

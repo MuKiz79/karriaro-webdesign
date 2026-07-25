@@ -82,6 +82,7 @@ export function calculateReviewVelocity(reviews, totalCount = 0) {
     return {
         available: true,
         velocity,
+        n: dated.length,   // Anzahl DATIERTER Reviews — Belastbarkeit der Velocity
         last30,
         prev30,
         trend,

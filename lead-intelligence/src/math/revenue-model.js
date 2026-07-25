@@ -56,6 +56,41 @@ function lossFraction(lcpSec, mobilePenalty, sslPenalty, seoLostPct) {
     return 1 - (1 - pSpeed) * (1 - pMobile) * (1 - pSsl) * (1 - pSeo);
 }
 
+/**
+ * Einzelne Verlust-Faktoren aus dem Website-Score — die GEMESSENEN Anteile, aus
+ * denen sich lossFraction zusammensetzt. Exportiert, damit andere Module (Ad-Waste
+ * in analysis/buying-intent.js) exakt dieselben Annahmen verwenden statt eigene
+ * Zahlen zu erfinden. Identische Werte wie in calculateRevenueLoss.
+ *
+ * WICHTIG fuer den Aufrufer: `seo` beschreibt entgangenen ORGANISCHEN Traffic
+ * (schlechtere Rankings = weniger Besucher). Auf BEZAHLTE Klicks ist der Faktor
+ * NICHT anwendbar — die kommen unabhaengig vom Ranking an. Wer den Verlust auf
+ * Anzeigen-Traffic rechnet, kombiniert nur speed/mobile/ssl.
+ *
+ * @param {Object} ws - Website-Score
+ * @returns {{speed:number, mobile:number, ssl:number, seo:number}} Anteile 0..1
+ */
+export function lossFactors(ws = {}) {
+    const lcpSec = parseFloat(ws.lcp) || 3;
+    return {
+        speed: speedLossPct(lcpSec),
+        mobile: 0.6 * (ws.viewport ? 0 : 0.15),
+        ssl: ws.isHttps ? 0 : 0.10,
+        seo: ws.seo < 50 ? 0.30 : ws.seo < 75 ? 0.15 : 0.05
+    };
+}
+
+/**
+ * Kombiniert Verlust-Anteile multiplikativ (Survival): 1 - ∏(1-p_i).
+ * Intrinsisch <1, keine Doppelzaehlung desselben verlorenen Besuchers.
+ *
+ * @param {number[]} ps - Einzelanteile 0..1
+ * @returns {number} Gesamtanteil 0..1
+ */
+export function combineLoss(ps = []) {
+    return 1 - ps.reduce((acc, p) => acc * (1 - (p || 0)), 1);
+}
+
 export function calculateRevenueLoss(ws, place) {
     const type = place?.primaryType || '_default';
     const ind = INDUSTRIES[type] || INDUSTRIES._default;

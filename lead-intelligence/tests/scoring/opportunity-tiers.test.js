@@ -154,6 +154,46 @@ describe('Ad-Intent (Kaufsignal: schaltet Anzeigen)', () => {
     it('macht eine soft-Lead ohne hartes Strukturzeichen NICHT HOT (Konvergenz)', () => {
         expect(computeOpportunity({ ...soft, adIntent: ad }).opportunity).toBeLessThan(70);
     });
+
+    // ── Kaufsignal-Achse (2026-07-25) ──
+    const job = { isHiring: true, signals: ['Karriere-Bereich erkannt'] };
+
+    it('"stellt ein" ist ein eigenstaendiges Kaufsignal', () => {
+        const ohne = computeOpportunity({ ...qualified }).opportunity;
+        const mit = computeOpportunity({ ...qualified, jobIntent: job });
+        expect(mit.opportunity).toBeGreaterThan(ohne);
+        expect(mit.buySignal.hiring).toBe(true);
+    });
+
+    it('Anzeigen + Einstellung stapeln sich', () => {
+        // Eigene Fixture mit Kopfraum: `qualified` saettigt mit Anzeigen bereits
+        // bei 100, dort waere das Stapeln nicht messbar (Clamp, kein Fehler).
+        const midsize = {
+            ws: { perf: 50, seo: 60, a11y: 58, viewport: true, isHttps: true },
+            tech: { isBaukasten: true, cms: 'Wix' },
+            techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+            place: { rating: 4.3, userRatingCount: 30, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' },
+            reviewRecency: { daysSinceLast: 30, velocity: 3, n: 5 }
+        };
+        const nur = computeOpportunity({ ...midsize, adIntent: ad }).opportunity;
+        const beide = computeOpportunity({ ...midsize, adIntent: ad, jobIntent: job });
+        expect(nur).toBeLessThan(100);                 // Kopfraum wirklich vorhanden
+        expect(beide.opportunity).toBeGreaterThan(nur);
+        expect(beide.buySignal.mult).toBeCloseTo(1.35 * 1.15, 2);
+    });
+
+    it('FEHLENDES Kaufsignal wird NICHT bestraft (Neutralwert 1.0)', () => {
+        // Schuetzt die kalibrierte 27-Profil-Ground-Truth: ohne Signal darf sich
+        // der Score gegenueber dem Stand vor der Kaufsignal-Achse nicht aendern.
+        const r = computeOpportunity({ ...qualified });
+        expect(r.buySignal.mult).toBe(1);
+        expect(r.buySignal.adActive).toBe(false);
+        expect(r.buySignal.hiring).toBe(false);
+    });
+
+    it('"stellt ein" rettet ebenfalls KEIN totes Geschaeft', () => {
+        expect(computeOpportunity({ ...dead, adIntent: ad, jobIntent: job }).opportunity).toBeLessThan(50);
+    });
 });
 
 describe('Timing/Saison-Boost', () => {

@@ -199,6 +199,28 @@ function buildPainArguments(data, techAge) {
     const domain = new URL(data.url).hostname.replace('www.', '');
     const visionModern = siteLooksModern(data.screenshotAnalysis) === true; // Vision: Seite wirkt modern?
 
+    // -2) Ad-Waste — das staerkste Argument ueberhaupt, weil der Empfaenger es
+    //     SELBST nachrechnen kann: Er weiss, dass er fuer Klicks zahlt. Wir zeigen
+    //     ihm den gemessenen Anteil, der unterwegs verloren geht. Kein Vorwurf,
+    //     kein Design-Geschmacksurteil, sondern seine eigene Rechnung.
+    //     Steht bewusst vor Security/Deep-Research: die sind stark, aber abstrakt —
+    //     dieses hier trifft direkt sein laufendes Budget.
+    const adWaste = data.adWaste || null;
+    if (adWaste?.active && adWaste.pitch) {
+        args.push({
+            type: 'ad_waste',
+            severity: 5,
+            short: adWaste.headline || `${adWaste.lossPct} % der bezahlten Klicks versanden`,
+            text: adWaste.pitch,
+            subjectAlt: `${domain}: Sie zahlen für Klicks, die nicht ankommen`,
+            evidence: (adWaste.drivers || []).map(d => `${d.label}: ${d.pct} %`).join(' · '),
+            lossPct: adWaste.lossPct,
+            // Ehrlichkeits-Hinweis fuer die UI: ob ein Euro-Betrag ueberhaupt
+            // belegbar ist, haengt am bekannten Budget (siehe buying-intent.js).
+            assumptionNote: adWaste.assumptionNote
+        });
+    }
+
     // -1) Security-Findings — wenn kritisch/hoch, ist das oft der konkreteste,
     //     unwiderruflichste Pitch-Anker. ("Ihr .git-Verzeichnis ist offen.")
     const security = data.security || null;
@@ -261,8 +283,8 @@ function buildPainArguments(data, techAge) {
             type: 'visual_mockup',
             severity: 5,
             short: 'Mockup im Anhang',
-            text: `Ich habe Ihnen einen visuellen Entwurf einer neuen Seite fuer ${domain} gemacht — als Bild in dieser E-Mail. Der Vorschlag: "${heroHeadline}". Wenn Ihnen die Richtung gefaellt, sprechen wir 15 Minuten ueber die Umsetzung.`,
-            subjectAlt: `Entwurf fuer ${domain}: ${heroHeadline}`,
+            text: `Ich habe Ihnen einen visuellen Entwurf einer neuen Seite für ${domain} gemacht — als Bild in dieser E-Mail. Der Vorschlag: "${heroHeadline}". Wenn Ihnen die Richtung gefällt, sprechen wir 15 Minuten über die Umsetzung.`,
+            subjectAlt: `Entwurf für ${domain}: ${heroHeadline}`,
             htmlSnippet: visualMockup.htmlSnippet || null,
             svgDataUrl: visualMockup.svgDataUrl
         });

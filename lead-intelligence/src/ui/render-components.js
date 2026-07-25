@@ -127,20 +127,22 @@ export function renderScore(el, data, explanation) {
         <div class="explanation-box">${explanation}</div>
     </div>`;
 
-    // Aufmerksamkeits-Index aufschlüsseln — Fit/Intent/Timing mit Bottleneck-Highlight.
+    // Aufmerksamkeits-Index aufschlüsseln — Fit/Intent/Hebel/Timing mit Bottleneck-Highlight.
     // title-Tooltip erklärt jede Dimension, Bottleneck bekommt orange Border-Markierung.
     const cs0 = data.compositeScore;
     if (!isSkip && cs0 && typeof cs0.fit === 'number') {
         const bnName = cs0.bottleneck?.name || '';
         const dims = [
             { key: 'Fit', val: cs0.fit, title: 'Fit: Passt der Lead zu Karriaro? Branche, Größe, Budget, Digital-Maturity.' },
-            { key: 'Intent', val: cs0.intent, title: 'Intent: Will der Lead eine neue Website? Design-Qualität, Performance-Probleme, BFSG-Risiko, Tech-Alter.' },
-            { key: 'Timing', val: cs0.timing, title: 'Timing: Ist JETZT der richtige Zeitpunkt? Trigger-Events, Saison, Review-Trend, Wettbewerb.' }
-        ];
+            { key: 'Intent', val: cs0.intent, title: 'Intent: Gibt der Betrieb JETZT nachweislich Geld für Kundengewinnung aus? Laufende Anzeigen, offene Stellen, frische Bewertungen, Analytics. Das ist der Kauf-Beweis — nicht der Problem-Beweis.' },
+            { key: 'Hebel', val: cs0.hebel, title: 'Hebel: Gibt es einen belegbaren Anlass? Design-Qualität, Performance, BFSG-Risiko, Tech-Alter, Content-Frische. Das ist das Argument — aber allein noch kein Kaufsignal.' },
+            { key: 'Timing', val: cs0.timing, title: 'Timing: Ist JETZT der richtige Zeitpunkt? Trigger-Events, Saison, Review-Trend, Wettbewerb, laufende Anzeigen auf schwacher Seite.' }
+        ].filter(d => typeof d.val === 'number');
         const tone = v => v >= 65 ? 'var(--green)' : v >= 40 ? 'var(--orange)' : 'var(--red)';
         html += `<div class="card anim-in" style="margin-bottom:24px;padding:16px">
             <div class="section-label" style="margin-bottom:12px">Aufmerksamkeits-Index · Engpass: ${escapeHtml(bnName || '—')}</div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+            ${cs0.intentNote ? `<div class="metric-desc" style="margin-top:-4px;margin-bottom:10px;font-size:12px">${escapeHtml(cs0.intentNote)}</div>` : ''}
+            <div style="display:grid;grid-template-columns:repeat(${dims.length},1fr);gap:12px">
                 ${dims.map(d => {
                     const isBn = d.key === bnName;
                     const borderColor = isBn ? 'var(--orange)' : 'rgba(134,134,139,0.15)';
@@ -429,7 +431,7 @@ export function renderScience(el, data) {
     const sc = v => v >= 0.6 ? 'good' : v >= 0.3 ? 'ok' : 'bad';
     el.innerHTML = `
         <div class="metric-desc" style="margin-bottom:8px;padding:8px 12px;background:rgba(255,159,10,0.08);border-left:3px solid var(--orange);border-radius:4px">
-            <strong>Experimentell.</strong> Diese Metriken sind heuristische Inspiration für das Kontaktgespräch — nicht in den Lead-Score eingerechnet, nicht empirisch kalibriert. Verlass dich bei der Priorisierung auf den Aufmerksamkeits-Index.
+            <strong>Experimentell.</strong> Entropie, Aktivierungsenergie, R₀ und Kahneman sind heuristische Inspiration für das Kontaktgespräch — nicht in den Lead-Score eingerechnet, nicht empirisch kalibriert. <strong>Ausnahme: Google Ads und Job-Signale zählen seit 2026-07-25 voll in die Intent-Dimension</strong> (siehe Karte „Kaufsignal"). Verlass dich bei der Priorisierung auf den Aufmerksamkeits-Index.
         </div>
         <div class="science-grid">
             <div class="card anim-in"><div class="section-label">Thermo-Entropie</div><div class="metric-big ${sc(entropy?.S)}">${entropy?.S ?? '—'}</div><div class="metric-desc">${entropy?.label || ''}</div></div>
@@ -804,10 +806,39 @@ export function renderSignals(el, data) {
             </div>
             <div class="composite-grid">
                 <div style="text-align:center"><div class="metric-xl">${cs.fit}</div><div class="metric-desc">Fit</div></div>
-                <div style="text-align:center"><div class="metric-xl">${cs.intent}</div><div class="metric-desc">Intent</div></div>
+                <div style="text-align:center"><div class="metric-xl">${cs.intent}</div><div class="metric-desc">Intent (kauft)</div></div>
+                <div style="text-align:center"><div class="metric-xl">${cs.hebel ?? '—'}</div><div class="metric-desc">Hebel (Anlass)</div></div>
                 <div style="text-align:center"><div class="metric-xl">${cs.timing}</div><div class="metric-desc">Timing</div></div>
             </div>
             <div class="metric-desc">Engpass: <strong>${cs.bottleneck.name}</strong> (${cs.bottleneck.value}) — ${cs.recommendation}</div>
+        </div>`;
+    }
+
+    // ── Kaufsignal: gibt der Betrieb JETZT Geld fuer Kundengewinnung aus? ──
+    // Die wichtigste Karte fuer die Triage — vor allen Problem-Karten, weil sie
+    // entscheidet, ob sich der Kontakt ueberhaupt lohnt.
+    const bi = data.buyingIntent;
+    if (bi) {
+        const biColor = bi.tier === 'beweisbar' ? 'var(--green)'
+            : bi.tier === 'wahrscheinlich' ? 'var(--orange)' : 'var(--muted)';
+        const aw = data.adWaste;
+        html += `<div class="card card-accent anim-in">
+            <div class="section-label-accent">Kaufsignal — investiert der Betrieb gerade?</div>
+            <div class="metric-desc" style="margin-top:-4px;margin-bottom:12px;font-size:11px;opacity:0.7">Bewiesenes Geldausgeben für Kundengewinnung. Bewusst getrennt vom Problem-Beleg: eine alte Seite zeigt Bedarf, aber keine Kaufbereitschaft.</div>
+            <div class="flex-between" style="margin-bottom:12px">
+                <div><span class="metric-xl" style="color:${biColor}">${bi.score}</span> <span class="metric-desc">${escapeHtml(bi.label || '')}</span></div>
+                ${bi.isProvenSpender ? '<span class="badge badge-green">bewiesener Spender</span>' : ''}
+            </div>
+            ${(bi.signals || []).map(s => `<div class="feature-row">
+                <span class="stat-label"><span class="feature-icon found">★</span>${escapeHtml(s.label)}</span>
+                <span class="feature-detail" title="${escapeHtml(s.proof || '')}">+${s.weight}</span>
+            </div>`).join('')}
+            ${(bi.missing || []).map(m => `<div class="feature-row"><span class="stat-label" style="opacity:0.55">${escapeHtml(m)}</span></div>`).join('')}
+            ${aw?.active ? `<div class="pitch-box" style="margin-top:12px">
+                <h3>Anzeigen laufen auf eine schwache Seite</h3>
+                <p>${escapeHtml(aw.pitch)}</p>
+                <p class="metric-desc" style="font-size:11px;opacity:0.7;margin-top:6px">${escapeHtml(aw.assumptionNote || '')} SEO-Verluste sind hier bewusst ausgeklammert — bezahlte Klicks kommen unabhängig vom Ranking an.</p>
+            </div>` : ''}
         </div>`;
     }
 
@@ -1107,7 +1138,7 @@ function renderMockupCard(m) {
             <button class="btn-copy" id="btn-copy-mockup-svg">SVG kopieren</button>
             <a href="${escapeHtml(m.svgDataUrl)}" download="karriaro-mockup.svg" class="btn-copy">SVG herunterladen</a>
         </div>
-        <div class="mockup-hint">Tipp: In Gmail/Apple Mail einfuegen — das Bild rendert direkt in der Mail. (Outlook-Desktop kann SVG-data-URLs nicht zeigen — fuer den Fall: SVG herunterladen + manuell anhaengen.)</div>
+        <div class="mockup-hint">Tipp: In Gmail/Apple Mail einfügen — das Bild rendert direkt in der Mail. (Outlook-Desktop kann SVG-data-URLs nicht zeigen — für den Fall: SVG herunterladen + manuell anhängen.)</div>
     </div>`;
 }
 
@@ -1119,7 +1150,7 @@ if (typeof document !== "undefined") {
             const data = window.__lastMockupResult;
             if (!data?.htmlSnippet) { showToast?.("Kein Mockup vorhanden"); return; }
             navigator.clipboard.writeText(data.htmlSnippet).then(() => {
-                target.textContent = "✓ HTML kopiert — in Mail einfuegen";
+                target.textContent = "✓ HTML kopiert — in Mail einfügen";
                 setTimeout(() => { target.textContent = "📨 In Outreach-Mail einbetten"; }, 3000);
             });
         }

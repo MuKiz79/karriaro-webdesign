@@ -33,6 +33,9 @@ import { auditUX } from '../analysis/ux-audit.js';
 import { verifyFeatureClaim } from '../analysis/claim-verify.js';
 import { checkFreshness } from '../analysis/wayback-freshness.js';
 import { detectSurgeIntent } from '../analysis/surge-intent.js';
+import { detectGoogleAds } from '../signals/google-ads.js';
+import { detectJobSignals } from '../signals/job-signal.js';
+import { assessBuyingIntent, computeAdWaste } from '../analysis/buying-intent.js';
 import { assessDigitalMaturity } from '../analysis/digital-maturity.js';
 import { assessConversationReadiness } from '../analysis/conversation-ready.js';
 import { detectStakeholder } from '../analysis/stakeholder.js';
@@ -307,8 +310,17 @@ function renderResult(data) {
 function runLocalAnalysis(p) {
     const { ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile } = p;
 
-    const surgeIntent = detectSurgeIntent(footprint, null, null, place);
-    const digitalMaturity = assessDigitalMaturity(footprint, null, psiData);
+    // Ads- und Job-Signale kommen GRATIS aus denselben PSI-Network-Requests.
+    // Sie wurden bis 2026-07-25 zwar berechnet, aber nur im Tab "Experimentell"
+    // angezeigt — an detectSurgeIntent/assessDigitalMaturity wurde hart `null`
+    // uebergeben. Damit waren die beiden staerksten Kaufsignale (Anzeigen laufen,
+    // Betrieb stellt ein) strukturell tot: von 15 moeglichen Surge-Punkten waren
+    // 7 unerreichbar, und `hasSurge` (>=5) sprang praktisch nie an.
+    const googleAds = detectGoogleAds(psiData);
+    const jobSignal = detectJobSignals(psiData);
+
+    const surgeIntent = detectSurgeIntent(footprint, jobSignal, googleAds, place);
+    const digitalMaturity = assessDigitalMaturity(footprint, googleAds, psiData);
     const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
     const stakeholder = detectStakeholder(psiData, place);
     const techTrajectory = assessTechTrajectory(tech, wayback);
@@ -330,7 +342,22 @@ function runLocalAnalysis(p) {
     const wpSecurity = assessWPSecurity(psiData, tech);
     const cognitiveLoad = assessCognitiveLoad(psiData);
     const signalStack = analyzeSignalStack({ ws, tech, place, footprint, revenue, wayback, screenshotAnalysis, socialSignals, surgeIntent, emotionalReady, conversationReady, bfsgScore });
-    const compositeScore = calculateCompositeScore({ ws, tech, place, footprint, revenue, result, screenshotAnalysis, contentAnalysis, socialSignals, triggerEvents, bfsgScore, signalStack, techDepth, contentFreshness, companyProfile });
+
+    // ── Kaufsignal-Achse: gibt der Betrieb JETZT Geld fuer Kundengewinnung aus? ──
+    // Bewusst getrennt vom Problem-Beleg (siehe analysis/buying-intent.js).
+    const buyingIntent = assessBuyingIntent({
+        googleAds,
+        footprint,
+        jobSignal,
+        jobOpenings: null, // echte Stellenzahl (Arbeitsagentur-API) noch nicht auf main
+        reviewRecency: reviewVelocity?.available
+            ? { daysSinceLast: reviewVelocity.daysSinceLastReview, velocity: reviewVelocity.velocity, n: reviewVelocity.n }
+            : null
+    });
+    // Killer-Kombi: zahlt fuer Klicks UND leitet sie auf eine messbar schwache Seite.
+    const adWaste = computeAdWaste({ ws, adsActive: buyingIntent.adsActive });
+
+    const compositeScore = calculateCompositeScore({ ws, tech, place, footprint, revenue, result, screenshotAnalysis, contentAnalysis, socialSignals, triggerEvents, bfsgScore, signalStack, techDepth, contentFreshness, companyProfile, buyingIntent, adWaste });
     const feedbackInsight = getScoreInsight(result.leadScore);
     // Konsolidierte Top-Empfehlung — EV ist Top-Filter (siehe decision-engine.js).
     // Verhindert Widersprueche zwischen "Composite=Exzellent" und "Kelly=Skip".
@@ -341,7 +368,8 @@ function runLocalAnalysis(p) {
         localSEO, emotionalReady, revenueWeighted, socialSignals, socialComparison,
         cruxData, bfsgScore, triggerEvents, techDepth, contentFreshness,
         pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight,
-        reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad, decision
+        reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad, decision,
+        googleAds, jobSignal, buyingIntent, adWaste
     };
 }
 

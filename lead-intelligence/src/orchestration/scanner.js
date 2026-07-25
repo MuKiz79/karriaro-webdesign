@@ -21,6 +21,7 @@ import { fetchPageSpeed } from '../api/pagespeed.js';
 import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
+import { detectJobSignals } from '../signals/job-signal.js';
 import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
@@ -217,9 +218,9 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech, screenshot = null, adIntent = null;
+            let ws, tech, screenshot = null, adIntent = null, jobIntent = null;
             const cs = getCachedScore(domainKey);
-            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; }
+            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; jobIntent = cs.jobIntent || null; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
@@ -231,11 +232,14 @@ export async function runScanner() {
                 const fp = analyzeDigitalFootprint(psi);
                 const signals = [...ga.signals, ...(fp.hasFbPixel ? ['Meta-Pixel (Facebook-Werbung)'] : [])];
                 adIntent = { active: ga.active || fp.hasFbPixel, signals };
-                setCachedScore(domainKey, ws, tech, adIntent);
+                // Job-Signal ebenfalls gratis aus denselben PSI-Requests: stellt der
+                // Betrieb ein? = Wachstum + Personalbudget = zweites Kaufsignal.
+                jobIntent = detectJobSignals(psi);
+                setCachedScore(domainKey, ws, tech, adIntent, jobIntent);
             }
             const techAge = analyzeTechAge(tech, {});
             // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Ad-Intent.
-            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, seasonal: seasonalTriggerFor(place.primaryType) });
+            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, jobIntent, seasonal: seasonalTriggerFor(place.primaryType) });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -259,6 +263,8 @@ export async function runScanner() {
                 looksAlreadyGood: opp.looksAlreadyGood,
                 hardStructural: opp.hardStructural,
                 adIntent,                              // {active, signals} — Pitch-Hook + Vision-Recompute
+                jobIntent,                             // {isHiring, signals} — zweites Kaufsignal
+                buySignal: opp.buySignal,              // {adActive, hiring, mult} — Filter/Sortierung
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,

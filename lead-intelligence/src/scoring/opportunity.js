@@ -102,11 +102,13 @@ export const MIN_REVIEWS_VALUE = 8;
 /**
  * @param {{ws:object, tech:object, place:object, websiteUri?:string, techAge?:object,
  *           reviewRecency?:{daysSinceLast:number|null, velocity:number|null, n:number},
- *           visionOutdated?:boolean, adIntent?:{active:boolean, signals?:string[]}}} p
+ *           visionOutdated?:boolean, adIntent?:{active:boolean, signals?:string[]},
+ *           jobIntent?:{isHiring:boolean, signals?:string[]}}} p
  * @returns {{opportunity:number, badnessScore:number, businessStrength:number,
- *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number, adIntent:boolean}}
+ *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number,
+ *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, seasonal = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null }) {
     const perf = typeof ws.perf === 'number' ? ws.perf : 50;
     const isHttps = ws.isHttps !== false;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
@@ -154,11 +156,21 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const looksAlreadyGood = perf >= 70 && isHttps && !baukasten && !ta.cmsEolYear
         && (ta.techSeverity || 0) < 2 && hardStructural === 0;
 
-    // ── Ad-Intent (stärkstes billiges KAUFSIGNAL): zahlt für Google-/Meta-Anzeigen →
-    //    bewiesener Spender, der Geld in Kundengewinnung steckt UND es auf eine schlechte
-    //    Seite leitet. Boost (×1.25) auf eine bereits qualifizierte Lead — KEIN Junk-Rescue
-    //    (die Konvergenz-Schranke unten greift weiter, ad-intent allein macht nicht HOT). ──
+    // ── KAUFSIGNAL-Achse (stärkstes billiges Signal): zahlt für Google-/Meta-Anzeigen
+    //    bzw. stellt ein → bewiesener Spender, der Geld in Kundengewinnung steckt UND es
+    //    auf eine schlechte Seite leitet. Boost auf eine bereits qualifizierte Lead —
+    //    KEIN Junk-Rescue (die Konvergenz-Schranke unten greift weiter, Kaufsignal allein
+    //    macht nicht HOT, und das Liveness-Gate killt tote Betriebe weiter).
+    //
+    //    ⚠️ Bewusst OHNE Bewertungs-Frische: die traegt bereits das livenessGate oben.
+    //    Dieselbe Evidenz zweimal zu zaehlen wuerde lebendige Betriebe doppelt belohnen.
+    //
+    //    ⚠️ Kein Abschlag fuer FEHLENDES Kaufsignal (Neutralwert bleibt 1.0). Das haelt
+    //    die kalibrierte 27-Profil-Ground-Truth in tests/scoring/opportunity-tiers.test.js
+    //    unberuehrt — die relative Hochstufung der Spender reicht fuer die Sortierung. ──
     const adActive = !!(adIntent && adIntent.active);
+    const hiring = !!(jobIntent && jobIntent.isHiring);
+    const buySignalMult = (adActive ? 1.35 : 1.0) * (hiring ? 1.15 : 1.0);
     // Saison-Timing (Vor-Saison der Branche = jetzt bauen = rechtzeitig fertig): leichter
     // Boost auf eine qualifizierte Lead — KEIN Junk-Rescue (Konvergenz greift weiter).
     const seasonalActive = !!seasonal;
@@ -167,7 +179,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const lg = livenessGate(reviewRecency, place);
     const vm = valueMult(businessStrength, rating, reviews, MIN_REVIEWS_VALUE);
     let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
-        * (adActive ? 1.25 : 1.0) * (seasonalActive ? 1.10 : 1.0);
+        * buySignalMult * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -179,6 +191,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // ── Begründungs-Chips (Transparenz; Ad-Intent prominent für Founder-Triage) ──
     const reasons = [];
     if (adActive) reasons.push('💸 Anzeigen aktiv');     // bewiesener Spender — zuerst
+    if (hiring) reasons.push('📈 stellt ein');           // Wachstum + Personalbudget
     if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
@@ -189,5 +202,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (vm.gated) reasons.push('zu kleiner Betrieb');
     reasons.push(rating ? `${reviews}★ (${rating.toFixed(1)})` : `${reviews} Bew.`);
 
-    return { opportunity, badnessScore, businessStrength, looksAlreadyGood, reasons, hardStructural, adIntent: adActive };
+    return {
+        opportunity, badnessScore, businessStrength, looksAlreadyGood, reasons, hardStructural,
+        adIntent: adActive,
+        // Eigene Achse fuer UI-Filter/Sortierung ("nur Betriebe, die Geld ausgeben").
+        buySignal: { adActive, hiring, mult: Math.round(buySignalMult * 100) / 100 }
+    };
 }
