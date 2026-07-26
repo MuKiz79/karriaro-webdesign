@@ -898,6 +898,9 @@
 .ws-stat-hot { color: var(--red); }
 .ws-stat-warm { color: var(--orange); }
 .ws-stat-cold { color: var(--muted); }
+/* Kaufsignal = die Achse, die über „will der Inhaber erneuern?" entscheidet.
+   Bewusst in der Akzentfarbe hervorgehoben, nicht als weitere graue Zahl. */
+.ws-stat-buy { color: var(--accent); font-weight: 600; }
 
 .ws-toolbar {
     display: flex;

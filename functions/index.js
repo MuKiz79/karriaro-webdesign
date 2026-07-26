@@ -1703,7 +1703,12 @@ exports.adEvidence = onRequest(
     async (req, res) => {
         if (cors(req, res)) return;
         if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
-        if (await enforceRateLimit(db, req, res, "adEvidence", 60, 3600)) return;
+        // 240/h: der Region-Scanner prueft die Werbe-Evidenz jetzt fuer die Top-60
+        // statt Top-15 eines Scans (das Kaufsignal entscheidet ueber die Rangfolge,
+        // 15 von ~280 Treffern hiessen: fuer 95% galt "keine Werbung" ungeprueft als
+        // Tatsache). Zwei Scans/h passen damit rein; ein Treffer kostet 1 HTML- plus
+        // bis zu 3 Container-Fetches, alle serverseitig 168 h gecacht.
+        if (await enforceRateLimit(db, req, res, "adEvidence", 240, 3600)) return;
 
         const startMs = Date.now();
         let { url, force = false } = req.body || {};

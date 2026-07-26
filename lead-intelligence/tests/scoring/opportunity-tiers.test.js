@@ -39,13 +39,25 @@ function scoreProfile(p) {
     return applyVisionStep(base, p.visionModern, p);
 }
 
+// ⚠️ RE-KALIBRIERUNG 2026-07-26 (T01/T04/T06: HOT → WARM).
+// Die urspruengliche Ground-Truth kodierte die These „schlechte Seite + starker
+// Betrieb = heisser Lead". Ein echter Stuttgart-Scan hat sie falsifiziert: der
+// Founder hat die Top-Treffer (zwei ausgebuchte Zahnarztpraxen, eine Tierarzt-
+// praxis) als „nicht unser Klientel" zurueckgewiesen — waehrend der einzige
+// Betrieb mit bewiesenem Kaufsignal (Anwalt, Google Ads auf eine Seite ohne SSL)
+// dahinter lag. T06 IST dieser Tierarzt-Fall.
+// Neu gilt: kapazitaetsgebundene Heilberufe OHNE Kaufsignal sind WARM, nicht HOT
+// (Bedarfsdruck-Achse in scoring/opportunity.js). Sie verschwinden nicht — sie
+// stehen hinter den Betrieben, die nachweislich Geld fuer Kunden ausgeben.
+// Gegenprobe, dass hier keine Branchen-Diskriminierung entstanden ist, im
+// describe „Bedarfsdruck-Achse" unten: dieselben Profile MIT Anzeigen = wieder HOT.
 const TESTSET = [
-  { id:'T01', expectedTier:'HOT',  ws:{perf:34,seo:58,a11y:62,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.9'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.7,userRatingCount:180,primaryType:'dentist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:12,velocity:6,n:5}, visionModern:false },
+  { id:'T01', expectedTier:'WARM', ws:{perf:34,seo:58,a11y:62,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.9'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.7,userRatingCount:180,primaryType:'dentist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:12,velocity:6,n:5}, visionModern:false },
   { id:'T02', expectedTier:'HOT',  ws:{perf:41,seo:55,a11y:60,viewport:false,isHttps:true}, tech:{isBaukasten:false,cms:'Joomla',version:'3.10'}, techAge:{cms:'Joomla',cmsEolYear:2023,techSeverity:5}, place:{rating:4.6,userRatingCount:240,primaryType:'lawyer',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:9,velocity:7,n:5}, visionModern:false },
   { id:'T03', expectedTier:'HOT',  ws:{perf:48,seo:62,a11y:70,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Wix',version:null}, techAge:{cms:'Wix',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:95,primaryType:'real_estate_agency',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:21,velocity:4,n:5}, visionModern:false },
-  { id:'T04', expectedTier:'HOT',  ws:{perf:52,seo:68,a11y:66,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Jimdo',version:null}, techAge:{cms:'Jimdo',cmsEolYear:null,techSeverity:3}, place:{rating:4.9,userRatingCount:140,primaryType:'physiotherapist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:7,velocity:9,n:5}, visionModern:null },
+  { id:'T04', expectedTier:'WARM', ws:{perf:52,seo:68,a11y:66,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Jimdo',version:null}, techAge:{cms:'Jimdo',cmsEolYear:null,techSeverity:3}, place:{rating:4.9,userRatingCount:140,primaryType:'physiotherapist',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:7,velocity:9,n:5}, visionModern:null },
   { id:'T05', expectedTier:'HOT',  ws:{perf:45,seo:60,a11y:58,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.4'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.4,userRatingCount:320,primaryType:'car_dealer',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:5,velocity:14,n:5}, visionModern:false },
-  { id:'T06', expectedTier:'HOT',  ws:{perf:55,seo:70,a11y:72,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:110,primaryType:'veterinary_care',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:15,velocity:5,n:5}, visionModern:null },
+  { id:'T06', expectedTier:'WARM', ws:{perf:55,seo:70,a11y:72,viewport:true,isHttps:true}, tech:{isBaukasten:true,cms:'Squarespace',version:null}, techAge:{cms:'Squarespace',cmsEolYear:null,techSeverity:3}, place:{rating:4.8,userRatingCount:110,primaryType:'veterinary_care',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:15,velocity:5,n:5}, visionModern:null },
   { id:'T07', expectedTier:'HOT',  ws:{perf:38,seo:54,a11y:52,viewport:false,isHttps:false}, tech:{isBaukasten:false,cms:'WordPress',version:'5.2'}, techAge:{cms:'WordPress',cmsEolYear:null,techSeverity:2}, place:{rating:4.5,userRatingCount:88,primaryType:'roofing_contractor',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:18,velocity:4,n:5}, visionModern:false },
   { id:'T08', expectedTier:'HOT',  ws:{perf:50,seo:66,a11y:64,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.1'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.3,userRatingCount:130,primaryType:'plumber',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:28,velocity:3,n:5}, visionModern:null },
   { id:'T26', expectedTier:'HOT',  ws:{perf:43,seo:58,a11y:56,viewport:true,isHttps:true}, tech:{isBaukasten:false,cms:'WordPress',version:'4.6'}, techAge:{cms:'WordPress',cmsEolYear:2022,techSeverity:5}, place:{rating:4.6,userRatingCount:900,primaryType:'hotel',businessStatus:'OPERATIONAL'}, reviewRecency:{daysSinceLast:4,velocity:12,n:5}, visionModern:false },
@@ -219,5 +231,69 @@ describe('Timing/Saison-Boost', () => {
             reviewRecency: { daysSinceLast: 700, velocity: 0.2, n: 4 }
         };
         expect(computeOpportunity({ ...dead, seasonal: season }).opportunity).toBeLessThan(50);
+    });
+});
+
+describe('Bedarfsdruck-Achse (F9) — „will der Betrieb überhaupt mehr Kunden?"', () => {
+    // Ausgelöst durch echte Founder-Rückmeldung am Stuttgart-Scan (2026-07-26):
+    // ausgebuchte Praxen standen über einem bewiesenen Werbetreibenden.
+    const praxis = {
+        ws: { perf: 63, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 5.0, userRatingCount: 25, primaryType: 'dentist', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 33, velocity: null, n: 5 }
+    };
+    const ad = { active: true, signals: ['Google Ads'] };
+
+    it('dämpft eine etablierte, kapazitätsgebundene Praxis ohne Kaufsignal', () => {
+        const r = computeOpportunity({ ...praxis });
+        expect(r.demandFactor).toBe(0.70);
+        expect(r.reasons).toContain('⏸ kein Wachstumssignal');
+        expect(r.opportunity).toBeLessThan(70);          // nicht mehr HOT
+        expect(r.opportunity).toBeGreaterThanOrEqual(50); // aber auch nicht weggeworfen
+    });
+
+    it('hebt DIESELBE Praxis mit Anzeigen wieder über die HOT-Schwelle', () => {
+        // Beweist: die Achse misst Kaufabsicht, nicht Branchenzugehörigkeit.
+        const ohne = computeOpportunity({ ...praxis }).opportunity;
+        const mit = computeOpportunity({ ...praxis, adIntent: ad });
+        expect(mit.demandFactor).toBe(1.0);
+        expect(mit.opportunity).toBeGreaterThanOrEqual(70);
+        expect(mit.opportunity - ohne).toBeGreaterThan(20);
+    });
+
+    it('„stellt ein" hebt den Abschlag ebenfalls auf — Wachstum ist bewiesen', () => {
+        const r = computeOpportunity({ ...praxis, jobIntent: { isHiring: true, signals: ['Stellenanzeige'] } });
+        expect(r.demandFactor).toBe(1.0);
+        expect(r.reasons).not.toContain('⏸ kein Wachstumssignal');
+    });
+
+    it('verschont eine JUNGE Praxis ohne Patientenstamm (Zulauf gesucht)', () => {
+        // businessStrength < 45 → der Betrieb ist noch nicht etabliert, der
+        // „ausgelastet"-Schluss wäre unbelegt.
+        const jung = { ...praxis, place: { ...praxis.place, userRatingCount: 9, rating: 4.6 } };
+        const r = computeOpportunity(jung);
+        expect(r.businessStrength).toBeLessThan(45);
+        expect(r.demandFactor).toBe(1.0);
+    });
+
+    it('lässt nicht-kapazitätsgebundene Branchen unberührt (Anwalt, Umzug, Handwerk)', () => {
+        for (const t of ['lawyer', 'moving_company', 'roofing_contractor', 'real_estate_agency', 'hair_salon']) {
+            const r = computeOpportunity({ ...praxis, place: { ...praxis.place, primaryType: t } });
+            expect(r.demandFactor, `${t} darf nicht gedämpft werden`).toBe(1.0);
+        }
+    });
+
+    it('der Werbetreibende schlägt die ausgebuchte Praxis — der Kernfall des Founders', () => {
+        // RA Voggel (Anzeigen + EOL-CMS + kein SSL) vs. Zahnarzt Simon (nur Wix).
+        const anwalt = computeOpportunity({
+            ws: { perf: 64, viewport: true, isHttps: false }, tech: { cms: 'WordPress' },
+            techAge: { cms: 'WordPress', cmsEolYear: 2021, techSeverity: 5 },
+            place: { rating: 5.0, userRatingCount: 30, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' },
+            reviewRecency: { daysSinceLast: 200, velocity: null, n: 5 },
+            adIntent: ad
+        }).opportunity;
+        expect(anwalt).toBeGreaterThan(computeOpportunity({ ...praxis }).opportunity);
     });
 });

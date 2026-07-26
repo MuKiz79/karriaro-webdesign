@@ -40,12 +40,50 @@ const PROFESSIONAL = new Set(['roofing_contractor', 'plumber', 'electrician', 'm
     'physiotherapist', 'veterinary_care', 'lodging', 'hotel', 'car_dealer', 'car_repair', 'auto_repair']);
 const LOW_VALUE_GASTRO = new Set(['restaurant', 'cafe', 'bakery']);
 const LOW_VALUE_RETAIL = new Set(['hair_salon', 'beauty_salon', 'florist', 'gym']);
+
+// KAPAZITAETSGEBUNDENE Branchen: der Engpass ist der Behandlungsstuhl/Termin-Slot,
+// NICHT die Website. Ein etablierter Zahnarzt kann zusaetzliche Website-Besucher
+// gar nicht in Umsatz verwandeln — er hat keinen Grund, eine neue Seite zu kaufen.
+// Ein Anwalt/Makler/Umzugsunternehmen dagegen skaliert direkt mit Anfragen.
+// Bewusst NICHT enthalten: lawyer (wirbt aktiv um Mandate), hair_salon/beauty_salon
+// (stuhlgebunden, aber nachweislich akquise-hungrig).
+const CAPACITY_BOUND = new Set(['dentist', 'doctor', 'veterinary_care', 'physiotherapist']);
 function dealFactor(primaryType) {
     if (PREMIUM.has(primaryType)) return 1.25;
     if (PROFESSIONAL.has(primaryType)) return 1.10;
     if (LOW_VALUE_GASTRO.has(primaryType)) return 0.68;
     if (LOW_VALUE_RETAIL.has(primaryType)) return 0.82;
     return 0.90;
+}
+
+// Schwelle, ab der ein Betrieb als ETABLIERT gilt (deckungsgleich mit der 1.00-Stufe
+// in valueMult). Darunter greift der Bedarfsdruck-Abschlag NICHT: eine junge Praxis
+// ohne Patientenstamm sucht sehr wohl Zulauf.
+const ESTABLISHED_STRENGTH = 45;
+
+/**
+ * Bedarfsdruck (F9) — „will der Betrieb ueberhaupt mehr Kunden?"
+ *
+ * Der bisherige Score las „laeuft gut" (frische Bewertungen x starker Betrieb =
+ * bis 1.56x) als Kaufbereitschaft. Genau falsch herum: viele frische Top-Bewertungen
+ * beweisen Zahlungsfaehigkeit UND dass die Website den Betrieb nicht behindert.
+ * Empirischer Ausloeser (Founder-Rueckmeldung am Stuttgart-Scan 2026-07-26): zwei
+ * ausgebuchte Zahnarztpraxen auf Wix/Jimdo standen mit 92 ueber einem Anwalt (91),
+ * der nachweislich Google-Geld auf eine Seite OHNE SSL leitet.
+ *
+ * Regel bewusst schmal — sie greift nur, wo sie strukturell begruendbar ist:
+ * kapazitaetsgebundene Branche UND etabliert UND KEIN Kaufsignal. Sobald der Betrieb
+ * Anzeigen schaltet oder einstellt, ist der Wachstumswille bewiesen → kein Abschlag.
+ * Damit wird das Kaufsignal INNERHALB der Premium-Heilberufe zur entscheidenden Achse
+ * (Spreizung 1.35x statt 0.70x = 1.93x) statt zum schwaechsten Multiplikator.
+ *
+ * @returns {{factor:number, chip:string|null}}
+ */
+function demandPressure(primaryType, businessStrength, adActive, hiring) {
+    if (adActive || hiring) return { factor: 1.0, chip: null };          // Wachstumswille bewiesen
+    if (!CAPACITY_BOUND.has(primaryType)) return { factor: 1.0, chip: null };
+    if (businessStrength < ESTABLISHED_STRENGTH) return { factor: 1.0, chip: null };
+    return { factor: 0.70, chip: '⏸ kein Wachstumssignal' };
 }
 
 /**
@@ -178,8 +216,9 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // ── Multiplikativer Kern (F2: Matrix von Achsen mit Gates, KEINE gewichtete Summe). ──
     const lg = livenessGate(reviewRecency, place);
     const vm = valueMult(businessStrength, rating, reviews, MIN_REVIEWS_VALUE);
+    const dp = demandPressure(place.primaryType, businessStrength, adActive, hiring);
     let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
-        * buySignalMult * (seasonalActive ? 1.10 : 1.0);
+        * buySignalMult * dp.factor * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -199,6 +238,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (!isHttps) reasons.push('kein SSL');
     if (noMobile) reasons.push('nicht mobil');
     if (lg.chip) reasons.push(lg.chip);
+    if (dp.chip) reasons.push(dp.chip);   // kapazitätsgebunden + etabliert + kein Kaufsignal
     if (vm.gated) reasons.push('zu kleiner Betrieb');
     reasons.push(rating ? `${reviews}★ (${rating.toFixed(1)})` : `${reviews} Bew.`);
 
@@ -206,6 +246,8 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         opportunity, badnessScore, businessStrength, looksAlreadyGood, reasons, hardStructural,
         adIntent: adActive,
         // Eigene Achse fuer UI-Filter/Sortierung ("nur Betriebe, die Geld ausgeben").
-        buySignal: { adActive, hiring, mult: Math.round(buySignalMult * 100) / 100 }
+        buySignal: { adActive, hiring, mult: Math.round(buySignalMult * 100) / 100 },
+        // Bedarfsdruck-Faktor (1.0 = kein Abschlag, 0.70 = kapazitaetsgebunden ohne Kaufsignal).
+        demandFactor: dp.factor
     };
 }

@@ -27,6 +27,7 @@ import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
+import { applyFilters, hasBuySignal } from './lead-filters.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { seasonalTriggerFor } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
@@ -293,8 +294,13 @@ export async function runScanner() {
     // Läuft VOR dem Bild-Check, damit dessen Neuberechnung das aktualisierte
     // adIntent mitnimmt (sonst ginge die Vision-Dämpfung verloren).
     if (!state.aborted) {
-        const AD_EVIDENCE_TOP_N = 15;
-        const adCands = leads.filter(l => l.opportunity >= 45 && !l.adIntent?.active)
+        // 60 statt 15: das Kaufsignal entscheidet ueber die Rangfolge, also darf es
+        // nicht fuer 95% der Treffer ungeprueft als "nicht vorhanden" gelten. Die
+        // Schwelle faellt von 45 auf 35, weil ein gefundener Werbetreibender genau
+        // dort nach oben springt, wo er vorher unsichtbar blieb. Server-Limit 240/h,
+        // Ergebnisse 7 Tage client- und 168 h serverseitig gecacht.
+        const AD_EVIDENCE_TOP_N = 60;
+        const adCands = leads.filter(l => l.opportunity >= 35 && !l.adIntent?.active)
             .sort((a, b) => b.opportunity - a.opportunity).slice(0, AD_EVIDENCE_TOP_N);
         if (adCands.length) {
             let aDone = 0;
@@ -306,6 +312,10 @@ export async function runScanner() {
                     if (ev?.ok) setCachedAdEvidence(l.domain, ev);
                 }
                 const e = (ev?.ok && !ev.blocked) ? ev.adEvidence : null;
+                // Ehrlichkeits-Flag: "geprueft und nichts gefunden" ist etwas anderes
+                // als "nie geprueft". Nur ein sauberer Scan (kein WAF-Block) zaehlt.
+                l.adChecked = !!e;
+                l.adBlocked = !!(ev?.ok && ev.blocked);
                 if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
                     const sig = [];
                     if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
@@ -428,7 +438,12 @@ function getActiveFilters() {
         minScore: parseInt(h.get('min') || '0', 10),
         branch:   h.get('branch') || 'all',
         sort:     h.get('sort') || 'score',
-        baukasten: h.get('baukasten') === '1'
+        baukasten: h.get('baukasten') === '1',
+        // Kaufsignal-Filter: nur Betriebe, die nachweislich Geld fuer Kundengewinnung
+        // ausgeben (Anzeigen) oder wachsen (stellen ein). Das ist die Achse, die
+        // ueber „will der Inhaber erneuern?" entscheidet — vorher war sie zwar
+        // berechnet, aber weder filter- noch sortierbar (bei 281 Treffern unauffindbar).
+        buy:      h.get('buy') === '1'
     };
 }
 
@@ -440,20 +455,9 @@ function persistFilters(updates) {
     if (next.branch && next.branch !== 'all') h.set('branch', next.branch);
     if (next.sort && next.sort !== 'score') h.set('sort', next.sort);
     if (next.baukasten) h.set('baukasten', '1');
+    if (next.buy) h.set('buy', '1');
     const str = h.toString();
     location.hash = str ? '#' + str : '';
-}
-
-function applyFilters(leads, f) {
-    let out = leads.slice();
-    if (f.minScore > 0) out = out.filter(l => l.leadScore >= f.minScore);
-    if (f.branch && f.branch !== 'all') out = out.filter(l => l.branch.key === f.branch);
-    if (f.baukasten) out = out.filter(l => l.isBaukasten);
-    if (f.sort === 'reviews') out.sort((a, b) => b.reviews - a.reviews);
-    else if (f.sort === 'name')  out.sort((a, b) => a.name.localeCompare(b.name));
-    else if (f.sort === 'perf')  out.sort((a, b) => (a.ws?.perf || 0) - (b.ws?.perf || 0));
-    else /* score */              out.sort((a, b) => b.leadScore - a.leadScore);
-    return out;
 }
 
 // ─────────── Render ───────────
@@ -464,6 +468,7 @@ function renderLeadWorkspace(city, leads, filters) {
     const hot = leads.filter(l => l.leadScore >= 70).length;
     const warm = leads.filter(l => l.leadScore >= 50 && l.leadScore < 70).length;
     const cold = leads.length - hot - warm;
+    const buyers = leads.filter(hasBuySignal).length;
 
     // Branchen-Filter-Liste — nur die Branchen, die echte Leads haben
     const branchCounts = {};
@@ -480,6 +485,7 @@ function renderLeadWorkspace(city, leads, filters) {
                     <span class="ws-stat-hot">🔥 ${hot} hot</span>
                     <span class="ws-stat-warm">⚠ ${warm} warm</span>
                     <span class="ws-stat-cold">○ ${cold} cold</span>
+                    <span class="ws-stat-buy" title="Betriebe, die nachweislich Geld für Kundengewinnung ausgeben oder einstellen">💸 ${buyers} mit Kaufsignal</span>
                 </div>
             </div>
             <button class="ws-aggregate-btn" data-action="aggregate" title="Voranalyse: welche Branchen in dieser Stadt am meisten werbende, schwache, erreichbare Betriebe haben">🎯 Voranalyse</button>
@@ -496,6 +502,9 @@ function renderLeadWorkspace(city, leads, filters) {
             <div class="ws-pills" data-pill-group="baukasten">
                 <button class="ws-pill${filters.baukasten ? ' active' : ''}" data-baukasten="${filters.baukasten ? '0' : '1'}">${filters.baukasten ? '✓ ' : ''}Baukasten-only</button>
             </div>
+            <div class="ws-pills" data-pill-group="buy">
+                <button class="ws-pill${filters.buy ? ' active' : ''}" data-buy="${filters.buy ? '0' : '1'}" title="Nur Betriebe mit bewiesenem Kaufsignal — schaltet Anzeigen oder stellt ein">${filters.buy ? '✓ ' : ''}💸 nur Kaufsignal (${buyers})</button>
+            </div>
             <div class="ws-select-wrap">
                 <select class="ws-select" data-action="branch">
                     <option value="all"${filters.branch === 'all' ? ' selected' : ''}>Alle Branchen (${total})</option>
@@ -503,6 +512,7 @@ function renderLeadWorkspace(city, leads, filters) {
                 </select>
                 <select class="ws-select" data-action="sort">
                     <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Score ↓</option>
+                    <option value="buy"${filters.sort === 'buy' ? ' selected' : ''}>Sort: Kaufsignal zuerst</option>
                     <option value="reviews"${filters.sort === 'reviews' ? ' selected' : ''}>Sort: Reviews ↓</option>
                     <option value="perf"${filters.sort === 'perf' ? ' selected' : ''}>Sort: Performance ↑</option>
                     <option value="name"${filters.sort === 'name' ? ' selected' : ''}>Sort: A-Z</option>
@@ -577,6 +587,8 @@ function bindWorkspaceEvents(el) {
                 persistFilters({ minScore: parseInt(pill.dataset.min, 10) });
             } else if (group === 'baukasten') {
                 persistFilters({ baukasten: pill.dataset.baukasten === '1' });
+            } else if (group === 'buy') {
+                persistFilters({ buy: pill.dataset.buy === '1' });
             }
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
@@ -584,7 +596,7 @@ function bindWorkspaceEvents(el) {
 
         // Reset
         if (e.target.dataset.action === 'reset-filters') {
-            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false });
+            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
         }
