@@ -101,7 +101,15 @@ html.embed-hero .hero-h1-line{display:block}
         .bad-slider-row { display: flex; flex-direction: column; gap: 10px; padding: 18px 0; border-top: 1px solid var(--border); }
         .bad-slider-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text); }
         .bad-slider-label .val { color: var(--accent); font-variant-numeric: tabular-nums; }
-        .bad-slider-row input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .bad-slider-row input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px; background: var(--border-strong); outline: none; cursor: pointer; margin: 12px 0; }
+        .bad-slider-row input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 999px; background: transparent; }
+        .bad-slider-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.06); margin-top: -8px; transition: border-color 0.15s, box-shadow 0.15s; }
+        .bad-slider-row input[type="range"]:hover::-webkit-slider-thumb { border-color: var(--accent); box-shadow: 0 2px 6px rgba(0,0,0,0.22), 0 3px 10px rgba(0,0,0,0.08); }
+        .bad-slider-row input[type="range"]::-moz-range-track { height: 4px; border-radius: 999px; background: var(--border-strong); }
+        .bad-slider-row input[type="range"]::-moz-range-progress { height: 4px; border-radius: 999px; background: var(--accent); }
+        .bad-slider-row input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.18); }
+        .bad-config-canvas { flex-direction: column; gap: 4px; text-align: center; padding: 0 24px; }
+        .bad-canvas-price { font-size: 0.6em; opacity: 0.82; letter-spacing: 0; font-weight: 600; }
         .bad-config-output { background: var(--accent); color: var(--bg); padding: 24px 28px; border-radius: var(--p-radius-lg); margin-top: 8px; }
         .bad-config-output-label { font-size: 11px; opacity: 0.75; letter-spacing: 0.24em; text-transform: uppercase; margin-bottom: 8px; }
         .bad-config-output-val { font-family: var(--font-tight); font-weight: 800; font-size: clamp(36px, 4.4vw, 56px); line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -0.025em; margin-bottom: 6px; }
@@ -232,8 +240,8 @@ html.embed-hero .hero-h1-line{display:block}
         .ai-trigger:hover { background: rgba(180,112,69,0.16); }
         .ai-trigger .ai-icon { width: 32px; height: 32px; background: var(--accent); color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px; font-weight: 700; }
         .ai-trigger .ai-text strong { display: block; font-size: 14px; color: var(--text); }
-        .ai-trigger .ai-text span { font-size: 12px; color: var(--text-soft); }
-        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
+        .ai-trigger .ai-text > span { font-size: 12px; color: var(--text-soft); }
+        .ai-real-badge { display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 999px; background: var(--accent-dark); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle; }
         .ai-consent { font-size: 11px; color: var(--text-light); margin-top: 10px; line-height: 1.45; }
         .ai-result { margin-top: 18px; padding: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--p-radius); display: none; }
         .ai-result.is-loading { display: block; }
@@ -470,8 +478,8 @@ html.embed-hero .hero-h1-line{display:block}
                             </svg>
                         </span>
                         <h1 class="hero-headline">
-                            <span class="hero-h1-line"><span class="hero-dropcap">W</span>asser ist kein Spaß.</span>
-                            <span class="hero-h1-line"><em>Wir nehmen das ernst — und Ihre Zeit auch.</em></span>
+                            <span class="hero-h1-line"><span class="hero-dropcap hero-dropcap--digit">6</span>40 Bäder seit 2010.</span>
+                            <span class="hero-h1-line"><em>Ihres wird das nächste.</em></span>
                         </h1>
                         <p class="lead">Wasserschaden, defekte Heizung, geplantes Komplettbad — Foto senden, Festpreis-Angebot in 24 Stunden. SHK-Innungsmitglied, Energie-Berater, versichert bis 5 Mio €.</p>
                         <div class="hero-ctas">
