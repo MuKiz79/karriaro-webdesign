@@ -509,6 +509,8 @@ html.embed-hero .hero-h1-line{display:block}
         @keyframes dropPulse { 0%,100% { box-shadow: 0 0 0 3px rgba(122,139,107,0.25); } 50% { box-shadow: 0 0 0 7px rgba(122,139,107,0.12); } }
         /* Foto-Vorschau (Thumbnails + Zähler) */
         .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        /* .foto-preview setzt display — ohne diese Regel bliebe das hidden-Attribut wirkungslos. */
+        .foto-preview[hidden] { display: none; }
         .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
         .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
         .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }

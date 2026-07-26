@@ -151,6 +151,9 @@ html.embed-hero .hero-h1-line{display:block}
         .modell .m-sub { font-size: 12.5px; color: var(--text-light); margin-top: 3px; }
         .modell .m-preis { font-family: var(--mono); font-size: 19px; color: var(--accent); font-weight: 600; white-space: nowrap; }
         .m-tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: 2px; }
+        /* MUSS spezifischer sein als .m-tag — sonst schlaegt display:inline-block das
+           Browser-eigene [hidden]{display:none} und das Siegel bleibt immer sichtbar. */
+        .m-tag[hidden] { display: none; }
 
         /* Rechtsgebiete */
         .gebiete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }

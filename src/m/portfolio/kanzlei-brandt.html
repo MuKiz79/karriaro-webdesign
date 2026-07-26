@@ -168,6 +168,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .modell .m-sub { font-size: 12.5px; color: var(--text-light); margin-top: 3px; }
         .modell .m-preis { font-family: var(--mono); font-size: 19px; color: var(--accent); font-weight: 600; white-space: nowrap; }
         .m-tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: 2px; }
+        /* MUSS spezifischer sein als .m-tag — sonst schlaegt display:inline-block das
+           Browser-eigene [hidden]{display:none} und das Siegel bleibt immer sichtbar. */
+        .m-tag[hidden] { display: none; }
 
         /* Rechtsgebiete */
         .gebiete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -396,21 +399,21 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <div class="modelle" id="hn-modelle" aria-live="polite">
                             <div class="modell" id="hn-rvg">
                                 <div>
-                                    <div class="m-name">Nach RVG<span class="m-tag" id="hn-tag" hidden>Meist günstiger</span></div>
+                                    <div class="m-name">Nach RVG<span class="m-tag" id="hn-tag-rvg" hidden>Günstigstes Modell</span></div>
                                     <div class="m-sub" id="hn-rvg-sub">Gesetzliche Gebühren · außergerichtlich</div>
                                 </div>
                                 <div class="m-preis" id="hn-rvg-preis">2.293 €</div>
                             </div>
                             <div class="modell" id="hn-std">
                                 <div>
-                                    <div class="m-name">Stundensatz</div>
+                                    <div class="m-name">Stundensatz<span class="m-tag" id="hn-tag-std" hidden>Günstigstes Modell</span></div>
                                     <div class="m-sub" id="hn-std-sub">290 € je Stunde · minutengenau abgerechnet</div>
                                 </div>
                                 <div class="m-preis" id="hn-std-preis">2.760 €</div>
                             </div>
                             <div class="modell" id="hn-pau">
                                 <div>
-                                    <div class="m-name">Pauschale</div>
+                                    <div class="m-name">Pauschale<span class="m-tag" id="hn-tag-pau" hidden>Günstigstes Modell</span></div>
                                     <div class="m-sub">Fester Preis, vorher vereinbart — keine Überraschung</div>
                                 </div>
                                 <div class="m-preis" id="hn-pau-preis">2.500 €</div>
@@ -622,11 +625,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             document.getElementById('hn-std-sub').textContent = '290 € je Stunde · ' + stunden + ' h veranschlagt';
             /* das jeweils guenstigste Modell markieren — ehrlich, auch wenn es nicht unseres ist */
             var beste = Math.min(rvg, std, pau);
-            [['hn-rvg', rvg], ['hn-std', std], ['hn-pau', pau]].forEach(function(m){
-                document.getElementById(m[0]).classList.toggle('ist-empfohlen', m[1] === beste);
+            [['hn-rvg', 'hn-tag-rvg', rvg], ['hn-std', 'hn-tag-std', std], ['hn-pau', 'hn-tag-pau', pau]].forEach(function(m){
+                var ist = (m[2] === beste);
+                document.getElementById(m[0]).classList.toggle('ist-empfohlen', ist);
+                /* Das Siegel wandert mit — ab etwa 30.000 € Gegenstandswert ist der
+                   Stundensatz guenstiger als die RVG-Gebuehren, und dann muss es dort stehen. */
+                document.getElementById(m[1]).hidden = !ist;
             });
-            var tag = document.getElementById('hn-tag');
-            tag.hidden = (rvg !== beste);
         }
         document.getElementById('hn-wert').addEventListener('input', rechnen);
         document.getElementById('hn-umfang').addEventListener('input', rechnen);

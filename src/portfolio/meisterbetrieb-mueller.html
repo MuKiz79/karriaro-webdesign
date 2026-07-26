@@ -238,6 +238,8 @@ html.embed-hero .hero-h1-line{display:block}
         .foto-promise strong { color: var(--accent-dark); }
         /* Foto-Vorschau + KI-Bad-Ersteinschätzung (echter Vision-Call, Port des Dachdecker-Musters) */
         .foto-preview { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        /* .foto-preview setzt display — ohne diese Regel bliebe das hidden-Attribut wirkungslos. */
+        .foto-preview[hidden] { display: none; }
         .foto-preview-count { width: 100%; font-size: 12px; font-weight: 600; color: var(--accent-strong); margin: 2px 0; }
         .foto-preview-thumb { position: relative; width: 64px; height: 64px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
         .foto-preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
