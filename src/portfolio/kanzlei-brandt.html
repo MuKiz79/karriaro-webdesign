@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Sprint 140 — Embed-Hero-Mode für iframe-Live-Preview im Mobile-Demo-Swiper -->
+    <script>if(location.search.indexOf('embed=hero')!==-1)document.documentElement.classList.add('embed-hero');if(location.search.indexOf('embed=desktop')!==-1)document.documentElement.classList.add('embed-desktop');</script>
+    <style>
+html.embed-hero{overflow:hidden;background:#fff}
+html.embed-desktop{overflow:hidden;background:#fff}html.embed-desktop body{background:#fff;margin:0}html.embed-desktop .topbar,html.embed-desktop header,html.embed-desktop nav,html.embed-desktop footer,html.embed-desktop main>*:not(.hero),html.embed-desktop .kr-footer-card,html.embed-desktop .kr-strip{display:none!important}
+html.embed-hero body{background:#fff;margin:0}
+html.embed-hero .topbar,html.embed-hero header,html.embed-hero nav,html.embed-hero footer,html.embed-hero main>*:not(.hero),html.embed-hero .kr-footer-card,html.embed-hero .kr-strip,html.embed-hero .hero-folio-marker,html.embed-hero .hero-deco,html.embed-hero .hero .lead,html.embed-hero .hero-ctas,html.embed-hero .hero-marginalia-anchor{display:none!important}
+html.embed-hero section.hero,html.embed-hero section.hero>.container,html.embed-hero section.hero>.hero-inner,html.embed-hero section.hero .hero-grid{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;padding:0!important;gap:14px!important;max-width:none!important;min-height:auto!important;align-items:stretch!important}
+html.embed-hero section.hero{padding:clamp(20px,4svh,40px) 20px clamp(16px,3svh,28px)!important;text-align:center}
+html.embed-hero .hero-content,html.embed-hero .hero-grid>div{order:2;padding:0!important}
+html.embed-hero .hero-folio-eyebrow{font-size:10px!important;margin-bottom:10px!important;justify-content:center!important}
+html.embed-hero .hero-headline,html.embed-hero .hero h1{font-size:clamp(22px,5.8vw,32px)!important;line-height:1.06!important;margin:0!important;color:var(--accent,#1F3A3D)!important}
+html.embed-hero .hero-h1-line{display:block}
+    </style>
+    <script>(function(){var h=location.hostname;if(h!=="karriaro-webdesign.de"&&h!=="www.karriaro-webdesign.de")return;if(sessionStorage.getItem("kr-keep-desktop")==="1")return;var ua=navigator.userAgent||"";if(/bot|crawl|spider|slurp|mediapartners|googlebot|google-extended|bingpreview|gptbot|oai-searchbot|chatgpt|claudebot|claude-web|anthropic|perplexity|applebot|ccbot|facebookbot|facebookexternalhit|meta-external|bytespider|amazonbot|duckduckbot|yandex|baidu|lighthouse|pagespeed|headless|prerender/i.test(ua))return;var isMobileUA=/iPhone|iPod|Android|Mobile|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);var isNarrow=(window.innerWidth||document.documentElement.clientWidth||0)<=900;if(!isMobileUA&&!isNarrow)return;location.replace("https://m.karriaro-webdesign.de"+location.pathname+location.search);})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanzlei Brandt &amp; Kollegen · Arbeitsrecht, Erbrecht, Familienrecht Stuttgart — Ersteinschätzung in 24 h · Demo · Karriaro Webdesign</title>
+    <meta name="description" content="Rechtsanwälte für Arbeitsrecht, Erbrecht und Familienrecht in Stuttgart. Sachverhalt schildern, Unterlagen hochladen — Ersteinschätzung binnen 24 Stunden, Honorar vorher transparent. Demo-Seite von Karriaro Webdesign.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/kanzlei-brandt">
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
+    <link rel="stylesheet" href="/css/fonts-inter.css?v=183">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Kanzlei Brandt &amp; Kollegen — Ersteinschätzung in 24 h">
+    <meta property="og:description" content="Arbeitsrecht, Erbrecht, Familienrecht. Sachverhalt schildern, Honorar vorher kennen.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:image:alt" content="Karriaro Webdesign — Branchen-Demo">
+    <style>
+        :root {
+            --accent: #1F3A3D;
+            --accent-dark: #14282A;
+            --accent-strong: #0D1B1C;
+            --accent-bg: #EDF1F0;
+            --gold: #A98850;
+            --bg: #FBFAF7;
+            --bg-soft: #F2F0EA;
+            --text: #16201F;
+            --text-soft: #45514F;
+            --text-light: #808A88;
+            --border: #E2DFD6;
+            --border-strong: #C3BCAC;
+            --p-radius: 3px;
+            --p-radius-lg: 6px;
+            --p-shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --p-shadow: 0 8px 32px rgba(20,30,28,0.06);
+            --p-shadow-lg: 0 32px 72px rgba(20,30,28,0.10);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --serif: 'Cormorant Garamond', Georgia, serif;
+            --mono: 'JetBrains Mono', ui-monospace, monospace;
+            --max: 1180px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; }
+        a { color: inherit; }
+        .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+
+        .topbar { background: var(--accent-dark); color: rgba(255,255,255,0.92); font-size: 13px; padding: 9px 24px; text-align: center; }
+        .topbar strong { color: var(--gold); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+
+        header.site { position: sticky; top: 0; z-index: 50; background: rgba(251,250,247,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 32px; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand-mark { width: 38px; height: 38px; background: var(--accent); color: var(--gold); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        .brand-name { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: 0.01em; }
+        nav.primary { display: flex; gap: 26px; margin-left: auto; font-size: 15px; }
+        nav.primary a { text-decoration: none; color: var(--text-soft); }
+        nav.primary a:hover { color: var(--accent); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: var(--p-radius); font-size: 14px; font-weight: 500; text-decoration: none; }
+        @media (max-width: 900px) { nav.primary { display: none; } .nav-inner { gap: 16px; } }
+
+        section { padding: 90px 0; }
+        .section-head { max-width: 720px; margin-bottom: 48px; }
+        .section-head h2 { font-size: clamp(32px, 4vw, 46px); margin: 12px 0 16px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+
+        /* Hero — editorial, ohne Bildmaterial: die Typografie traegt */
+        .hero { padding: 96px 0 84px; background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); }
+        .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: center; }
+        @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+        .hero-folio-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+        .hero-folio-eyebrow .rule { width: 42px; height: 1px; background: var(--gold); }
+        .hero h1 { font-size: clamp(40px, 5.6vw, 66px); line-height: 1.02; }
+        .hero h1 em { display: block; font-style: italic; color: var(--accent); }
+        .hero .lead { margin-top: 24px; font-size: 18px; color: var(--text-soft); max-width: 33em; }
+        .hero-ctas { margin-top: 34px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .btn-primary { background: var(--accent); color: #fff; padding: 15px 30px; border-radius: var(--p-radius); text-decoration: none; font-size: 15px; font-weight: 500; display: inline-block; }
+        .btn-ghost { color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 500; border-bottom: 1px solid var(--border-strong); padding-bottom: 2px; }
+        .hero-facts { display: grid; gap: 2px; background: var(--border); border: 1px solid var(--border); border-radius: var(--p-radius-lg); overflow: hidden; }
+        .hero-fact { background: var(--bg); padding: 22px 24px; }
+        .hero-fact .k { font-family: var(--serif); font-size: 30px; color: var(--accent); display: block; line-height: 1.1; }
+        .hero-fact .v { font-size: 13px; color: var(--text-light); margin-top: 4px; display: block; }
+
+        /* Werkzeug 1 — Ersteinschaetzung */
+        .einschaetzung { background: var(--bg-soft); }
+        .ein-card { background: #fff; border: 1px solid var(--border); border-radius: var(--p-radius-lg); box-shadow: var(--p-shadow); padding: 40px; }
+        .ein-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media (max-width: 880px) { .ein-grid { grid-template-columns: 1fr; } .ein-card { padding: 26px; } }
+        .feld { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+        .feld label { font-size: 13px; color: var(--text-soft); font-weight: 500; }
+        .feld input, .feld select, .feld textarea { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 15px; padding: 13px 15px; border: 1px solid var(--border); border-radius: var(--p-radius); background: var(--bg); outline: none; transition: border-color 0.2s; }
+        .feld input:focus, .feld select:focus, .feld textarea:focus { border-color: var(--accent); }
+        .feld textarea { min-height: 128px; resize: vertical; }
+        .dropzone { border: 1px dashed var(--border-strong); border-radius: var(--p-radius); padding: 30px 20px; text-align: center; cursor: pointer; background: var(--bg); transition: all 0.2s; }
+        .dropzone:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .dropzone:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .dropzone .dz-icon { font-size: 22px; display: block; margin-bottom: 8px; }
+        .dropzone strong { display: block; font-size: 15px; margin-bottom: 4px; }
+        .dropzone span { font-size: 12.5px; color: var(--text-light); }
+        .dz-liste { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+        .dz-liste li { font-size: 13px; color: var(--text-soft); display: flex; align-items: center; gap: 8px; }
+        .dz-liste li::before { content: "✓"; color: var(--accent); }
+        .hinweis { font-size: 12.5px; color: var(--text-light); line-height: 1.55; margin-top: 14px; }
+        .btn-send { width: 100%; font-family: inherit; background: var(--accent); color: #fff; border: 0; padding: 15px; border-radius: var(--p-radius); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 6px; }
+        .btn-send:hover { background: var(--accent-dark); }
+        .btn-send:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+        /* Werkzeug 2 — Honorar-Transparenz */
+        .honorar-box { border: 1px solid var(--border); border-radius: var(--p-radius-lg); overflow: hidden; }
+        .honorar-kopf { background: var(--accent); color: #fff; padding: 24px 28px; }
+        .honorar-kopf h3 { font-size: 24px; color: #fff; }
+        .honorar-kopf p { font-size: 14px; color: rgba(255,255,255,0.78); margin-top: 6px; }
+        .honorar-body { background: #fff; padding: 28px; display: grid; grid-template-columns: 300px 1fr; gap: 32px; }
+        @media (max-width: 880px) { .honorar-body { grid-template-columns: 1fr; } }
+        .schieber { margin-bottom: 20px; }
+        .schieber-kopf { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .schieber-kopf label { font-size: 13px; color: var(--text-soft); }
+        .schieber-kopf .wert { font-family: var(--mono); font-size: 15px; color: var(--accent); font-weight: 600; }
+        .schieber input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px; background: var(--border-strong); outline: none; cursor: pointer; }
+        .schieber input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.20); }
+        .schieber input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); }
+        .schieber input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        .modelle { display: grid; gap: 12px; }
+        .modell { border: 1px solid var(--border); border-radius: var(--p-radius); padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .modell.ist-empfohlen { border-color: var(--accent); background: var(--accent-bg); }
+        .modell .m-name { font-weight: 600; font-size: 15px; }
+        .modell .m-sub { font-size: 12.5px; color: var(--text-light); margin-top: 3px; }
+        .modell .m-preis { font-family: var(--mono); font-size: 19px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+        .m-tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--accent); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 8px; vertical-align: 2px; }
+
+        /* Rechtsgebiete */
+        .gebiete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        @media (max-width: 880px) { .gebiete-grid { grid-template-columns: 1fr; } }
+        .gebiet { border-top: 2px solid var(--accent); padding-top: 20px; }
+        .gebiet h3 { font-size: 24px; margin-bottom: 10px; }
+        .gebiet p { font-size: 15px; color: var(--text-soft); }
+        .gebiet ul { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
+        .gebiet li { font-size: 14px; color: var(--text-soft); padding-left: 18px; position: relative; }
+        .gebiet li::before { content: "—"; position: absolute; left: 0; color: var(--gold); }
+
+        /* Ablauf */
+        .ablauf { background: var(--accent); color: #fff; }
+        .ablauf h2 { color: #fff; }
+        .ablauf .section-head p { color: rgba(255,255,255,0.72); }
+        .schritte { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+        @media (max-width: 880px) { .schritte { grid-template-columns: 1fr 1fr; } }
+        .schritt .nr { font-family: var(--mono); font-size: 12px; color: var(--gold); letter-spacing: 0.16em; }
+        .schritt h4 { font-family: var(--serif); font-size: 21px; margin: 10px 0 8px; font-weight: 600; }
+        .schritt p { font-size: 14px; color: rgba(255,255,255,0.72); }
+
+        /* FAQ */
+        .faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+        .faq-q { font-family: var(--serif); font-size: 21px; font-weight: 600; }
+        .faq-a { font-size: 15px; color: var(--text-soft); margin-top: 10px; max-width: 62em; }
+
+        /* Kontakt */
+        .kontakt { background: var(--bg-soft); }
+        .kontakt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+        @media (max-width: 880px) { .kontakt-grid { grid-template-columns: 1fr; } }
+        .k-zeile { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .k-zeile .k-label { color: var(--text-light); min-width: 96px; font-size: 13px; }
+
+        footer.site { background: var(--accent-strong); color: rgba(255,255,255,0.72); padding: 56px 0 30px; font-size: 14px; }
+        footer .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
+        @media (max-width: 880px) { footer .f-grid { grid-template-columns: 1fr; gap: 26px; } }
+        footer strong { color: #fff; font-family: var(--serif); font-size: 19px; }
+        footer h5 { color: #fff; font-size: 13px; margin-bottom: 12px; font-family: var(--font); letter-spacing: 0.04em; }
+        footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        footer a { color: rgba(255,255,255,0.72); text-decoration: none; }
+        footer a:hover { color: #fff; }
+        footer .f-foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12.5px; }
+        footer .karriaro-note { color: var(--gold); font-size: 12px; }
+
+        /* Demo-Hinweis: die Musterseite zeigt den Ablauf, sie mandatiert nicht */
+        .demo-modal { position: fixed; inset: 0; background: rgba(13,27,28,0.80); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+        .demo-modal.is-open { display: flex; }
+        .demo-modal-card { background: var(--bg); border-radius: var(--p-radius-lg); padding: 44px; max-width: 520px; width: 100%; text-align: center; box-shadow: var(--p-shadow-lg); }
+        .demo-modal-card .icon { width: 60px; height: 60px; margin: 0 auto 18px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .demo-modal-card .icon svg { width: 30px; height: 30px; }
+        .demo-modal-card h3 { font-size: 27px; margin-bottom: 12px; }
+        .demo-modal-card p { color: var(--text-soft); font-size: 15px; margin-bottom: 26px; }
+        .demo-modal-card button { font-family: inherit; padding: 12px 28px; background: var(--accent); color: #fff; border: 0; border-radius: var(--p-radius); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+        .demo-modal-card button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LegalService",
+      "name": "Kanzlei Brandt & Kollegen",
+      "description": "Rechtsanwälte für Arbeitsrecht, Erbrecht und Familienrecht in Stuttgart. Ersteinschätzung binnen 24 Stunden, Honorar vorher transparent.",
+      "areaServed": "Stuttgart",
+      "address": { "@type": "PostalAddress", "addressLocality": "Stuttgart", "addressCountry": "DE" },
+      "disambiguatingDescription": "Fiktive Musterseite (Demo) von Karriaro Webdesign — kein reales Unternehmen."
+    }
+    </script>
+</head>
+<body>
+    <div class="topbar"><strong>Kanzlei Brandt &amp; Kollegen</strong> · Arbeitsrecht · Erbrecht · Familienrecht · Stuttgart-Mitte · <a href="tel:+4971120480">0711 204 80</a></div>
+
+    <header class="site">
+        <div class="nav-inner">
+            <a href="/portfolio/kanzlei-brandt" class="nav-brand">
+                <span class="brand-mark">B</span>
+                <span class="brand-name">Brandt &amp; Kollegen</span>
+            </a>
+            <nav class="primary" aria-label="Hauptnavigation">
+                <a href="#einschaetzung">Ersteinschätzung</a>
+                <a href="#honorar">Honorar</a>
+                <a href="#gebiete">Rechtsgebiete</a>
+                <a href="#ablauf">Ablauf</a>
+            </nav>
+            <a href="#einschaetzung" class="nav-cta">Sachverhalt schildern</a>
+        </div>
+    </header>
+
+    <main id="main">
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <div class="hero-folio-eyebrow"><span class="rule"></span><span class="eyebrow">Ersteinschätzung in 24 Stunden</span></div>
+                        <h1 class="hero-headline">Erst wissen, woran<br>Sie sind.<em>Dann entscheiden.</em></h1>
+                        <p class="lead">Die meisten Mandate scheitern nicht am Recht, sondern an der Ungewissheit davor: Lohnt sich das? Was kostet es? Schildern Sie Ihren Fall, laden Sie die Unterlagen hoch — Sie bekommen binnen 24 Stunden eine erste Einschätzung und wissen vorher, was ein Mandat kostet.</p>
+                        <div class="hero-ctas">
+                            <a href="#einschaetzung" class="btn-primary">Sachverhalt schildern</a>
+                            <a href="#honorar" class="btn-ghost">Honorar vorher berechnen ›</a>
+                        </div>
+                    </div>
+                    <div class="hero-facts">
+                        <div class="hero-fact"><span class="k">24 Stunden</span><span class="v">bis zur ersten Einschätzung — werktags</span></div>
+                        <div class="hero-fact"><span class="k">Drei Gebiete</span><span class="v">Arbeitsrecht, Erbrecht, Familienrecht</span></div>
+                        <div class="hero-fact"><span class="k">Honorar vorab</span><span class="v">RVG, Stundensatz oder Pauschale — Sie wählen</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WERKZEUG 1 — Ersteinschätzung mit Unterlagen-Upload -->
+        <section class="einschaetzung" id="einschaetzung" aria-label="Ersteinschätzung anfragen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug · Ohne Termin</span>
+                    <h2>Ihr Fall, in 24 Stunden eingeordnet.</h2>
+                    <p>Sie schildern den Sachverhalt und laden vorhandene Unterlagen hoch — Kündigung, Testament, Vertrag. Wir sagen Ihnen, ob und wie wir helfen können, und was es kostet. Erst danach entscheiden Sie über ein Mandat.</p>
+                </div>
+                <div class="ein-card">
+                    <form class="ein-grid" id="ein-form" novalidate>
+                        <div>
+                            <div class="feld">
+                                <label for="ein-gebiet">Worum geht es?</label>
+                                <select id="ein-gebiet" name="gebiet">
+                                    <option>Arbeitsrecht — Kündigung erhalten</option>
+                                    <option>Arbeitsrecht — Aufhebungsvertrag liegt vor</option>
+                                    <option>Arbeitsrecht — Abmahnung / Zeugnis</option>
+                                    <option>Erbrecht — Testament / Pflichtteil</option>
+                                    <option>Erbrecht — Erbengemeinschaft</option>
+                                    <option>Familienrecht — Trennung / Scheidung</option>
+                                    <option>Familienrecht — Unterhalt</option>
+                                    <option>Etwas anderes</option>
+                                </select>
+                            </div>
+                            <div class="feld">
+                                <label for="ein-frist">Läuft eine Frist?</label>
+                                <select id="ein-frist" name="frist">
+                                    <option>Nein / weiß ich nicht</option>
+                                    <option>Ja — innerhalb der nächsten 3 Wochen</option>
+                                    <option>Ja — sehr eilig (diese Woche)</option>
+                                </select>
+                            </div>
+                            <div class="feld">
+                                <label for="ein-text">Was ist passiert?</label>
+                                <textarea id="ein-text" name="sachverhalt" placeholder="Stichworte genügen: Was ist geschehen, seit wann, was möchten Sie erreichen?"></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="feld">
+                                <label id="dz-label">Unterlagen (optional)</label>
+                                <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-labelledby="dz-label" aria-describedby="dz-hilfe">
+                                    <span class="dz-icon" aria-hidden="true">⇪</span>
+                                    <strong>Dokumente hierher ziehen oder klicken</strong>
+                                    <span id="dz-hilfe">Bis zu 5 Dateien · max. 10 MB · PDF, JPG, PNG · Smartphone-Foto genügt</span>
+                                </div>
+                                <ul class="dz-liste">
+                                    <li>Kündigung, Vertrag oder Testament als Foto reicht</li>
+                                    <li>Verschlüsselte Übertragung, Löschung nach Abschluss</li>
+                                </ul>
+                            </div>
+                            <div class="feld">
+                                <label for="ein-name">Ihr Name</label>
+                                <input id="ein-name" name="name" type="text" placeholder="Vor- und Nachname">
+                            </div>
+                            <div class="feld">
+                                <label for="ein-mail">E-Mail für die Einschätzung</label>
+                                <input id="ein-mail" name="mail" type="email" placeholder="ihre.adresse@beispiel.de">
+                            </div>
+                            <button class="btn-send" type="submit">Ersteinschätzung anfordern</button>
+                            <p class="hinweis">Die Ersteinschätzung ist eine erste Orientierung, ob und wie sich Ihr Anliegen verfolgen lässt — sie ersetzt keine Beratung im Mandat und begründet noch kein Mandatsverhältnis. Ein Mandat kommt erst mit schriftlicher Vollmacht zustande.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- WERKZEUG 2 — Honorar-Transparenz -->
+        <section id="honorar" aria-label="Honorar berechnen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug · Datenbasiert</span>
+                    <h2>Was es kostet, bevor Sie fragen müssen.</h2>
+                    <p>Anwaltskosten wirken undurchsichtig, weil die meisten Kanzleien erst im Gespräch damit herausrücken. Stellen Sie hier den Streitwert ein — Sie sehen sofort die drei Modelle nebeneinander.</p>
+                </div>
+                <div class="honorar-box">
+                    <div class="honorar-kopf">
+                        <h3>Honorar-Rechner</h3>
+                        <p>Nach RVG-Systematik berechnet · unverbindliche Orientierung, keine Kostenzusage</p>
+                    </div>
+                    <div class="honorar-body">
+                        <div>
+                            <div class="schieber">
+                                <div class="schieber-kopf">
+                                    <label for="hn-wert">Streitwert / Gegenstandswert</label>
+                                    <span class="wert" id="hn-wert-val">15.000 €</span>
+                                </div>
+                                <input id="hn-wert" type="range" min="1000" max="120000" step="1000" value="15000">
+                            </div>
+                            <div class="schieber">
+                                <div class="schieber-kopf">
+                                    <label for="hn-umfang">Erwarteter Umfang</label>
+                                    <span class="wert" id="hn-umfang-val">8 Stunden</span>
+                                </div>
+                                <input id="hn-umfang" type="range" min="2" max="40" step="1" value="8">
+                            </div>
+                            <p class="hinweis">Grundlage: Geschäftsgebühr 1,3 und Einigungsgebühr 1,5 nach RVG-Tabelle, zuzüglich Auslagenpauschale und 19 % Umsatzsteuer. Der tatsächliche Gebührensatz hängt von Umfang und Schwierigkeit ab.</p>
+                        </div>
+                        <div class="modelle" id="hn-modelle" aria-live="polite">
+                            <div class="modell" id="hn-rvg">
+                                <div>
+                                    <div class="m-name">Nach RVG<span class="m-tag" id="hn-tag" hidden>Meist günstiger</span></div>
+                                    <div class="m-sub" id="hn-rvg-sub">Gesetzliche Gebühren · außergerichtlich</div>
+                                </div>
+                                <div class="m-preis" id="hn-rvg-preis">2.293 €</div>
+                            </div>
+                            <div class="modell" id="hn-std">
+                                <div>
+                                    <div class="m-name">Stundensatz</div>
+                                    <div class="m-sub" id="hn-std-sub">290 € je Stunde · minutengenau abgerechnet</div>
+                                </div>
+                                <div class="m-preis" id="hn-std-preis">2.760 €</div>
+                            </div>
+                            <div class="modell" id="hn-pau">
+                                <div>
+                                    <div class="m-name">Pauschale</div>
+                                    <div class="m-sub">Fester Preis, vorher vereinbart — keine Überraschung</div>
+                                </div>
+                                <div class="m-preis" id="hn-pau-preis">2.500 €</div>
+                            </div>
+                            <p class="hinweis" id="hn-hinweis">Alle Beträge inklusive 19 % Umsatzsteuer. Im Erstgespräch legen wir gemeinsam fest, welches Modell zu Ihrem Fall passt — und halten es schriftlich fest.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gebiete" style="background: var(--bg-soft);" aria-label="Rechtsgebiete">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Drei Gebiete · Keine Beliebigkeit</span>
+                    <h2>Wir machen drei Dinge. Die richtig.</h2>
+                    <p>Eine Kanzlei, die alles anbietet, kann nichts davon vertiefen. Wir bearbeiten Arbeitsrecht, Erbrecht und Familienrecht — bei allem anderen vermitteln wir Ihnen eine Kollegin oder einen Kollegen.</p>
+                </div>
+                <div class="gebiete-grid">
+                    <div class="gebiet">
+                        <h3>Arbeitsrecht</h3>
+                        <p>Für Arbeitnehmerinnen und Arbeitnehmer — von der Kündigung bis zur Abfindung.</p>
+                        <ul>
+                            <li>Kündigungsschutzklage (3-Wochen-Frist!)</li>
+                            <li>Aufhebungsvertrag prüfen, bevor Sie unterschreiben</li>
+                            <li>Abmahnung, Zeugnis, Überstunden</li>
+                        </ul>
+                    </div>
+                    <div class="gebiet">
+                        <h3>Erbrecht</h3>
+                        <p>Wenn ein Nachlass Menschen trennt, die zusammengehören.</p>
+                        <ul>
+                            <li>Pflichtteil geltend machen oder abwehren</li>
+                            <li>Erbengemeinschaft auseinandersetzen</li>
+                            <li>Testament prüfen und gestalten</li>
+                        </ul>
+                    </div>
+                    <div class="gebiet">
+                        <h3>Familienrecht</h3>
+                        <p>Trennung ist ein Übergang. Wir halten ihn so kurz wie möglich.</p>
+                        <ul>
+                            <li>Scheidung — einvernehmlich, wenn es geht</li>
+                            <li>Unterhalt berechnen und durchsetzen</li>
+                            <li>Sorge- und Umgangsrecht</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ablauf" id="ablauf" aria-label="Ablauf">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow" style="color: var(--gold);">Ablauf · Vier Schritte</span>
+                    <h2>Kein Mandat ohne Klarheit.</h2>
+                    <p>Sie gehen kein Risiko ein, bevor Sie wissen, worauf Sie sich einlassen.</p>
+                </div>
+                <div class="schritte">
+                    <div class="schritt">
+                        <div class="nr">01</div>
+                        <h4>Sachverhalt</h4>
+                        <p>Sie schildern den Fall und laden vorhandene Unterlagen hoch — online, ohne Termin.</p>
+                    </div>
+                    <div class="schritt">
+                        <div class="nr">02</div>
+                        <h4>Einschätzung</h4>
+                        <p>Binnen 24 Stunden (werktags) sagen wir Ihnen, wie wir die Lage sehen — und was ein Mandat kostet.</p>
+                    </div>
+                    <div class="schritt">
+                        <div class="nr">03</div>
+                        <h4>Entscheidung</h4>
+                        <p>Sie entscheiden in Ruhe. Ein Mandat entsteht erst mit Ihrer schriftlichen Vollmacht.</p>
+                    </div>
+                    <div class="schritt">
+                        <div class="nr">04</div>
+                        <h4>Vertretung</h4>
+                        <p>Wir übernehmen — und Sie erfahren nach jedem Schritt, woran Sie sind.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section aria-label="Häufige Fragen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Häufige Fragen</span>
+                    <h2>Was Mandanten zuerst fragen.</h2>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Kostet die Ersteinschätzung etwas?</div>
+                    <div class="faq-a">Nein. Die Ersteinschätzung ist unsere Einladung zum Gespräch — sie ist kostenfrei und unverbindlich. Erst wenn Sie uns mandatieren, entstehen Kosten, und deren Höhe kennen Sie dann bereits.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Ich habe eine Kündigung erhalten. Wie eilig ist es?</div>
+                    <div class="faq-a">Sehr eilig: Eine Kündigungsschutzklage muss binnen drei Wochen nach Zugang der Kündigung beim Arbeitsgericht eingehen. Ist die Frist verstrichen, gilt die Kündigung in aller Regel als wirksam — unabhängig davon, wie gut Ihre Argumente wären. Schildern Sie den Fall deshalb bitte sofort.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Übernimmt meine Rechtsschutzversicherung die Kosten?</div>
+                    <div class="faq-a">In Arbeits-, Erb- und Familiensachen ist das häufig der Fall, hängt aber von Ihrem Tarif und den Wartezeiten ab. Wir holen die Deckungszusage für Sie ein — vor dem ersten kostenpflichtigen Schritt.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Was passiert mit meinen Unterlagen?</div>
+                    <div class="faq-a">Sie werden verschlüsselt übertragen, ausschließlich zur Bearbeitung Ihrer Anfrage verwendet und nach Abschluss gelöscht, sofern kein Mandat zustande kommt. Anwältinnen und Anwälte unterliegen zudem der beruflichen Verschwiegenheitspflicht.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Kann ich einen Ausgang garantiert bekommen?</div>
+                    <div class="faq-a">Nein — und niemand, der das verspricht, sollte Ihr Vertrauen bekommen. Wir sagen Ihnen ehrlich, wie wir die Erfolgsaussichten einschätzen, auch wenn die Antwort einmal lautet: Lassen Sie es.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="kontakt" id="kontakt" aria-label="Kontakt">
+            <div class="container">
+                <div class="kontakt-grid">
+                    <div>
+                        <div class="section-head" style="margin-bottom: 24px;">
+                            <span class="eyebrow">Kontakt</span>
+                            <h2>Sprechen Sie uns an.</h2>
+                        </div>
+                        <div class="k-zeile"><span class="k-label">Telefon</span><a href="tel:+4971120480">0711 204 80</a></div>
+                        <div class="k-zeile"><span class="k-label">E-Mail</span><a href="mailto:kanzlei@brandt-kollegen.de">kanzlei@brandt-kollegen.de</a></div>
+                        <div class="k-zeile"><span class="k-label">Kanzlei</span><span>Königstraße 12 · 70173 Stuttgart-Mitte</span></div>
+                        <div class="k-zeile"><span class="k-label">Sprechzeit</span><span>Mo–Do 9–17 Uhr, Fr 9–13 Uhr · Termine auch abends nach Absprache</span></div>
+                    </div>
+                    <div>
+                        <div class="section-head" style="margin-bottom: 24px;">
+                            <span class="eyebrow">Notfall-Frist</span>
+                            <h2>Drei Wochen sind schnell um.</h2>
+                        </div>
+                        <p style="color: var(--text-soft); font-size: 16px;">Wenn Ihre Kündigung frisch ist, zählt jeder Tag. Schildern Sie den Fall online — wir melden uns bei Fristsachen noch am selben Werktag.</p>
+                        <p style="margin-top: 24px;"><a href="#einschaetzung" class="btn-primary">Sachverhalt jetzt schildern</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site">
+        <div class="container">
+            <div class="f-grid">
+                <div class="f-brand">
+                    <strong>Brandt &amp; Kollegen</strong>
+                    <p style="margin-top: 10px;">Rechtsanwälte für Arbeitsrecht, Erbrecht und Familienrecht. Stuttgart-Mitte.</p>
+                </div>
+                <div>
+                    <h5>Rechtsgebiete</h5>
+                    <ul>
+                        <li><a href="#gebiete">Arbeitsrecht</a></li>
+                        <li><a href="#gebiete">Erbrecht</a></li>
+                        <li><a href="#gebiete">Familienrecht</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Kanzlei</h5>
+                    <ul>
+                        <li><a href="#einschaetzung">Ersteinschätzung</a></li>
+                        <li><a href="#honorar">Honorar</a></li>
+                        <li><a href="#ablauf">Ablauf</a></li>
+                        <li><a href="#kontakt">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="f-foot">
+                <span>© 2026 Kanzlei Brandt &amp; Kollegen. Alle Rechte vorbehalten. · <a href="#" style="text-decoration: underline;">Impressum</a> · <a href="#" style="text-decoration: underline;">Datenschutz</a></span>
+                <span class="karriaro-note">Demo · Webdesign by Karriaro Manufaktur</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle" aria-describedby="demoMsg">
+        <div class="demo-modal-card">
+            <div class="icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <h3 id="demoTitle">Anfrage abgeschickt — Demo</h3>
+            <p id="demoMsg">Diese Musterseite zeigt den Ablauf, sie verschickt nichts.</p>
+            <button type="button" id="demoClose" onclick="closeDemo()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        /* Werkzeug 2 — Honorar nach RVG-Systematik. Bewusst deterministisch gerechnet
+           (Gebuehrentabelle + Faktoren), NICHT per KI: eine erfundene Zahl waere hier
+           schlimmer als keine. Werte = Orientierung, keine Kostenzusage. */
+        var RVG = [[500,49],[1000,88],[1500,127],[2000,166],[3000,222],[4000,278],[5000,334],[6000,390],[7000,446],[8000,502],[9000,558],[10000,614],
+                   [13000,666],[16000,718],[19000,770],[22000,822],[25000,874],[30000,955],[35000,1036],[40000,1117],[45000,1198],[50000,1279],
+                   [65000,1373],[80000,1467],[95000,1561],[110000,1655],[125000,1749]];
+        function gebuehr(wert){
+            for (var i = 0; i < RVG.length; i++) if (wert <= RVG[i][0]) return RVG[i][1];
+            return RVG[RVG.length - 1][1];
+        }
+        function euro(n){ return n.toLocaleString('de-DE', {maximumFractionDigits: 0}) + ' €'; }
+        function rechnen(){
+            var wert = +document.getElementById('hn-wert').value;
+            var stunden = +document.getElementById('hn-umfang').value;
+            var satz = gebuehr(wert);
+            /* Geschaeftsgebuehr 1,3 + Einigungsgebuehr 1,5 + Auslagenpauschale (max. 20 €) + 19 % USt */
+            var netto = satz * 1.3 + satz * 1.5 + 20;
+            var rvg = Math.round(netto * 1.19);
+            var std = Math.round(stunden * 290 * 1.19);
+            var pau = Math.round(((rvg + std) / 2) / 50) * 50;   /* Pauschale liegt zwischen beiden, auf 50 € gerundet */
+            document.getElementById('hn-wert-val').textContent = euro(wert);
+            document.getElementById('hn-umfang-val').textContent = stunden + (stunden === 1 ? ' Stunde' : ' Stunden');
+            document.getElementById('hn-rvg-preis').textContent = euro(rvg);
+            document.getElementById('hn-std-preis').textContent = euro(std);
+            document.getElementById('hn-pau-preis').textContent = euro(pau);
+            document.getElementById('hn-rvg-sub').textContent = 'Gesetzliche Gebühren · Gegenstandswert ' + euro(wert);
+            document.getElementById('hn-std-sub').textContent = '290 € je Stunde · ' + stunden + ' h veranschlagt';
+            /* das jeweils guenstigste Modell markieren — ehrlich, auch wenn es nicht unseres ist */
+            var beste = Math.min(rvg, std, pau);
+            [['hn-rvg', rvg], ['hn-std', std], ['hn-pau', pau]].forEach(function(m){
+                document.getElementById(m[0]).classList.toggle('ist-empfohlen', m[1] === beste);
+            });
+            var tag = document.getElementById('hn-tag');
+            tag.hidden = (rvg !== beste);
+        }
+        document.getElementById('hn-wert').addEventListener('input', rechnen);
+        document.getElementById('hn-umfang').addEventListener('input', rechnen);
+        rechnen();
+
+        /* Werkzeug 1 — Upload + Absenden. Ohne Backend, also sagt die Seite das auch. */
+        var dz = document.getElementById('dropzone');
+        function dzDemo(){ openDemo('upload'); }
+        dz.addEventListener('click', dzDemo);
+        dz.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dzDemo(); } });
+        ['dragover','dragenter'].forEach(function(t){ dz.addEventListener(t, function(e){ e.preventDefault(); dz.style.borderColor = 'var(--accent)'; }); });
+        ['dragleave','drop'].forEach(function(t){ dz.addEventListener(t, function(e){ e.preventDefault(); dz.style.borderColor = ''; if (t === 'drop') dzDemo(); }); });
+        document.getElementById('ein-form').addEventListener('submit', function(e){ e.preventDefault(); openDemo('anfrage'); });
+
+        function openDemo(key){
+            var titel = key === 'upload' ? 'Unterlagen hochladen — Demo' : 'Anfrage abgeschickt — Demo';
+            var text = key === 'upload'
+                ? 'In der Live-Version wählen Sie hier Ihre Dateien aus; sie werden verschlüsselt übertragen und der Anfrage angehängt. Diese Musterseite zeigt den Ablauf, sie überträgt nichts.'
+                : 'In der Live-Version ginge Ihre Schilderung jetzt verschlüsselt an die Kanzlei, und Sie erhielten binnen 24 Stunden (werktags) die Ersteinschätzung per E-Mail. Diese Musterseite zeigt den Ablauf, sie verschickt nichts.';
+            document.getElementById('demoTitle').textContent = titel;
+            document.getElementById('demoMsg').textContent = text;
+            var m = document.getElementById('demoModal');
+            m._opener = document.activeElement;
+            m.classList.add('is-open');
+            document.getElementById('demoClose').focus();
+        }
+        function closeDemo(){
+            var m = document.getElementById('demoModal');
+            m.classList.remove('is-open');
+            if (m._opener && document.contains(m._opener)) m._opener.focus();
+        }
+        document.getElementById('demoModal').addEventListener('click', function(e){ if (e.target.id === 'demoModal') closeDemo(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && document.getElementById('demoModal').classList.contains('is-open')) closeDemo(); });
+    </script>
+
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <script src="/js/karriaro-tools.js"></script>
+    <script src="/js/concierge.js?v=3" data-branche="kanzlei" data-name="Brandt &amp; Kollegen" data-accent="#1F3A3D" data-greeting="Guten Tag! Ich bin der digitale Assistent der Kanzlei Brandt &amp; Kollegen. Fragen Sie mich zum Ablauf, zu Fristen oder zum Honorar — oder schildern Sie gleich Ihren Sachverhalt." defer></script>
+</body>
+</html>
