@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <!-- Sprint 140 — Embed-Hero-Mode für iframe-Live-Preview im Mobile-Demo-Swiper -->
+    <script>if(location.search.indexOf('embed=hero')!==-1)document.documentElement.classList.add('embed-hero');if(location.search.indexOf('embed=desktop')!==-1)document.documentElement.classList.add('embed-desktop');</script>
+    <style>
+html.embed-hero{overflow:hidden;background:#fff}
+html.embed-desktop{overflow:hidden;background:#fff}html.embed-desktop body{background:#fff;margin:0}html.embed-desktop .topbar,html.embed-desktop header,html.embed-desktop nav,html.embed-desktop footer,html.embed-desktop main>*:not(.hero),html.embed-desktop .kr-footer-card,html.embed-desktop .kr-strip{display:none!important}
+html.embed-hero body{background:#fff;margin:0}
+html.embed-hero .topbar,html.embed-hero header,html.embed-hero nav,html.embed-hero footer,html.embed-hero main>*:not(.hero),html.embed-hero .kr-footer-card,html.embed-hero .kr-strip,html.embed-hero .hero-folio-marker,html.embed-hero .hero-deco,html.embed-hero .hero .lead,html.embed-hero .hero-ctas,html.embed-hero .hero-marginalia-anchor{display:none!important}
+html.embed-hero section.hero,html.embed-hero section.hero>.container,html.embed-hero section.hero>.hero-inner,html.embed-hero section.hero .hero-grid{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;padding:0!important;gap:14px!important;max-width:none!important;min-height:auto!important;align-items:stretch!important}
+html.embed-hero section.hero{padding:clamp(20px,4svh,40px) 20px clamp(16px,3svh,28px)!important;text-align:center}
+html.embed-hero .hero-content,html.embed-hero .hero-grid>div{order:2;padding:0!important}
+html.embed-hero .hero-folio-eyebrow{font-size:10px!important;margin-bottom:10px!important;justify-content:center!important}
+html.embed-hero .hero-headline,html.embed-hero .hero h1{font-size:clamp(22px,5.8vw,32px)!important;line-height:1.06!important;margin:0!important;color:var(--accent,#0F2E33)!important}
+    </style>
+    <script>(function(){var h=location.hostname;if(h!=="karriaro-webdesign.de"&&h!=="www.karriaro-webdesign.de")return;if(sessionStorage.getItem("kr-keep-desktop")==="1")return;var ua=navigator.userAgent||"";if(/bot|crawl|spider|slurp|mediapartners|googlebot|google-extended|bingpreview|gptbot|oai-searchbot|chatgpt|claudebot|claude-web|anthropic|perplexity|applebot|ccbot|facebookbot|facebookexternalhit|meta-external|bytespider|amazonbot|duckduckbot|yandex|baidu|lighthouse|pagespeed|headless|prerender/i.test(ua))return;var isMobileUA=/iPhone|iPod|Android|Mobile|webOS|BlackBerry|Opera Mini|IEMobile/i.test(ua);var isNarrow=(window.innerWidth||document.documentElement.clientWidth||0)<=900;if(!isMobileUA&&!isNarrow)return;location.replace("https://m.karriaro-webdesign.de"+location.pathname+location.search);})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zahnarztpraxis Dr. Sommer · Implantate, Aligner, Prophylaxe Stuttgart — Kosten vorab · Demo · Karriaro Webdesign</title>
+    <meta name="description" content="Zahnarztpraxis in Stuttgart-West. Kostenrahmen f&uuml;r Implantate, Aligner und Zahnersatz vorab einsehen, Prophylaxe-Erinnerung, Termin ohne Warteschleife. Demo-Seite von Karriaro Webdesign.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/zahnarzt-sommer">
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
+    <link rel="stylesheet" href="/css/fonts-inter.css?v=183">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Zahnarztpraxis Dr. Sommer — Kosten vorab kennen">
+    <meta property="og:description" content="Implantate, Aligner, Prophylaxe. Kostenrahmen vorab, Termin ohne Warteschleife.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:image:alt" content="Karriaro Webdesign — Branchen-Demo">
+    <style>
+        :root {
+            --accent: #0F2E33; --accent-dark: #0A2226; --accent-strong: #06171A; --accent-bg: #E8F1F1;
+            --gold: #7FC6C6; --bg: #FBFCFC; --bg-soft: #EFF4F4; --text: #11201F; --text-soft: #41544F;
+            --text-light: #7E9490; --border: #DDE7E6; --border-strong: #B6C8C6;
+            --p-radius: 8px; --p-radius-lg: 16px; --p-shadow: 0 8px 32px rgba(15,46,51,0.07); --p-shadow-lg: 0 32px 72px rgba(15,46,51,0.12);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --serif: 'Fraunces', Georgia, serif; --mono: 'JetBrains Mono', ui-monospace, monospace; --max: 1180px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
+        a { color: inherit; }
+        .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+        .topbar { background: var(--accent-dark); color: rgba(255,255,255,0.92); font-size: 13px; padding: 9px 24px; text-align: center; }
+        .topbar strong { color: var(--gold); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+        header.site { position: sticky; top: 0; z-index: 50; background: rgba(251,252,252,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 32px; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand-mark { width: 40px; height: 40px; background: var(--accent); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 19px; font-weight: 600; }
+        .brand-name { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        nav.primary { display: flex; gap: 26px; margin-left: auto; font-size: 15px; }
+        nav.primary a { text-decoration: none; color: var(--text-soft); }
+        nav.primary a:hover { color: var(--accent); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 24px; border-radius: 999px; font-size: 14px; font-weight: 500; text-decoration: none; }
+        @media (max-width: 900px) { nav.primary { display: none; } .nav-inner { gap: 16px; } }
+        section { padding: 88px 0; }
+        .section-head { max-width: 720px; margin-bottom: 44px; }
+        .section-head h2 { font-size: clamp(30px, 3.8vw, 44px); margin: 12px 0 16px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+        .hero { padding: 92px 0 80px; background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); }
+        .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+        @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 38px; } }
+        .hero-folio-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .hero-folio-eyebrow .rule { width: 42px; height: 1px; background: var(--gold); }
+        .hero h1 { font-size: clamp(38px, 5.2vw, 60px); }
+        .hero h1 em { display: block; font-style: italic; color: var(--accent); }
+        .hero .lead { margin-top: 22px; font-size: 18px; color: var(--text-soft); max-width: 34em; }
+        .hero-ctas { margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .btn-primary { background: var(--accent); color: #fff; padding: 15px 32px; border-radius: 999px; text-decoration: none; font-size: 15px; font-weight: 500; display: inline-block; }
+        .btn-ghost { color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 500; border-bottom: 1px solid var(--border-strong); padding-bottom: 2px; }
+        .hero-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--p-radius-lg); padding: 26px; box-shadow: var(--p-shadow); }
+        .hero-panel h4 { font-family: var(--font); font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-light); margin-bottom: 14px; }
+        .hp-zeile { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .hp-zeile:last-child { border-bottom: 0; }
+        .hp-zeile .v { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+        .kosten { background: var(--bg-soft); }
+        .kbox { background: #fff; border: 1px solid var(--border); border-radius: var(--p-radius-lg); overflow: hidden; box-shadow: var(--p-shadow); }
+        .kbox-kopf { background: var(--accent); color: #fff; padding: 24px 28px; }
+        .kbox-kopf h3 { font-size: 24px; color: #fff; }
+        .kbox-kopf p { font-size: 14px; color: rgba(255,255,255,0.78); margin-top: 6px; }
+        .kbox-body { padding: 28px; display: grid; grid-template-columns: 340px 1fr; gap: 34px; }
+        @media (max-width: 880px) { .kbox-body { grid-template-columns: 1fr; } }
+        .wahl { display: grid; gap: 10px; margin-bottom: 20px; }
+        .wahl-btn { font-family: inherit; text-align: left; font-size: 15px; padding: 15px 18px; border-radius: var(--p-radius); border: 1px solid var(--border-strong); background: #fff; color: var(--text); cursor: pointer; transition: all 0.15s; }
+        .wahl-btn:hover { border-color: var(--accent); }
+        .wahl-btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+        .wahl-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+        .wahl-btn .w-sub { display: block; font-size: 12.5px; opacity: 0.7; margin-top: 3px; }
+        .schieber-kopf { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+        .schieber-kopf label { font-size: 13px; color: var(--text-soft); }
+        .schieber-kopf .wert { font-family: var(--mono); font-size: 15px; color: var(--accent); font-weight: 600; }
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px; background: var(--border-strong); outline: none; cursor: pointer; margin-bottom: 18px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); }
+        input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        .spanne { text-align: center; padding: 30px 20px; border: 1px solid var(--accent); border-radius: var(--p-radius-lg); background: var(--accent-bg); }
+        .spanne .s-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-soft); }
+        .spanne .s-wert { font-family: var(--serif); font-size: clamp(34px, 4.4vw, 52px); color: var(--accent); margin: 10px 0 6px; font-weight: 600; }
+        .spanne .s-sub { font-size: 14px; color: var(--text-soft); }
+        .kasse { display: grid; gap: 10px; margin-top: 18px; }
+        .kasse-zeile { display: flex; justify-content: space-between; gap: 16px; padding: 13px 16px; border: 1px solid var(--border); border-radius: var(--p-radius); font-size: 14.5px; }
+        .kasse-zeile .kz-name { color: var(--text-soft); }
+        .kasse-zeile .kz-wert { font-family: var(--mono); color: var(--accent); font-weight: 600; white-space: nowrap; }
+        .hinweis { font-size: 12.5px; color: var(--text-light); line-height: 1.55; margin-top: 14px; }
+        .termin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+        @media (max-width: 880px) { .termin-grid { grid-template-columns: 1fr; } }
+        .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .slot { width: 100%; font-family: inherit; color: var(--text); background: #fff; padding: 14px; border: 1px solid var(--border); border-radius: var(--p-radius); font-size: 14px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .slot:hover { border-color: var(--accent); background: var(--accent-bg); }
+        .slot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .slot.belegt { color: var(--text-light); text-decoration: line-through; cursor: not-allowed; opacity: 0.5; }
+        .slot.belegt:hover { border-color: var(--border); background: #fff; }
+        .prophy { background: var(--accent); color: #fff; }
+        .prophy h2 { color: #fff; }
+        .prophy .section-head p { color: rgba(255,255,255,0.72); }
+        .schritte { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        @media (max-width: 880px) { .schritte { grid-template-columns: 1fr; } }
+        .schritt .nr { font-family: var(--mono); font-size: 12px; color: var(--gold); letter-spacing: 0.16em; }
+        .schritt h4 { font-family: var(--serif); font-size: 20px; margin: 10px 0 8px; }
+        .schritt p { font-size: 14px; color: rgba(255,255,255,0.72); }
+        .faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+        .faq-q { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        .faq-a { font-size: 15px; color: var(--text-soft); margin-top: 10px; max-width: 62em; }
+        .kontakt { background: var(--bg-soft); }
+        .k-zeile { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .k-zeile .k-label { color: var(--text-light); min-width: 96px; font-size: 13px; }
+        footer.site { background: var(--accent-strong); color: rgba(255,255,255,0.72); padding: 54px 0 28px; font-size: 14px; }
+        footer .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
+        @media (max-width: 880px) { footer .f-grid { grid-template-columns: 1fr; gap: 26px; } }
+        footer strong { color: #fff; font-family: var(--serif); font-size: 19px; }
+        footer h5 { color: #fff; font-size: 13px; margin-bottom: 12px; font-family: var(--font); }
+        footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        footer a { color: rgba(255,255,255,0.72); text-decoration: none; }
+        footer a:hover { color: #fff; }
+        footer .f-foot { margin-top: 38px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12.5px; }
+        footer .karriaro-note { color: var(--gold); font-size: 12px; }
+        .demo-modal { position: fixed; inset: 0; background: rgba(6,23,26,0.80); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+        .demo-modal.is-open { display: flex; }
+        .demo-modal-card { background: var(--bg); border-radius: var(--p-radius-lg); padding: 44px; max-width: 520px; width: 100%; text-align: center; box-shadow: var(--p-shadow-lg); }
+        .demo-modal-card .icon { width: 60px; height: 60px; margin: 0 auto 18px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .demo-modal-card .icon svg { width: 30px; height: 30px; }
+        .demo-modal-card h3 { font-size: 26px; margin-bottom: 12px; }
+        .demo-modal-card p { color: var(--text-soft); font-size: 15px; margin-bottom: 26px; }
+        .demo-modal-card button { font-family: inherit; padding: 12px 28px; background: var(--accent); color: #fff; border: 0; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+        .demo-modal-card button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org", "@type": "Dentist", "name": "Zahnarztpraxis Dr. Sommer",
+      "description": "Zahnarztpraxis in Stuttgart-West mit Implantologie, Aligner-Behandlung und Prophylaxe. Kostenrahmen vorab einsehbar.",
+      "areaServed": "Stuttgart", "address": { "@type": "PostalAddress", "addressLocality": "Stuttgart", "addressCountry": "DE" },
+      "disambiguatingDescription": "Fiktive Musterseite (Demo) von Karriaro Webdesign — kein reales Unternehmen."
+    }
+    </script>
+</head>
+<body>
+    <div class="topbar"><strong>Zahnarztpraxis Dr. Sommer</strong> &middot; Implantate &middot; Aligner &middot; Prophylaxe &middot; Stuttgart-West &middot; <a href="tel:+4971163410">0711 634 10</a></div>
+
+    <header class="site">
+        <div class="nav-inner">
+            <a href="/portfolio/zahnarzt-sommer" class="nav-brand">
+                <span class="brand-mark">S</span><span class="brand-name">Dr. Sommer</span>
+            </a>
+            <nav class="primary" aria-label="Hauptnavigation">
+                <a href="#kosten">Kosten</a><a href="#termin">Termin</a><a href="#prophylaxe">Prophylaxe</a><a href="#praxis">Praxis</a>
+            </nav>
+            <a href="#termin" class="nav-cta">Termin w&auml;hlen</a>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <div class="hero-folio-eyebrow"><span class="rule"></span><span class="eyebrow">Kosten vorab &middot; Ohne Termin</span></div>
+                        <h1 class="hero-headline">Die Kosten kennen,<em>bevor es losgeht.</em></h1>
+                        <p class="lead">Beim Zahnarzt ist die zweite Frage fast immer dieselbe: Was kostet das? Antworten bekommt man meist erst nach der Untersuchung. Hier sehen Sie den &uuml;blichen Rahmen schon vorher &mdash; und was die Kasse davon tr&auml;gt.</p>
+                        <div class="hero-ctas">
+                            <a href="#kosten" class="btn-primary">Kostenrahmen ansehen</a>
+                            <a href="#termin" class="btn-ghost">Freien Termin w&auml;hlen &rsaquo;</a>
+                        </div>
+                    </div>
+                    <div class="hero-panel">
+                        <h4>Kurzfristig frei</h4>
+                        <div class="hp-zeile"><span>Schmerz-Sprechstunde</span><span class="v">t&auml;glich 8&ndash;9 Uhr</span></div>
+                        <div class="hp-zeile"><span>Prophylaxe</span><span class="v">diese Woche</span></div>
+                        <div class="hp-zeile"><span>Implantat-Beratung</span><span class="v">n&auml;chste Woche</span></div>
+                        <div class="hp-zeile"><span>Erstberatung</span><span class="v">kostenfrei</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="kosten" id="kosten" aria-label="Kostenrahmen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug &middot; Datenbasiert</span>
+                    <h2>Kein Heil- und Kostenplan. Aber eine ehrliche Zahl.</h2>
+                    <p>W&auml;hlen Sie die Behandlung &mdash; die Seite zeigt den &uuml;blichen Rahmen nach GOZ-Steigerungss&auml;tzen und trennt sauber, was die gesetzliche Kasse tr&auml;gt und was Sie selbst tragen. Verbindlich wird es erst mit dem Heil- und Kostenplan nach der Untersuchung.</p>
+                </div>
+                <div class="kbox">
+                    <div class="kbox-kopf">
+                        <h3>Kostenrahmen</h3>
+                        <p>Nach GOZ-Systematik &middot; unverbindliche Orientierung, kein Heil- und Kostenplan</p>
+                    </div>
+                    <div class="kbox-body">
+                        <div>
+                            <div class="wahl" role="group" aria-label="Behandlung w&auml;hlen">
+                                <button class="wahl-btn" type="button" data-b="implantat" aria-pressed="true">Implantat mit Krone<span class="w-sub">Einzelzahn, inkl. Aufbau</span></button>
+                                <button class="wahl-btn" type="button" data-b="aligner" aria-pressed="false">Aligner-Behandlung<span class="w-sub">Unsichtbare Schienen</span></button>
+                                <button class="wahl-btn" type="button" data-b="krone" aria-pressed="false">Krone<span class="w-sub">Vollkeramik oder Metall-Keramik</span></button>
+                                <button class="wahl-btn" type="button" data-b="prophy" aria-pressed="false">Professionelle Zahnreinigung<span class="w-sub">Prophylaxe-Sitzung</span></button>
+                            </div>
+                            <div class="schieber-kopf"><label for="z-anzahl" id="z-anzahl-label">Anzahl</label><span class="wert" id="z-anzahl-val">1</span></div>
+                            <input id="z-anzahl" type="range" min="1" max="8" step="1" value="1" aria-labelledby="z-anzahl-label">
+                            <div class="schieber-kopf"><label for="z-satz">Aufwand der Behandlung</label><span class="wert" id="z-satz-val">mittel</span></div>
+                            <input id="z-satz" type="range" min="1" max="3" step="1" value="2">
+                            <p class="hinweis">Grundlage: Geb&uuml;hrenordnung f&uuml;r Zahn&auml;rzte (GOZ) mit Steigerungssatz 2,3 als Regelfall; einfacher bzw. erh&ouml;hter Aufwand verschiebt den Satz. Material- und Laborkosten sind als &uuml;bliche Spanne enthalten.</p>
+                        </div>
+                        <div>
+                            <div class="spanne" aria-live="polite">
+                                <div class="s-label" id="z-titel">Implantat mit Krone</div>
+                                <div class="s-wert" id="z-spanne">&mdash;</div>
+                                <div class="s-sub" id="z-sub">&uuml;blicher Rahmen inkl. Material und Labor</div>
+                            </div>
+                            <div class="kasse">
+                                <div class="kasse-zeile"><span class="kz-name" id="z-kasse-name">Anteil gesetzliche Kasse</span><span class="kz-wert" id="z-kasse">&mdash;</span></div>
+                                <div class="kasse-zeile"><span class="kz-name">Ihr Eigenanteil, etwa</span><span class="kz-wert" id="z-eigen">&mdash;</span></div>
+                                <div class="kasse-zeile"><span class="kz-name">Ratenzahlung m&ouml;glich ab</span><span class="kz-wert" id="z-rate">&mdash;</span></div>
+                            </div>
+                            <p class="hinweis" id="z-hinweis">Der genaue Betrag h&auml;ngt vom Befund ab. Nach der Untersuchung bekommen Sie einen schriftlichen Heil- und Kostenplan &mdash; erst der ist verbindlich, und erst dann entscheiden Sie.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="termin" aria-label="Termin w&auml;hlen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug &middot; Ohne Warteschleife</span>
+                    <h2>Termine, die man sehen kann.</h2>
+                    <p>Kein R&uuml;ckruf, keine Warteschleife: Hier stehen die freien Zeiten dieser Woche. W&auml;hlen Sie eine aus &mdash; den Rest kl&auml;ren wir in zwei S&auml;tzen.</p>
+                </div>
+                <div class="termin-grid">
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 6px;">Diese Woche frei</h3>
+                        <p style="color: var(--text-light); font-size: 14px; margin-bottom: 18px;">Prophylaxe und Beratung &middot; Schmerzpatienten kommen ohne Termin morgens in die Sprechstunde</p>
+                        <div class="slots">
+                            <button type="button" class="slot belegt" disabled aria-label="Montag 9:20 Uhr &mdash; bereits vergeben">Mo 9:20</button>
+                            <button type="button" class="slot" onclick="openDemo('slot','Mo 15:40')">Mo 15:40</button>
+                            <button type="button" class="slot" onclick="openDemo('slot','Di 11:00')">Di 11:00</button>
+                            <button type="button" class="slot belegt" disabled aria-label="Dienstag 16:20 Uhr &mdash; bereits vergeben">Di 16:20</button>
+                            <button type="button" class="slot" onclick="openDemo('slot','Mi 8:40')">Mi 8:40</button>
+                            <button type="button" class="slot" onclick="openDemo('slot','Do 14:00')">Do 14:00</button>
+                            <button type="button" class="slot belegt" disabled aria-label="Donnerstag 17:00 Uhr &mdash; bereits vergeben">Do 17:00</button>
+                            <button type="button" class="slot" onclick="openDemo('slot','Fr 10:20')">Fr 10:20</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 22px; margin-bottom: 12px;">Angst vor dem Zahnarzt?</h3>
+                        <p style="color: var(--text-soft); font-size: 16px;">Sagen Sie es uns bei der Anmeldung &mdash; wir planen dann mehr Zeit ein, erkl&auml;ren jeden Schritt vorher und h&ouml;ren auf, wenn Sie die Hand heben. Das ist keine Floskel, sondern der Ablauf.</p>
+                        <p style="color: var(--text-soft); font-size: 16px; margin-top: 16px;">Auf Wunsch behandeln wir in Sedierung. Was daf&uuml;r spricht und was dagegen, besprechen wir vorher in Ruhe &mdash; ohne Drängen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="prophy" id="prophylaxe" aria-label="Prophylaxe">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow" style="color: var(--gold);">Prophylaxe &middot; Erinnerung</span>
+                    <h2>Der Termin, den alle vergessen.</h2>
+                    <p>Die professionelle Zahnreinigung ist die g&uuml;nstigste Behandlung, die wir anbieten &mdash; und die, die am meisten sp&auml;tere Kosten verhindert.</p>
+                </div>
+                <div class="schritte">
+                    <div class="schritt"><div class="nr">01</div><h4>Wir erinnern</h4><p>Sie w&auml;hlen den Abstand &mdash; halbj&auml;hrlich oder j&auml;hrlich. Die Erinnerung kommt per SMS oder Mail, nicht per Anruf.</p></div>
+                    <div class="schritt"><div class="nr">02</div><h4>Sie w&auml;hlen</h4><p>Aus der Erinnerung heraus buchen Sie direkt einen freien Termin &mdash; ohne R&uuml;ckruf.</p></div>
+                    <div class="schritt"><div class="nr">03</div><h4>Wir dokumentieren</h4><p>Ihr Verlauf bleibt nachvollziehbar; viele Kassen erstatten die Reinigung anteilig, wenn sie regelm&auml;&szlig;ig belegt ist.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="praxis" aria-label="Praxis">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Praxis</span>
+                    <h2>Zahnmedizin ohne Verkaufsgespr&auml;ch.</h2>
+                </div>
+                <div class="faq-item"><div class="faq-q">Was kostet die Erstberatung?</div><div class="faq-a">Nichts. Wir schauen uns an, worum es geht, und sagen Ihnen, welche Wege es gibt &mdash; auch den, bei dem wir nichts verdienen.</div></div>
+                <div class="faq-item"><div class="faq-q">Ist der Kostenrahmen verbindlich?</div><div class="faq-a">Nein. Er zeigt, was Behandlungen dieser Art &uuml;blicherweise kosten. Verbindlich ist erst der schriftliche Heil- und Kostenplan, den Sie nach der Untersuchung bekommen &mdash; mit Ihrem tats&auml;chlichen Befund.</div></div>
+                <div class="faq-item"><div class="faq-q">Was zahlt meine Kasse?</div><div class="faq-a">Bei Zahnersatz zahlt die gesetzliche Kasse einen Festzuschuss, der sich am Befund orientiert und mit einem gef&uuml;hrten Bonusheft steigt. Bei rein &auml;sthetischen Behandlungen und bei Alignern zahlt sie in der Regel nichts. Wir rechnen Ihnen beides vorher aus.</div></div>
+                <div class="faq-item"><div class="faq-q">Bekomme ich einen Termin, wenn ich Schmerzen habe?</div><div class="faq-a">Ja &mdash; kommen Sie werktags zwischen 8 und 9 Uhr in die Schmerzsprechstunde, ohne Anmeldung. Wir behandeln akute F&auml;lle vor den geplanten Terminen.</div></div>
+                <div class="faq-item"><div class="faq-q">Kann ich in Raten zahlen?</div><div class="faq-a">Ja, gr&ouml;&szlig;ere Behandlungen lassen sich &uuml;ber einen Abrechnungsdienstleister in Raten zahlen. Wir besprechen das offen, bevor Sie sich entscheiden.</div></div>
+            </div>
+        </section>
+
+        <section class="kontakt" aria-label="Kontakt">
+            <div class="container">
+                <div class="section-head"><span class="eyebrow">Kontakt</span><h2>Wir sind da.</h2></div>
+                <div style="max-width: 620px;">
+                    <div class="k-zeile"><span class="k-label">Telefon</span><a href="tel:+4971163410">0711 634 10</a></div>
+                    <div class="k-zeile"><span class="k-label">E-Mail</span><a href="mailto:praxis@zahnarzt-sommer.de">praxis@zahnarzt-sommer.de</a></div>
+                    <div class="k-zeile"><span class="k-label">Praxis</span><span>Rotebühlstraße 88 &middot; 70178 Stuttgart-West</span></div>
+                    <div class="k-zeile"><span class="k-label">Sprechzeit</span><span>Mo&ndash;Do 8&ndash;18 Uhr, Fr 8&ndash;14 Uhr &middot; Schmerzsprechstunde werktags 8&ndash;9 Uhr</span></div>
+                    <p style="margin-top: 26px;"><a href="#termin" class="btn-primary">Freien Termin w&auml;hlen</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site">
+        <div class="container">
+            <div class="f-grid">
+                <div class="f-brand"><strong>Zahnarztpraxis Dr. Sommer</strong><p style="margin-top: 10px;">Implantologie, Aligner und Prophylaxe. Stuttgart-West.</p></div>
+                <div><h5>Behandlung</h5><ul><li><a href="#kosten">Implantate</a></li><li><a href="#kosten">Aligner</a></li><li><a href="#prophylaxe">Prophylaxe</a></li></ul></div>
+                <div><h5>Praxis</h5><ul><li><a href="#termin">Termine</a></li><li><a href="#kosten">Kostenrahmen</a></li><li><a href="#praxis">Fragen</a></li></ul></div>
+            </div>
+            <div class="f-foot">
+                <span>&copy; 2026 Zahnarztpraxis Dr. Sommer. Alle Rechte vorbehalten. &middot; <a href="#" style="text-decoration: underline;">Impressum</a> &middot; <a href="#" style="text-decoration: underline;">Datenschutz</a></span>
+                <span class="karriaro-note">Demo &middot; Webdesign by Karriaro Manufaktur</span>
+            </div>
+        </div>
+    </footer>
+
+    <div class="demo-modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="demoTitle" aria-describedby="demoMsg">
+        <div class="demo-modal-card">
+            <div class="icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3M3 11h18M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+            <h3 id="demoTitle">Termin gew&auml;hlt &mdash; Demo</h3>
+            <p id="demoMsg">Diese Musterseite zeigt den Ablauf, sie bucht nicht.</p>
+            <button type="button" id="demoClose" onclick="closeDemo()">Verstanden</button>
+        </div>
+    </div>
+
+    <script>
+        /* WERKZEUG 1 — Kostenrahmen nach GOZ-Systematik. Bewusst deterministisch (keine KI)
+           und bewusst als SPANNE: eine exakte Zahl ohne Befund waere unserioes und
+           heilmittelwerberechtlich heikel. Kassenanteil = Festzuschuss-Logik. */
+        var BEH = {
+            implantat: { name: 'Implantat mit Krone', von: 1900, bis: 3200, kasse: 450, kasseText: 'Festzuschuss der Kasse', einheit: 'Zahn', max: 6 },
+            aligner:   { name: 'Aligner-Behandlung', von: 3500, bis: 6500, kasse: 0,   kasseText: 'Kasse zahlt bei Erwachsenen nichts', einheit: 'Kiefer', max: 2 },
+            krone:     { name: 'Krone', von: 550, bis: 1100, kasse: 210, kasseText: 'Festzuschuss der Kasse', einheit: 'Zahn', max: 8 },
+            prophy:    { name: 'Professionelle Zahnreinigung', von: 95, bis: 160, kasse: 0, kasseText: 'viele Kassen erstatten anteilig', einheit: 'Sitzung', max: 4 }
+        };
+        var aktuell = 'implantat';
+        function euro(n){ return Math.round(n).toLocaleString('de-DE') + ' €'; }
+        function rechnen(){
+            var b = BEH[aktuell];
+            var anzahl = +document.getElementById('z-anzahl').value;
+            var satz = +document.getElementById('z-satz').value;          /* 1 einfach, 2 mittel (GOZ-Regelfall 2,3), 3 erhoeht */
+            var f = satz === 1 ? 0.82 : (satz === 3 ? 1.28 : 1.0);
+            var von = b.von * f * anzahl, bis = b.bis * f * anzahl;
+            var kasse = b.kasse * anzahl;
+            var eigenVon = Math.max(0, von - kasse), eigenBis = Math.max(0, bis - kasse);
+            document.getElementById('z-titel').textContent = b.name;
+            document.getElementById('z-spanne').textContent = euro(von) + ' – ' + euro(bis);
+            var PL = {Zahn:'Zähne', Kiefer:'Kiefer', Sitzung:'Sitzungen'};
+            document.getElementById('z-sub').textContent = anzahl + ' ' + (anzahl > 1 ? PL[b.einheit] : b.einheit) + ' · inkl. Material und Labor';
+            document.getElementById('z-anzahl-val').textContent = anzahl;
+            document.getElementById('z-satz-val').textContent = satz === 1 ? 'einfach' : (satz === 3 ? 'erhöht' : 'mittel');
+            document.getElementById('z-kasse-name').textContent = b.kasseText;
+            document.getElementById('z-kasse').textContent = kasse ? euro(kasse) : '0 €';
+            document.getElementById('z-eigen').textContent = euro(eigenVon) + ' – ' + euro(eigenBis);
+            document.getElementById('z-rate').textContent = euro(eigenVon / 24) + ' im Monat';
+        }
+        Array.prototype.forEach.call(document.querySelectorAll('.wahl-btn'), function(b){
+            b.addEventListener('click', function(){
+                Array.prototype.forEach.call(document.querySelectorAll('.wahl-btn'), function(x){ x.setAttribute('aria-pressed','false'); });
+                b.setAttribute('aria-pressed','true');
+                aktuell = b.dataset.b;
+                var sl = document.getElementById('z-anzahl');
+                sl.max = BEH[aktuell].max;
+                if (+sl.value > BEH[aktuell].max) sl.value = BEH[aktuell].max;
+                rechnen();
+            });
+        });
+        document.getElementById('z-anzahl').addEventListener('input', rechnen);
+        document.getElementById('z-satz').addEventListener('input', rechnen);
+        document.getElementById('z-anzahl').max = BEH[aktuell].max;
+        rechnen();
+
+        /* WERKZEUG 2 — Termine: ohne Backend, also sagt die Seite das auch. */
+        function openDemo(key, slot){
+            document.getElementById('demoTitle').textContent = 'Termin gewählt — Demo';
+            document.getElementById('demoMsg').textContent = 'In der Live-Version tragen Sie jetzt Name und Versichertenstatus ein und erhalten für ' + (slot || 'diesen Termin') + ' die Bestätigung per SMS. Diese Musterseite zeigt den Ablauf, sie bucht nicht.';
+            var m = document.getElementById('demoModal');
+            m._opener = document.activeElement;
+            m.classList.add('is-open');
+            document.getElementById('demoClose').focus();
+        }
+        function closeDemo(){
+            var m = document.getElementById('demoModal');
+            m.classList.remove('is-open');
+            if (m._opener && document.contains(m._opener)) m._opener.focus();
+        }
+        document.getElementById('demoModal').addEventListener('click', function(e){ if (e.target.id === 'demoModal') closeDemo(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && document.getElementById('demoModal').classList.contains('is-open')) closeDemo(); });
+    </script>
+
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <script src="/js/karriaro-tools.js"></script>
+    <script src="/js/concierge.js?v=3" data-branche="zahnarzt" data-name="Praxis Dr. Sommer" data-accent="#0F2E33" data-greeting="Guten Tag! Ich bin der digitale Assistent der Zahnarztpraxis Dr. Sommer. Fragen Sie mich zu Behandlungen, Kosten oder freien Terminen." defer></script>
+</body>
+</html>

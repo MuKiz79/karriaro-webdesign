@@ -1,0 +1,415 @@
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elektro Wagner &middot; Wallbox, Photovoltaik, E-Check Stuttgart &mdash; Kosten und F&ouml;rderung vorab &middot; Demo &middot; Karriaro Webdesign</title>
+    <meta name="description" content="Elektrobetrieb in Stuttgart. Wallbox-Kosten inklusive Leitungsweg vorab berechnen, PV-Ertrag absch&auml;tzen, E-Check und Notdienst. Demo-Seite von Karriaro Webdesign.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://karriaro-webdesign.de/portfolio/elektro-wagner">
+    <link rel="stylesheet" href="/css/fonts.css?v=183">
+    <link rel="stylesheet" href="/css/fonts-inter.css?v=183">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Elektro Wagner &mdash; Wallbox mit Preis vorab">
+    <meta property="og:description" content="Wallbox, Photovoltaik, E-Check. Kosten und F&ouml;rderung vorab berechnen.">
+    <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
+    <meta property="og:image:alt" content="Karriaro Webdesign — Branchen-Demo">
+    <style>
+        :root {
+            --accent: #26200E; --accent-dark: #1A1608; --accent-strong: #100D04; --accent-bg: #F5F0DE;
+            --gold: #E2B93B; --bg: #FCFBF7; --bg-soft: #F3F0E6; --text: #1C1810; --text-soft: #4F4839;
+            --text-light: #8B8471; --border: #E6E1D2; --border-strong: #C4BCA4; --gruen: #4A7C3F;
+            --p-radius: 4px; --p-radius-lg: 10px; --p-shadow: 0 8px 32px rgba(30,25,10,0.07); --p-shadow-lg: 0 32px 72px rgba(30,25,10,0.12);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            --serif: 'Fraunces', Georgia, serif; --mono: 'JetBrains Mono', ui-monospace, monospace; --max: 1180px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font); color: var(--text); background: var(--bg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+        h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
+        a { color: inherit; }
+        .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-light); }
+        .topbar { background: var(--accent-dark); color: rgba(255,255,255,0.92); font-size: 13px; padding: 9px 24px; text-align: center; }
+        .topbar strong { color: var(--gold); font-weight: 600; }
+        .topbar a { color: #fff; text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+        header.site { position: sticky; top: 0; z-index: 50; background: rgba(252,251,247,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        .nav-inner { max-width: var(--max); margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; gap: 32px; }
+        .nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .brand-mark { width: 38px; height: 38px; background: var(--gold); color: var(--accent); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 20px; font-weight: 700; }
+        .brand-name { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        nav.primary { display: flex; gap: 26px; margin-left: auto; font-size: 15px; }
+        nav.primary a { text-decoration: none; color: var(--text-soft); }
+        nav.primary a:hover { color: var(--accent); }
+        .nav-cta { background: var(--accent); color: #fff; padding: 11px 22px; border-radius: var(--p-radius); font-size: 14px; font-weight: 500; text-decoration: none; }
+        @media (max-width: 900px) { nav.primary { display: none; } .nav-inner { gap: 16px; } }
+        section { padding: 88px 0; }
+        .section-head { max-width: 720px; margin-bottom: 44px; }
+        .section-head h2 { font-size: clamp(30px, 3.8vw, 44px); margin: 12px 0 16px; }
+        .section-head p { color: var(--text-soft); font-size: 17px; }
+        .hero { padding: 92px 0 80px; background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%); border-bottom: 1px solid var(--border); }
+        .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
+        @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 38px; } }
+        .hero-folio-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .hero-folio-eyebrow .rule { width: 42px; height: 1px; background: var(--gold); }
+        .hero h1 { font-size: clamp(38px, 5.2vw, 60px); }
+        .hero h1 em { display: block; font-style: italic; color: var(--text-soft); }
+        .hero .lead { margin-top: 22px; font-size: 18px; color: var(--text-soft); max-width: 34em; }
+        .hero-ctas { margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+        .btn-primary { background: var(--accent); color: #fff; padding: 15px 30px; border-radius: var(--p-radius); text-decoration: none; font-size: 15px; font-weight: 500; display: inline-block; }
+        .btn-ghost { color: var(--accent); text-decoration: none; font-size: 15px; font-weight: 500; border-bottom: 1px solid var(--border-strong); padding-bottom: 2px; }
+        .hero-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--p-radius-lg); padding: 26px; box-shadow: var(--p-shadow); }
+        .hero-panel h4 { font-family: var(--font); font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-light); margin-bottom: 14px; }
+        .hp-zeile { display: flex; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .hp-zeile:last-child { border-bottom: 0; }
+        .hp-zeile .v { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+        .rechner { background: var(--bg-soft); }
+        .rbox { background: #fff; border: 1px solid var(--border); border-radius: var(--p-radius-lg); overflow: hidden; box-shadow: var(--p-shadow); }
+        .rbox-kopf { background: var(--accent); color: #fff; padding: 24px 28px; }
+        .rbox-kopf h3 { font-size: 24px; color: #fff; }
+        .rbox-kopf p { font-size: 14px; color: rgba(255,255,255,0.78); margin-top: 6px; }
+        .rbox-body { padding: 28px; display: grid; grid-template-columns: 330px 1fr; gap: 34px; }
+        @media (max-width: 880px) { .rbox-body { grid-template-columns: 1fr; } }
+        .feld { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+        .feld label { font-size: 13px; color: var(--text-soft); font-weight: 500; }
+        .feld select { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 15px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--p-radius); background: var(--bg); outline: none; }
+        .feld select:focus { border-color: var(--accent); }
+        .schieber-kopf { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+        .schieber-kopf label { font-size: 13px; color: var(--text-soft); }
+        .schieber-kopf .wert { font-family: var(--mono); font-size: 15px; color: var(--accent); font-weight: 600; }
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; border-radius: 999px; background: var(--border-strong); outline: none; cursor: pointer; margin-bottom: 18px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 1px solid rgba(0,0,0,0.10); }
+        input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+        .posten { display: grid; gap: 10px; }
+        .posten-zeile { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 18px; border: 1px solid var(--border); border-radius: var(--p-radius); }
+        .posten-zeile .p-name { font-weight: 600; font-size: 15px; }
+        .posten-zeile .p-sub { font-size: 12.5px; color: var(--text-light); margin-top: 2px; }
+        .posten-zeile .p-preis { font-family: var(--mono); font-size: 17px; color: var(--accent); font-weight: 600; white-space: nowrap; }
+        .posten-zeile.abzug .p-preis { color: var(--gruen); }
+        .summe { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 20px 18px; border-radius: var(--p-radius); background: var(--accent-bg); border: 1px solid var(--gold); margin-top: 4px; }
+        .summe .s-name { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        .summe .s-preis { font-family: var(--mono); font-size: 26px; color: var(--accent); font-weight: 700; }
+        .hinweis { font-size: 12.5px; color: var(--text-light); line-height: 1.55; margin-top: 14px; }
+        .pv-grid { display: grid; grid-template-columns: 330px 1fr; gap: 34px; }
+        @media (max-width: 880px) { .pv-grid { grid-template-columns: 1fr; } }
+        .pv-karten { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 560px) { .pv-karten { grid-template-columns: 1fr; } }
+        .pv-karte { border: 1px solid var(--border); border-radius: var(--p-radius-lg); padding: 22px; background: #fff; }
+        .pv-karte .pk-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-light); }
+        .pv-karte .pk-wert { font-family: var(--serif); font-size: 32px; color: var(--accent); margin: 8px 0 4px; font-weight: 600; }
+        .pv-karte .pk-sub { font-size: 13px; color: var(--text-soft); }
+        .leistungen-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        @media (max-width: 880px) { .leistungen-grid { grid-template-columns: 1fr; } }
+        .leistung { border-top: 2px solid var(--gold); padding-top: 20px; }
+        .leistung h3 { font-size: 22px; margin-bottom: 10px; }
+        .leistung p { font-size: 15px; color: var(--text-soft); }
+        .notdienst { background: var(--accent); color: #fff; }
+        .notdienst h2 { color: #fff; }
+        .notdienst .section-head p { color: rgba(255,255,255,0.72); }
+        .nd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        @media (max-width: 880px) { .nd-grid { grid-template-columns: 1fr; } }
+        .nd h4 { font-family: var(--serif); font-size: 20px; margin-bottom: 8px; color: var(--gold); }
+        .nd p { font-size: 14px; color: rgba(255,255,255,0.72); }
+        .faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+        .faq-q { font-family: var(--serif); font-size: 20px; font-weight: 600; }
+        .faq-a { font-size: 15px; color: var(--text-soft); margin-top: 10px; max-width: 62em; }
+        .kontakt { background: var(--bg-soft); }
+        .k-zeile { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+        .k-zeile .k-label { color: var(--text-light); min-width: 96px; font-size: 13px; }
+        footer.site { background: var(--accent-strong); color: rgba(255,255,255,0.72); padding: 54px 0 28px; font-size: 14px; }
+        footer .f-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
+        @media (max-width: 880px) { footer .f-grid { grid-template-columns: 1fr; gap: 26px; } }
+        footer strong { color: #fff; font-family: var(--serif); font-size: 19px; }
+        footer h5 { color: #fff; font-size: 13px; margin-bottom: 12px; font-family: var(--font); }
+        footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        footer a { color: rgba(255,255,255,0.72); text-decoration: none; }
+        footer a:hover { color: #fff; }
+        footer .f-foot { margin-top: 38px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.12); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12.5px; }
+        footer .karriaro-note { color: var(--gold); font-size: 12px; }
+        .demo-modal { position: fixed; inset: 0; background: rgba(16,13,4,0.82); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px; }
+        .demo-modal.is-open { display: flex; }
+        .demo-modal-card { background: var(--bg); border-radius: var(--p-radius-lg); padding: 44px; max-width: 520px; width: 100%; text-align: center; box-shadow: var(--p-shadow-lg); }
+        .demo-modal-card .icon { width: 60px; height: 60px; margin: 0 auto 18px; background: var(--accent-bg); color: var(--accent); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+        .demo-modal-card .icon svg { width: 30px; height: 30px; }
+        .demo-modal-card h3 { font-size: 26px; margin-bottom: 12px; }
+        .demo-modal-card p { color: var(--text-soft); font-size: 15px; margin-bottom: 26px; }
+        .demo-modal-card button { font-family: inherit; padding: 12px 28px; background: var(--accent); color: #fff; border: 0; border-radius: var(--p-radius); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; }
+        .demo-modal-card button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org", "@type": "Electrician", "name": "Elektro Wagner",
+      "description": "Elektrobetrieb in Stuttgart: Wallbox-Installation, Photovoltaik, E-Check und Notdienst. Kosten und F&ouml;rderung vorab einsehbar.",
+      "areaServed": "Stuttgart", "address": { "@type": "PostalAddress", "addressLocality": "Stuttgart", "addressCountry": "DE" },
+      "disambiguatingDescription": "Fiktive Musterseite (Demo) von Karriaro Webdesign — kein reales Unternehmen."
+    }
+    </script>
+</head>
+<body>
+    <div class="topbar"><strong>Elektro Wagner</strong> &middot; Wallbox &middot; Photovoltaik &middot; E-Check &middot; Stuttgart-Feuerbach &middot; <a href="tel:+4971181500">0711 815 00</a></div>
+
+    <header class="site">
+        <div class="nav-inner">
+            <a href="/portfolio/elektro-wagner" class="nav-brand"><span class="brand-mark">W</span><span class="brand-name">Elektro Wagner</span></a>
+            <nav class="primary" aria-label="Hauptnavigation">
+                <a href="#wallbox">Wallbox</a><a href="#pv">Photovoltaik</a><a href="#leistungen">Leistungen</a><a href="#notdienst">Notdienst</a>
+            </nav>
+            <a href="#wallbox" class="nav-cta">Wallbox berechnen</a>
+        </div>
+    </header>
+
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <div class="hero-folio-eyebrow"><span class="rule"></span><span class="eyebrow">Preis inklusive Leitungsweg</span></div>
+                        <h1 class="hero-headline">Strom ist einfach.<em>Der Antrag nicht.</em></h1>
+                        <p class="lead">Bei Wallboxen scheitert selten die Technik &mdash; es scheitert am Papier: Netzanmeldung, Z&auml;hlerschrank, F&ouml;rderantrag. Rechnen Sie hier zuerst, was es bei Ihnen kostet. Den Papierkram &uuml;bernehmen wir.</p>
+                        <div class="hero-ctas">
+                            <a href="#wallbox" class="btn-primary">Wallbox berechnen</a>
+                            <a href="#pv" class="btn-ghost">Photovoltaik absch&auml;tzen &rsaquo;</a>
+                        </div>
+                    </div>
+                    <div class="hero-panel">
+                        <h4>Was wir am h&auml;ufigsten machen</h4>
+                        <div class="hp-zeile"><span>Wallbox 11 kW, Standardfall</span><span class="v">ab 1.690 €</span></div>
+                        <div class="hp-zeile"><span>PV-Anlage 10 kWp</span><span class="v">ab 14.900 €</span></div>
+                        <div class="hp-zeile"><span>E-Check Wohnhaus</span><span class="v">ab 190 €</span></div>
+                        <div class="hp-zeile"><span>Vor-Ort-Termin</span><span class="v">kostenfrei</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="rechner" id="wallbox" aria-label="Wallbox berechnen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug &middot; Datenbasiert</span>
+                    <h2>Was die Wallbox bei Ihnen kostet.</h2>
+                    <p>Der Preis einer Wallbox h&auml;ngt weniger von der Box ab als vom Weg dorthin. Stellen Sie ein, wie es bei Ihnen aussieht &mdash; die Seite rechnet Leitung, Z&auml;hlerschrank und Anmeldung mit.</p>
+                </div>
+                <div class="rbox">
+                    <div class="rbox-kopf">
+                        <h3>Wallbox-Rechner</h3>
+                        <p>Marktpreise unseres Betriebs &middot; unverbindliche Orientierung, kein Angebot</p>
+                    </div>
+                    <div class="rbox-body">
+                        <div>
+                            <div class="feld">
+                                <label for="w-typ">Wallbox</label>
+                                <select id="w-typ">
+                                    <option value="11">11 kW, ohne Lastmanagement</option>
+                                    <option value="11s">11 kW, mit App und Lastmanagement</option>
+                                    <option value="22">22 kW, mit Lastmanagement</option>
+                                    <option value="pv">11 kW, PV-&uuml;berschussf&auml;hig</option>
+                                </select>
+                            </div>
+                            <div class="schieber-kopf"><label for="w-leitung">Leitungsweg zum Z&auml;hler</label><span class="wert" id="w-leitung-val">12 m</span></div>
+                            <input id="w-leitung" type="range" min="3" max="60" step="1" value="12">
+                            <div class="feld">
+                                <label for="w-schrank">Z&auml;hlerschrank</label>
+                                <select id="w-schrank">
+                                    <option value="0">Modern, Platz vorhanden</option>
+                                    <option value="1">&Auml;lter, Erweiterung n&ouml;tig</option>
+                                    <option value="2">Muss ersetzt werden (vor 1990)</option>
+                                </select>
+                            </div>
+                            <div class="feld">
+                                <label for="w-weg">Verlegeart</label>
+                                <select id="w-weg">
+                                    <option value="1">Aufputz / Kabelkanal</option>
+                                    <option value="1.7">Unterputz, Stemmarbeiten</option>
+                                    <option value="2.3">Erdarbeiten (Garage im Hof)</option>
+                                </select>
+                            </div>
+                            <p class="hinweis">Grundlage sind unsere Marktpreise, Stand Juli 2026. Verbindlich wird es nach dem kostenfreien Vor-Ort-Termin &mdash; erst dann sehen wir Z&auml;hlerschrank und Leitungsweg wirklich.</p>
+                        </div>
+                        <div>
+                            <div class="posten" id="w-posten" aria-live="polite">
+                                <div class="posten-zeile"><div><div class="p-name" id="w-box-name">Wallbox 11 kW</div><div class="p-sub">Ger&auml;t inkl. Montage</div></div><div class="p-preis" id="w-box">&mdash;</div></div>
+                                <div class="posten-zeile"><div><div class="p-name">Leitung und Absicherung</div><div class="p-sub" id="w-leit-sub">&mdash;</div></div><div class="p-preis" id="w-leit">&mdash;</div></div>
+                                <div class="posten-zeile"><div><div class="p-name">Z&auml;hlerschrank</div><div class="p-sub" id="w-schrank-sub">&mdash;</div></div><div class="p-preis" id="w-schrankp">&mdash;</div></div>
+                                <div class="posten-zeile"><div><div class="p-name">Netzanmeldung und Inbetriebnahme</div><div class="p-sub">Anmeldung beim Netzbetreiber, Protokoll, Einweisung</div></div><div class="p-preis" id="w-anm">&mdash;</div></div>
+                            </div>
+                            <div class="summe">
+                                <div><div class="s-name">Gesamt, inkl. 19 % USt</div><div class="p-sub" id="w-dauer">&mdash;</div></div>
+                                <div class="s-preis" id="w-summe">&mdash;</div>
+                            </div>
+                            <p class="hinweis">Zur F&ouml;rderung: Bundesweite Zusch&uuml;sse f&uuml;r private Wallboxen laufen derzeit nicht; einzelne L&auml;nder, Kommunen und Stadtwerke f&ouml;rdern weiterhin. Wir pr&uuml;fen beim Vor-Ort-Termin, was f&uuml;r Ihre Adresse gilt, und stellen den Antrag &mdash; wir rechnen hier aber bewusst keine F&ouml;rderung ein, die es vielleicht nicht gibt.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pv" aria-label="Photovoltaik absch&auml;tzen">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Werkzeug &middot; Datenbasiert</span>
+                    <h2>Lohnt sich das Dach?</h2>
+                    <p>Vier Angaben gen&uuml;gen f&uuml;r eine erste Gr&ouml;&szlig;enordnung: Fl&auml;che, Ausrichtung, Stromverbrauch und Speicher. Die genaue Auslegung macht danach ein Mensch &mdash; auf dem Dach, nicht am Rechner.</p>
+                </div>
+                <div class="pv-grid">
+                    <div>
+                        <div class="schieber-kopf"><label for="p-flaeche">Nutzbare Dachfl&auml;che</label><span class="wert" id="p-flaeche-val">45 m&sup2;</span></div>
+                        <input id="p-flaeche" type="range" min="10" max="160" step="5" value="45">
+                        <div class="feld">
+                            <label for="p-richtung">Ausrichtung</label>
+                            <select id="p-richtung"><option value="1">S&uuml;d</option><option value="0.9">S&uuml;dost / S&uuml;dwest</option><option value="0.78">Ost / West</option><option value="0.6">Nordost / Nordwest</option></select>
+                        </div>
+                        <div class="schieber-kopf"><label for="p-verbrauch">Stromverbrauch im Jahr</label><span class="wert" id="p-verbrauch-val">4.500 kWh</span></div>
+                        <input id="p-verbrauch" type="range" min="1500" max="12000" step="500" value="4500">
+                        <div class="feld">
+                            <label for="p-speicher">Speicher</label>
+                            <select id="p-speicher"><option value="0">ohne Speicher</option><option value="1">mit Speicher (etwa 8 kWh)</option></select>
+                        </div>
+                        <p class="hinweis">Gerechnet mit rund 950 kWh Ertrag je kWp und Jahr f&uuml;r den Raum Stuttgart, 0,34 &euro; Strompreis und 8,0 Cent Einspeiseverg&uuml;tung. Der Autarkiegrad ist realistisch gedeckelt &mdash; im Winter liefert kein Dach genug, 100 % gibt es nicht. Erträge schwanken mit Wetter, Verschattung und Dachneigung.</p>
+                    </div>
+                    <div>
+                        <div class="pv-karten">
+                            <div class="pv-karte"><div class="pk-label">Anlagengr&ouml;&szlig;e</div><div class="pk-wert" id="p-kwp">&mdash;</div><div class="pk-sub" id="p-module">&mdash;</div></div>
+                            <div class="pv-karte"><div class="pk-label">Ertrag im Jahr</div><div class="pk-wert" id="p-ertrag">&mdash;</div><div class="pk-sub" id="p-deckung">&mdash;</div></div>
+                            <div class="pv-karte"><div class="pk-label">Ersparnis im Jahr</div><div class="pk-wert" id="p-sparen">&mdash;</div><div class="pk-sub">Eigenverbrauch plus Einspeisung</div></div>
+                            <div class="pv-karte"><div class="pk-label">Investition, etwa</div><div class="pk-wert" id="p-invest">&mdash;</div><div class="pk-sub" id="p-amort">&mdash;</div></div>
+                        </div>
+                        <p class="hinweis">Eine Amortisation ist keine Rendite-Zusage: Strompreise und Verg&uuml;tungen &auml;ndern sich. Wir zeigen die Rechnung offen, damit Sie sie selbst nachvollziehen k&ouml;nnen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="leistungen" style="background: var(--bg-soft);" aria-label="Leistungen">
+            <div class="container">
+                <div class="section-head"><span class="eyebrow">Leistungen</span><h2>Was wir sonst noch machen.</h2></div>
+                <div class="leistungen-grid">
+                    <div class="leistung"><h3>E-Check</h3><p>Pr&uuml;fung der Hausinstallation nach DIN VDE mit Protokoll &mdash; viele Versicherer verlangen ihn, und er findet Fehler, bevor sie brennen.</p></div>
+                    <div class="leistung"><h3>Sanierung</h3><p>Alte Leitungen, zu wenig Steckdosen, kein FI-Schutzschalter. Wir sanieren bewohnte H&auml;user schrittweise, damit Sie nicht ausziehen m&uuml;ssen.</p></div>
+                    <div class="leistung"><h3>Smart Home</h3><p>Licht, Rollladen, Heizung &mdash; kabelgebunden statt Funk, wo es geht. Das h&auml;lt l&auml;nger als jede App.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="notdienst" id="notdienst" aria-label="Notdienst">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow" style="color: var(--gold);">Notdienst</span>
+                    <h2>Wenn es dunkel wird.</h2>
+                    <p>Wir haben einen Bereitschaftsdienst f&uuml;r echte St&ouml;rungen &mdash; und sagen Ihnen am Telefon ehrlich, ob es bis morgen Zeit hat.</p>
+                </div>
+                <div class="nd-grid">
+                    <div class="nd"><h4>Stromausfall im Haus</h4><p>Wenn der ganze Haushalt dunkel ist und der Nachbar Licht hat, kommen wir. Rufen Sie an, bevor Sie am Sicherungskasten hantieren.</p></div>
+                    <div class="nd"><h4>Wasser an der Elektrik</h4><p>Nach Rohrbruch oder Sturm: Finger weg, Sicherung raus, anrufen. Das ist kein Fall f&uuml;r morgen.</p></div>
+                    <div class="nd"><h4>Kein Notfall?</h4><p>Ein defekter Lichtschalter ist &auml;rgerlich, aber kein Notdienst-Fall. Wir sagen es Ihnen und geben einen Termin in der Woche &mdash; das ist g&uuml;nstiger f&uuml;r Sie.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section aria-label="H&auml;ufige Fragen">
+            <div class="container">
+                <div class="section-head"><span class="eyebrow">H&auml;ufige Fragen</span><h2>Was Kunden zuerst fragen.</h2></div>
+                <div class="faq-item"><div class="faq-q">Brauche ich f&uuml;r eine Wallbox eine Genehmigung?</div><div class="faq-a">Wallboxen bis 11 kW sind beim Netzbetreiber anmeldepflichtig, ab 12 kW genehmigungspflichtig. Beides &uuml;bernehmen wir &mdash; Sie unterschreiben nur.</div></div>
+                <div class="faq-item"><div class="faq-q">Gibt es F&ouml;rderung f&uuml;r die Wallbox?</div><div class="faq-a">Bundesweit derzeit nicht. Einzelne Bundesl&auml;nder, Kommunen und Stadtwerke f&ouml;rdern jedoch weiterhin, teils nur in Kombination mit Photovoltaik. Wir pr&uuml;fen das f&uuml;r Ihre Adresse &mdash; und sagen es Ihnen auch, wenn nichts dabei ist.</div></div>
+                <div class="faq-item"><div class="faq-q">Wie lange dauert die Installation?</div><div class="faq-a">Der Standardfall ist an einem Tag erledigt. Muss der Z&auml;hlerschrank getauscht werden, kommen ein zweiter Termin und die Abstimmung mit dem Netzbetreiber dazu &mdash; das dauert meist zwei bis vier Wochen.</div></div>
+                <div class="faq-item"><div class="faq-q">Lohnt sich ein Speicher?</div><div class="faq-a">Rechnerisch selten allein, praktisch oft doch &mdash; wenn Sie tags&uuml;ber wenig zu Hause sind und abends laden. Wir rechnen Ihnen beide Varianten vor, ohne zum teureren zu dr&auml;ngen.</div></div>
+            </div>
+        </section>
+
+        <section class="kontakt" aria-label="Kontakt">
+            <div class="container">
+                <div class="section-head"><span class="eyebrow">Kontakt</span><h2>Wir kommen vorbei.</h2><p>Der Vor-Ort-Termin ist kostenfrei &mdash; erst danach gibt es ein verbindliches Angebot.</p></div>
+                <div style="max-width: 620px;">
+                    <div class="k-zeile"><span class="k-label">Telefon</span><a href="tel:+4971181500">0711 815 00</a></div>
+                    <div class="k-zeile"><span class="k-label">E-Mail</span><a href="mailto:info@elektro-wagner.de">info@elektro-wagner.de</a></div>
+                    <div class="k-zeile"><span class="k-label">Betrieb</span><span>Stuttgarter Straße 145 &middot; 70469 Stuttgart-Feuerbach</span></div>
+                    <div class="k-zeile"><span class="k-label">Zeiten</span><span>Mo&ndash;Fr 7&ndash;17 Uhr &middot; Bereitschaftsdienst f&uuml;r St&ouml;rungen</span></div>
+                    <p style="margin-top: 26px;"><a href="#wallbox" class="btn-primary">Erst Kosten berechnen</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site">
+        <div class="container">
+            <div class="f-grid">
+                <div class="f-brand"><strong>Elektro Wagner</strong><p style="margin-top: 10px;">Wallbox, Photovoltaik, E-Check und Sanierung. Stuttgart-Feuerbach.</p></div>
+                <div><h5>Leistungen</h5><ul><li><a href="#wallbox">Wallbox</a></li><li><a href="#pv">Photovoltaik</a></li><li><a href="#leistungen">E-Check</a></li></ul></div>
+                <div><h5>Betrieb</h5><ul><li><a href="#notdienst">Notdienst</a></li><li><a href="#wallbox">Preise</a></li><li><a href="#kontakt">Kontakt</a></li></ul></div>
+            </div>
+            <div class="f-foot">
+                <span>&copy; 2026 Elektro Wagner. Alle Rechte vorbehalten. &middot; <a href="#" style="text-decoration: underline;">Impressum</a> &middot; <a href="#" style="text-decoration: underline;">Datenschutz</a></span>
+                <span class="karriaro-note">Demo &middot; Webdesign by Karriaro Manufaktur</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* Beide Rechner deterministisch (keine KI) — bei Preisen und Ertraegen waere eine
+           erfundene Zahl schlimmer als keine. Foerderung wird BEWUSST nicht eingerechnet:
+           bundesweite Wallbox-Zuschuesse laufen derzeit nicht. */
+        function euro(n){ return Math.round(n).toLocaleString('de-DE') + ' €'; }
+        var BOX = { '11': {p: 1150, n: 'Wallbox 11 kW'}, '11s': {p: 1490, n: 'Wallbox 11 kW mit App'}, '22': {p: 1790, n: 'Wallbox 22 kW'}, 'pv': {p: 1690, n: 'Wallbox 11 kW, PV-überschussfähig'} };
+        var SCHRANK = [ {p: 0, t: 'Kein Eingriff nötig'}, {p: 780, t: 'Erweiterung mit neuem Zählerfeld'}, {p: 2200, t: 'Kompletter Tausch inkl. Anmeldung'} ];
+        function wallbox(){
+            var typ = document.getElementById('w-typ').value;
+            var meter = +document.getElementById('w-leitung').value;
+            var schrank = +document.getElementById('w-schrank').value;
+            var wegF = parseFloat(document.getElementById('w-weg').value);
+            var box = BOX[typ];
+            var leitung = (38 * meter * wegF) + 210;          /* Kabel, Absicherung, FI Typ B */
+            var s = SCHRANK[schrank];
+            var anm = 290;
+            var summe = box.p + leitung + s.p + anm;
+            document.getElementById('w-box-name').textContent = box.n;
+            document.getElementById('w-box').textContent = euro(box.p);
+            document.getElementById('w-leit').textContent = euro(leitung);
+            document.getElementById('w-leit-sub').textContent = meter + ' m · ' + document.getElementById('w-weg').selectedOptions[0].textContent;
+            document.getElementById('w-schrankp').textContent = s.p ? euro(s.p) : 'entfällt';
+            document.getElementById('w-schrank-sub').textContent = s.t;
+            document.getElementById('w-anm').textContent = euro(anm);
+            document.getElementById('w-summe').textContent = euro(summe);
+            document.getElementById('w-leitung-val').textContent = meter + ' m';
+            document.getElementById('w-dauer').textContent = schrank === 2 ? 'zwei Termine · Zählertausch mit Netzbetreiber' : 'ein Termin · meist an einem Tag erledigt';
+        }
+        ['w-typ','w-leitung','w-schrank','w-weg'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', wallbox);
+            document.getElementById(id).addEventListener('change', wallbox);
+        });
+        wallbox();
+
+        function pv(){
+            var flaeche = +document.getElementById('p-flaeche').value;
+            var richtung = parseFloat(document.getElementById('p-richtung').value);
+            var verbrauch = +document.getElementById('p-verbrauch').value;
+            var speicher = +document.getElementById('p-speicher').value;
+            var kwp = flaeche / 5.0;                              /* rund 5 m² je kWp */
+            var module = Math.round(flaeche / 1.9);
+            var ertrag = kwp * 950 * richtung;                    /* Raum Stuttgart */
+            var eigenquote = speicher ? 0.62 : 0.31;
+            /* Autarkie ist auch mit Speicher gedeckelt — im Winter liefert das Dach zu wenig.
+               Ein rechnerisches "100 %" waere ein Versprechen, das die Anlage nicht haelt. */
+            var maxAutarkie = speicher ? 0.80 : 0.45;
+            var eigen = Math.min(verbrauch * maxAutarkie, ertrag * eigenquote);
+            var einspeisung = Math.max(0, ertrag - eigen);
+            var sparen = eigen * 0.34 + einspeisung * 0.08;
+            var invest = kwp * 1490 + (speicher ? 6800 : 0);
+            var jahre = invest / Math.max(1, sparen);
+            document.getElementById('p-flaeche-val').textContent = flaeche + ' m²';
+            document.getElementById('p-verbrauch-val').textContent = verbrauch.toLocaleString('de-DE') + ' kWh';
+            document.getElementById('p-kwp').textContent = kwp.toFixed(1).replace('.', ',') + ' kWp';
+            document.getElementById('p-module').textContent = 'etwa ' + module + ' Module';
+            document.getElementById('p-ertrag').textContent = Math.round(ertrag).toLocaleString('de-DE') + ' kWh';
+            document.getElementById('p-deckung').textContent = 'deckt etwa ' + Math.round(eigen / verbrauch * 100) + ' % Ihres Verbrauchs im Jahresmittel';
+            document.getElementById('p-sparen').textContent = euro(sparen);
+            document.getElementById('p-invest').textContent = euro(invest);
+            document.getElementById('p-amort').textContent = 'amortisiert nach etwa ' + jahre.toFixed(1).replace('.', ',') + ' Jahren';
+        }
+        ['p-flaeche','p-richtung','p-verbrauch','p-speicher'].forEach(function(id){
+            document.getElementById(id).addEventListener('input', pv);
+            document.getElementById(id).addEventListener('change', pv);
+        });
+        pv();
+    </script>
+
+    <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
+    <script src="/js/karriaro-tools.js"></script>
+    <script src="/js/concierge.js?v=3" data-branche="elektro" data-name="Elektro Wagner" data-accent="#26200E" data-greeting="Guten Tag! Ich bin der digitale Assistent von Elektro Wagner. Fragen Sie mich zur Wallbox, zur Photovoltaik oder zum E-Check &mdash; oder rechnen Sie oben gleich Ihren Fall durch." defer></script>
+</body>
+</html>
