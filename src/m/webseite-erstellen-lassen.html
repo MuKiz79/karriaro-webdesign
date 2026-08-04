@@ -447,9 +447,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <section aria-label="Hero" style="min-height: 86vh; display: flex; align-items: flex-start; padding-top: 96px; background: var(--c-hero);">
             <div class="hero-in hero-grid" style="margin: 0 auto; padding: 0 24px;">
             <div class="hero-lead">
-            <a href="#preise" class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot · bis 31. Juli 2026</a>
+            <a href="#preise" class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot 2026 · Sie sparen 200 bis 600 €</a>
             <p class="eyebrow">Webseite erstellen lassen</p>
-            <h1>Keine Websites von der Stange.<span class="h1-promise"><span class="gold">Unikate</span>, die mitarbeiten.</span></h1>
+            <h1>Ihre Website soll <span class="gold">Kunden bringen</span>.<span class="h1-promise">Nicht nur gut aussehen.</span></h1>
             </div>
                         <div class="hero-stage">
               <div class="werkstatt" aria-hidden="true">
@@ -482,7 +482,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
               <p class="wk-caption">Live gebaut &mdash; nicht gerendert. Bewegen Sie die Maus.</p>
             </div>
             <div class="hero-rest">
-            <p class="subhead">Wir bauen individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen.</p>
+            <p class="subhead">Keine Websites von der Stange: individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen.</p>
             <div class="hero-rating">
                 <span class="hr-stars" role="img" aria-label="5 von 5 Sternen">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
@@ -670,6 +670,91 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         </div>
     </section>
 
+    <!-- Rechenhilfe „Was kostet Sie Ihre aktuelle Website?" (2026-08-04, Ableitung CIO-Review).
+         Bewusst OHNE vorbelegte Zahlen: ein Ergebnis erscheint ERST, wenn der Besucher beide
+         Werte selbst gesetzt hat (Vertrauens-Regel: Demo zeigt nie ein Ergebnis ohne Eingabe).
+         Die Formel steht offen im Ergebnis, alles rechnet nur im Browser — kein Netz-Call. -->
+    <section class="kr-wr fade-in" aria-labelledby="kr-wr-h">
+        <style>
+            .kr-wr { padding: 78px 24px; border-top: 1px solid rgba(0,0,0,0.05); }
+            .kr-wr-card { max-width: 680px; margin: 0 auto; text-align: center; }
+            .kr-wr-eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #86868b; margin: 0 0 12px; }
+            .kr-wr h2 { font-size: clamp(24px, 3.2vw, 40px); margin: 0 0 10px; }
+            .kr-wr-lead { color: #86868b; font-size: 17px; line-height: 1.5; margin: 0 auto 30px; max-width: 520px; }
+            .kr-wr-row { display: flex; gap: 22px; justify-content: center; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px; }
+            .kr-wr-row label { display: block; font-size: 14px; color: inherit; text-align: left; }
+            .kr-wr-feld { display: flex; align-items: center; gap: 8px; margin-top: 8px; border: 1px solid rgba(0,0,0,.18); border-radius: 10px; padding: 10px 14px; background: #fff; }
+            .kr-wr-feld input { border: 0; outline: 0; font-size: 17px; width: 118px; background: transparent; color: inherit; font-family: inherit; }
+            .kr-wr-feld:focus-within { border-color: #1A2E40; box-shadow: 0 0 0 3px rgba(26,46,64,.12); }
+            .kr-wr-step { display: flex; gap: 8px; margin-top: 8px; }
+            .kr-wr-step button { min-width: 54px; padding: 11px 0; font-size: 16px; border-radius: 10px; border: 1px solid rgba(0,0,0,.18); background: #fff; cursor: pointer; color: inherit; font-family: inherit; }
+            .kr-wr-step button[aria-pressed="true"] { background: #1A2E40; border-color: #1A2E40; color: #fff; }
+            .kr-wr-step button:focus-visible, .kr-wr-cta:focus-visible { outline: 2px solid #1A2E40; outline-offset: 2px; }
+            .kr-wr-erg { margin-top: 28px; }
+            .kr-wr-erg[hidden] { display: none; } /* [hidden] verliert sonst gegen jede display-Regel */
+            .kr-wr-formel { font-size: 14px; color: #86868b; margin: 0 0 6px; font-variant-numeric: tabular-nums; }
+            .kr-wr-summe { font-size: clamp(28px, 3.6vw, 42px); font-weight: 600; margin: 0 0 4px; font-variant-numeric: tabular-nums; }
+            .kr-wr-qual { font-size: 14.5px; color: #86868b; margin: 0 0 20px; max-width: 460px; margin-left: auto; margin-right: auto; }
+            .kr-wr-cta { display: inline-block; background: #1A2E40; color: #fff; border-radius: 100px; padding: 13px 26px; text-decoration: none; font-size: 16px; font-weight: 500; }
+            .kr-wr-cta:hover { background: #0F1F2E; }
+            .kr-wr-note { font-size: 12.5px; color: #86868b; margin: 24px 0 0; }
+        </style>
+        <div class="kr-wr-card">
+            <p class="kr-wr-eyebrow">Rechenhilfe</p>
+            <h2 id="kr-wr-h">Was kostet Sie Ihre aktuelle Website?</h2>
+            <p class="kr-wr-lead">Eine Seite, die keine Anfragen bringt, kostet still — jeden Monat. Rechnen Sie mit Ihren eigenen Zahlen; wir tragen nichts ein.</p>
+            <div class="kr-wr-row">
+                <label for="kr-wr-wert">Durchschnittlicher Auftragswert
+                    <span class="kr-wr-feld"><input id="kr-wr-wert" type="number" inputmode="numeric" min="1" max="9999999" step="1" placeholder="z. B. 1800" aria-describedby="kr-wr-note"> €</span>
+                </label>
+                <div>
+                    <label id="kr-wr-anz-l">Mehr Aufträge im Monat — Ihre Annahme</label>
+                    <div class="kr-wr-step" role="group" aria-labelledby="kr-wr-anz-l">
+                        <button type="button" data-anz="1" aria-pressed="false">1</button>
+                        <button type="button" data-anz="2" aria-pressed="false">2</button>
+                        <button type="button" data-anz="3" aria-pressed="false">3</button>
+                    </div>
+                </div>
+            </div>
+            <div class="kr-wr-erg" hidden aria-live="polite">
+                <p class="kr-wr-formel"></p>
+                <p class="kr-wr-summe"></p>
+                <p class="kr-wr-qual">Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft.</p>
+                <a class="kr-wr-cta" href="#kurz-anfrage">Entwurf anfordern — in 48 Stunden, kostenfrei</a>
+            </div>
+            <p class="kr-wr-note" id="kr-wr-note">Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose.</p>
+        </div>
+        <script>
+        (function () {
+            var wr = document.currentScript && document.currentScript.closest('.kr-wr');
+            if (!wr) return;
+            var wert = wr.querySelector('#kr-wr-wert');
+            var knoepfe = [].slice.call(wr.querySelectorAll('.kr-wr-step button'));
+            var erg = wr.querySelector('.kr-wr-erg');
+            var formel = wr.querySelector('.kr-wr-formel');
+            var summe = wr.querySelector('.kr-wr-summe');
+            var anz = 0, gemeldet = false;
+            function eur(n) { try { return n.toLocaleString('de-DE') + ' €'; } catch (e) { return n + ' €'; } }
+            function rechne() {
+                var w = Math.floor(Number(wert.value));
+                if (!(w > 0) || !(anz > 0)) { erg.hidden = true; return; } /* nie ein Ergebnis ohne Eingabe */
+                formel.textContent = eur(w) + ' × ' + anz + (anz === 1 ? ' Auftrag' : ' Aufträge') + ' × 12 Monate';
+                summe.textContent = eur(w * anz * 12);
+                erg.hidden = false;
+                if (!gemeldet) { gemeldet = true; try { if (window.krTrack) window.krTrack('Rechenhilfe genutzt', {}); } catch (e) {} }
+            }
+            knoepfe.forEach(function (b) {
+                b.addEventListener('click', function () {
+                    anz = +b.getAttribute('data-anz');
+                    knoepfe.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+                    rechne();
+                });
+            });
+            wert.addEventListener('input', rechne);
+        })();
+        </script>
+    </section>
+
     <section class="fade-in" style="background: var(--c-alt);">
         <div class="wrap" style="text-align: center;">
             <h2>Eine Stimme, die zählt.</h2>
@@ -724,7 +809,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         <div class="wrap" style="text-align: center;">
             <h2>Festpreise. Einmalig.</h2>
             <p class="subhead" style="margin-bottom: 0;">Keine Abo-Gebühren, kein Baukasten-Zwang. Der Preis richtet sich nach Umfang — nicht nach Ihrem Standort.</p>
-            <p class="founding-note">Gründungs-Angebot 2026: Sie sparen 200 bis 600 € — im Gegenzug dürfen wir Ihre fertige Seite als Referenz zeigen. Nur bis 31. Juli 2026.</p>
+            <p class="founding-note">Gründungs-Angebot 2026: Sie sparen 200 bis 600 € — im Gegenzug dürfen wir Ihre fertige Seite als Referenz zeigen.</p>
             <div class="price-grid">
                 <div class="price-card">
                     <div class="tier">Essential</div>
@@ -968,9 +1053,18 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     </div>
     <script>
         (function () {
-            // Founder: bei JEDEM Seitenaufruf zeigen (keine Session-Sperre).
+            // 2026-08-04 Founder: Gate statt Dauer-Popup. (1) Bezahlte Klicks (gclid/fbclid/msclkid
+            // in der URL ODER in der First-Touch-Attribution der Session) sehen es NIE — der
+            // Ads-Besucher soll den Festpreis verdauen, bevor ihm ein Vielleicht-0-€-Anker
+            // begegnet. (2) Organisch höchstens 1× pro Sitzung.
             var popup = document.getElementById('kr-gp-popup');
             if (!popup) return;
+            try {
+                if (/[?&](gclid|fbclid|msclkid)=/.test(location.search || '')) return;
+                var att = JSON.parse(sessionStorage.getItem('kr_attribution') || 'null');
+                if (att && (att.gclid || att.fbclid || att.msclkid)) return;
+                if (sessionStorage.getItem('kr-gp-popup-seen') === '1') return;
+            } catch (e) { /* Storage gesperrt: dann lieber zeigen als werfen */ }
             function close() {
                 popup.classList.remove('is-open');
                 popup.hidden = true;
@@ -981,6 +1075,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             setTimeout(function () {
                 popup.hidden = false;
                 popup.classList.add('is-open');
+                try { sessionStorage.setItem('kr-gp-popup-seen', '1'); } catch (e) {}
                 document.addEventListener('keydown', onKey);
                 try { if (window.krTrack) window.krTrack('Referenzprogramm Popup gezeigt', { seite: 'money' }); } catch (e) {}
             }, delay);

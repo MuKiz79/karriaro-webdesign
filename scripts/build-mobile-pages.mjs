@@ -363,9 +363,9 @@ function rewriteHeroHeadline(html) {
         /<h1 class="hero-headline">[\s\S]*?<\/h1>/,
         '<h1 class="hero-headline hero-headline--keim">' +
         buildHeroBloomSvg() +
-        '<span class="hero-h1-line">Keine Websites</span>' +
-        '<span class="hero-h1-line">von der Stange.</span>' +
-        '<span class="hero-h1-line hero-h1-climax">Unikate, die mitarbeiten.</span>' +
+        '<span class="hero-h1-line">Ihre Website soll</span>' +
+        '<span class="hero-h1-line">Kunden bringen.</span>' +
+        '<span class="hero-h1-line hero-h1-climax">Nicht nur gut aussehen.</span>' +
         '</h1>'
     );
 }

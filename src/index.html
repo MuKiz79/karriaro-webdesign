@@ -4168,11 +4168,11 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                     <span>Webseite erstellen lassen</span>
                 </p>
                 <h1 class="hero-headline">
-                    <span class="hero-h1-line">Keine Websites von der Stange.</span>
-                    <span class="hero-h1-promise"><span class="hero-h1-gold">Unikate</span>, die mitarbeiten.</span>
+                    <span class="hero-h1-line">Ihre Website soll <span class="hero-h1-gold">Kunden bringen</span>.</span>
+                    <span class="hero-h1-promise">Nicht nur gut aussehen.</span>
                 </h1>
                 <p class="subhead">
-                    Wir bauen individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen.
+                    Keine Websites von der Stange: individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen.
                 </p>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt. · Zahlung erst nach Ihrem Entwurf</p>
                 <div class="hero-cta-row">
@@ -4188,7 +4188,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                      Cockpit, KI"). Weniger Text → H1 darf groß sein; Vielfalt trägt die
                      Subline + das interaktive Demo. -->
                 <p class="hero-provenance">
-                    <a href="/gruender">Karriaro-Manufaktur</a> · BFSG · DSGVO
+                    <a href="/gruender">Karriaro-Manufaktur</a> · barrierefrei (BFSG) · Datenschutz nach DSGVO
                 </p>
                 <!-- Sprint 197 — Phyllotaxis-Manufaktursiegel verschoben in die
                      „Über uns"-Section (Codex-Heimat „Deep-Moment"); entlastet den Hero. -->
@@ -4462,6 +4462,92 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
         </div>
     </section>
 
+    <!-- Rechenhilfe „Was kostet Sie Ihre aktuelle Website?" (2026-08-04, Ableitung CIO-Review).
+         Bewusst OHNE vorbelegte Zahlen: ein Ergebnis erscheint ERST, wenn der Besucher beide
+         Werte selbst gesetzt hat (Vertrauens-Regel: Demo zeigt nie ein Ergebnis ohne Eingabe).
+         Die Formel steht offen im Ergebnis, alles rechnet nur im Browser — kein Netz-Call. -->
+    <section class="kr-wr fade-in" aria-labelledby="kr-wr-h">
+        <style>
+            .kr-wr { padding: 78px 24px; border-top: 1px solid rgba(0,0,0,0.05); }
+            .kr-wr-card { max-width: 680px; margin: 0 auto; text-align: center; }
+            .kr-wr-eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #86868b; margin: 0 0 12px; }
+            .kr-wr h2 { font-size: clamp(24px, 3.2vw, 40px); margin: 0 0 10px; }
+            .kr-wr-lead { color: #86868b; font-size: 17px; line-height: 1.5; margin: 0 auto 30px; max-width: 520px; }
+            .kr-wr-row { display: flex; gap: 22px; justify-content: center; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px; }
+            .kr-wr-row label { display: block; font-size: 14px; color: inherit; text-align: left; }
+            .kr-wr-feld { display: flex; align-items: center; gap: 8px; margin-top: 8px; border: 1px solid rgba(0,0,0,.18); border-radius: 10px; padding: 10px 14px; background: #fff; }
+            .kr-wr-feld input { border: 0; outline: 0; font-size: 17px; width: 118px; background: transparent; color: inherit; font-family: inherit; }
+            .kr-wr-feld:focus-within { border-color: #1A2E40; box-shadow: 0 0 0 3px rgba(26,46,64,.12); }
+            .kr-wr-step { display: flex; gap: 8px; margin-top: 8px; }
+            .kr-wr-step button { min-width: 54px; padding: 11px 0; font-size: 16px; border-radius: 10px; border: 1px solid rgba(0,0,0,.18); background: #fff; cursor: pointer; color: inherit; font-family: inherit; }
+            .kr-wr-step button[aria-pressed="true"] { background: #1A2E40; border-color: #1A2E40; color: #fff; }
+            .kr-wr-step button:focus-visible, .kr-wr-cta:focus-visible { outline: 2px solid #1A2E40; outline-offset: 2px; }
+            .kr-wr-erg { margin-top: 28px; }
+            .kr-wr-erg[hidden] { display: none; } /* [hidden] verliert sonst gegen jede display-Regel */
+            .kr-wr-formel { font-size: 14px; color: #86868b; margin: 0 0 6px; font-variant-numeric: tabular-nums; }
+            .kr-wr-summe { font-size: clamp(28px, 3.6vw, 42px); font-weight: 600; margin: 0 0 4px; font-variant-numeric: tabular-nums; }
+            .kr-wr-qual { font-size: 14.5px; color: #86868b; margin: 0 0 20px; max-width: 460px; margin-left: auto; margin-right: auto; }
+            .kr-wr-cta { display: inline-block; background: #1A2E40; color: #fff; border-radius: 100px; padding: 13px 26px; text-decoration: none; font-size: 16px; font-weight: 500; }
+            .kr-wr-cta:hover { background: #0F1F2E; }
+            .kr-wr-note { font-size: 12.5px; color: #86868b; margin: 24px 0 0; }
+        </style>
+        <div class="kr-wr-card">
+            <p class="kr-wr-eyebrow">Rechenhilfe</p>
+            <h2 id="kr-wr-h">Was kostet Sie Ihre aktuelle Website?</h2>
+            <p class="kr-wr-lead">Eine Seite, die keine Anfragen bringt, kostet still — jeden Monat. Rechnen Sie mit Ihren eigenen Zahlen; wir tragen nichts ein.</p>
+            <div class="kr-wr-row">
+                <label for="kr-wr-wert">Durchschnittlicher Auftragswert
+                    <span class="kr-wr-feld"><input id="kr-wr-wert" type="number" inputmode="numeric" min="1" max="9999999" step="1" placeholder="z. B. 1800" aria-describedby="kr-wr-note"> €</span>
+                </label>
+                <div>
+                    <label id="kr-wr-anz-l">Mehr Aufträge im Monat — Ihre Annahme</label>
+                    <div class="kr-wr-step" role="group" aria-labelledby="kr-wr-anz-l">
+                        <button type="button" data-anz="1" aria-pressed="false">1</button>
+                        <button type="button" data-anz="2" aria-pressed="false">2</button>
+                        <button type="button" data-anz="3" aria-pressed="false">3</button>
+                    </div>
+                </div>
+            </div>
+            <div class="kr-wr-erg" hidden aria-live="polite">
+                <p class="kr-wr-formel"></p>
+                <p class="kr-wr-summe"></p>
+                <p class="kr-wr-qual">Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft.</p>
+                <a class="kr-wr-cta" href="#kurz-anfrage">Entwurf anfordern — in 48 Stunden, kostenfrei</a>
+            </div>
+            <p class="kr-wr-note" id="kr-wr-note">Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose.</p>
+        </div>
+        <script>
+        (function () {
+            var wr = document.currentScript && document.currentScript.closest('.kr-wr');
+            if (!wr) return;
+            var wert = wr.querySelector('#kr-wr-wert');
+            var knoepfe = [].slice.call(wr.querySelectorAll('.kr-wr-step button'));
+            var erg = wr.querySelector('.kr-wr-erg');
+            var formel = wr.querySelector('.kr-wr-formel');
+            var summe = wr.querySelector('.kr-wr-summe');
+            var anz = 0, gemeldet = false;
+            function eur(n) { try { return n.toLocaleString('de-DE') + ' €'; } catch (e) { return n + ' €'; } }
+            function rechne() {
+                var w = Math.floor(Number(wert.value));
+                if (!(w > 0) || !(anz > 0)) { erg.hidden = true; return; } /* nie ein Ergebnis ohne Eingabe */
+                formel.textContent = eur(w) + ' × ' + anz + (anz === 1 ? ' Auftrag' : ' Aufträge') + ' × 12 Monate';
+                summe.textContent = eur(w * anz * 12);
+                erg.hidden = false;
+                if (!gemeldet) { gemeldet = true; try { if (window.krTrack) window.krTrack('Rechenhilfe genutzt', {}); } catch (e) {} }
+            }
+            knoepfe.forEach(function (b) {
+                b.addEventListener('click', function () {
+                    anz = +b.getAttribute('data-anz');
+                    knoepfe.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+                    rechne();
+                });
+            });
+            wert.addEventListener('input', rechne);
+        })();
+        </script>
+    </section>
+
+
 
     <!-- KI-Sichtbarkeits-Spiegel — Lead-Magnet + Innovationsbeweis (2026-06-04). Unnummerierte
          Feature-Sektion (themed Eyebrow, kein Folio — № 01–10 bleiben lückenlos). Verlinkt /ki-sichtbarkeit. -->
@@ -4574,8 +4660,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             <div class="kr-perf-trust">
                 <div class="kr-perf-pills">
                     <span class="kr-perf-pill"><abbr class="kr-abbr" title="Barrierefreiheitsstärkungsgesetz — seit 28.6.2025 Pflicht. Kleinstunternehmen (<10 MA, <2 Mio. € Umsatz) bei reinen Info-Sites ausgenommen, bei Online-Buchung/Shop greift die Pflicht.">BFSG</abbr>/WCAG gebaut</span>
-                    <span class="kr-perf-pill">DSGVO &amp; Hosting in DE/EU</span>
-                    <span class="kr-perf-pill">Schema.org pro Branche</span>
+                    <span class="kr-perf-pill"><abbr class="kr-abbr" title="Datenschutz-Grundverordnung — das EU-Datenschutzrecht. Ihre Seite erhebt nur, was nötig ist.">DSGVO</abbr> &amp; Hosting in DE/EU</span>
+                    <span class="kr-perf-pill"><abbr class="kr-abbr" title="Strukturierte Daten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte sicher verstehen.">Schema.org</abbr> pro Branche</span>
                 </div>
                 <p style="margin-top: 28px;"><a href="/portfolio/friseur-salon" class="link-arrow">Live-Demo öffnen: Friseur-Salon Müller &rarr;</a></p>
             </div>
@@ -4591,6 +4677,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             <div style="text-align: center; margin-bottom: 48px;">
                 <p class="hero-eyebrow" style="margin-bottom: 14px;">№&nbsp;04 · Besucher-Cockpit</p>
                 <h2 style="font-size: clamp(28px, 4vw, 48px); max-width: 760px; margin-left: auto; margin-right: auto;">Sehen Sie, wer Ihre Seite besucht.</h2>
+                <p class="subhead" style="max-width: 640px; margin: 18px auto 0;">Während andere hoffen, sehen Sie, wer wirklich Interesse hat — und fassen genau dort nach.</p>
             </div>
 
             <!-- Sprint 198 — Live-Cockpit-Mock: zeigt das Lighthouse-Besucher-Cockpit
@@ -5084,7 +5171,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <p>
                     Visitor- und Lead-Intelligence. Privacy-first, AI-gestützt,
                     Session-Replay, Sales-Workflow. Für Sites, die wirklich
-                    messen wollen — und für KI-Agenten via MCP-Server abrufbar.
+                    messen wollen — auf Wunsch fragen KI-Assistenten die Werte direkt ab (MCP).
                 </p>
                 <a href="https://lighthouse.karriaro.de" target="_blank" rel="noopener">Karriaro-Loupe ansehen ↗</a>
             </article>
@@ -5493,7 +5580,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             </style>
             <div class="kr-pricing-baseline" data-kr-reveal>
                 <p class="kr-pricing-baseline-label">In jedem Paket enthalten</p>
-                <p class="kr-pricing-baseline-text">Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform gebaut · gesicherte Header &amp; TLS · Schema.org &amp; semantisches HTML · mobil &amp; auf schnelle Ladezeit optimiert · kein Abo-Zwang.</p>
+                <p class="kr-pricing-baseline-text">Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform gebaut · gesicherte Header &amp; TLS · Schema.org &amp; semantisches HTML (für Google und KI zuverlässig lesbar) · mobil &amp; auf schnelle Ladezeit optimiert · kein Abo-Zwang.</p>
             </div>
 
             <!-- Cross-Sell Profil-Generator + Empfehlungs-Hinweis -->
@@ -6699,9 +6786,18 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     </div>
     <script>
         (function () {
-            // 2026-07-19 Founder: bei JEDEM Seitenaufruf zeigen (keine Session-Sperre).
+            // 2026-08-04 Founder: Gate statt Dauer-Popup. (1) Bezahlte Klicks (gclid/fbclid/msclkid
+            // in der URL ODER in der First-Touch-Attribution der Session) sehen es NIE — der
+            // Ads-Besucher soll den Festpreis verdauen, bevor ihm ein Vielleicht-0-€-Anker
+            // begegnet. (2) Organisch höchstens 1× pro Sitzung.
             var popup = document.getElementById('kr-gp-popup');
             if (!popup) return;
+            try {
+                if (/[?&](gclid|fbclid|msclkid)=/.test(location.search || '')) return;
+                var att = JSON.parse(sessionStorage.getItem('kr_attribution') || 'null');
+                if (att && (att.gclid || att.fbclid || att.msclkid)) return;
+                if (sessionStorage.getItem('kr-gp-popup-seen') === '1') return;
+            } catch (e) { /* Storage gesperrt: dann lieber zeigen als werfen */ }
             function close() {
                 popup.classList.remove('is-open');
                 popup.hidden = true;
@@ -6713,6 +6809,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             setTimeout(function () {
                 popup.hidden = false;
                 popup.classList.add('is-open');
+                try { sessionStorage.setItem('kr-gp-popup-seen', '1'); } catch (e) {}
                 document.addEventListener('keydown', onKey);
                 try { if (window.krTrack) window.krTrack('Referenzprogramm Popup gezeigt', {}); } catch (e) {}
             }, delay);
