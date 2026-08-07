@@ -160,14 +160,16 @@ export function countUncached(queries) {
 export function getCachedScore(domain) {
     const m = map(SCORE_KEY);
     const e = m[domain];
-    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null, jobIntent: e.jobIntent || null }; }
+    if (e && Date.now() - e.at < SCORE_TTL) { e.at = Date.now(); scheduleFlush(SCORE_KEY); return { ws: e.ws, tech: e.tech, adIntent: e.adIntent || null, jobIntent: e.jobIntent || null, footprint: e.footprint || null }; }
     return null;
 }
-// jobIntent kam 2026-07-25 dazu. Aeltere Cache-Eintraege haben das Feld nicht —
-// der Aufrufer liest dann `undefined` und behandelt es als "kein Signal" (kein
-// Fehler, nur ein fehlender Bonus bis der Eintrag neu geschrieben wird).
-export function setCachedScore(domain, ws, tech, adIntent = null, jobIntent = null) {
-    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent, jobIntent };
+// jobIntent kam 2026-07-25 dazu, footprint 2026-07-26. Aeltere Cache-Eintraege
+// haben die Felder nicht — der Aufrufer liest dann `null` und behandelt das als
+// "kein Signal" (kein Fehler, nur ein fehlender Bonus bis der Eintrag neu
+// geschrieben wird). footprint traegt die Kaufsignal-Achse (Meta-Pixel,
+// Analytics, Kanal-Breite) und darf deshalb nicht bei jedem Cache-Treffer fehlen.
+export function setCachedScore(domain, ws, tech, adIntent = null, jobIntent = null, footprint = null) {
+    map(SCORE_KEY)[domain] = { at: Date.now(), ws, tech, adIntent, jobIntent, footprint };
     scheduleFlush(SCORE_KEY);
 }
 

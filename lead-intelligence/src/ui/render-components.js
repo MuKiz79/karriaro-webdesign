@@ -633,8 +633,15 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
     // Actions
     let actionsExtra = '';
     if (data.abTest) {
-        const labels = { emotional: 'Emotional (Schmerz → Lösung)', rational: 'Rational (Daten → ROI)', hybrid: 'Hybrid (Hook → Fakten)' };
-        actionsExtra += `<div class="card anim-in"><div class="section-label">Pitch-Variante (Thompson Sampling, Konfidenz: ${data.abTest.confidence})</div><div style="font-size:14px;font-weight:600">${labels[data.abTest.variant] || data.abTest.variant}</div></div>`;
+        // Tonalitäten wie in strategy/outreach.js — dieselbe Achse, die das
+        // Outreach-Studio variiert und deren Versand jetzt erfasst wird.
+        const labels = { professionell: 'Professionell (sachlich, Sie-Register)', freundlich: 'Freundlich (nahbar, wärmer)', direkt: 'Direkt (kurz, auf den Punkt)' };
+        // Ohne Versand-Daten ist die Wahl zufällig — dann darf hier KEINE Konfidenz
+        // stehen (§7: Verdikte an Gemessenes binden). `confidence: null` = n=0.
+        const conf = data.abTest.confidence
+            ? `Thompson Sampling, Konfidenz: ${escapeHtml(data.abTest.confidence)} · ${data.abTest.totalSent || 0} Mails erfasst`
+            : 'zufällig gewählt — noch keine verschickte Mail erfasst';
+        actionsExtra += `<div class="card anim-in"><div class="section-label">Pitch-Variante (${conf})</div><div style="font-size:14px;font-weight:600">${labels[data.abTest.variant] || escapeHtml(data.abTest.variant)}</div></div>`;
     }
     if (data.drift?.drifted) {
         actionsExtra += `<div class="card card-alert anim-in"><div style="font-size:13px;font-weight:600;color:var(--orange)">Score verändert: ${data.drift.previousScore} → ${r.leadScore}</div></div>`;

@@ -186,3 +186,52 @@ describe('computeAdWaste — die Killer-Kombi', () => {
         expect(r.lossPct).toBe(0);
     });
 });
+
+describe('Bezahlte Werkzeuge + Pflegezustand (2026-07-26)', () => {
+    it('bezahltes Werkzeug erhöht den Kaufsignal-Score mit nennbarem Beleg', () => {
+        const ohne = assessBuyingIntent({});
+        const mit = assessBuyingIntent({
+            paidTools: { found: [{ key: 'doctolib', name: 'Doctolib', hint: 'Termin-Software mit Monatsgebühr' }], count: 1 }
+        });
+        expect(mit.score).toBeGreaterThan(ohne.score);
+        const sig = mit.signals.find(s => s.key === 'paid_tools');
+        expect(sig).toBeTruthy();
+        expect(sig.proof).toMatch(/Doctolib/);
+    });
+
+    it('mehrere Werkzeuge wiegen schwerer als eines', () => {
+        const eins = assessBuyingIntent({ paidTools: { found: [{ key: 'a', name: 'A', hint: 'x' }], count: 1 } });
+        const zwei = assessBuyingIntent({ paidTools: { found: [{ key: 'a', name: 'A', hint: 'x' }, { key: 'b', name: 'B', hint: 'y' }], count: 2 } });
+        expect(zwei.score).toBeGreaterThan(eins.score);
+    });
+
+    it('bezahlte Werkzeuge machen KEINEN bewiesenen Spender', () => {
+        // Entscheidend: Doctolib beweist ein Digital-Budget, aber keinen
+        // Wachstumswillen — eine ausgebuchte Praxis verwaltet damit nur Termine.
+        // isProvenSpender hebt den Bedarfsdruck-Abschlag auf und darf das nicht.
+        const r = assessBuyingIntent({
+            paidTools: { found: [{ key: 'doctolib', name: 'Doctolib', hint: 'x' }, { key: 'calendly', name: 'Calendly', hint: 'y' }], count: 2 }
+        });
+        expect(r.isProvenSpender).toBe(false);
+        expect(r.adsActive).toBe(false);
+    });
+
+    it('Anzeigen machen weiterhin einen bewiesenen Spender', () => {
+        const r = assessBuyingIntent({ googleAds: { signals: ['Google Ads aktiv'] } });
+        expect(r.isProvenSpender).toBe(true);
+    });
+
+    it('Pflege-Signale werten auf, fehlende werten NICHT ab', () => {
+        const ohne = assessBuyingIntent({ careSignals: { caresCount: 0, signals: [] } });
+        const mit = assessBuyingIntent({ careSignals: { caresCount: 2, signals: ['Copyright 2026', 'Sitemap hinterlegt'] } });
+        const gar = assessBuyingIntent({});
+        expect(mit.score).toBeGreaterThan(ohne.score);
+        expect(ohne.score).toBe(gar.score);   // Abwesenheit kostet nichts
+    });
+
+    it('fehlende Werkzeuge werden als Wissenslücke vermerkt, nicht als Strafe', () => {
+        const r = assessBuyingIntent({ paidTools: { found: [], count: 0 } });
+        expect(r.score).toBe(assessBuyingIntent({}).score);
+        expect(r.missing.some(m => /Werkzeuge/i.test(m))).toBe(true);
+    });
+});

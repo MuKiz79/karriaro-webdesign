@@ -79,11 +79,71 @@ const ESTABLISHED_STRENGTH = 45;
  *
  * @returns {{factor:number, chip:string|null}}
  */
-function demandPressure(primaryType, businessStrength, adActive, hiring) {
-    if (adActive || hiring) return { factor: 1.0, chip: null };          // Wachstumswille bewiesen
+function demandPressure(primaryType, businessStrength, provenSpender) {
+    if (provenSpender) return { factor: 1.0, chip: null };               // Wachstumswille bewiesen
     if (!CAPACITY_BOUND.has(primaryType)) return { factor: 1.0, chip: null };
     if (businessStrength < ESTABLISHED_STRENGTH) return { factor: 1.0, chip: null };
     return { factor: 0.70, chip: '⏸ kein Wachstumssignal' };
+}
+
+/**
+ * Erreichbarkeit (F11) — ein Lead, den man nicht ansprechen kann, ist kein Lead.
+ *
+ * Die Erreichbarkeit wurde bisher erst im Outreach-Studio geprueft (verifyReachable
+ * in strategy/bulk-outreach.js), also NACH der kompletten Analyse-Investition und
+ * ohne jeden Einfluss auf die Rangfolge. Hier fliesst sie mit ein.
+ *
+ * ⚠️ Ehrlichkeitsregel (wie beim adChecked-Flag): NUR ein tatsaechlich
+ * durchgefuehrter Scan darf abwerten. `contactPaths === null` heisst „nicht
+ * geprueft" und bleibt strikt neutral — nicht geprueft ist nicht dasselbe wie
+ * nicht erreichbar. Der Abschlag ist bewusst mild (0.85): eine Seite ohne
+ * mailto/tel im HTML kann ihre Adresse immer noch im Impressum stehen haben.
+ *
+ * @returns {{factor:number, chip:string|null}}
+ */
+function reachFactor(contactPaths) {
+    if (!contactPaths || contactPaths.checked !== true) return { factor: 1.0, chip: null };
+    if (contactPaths.hasMailto || contactPaths.hasTel) return { factor: 1.0, chip: null };
+    // Ein Impressum-Link allein ist ein schwacher Hinweis (die Adresse steht dort
+    // vielleicht) — deshalb halber Abschlag statt voller.
+    if (contactPaths.hasImpressumLink) return { factor: 0.92, chip: null };
+    return { factor: 0.85, chip: '✉ kein Kontaktweg gefunden' };
+}
+
+/**
+ * Kaufsignal-Faktor (F10) — abgestuft statt binaer.
+ *
+ * Vorher: `adActive ×1.35 · hiring ×1.15`, also zwei grobe Schalter. Die volle
+ * Evidenz-Summe aus analysis/buying-intent.js (11 Signale) lief NUR im Einzel-
+ * Check — die Rangfolge der Scan-Treffer entstand damit aus ~20 % der
+ * verfuegbaren Kaufevidenz.
+ *
+ * ⚠️ Entscheidend: die Abstufung haengt an AUSGABEN-Evidenz (`isProvenSpender`),
+ * nicht am Rohscore. Sonst waere derselbe Fehler wie beim Bedarfsdruck (F9)
+ * zurueck: reine Aktivitaets-Signale (frische Bewertungen 14 + Analytics 8 +
+ * Kanal-Breite 8 = 30) wuerden die Schwelle reissen und „laeuft gut" erneut als
+ * Kaufbereitschaft gelesen. buying-intent.js sagt es selbst: „Reine Aktivitaets-
+ * Signale reichen dafuer bewusst NICHT."
+ *
+ * Ohne `buyingIntent` faellt die Funktion exakt auf die alte Formel zurueck —
+ * Bestandsaufrufer (batch-search, Tests) bleiben byte-identisch.
+ *
+ * @returns {{mult:number, tier:string|null, proven:boolean}}
+ */
+function buySignalFactor(buyingIntent, adActive, hiring) {
+    if (!buyingIntent) {
+        return { mult: (adActive ? 1.35 : 1.0) * (hiring ? 1.15 : 1.0), tier: null, proven: adActive || hiring };
+    }
+    if (buyingIntent.isProvenSpender) {
+        // Gestapelte Evidenz (z.B. Anzeigen + mehrere offene Stellen) zaehlt mehr
+        // als ein einzelnes Signal. 1.55 entspricht der alten Kombination
+        // adActive×hiring (1.5525) — bewusst kein Sprung nach oben.
+        return { mult: buyingIntent.score >= 55 ? 1.55 : 1.35, tier: buyingIntent.tier, proven: true };
+    }
+    // Werbung wahrscheinlich, aber nicht bewiesen (GTM/Consent-Mode hinter dem
+    // Cookie-Banner). Kleiner Aufschlag, KEIN Spender-Status.
+    const probable = (buyingIntent.signals || []).some(s => s.key === 'ad_consent_mode' || s.key === 'tag_manager');
+    return { mult: probable ? 1.15 : 1.0, tier: buyingIntent.tier, proven: false };
 }
 
 /**
@@ -146,7 +206,7 @@ export const MIN_REVIEWS_VALUE = 8;
  *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number,
  *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null }) {
     const perf = typeof ws.perf === 'number' ? ws.perf : 50;
     const isHttps = ws.isHttps !== false;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
@@ -208,7 +268,8 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     //    unberuehrt — die relative Hochstufung der Spender reicht fuer die Sortierung. ──
     const adActive = !!(adIntent && adIntent.active);
     const hiring = !!(jobIntent && jobIntent.isHiring);
-    const buySignalMult = (adActive ? 1.35 : 1.0) * (hiring ? 1.15 : 1.0);
+    const bs = buySignalFactor(buyingIntent, adActive, hiring);
+    const buySignalMult = bs.mult;
     // Saison-Timing (Vor-Saison der Branche = jetzt bauen = rechtzeitig fertig): leichter
     // Boost auf eine qualifizierte Lead — KEIN Junk-Rescue (Konvergenz greift weiter).
     const seasonalActive = !!seasonal;
@@ -216,9 +277,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // ── Multiplikativer Kern (F2: Matrix von Achsen mit Gates, KEINE gewichtete Summe). ──
     const lg = livenessGate(reviewRecency, place);
     const vm = valueMult(businessStrength, rating, reviews, MIN_REVIEWS_VALUE);
-    const dp = demandPressure(place.primaryType, businessStrength, adActive, hiring);
+    const dp = demandPressure(place.primaryType, businessStrength, bs.proven);
+    const rf = reachFactor(contactPaths);
     let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
-        * buySignalMult * dp.factor * (seasonalActive ? 1.10 : 1.0);
+        * buySignalMult * dp.factor * rf.factor * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -231,6 +293,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const reasons = [];
     if (adActive) reasons.push('💸 Anzeigen aktiv');     // bewiesener Spender — zuerst
     if (hiring) reasons.push('📈 stellt ein');           // Wachstum + Personalbudget
+    // Bezahlte Werkzeuge sichtbar machen — sonst waere das Signal zwar gemessen
+    // und im Score wirksam, in der Liste aber nicht ablesbar (Playbook §2).
+    const toolSig = (buyingIntent?.signals || []).find(s => s.key === 'paid_tools');
+    if (toolSig) reasons.push(`🧾 ${toolSig.label}`);
     if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
@@ -239,6 +305,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (noMobile) reasons.push('nicht mobil');
     if (lg.chip) reasons.push(lg.chip);
     if (dp.chip) reasons.push(dp.chip);   // kapazitätsgebunden + etabliert + kein Kaufsignal
+    if (rf.chip) reasons.push(rf.chip);   // geprüft, aber kein Kontaktweg auffindbar
     if (vm.gated) reasons.push('zu kleiner Betrieb');
     reasons.push(rating ? `${reviews}★ (${rating.toFixed(1)})` : `${reviews} Bew.`);
 
@@ -246,8 +313,16 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         opportunity, badnessScore, businessStrength, looksAlreadyGood, reasons, hardStructural,
         adIntent: adActive,
         // Eigene Achse fuer UI-Filter/Sortierung ("nur Betriebe, die Geld ausgeben").
-        buySignal: { adActive, hiring, mult: Math.round(buySignalMult * 100) / 100 },
+        buySignal: {
+            adActive, hiring, mult: Math.round(buySignalMult * 100) / 100,
+            // `proven` = echtes Geld verlaesst den Betrieb fuer Kundengewinnung.
+            // Filter/Sortierung lesen das (orchestration/lead-filters.js).
+            proven: bs.proven, tier: bs.tier,
+            intentScore: buyingIntent ? buyingIntent.score : null
+        },
         // Bedarfsdruck-Faktor (1.0 = kein Abschlag, 0.70 = kapazitaetsgebunden ohne Kaufsignal).
-        demandFactor: dp.factor
+        demandFactor: dp.factor,
+        // Erreichbarkeit (1.0 = ok oder ungeprueft, <1 = geprueft ohne Kontaktweg).
+        reachFactor: rf.factor
     };
 }

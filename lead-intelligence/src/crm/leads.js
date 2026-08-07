@@ -2,6 +2,7 @@
  * Lead Storage — Firestore + localStorage Dual-Sync
  */
 import { currentUser } from './firebase.js';
+import { logReply } from '../learning/ab-test.js';
 
 function fb() { return window.__firebase; }
 
@@ -102,10 +103,19 @@ export async function updateLead(leadId, updates) {
     const local = getLocal();
     const idx = local.findIndex(l => l.id === leadId);
     if (idx >= 0) {
-        local[idx] = { ...local[idx], ...updates, updatedAt: Date.now() };
+        const prev = local[idx];
+        local[idx] = { ...prev, ...updates, updatedAt: Date.now() };
         // Automatisch contactedAt setzen wenn Status → kontaktiert
-        if (updates.status === 'kontaktiert' && !local[idx].contactedAt) {
+        if (updates.status === 'kontaktiert' && !prev.contactedAt) {
             local[idx].contactedAt = Date.now();
+        }
+        // Antwort erfassen — die wichtigste Frühmetrik im Outbound.
+        // NUR beim ERSTEN Übergang nach 'geantwortet' zählen: sonst würde jedes
+        // erneute Speichern desselben Leads die Antwortquote aufblähen und das
+        // Beta-Update in learning/ab-test.js verfälschen.
+        if (updates.status === 'geantwortet' && prev.status !== 'geantwortet' && !prev.repliedAt) {
+            local[idx].repliedAt = Date.now();
+            if (prev.pitchVariant) logReply(prev.pitchVariant);
         }
         setLocal(local);
     }
@@ -117,6 +127,9 @@ export async function updateLead(leadId, updates) {
         const firestoreUpdates = { ...updates, updatedAt: fb().fns.serverTimestamp() };
         if (updates.status === 'kontaktiert') {
             firestoreUpdates.contactedAt = fb().fns.serverTimestamp();
+        }
+        if (updates.status === 'geantwortet') {
+            firestoreUpdates.repliedAt = fb().fns.serverTimestamp();
         }
         const ref = fb().fns.doc(fb().db, 'leads', leadId);
         await fb().fns.updateDoc(ref, firestoreUpdates);

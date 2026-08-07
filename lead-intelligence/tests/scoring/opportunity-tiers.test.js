@@ -297,3 +297,102 @@ describe('Bedarfsdruck-Achse (F9) — „will der Betrieb überhaupt mehr Kunden
         expect(anwalt).toBeGreaterThan(computeOpportunity({ ...praxis }).opportunity);
     });
 });
+
+describe('Kaufsignal-Abstufung (F10) — Evidenz-Summe statt zwei Schalter', () => {
+    const basis = {
+        ws: { perf: 55, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.6, userRatingCount: 60, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 30, velocity: null, n: 5 }
+    };
+
+    it('ohne buyingIntent bleibt der alte Multiplikator erhalten (Rückfallpfad)', () => {
+        // buySignal.mult wird seit jeher auf 2 Stellen gerundet (1.35×1.15 = 1.5525 → 1.55).
+        const alt = computeOpportunity({ ...basis, adIntent: { active: true }, jobIntent: { isHiring: true } });
+        expect(alt.buySignal.mult).toBe(1.55);
+        expect(alt.buySignal.proven).toBe(true);
+        expect(alt.buySignal.intentScore).toBeNull();   // kein buyingIntent übergeben
+    });
+
+    it('bewiesene Ausgabe hebt den Faktor, gestapelte Evidenz hebt ihn weiter', () => {
+        // Bewusst ein Profil MIT Kopfraum — bei einem gesättigten Lead (100) wäre
+        // der Unterschied nicht messbar und der Test grün aus dem falschen Grund.
+        const mitLuft = {
+            ...basis,
+            place: { rating: 4.4, userRatingCount: 20, primaryType: 'restaurant', businessStatus: 'OPERATIONAL' },
+            reviewRecency: { daysSinceLast: 100, velocity: null, n: 5 }
+        };
+        const einfach = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 32, tier: 'wahrscheinlich', signals: [] } });
+        const gestapelt = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 62, tier: 'beweisbar', signals: [] } });
+        expect(einfach.opportunity).toBeLessThan(100);   // Kopfraum wirklich vorhanden
+        expect(einfach.buySignal.mult).toBe(1.35);
+        expect(gestapelt.buySignal.mult).toBe(1.55);
+        expect(gestapelt.opportunity).toBeGreaterThan(einfach.opportunity);
+    });
+
+    it('reine AKTIVITÄTS-Signale heben den Faktor NICHT — der Kernfehler von gestern', () => {
+        // reviewsFresh 14 + analytics 8 + socialBreadth 8 = 30 reißt die
+        // PROVEN_THRESHOLD, ist aber keine einzige ausgegebene Mark.
+        const r = computeOpportunity({
+            ...basis,
+            buyingIntent: {
+                isProvenSpender: false, score: 30, tier: 'wahrscheinlich',
+                signals: [{ key: 'reviews_fresh' }, { key: 'analytics' }, { key: 'social_breadth' }]
+            }
+        });
+        expect(r.buySignal.mult).toBe(1.0);
+        expect(r.buySignal.proven).toBe(false);
+    });
+
+    it('wahrscheinliche Werbung (GTM/Consent-Mode) gibt einen kleinen Aufschlag, keinen Spender-Status', () => {
+        const r = computeOpportunity({
+            ...basis,
+            buyingIntent: { isProvenSpender: false, score: 28, tier: 'schwach', signals: [{ key: 'ad_consent_mode' }] }
+        });
+        expect(r.buySignal.mult).toBe(1.15);
+        expect(r.buySignal.proven).toBe(false);
+    });
+
+    it('nur bewiesene Ausgabe hebt den Bedarfsdruck-Abschlag auf', () => {
+        const praxis = { ...basis, place: { ...basis.place, primaryType: 'dentist', userRatingCount: 90, rating: 4.9 } };
+        const nurAktiv = computeOpportunity({ ...praxis, buyingIntent: { isProvenSpender: false, score: 44, tier: 'wahrscheinlich', signals: [{ key: 'reviews_fresh' }] } });
+        const spender = computeOpportunity({ ...praxis, buyingIntent: { isProvenSpender: true, score: 44, tier: 'wahrscheinlich', signals: [] } });
+        expect(nurAktiv.demandFactor).toBe(0.70);
+        expect(spender.demandFactor).toBe(1.0);
+    });
+});
+
+describe('Erreichbarkeit (F11) — ungeprüft bleibt neutral', () => {
+    const basis = {
+        ws: { perf: 55, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.6, userRatingCount: 60, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 30, velocity: null, n: 5 }
+    };
+
+    it('wertet NICHT ab, wenn gar nicht geprüft wurde', () => {
+        expect(computeOpportunity({ ...basis }).reachFactor).toBe(1.0);
+        expect(computeOpportunity({ ...basis, contactPaths: null }).reachFactor).toBe(1.0);
+        // checked:false = Bot-Wall/übersprungen → ebenfalls neutral
+        expect(computeOpportunity({ ...basis, contactPaths: { checked: false } }).reachFactor).toBe(1.0);
+    });
+
+    it('wertet ab, wenn die Prüfung KEINEN Kontaktweg fand', () => {
+        const r = computeOpportunity({ ...basis, contactPaths: { checked: true, hasMailto: false, hasTel: false, hasImpressumLink: false } });
+        expect(r.reachFactor).toBe(0.85);
+        expect(r.reasons).toContain('✉ kein Kontaktweg gefunden');
+    });
+
+    it('wertet mit Kontaktweg nicht ab', () => {
+        expect(computeOpportunity({ ...basis, contactPaths: { checked: true, hasMailto: true } }).reachFactor).toBe(1.0);
+        expect(computeOpportunity({ ...basis, contactPaths: { checked: true, hasTel: true } }).reachFactor).toBe(1.0);
+    });
+
+    it('Impressum-Link allein = halber Abschlag (Adresse steht dort vielleicht)', () => {
+        const r = computeOpportunity({ ...basis, contactPaths: { checked: true, hasImpressumLink: true } });
+        expect(r.reachFactor).toBe(0.92);
+        expect(r.reasons).not.toContain('✉ kein Kontaktweg gefunden');
+    });
+});

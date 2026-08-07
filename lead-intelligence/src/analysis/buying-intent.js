@@ -51,7 +51,10 @@ const W = {
     analytics: 8,       // misst bereits — versteht Zahlen
     socialBreadth: 8,   // >= 3 gepflegte Kanäle
     tagManager: 12,     // GTM ohne sichtbare Ad-Tags — Werbung wahrscheinlich, nicht bewiesen
-    adConsentMode: 16   // Werbe-Consent-Mode konfiguriert — staerkeres Indiz, weiter kein Beweis
+    adConsentMode: 16,  // Werbe-Consent-Mode konfiguriert — staerkeres Indiz, weiter kein Beweis
+    paidTools: 14,      // laufend bezahlte Kundengewinnungs-Werkzeuge (Doctolib, OpenTable, …)
+    paidToolsMulti: 20, // mehrere davon = eigene Haushaltszeile fuer "digital"
+    siteCare: 10        // Seite wird gepflegt — kuemmert sich, hat nicht aufgegeben
 };
 
 /** Ab hier gilt Kaufbereitschaft als BEWIESEN (nicht nur wahrscheinlich). */
@@ -67,6 +70,8 @@ export const PROVEN_THRESHOLD = 30;
  * @param {Object|null} [p.jobSignal]   - detectJobSignals()-Ergebnis (Website-Proxy)
  * @param {number|null} [p.jobOpenings] - Anzahl echter offener Stellen (z.B. Arbeitsagentur-API)
  * @param {Object|null} [p.reviewRecency] - { daysSinceLast, velocity, n }
+ * @param {Object|null} [p.paidTools]   - scanPaidTools()-Ergebnis (functions/lib/site-evidence.js)
+ * @param {Object|null} [p.careSignals] - scanCareSignals()-Ergebnis (dito)
  * @returns {{score:number, tier:string, isProvenSpender:boolean, adsActive:boolean,
  *            signals:Array<{key:string,label:string,detail:string,weight:number,proof:string}>,
  *            label:string, missing:string[]}}
@@ -76,7 +81,9 @@ export function assessBuyingIntent({
     footprint = null,
     jobSignal = null,
     jobOpenings = null,
-    reviewRecency = null
+    reviewRecency = null,
+    paidTools = null,
+    careSignals = null
 } = {}) {
     const signals = [];
     const missing = [];
@@ -183,12 +190,49 @@ export function assessBuyingIntent({
             W.socialBreadth, `${footprint.platformCount} verlinkte Plattformen`);
     }
 
+    // ── 6. Bezahlte digitale Werkzeuge: Budget-Beweis OHNE Anzeigen ──
+    // Doctolib, OpenTable, Treatwell, ein Shop, ein Newsletter-Dienst — das sind
+    // laufende Rechnungen für Kundengewinnung. Wer die zahlt, hat eine
+    // Haushaltszeile für „digital" und ist keine Baukasten-und-vergessen-Person.
+    // Bewusst schwächer als Anzeigen (32): ein Buchungstool kann auch nur
+    // Verwaltung sein — Anzeigen sind reine Akquise.
+    const tools = paidTools?.found || [];
+    if (tools.length > 0) {
+        const multi = tools.length >= 2;
+        add('paid_tools', `${tools.length} bezahlte${tools.length === 1 ? 's' : ''} Werkzeug${tools.length === 1 ? '' : 'e'}`,
+            multi
+                ? 'Mehrere laufende Digital-Abos — der Betrieb hat ein Budget für Kundengewinnung.'
+                : 'Zahlt laufend für ein Kundengewinnungs-Werkzeug — Budget vorhanden.',
+            multi ? W.paidToolsMulti : W.paidTools,
+            tools.map(t => `${t.name} (${t.hint})`).join(', '));
+    } else if (paidTools) {
+        missing.push('Keine bezahlten Digital-Werkzeuge im Quelltext gefunden');
+    }
+
+    // ── 7. Pflegezustand der Seite: „kümmert sich" statt „hat aufgegeben" ──
+    // Schwaches Signal, bewusst nur AUFWERTEND. Fehlen diese Hinweise, folgt
+    // daraus nichts (Copyright-Jahre werden oft per JS gesetzt und stehen dann
+    // gar nicht im HTML) — der echte Aufgabe-Fall wird vom livenessGate in
+    // scoring/opportunity.js abgefangen, nicht hier ein zweites Mal.
+    if (careSignals && careSignals.caresCount > 0) {
+        add('site_care', 'Seite wird gepflegt',
+            'Jemand kümmert sich um die Website — ansprechbar, nicht resigniert.',
+            W.siteCare, careSignals.signals.join(', '));
+    }
+
     const score = Math.min(100, signals.reduce((s, x) => s + x.weight, 0));
 
     // Harte Kaufbereitschaft = echtes Geld verlaesst den Betrieb für
     // Kundengewinnung. Reine Aktivitaets-Signale (Bewertungen, Analytics)
     // reichen dafür bewusst NICHT — sie zeigen einen lebenden Betrieb,
     // aber keine Investitionsentscheidung.
+    //
+    // ⚠️ Bezahlte Werkzeuge zaehlen hier bewusst NICHT mit: Doctolib oder ein
+    // Buchungssystem beweisen ein Digital-BUDGET, aber keinen WACHSTUMSWILLEN —
+    // eine ausgebuchte Praxis verwaltet damit nur ihre Termine. `isProvenSpender`
+    // hebt in scoring/opportunity.js den Bedarfsdruck-Abschlag fuer
+    // kapazitaetsgebundene Branchen auf; das darf nur echte Akquise-Ausgabe
+    // (Anzeigen) oder Wachstum (offene Stellen) ausloesen.
     const adsActive = hasSearchAds || hasDisplay || hasMetaPixel || hasBing;
     const isHiring = signals.some(s => s.key === 'hiring');
     const isProvenSpender = adsActive || isHiring;

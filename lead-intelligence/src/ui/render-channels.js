@@ -94,7 +94,9 @@ export async function runPitch(data, btn) {
                 : 'Die Pitch-Seite konnte nicht erzeugt werden. Bitte in einer Minute erneut versuchen (KI-Limit oder Überlast).');
             return;
         }
-        showPitchResult(data, res.url, res.cached);
+        // viewInfo nur im Cache-Pfad vorhanden — eine frisch erzeugte Seite
+        // kann noch niemand geöffnet haben.
+        showPitchResult(data, res.url, res.cached, res.cached ? { views: res.views || 0, lastViewAtMs: res.lastViewAtMs || null } : null);
     } catch (e) {
         window.alert('Pitch-Generierung fehlgeschlagen: ' + (e?.message || e));
     } finally {
@@ -103,7 +105,7 @@ export async function runPitch(data, btn) {
 }
 
 /** Overlay mit teilbarer Pitch-URL + fertiger Neva-Voice-Mail. */
-function showPitchResult(data, pitchUrl, cached) {
+function showPitchResult(data, pitchUrl, cached, viewInfo = null) {
     const mail = buildPitchEmail(data, pitchUrl);
     const mailto = `mailto:${mail.recipientEmail ? encodeURIComponent(mail.recipientEmail) : ''}?subject=${encodeURIComponent(mail.subject)}&body=${encodeURIComponent(mail.body)}`;
     const el = document.createElement('div');
@@ -119,7 +121,10 @@ function showPitchResult(data, pitchUrl, cached) {
                     <button class="channel-btn" data-open>Seite öffnen</button>
                     <button class="channel-btn" data-copyurl>Link kopieren</button>
                 </div>
-                <p class="call-legal">Hinweis: Der Entwurf ist auf <code>noindex</code> gesetzt — er wird nicht von Google indexiert und ist nur über diesen Link erreichbar.</p>
+                ${viewInfo && viewInfo.views > 0
+                    ? `<p class="pitch-views"><strong>${viewInfo.views}× geöffnet</strong>${viewInfo.lastViewAtMs ? ` · zuletzt ${new Date(viewInfo.lastViewAtMs).toLocaleString('de-DE')}` : ''} — der Empfänger hat den Entwurf angesehen.</p>`
+                    : (cached ? `<p class="pitch-views pitch-views-none">Noch nicht geöffnet.</p>` : '')}
+                <p class="call-legal">Hinweis: Der Entwurf ist auf <code>noindex</code> gesetzt — er wird nicht von Google indexiert und ist nur über diesen Link erreichbar. Aufrufe werden serverseitig gezählt (kein Cookie, keine IP-Speicherung).</p>
             </div>
             <div class="call-sec">
                 <div class="section-label">Pitch-Mail (Neva-Voice) — prüfen, dann senden</div>

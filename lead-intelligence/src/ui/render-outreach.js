@@ -15,6 +15,7 @@ import { renderCRM } from './render-crm.js';
 import { createGmailDrafts } from '../outreach/gmail-drafts.js';
 import { exportEml } from '../outreach/eml-export.js';
 import { showToast } from './render-components.js';   // geteilter Toast (kein lokales Duplikat)
+import { logSent } from '../learning/ab-test.js';
 import { escapeHtml as esc } from '../lib/escape-html.js';
 
 let studioController = null;
@@ -118,6 +119,7 @@ function renderReview(el, signal) {
         <div class="studio-footer-actions">
             <button class="btn-primary studio-send-gmail" data-action="gmail">→ Gmail-Entwürfe</button>
             <button class="crm-btn-export" data-action="eml">→ .eml exportieren</button>
+            <button class="crm-btn-export" data-action="sent" title="Erst klicken, wenn die Mails in Gmail tatsächlich RAUS sind — setzt Status „Kontaktiert“, startet die Nachfass-Kadenz und zählt die Pitch-Variante">✓ Versendet</button>
         </div>
     </div>`;
 
@@ -256,6 +258,7 @@ function wireReviewEvents(el, signal) {
     el.addEventListener('click', async (e) => {
         if (e.target.dataset.action === 'gmail') return sendViaGmail(el);
         if (e.target.dataset.action === 'eml') return sendViaEml(el);
+        if (e.target.dataset.action === 'sent') return markAsSent(el);
     }, { signal });
 }
 
@@ -264,7 +267,9 @@ function approvedDrafts() {
         .filter(r => r._draftStatus === 'approved' && r.outreachStatus === 'ready')
         .map(r => {
             const v = r.outreachPack.variants[r._sel] || r.outreachPack.primary;
-            return { id: r.id, domain: r.domain, to: r.outreachPack.recipientEmail, subject: v.subject, body: v.body, bodyHtml: v.bodyHtml };
+            // `variant` = die TONALITÄT (v.tone), nicht der Index _sel — sonst
+            // landeten Zahlen im A/B-Test und die Zählung liefe still ins Leere.
+            return { id: r.id, domain: r.domain, to: r.outreachPack.recipientEmail, subject: v.subject, body: v.body, bodyHtml: v.bodyHtml, variant: v.tone || null };
         });
 }
 
@@ -287,8 +292,35 @@ function rerenderCard(el, r, signal) {
 
 async function markApprovedContacted() {
     // Entwurf erstellt → Status 'outreach_bereit' (echter Versand bleibt manuell in Gmail).
+    // Die gewählte Pitch-Variante wird HIER mitgespeichert, damit eine spätere
+    // Antwort sie in learning/ab-test.js der richtigen Variante zuordnen kann.
     const drafts = approvedDrafts();
-    await Promise.all(drafts.map(d => updateLead(d.id, { status: 'outreach_bereit' }).catch(() => null)));
+    await Promise.all(drafts.map(d =>
+        updateLead(d.id, { status: 'outreach_bereit', pitchVariant: d.variant || null }).catch(() => null)));
+}
+
+/**
+ * „Versendet" — der Schritt, der bisher komplett fehlte.
+ *
+ * Ein erzeugter Gmail-ENTWURF ist kein Versand. Bisher endete jeder Lead auf
+ * 'outreach_bereit', `contactedAt` blieb leer, die Nachfass-Kadenz in
+ * crm/reminders.js feuerte nie und kein A/B-Datenpunkt entstand. Dieser Klick
+ * bestätigt den tatsächlichen Versand und schließt damit die Messkette.
+ */
+async function markAsSent(el) {
+    const drafts = approvedDrafts();
+    if (!drafts.length) { showToast('Keine freigegebenen Entwürfe.'); return; }
+    const btn = el.querySelector('[data-action="sent"]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Wird erfasst…'; }
+    let n = 0;
+    for (const d of drafts) {
+        const r = await updateLead(d.id, { status: 'kontaktiert', pitchVariant: d.variant || null }).catch(() => null);
+        if (r) { n++; if (d.variant) logSent(d.variant); }
+    }
+    if (btn) { btn.disabled = false; btn.textContent = '✓ Versendet'; }
+    showToast(n === drafts.length
+        ? `${n} als versendet erfasst — Nachfass-Kadenz läuft.`
+        : `${n} von ${drafts.length} erfasst (Rest fehlgeschlagen).`);
 }
 
 async function sendViaGmail(el) {

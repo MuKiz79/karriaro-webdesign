@@ -27,7 +27,9 @@ import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
-import { applyFilters, hasBuySignal } from './lead-filters.js';
+import { applyFilters, hasBuySignal, isReachable } from './lead-filters.js';
+import { assessBuyingIntent } from '../analysis/buying-intent.js';
+import { computePeerPressure } from '../analysis/peer-pressure.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
 import { seasonalTriggerFor } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
@@ -221,9 +223,9 @@ export async function runScanner() {
         try {
             const domainKey = hostnameOf(place.websiteUri);
             // Score-Cache: PSI nur holen, wenn nicht gecacht (spart Zeit + Quota).
-            let ws, tech, screenshot = null, adIntent = null, jobIntent = null;
+            let ws, tech, screenshot = null, adIntent = null, jobIntent = null, footprint = null;
             const cs = getCachedScore(domainKey);
-            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; jobIntent = cs.jobIntent || null; }
+            if (cs) { ws = cs.ws; tech = cs.tech; adIntent = cs.adIntent; jobIntent = cs.jobIntent || null; footprint = cs.footprint || null; }
             else {
                 const psi = await fetchPageSpeed(place.websiteUri);
                 ws = extractWebsiteScore(psi);
@@ -235,14 +237,17 @@ export async function runScanner() {
                 const fp = analyzeDigitalFootprint(psi);
                 const signals = [...ga.signals, ...(fp.hasFbPixel ? ['Meta-Pixel (Facebook-Werbung)'] : [])];
                 adIntent = { active: ga.active || fp.hasFbPixel, signals };
+                adIntent.googleAds = ga;      // volle Evidenz für assessBuyingIntent
+                footprint = fp;
                 // Job-Signal ebenfalls gratis aus denselben PSI-Requests: stellt der
                 // Betrieb ein? = Wachstum + Personalbudget = zweites Kaufsignal.
                 jobIntent = detectJobSignals(psi);
-                setCachedScore(domainKey, ws, tech, adIntent, jobIntent);
+                setCachedScore(domainKey, ws, tech, adIntent, jobIntent, footprint);
             }
             const techAge = analyzeTechAge(tech, {});
-            // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Ad-Intent.
-            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, jobIntent, seasonal: seasonalTriggerFor(place.primaryType) });
+            const buyingIntent = buildBuyingIntent({ adIntent, footprint, jobIntent, place });
+            // Transparente Vor-Bewertung (gratis): Badness × Liveness × Wert × Branche × Kaufsignal.
+            const opp = computeOpportunity({ ws, tech, place, websiteUri: place.websiteUri, techAge, reviewRecency: place.reviewRecency, adIntent, jobIntent, buyingIntent, seasonal: seasonalTriggerFor(place.primaryType) });
             // conversionRate/EV aus dem Funnel-Modell für CRM-Kontinuität (nicht als Hauptscore).
             const result = scoreLead(ws, tech, place, null, null);
             leads.push({
@@ -265,9 +270,11 @@ export async function runScanner() {
                 reasons: opp.reasons,
                 looksAlreadyGood: opp.looksAlreadyGood,
                 hardStructural: opp.hardStructural,
-                adIntent,                              // {active, signals} — Pitch-Hook + Vision-Recompute
+                adIntent,                              // {active, signals, googleAds} — Pitch-Hook + Recompute
                 jobIntent,                             // {isHiring, signals} — zweites Kaufsignal
-                buySignal: opp.buySignal,              // {adActive, hiring, mult} — Filter/Sortierung
+                footprint,                             // für Recompute der Kaufsignal-Achse
+                buyingIntent,                          // volle Evidenz-Summe (11+ Signale) — UI + Pitch
+                buySignal: opp.buySignal,              // {adActive, hiring, proven, tier, mult} — Filter/Sortierung
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -299,8 +306,12 @@ export async function runScanner() {
         // Schwelle faellt von 45 auf 35, weil ein gefundener Werbetreibender genau
         // dort nach oben springt, wo er vorher unsichtbar blieb. Server-Limit 240/h,
         // Ergebnisse 7 Tage client- und 168 h serverseitig gecacht.
+        // Der Aufruf liefert seit 2026-07-26 VIER Signalklassen aus derselben
+        // Seiten-Abholung: Werbe-Tags, bezahlte Werkzeuge, Pflegezustand und
+        // Kontaktwege. Deshalb auch Leads einbeziehen, deren Werbung schon
+        // erkannt ist — deren Erreichbarkeit kennen wir sonst nie.
         const AD_EVIDENCE_TOP_N = 60;
-        const adCands = leads.filter(l => l.opportunity >= 35 && !l.adIntent?.active)
+        const adCands = leads.filter(l => l.opportunity >= 35)
             .sort((a, b) => b.opportunity - a.opportunity).slice(0, AD_EVIDENCE_TOP_N);
         if (adCands.length) {
             let aDone = 0;
@@ -311,29 +322,47 @@ export async function runScanner() {
                     ev = await adEvidence({ url: l.websiteUri }).catch(() => null);
                     if (ev?.ok) setCachedAdEvidence(l.domain, ev);
                 }
-                const e = (ev?.ok && !ev.blocked) ? ev.adEvidence : null;
+                const clean = !!(ev?.ok && !ev.blocked);
+                const e = clean ? ev.adEvidence : null;
                 // Ehrlichkeits-Flag: "geprueft und nichts gefunden" ist etwas anderes
                 // als "nie geprueft". Nur ein sauberer Scan (kein WAF-Block) zaehlt.
                 l.adChecked = !!e;
                 l.adBlocked = !!(ev?.ok && ev.blocked);
+                if (!clean) { aDone++; showProgress(95, `④ Seiten-Check ${aDone}/${adCands.length}…`); return; }
+
+                l.siteEvidence = {
+                    paidTools: ev.paidTools || null,
+                    careSignals: ev.careSignals || null,
+                    contactPaths: ev.contactPaths || null
+                };
                 if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
                     const sig = [];
                     if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
                     if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
                     if (e.microsoftAds?.found) sig.push('Microsoft Ads');
-                    l.adIntent = { active: true, signals: sig };
-                    const re = computeOpportunity({
-                        ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
-                        techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
-                        adIntent: l.adIntent, jobIntent: l.jobIntent,
-                        seasonal: seasonalTriggerFor(l.place.primaryType)
-                    });
-                    l.opportunity = re.opportunity; l.leadScore = re.opportunity;
-                    l.badnessScore = re.badnessScore; l.reasons = re.reasons;
-                    l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
+                    // googleAds-Form beibehalten, damit assessBuyingIntent dieselbe
+                    // Evidenz liest wie beim ersten Durchlauf.
+                    l.adIntent = { active: true, signals: sig, googleAds: { ...(l.adIntent?.googleAds || {}), signals: sig, active: true } };
+                    if (e.metaPixel?.found) l.footprint = { ...(l.footprint || {}), hasFbPixel: true, fbPixelSource: e.metaPixel.source };
                 }
+                // IMMER neu rechnen — auch ohne Werbefund tragen Werkzeuge,
+                // Pflegezustand und Kontaktwege jetzt zum Score bei.
+                l.buyingIntent = buildBuyingIntent({
+                    adIntent: l.adIntent, footprint: l.footprint, jobIntent: l.jobIntent,
+                    place: l.place, siteEv: l.siteEvidence
+                });
+                const re = computeOpportunity({
+                    ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
+                    techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
+                    adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
+                    contactPaths: l.siteEvidence.contactPaths,
+                    seasonal: seasonalTriggerFor(l.place.primaryType)
+                });
+                l.opportunity = re.opportunity; l.leadScore = re.opportunity;
+                l.badnessScore = re.badnessScore; l.reasons = re.reasons;
+                l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
                 aDone++;
-                showProgress(95 + Math.round((aDone / adCands.length) * 1), `④ Werbe-Check Top ${aDone}/${adCands.length}…`);
+                showProgress(95 + Math.round((aDone / adCands.length) * 1), `④ Seiten-Check ${aDone}/${adCands.length}…`);
             });
         }
     }
@@ -367,7 +396,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
@@ -378,6 +407,22 @@ export async function runScanner() {
             });
         }
     }
+    // Stufe 3: Wettbewerbsdruck — der einzige Schritt ohne jeden API-Call.
+    // Bewusst GANZ AM ENDE: alle Recomputes (Werbe-Evidenz, Bild-Check) sind
+    // durch, sonst würde der Aufschlag von einer späteren Neuberechnung
+    // stillschweigend überschrieben.
+    if (!state.aborted && leads.length) {
+        const pressure = computePeerPressure(leads);
+        for (const l of leads) {
+            const p = pressure.get(l.domain);
+            if (!p || p.mult === 1.0) continue;
+            l.peerPressure = p;
+            l.opportunity = Math.max(0, Math.min(100, Math.round(l.opportunity * p.mult)));
+            l.leadScore = l.opportunity;
+            if (p.chip && !l.reasons.includes(p.chip)) l.reasons.push(p.chip);
+        }
+    }
+
     for (const l of leads) delete l._screenshot; // Speicher freigeben
 
     hideProgress();
@@ -425,6 +470,26 @@ export function reopenScan(entry) {
 
 // runWithConcurrency lebt jetzt in lib/concurrency.js und wird von batch-search.js mitgenutzt.
 
+/**
+ * Kaufsignal-Achse für einen Scan-Lead — dieselbe Evidenz-Summe, die bisher
+ * nur nach dem Klick auf „Tiefe Analyse" lief.
+ *
+ * Nutzt ausschließlich Daten, die im Scan ohnehin vorliegen (PSI-Footprint,
+ * Ad-Erkennung, Job-Signal, Bewertungs-Frische) plus die optionale Seiten-
+ * Evidenz aus dem adEvidence-Endpoint. KEIN zusätzlicher Netz-Zugriff.
+ */
+function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = null }) {
+    return assessBuyingIntent({
+        googleAds: adIntent?.googleAds || (adIntent ? { signals: adIntent.signals || [], active: !!adIntent.active } : null),
+        footprint,
+        jobSignal: jobIntent,
+        jobOpenings: null,               // echte Stellenzahl bleibt dem Einzel-Check vorbehalten (1 API-Call je Lead)
+        reviewRecency: place?.reviewRecency || null,
+        paidTools: siteEv?.paidTools || null,
+        careSignals: siteEv?.careSignals || null
+    });
+}
+
 function hostnameOf(url) {
     try { return new URL(url).hostname.replace(/^www\./, ''); }
     catch { return url; }
@@ -443,7 +508,10 @@ function getActiveFilters() {
         // ausgeben (Anzeigen) oder wachsen (stellen ein). Das ist die Achse, die
         // ueber „will der Inhaber erneuern?" entscheidet — vorher war sie zwar
         // berechnet, aber weder filter- noch sortierbar (bei 281 Treffern unauffindbar).
-        buy:      h.get('buy') === '1'
+        buy:      h.get('buy') === '1',
+        // Erreichbarkeit: blendet aus, was NACHWEISLICH keinen Kontaktweg hat.
+        // Ungeprüfte Leads bleiben sichtbar (siehe isReachable).
+        reach:    h.get('reach') === '1'
     };
 }
 
@@ -456,6 +524,7 @@ function persistFilters(updates) {
     if (next.sort && next.sort !== 'score') h.set('sort', next.sort);
     if (next.baukasten) h.set('baukasten', '1');
     if (next.buy) h.set('buy', '1');
+    if (next.reach) h.set('reach', '1');
     const str = h.toString();
     location.hash = str ? '#' + str : '';
 }
@@ -469,6 +538,7 @@ function renderLeadWorkspace(city, leads, filters) {
     const warm = leads.filter(l => l.leadScore >= 50 && l.leadScore < 70).length;
     const cold = leads.length - hot - warm;
     const buyers = leads.filter(hasBuySignal).length;
+    const unreachable = leads.filter(l => !isReachable(l)).length;
 
     // Branchen-Filter-Liste — nur die Branchen, die echte Leads haben
     const branchCounts = {};
@@ -501,6 +571,9 @@ function renderLeadWorkspace(city, leads, filters) {
             </div>
             <div class="ws-pills" data-pill-group="baukasten">
                 <button class="ws-pill${filters.baukasten ? ' active' : ''}" data-baukasten="${filters.baukasten ? '0' : '1'}">${filters.baukasten ? '✓ ' : ''}Baukasten-only</button>
+            </div>
+            <div class="ws-pills" data-pill-group="reach">
+                <button class="ws-pill${filters.reach ? ' active' : ''}" data-reach="${filters.reach ? '0' : '1'}" title="Blendet Betriebe aus, bei denen die Prüfung keinen Kontaktweg gefunden hat (ungeprüfte bleiben sichtbar)">${filters.reach ? '✓ ' : ''}✉ erreichbar${unreachable ? ` (−${unreachable})` : ''}</button>
             </div>
             <div class="ws-pills" data-pill-group="buy">
                 <button class="ws-pill${filters.buy ? ' active' : ''}" data-buy="${filters.buy ? '0' : '1'}" title="Nur Betriebe mit bewiesenem Kaufsignal — schaltet Anzeigen oder stellt ein">${filters.buy ? '✓ ' : ''}💸 nur Kaufsignal (${buyers})</button>
@@ -589,6 +662,8 @@ function bindWorkspaceEvents(el) {
                 persistFilters({ baukasten: pill.dataset.baukasten === '1' });
             } else if (group === 'buy') {
                 persistFilters({ buy: pill.dataset.buy === '1' });
+            } else if (group === 'reach') {
+                persistFilters({ reach: pill.dataset.reach === '1' });
             }
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
@@ -596,7 +671,7 @@ function bindWorkspaceEvents(el) {
 
         // Reset
         if (e.target.dataset.action === 'reset-filters') {
-            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false });
+            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false, reach: false });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
         }

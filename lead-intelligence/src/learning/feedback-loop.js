@@ -152,4 +152,61 @@ function loadFeedback() {
 
 function saveFeedback(data) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    mirrorToFirestore(data);
+}
+
+/**
+ * Outcomes zusätzlich nach Firestore spiegeln.
+ *
+ * Bis 2026-07-26 lagen die Lerndaten AUSSCHLIESSLICH in localStorage — während
+ * die Leads selbst längst gesynct wurden. Ein geleerter Browser-Cache, ein
+ * zweites Gerät oder ein anderes Profil löschte damit die gesamte Lernhistorie,
+ * und `MIN_N_FOR_UPDATE = 20` wäre nie wieder erreichbar gewesen.
+ *
+ * Bewusst fire-and-forget: der Outcome ist lokal bereits gespeichert, ein
+ * fehlgeschlagener Sync darf den Klick des Founders nicht blockieren. Ein
+ * einzelnes Dokument je Nutzer — die Datenmenge ist klein (ein Eintrag je Lead).
+ */
+function mirrorToFirestore(data) {
+    try {
+        const fbx = typeof window !== 'undefined' ? window.__firebase : null;
+        const uid = fbx?.auth?.currentUser?.uid;
+        if (!fbx?.db || !uid) return;                 // nicht eingeloggt → nur lokal
+        const ref = fbx.fns.doc(fbx.db, 'leadFeedback', uid);
+        fbx.fns.setDoc(ref, {
+            entries: data.entries || [],
+            buckets: data.buckets || {},
+            updatedAt: fbx.fns.serverTimestamp()
+        }).catch(e => console.warn('Feedback-Sync fehlgeschlagen:', e?.message || e));
+    } catch (e) {
+        console.warn('Feedback-Sync übersprungen:', e?.message || e);
+    }
+}
+
+/**
+ * Beim Start die serverseitigen Outcomes einlesen, falls lokal nichts (mehr) da ist.
+ * Verschmilzt NICHT — Firestore gewinnt nur, wenn es MEHR Einträge hat als lokal.
+ * So gewinnt ein frisch geleerter Browser die Historie zurück, ohne dass ein
+ * veralteter Server-Stand lokale Neueinträge überschreibt.
+ * @returns {Promise<boolean>} ob etwas übernommen wurde
+ */
+export async function restoreFeedbackFromCloud() {
+    try {
+        const fbx = typeof window !== 'undefined' ? window.__firebase : null;
+        const uid = fbx?.auth?.currentUser?.uid;
+        if (!fbx?.db || !uid) return false;
+        const snap = await fbx.fns.getDoc(fbx.fns.doc(fbx.db, 'leadFeedback', uid));
+        if (!snap.exists()) return false;
+        const remote = snap.data() || {};
+        const local = loadFeedback();
+        if ((remote.entries || []).length <= (local.entries || []).length) return false;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            entries: remote.entries || [],
+            buckets: remote.buckets || {}
+        }));
+        return true;
+    } catch (e) {
+        console.warn('Feedback-Restore fehlgeschlagen:', e?.message || e);
+        return false;
+    }
 }

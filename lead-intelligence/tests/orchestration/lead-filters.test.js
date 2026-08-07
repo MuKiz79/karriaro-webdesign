@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyFilters, hasBuySignal } from '../../src/orchestration/lead-filters.js';
+import { applyFilters, hasBuySignal, isReachable } from '../../src/orchestration/lead-filters.js';
 
 const lead = (o = {}) => ({
     name: o.name || 'Betrieb',
@@ -81,5 +81,50 @@ describe('applyFilters', () => {
     it('leere Eingabe ergibt eine leere Liste statt Absturz', () => {
         expect(applyFilters(null, { buy: true })).toEqual([]);
         expect(applyFilters([], {})).toEqual([]);
+    });
+});
+
+describe('Erreichbarkeits-Filter — ungeprüft bleibt sichtbar', () => {
+    const geprueftOk = lead({ name: 'erreichbar' });
+    geprueftOk.siteEvidence = { contactPaths: { checked: true, hasMailto: true } };
+    const geprueftLeer = lead({ name: 'kein Kontakt' });
+    geprueftLeer.siteEvidence = { contactPaths: { checked: true, hasMailto: false, hasTel: false, hasImpressumLink: false } };
+    const ungeprueft = lead({ name: 'ungeprüft' });          // kein siteEvidence
+
+    it('blendet nur aus, was NACHWEISLICH keinen Kontaktweg hat', () => {
+        const r = applyFilters([geprueftOk, geprueftLeer, ungeprueft], { reach: true });
+        expect(r.map(x => x.name).sort()).toEqual(['erreichbar', 'ungeprüft']);
+    });
+
+    it('ein ungeprüfter Lead gilt als erreichbar — nicht geprüft ist nicht unerreichbar', () => {
+        expect(isReachable(ungeprueft)).toBe(true);
+        expect(isReachable({ siteEvidence: { contactPaths: { checked: false } } })).toBe(true);
+    });
+
+    it('Impressum-Link allein reicht für den Filter', () => {
+        const nurImpressum = lead({ name: 'impressum' });
+        nurImpressum.siteEvidence = { contactPaths: { checked: true, hasImpressumLink: true } };
+        expect(isReachable(nurImpressum)).toBe(true);
+    });
+
+    it('kombiniert mit dem Kaufsignal-Filter', () => {
+        const werberOhneKontakt = lead({ name: 'Werber', buySignal: { proven: true } });
+        werberOhneKontakt.siteEvidence = { contactPaths: { checked: true, hasMailto: false, hasTel: false, hasImpressumLink: false } };
+        expect(applyFilters([werberOhneKontakt], { buy: true })).toHaveLength(1);
+        expect(applyFilters([werberOhneKontakt], { buy: true, reach: true })).toHaveLength(0);
+    });
+});
+
+describe('hasBuySignal — neue proven-Semantik', () => {
+    it('erkennt den proven-Marker aus der Kaufsignal-Achse', () => {
+        expect(hasBuySignal({ buySignal: { proven: true, adActive: false, hiring: false } })).toBe(true);
+    });
+    it('bleibt rückwärtskompatibel zu gespeicherten Scans ohne proven', () => {
+        expect(hasBuySignal({ buySignal: { adActive: true } })).toBe(true);
+        expect(hasBuySignal({ buySignal: { hiring: true } })).toBe(true);
+    });
+    it('ein hoher Intent-Score OHNE proven zählt nicht', () => {
+        // Aktivitätssignale erreichen die Schwelle, sind aber keine Ausgabe.
+        expect(hasBuySignal({ buySignal: { proven: false, intentScore: 44 } })).toBe(false);
     });
 });

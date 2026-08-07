@@ -14,9 +14,9 @@ import { openStudio } from './render-outreach.js';
 
 // 'qualifiziert' (Verifikations-Plan) und 'entwurf'/'outreach_bereit' (Outreach-Studio)
 // liegen zwischen 'neu' und 'kontaktiert'. Reihenfolge = Lead-Lebenszyklus.
-const STATUSES = ['alle', 'neu', 'qualifiziert', 'entwurf', 'outreach_bereit', 'kontaktiert', 'interessiert', 'angebot', 'kunde', 'verloren'];
-const STATUS_LABELS = { neu: 'Neu', qualifiziert: 'Qualifiziert', entwurf: 'Entwurf', outreach_bereit: 'Versandbereit', kontaktiert: 'Kontaktiert', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
-const STATUS_COLORS = { neu: 'var(--muted)', qualifiziert: 'var(--accent)', entwurf: 'var(--accent)', outreach_bereit: 'var(--orange)', kontaktiert: 'var(--orange)', interessiert: 'var(--accent)', angebot: 'var(--accent)', kunde: 'var(--green)', verloren: 'var(--red)' };
+const STATUSES = ['alle', 'neu', 'qualifiziert', 'entwurf', 'outreach_bereit', 'kontaktiert', 'geantwortet', 'interessiert', 'angebot', 'kunde', 'verloren'];
+const STATUS_LABELS = { neu: 'Neu', qualifiziert: 'Qualifiziert', entwurf: 'Entwurf', outreach_bereit: 'Versandbereit', kontaktiert: 'Kontaktiert', geantwortet: 'Geantwortet', interessiert: 'Interessiert', angebot: 'Angebot', kunde: 'Kunde', verloren: 'Verloren' };
+const STATUS_COLORS = { neu: 'var(--muted)', qualifiziert: 'var(--accent)', entwurf: 'var(--accent)', outreach_bereit: 'var(--orange)', kontaktiert: 'var(--orange)', geantwortet: 'var(--green)', interessiert: 'var(--accent)', angebot: 'var(--accent)', kunde: 'var(--green)', verloren: 'var(--red)' };
 
 // AbortController für Event-Listener Cleanup
 let crmController = null;
@@ -152,7 +152,9 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     // Jede Stage zeigt Count + Wert + den Top-Lead (höchster Score). User sieht
     // sofort den nächsten Move pro Stage statt nur ein Aggregat. Klick auf Stage
     // filtert die Liste, Klick auf Top-Lead-Karte scrollt zur Lead-Card.
-    const pipeStages = ['neu', 'kontaktiert', 'interessiert', 'angebot', 'kunde'];
+    // „geantwortet" ist die wichtigste Frühmetrik im Outbound — sie gehört in die
+    // Pipeline, sonst sieht man nie, ob die Ansprache überhaupt trägt.
+    const pipeStages = ['neu', 'kontaktiert', 'geantwortet', 'interessiert', 'angebot', 'kunde'];
     html += `<div class="crm-pipeline">`;
     for (const stage of pipeStages) {
         const stageLeads = leads.filter(l => l.status === stage);

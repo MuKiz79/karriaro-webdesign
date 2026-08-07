@@ -15,6 +15,7 @@ const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
 const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
+const { scanPaidTools, scanCareSignals, scanContactPaths } = require("./lib/site-evidence.js");
 const {
     PITCH_SYS, PITCH_CSP, buildPitchUserMessage, sanitizePitchHtml, pitchId, pitchNotFoundHtml
 } = require("./lib/pitch-generator.js");
@@ -1496,7 +1497,16 @@ exports.generatePitch = onRequest(
             try {
                 const snap = await db.collection("pitches").doc(id).get();
                 if (snap.exists && (snap.data().expiresAtMs || 0) > Date.now()) {
-                    return res.json({ ok: true, cached: true, id, url: `${PITCH_PUBLIC_BASE}/pitch/${id}`, businessName, meta: { durationMs: Date.now() - startMs } });
+                    const d = snap.data();
+                    // views/lastViewAtMs zurückgeben: erneutes Erzeugen für denselben
+                    // Lead zeigt dem Founder, ob der Empfänger die Seite geöffnet hat.
+                    // Ohne diese Rückgabe wäre der Zähler in pitchPage unsichtbar —
+                    // gemessen, aber nirgends ablesbar (Playbook §2).
+                    return res.json({
+                        ok: true, cached: true, id, url: `${PITCH_PUBLIC_BASE}/pitch/${id}`, businessName,
+                        views: d.views || 0, lastViewAtMs: d.lastViewAtMs || null, firstViewAtMs: d.firstViewAtMs || null,
+                        meta: { durationMs: Date.now() - startMs }
+                    });
                 }
             } catch (e) { /* cache miss → generieren */ }
         }
@@ -1547,7 +1557,23 @@ exports.pitchPage = onRequest(
                 res.status(404).send(pitchNotFoundHtml());
                 return;
             }
-            res.set("Cache-Control", "public, max-age=300");
+            // ── Aufruf zählen ────────────────────────────────────────────────
+            // „Der Betrieb hat den Entwurf geöffnet" ist das stärkste verfügbare
+            // Inbound-Signal — und wurde bis 2026-07-26 gar nicht erfasst.
+            // Bewusst NUR ein serverseitiger Zähler: keine Cookies, kein Pixel,
+            // keine IP- oder User-Agent-Speicherung. Für „hat reagiert" reicht das,
+            // und es bleibt ohne Einwilligung zulässig (§25 TDDDG greift nicht,
+            // weil nichts auf dem Endgerät gespeichert oder ausgelesen wird).
+            // Fire-and-forget: ein fehlgeschlagener Zähler darf die Seite,
+            // die der Interessent gerade sehen will, niemals blockieren.
+            // Cache-Control bewusst kurz — sonst zählt der Edge-Cache Zweitaufrufe weg.
+            db.collection("pitches").doc(id).set({
+                views: admin.firestore.FieldValue.increment(1),
+                lastViewAtMs: Date.now(),
+                firstViewAtMs: data.firstViewAtMs || Date.now()
+            }, { merge: true }).catch(err => console.warn("pitch view count failed:", err.message));
+
+            res.set("Cache-Control", "public, max-age=60");
             res.status(200).send(data.html);
         } catch (err) {
             console.error("pitchPage failed:", err);
@@ -1663,6 +1689,11 @@ exports.securityAudit = onRequest(
 
 const AD_EVIDENCE_CACHE_HOURS = 168;         // 7 Tage — Werbeverhalten ändert sich langsam
 const AD_EVIDENCE_BLOCKED_CACHE_HOURS = 24;  // Bot-Wall kann temporär sein → kürzer halten
+// Schema 2 (2026-07-26): dieselbe HTML-Abholung liefert zusätzlich paidTools,
+// careSignals und contactPaths (lib/site-evidence.js). Ältere Cache-Dokumente
+// gelten als Miss — ein Teil-Datensatz würde "nicht geprüft" als "nichts
+// gefunden" ausgeben und die Erreichbarkeits-Abwertung falsch auslösen.
+const EVIDENCE_SCHEMA = 2;
 
 function adEvidenceCacheKey(url) {
     const u = String(url || "").toLowerCase().replace(/\/+$/, "");
@@ -1675,6 +1706,11 @@ async function loadAdEvidenceCache(url) {
         if (!snap.exists) return null;
         const data = snap.data();
         if ((data.expiresAtMs || 0) < Date.now()) return null;
+        // Schema-Bump: Dokumente aus Schema 1 kennen paidTools/careSignals/
+        // contactPaths nicht. Sie als Treffer zu servieren wuerde stillschweigend
+        // einen TEIL-Datensatz ausliefern — der Aufrufer saehe "geprueft, nichts
+        // gefunden" statt "nicht geprueft". Also als Miss behandeln.
+        if ((data.schemaVersion || 1) < EVIDENCE_SCHEMA) return null;
         return data;
     } catch (err) {
         console.warn("adEvidence cache read failed:", err.message);
@@ -1687,6 +1723,7 @@ async function saveAdEvidenceCache(url, payload, hours) {
         const expiresAtMs = Date.now() + hours * 3600000;
         await db.collection("adEvidence").doc(adEvidenceCacheKey(url)).set({
             ...payload,
+            schemaVersion: EVIDENCE_SCHEMA,
             cachedUrl: url,
             cachedAtMs: Date.now(),
             expiresAtMs,
@@ -1724,6 +1761,9 @@ exports.adEvidence = onRequest(
                     gtmContainers: cached.gtmContainers || [],
                     cmp: cached.cmp || null,
                     blocked: cached.blocked || null,
+                    paidTools: cached.paidTools || null,
+                    careSignals: cached.careSignals || null,
+                    contactPaths: cached.contactPaths || null,
                     fetchedAt: cached.fetchedAt || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
@@ -1741,6 +1781,10 @@ exports.adEvidence = onRequest(
                 const payload = {
                     adEvidence: buildAdEvidence({}, []),
                     gtmContainers: [], cmp: null, blocked,
+                    // Bewusst null statt leerer Ergebnisse: hinter der Bot-Wall haben
+                    // wir NICHTS gesehen. Ein leeres contactPaths{checked:true} würde
+                    // als "geprüft, kein Kontaktweg" gelesen und den Lead abwerten.
+                    paidTools: null, careSignals: null, contactPaths: null,
                     fetchedAt: new Date().toISOString(),
                     meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
                 };
@@ -1778,6 +1822,10 @@ exports.adEvidence = onRequest(
                 gtmContainers,
                 cmp: htmlScan.cmp,
                 blocked: null,
+                // Dieselben Bytes, drei weitere Signalklassen — kein zusätzlicher Fetch.
+                paidTools: scanPaidTools(html),
+                careSignals: scanCareSignals(html, new Date().getFullYear()),
+                contactPaths: scanContactPaths(html),
                 fetchedAt: new Date().toISOString(),
                 meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
             };
