@@ -63,10 +63,17 @@ export function calculateCompositeScore(params) {
     if (companyProfile?.isEnterprise) fit -= 40; // Großunternehmen = kein Fit
 
     // Budget-Indikatoren
-    const reviews = place?.userRatingCount || 0;
-    if (reviews > 100) fit += 15;       // Etabliert, hat Budget
-    else if (reviews > 30) fit += 10;
-    else if (reviews < 5) fit -= 10;    // Vielleicht zu klein
+    // ⚠️ KORREKTUR 2026-08-08: Ohne `place` wurden reviews auf 0 gesetzt → `< 5`
+    // → −10, ZUSÄTZLICH zum entgangenen +15 oben. Ein fehlender Places-Datensatz
+    // kostete also 25 Fit-Punkte, obwohl über den Betrieb nichts bekannt ist.
+    // „Vielleicht zu klein" darf nur greifen, wenn eine Zahl vorliegt.
+    const reviewsKnown = typeof place?.userRatingCount === 'number';
+    const reviews = reviewsKnown ? place.userRatingCount : 0;
+    if (reviewsKnown) {
+        if (reviews > 100) fit += 15;       // Etabliert, hat Budget
+        else if (reviews > 30) fit += 10;
+        else if (reviews < 5) fit -= 10;    // Vielleicht zu klein
+    }
 
     // Digital-Affinität (zu hoch = macht es selbst, zu niedrig = versteht es nicht)
     const maturity = footprint?.maturity || 0;
@@ -85,18 +92,33 @@ export function calculateCompositeScore(params) {
     let hebel = 20; // Basis (jeder könnte eine gebrauchen)
 
     // Design-Qualität (schlecht = starker Hebel)
-    const dq = screenshotAnalysis?.designQuality || 5;
-    if (dq <= 3) hebel += 25;
-    else if (dq <= 5) hebel += 15;
-    else if (dq >= 8) hebel -= 15; // Gutes Design = kein sichtbarer Anlass
+    // ⚠️ KORREKTUR 2026-08-08: `screenshotAnalysis?.designQuality || 5` gab bei
+    // FEHLENDER Vision-Analyse eine 5 zurück → `dq <= 5` → +15 Punkte fürs
+    // Nichtmessen. Genau diese Bug-Klasse war in scoring/lead-scorer.js:90 schon
+    // beim Audit 2026-05-03 behoben („screenshotAnalysis = null bedeutet
+    // KI-Failure — KEIN künstliches Score-Boosting") — der Fix wurde hier nie
+    // nachgezogen. Jetzt zählt die Design-Dimension nur, wenn sie gemessen wurde.
+    const dqKnown = typeof screenshotAnalysis?.designQuality === 'number';
+    const dq = dqKnown ? screenshotAnalysis.designQuality : null;
+    if (dqKnown) {
+        if (dq <= 3) hebel += 25;
+        else if (dq <= 5) hebel += 15;
+        else if (dq >= 8) hebel -= 15; // Gutes Design = kein sichtbarer Anlass
+    }
 
-    // Performance-Probleme
-    if (ws?.perf < 30) hebel += 15;
-    else if (ws?.perf < 50) hebel += 10;
-    else if (ws?.perf < 70 && dq <= 5) hebel += 5;
+    // Performance-Probleme — nur bei gemessenem Wert (undefined < 30 ist false,
+    // aber der dq-Zweig unten würde sonst auf einer geratenen 5 mitlaufen).
+    const perfKnown = typeof ws?.perf === 'number';
+    if (perfKnown) {
+        if (ws.perf < 30) hebel += 15;
+        else if (ws.perf < 50) hebel += 10;
+        else if (ws.perf < 70 && dqKnown && dq <= 5) hebel += 5;
+    }
 
     // Kritische Probleme (SSL, Viewport)
-    if (!ws?.isHttps) hebel += 20;
+    // ⚠️ `!ws?.isHttps` war true, wenn ws GAR NICHT vorlag → +20 Hebel für eine
+    // Seite, die nie geprüft wurde. Jetzt nur bei explizit gemessenem `false`.
+    if (ws?.isHttps === false) hebel += 20;
     if (ws?.viewportMissing) hebel += 15;
 
     // BFSG-Risiko

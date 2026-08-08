@@ -323,8 +323,12 @@ describe('Kaufsignal-Abstufung (F10) — Evidenz-Summe statt zwei Schalter', () 
             place: { rating: 4.4, userRatingCount: 20, primaryType: 'restaurant', businessStatus: 'OPERATIONAL' },
             reviewRecency: { daysSinceLast: 100, velocity: null, n: 5 }
         };
-        const einfach = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 32, tier: 'wahrscheinlich', signals: [] } });
-        const gestapelt = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 62, tier: 'beweisbar', signals: [] } });
+        // ⚠️ Fixture 2026-08-08 korrigiert: es setzte einen score OHNE signals —
+        // eine Kombination, die real nie vorkommt. Seit die Stapel-Schwelle die
+        // Bewertungs-Signale ausklammert (spendScore), muss das Fixture die
+        // Signale tragen, aus denen der score entsteht.
+        const einfach = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 32, tier: 'wahrscheinlich', signals: [{ key: 'google_ads', weight: 32 }] } });
+        const gestapelt = computeOpportunity({ ...mitLuft, buyingIntent: { isProvenSpender: true, score: 58, tier: 'beweisbar', signals: [{ key: 'google_ads', weight: 32 }, { key: 'hiring', weight: 26 }] } });
         expect(einfach.opportunity).toBeLessThan(100);   // Kopfraum wirklich vorhanden
         expect(einfach.buySignal.mult).toBe(1.35);
         expect(gestapelt.buySignal.mult).toBe(1.55);
@@ -357,7 +361,7 @@ describe('Kaufsignal-Abstufung (F10) — Evidenz-Summe statt zwei Schalter', () 
     it('nur bewiesene Ausgabe hebt den Bedarfsdruck-Abschlag auf', () => {
         const praxis = { ...basis, place: { ...basis.place, primaryType: 'dentist', userRatingCount: 90, rating: 4.9 } };
         const nurAktiv = computeOpportunity({ ...praxis, buyingIntent: { isProvenSpender: false, score: 44, tier: 'wahrscheinlich', signals: [{ key: 'reviews_fresh' }] } });
-        const spender = computeOpportunity({ ...praxis, buyingIntent: { isProvenSpender: true, score: 44, tier: 'wahrscheinlich', signals: [] } });
+        const spender = computeOpportunity({ ...praxis, buyingIntent: { isProvenSpender: true, score: 44, tier: 'wahrscheinlich', signals: [{ key: 'google_ads', weight: 32 }] } });
         expect(nurAktiv.demandFactor).toBe(0.70);
         expect(spender.demandFactor).toBe(1.0);
     });
@@ -394,5 +398,81 @@ describe('Erreichbarkeit (F11) — ungeprüft bleibt neutral', () => {
         const r = computeOpportunity({ ...basis, contactPaths: { checked: true, hasImpressumLink: true } });
         expect(r.reachFactor).toBe(0.92);
         expect(r.reasons).not.toContain('✉ kein Kontaktweg gefunden');
+    });
+});
+
+describe('Nicht gemessen ≠ negativ gemessen (Korrekturen 2026-08-08)', () => {
+    // Die 27-Profil-Ground-Truth hat VOLLSTÄNDIGE Daten und konnte diese Fehler
+    // deshalb nie fangen. Diese Tests erzwingen genau die Lücken-Pfade.
+    const voll = {
+        ws: { perf: 55, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        techAge: { cms: 'Wix', cmsEolYear: null, techSeverity: 3 },
+        place: { rating: 4.6, userRatingCount: 60, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 30, velocity: null, n: 5 }
+    };
+
+    it('fehlende datierte Bewertungen sind NEUTRAL, nicht ×0.85', () => {
+        // Ob `publishTime` in der Places-Antwort steht, ist eine Eigenschaft von
+        // Googles Daten — nicht des Betriebs.
+        const ohne = computeOpportunity({ ...voll, reviewRecency: { daysSinceLast: null, velocity: null, n: 0 } });
+        const neutral = computeOpportunity({ ...voll, reviewRecency: null });
+        // Gegenprobe über den Mechanismus: identisch zu einem Lauf, in dem das
+        // Liveness-Gate nachweislich 1.0 liefert (weder Bonus noch Abschlag).
+        expect(ohne.opportunity).toBe(neutral.opportunity);
+        // Und der gemessene Frische-Bonus bleibt ein BONUS, kein Normalzustand.
+        expect(computeOpportunity({ ...voll }).opportunity).toBeGreaterThan(ohne.opportunity);
+    });
+
+    it('ein fehlendes Rating (Places liefert 0) wird nicht bestraft', () => {
+        const ohneRating = computeOpportunity({ ...voll, place: { ...voll.place, rating: 0 } });
+        // Vor der Korrektur: ×0.45. Jetzt fällt der Fall auf die
+        // businessStrength-Stufen durch → höchstens der entgangene Stärke-Bonus.
+        expect(ohneRating.opportunity).toBeGreaterThan(computeOpportunity({ ...voll }).opportunity * 0.6);
+        // Ein NACHWEISLICH schlechtes Rating bleibt dagegen ein hartes Gate.
+        expect(computeOpportunity({ ...voll, place: { ...voll.place, rating: 2.9 } }).opportunity).toBe(0);
+    });
+
+    it('eine fehlgeschlagene PSI-Messung erzeugt KEINE Badness', () => {
+        const ohnePsi = computeOpportunity({
+            ...voll, ws: { viewport: true, isHttps: true },
+            tech: {}, techAge: { cms: null, cmsEolYear: null, techSeverity: 0 }
+        });
+        // Vorher: Default-perf 50 → +9 Badness UND Floor 32.
+        expect(ohnePsi.badnessScore).toBe(0);
+    });
+
+    it('ein GEMESSENER schwacher perf-Wert wirkt weiterhin', () => {
+        // Gegenprobe: die Korrektur darf den echten Fall nicht mit abschalten.
+        const langsam = computeOpportunity({
+            ...voll, ws: { perf: 35, viewport: true, isHttps: true },
+            tech: {}, techAge: { cms: null, cmsEolYear: null, techSeverity: 0 }
+        });
+        expect(langsam.badnessScore).toBeGreaterThanOrEqual(32);   // Floor greift
+    });
+
+    it('Bewertungs-Frische kippt die Kaufsignal-Schwelle NICHT mehr', () => {
+        // Die Frische wird bereits vom livenessGate mit ×1.30 belohnt. Sie darf
+        // nicht zusätzlich den Sprung 1.35 → 1.55 auslösen.
+        const w = { google_ads: 32, reviews_fresh: 14, analytics: 8, social_breadth: 8 };
+        const mitFrische = computeOpportunity({
+            ...voll,
+            buyingIntent: {
+                isProvenSpender: true, tier: 'beweisbar', score: 62,
+                signals: Object.entries(w).map(([key, weight]) => ({ key, weight }))
+            }
+        });
+        expect(mitFrische.buySignal.mult).toBe(1.35);
+    });
+
+    it('echte Ausgaben-Stapelung hebt weiterhin auf 1.55', () => {
+        const echt = computeOpportunity({
+            ...voll,
+            buyingIntent: {
+                isProvenSpender: true, tier: 'beweisbar', score: 58,
+                signals: [{ key: 'google_ads', weight: 32 }, { key: 'hiring', weight: 26 }]
+            }
+        });
+        expect(echt.buySignal.mult).toBe(1.55);
     });
 });

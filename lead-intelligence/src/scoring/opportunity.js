@@ -130,6 +130,18 @@ function reachFactor(contactPaths) {
  *
  * @returns {{mult:number, tier:string|null, proven:boolean}}
  */
+// Signale, die das livenessGate bereits belohnt — sie duerfen die Stapel-Schwelle
+// des Kaufsignals nicht mitentscheiden, sonst zaehlt dieselbe Bewertungs-Frische
+// zweimal (einmal ×1.30 im Gate, einmal beim Sprung 1.35 → 1.55).
+const LIVENESS_KEYS = new Set(['reviews_fresh', 'reviews_velocity']);
+
+/** Punktsumme der Kaufsignale OHNE die Bewertungs-Signale. */
+function spendScore(buyingIntent) {
+    return (buyingIntent.signals || [])
+        .filter(s => !LIVENESS_KEYS.has(s.key))
+        .reduce((sum, s) => sum + (s.weight || 0), 0);
+}
+
 function buySignalFactor(buyingIntent, adActive, hiring) {
     if (!buyingIntent) {
         return { mult: (adActive ? 1.35 : 1.0) * (hiring ? 1.15 : 1.0), tier: null, proven: adActive || hiring };
@@ -138,7 +150,15 @@ function buySignalFactor(buyingIntent, adActive, hiring) {
         // Gestapelte Evidenz (z.B. Anzeigen + mehrere offene Stellen) zaehlt mehr
         // als ein einzelnes Signal. 1.55 entspricht der alten Kombination
         // adActive×hiring (1.5525) — bewusst kein Sprung nach oben.
-        return { mult: buyingIntent.score >= 55 ? 1.55 : 1.35, tier: buyingIntent.tier, proven: true };
+        //
+        // ⚠️ KORREKTUR 2026-08-08: Die Schwelle lief auf `buyingIntent.score` — und
+        // darin stecken `reviews_fresh` (14) + `reviews_velocity` (8). Dieselbe
+        // Bewertungs-Frische wird aber oben schon vom livenessGate mit bis zu ×1.30
+        // belohnt. Gemessen: Anzeigen(32) + Frische(14) + Analytics(8) + Kanäle(8)
+        // = 62 → kippte auf 1.55. Der Kommentar unten behauptete das Gegenteil.
+        // Die Schwelle rechnet jetzt auf der AUSGABEN-Evidenz ohne die
+        // Bewertungs-Signale — damit stimmt die Nicht-Doppelzählung wirklich.
+        return { mult: spendScore(buyingIntent) >= 55 ? 1.55 : 1.35, tier: buyingIntent.tier, proven: true };
     }
     // Werbung wahrscheinlich, aber nicht bewiesen (GTM/Consent-Mode hinter dem
     // Cookie-Banner). Kleiner Aufschlag, KEIN Spender-Status.
@@ -149,8 +169,16 @@ function buySignalFactor(buyingIntent, adActive, hiring) {
 /**
  * Liveness aus Review-Recency (F6) → Gate/Multiplikator (0.0 … 1.30). NIE additiv.
  * `reviewRecency` ist der in trimPlace abgeleitete Wert
- * { daysSinceLast:number|null, velocity:number|null, n:number }. Fehlt das Signal
- * (n<2 / kein publishTime) → NICHT bestrafen, leichter Abschlag (Daten fehlen ≠ tot).
+ * { daysSinceLast:number|null, velocity:number|null, n:number }.
+ *
+ * ⚠️ KORREKTUR 2026-08-08: Fehlt das Signal (n<2 / kein publishTime), war der
+ * Rueckgabewert 0.85 — bei gleichzeitigem Kommentar „NICHT bestrafen". Das war ein
+ * Widerspruch mit echter Wirkung: gegen einen Betrieb mit frischen Bewertungen
+ * (1.30) lag der Rueckstand bei Faktor 1.53, allein weil Google zu diesem Betrieb
+ * keine datierten Bewertungen liefert. Ob `publishTime` in der Places-Antwort
+ * steht, ist eine Eigenschaft von GOOGLES Daten, nicht des Betriebs.
+ * Jetzt strikt neutral (1.0) — dieselbe Regel, die `reachFactor` und
+ * `peer-pressure` schon befolgen: nicht gemessen ≠ negativ gemessen.
  */
 function livenessGate(reviewRecency, place) {
     const status = place && place.businessStatus;
@@ -159,7 +187,7 @@ function livenessGate(reviewRecency, place) {
     const d = typeof rr.daysSinceLast === 'number' ? rr.daysSinceLast : null;
     const v = typeof rr.velocity === 'number' ? rr.velocity : null;
     const n = rr.n || 0;
-    if (d === null || n < 2) return { factor: 0.85, chip: null };
+    if (d === null || n < 2) return { factor: 1.0, chip: null };   // unbekannt = neutral
     // Primärachse: Tage seit der jüngsten Bewertung (BrightLocal „73% trauen nur dem
     // letzten Monat" → ~30–45T Frische-Klippe). >18 Mon. still → Nahe-0x-Gate.
     let factor;
@@ -182,16 +210,33 @@ function livenessGate(reviewRecency, place) {
 
 /**
  * Geschäftswert als gesättigter Multiplikator (0.0 … 1.20) mit 0x-Gate (F2).
- * rating<=3.2 → 0x-Gate; rating===0 (Datenqualitäts-Flag) → Strafe (0.45), KEIN Freifahrtschein.
+ * rating<=3.2 → 0x-Gate (ein nachweislich schlecht bewerteter Betrieb ist kein Lead).
+ *
+ * ⚠️ KORREKTUR 2026-08-08: `rating === 0` kostete pauschal 55 %. Das war eine
+ * ERFUNDENE Strafe — aber der naheliegende Gegen-Fix (voller Multiplikator) wäre
+ * schlimmer gewesen, wie der Bestandstest zeigte:
+ *   • Der Zweig ist für ein echtes Datenloch UNERREICHBAR — `reviews < 8` gated
+ *     vorher schon auf 0. Wer hier ankommt, hat ≥8 Bewertungen UND kein Rating,
+ *     also einen widersprüchlichen Datensatz.
+ *   • `businessStrength` rechnet in dem Fall mit `rating || 3` — die Stärke-Zahl
+ *     ist bereits erfunden. Ein voller Bonus auf eine erfundene Zahl ist kein
+ *     „neutral", sondern ein zweiter Fehler.
+ * Richtig ist deshalb weder Strafe noch Bonus, sondern eine GRENZE: der Lead
+ * rankt normal, kann aber nicht HOT werden, solange sein Ruf nicht überprüfbar
+ * ist. Eine Grenze behauptet nichts — ein Multiplikator schon.
  */
+function strengthTier(businessStrength) {
+    if (businessStrength >= 70) return 1.20;
+    if (businessStrength >= 45) return 1.00;
+    if (businessStrength >= 25) return 0.85;
+    return 0.70;
+}
+
 function valueMult(businessStrength, rating, reviews, minReviews) {
     if (reviews < minReviews) return { mult: 0.0, gated: true };
     if (rating > 0 && rating <= 3.2) return { mult: 0.0, gated: true };
-    if (rating === 0) return { mult: 0.45, gated: false };
-    if (businessStrength >= 70) return { mult: 1.20, gated: false };
-    if (businessStrength >= 45) return { mult: 1.00, gated: false };
-    if (businessStrength >= 25) return { mult: 0.85, gated: false };
-    return { mult: 0.70, gated: false };
+    if (rating === 0) return { mult: strengthTier(businessStrength), gated: false, ratingUnknown: true };
+    return { mult: strengthTier(businessStrength), gated: false };
 }
 
 // Eingangs-/Gate-Schwelle für Bewertungen — identisch zum Scanner-MIN_REVIEWS.
@@ -207,7 +252,14 @@ export const MIN_REVIEWS_VALUE = 8;
  *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
 export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null }) {
-    const perf = typeof ws.perf === 'number' ? ws.perf : 50;
+    // ⚠️ KORREKTUR 2026-08-08: Ein fehlender PSI-Wert wurde auf 50 defaultet — und
+    // 50 liegt unter BEIDEN Perf-Schwellen (<55 → +9 Badness) und unter dem
+    // Design-Floor (<70 → Badness mindestens 32). Eine Seite, die PSI gar nicht
+    // messen konnte, bekam dadurch Problem-Belege aus dem Nichts. Der Default
+    // bleibt für die Anzeige, ist aber als UNGEMESSEN markiert und löst weder
+    // Perf-Badness noch den Floor aus.
+    const perfKnown = typeof ws.perf === 'number';
+    const perf = perfKnown ? ws.perf : 50;
     const isHttps = ws.isHttps !== false;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
     const ub = urlBaukasten(websiteUri);
@@ -228,16 +280,20 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (!isHttps) { b += 22; hardStructural++; }                  // F3: SSL/Vertrauen
 
     // Perf: gedeckelt & weich (war (100-perf)*0.45 ⇒ bis 45). Nur der Slow-Tail nudged (F0).
-    if (perf < 40) b += 14;
-    else if (perf < 55) b += 9;
-    else if (perf < 70) b += 5;
+    if (perfKnown) {
+        if (perf < 40) b += 14;
+        else if (perf < 55) b += 9;
+        else if (perf < 70) b += 5;
+    }
     b += Math.max(0, 60 - (ws.seo ?? 60)) * 0.10;
     b += Math.max(0, 60 - (ws.a11y ?? 60)) * 0.10;
 
     // Design-Relaunch-Floor (F2): CURRENT-Tech ohne hartes Strukturzeichen, aber müder
     // Lab-Profile (perf<70) ist eine legitime Design/Conversion-Relaunch-Lead. Ohne Floor
     // wäre die Badness ~0 → Score 0 → Vision nie erreicht. Schnelle Seiten ausgenommen.
-    if (hardStructural === 0 && perf < 70) b = Math.max(b, 32);
+    // ⚠️ `perfKnown` PFLICHT: ohne ihn hebt ein fehlgeschlagener PSI-Lauf (Default 50)
+    //    die Badness auf 32, obwohl über die Seite nichts bekannt ist.
+    if (hardStructural === 0 && perfKnown && perf < 70) b = Math.max(b, 32);
     // Badness-Sättigung ab ~46: weitere Flags geben abnehmenden Ertrag — reiner FLAG-COUNT
     // bläst das Produkt nicht linear auf (Multi-Flag-Low-Value kann Single-Flag-Premium nicht
     // davonlaufen), ein starkes Signal allein klärt aber weiter die HOT-Schwelle.
@@ -286,6 +342,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
     // unter 70) — eine müde Current-Tech-Premium-Relaunch-Lead bleibt aber WARM.
     if (hardStructural < 1) opp = Math.min(opp, 69);
+    // Ruf nicht überprüfbar (Bewertungen vorhanden, aber kein Rating): derselbe
+    // Deckel statt einer erfundenen Strafe. Der Lead bleibt sichtbar und rankt
+    // nach seinen echten Signalen — er wird nur nicht als Top-Empfehlung geführt.
+    if (vm.ratingUnknown) opp = Math.min(opp, 69);
 
     const opportunity = Math.max(0, Math.min(100, Math.round(opp)));
 

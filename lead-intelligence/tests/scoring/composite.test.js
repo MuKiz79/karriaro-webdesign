@@ -158,3 +158,61 @@ describe('calculateCompositeScore — Kaufsignal statt Problem-Beleg', () => {
         expect(result.bottleneck).toHaveProperty('value');
     });
 });
+
+describe('Nicht gemessen ≠ negativ gemessen — Hebel/Fit (Korrekturen 2026-08-08)', () => {
+    /**
+     * Eigenes Fixture mit KOPFRAUM: das Basis-fixture() ist maximal schlecht
+     * (perf 25, kein SSL, BFSG kritisch …) und laeuft in den 100er-Deckel — dort
+     * waere jeder Unterschied unsichtbar und der Test gruen aus dem falschen Grund.
+     */
+    const mild = (o = {}) => fixture({
+        ws: { perf: 75, isHttps: true, viewport: true, viewportMissing: false },
+        bfsgScore: null, signalStack: null, techDepth: null, contentFreshness: null,
+        triggerEvents: null, screenshotAnalysis: null, tech: {},
+        ...o
+    });
+
+    it('fehlende Vision-Analyse gibt KEINE Hebel-Punkte mehr', () => {
+        // `screenshotAnalysis?.designQuality || 5` ergab 5 → `dq <= 5` → +15.
+        // Derselbe Bug war in lead-scorer.js:90 schon 2026-05-03 behoben, hier nie.
+        const ohne = calculateCompositeScore(mild({ screenshotAnalysis: null }));
+        const gemessenMittel = calculateCompositeScore(mild({ screenshotAnalysis: { designQuality: 5 } }));
+        expect(ohne.hebel).toBeLessThan(gemessenMittel.hebel);
+        expect(gemessenMittel.hebel - ohne.hebel).toBe(15);   // exakt der erfundene Bonus
+    });
+
+    it('gemessen schlechtes Design wirkt weiterhin am staerksten', () => {
+        // Gegenprobe: die Korrektur darf den echten Fall nicht mit abschalten.
+        const s = q => calculateCompositeScore(mild({ screenshotAnalysis: { designQuality: q } })).hebel;
+        expect(s(2)).toBeGreaterThan(s(5));
+        expect(s(5)).toBeGreaterThan(s(9));
+    });
+
+    it('fehlende Website-Messung gibt keinen SSL-Hebel', () => {
+        // `!ws?.isHttps` war true, wenn ws GAR NICHT vorlag → +20 fuers Nichtmessen.
+        const ohneWs = calculateCompositeScore(mild({ ws: null }));
+        const gemessenSicher = calculateCompositeScore(mild({ ws: { isHttps: true } }));
+        expect(ohneWs.hebel).toBe(gemessenSicher.hebel);
+    });
+
+    it('gemessen fehlendes SSL wirkt weiterhin', () => {
+        const unsicher = calculateCompositeScore(mild({ ws: { isHttps: false } }));
+        const sicher = calculateCompositeScore(mild({ ws: { isHttps: true } }));
+        expect(unsicher.hebel - sicher.hebel).toBe(20);
+    });
+
+    it('ein fehlender Places-Datensatz loest die „zu klein"-Strafe NICHT aus', () => {
+        // Vorher: kein `place` → reviews=0 → `< 5` → −10, ZUSAETZLICH zum
+        // entgangenen +15. Der Mechanismus, nicht das Gesamtergebnis, ist der Punkt:
+        // ein vorhandener Datensatz OHNE Bewertungszahl muss gleich behandelt werden.
+        const ohnePlace = calculateCompositeScore(mild({ place: null })).fit;
+        const placeOhneZahl = calculateCompositeScore(mild({ place: { rating: 4.5 } })).fit;
+        expect(placeOhneZahl - ohnePlace).toBe(15);   // NUR der Lokal-Bonus, keine Strafe
+    });
+
+    it('ein nachweislich kleiner Betrieb bleibt abgewertet', () => {
+        const klein = calculateCompositeScore(mild({ place: { userRatingCount: 2, rating: 4.5 } })).fit;
+        const gross = calculateCompositeScore(mild({ place: { userRatingCount: 150, rating: 4.5 } })).fit;
+        expect(klein).toBeLessThan(gross);
+    });
+});
