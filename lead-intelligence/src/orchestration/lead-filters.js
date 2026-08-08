@@ -41,7 +41,7 @@ export function isReachable(l) {
 
 /**
  * @param {Array} leads
- * @param {{minScore:number, branch:string, sort:string, baukasten:boolean, buy:boolean, reach:boolean}} f
+ * @param {{minScore:number, branch:string, sort:string, baukasten:boolean, buy:boolean, reach:boolean, unrated:boolean}} f
  * @returns {Array} neue, gefilterte + sortierte Liste (Eingabe bleibt unberührt)
  */
 export function applyFilters(leads, f = {}) {
@@ -51,8 +51,20 @@ export function applyFilters(leads, f = {}) {
     if (f.baukasten) out = out.filter(l => l.isBaukasten);
     if (f.buy) out = out.filter(hasBuySignal);
     if (f.reach) out = out.filter(isReachable);
+    // `urteil` wird vom Aufrufer aufs Lead hydriert (scanner.js) — dieses Modul
+    // bleibt dadurch pure und DOM-/Store-frei, die Bestandstests gelten weiter.
+    if (f.unrated) out = out.filter(l => !l.urteil);
 
-    if (f.sort === 'buy') {
+    if (f.sort === 'uncertain') {
+        // Aktives Lernen: die Faelle zuerst, bei denen das Modell am wenigsten
+        // weiss (|p − 0.5| klein). Zwanzig Klicks hier sind mehr wert als hundert
+        // auf offensichtliche Treffer. Leads ohne Vorhersage ans Ende.
+        out.sort((a, b) => {
+            const ua = typeof a.uncertainty === 'number' ? a.uncertainty : Infinity;
+            const ub = typeof b.uncertainty === 'number' ? b.uncertainty : Infinity;
+            return ua - ub || (b.leadScore - a.leadScore);
+        });
+    } else if (f.sort === 'buy') {
         // Bewiesene Spender zuerst, innerhalb der Gruppe nach Score.
         out.sort((a, b) => (hasBuySignal(b) - hasBuySignal(a)) || (b.leadScore - a.leadScore));
     } else if (f.sort === 'reviews') {

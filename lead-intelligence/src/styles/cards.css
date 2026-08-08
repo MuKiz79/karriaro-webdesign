@@ -1038,7 +1038,35 @@
     display: flex;
     gap: 6px;
     flex-shrink: 0;
+    align-items: center;
 }
+
+/* Bewertung „würde ich anrufen?" — drei Knöpfe je Karte.
+   Bewusst zurückhaltend, bis geklickt wurde: die Liste soll nicht zum Formular
+   werden. Der aktive Zustand trägt Farbe UND Deckkraft, damit er auch ohne
+   Farbwahrnehmung erkennbar ist. */
+.ws-rate { display: flex; gap: 2px; margin-right: 4px; }
+.ws-rate-btn {
+    background: transparent;
+    border: 1px solid var(--border, rgba(255,255,255,0.12));
+    border-radius: 6px;
+    padding: 4px 7px;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.45;
+    transition: opacity .12s ease, border-color .12s ease, background .12s ease;
+}
+.ws-rate-btn:hover { opacity: 0.9; }
+.ws-rate-btn.active { opacity: 1; font-weight: 600; }
+.ws-rate-btn.active.up   { border-color: var(--green); background: color-mix(in srgb, var(--green) 16%, transparent); }
+.ws-rate-btn.active.down { border-color: var(--red);   background: color-mix(in srgb, var(--red) 16%, transparent); }
+.ws-rate-btn.active.skip { border-color: var(--muted); background: color-mix(in srgb, var(--muted) 16%, transparent); }
+.ws-rate-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* Lernstand in der Kopfzeile — der Founder muss jederzeit sehen, ob das Modell
+   die Rangfolge gerade mitbestimmt. */
+.ws-stat-rate { color: var(--accent); font-weight: 600; }
 .ws-btn {
     background: rgba(255,255,255,0.04);
     border: 1px solid rgba(255,255,255,0.08);

@@ -12,6 +12,9 @@ import { driftAllBranches } from '../learning/drift-monitor.js';
 import { inflationSnapshot, inflationVsCalibration } from '../learning/score-distribution.js';
 import { refreshAllBranches, getAllBranchPosteriors } from '../learning/prior-update.js';
 import { BRANCH_PRIORS } from '../priors/branch-priors.js';
+import { getRatingStats, getAllRatings } from '../learning/lead-ratings.js';
+import { trainRatingModel } from '../learning/rating-model.js';
+import { escapeHtml as esc } from '../lib/escape-html.js';
 
 const STORAGE_KEY = 'karriaro_feedback';
 
@@ -150,6 +153,55 @@ function renderInflation(snap, verdict) {
  * Hauptfunktion: rendert ein vollständiges Statistik-Panel als HTML-String.
  * Wird vom CRM-Renderer als Sektion eingefügt.
  */
+/**
+ * Was hat das System aus den Daumen gelernt — und was beweist das NICHT.
+ *
+ * ⚠️ Zwei Kanäle, die nie vermischt werden dürfen:
+ *   • URTEIL (Daumen) lernt, wen der Founder anrufen WÜRDE. Das spart seine
+ *     Zeit, ist aber kein Beleg über den Markt — im schlimmsten Fall lernt das
+ *     Modell nur, seinen eigenen Bias schneller zu bestätigen.
+ *   • ERGEBNIS (geantwortet/gewonnen) ist die einzige echte Wahrheit.
+ * Erst die Kreuzung beider Zahlen zeigt, ob das Urteil trägt.
+ */
+function renderRatingModel() {
+    const st = getRatingStats();
+    if (!st.total) {
+        return `<div class="stat-block">
+            <div class="section-label">Ihr Urteil</div>
+            <p class="metric-desc">Noch keine Bewertung. Die Daumen in der Lead-Liste sind die Grundlage — ab 40 Bewertungen (mindestens 8 je Seite) prüft das System, ob es die Rangfolge besser ordnen kann als die eingebaute Heuristik.</p>
+        </div>`;
+    }
+    const t = trainRatingModel();
+    const outcomes = loadEntries();
+    const ratings = getAllRatings();
+
+    // Die entscheidende Kreuzung: von den Daumen-hoch — wie viele haben reagiert?
+    const upDomains = new Set(Object.values(ratings).filter(r => r.rating === 'up').map(r => r.domain));
+    const upMitOutcome = outcomes.filter(e => upDomains.has(e.domain));
+    const upGewonnen = upMitOutcome.filter(e => e.outcome === 'kunde').length;
+
+    const gew = t.gewichte.slice(0, 8).map(g =>
+        `<div class="feature-row"><span>${esc(g.merkmal)}</span><span style="color:${g.gewicht >= 0 ? 'var(--green)' : 'var(--red)'}">${g.gewicht >= 0 ? '+' : ''}${g.gewicht.toFixed(2)}</span></div>`
+    ).join('');
+
+    return `<div class="stat-block">
+        <div class="section-label">Ihr Urteil — was das System daraus gelernt hat</div>
+        <p class="metric-desc">
+            ${st.up}× „würde ich anrufen" · ${st.down}× „nicht" · ${st.skip}× „weiß ich nicht"
+            (${st.trainierbar} verwertbar — Enthaltungen zählen bewusst nicht mit).
+        </p>
+        <p class="metric-desc"><strong>${esc(t.hinweis)}</strong></p>
+        ${t.gewichte.length ? `<div class="section-label" style="margin-top:12px">Gelernte Gewichte (Auszug)</div>${gew}
+        <p class="metric-desc">Positiv = spricht dafür, dass Sie anrufen würden. Lesen Sie das gegen Ihr Bauchgefühl — steht dort Unsinn, ist die Datenlage noch zu dünn.</p>` : ''}
+        <div class="section-label" style="margin-top:16px">Trägt Ihr Urteil? (die eigentliche Frage)</div>
+        <p class="metric-desc">
+            ${upMitOutcome.length === 0
+                ? 'Noch kein Ergebnis zu einem der bewerteten Betriebe. Erst wenn Mails raus sind und Antworten erfasst werden, lässt sich sagen, ob Ihr Urteil den Markt trifft — bis dahin lernt das System nur, Ihnen schneller zuzustimmen.'
+                : `Von ${upDomains.size} mit Daumen hoch haben ${upMitOutcome.length} ein erfasstes Ergebnis, davon ${upGewonnen} gewonnen.`}
+        </p>
+    </div>`;
+}
+
 export function renderStatisticsPanel() {
     const entries = loadEntries();
     refreshAllBranches(entries, BRANCH_PRIORS);
@@ -162,6 +214,7 @@ export function renderStatisticsPanel() {
         <div class="stat-section">
             <h2 class="section-title">Wissenschaft & Selbst-Validierung</h2>
             <p class="metric-desc">Empirische Auswertung aller bisherigen Outcomes — Brier / ECE / Drift / Inflation.</p>
+            ${renderRatingModel()}
             ${renderCalibration(cal)}
             ${renderDrift(drift, posteriors)}
             ${renderInflation(infl, verdict)}

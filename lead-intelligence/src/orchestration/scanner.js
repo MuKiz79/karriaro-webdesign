@@ -28,6 +28,8 @@ import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
 import { applyFilters, hasBuySignal, isReachable } from './lead-filters.js';
+import { setRating, getAllRatings, getRatingStats } from '../learning/lead-ratings.js';
+import { extractFeatures, trainRatingModel, predictLeads, blendRanks } from '../learning/rating-model.js';
 import { assessBuyingIntent } from '../analysis/buying-intent.js';
 import { computePeerPressure } from '../analysis/peer-pressure.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
@@ -431,6 +433,7 @@ export async function runScanner() {
 
     leads.sort((a, b) => b.leadScore - a.leadScore);
     lastResults = leads;
+    refreshRatingModel(leads);   // gelernte Achse vor dem ersten Rendern bereitstellen
     lastCity = city;
     // Ergebnis persistieren (Reopen ohne API). _screenshot ist hier schon geloescht.
     // Schwere place-Felder (Review-Texte/Fotos vom FRISCHEN Pfad) fuer die Persistenz
@@ -462,6 +465,7 @@ export async function runScanner() {
 export function reopenScan(entry) {
     if (!entry || !Array.isArray(entry.payload)) return false;
     lastResults = entry.payload;
+    refreshRatingModel(lastResults);
     lastCity = entry.city || entry.label || '';
     persistFilters({});                       // URL-Hash auf default → frischer Filterzustand
     renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
@@ -490,6 +494,22 @@ function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = nul
     });
 }
 
+// Trainingsstand der Bewertungs-Achse. Wird nach jedem Klick neu gerechnet
+// (bei n<=300 sind das Millisekunden) und speist Sortierung + Kopfzeile.
+let trained = null;
+let uncertainty = new Map();
+
+function refreshRatingModel(leads) {
+    try {
+        trained = trainRatingModel();
+        const p = predictLeads(leads || [], trained);
+        uncertainty = new Map([...p].map(([d, v]) => [d, Math.abs(v - 0.5)]));
+    } catch (e) {
+        console.warn('Bewertungs-Modell konnte nicht trainiert werden:', e?.message || e);
+        trained = null; uncertainty = new Map();
+    }
+}
+
 function hostnameOf(url) {
     try { return new URL(url).hostname.replace(/^www\./, ''); }
     catch { return url; }
@@ -511,7 +531,9 @@ function getActiveFilters() {
         buy:      h.get('buy') === '1',
         // Erreichbarkeit: blendet aus, was NACHWEISLICH keinen Kontaktweg hat.
         // Ungeprüfte Leads bleiben sichtbar (siehe isReachable).
-        reach:    h.get('reach') === '1'
+        reach:    h.get('reach') === '1',
+        // Nur noch nicht bewertete zeigen — der schnellste Weg zu Menge.
+        unrated:  h.get('unrated') === '1'
     };
 }
 
@@ -525,6 +547,7 @@ function persistFilters(updates) {
     if (next.baukasten) h.set('baukasten', '1');
     if (next.buy) h.set('buy', '1');
     if (next.reach) h.set('reach', '1');
+    if (next.unrated) h.set('unrated', '1');
     const str = h.toString();
     location.hash = str ? '#' + str : '';
 }
@@ -532,13 +555,30 @@ function persistFilters(updates) {
 // ─────────── Render ───────────
 
 function renderLeadWorkspace(city, leads, filters) {
-    const filtered = applyFilters(leads, filters);
+    // Bewertung und Modell-Unsicherheit AUF das Lead hydrieren, bevor gefiltert
+    // wird. So bleibt orchestration/lead-filters.js pure und DOM-/Store-frei —
+    // die dortigen Tests gelten unveraendert.
+    const ratings = getAllRatings();
+    for (const l of leads) {
+        l.urteil = ratings[l.domain]?.rating || null;   // NICHT `rating` — das ist die Google-Note
+        l.uncertainty = uncertainty.get(l.domain) ?? null;
+    }
+    // Gelernte Rangfolge einmischen — NUR wenn das Gate sie freigegeben hat.
+    // Gemischt wird im Rang-Raum: Score (0–100) und Wahrscheinlichkeit (0–1)
+    // haben unterschiedliche Skalen, ein direkter Mittelwert waere bedeutungslos.
+    // ⚠️ NUR die Standard-Sortierung ersetzen. Waehlt der Founder ausdruecklich
+    // „A–Z" oder „Kaufsignal zuerst", darf das Modell ihm nicht dazwischenfunken.
+    const misch = (!filters.sort || filters.sort === 'score') ? blendRanks(leads, trained) : new Map();
+    const filtered = misch.size
+        ? applyFilters(leads, filters).sort((a, b) => (misch.get(a.domain) ?? 0) - (misch.get(b.domain) ?? 0))
+        : applyFilters(leads, filters);
     const total = leads.length;
     const hot = leads.filter(l => l.leadScore >= 70).length;
     const warm = leads.filter(l => l.leadScore >= 50 && l.leadScore < 70).length;
     const cold = leads.length - hot - warm;
     const buyers = leads.filter(hasBuySignal).length;
     const unreachable = leads.filter(l => !isReachable(l)).length;
+    const unbewertet = leads.filter(l => !l.urteil).length;
 
     // Branchen-Filter-Liste — nur die Branchen, die echte Leads haben
     const branchCounts = {};
@@ -555,6 +595,7 @@ function renderLeadWorkspace(city, leads, filters) {
                     <span class="ws-stat-hot">🔥 ${hot} hot</span>
                     <span class="ws-stat-warm">⚠ ${warm} warm</span>
                     <span class="ws-stat-cold">○ ${cold} cold</span>
+                    <span class="ws-stat-rate" id="ws-rate-stat" title="Ihre Bewertungen — Grundlage des Lernens">${ratingHeaderText()}</span>
                     <span class="ws-stat-buy" title="Betriebe, die nachweislich Geld für Kundengewinnung ausgeben oder einstellen">💸 ${buyers} mit Kaufsignal</span>
                 </div>
             </div>
@@ -572,6 +613,9 @@ function renderLeadWorkspace(city, leads, filters) {
             <div class="ws-pills" data-pill-group="baukasten">
                 <button class="ws-pill${filters.baukasten ? ' active' : ''}" data-baukasten="${filters.baukasten ? '0' : '1'}">${filters.baukasten ? '✓ ' : ''}Baukasten-only</button>
             </div>
+            <div class="ws-pills" data-pill-group="unrated">
+                <button class="ws-pill${filters.unrated ? ' active' : ''}" data-unrated="${filters.unrated ? '0' : '1'}" title="Nur Betriebe, die Sie noch nicht bewertet haben">${filters.unrated ? '✓ ' : ''}unbewertet (${unbewertet})</button>
+            </div>
             <div class="ws-pills" data-pill-group="reach">
                 <button class="ws-pill${filters.reach ? ' active' : ''}" data-reach="${filters.reach ? '0' : '1'}" title="Blendet Betriebe aus, bei denen die Prüfung keinen Kontaktweg gefunden hat (ungeprüfte bleiben sichtbar)">${filters.reach ? '✓ ' : ''}✉ erreichbar${unreachable ? ` (−${unreachable})` : ''}</button>
             </div>
@@ -586,6 +630,7 @@ function renderLeadWorkspace(city, leads, filters) {
                 <select class="ws-select" data-action="sort">
                     <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Score ↓</option>
                     <option value="buy"${filters.sort === 'buy' ? ' selected' : ''}>Sort: Kaufsignal zuerst</option>
+                    <option value="uncertain"${filters.sort === 'uncertain' ? ' selected' : ''}${trained?.besser ? '' : ' disabled'}>Sort: am unsichersten (lehrreichste)</option>
                     <option value="reviews"${filters.sort === 'reviews' ? ' selected' : ''}>Sort: Reviews ↓</option>
                     <option value="perf"${filters.sort === 'perf' ? ' selected' : ''}>Sort: Performance ↑</option>
                     <option value="name"${filters.sort === 'name' ? ' selected' : ''}>Sort: A-Z</option>
@@ -601,11 +646,34 @@ function renderLeadWorkspace(city, leads, filters) {
     `;
 
     const el = document.getElementById('batch-results');
+    const warVerborgen = el.classList.contains('hidden');
     el.innerHTML = html;
     el.classList.remove('hidden');
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Nur beim ERSTEN Aufbau nach oben springen. Bei jedem Filterklick zu
+    // scrollen riss den Founder aus der Liste — und beim Bewerten waere es
+    // unbenutzbar (auch wenn der Bewertungsklick selbst nicht neu rendert).
+    if (warVerborgen) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     bindWorkspaceEvents(el);
+}
+
+/**
+ * Ein Satz über den Lernstand — bewusst in der Kopfzeile und nicht versteckt:
+ * der Founder muss jederzeit sehen, ob das Modell die Rangfolge gerade
+ * mitbestimmt oder ob die reine Heuristik sortiert.
+ */
+function ratingHeaderText() {
+    const st = getRatingStats();
+    if (!st.total) return '👍 noch keine Bewertung';
+    const kern = `👍 ${st.up} · 👎 ${st.down}${st.skip ? ` · 🤷 ${st.skip}` : ''}`;
+    if (trained?.besser) return `${kern} — Modell aktiv (${Math.round(trained.lambda * 100)} %)`;
+    if (trained?.status === 'einseitig') return `${kern} — zu einseitig zum Lernen`;
+    return `${kern} — ${Math.max(0, 40 - st.trainierbar)} bis zum Lernstart`;
+}
+
+function updateRatingHeader(el) {
+    const n = el.querySelector('#ws-rate-stat');
+    if (n) n.textContent = ratingHeaderText();
 }
 
 function renderEmpty(city) {
@@ -643,6 +711,11 @@ function renderLeadCard(l) {
                 ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}
             </div>
             <div class="ws-lead-actions">
+                <div class="ws-rate" title="Würden Sie diesen Betrieb anrufen?">
+                    <button class="ws-rate-btn${l.urteil === 'up' ? ' active up' : ''}" data-rate="up" title="Würde ich anrufen" aria-label="Würde ich anrufen">👍</button>
+                    <button class="ws-rate-btn${l.urteil === 'skip' ? ' active skip' : ''}" data-rate="skip" title="Weiß ich nicht" aria-label="Weiß ich nicht">🤷</button>
+                    <button class="ws-rate-btn${l.urteil === 'down' ? ' active down' : ''}" data-rate="down" title="Würde ich nicht anrufen" aria-label="Würde ich nicht anrufen">👎</button>
+                </div>
                 <button class="ws-btn ws-btn-primary" data-action="analyze">Tiefe Analyse →</button>
                 <button class="ws-btn" data-action="save">✚ CRM</button>
             </div>
@@ -650,7 +723,17 @@ function renderLeadCard(l) {
     `;
 }
 
+let wsController = null;
+
 function bindWorkspaceEvents(el) {
+    // ⚠️ `#batch-results` wird nie ersetzt, nur sein innerHTML — ohne Abbruch der
+    // alten Listener feuerten nach fuenf Filterklicks fuenf identische Handler
+    // (und ein Bewertungsklick haette fuenf Firestore-Schreibvorgaenge ausgeloest).
+    // Muster wie in ui/render-crm.js:47 und ui/render-outreach.js:37.
+    wsController?.abort();
+    wsController = new AbortController();
+    const signal = wsController.signal;
+
     el.addEventListener('click', async (e) => {
         // Filter-Pills
         const pill = e.target.closest('.ws-pill');
@@ -664,14 +747,44 @@ function bindWorkspaceEvents(el) {
                 persistFilters({ buy: pill.dataset.buy === '1' });
             } else if (group === 'reach') {
                 persistFilters({ reach: pill.dataset.reach === '1' });
+            } else if (group === 'unrated') {
+                persistFilters({ unrated: pill.dataset.unrated === '1' });
             }
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
         }
 
+        // ── Bewertung: „wuerde ich anrufen?" ──
+        // Bewusst VOR dem .ws-lead-Fallback, sonst faellt der Klick in
+        // „Tiefe Analyse" durch. Und bewusst OHNE Rerender: renderLeadWorkspace
+        // baut die ganze Liste neu auf — die Scroll-Position waere weg.
+        const rateBtn = e.target.closest('[data-rate]');
+        if (rateBtn) {
+            const card = rateBtn.closest('.ws-lead');
+            const l = lastResults.find(x => x.key === card?.dataset.key);
+            if (!l) return;
+            const wert = rateBtn.dataset.rate;
+            const res = await setRating(l.domain, wert, {
+                features: extractFeatures(l), score: l.leadScore, key: l.key, city: lastCity
+            });
+            l.urteil = res.rating;
+            // Nur die drei Knoepfe dieser Karte umschalten.
+            card.querySelectorAll('[data-rate]').forEach(b => {
+                const an = res.rating !== null && b.dataset.rate === res.rating;
+                b.classList.toggle('active', an);
+                b.classList.toggle('up', an && res.rating === 'up');
+                b.classList.toggle('down', an && res.rating === 'down');
+                b.classList.toggle('skip', an && res.rating === 'skip');
+            });
+            refreshRatingModel(lastResults);
+            updateRatingHeader(el);
+            if (!res.firestoreSynced) showError('Bewertung nur lokal gespeichert (kein Sync).');
+            return;
+        }
+
         // Reset
         if (e.target.dataset.action === 'reset-filters') {
-            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false, reach: false });
+            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false, reach: false, unrated: false });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
         }
@@ -735,7 +848,7 @@ function bindWorkspaceEvents(el) {
         document.getElementById('input-scanner')?.classList.add('hidden');
         document.getElementById('btn-analyze')?.click();
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }, { signal });
 
     el.addEventListener('change', (e) => {
         if (e.target.dataset.action === 'branch') {
@@ -745,7 +858,7 @@ function bindWorkspaceEvents(el) {
             persistFilters({ sort: e.target.value });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
         }
-    });
+    }, { signal });
 }
 
 // escapeHtml kommt zentral aus lib/escape-html.js (Import oben).
