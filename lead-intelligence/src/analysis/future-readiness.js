@@ -36,14 +36,17 @@ const SOURCES = {
 
 const CHECKS = [
     {
-        id: 'bfsg', name: 'BFSG-Compliance (Barrierefreiheit)',
-        description: 'Seit Juni 2025 gesetzlich vorgeschrieben. Bussgelder bis 100.000 EUR. Erste Abmahnwellen laufen.',
+        id: 'bfsg', name: 'Barrierefreiheit (WCAG)',
+        // 2026-08-14: „Erste Abmahnwellen laufen" war eine Tatsachenbehauptung ueber
+        // die Welt, die niemand belegen kann — und die Bussgeld-Zahl galt fuer die
+        // meisten Betriebe ohnehin nicht (§§ 1, 3 BFSG). Beides raus.
+        description: 'WCAG 2.2 AA ist der Massstab, den auch das BFSG zugrunde legt. Unabhaengig von einer Pflicht: Barrieren kosten Besucher.',
         stat: '95,9 % der untersuchten Home-Pages haben WCAG-Fehler.',
         source: SOURCES.webaim2024,
         check: (ws) => ws.a11y >= 80,
         score: (ws) => ws.a11y,
         weight: 3,
-        pitch: 'Barrierefreiheit ist keine Option mehr — es ist Gesetz. Ihre Website erreicht ${score}/100. Die ersten Abmahnungen laufen bereits.'
+        pitch: 'Ihre Website erreicht ${score}/100 bei der Barrierefreiheit. Wer die Schrift vergroessert, per Tastatur bedient oder bei Sonnenlicht auf dem Handy liest, kommt an diesen Stellen nicht weiter.'
     },
     {
         id: 'schema', name: 'Strukturierte Daten (Schema.org)',

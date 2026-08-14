@@ -35,8 +35,17 @@ export function generatePersonalEmail(data) {
             : 'die bezahlten Besucher nicht überzeugt';
         args.push({ type: 'adspend', text: `Sie schalten Online-Anzeigen — aber die Seite, auf der Ihre bezahlten Besucher landen, ${problem}. Jeder bezahlte Klick verliert dadurch unnötig Wirkung.`, subject: `${domain}: Sie zahlen für Klicks, die abspringen` });
     }
+    // 2026-08-14: Bußgeld-Drohung raus (§§ 1, 3 BFSG — gilt für die meisten Betriebe
+    // gar nicht). Der Rechtssatz haengt jetzt an der serverseitig geprüften Lage.
     if (data.bfsgScore?.risk === 'hoch' || data.bfsgScore?.risk === 'kritisch') {
-        args.push({ type: 'legal', text: `Ihre Website erfüllt nur ${data.bfsgScore.complianceScore}% der BFSG-Anforderungen. Seit Juni 2025 drohen Bußgelder bis ${data.bfsgScore.fine}.`, subject: `BFSG: ${domain} hat ein Compliance-Problem` });
+        const rh = data.bfsgScore.rechtsHinweis;
+        args.push({
+            type: rh ? 'legal' : 'quality',
+            text: `Ihre Website erfüllt ${data.bfsgScore.complianceScore}% der geprüften WCAG-Kriterien für Barrierefreiheit. `
+                + `Besucher, die die Schrift vergrößern oder per Tastatur bedienen, stoßen an mehreren Stellen an Grenzen.`
+                + (rh ? ` ${rh}` : ''),
+            subject: `${domain}: ${data.bfsgScore.complianceScore}% bei der Barrierefreiheit`
+        });
     }
     if (data.branchStandards?.missing?.length > 2) {
         const top = data.branchStandards.missing[0];

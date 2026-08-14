@@ -13,8 +13,13 @@ describe('sequences', () => {
         expect(seq[0].subject).toContain('friseur-x.de');
         expect(seq[0].body).toContain('35/100');
         expect(seq[0].body).toContain('8.500');
-        // a11y < 70 → BFSG-Betreff in Tag 8
-        expect(seq[2].subject).toMatch(/BFSG/);
+        // a11y < 70 → Barrierefreiheits-Betreff in Tag 8.
+        // 2026-08-14: war /BFSG/. Der Betreff behauptete eine Pflicht, die für die
+        // meisten Empfänger gar nicht gilt (§§ 1, 3 BFSG), und der Rumpf sagte
+        // „Erste Abmahnungen laufen" — unbelegbar. Jetzt steht der gemessene Wert da.
+        expect(seq[2].subject).toMatch(/Barrierefreiheit 55\/100/);
+        expect(seq[2].body).toMatch(/55\/100/);
+        expect(seq[2].subject + seq[2].body).not.toMatch(/Abmahn|Bußgeld|Pflicht/);
     });
 
     it('robust gegen fehlende url (kein Crash)', () => {

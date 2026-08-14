@@ -44,12 +44,16 @@ export function detectTriggerEvents(params) {
         events.push({ type: 'seasonal', urgency: 'hoch', label: seasonal.label, timing: 'jetzt', impact: 3 });
     }
 
-    // ── BFSG Deadline (seit Juni 2025 aktiv) ──
+    // ── Barrierefreiheit ──
+    // 2026-08-14: war „BFSG seit Juni 2025 in Kraft — Bußgelder bis 100.000€" und
+    // damit eine Rechtsfolge ohne jede Prüfung, ob sie für diesen Betrieb gilt.
+    // `impact` von 5 auf 4: ohne Bußgeld-Behauptung ist der Hebel schwächer als
+    // eine fehlende Verschlüsselung, die jeder Besucher sofort sieht.
     if (ws?.a11y < 70) {
         events.push({
-            type: 'legal', urgency: 'sofort',
-            label: 'BFSG seit Juni 2025 in Kraft — Bußgelder bis 100.000€',
-            timing: 'überfällig', impact: 5
+            type: 'quality', urgency: 'hoch',
+            label: `Barrierefreiheit ${ws.a11y}/100 — Besucher werden ausgeschlossen`,
+            timing: 'jetzt', impact: 4
         });
     }
 

@@ -14,7 +14,7 @@
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
-const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
+const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,label}
 
 function detectTech(psiData) {
     const lh = psiData?.lighthouseResult || {};
@@ -233,13 +233,18 @@ function checkBFSGCompliance(psiData) {
     const complianceScore = total > 0 ? Math.round(passed / total * 100) : a11yScore;
 
     // Sprint 180 — Single-Source via bfsg-risk.js. PSI-Vollanalyse: mittel <90 (Default).
-    const { risk, fine } = bfsgRiskTier(complianceScore);
+    const { risk, label } = bfsgRiskTier(complianceScore);
 
+    // 2026-08-14: Der Satz behauptet keine Rechtsfolge mehr, sondern nennt die
+    // gemessene Wirkung. Sie gilt für JEDEN Betrieb — auch für die, die dem
+    // BFSG gar nicht unterliegen (§§ 1, 3 BFSG, → lib/bfsg-scope.js).
     const pitchArg = (risk === 'kritisch' || risk === 'hoch')
-        ? `Ihre Website erfüllt nur ${complianceScore}% der BFSG-Anforderungen. Das Gesetz gilt seit Juni 2025 — Bußgelder bis ${fine}.`
+        ? `Ihre Website erfüllt ${complianceScore}% der geprüften Kriterien für Barrierefreiheit (WCAG). `
+          + `Das sind ${label}: Besucher, die die Schrift vergrößern, per Tastatur bedienen oder bei `
+          + `schlechtem Licht auf dem Handy lesen, kommen an diesen Stellen nicht weiter.`
         : null;
 
-    return { complianceScore, risk, fine, a11yScore, pitchArg };
+    return { complianceScore, risk, label, a11yScore, pitchArg };
 }
 
 // ─────────── Haupt-Pipeline ───────────
@@ -300,7 +305,7 @@ async function runAuditPipeline(url, psiKey) {
 
     const summaryParts = [];
     if (techAge.severity >= 4) summaryParts.push(`${techAge.cms} ist eine Generation hinter dem aktuellen Stand`);
-    if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') summaryParts.push(`die BFSG-Compliance liegt bei ${bfsg.complianceScore}% (Bußgeld-Risiko)`);
+    if (bfsg.risk === 'kritisch' || bfsg.risk === 'hoch') summaryParts.push(`die Barrierefreiheit erreicht nur ${bfsg.complianceScore}% der geprüften WCAG-Kriterien`);
     if (ws.perf < 50) summaryParts.push(`die Ladezeit ist mit Performance-Score ${ws.perf}/100 messbar zu langsam`);
     if (!ws.isHttps) summaryParts.push('die Verschlüsselung (HTTPS) fehlt — Browser warnen Besucher');
     const summary = summaryParts.length > 0

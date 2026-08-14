@@ -1836,7 +1836,12 @@ html.embed-hero .hero-h1-line{display:block}
             } else if (zweck === 'verkauf') {
                 text = '<strong>Verbrauchsausweis ausreichend.</strong> Günstiger und schneller. Kosten ca. 60–150 €. Erstellung auf Basis Heizkostenabrechnungen der letzten drei Jahre.';
             } else {
-                text = '<strong>Verbrauchsausweis ausreichend für Neuvermietung.</strong> Kosten ca. 60–150 €. Hinweis: Energiekennwerte gehören schon ins Inserat (BFSG-Pflicht seit 2025), sonst Bußgeld bis 15.000 €.';
+                // 2026-08-14: stand hier als „BFSG-Pflicht seit 2025 … Bußgeld bis
+                // 15.000 €" — zwei Fehler in einem Satz. Die Pflichtangaben im
+                // Inserat kommen aus § 87 GEG (nicht BFSG, das ist Barrierefreiheit),
+                // und der Rahmen ist § 108 Abs. 1 Nr. 16 GEG: bis 10.000 €.
+                // Ausgerechnet auf der Demo für Makler, die das selbst wissen.
+                text = '<strong>Verbrauchsausweis ausreichend für Neuvermietung.</strong> Kosten ca. 60–150 €. Hinweis: Energiekennwerte gehören schon ins Inserat (§ 87 GEG), sonst Bußgeld bis 10.000 €.';
             }
             result.innerHTML = text;
         }

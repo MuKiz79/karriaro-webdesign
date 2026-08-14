@@ -661,11 +661,14 @@ test('brand-voice: Pitch-Texte ohne Transliteration (Oeffnung/Gaeste/erfuel/...)
 // Sprint 180 — BFSG-Risk-Tier (Single-Source bfsg-risk.js)
 // ────────────────────────────────────────────────────────────────
 
-test('bfsgRiskTier: Tier-Grenzen + Bußgeld-Beträge', () => {
-    assert.deepEqual(bfsgRiskTier(40), { risk: 'kritisch', fine: '100.000 €' });
-    assert.deepEqual(bfsgRiskTier(60), { risk: 'hoch', fine: '50.000 €' });
-    assert.deepEqual(bfsgRiskTier(80), { risk: 'mittel', fine: '10.000 €' });
-    assert.deepEqual(bfsgRiskTier(95), { risk: 'niedrig', fine: 'kein Risiko erkennbar' });
+test('bfsgRiskTier: Tier-Grenzen + Barriere-Stufen (ohne Geldbetrag)', () => {
+    // 2026-08-14: Die Beträge sind ersatzlos weg. § 37 BFSG kennt zwei Rahmen,
+    // gebunden an die verletzte PFLICHT — nicht an die Höhe eines Scores; 50.000 €
+    // stand im Gesetz nie. Die Stufen beschreiben jetzt die Schwere der Barrieren.
+    assert.deepEqual(bfsgRiskTier(40), { risk: 'kritisch', label: 'gravierende Barrieren' });
+    assert.deepEqual(bfsgRiskTier(60), { risk: 'hoch', label: 'deutliche Barrieren' });
+    assert.deepEqual(bfsgRiskTier(80), { risk: 'mittel', label: 'einzelne Barrieren' });
+    assert.deepEqual(bfsgRiskTier(95), { risk: 'niedrig', label: 'keine auffälligen Barrieren' });
 });
 
 test('bfsgRiskTier: mittelBelow parametrisiert — beide Pipeline-Verhalten exakt erhalten', () => {

@@ -48,8 +48,11 @@ export function buildSequence(data = {}) {
         },
         {
             day: 8,
-            subject: ws.a11y < 70 ? 'BFSG: Barrierefreiheit seit 2025 Pflicht' : 'Google bevorzugt schnelle Websites',
-            body: ws.a11y < 70 ? `Barrierefreiheit ${ws.a11y}/100. Gesetz seit Juni 2025. Erste Abmahnungen laufen.` : 'Websites die Core Web Vitals bestehen bekommen 24% mehr Traffic.'
+            // 2026-08-14: „Erste Abmahnungen laufen" war unbelegbar, „seit 2025 Pflicht"
+            // gilt für die meisten Empfänger gar nicht (§§ 1, 3 BFSG). Ersetzt durch
+            // den gemessenen Wert und seine Wirkung.
+            subject: ws.a11y < 70 ? `Barrierefreiheit ${ws.a11y}/100 — wer bleibt draußen?` : 'Google bevorzugt schnelle Websites',
+            body: ws.a11y < 70 ? `Ihre Seite erreicht ${ws.a11y}/100 bei der Barrierefreiheit. Wer die Schrift vergrößert oder per Tastatur bedient, kommt an mehreren Stellen nicht weiter.` : 'Websites die Core Web Vitals bestehen bekommen 24% mehr Traffic.'
         },
         {
             day: 12,

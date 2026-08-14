@@ -302,14 +302,21 @@ function buildPainArguments(data, techAge) {
         });
     }
 
-    // 2) BFSG (rechtlicher Druck) — branchenabhängig, aber harter Treiber.
+    // 2) Barrierefreiheit — gemessene Wirkung auf echte Besucher.
+    // 2026-08-14: war eine Bußgeld-Drohung („bis ${fine}") ohne jede Prüfung, ob
+    // der Betrieb dem BFSG überhaupt unterliegt. severity 5→4: der Hebel ist ohne
+    // Rechtsdruck echt, aber schwächer. Der Rechtssatz kommt NUR, wenn die
+    // Betroffenheit serverseitig belegt ist (bfsgScore.rechtsHinweis).
     if (data.bfsgScore?.risk === 'kritisch' || data.bfsgScore?.risk === 'hoch') {
+        const rh = data.bfsgScore.rechtsHinweis;
         args.push({
             type: 'bfsg',
-            severity: 5,
-            short: `BFSG-Score ${data.bfsgScore.complianceScore}%`,
-            text: `Ihre Website erfüllt nur ${data.bfsgScore.complianceScore}% der BFSG-Anforderungen. Das Gesetz gilt seit Juni 2025 — Bußgelder bis ${data.bfsgScore.fine}.`,
-            subjectAlt: `BFSG-Risiko bei ${domain} — kurz prüfen?`
+            severity: rh ? 5 : 4,
+            short: `Barrierefreiheit ${data.bfsgScore.complianceScore}%`,
+            text: `Ihre Website erfüllt ${data.bfsgScore.complianceScore}% der geprüften WCAG-Kriterien. `
+                + `Besucher, die die Schrift vergrößern oder per Tastatur bedienen, kommen an mehreren Stellen nicht weiter.`
+                + (rh ? ` ${rh}` : ''),
+            subjectAlt: `${domain}: Besucher, die nicht ankommen`
         });
     }
 

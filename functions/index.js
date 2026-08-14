@@ -16,6 +16,7 @@ const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pi
 const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
 const { scanPaidTools, scanCareSignals, scanContactPaths } = require("./lib/site-evidence.js");
+const { bfsgPflichtLage } = require("./lib/bfsg-scope.js");
 const {
     PITCH_SYS, PITCH_CSP, buildPitchUserMessage, sanitizePitchHtml, pitchId, pitchNotFoundHtml
 } = require("./lib/pitch-generator.js");
@@ -558,6 +559,11 @@ function buildQuickResponse(domain, light, full) {
     const bfsg = (full?.bfsg && typeof full.bfsg.complianceScore === "number")
         ? { ...full.bfsg, method: "wcag" }
         : { ...(light.bfsg || {}), method: "heuristic" };
+    // 2026-08-14 — Die Betroffenheitslage kommt IMMER aus Light: nur dort liegt das
+    // HTML. Die PSI-Vollanalyse kennt sie nicht, und ein Spread von `full` wuerde
+    // sie sonst still verschlucken (dann stuende auf der Seite wieder eine
+    // Rechtsfolge ohne Pruefung, ob sie ueberhaupt gilt).
+    const pflichtLage = light?.bfsg?.pflichtLage || null;
     const perfScore = full?.websiteScore?.perf;
     const ws = full?.websiteScore;
 
@@ -577,7 +583,8 @@ function buildQuickResponse(domain, light, full) {
         bfsg: {
             complianceScore: bfsg.complianceScore != null ? bfsg.complianceScore : null,
             risk: bfsg.risk || null,
-            fine: bfsg.fine || null,
+            label: bfsg.label || null,
+            pflichtLage,
             pitchArg: bfsg.pitchArg || null,
             method: bfsg.method
         },
@@ -1764,6 +1771,7 @@ exports.adEvidence = onRequest(
                     paidTools: cached.paidTools || null,
                     careSignals: cached.careSignals || null,
                     contactPaths: cached.contactPaths || null,
+                    bfsgScope: cached.bfsgScope || null,
                     fetchedAt: cached.fetchedAt || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
@@ -1785,6 +1793,10 @@ exports.adEvidence = onRequest(
                     // wir NICHTS gesehen. Ein leeres contactPaths{checked:true} würde
                     // als "geprüft, kein Kontaktweg" gelesen und den Lead abwerten.
                     paidTools: null, careSignals: null, contactPaths: null,
+                    // Gleiche Begründung: hinter der Bot-Wall ist die Pflichtlage NICHT
+                    // geprüft. `null` unterdrückt das Rechtsargument, ein
+                    // „ausgenommen_wahrscheinlich" wäre hier eine erfundene Entwarnung.
+                    bfsgScope: null,
                     fetchedAt: new Date().toISOString(),
                     meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
                 };
@@ -1826,6 +1838,12 @@ exports.adEvidence = onRequest(
                 paidTools: scanPaidTools(html),
                 careSignals: scanCareSignals(html, new Date().getFullYear()),
                 contactPaths: scanContactPaths(html),
+                // 2026-08-14 — BFSG-Betroffenheit. Bewusst OHNE Schema-Bump: fehlt das
+                // Feld in einem Alt-Cache-Dokument, liest der Client `null` = „nicht
+                // geprüft" und unterdrückt das Rechtsargument. Die Lücke faellt also in
+                // die sichere Richtung, anders als bei paidTools (Schema 2), wo ein
+                // fehlendes Feld wie „nichts gefunden" gewirkt haette.
+                bfsgScope: bfsgPflichtLage({ html, paidToolKeys: scanPaidTools(html).keys }),
                 fetchedAt: new Date().toISOString(),
                 meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
             };

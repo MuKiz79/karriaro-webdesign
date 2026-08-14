@@ -135,7 +135,7 @@ export function renderScore(el, data, explanation) {
         const dims = [
             { key: 'Fit', val: cs0.fit, title: 'Fit: Passt der Lead zu Karriaro? Branche, Größe, Budget, Digital-Maturity.' },
             { key: 'Intent', val: cs0.intent, title: 'Intent: Gibt der Betrieb JETZT nachweislich Geld für Kundengewinnung aus? Laufende Anzeigen, offene Stellen, frische Bewertungen, Analytics. Das ist der Kauf-Beweis — nicht der Problem-Beweis.' },
-            { key: 'Hebel', val: cs0.hebel, title: 'Hebel: Gibt es einen belegbaren Anlass? Design-Qualität, Performance, BFSG-Risiko, Tech-Alter, Content-Frische. Das ist das Argument — aber allein noch kein Kaufsignal.' },
+            { key: 'Hebel', val: cs0.hebel, title: 'Hebel: Gibt es einen belegbaren Anlass? Design-Qualität, Performance, Barrierefreiheit, Tech-Alter, Content-Frische. Das ist das Argument — aber allein noch kein Kaufsignal.' },
             { key: 'Timing', val: cs0.timing, title: 'Timing: Ist JETZT der richtige Zeitpunkt? Trigger-Events, Saison, Review-Trend, Wettbewerb, laufende Anzeigen auf schwacher Seite.' }
         ].filter(d => typeof d.val === 'number');
         const tone = v => v >= 65 ? 'var(--green)' : v >= 40 ? 'var(--orange)' : 'var(--red)';
@@ -874,18 +874,28 @@ export function renderSignals(el, data) {
         }
     }
 
-    // BFSG Compliance
+    // Barrierefreiheit (WCAG) — 2026-08-14 ohne Bußgeld-Plakette.
+    // Die rechte Marke zeigt jetzt die BETROFFENHEIT statt eines erfundenen Betrags:
+    // Sie ist die Information, die entscheidet, ob das Rechtsargument im Gespräch
+    // überhaupt vorkommen darf.
     const bf = data.bfsgScore;
     if (bf) {
         const bfColor = bf.risk === 'niedrig' ? 'var(--green)' : bf.risk === 'mittel' ? 'var(--orange)' : 'var(--red)';
+        const lage = bf.pflichtLage?.lage;
+        const lageBadge = lage === 'moeglich'
+            ? '<span class="badge badge-orange">BFSG möglich</span>'
+            : lage === 'ausgenommen_wahrscheinlich'
+                ? '<span class="badge badge-green">wahrscheinlich nicht BFSG-pflichtig</span>'
+                : '<span class="badge">Pflichtlage nicht geprüft</span>';
         html += `<div class="card anim-in" style="border-left:3px solid ${bfColor}">
-            <div class="section-label">BFSG-Compliance (Barrierefreiheit seit 2025)</div>
+            <div class="section-label">Barrierefreiheit (WCAG 2.2 AA)</div>
             <div class="flex-between" style="margin-bottom:8px">
                 <div><span class="metric-xl" style="color:${bfColor}">${bf.complianceScore}%</span> <span class="metric-desc">${bf.riskLabel}</span></div>
-                <div><span class="badge ${bf.risk === 'niedrig' ? 'badge-green' : bf.risk === 'mittel' ? 'badge-orange' : 'badge-red'}">${bf.fine}</span></div>
+                <div>${lageBadge}</div>
             </div>
-            <div class="metric-desc">${bf.passed} bestanden · ${bf.failed} nicht bestanden · ${bf.criticalFails.length} kritisch</div>
+            <div class="metric-desc">${bf.passed} bestanden · ${bf.failed} nicht bestanden · ${bf.criticalFails.length} schwerwiegend</div>
             ${bf.pitchArg ? `<div class="highlight-box-red" style="margin-top:8px;font-size:12px">${bf.pitchArg}</div>` : ''}
+            ${bf.rechtsHinweis ? `<div class="highlight-box-red" style="margin-top:8px;font-size:12px">${bf.rechtsHinweis}</div>` : ''}
         </div>`;
     }
 

@@ -17,6 +17,10 @@ const baseData = {
         { displayName: { text: 'Friseur B' }, rating: 4.6, userRatingCount: 95, primaryType: 'hair_salon' },
         { displayName: { text: 'Friseur C' }, rating: 4.5, userRatingCount: 60, primaryType: 'hair_salon' }
     ],
+    // `fine` steht hier ABSICHTLICH noch drin: Alt-Daten aus Firestore und aus
+    // laufenden Caches tragen das Feld weiter. Die Tests unten beweisen, dass es
+    // in keinen Text mehr einfliesst — ein Feld zu löschen ist leichter, als
+    // sicherzustellen, dass niemand es mehr liest.
     bfsgScore: { risk: 'hoch', complianceScore: 35, fine: '50.000€' },
     revenue: { yearlyLoss: 8500 },
     result: { leadScore: 72 }
@@ -34,11 +38,39 @@ describe('buildOutreachPack', () => {
         }
     });
 
-    it('priorityArg picks BFSG when risk is high (severity 5)', () => {
+    // ─────────────────────────────────────────────────────────────────────────
+    // 2026-08-14 — Die Barrierefreiheit führt nur noch mit GEPRÜFTER Betroffenheit.
+    //
+    // Vorher gewann sie immer mit severity 5, weil sie als Rechtsdruck galt
+    // („Bußgelder bis ${fine}"). Ohne diese Drohung ist sie ein echter, aber
+    // schwächerer Hebel als ein hartes Tech-Alter — außer die Seite ermöglicht
+    // nachweislich einen Online-Abschluss, dann kann das BFSG tatsächlich greifen.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    it('ohne geprüfte Pflichtlage führt die Barrierefreiheit NICHT mehr', () => {
         const pack = buildOutreachPack(baseData);
-        // BFSG (5) und Mockup (5) sind gleichauf — bei equal severity gewinnt der erste in der Reihenfolge
-        // (Mockup ist erste, aber hier nicht verfügbar) → BFSG sollte Top sein
-        expect(['bfsg', 'mockup']).toContain(pack.bestPitchAngle);
+        expect(pack.bestPitchAngle).not.toBe('bfsg');
+        // Das Argument verschwindet aber nicht — es steht nur nicht mehr vorn.
+        const bfsgArg = pack.allArgs.find(a => a.type === 'bfsg');
+        expect(bfsgArg).toBeTruthy();
+        expect(bfsgArg.severity).toBe(4);
+        expect(bfsgArg.text).not.toMatch(/Bußgeld|Abmahn|100\.000|50\.000/);
+    });
+
+    it('mit belegtem Online-Abschluss führt sie wieder (severity 5, mit Vorbehalt)', () => {
+        const pack = buildOutreachPack({
+            ...baseData,
+            bfsgScore: {
+                ...baseData.bfsgScore,
+                rechtsHinweis: 'Hinzu kommt: Die Seite ermöglicht einen Online-Abschluss (Shopify-Shop). '
+                    + 'Damit kann sie unter das BFSG fallen. Ob eine Pflicht besteht, hängt zusätzlich '
+                    + 'von der Betriebsgröße ab.'
+            }
+        });
+        const bfsgArg = pack.allArgs.find(a => a.type === 'bfsg');
+        expect(bfsgArg.severity).toBe(5);
+        expect(bfsgArg.text).toMatch(/Betriebsgröße/);   // der Vorbehalt fährt in die Mail mit
+        expect(bfsgArg.text).not.toMatch(/Bußgeld|Abmahn/);
     });
 
     it('falls back to tech_age when BFSG is low risk', () => {

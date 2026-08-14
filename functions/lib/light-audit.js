@@ -15,7 +15,9 @@ const { checkFreshness, analyzeTechAge } = require('./audit-pipeline.js');
 const { extractSubPages, htmlToText } = require('./deep-research.js');
 const { checkBranchStandards, BRANCH_STANDARDS } = require('./branch-standards.js');
 const { resolvePublicAddress } = require('./safe-fetch.js');  // Sprint 240 — safeFetch entfernt (undici-Agent-Teardown-500); alle Fetches via globales fetch + resolvePublicAddress-Guard
-const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,fine}
+const { bfsgRiskTier } = require('./bfsg-risk.js');  // Sprint 180 — Single-Source Score→{risk,label}
+const { bfsgPflichtLage } = require('./bfsg-scope.js');  // 2026-08-14 — Betroffenheit vor Rechtsfolge
+const { scanPaidTools } = require('./site-evidence.js');
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
@@ -100,7 +102,7 @@ function detectTechFromHtml(html, finalUrl) {
     return result;
 }
 
-function bfsgHeuristic(html) {
+function bfsgHeuristic(html, opts) {
     const checks = [];
     let score = 100;
 
@@ -159,18 +161,31 @@ function bfsgHeuristic(html) {
 
     // Sprint 180 — Single-Source via bfsg-risk.js. Heuristik bewusst milder (mittel <85),
     // da die HTML-Heuristik gröber ist als die PSI-Vollanalyse (<90).
-    const { risk, fine } = bfsgRiskTier(score, { mittelBelow: 85 });
+    const { risk, label } = bfsgRiskTier(score, { mittelBelow: 85 });
 
+    // 2026-08-14 — Betroffenheit VOR Rechtsfolge (§§ 1, 3 BFSG). Ohne diese Prüfung
+    // lief die Kette Score → Risiko → Bußgeld für jede Domain durch, auch für
+    // Betriebe ohne jede BFSG-Pflicht. Siehe lib/bfsg-scope.js.
+    const pflichtLage = bfsgPflichtLage({
+        html,
+        paidToolKeys: (opts && Array.isArray(opts.paidToolKeys)) ? opts.paidToolKeys : []
+    });
+
+    // Der Satz nennt die gemessene Wirkung, nicht eine Rechtsfolge — die gilt für
+    // jeden Betrieb, unabhaengig von der Pflichtlage.
     const pitchArg = (risk === 'kritisch' || risk === 'hoch')
-        ? `Heuristik-Score ${score}% — Ihre Seite weist sichtbare Barrierefreiheits-Luecken auf. BFSG ist seit Juni 2025 Pflicht, Bussgelder bis ${fine}.`
+        ? `Heuristik-Score ${score}% — die Seite zeigt ${label} im Quelltext. Besucher, die die Schrift `
+          + `vergroessern, per Tastatur bedienen oder einen Screenreader nutzen, stossen hier an Grenzen. `
+          + `Vollstaendige WCAG-Pruefung im Komplettaudit.`
         : (risk === 'mittel'
-            ? `Heuristik-Score ${score}% — einzelne BFSG-Punkte sind verbesserungswuerdig. Vollstaendige WCAG-Pruefung im Komplettaudit.`
+            ? `Heuristik-Score ${score}% — einzelne Punkte sind verbesserungswuerdig. Vollstaendige WCAG-Pruefung im Komplettaudit.`
             : null);
 
     return {
         complianceScore: score,
         risk,
-        fine,
+        label,
+        pflichtLage,
         method: 'heuristic',
         checks,
         pitchArg
@@ -895,7 +910,10 @@ async function runLightAudit(url, placesKey) {
     const { html, finalUrl, headers } = htmlResult;
     const tech = detectTechFromHtml(html, finalUrl);
     const techAge = analyzeTechAge(tech, wayback);
-    const bfsg = bfsgHeuristic(html);
+    // paidToolKeys schaerfen die Betroffenheits-Pruefung: Doctolib/Shopify & Co.
+    // belegen einen Online-Vertragsschluss auch dann, wenn die Seite ihn nicht
+    // in Worten ankuendigt.
+    const bfsg = bfsgHeuristic(html, { paidToolKeys: scanPaidTools(html).keys });
 
     // Sprint 70 — Sub-Types wie 'german_restaurant', 'barber_shop' auf Hauptkategorie normalisieren.
     // Sprint 67 — URL-Heuristik als Fallback wenn Google-Places leer liefert ODER einen

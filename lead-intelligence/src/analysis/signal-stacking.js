@@ -30,7 +30,10 @@ const SIGNAL_CLUSTERS = {
         signals: ['no_ssl', 'bad_a11y', 'no_privacy', 'bfsg_risk'],
         multiplier: 2.0,
         minSignals: 2,
-        pitchArg: 'Ihre Website hat rechtliche Risiken: SSL fehlt, Barrierefreiheit nicht erfüllt. Seit 2025 drohen Bußgelder.'
+        // 2026-08-14: „Seit 2025 drohen Bußgelder" raus — die Rechtsfolge gilt für die
+        // meisten Betriebe nicht (§§ 1, 3 BFSG). Die fehlende Verschlüsselung ist
+        // dagegen ein Befund, den jeder Besucher selbst im Browser sieht.
+        pitchArg: 'Ihre Website hat sichtbare Schwachstellen: die Verschlüsselung fehlt und Besucher mit Einschränkung kommen nicht durch. Beides sieht Ihr Kunde, bevor er Sie anruft.'
     },
     // "Digital aktiv + schlechte Website" = versteht den Wert
     digitalParadox: {

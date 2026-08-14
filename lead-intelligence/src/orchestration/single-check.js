@@ -354,7 +354,10 @@ function runLocalAnalysis(p) {
     const socialSignals = analyzeSocialSignals(place);
     const socialComparison = compareSocialPresence(place, competitors);
     const cruxData = null; // CrUX wird async separat geholt wenn nötig
-    const bfsgScore = checkBFSGCompliance(psiData);
+    // Die Betroffenheitslage kommt aus adEvidence (dort liegt das HTML). Fehlt sie
+    // — kein adEvidence, Bot-Wall, oder ein Cache-Dokument von vor 2026-08-14 —
+    // ist sie `null` und es wird KEINE Rechtsfolge behauptet.
+    const bfsgScore = checkBFSGCompliance(psiData, adEvidenceResult?.bfsgScope || null);
     const triggerEvents = detectTriggerEvents({ ws, tech, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors });
     const techDepth = analyzeTechDepth(psiData, tech);
     const contentFreshness = analyzeContentFreshness(psiData, contentAnalysis, wayback);
@@ -504,9 +507,11 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             emailArgs.push(`die Seite läuft auf ${tech.cms}`);
         }
 
+        // 2026-08-14: Bußgeld-Satz raus — er behauptete eine Rechtsfolge für JEDE
+        // Domain, obwohl das BFSG die weitaus meisten dieser Betriebe nicht erfasst.
         if (ws.a11y < 60) {
-            problems.push(`<strong>Barrierefreiheit ${ws.a11y}/100</strong> — seit Juni 2025 gesetzlich vorgeschrieben (BFSG). Bußgelder bis 100.000€ möglich.`);
-            emailArgs.push(`Barrierefreiheit nur ${ws.a11y}/100 — seit 2025 Pflicht`);
+            problems.push(`<strong>Barrierefreiheit ${ws.a11y}/100</strong> — Besucher, die die Schrift vergrößern, per Tastatur bedienen oder einen Screenreader nutzen, kommen an mehreren Stellen nicht weiter.`);
+            emailArgs.push(`Barrierefreiheit nur ${ws.a11y}/100 — Besucher werden ausgeschlossen`);
         }
 
         // ── Business-Signale ──
@@ -553,8 +558,13 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 
         // ── Module 11-15 ──
         if (data.bfsgScore?.pitchArg) {
-            problems.push(`<div class="highlight-box-red"><strong>BFSG-Risiko:</strong> ${data.bfsgScore.pitchArg}</div>`);
-            emailArgs.push(`die Website erfüllt nur ${data.bfsgScore.complianceScore}% der Barrierefreiheits-Anforderungen`);
+            problems.push(`<div class="highlight-box-red"><strong>Barrierefreiheit:</strong> ${data.bfsgScore.pitchArg}</div>`);
+            emailArgs.push(`die Website erfüllt ${data.bfsgScore.complianceScore}% der geprüften WCAG-Kriterien`);
+        }
+        // Der Rechtssatz nur, wenn die Betroffenheit serverseitig belegt ist —
+        // eigener Kasten, damit er nie mit dem Qualitäts-Befund verschmilzt.
+        if (data.bfsgScore?.rechtsHinweis) {
+            problems.push(`<div class="highlight-box-red"><strong>Mögliche BFSG-Pflicht:</strong> ${data.bfsgScore.rechtsHinweis}</div>`);
         }
 
         if (data.triggerEvents?.hasSofort) {

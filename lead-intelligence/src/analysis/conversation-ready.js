@@ -13,9 +13,11 @@ export function assessConversationReadiness(ws, tech, place, wayback, futureRead
         readiness += 5;
     }
 
-    // BFSG seit Juni 2025 = gesetzliche Pflicht JETZT
+    // 2026-08-14: kein „Abmahnrisiko" mehr — das behauptete eine Rechtsfolge, die
+    // für die meisten Betriebe gar nicht gilt (§§ 1, 3 BFSG). Der Befund selbst
+    // bleibt: eine Seite mit diesem Wert schließt Besucher aus.
     if (ws.a11y < 60) {
-        triggers.push({ urgency: 'sofort', label: 'BFSG nicht erfüllt', detail: `Barrierefreiheit ${ws.a11y}/100 — Abmahnrisiko seit Juni 2025`, impact: 4 });
+        triggers.push({ urgency: 'sofort', label: 'Barrierefreiheit mangelhaft', detail: `${ws.a11y}/100 — Besucher mit Seh- oder Bedien-Einschränkung kommen nicht durch`, impact: 4 });
         readiness += 4;
     }
 

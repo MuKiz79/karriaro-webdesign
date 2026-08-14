@@ -62,10 +62,16 @@ export function buildPitchInputs(src = {}) {
             lastChanged: src.wayback.lastChanged ?? null
         } : null,
         revenue: src.revenue?.yearlyLoss ? { yearlyLoss: src.revenue.yearlyLoss } : null,
+        // 2026-08-14 — `fine` wird NICHT mehr durchgereicht. Ein Geldbetrag im
+        // Prompt ist die direkteste Art, eine erfundene Rechtsfolge in generierten
+        // Kundentext zu bekommen: das Modell schreibt sie ungeprüft aus. Stattdessen
+        // die gemessene Schwere plus die geprüfte Betroffenheitslage — mehr darf
+        // über die Rechtslage nicht behauptet werden.
         bfsgScore: src.bfsgScore ? {
             risk: src.bfsgScore.risk ?? null,
             complianceScore: src.bfsgScore.complianceScore ?? null,
-            fine: src.bfsgScore.fine ?? null
+            riskLabel: src.bfsgScore.riskLabel ?? null,
+            pflichtLage: src.bfsgScore.pflichtLage?.lage ?? null
         } : null,
         // Deep/Security sind die teuren, pitch-starken Signale — wenn da, mitnehmen.
         deepAssessment: deep ? {
