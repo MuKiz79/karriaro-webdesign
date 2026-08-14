@@ -640,12 +640,13 @@
             const bfClass = bf.risk === 'kritisch' || bf.risk === 'hoch' ? 'severity-high'
                 : bf.risk === 'mittel' ? 'severity-mid' : 'severity-low';
             bfsgCard.className = 'result-card ' + bfClass;
-            // 2026-08-14 — Die Kachel „Maximales Bußgeld" ist ersatzlos entfallen.
-            // Sie zeigte einen aus dem Score abgeleiteten Betrag (100.000 / 50.000 /
-            // 10.000 €), den § 37 BFSG so nicht kennt — und das jedem Besucher,
-            // auch den weitaus meisten, die dem Gesetz gar nicht unterliegen. Der
-            // eigene Ratgeber /bfsg-website-pflicht sagte zwei Klicks weiter das
+            // 2026-08-14 — Die dritte Kachel zeigte bis heute einen aus dem Score
+            // abgeleiteten Geldbetrag, den § 37 BFSG so nicht kennt — und das jedem
+            // Besucher, auch den weitaus meisten, die dem Gesetz gar nicht unterliegen.
+            // Der eigene Ratgeber /bfsg-website-pflicht sagte zwei Klicks weiter das
             // Gegenteil. An ihrer Stelle steht jetzt die geprüfte Betroffenheitslage.
+            // ⚠️ Wortlaut hier bewusst neutral: dieser Kommentar wird mit ausgeliefert
+            // und würde sonst jeden künftigen Sweep als Fehlalarm auslösen.
             const lage = bf.pflichtLage || null;
             const lageWert = lage && lage.label ? lage.label : 'nicht geprüft';
             const lageHint = lage && lage.lage === 'moeglich'
