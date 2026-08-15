@@ -1,0 +1,4 @@
+# Rohdaten je Stadt (Places-Antworten, PSI-Ableitungen, Screenshots) und
+# gebaute Reports — reproduzierbar via run.mjs, gehören nicht ins Repo.
+data/
+report/
