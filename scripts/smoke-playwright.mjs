@@ -664,6 +664,24 @@ async function main() {
 
         const browser = await chromium.launch();
         const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+
+        // Ein frischer Browser-Context hat leeren sessionStorage — damit feuert
+        // das Referenzprogramm-Popup (#kr-gp-popup) nach seinem 2500-ms-Timer
+        // mitten in die Tool-Phase und fängt die Klicks ab ("subtree intercepts
+        // pointer events" → exit 2). Lokal gewinnt der Testlauf das Rennen gegen
+        // den Timer, auf dem langsameren CI-Runner verliert er ihn — daher war
+        // der CI ab 08.08. dauerhaft rot, während `npm run smoke` grün blieb.
+        // Wir stellen hier den Zustand her, den die Seite nach dem ersten
+        // Besuch selbst setzt: gesehen, also stumm.
+        // ⚠️ Offene Lücke: Splash und Popup haben KEINE eigenen Smoke-Fälle.
+        // Wer sie testen will, braucht einen Context OHNE dieses Init-Script.
+        await ctx.addInitScript(() => {
+            try {
+                sessionStorage.setItem('kr-splash-seen', '1');
+                sessionStorage.setItem('kr-gp-popup-seen', '1');
+            } catch (e) { /* sessionStorage kann blockiert sein — dann greift der Fallback im Test */ }
+        });
+
         const page = await ctx.newPage();
 
         // === Phase 1: Page-Load ===
