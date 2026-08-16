@@ -45,6 +45,15 @@ const BAUKASTEN_URL = [
 export async function runBatchSearch() {
     const query = document.getElementById('batch-query').value.trim();
     if (!query) return;
+    // 2026-08-16 (Founder-Stolperstelle, live): „Hamburg" allein löste eine
+    // BEZAHLTE Places-Suche aus und endete in der nichtssagenden Meldung
+    // „1 gefunden, alle bereits bekannt oder gefiltert". Diese Kachel braucht
+    // Branche + Ort — ein einzelnes Wort kann das nie sein. VOR dem API-Call
+    // abfangen und sagen, was fehlt (und wo die Stadt-Suche wirklich wohnt).
+    if (!/\s/.test(query)) {
+        showError(`„${query}" allein reicht nicht — diese Suche braucht Branche + Ort, z. B. „Friseur ${query}". Eine ganze Stadt quer durch alle Branchen prüft die Kachel „Eine Region scannen".`);
+        return;
+    }
     if (!config.fnUrl) { showError('Cloud Function URL fehlt.'); return; }
     state.aborted = false;
     document.getElementById('btn-batch').disabled = true;
@@ -119,7 +128,13 @@ export async function runBatchSearch() {
         });
     }
 
-    if (!candidates.length) { cleanup(); showError(`${allPlaces.length} gefunden, alle bereits bekannt oder gefiltert.`); return; }
+    // Die Meldung muss sagen, WAS aussortiert wurde — „gefiltert" allein ließ
+    // den Founder ratlos zurück (2026-08-16).
+    if (!candidates.length) {
+        cleanup();
+        showError(`${allPlaces.length} Treffer, aber keiner übrig: ${filteredCount} aussortiert (bereits gespeichert/abgelehnt, Kette/Konzern oder unter 3 Bewertungen), der Rest ohne Website. Tipp: andere Branche versuchen — oder „Eine Region scannen" für den Überblick.`);
+        return;
+    }
 
     // ══════════════════════════════════════
     // PHASE 3: PageSpeed + Screenshot für ALLE (schnell, 2er-Batches)
