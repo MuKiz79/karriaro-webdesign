@@ -153,24 +153,69 @@ function asCandidate(fix, branchKey) {
     check('Pass 3 veraltet: Chip gesetzt', lo.reasons.includes('Bild: veraltet'), true);
 }
 
-// ── E1d: Peer NACH den Deckeln (IST-Verhalten, Matrix d2) ──
+// ── E1d: Peer-Aufschlag respektiert den 69er-Deckel (F13, seit 2026-08-16) ──
 {
-    // Sechs Salon-Leads: fünf stark, einer schwach OHNE hartes Strukturzeichen
-    // (gedeckelt bei 69). Der Peer-Aufschlag darf ihn per IST-Code ÜBER 70 heben.
+    // Ein score-starker Lead OHNE hartes Strukturzeichen (Deckel 69) unter fünf
+    // besseren Peers: der ×1.15-Aufschlag darf ihn NICHT über 70 heben. Vor F13
+    // sprang genau diese Klasse auf 75 (6 der Karlsruher Top-10).
     const weak = {
-        ws: { perf: 30, viewport: true, isHttps: true }, tech: {},
-        place: { rating: 4.8, userRatingCount: 120, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL', websiteUri: 'https://weak-salon.de', displayName: { text: 'Weak' }, reviewRecency: { daysSinceLast: 20, velocity: 4, n: 5 } }
+        ws: { perf: 24, viewport: true, isHttps: true }, tech: {},
+        place: { rating: 4.8, userRatingCount: 200, primaryType: 'lawyer', businessStatus: 'OPERATIONAL', websiteUri: 'https://weak-kanzlei.de', displayName: { text: 'Weak' }, reviewRecency: { daysSinceLast: 15, velocity: 5, n: 5 } },
+        adIntent: { active: true, signals: ['Google Ads'] }
     };
     const peers = Array.from({ length: 5 }, (_, i) => ({
         ws: { perf: 95, viewport: true, isHttps: true }, tech: {},
-        place: { rating: 4.5, userRatingCount: 50, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL', websiteUri: `https://peer-${i}.de`, displayName: { text: `Peer${i}` }, reviewRecency: { daysSinceLast: 30, velocity: 2, n: 5 } }
+        place: { rating: 4.5, userRatingCount: 50, primaryType: 'lawyer', businessStatus: 'OPERATIONAL', websiteUri: `https://peer-${i}.de`, displayName: { text: `Peer${i}` }, reviewRecency: { daysSinceLast: 30, velocity: 2, n: 5 } }
     }));
-    const cands = [weak, ...peers].map(f => asCandidate(f, 'hair_salon'));
+    const cands = [weak, ...peers].map(f => asCandidate(f, 'lawyer'));
     const leads = pass1({ candidates: cands, month: MONTH });
-    const weakLead = leads.find(l => l.domain === 'weak-salon.de');
+    const weakLead = leads.find(l => l.domain === 'weak-kanzlei.de');
+    check('Fixture ist gedeckelt (69 vor Peer, scoreCap 69)', [weakLead.opportunity, weakLead.scoreCap], [69, 69]);
     peerAndSort({ leads });
-    console.log(`  (info) Peer-Demo: schwacher Salon ${weakLead.oppBeforePeer} → ${weakLead.opportunity} (mult ${weakLead.peerPressure?.mult ?? 1})`);
-    check('Peer-Mult wird NACH den Deckeln multipliziert (oppBeforePeer erfasst)', typeof weakLead.oppBeforePeer, 'number');
+    check('Peer-Aufschlag hält den Deckel: 69 bleibt 69', weakLead.opportunity, 69);
+    check('Peer war wirklich aktiv (mult > 1)', (weakLead.peerPressure?.mult ?? 1) > 1, true);
+}
+
+// ── E1e: techVersion-Merge (F15) — EOL wird im Scan hart ──
+{
+    const wpAlt = {
+        ws: { perf: 60, viewport: true, isHttps: true }, tech: { cms: 'WordPress' },
+        place: { ...praxis.place, primaryType: 'lawyer', websiteUri: 'https://wp-alt.de' }
+    };
+    const ev = {
+        ok: true, blocked: null, adEvidence: { googleAds: { found: false }, metaPixel: { found: false }, microsoftAds: { found: false } },
+        paidTools: { found: [], count: 0, keys: [] }, careSignals: null,
+        contactPaths: { checked: true, hasMailto: true },
+        techVersion: { cms: 'WordPress', version: '4.8', quelle: 'generator' }
+    };
+    const [lead] = pass1({ candidates: [asCandidate(wpAlt, 'lawyer')], month: MONTH });
+    const capVorher = lead.scoreCap;
+    pass2({ leads: [lead], adevMap: { [lead.domain]: ev }, month: MONTH });
+    check('techVersion füllt die Lücke (Version gemerged)', lead.tech.version, '4.8');
+    check('EOL wird hartes Strukturzeichen: Deckel fällt (69 → keiner)', [capVorher, lead.scoreCap], [69, null]);
+
+    // Gegenprobe: CMS-Widerspruch wird NICHT gemerged (PSI sagt Wix, HTML sagt WP).
+    const wix = { ...wpAlt, tech: { isBaukasten: true, cms: 'Wix' }, place: { ...wpAlt.place, websiteUri: 'https://wix-fix.de' } };
+    const [lw] = pass1({ candidates: [asCandidate(wix, 'lawyer')], month: MONTH });
+    pass2({ leads: [lw], adevMap: { [lw.domain]: ev }, month: MONTH });
+    check('CMS-Widerspruch: keine Übernahme', lw.tech.version === undefined, true);
+}
+
+// ── E1f: Branchen-Jobsuche macht Hiring „proven" (F14) ──
+{
+    const ohneAds = {
+        ws: { perf: 63, viewport: true, isHttps: true }, tech: { isBaukasten: true, cms: 'Wix' },
+        place: { ...praxis.place, websiteUri: 'https://jobs-praxis.de', displayName: { text: 'Praxis Grünwald & Sohn' } }
+    };
+    const jobsPayload = { ok: true, total: 40, employers: ['Praxis Grünwald & Sohn GmbH', 'Andere Praxis'], jobs: [
+        { arbeitgeber: 'Praxis Grünwald & Sohn GmbH' }, { arbeitgeber: 'Praxis Grünwald & Sohn GmbH' }, { arbeitgeber: 'Andere Praxis' }
+    ] };
+    const evClean = { ok: true, blocked: null, adEvidence: { googleAds: { found: false }, metaPixel: { found: false }, microsoftAds: { found: false } }, paidTools: null, careSignals: null, contactPaths: null, techVersion: null };
+    const [lead] = pass1({ candidates: [asCandidate(ohneAds, 'dentist')], month: MONTH });
+    check('vor Jobs: kapazitätsgebunden gedämpft (0.70)', lead.passes[0].demandFactor, 0.70);
+    pass2({ leads: [lead], adevMap: { [lead.domain]: evClean }, month: MONTH, jobsByBranch: new Map([['dentist', jobsPayload]]), city: 'Stuttgart' });
+    check('Jobs gefunden (exact-Match-Fenster)', lead.jobOpenings, 2);
+    check('Hiring macht proven: Bedarfsdruck-Dämpfer fällt', [lead.buySignal.proven, lead.passes.at(-1).demandFactor], [true, 1.0]);
 }
 
 console.log(failures === 0 ? '\nE1-EICHUNG BESTANDEN — Probe = App.' : `\n✘ E1 FEHLGESCHLAGEN: ${failures} Abweichung(en). STOPP.`);

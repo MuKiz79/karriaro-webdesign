@@ -346,6 +346,11 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // Deckel statt einer erfundenen Strafe. Der Lead bleibt sichtbar und rankt
     // nach seinen echten Signalen — er wird nur nicht als Top-Empfehlung geführt.
     if (vm.ratingUnknown) opp = Math.min(opp, 69);
+    // 2026-08-15 (Verifikations-Befund d2): Der Deckel wird EXPORTIERT, damit
+    // nachgelagerte Multiplikatoren (Peer-Pressure im Scanner) ihn erneut
+    // anwenden können. Vorher hob der Peer-Aufschlag gedeckelte 69er auf 75 —
+    // in Karlsruhe standen sechs der Top-10 NUR dadurch über der HOT-Schwelle.
+    const scoreCap = (hardStructural < 1 || vm.ratingUnknown) ? 69 : null;
 
     const opportunity = Math.max(0, Math.min(100, Math.round(opp)));
 
@@ -371,6 +376,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
 
     return {
         opportunity, badnessScore, businessStrength, looksAlreadyGood, reasons, hardStructural,
+        // 69 wenn die Konvergenz-Schranke greift (kein hartes Strukturzeichen /
+        // Ruf unprüfbar), sonst null. Nachgelagerte Multiplikatoren MÜSSEN den
+        // Deckel erneut anwenden — er ist eine Invariante, kein Zwischenschritt.
+        scoreCap,
         adIntent: adActive,
         // Eigene Achse fuer UI-Filter/Sortierung ("nur Betriebe, die Geld ausgeben").
         buySignal: {

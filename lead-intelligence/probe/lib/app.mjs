@@ -41,3 +41,6 @@ export const siteLooksModern = claimVerify.siteLooksModern;
 export const deriveReviewRecency = scanCache.deriveReviewRecency;
 export const checkEnterpriseDB = enterpriseDb.checkEnterpriseDB;
 export const runWithConcurrency = concurrency.runWithConcurrency;
+
+const employerMatch = await import('../../src/signals/employer-match.js');
+export const deriveJobOpenings = employerMatch.deriveJobOpenings;

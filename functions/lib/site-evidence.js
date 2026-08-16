@@ -64,6 +64,41 @@ function scanPaidTools(html) {
     return { found, count: found.length, keys: found.map(f => f.key) };
 }
 
+// ─────────────────────────── CMS-Version (F15) ───────────────────────────
+
+// 2026-08-16 — Verifikations-Nebenbefund E1: Das EOL-Signal (CMS abgekündigt =
+// hartes Strukturzeichen) trägt nur, wenn die VERSION bekannt ist — und die
+// PSI-basierte Erkennung findet sie selten. Dieselben HTML-Bytes hier kennen
+// sie oft: der Generator-Meta-Tag nennt CMS+Version, und WordPress verrät die
+// CORE-Version über ?ver= an /wp-includes/-Assets (NUR dort — Plugin-Assets
+// tragen Plugin-Versionen, die dürfen nie als Core-Version gelesen werden).
+// Kein Fund → null = „ungeprüft", nie geraten.
+const RE_GENERATOR_A = /<meta[^>]+name=["']generator["'][^>]*content=["']([^"']+)["']/i;
+const RE_GENERATOR_B = /<meta[^>]+content=["']([^"']+)["'][^>]*name=["']generator["']/i;
+const RE_WP_CORE = /\/wp-includes\/[^"'\s>]*\?[^"'\s>]*ver=(\d+\.\d+(?:\.\d+)?)/i;
+// Namen exakt in der Form, die analysis/tech-age.js (CMS_EOL_YEAR) erwartet.
+const RE_GENERATOR_CMS = /^(WordPress|Joomla!?|Drupal|TYPO3(?:\s+CMS)?|Shopware|Contao)[\s/]+v?(\d+(?:\.\d+)*)/i;
+const CMS_CANONICAL = { wordpress: 'WordPress', joomla: 'Joomla', drupal: 'Drupal', typo3: 'TYPO3', shopware: 'Shopware', contao: 'Contao' };
+
+/**
+ * @param {string} html
+ * @returns {{cms:string, version:string, quelle:'generator'|'wp-includes'}|null}
+ */
+function scanTechVersion(html) {
+    const text = String(html || '');
+    const gen = text.match(RE_GENERATOR_A) || text.match(RE_GENERATOR_B);
+    if (gen) {
+        const m = gen[1].trim().match(RE_GENERATOR_CMS);
+        if (m) {
+            const key = m[1].toLowerCase().replace(/!|\s+cms/g, '');
+            return { cms: CMS_CANONICAL[key] || m[1], version: m[2], quelle: 'generator' };
+        }
+    }
+    const wp = text.match(RE_WP_CORE);
+    if (wp) return { cms: 'WordPress', version: wp[1], quelle: 'wp-includes' };
+    return null;
+}
+
 // ─────────────────────────── Pflege-Signale ───────────────────────────
 
 const RE_COPYRIGHT = /(?:©|&copy;|copyright)[^<>]{0,40}?((?:19|20)\d{2})(?:\s*[–\-—]\s*((?:19|20)\d{2}))?/gi;
@@ -170,6 +205,7 @@ module.exports = {
     scanPaidTools,
     scanCareSignals,
     scanContactPaths,
+    scanTechVersion,
     PAID_TOOLS,
     CONTACT_UNCHECKED
 };

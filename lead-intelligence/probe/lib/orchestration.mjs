@@ -16,7 +16,7 @@
  */
 import {
     computeOpportunity, assessBuyingIntent, analyzeTechAge,
-    seasonalTriggerFor, computePeerPressure, siteLooksModern
+    seasonalTriggerFor, computePeerPressure, siteLooksModern, deriveJobOpenings
 } from './app.mjs';
 
 export function hostnameOf(url) {
@@ -25,13 +25,13 @@ export function hostnameOf(url) {
     catch { return url; }
 }
 
-/** scanner.js:485-495 — inklusive jobOpenings:null (IST-Verhalten). */
-export function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = null }) {
+/** scanner.js buildBuyingIntent — seit F14 (2026-08-16) mit echter Stellenzahl. */
+export function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = null, jobOpenings = null }) {
     return assessBuyingIntent({
         googleAds: adIntent?.googleAds || (adIntent ? { signals: adIntent.signals || [], active: !!adIntent.active } : null),
         footprint,
         jobSignal: jobIntent,
-        jobOpenings: null,
+        jobOpenings,
         reviewRecency: place?.reviewRecency || null,
         paidTools: siteEv?.paidTools || null,
         careSignals: siteEv?.careSignals || null
@@ -90,6 +90,7 @@ export function pass1({ candidates, month }) {
             looksAlreadyGood: opp.looksAlreadyGood,
             hardStructural: opp.hardStructural,
             buySignal: opp.buySignal,
+            scoreCap: opp.scoreCap ?? null,     // F13 — Deckel gilt auch nach Peer
             isBaukasten: !!tech.isBaukasten,
             cms: tech.cms || null,
             screenshotKept: !!psi.screenshotKept,   // = Pass-1-opp>=45, in Phase 02 entschieden
@@ -112,7 +113,7 @@ export function selectAdCands(leads) {
  * Pass 2 — scanner.js:321-368. `adevMap`: domain → rohe Endpoint-Antwort (oder
  * null bei Fetch-Fehler). Nur Leads mit Eintrag werden angefasst.
  */
-export function pass2({ leads, adevMap, month }) {
+export function pass2({ leads, adevMap, month, jobsByBranch = new Map(), city = '' }) {
     for (const l of leads) {
         if (!(l.domain in adevMap)) continue;
         const ev = adevMap[l.domain];
@@ -120,35 +121,47 @@ export function pass2({ leads, adevMap, month }) {
         const e = clean ? ev.adEvidence : null;
         l.adChecked = !!e;
         l.adBlocked = !!(ev?.ok && ev.blocked);
-        if (!clean) { l.passes.push(snapshot(2, l, null)); continue; }
+        // F14 (2026-08-16): Branchen-Jobsuche + Namens-Matching wie scanner.js.
+        const { openings } = deriveJobOpenings(jobsByBranch.get(l.branch.key) || null, l.name, city);
+        l.jobOpenings = openings > 0 ? openings : null;
+        if (!clean && !l.jobOpenings) { l.passes.push(snapshot(2, l, null)); continue; }
 
-        l.siteEvidence = {
-            paidTools: ev.paidTools || null,
-            careSignals: ev.careSignals || null,
-            contactPaths: ev.contactPaths || null
-        };
-        if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
-            const sig = [];
-            if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
-            if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
-            if (e.microsoftAds?.found) sig.push('Microsoft Ads');
-            l.adIntent = { active: true, signals: sig, googleAds: { ...(l.adIntent?.googleAds || {}), signals: sig, active: true } };
-            if (e.metaPixel?.found) l.footprint = { ...(l.footprint || {}), hasFbPixel: true, fbPixelSource: e.metaPixel.source };
+        if (clean) {
+            l.siteEvidence = {
+                paidTools: ev.paidTools || null,
+                careSignals: ev.careSignals || null,
+                contactPaths: ev.contactPaths || null
+            };
+            // F15 (2026-08-16): CMS-Version aus dem Quelltext — nur Lücken füllen.
+            const tv = ev.techVersion;
+            if (tv?.version && !l.tech.version && (!l.tech.cms || l.tech.cms === tv.cms)) {
+                l.tech = { ...l.tech, cms: l.tech.cms || tv.cms, version: tv.version };
+                l.cms = l.tech.cms;
+            }
+            if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
+                const sig = [];
+                if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
+                if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
+                if (e.microsoftAds?.found) sig.push('Microsoft Ads');
+                l.adIntent = { active: true, signals: sig, googleAds: { ...(l.adIntent?.googleAds || {}), signals: sig, active: true } };
+                if (e.metaPixel?.found) l.footprint = { ...(l.footprint || {}), hasFbPixel: true, fbPixelSource: e.metaPixel.source };
+            }
         }
         l.buyingIntent = buildBuyingIntent({
             adIntent: l.adIntent, footprint: l.footprint, jobIntent: l.jobIntent,
-            place: l.place, siteEv: l.siteEvidence
+            place: l.place, siteEv: l.siteEvidence || null, jobOpenings: l.jobOpenings
         });
         const re = computeOpportunity({
             ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
             techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
             adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
-            contactPaths: l.siteEvidence.contactPaths,
+            contactPaths: l.siteEvidence?.contactPaths || null,
             seasonal: seasonalTriggerFor(l.place.primaryType, month)
         });
         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
         l.badnessScore = re.badnessScore; l.reasons = re.reasons;
         l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
+        l.scoreCap = re.scoreCap ?? null;
         l.passes.push(snapshot(2, l, re));
     }
     return leads;
@@ -185,6 +198,7 @@ export function pass3({ leads, visionMap, month }) {
             });
             l.opportunity = re.opportunity; l.leadScore = re.opportunity;
             l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
+            l.scoreCap = re.scoreCap ?? null;
             if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
             l.visionVerdict = 'veraltet';
             l.passes.push(snapshot(3, l, re));
@@ -204,6 +218,8 @@ export function peerAndSort({ leads }) {
         if (!p || p.mult === 1.0) continue;
         l.peerPressure = { mult: p.mult, peers: p.peers, behindOn: p.behindOn, pitch: p.pitch };
         l.opportunity = clamp100(l.opportunity * p.mult);
+        // F13 (2026-08-16): Deckel gilt auch nach dem Peer-Aufschlag (scanner.js).
+        if (l.scoreCap) l.opportunity = Math.min(l.opportunity, l.scoreCap);
         l.leadScore = l.opportunity;
         if (p.chip && !l.reasons.includes(p.chip)) l.reasons.push(p.chip);
     }
@@ -212,9 +228,9 @@ export function peerAndSort({ leads }) {
 }
 
 /** Kompletter Offline-Durchlauf über gespeicherte Phasen-Daten. */
-export function scoreAll({ candidates, adevMap = {}, visionMap = {}, month }) {
+export function scoreAll({ candidates, adevMap = {}, visionMap = {}, month, jobsByBranch = new Map(), city = '' }) {
     const leads = pass1({ candidates, month });
-    pass2({ leads, adevMap, month });
+    pass2({ leads, adevMap, month, jobsByBranch, city });
     pass3({ leads, visionMap, month });
     return peerAndSort({ leads });
 }

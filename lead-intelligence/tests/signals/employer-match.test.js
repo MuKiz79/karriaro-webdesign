@@ -81,3 +81,21 @@ describe('deriveJobOpenings', () => {
         expect(deriveJobOpenings({ ok: false }, 'Irgendwas').openings).toBe(0);
     });
 });
+
+describe('Gattungs-Komposita (2026-08-16, Live-Fund Branchen-Jobsuche)', () => {
+    it('„zahnzentrum" trägt einen Match NICHT mehr allein', () => {
+        // Realfall: WEISS32 Zahnzentrum ↔ Hossam Marey Elite Zahnzentrum —
+        // zwei völlig verschiedene Betriebe, gemeinsam nur das Kompositum.
+        expect(matchEmployer('WEISS32 Zahnzentrum Stuttgart',
+            ['Hossam Marey Elite Zahnzentrum'], 'Stuttgart')).toBeNull();
+    });
+    it('Gegenprobe: der echte Eigenname matcht weiter', () => {
+        expect(matchEmployer('WEISS32 Zahnzentrum Stuttgart',
+            ['WEISS32 MVZ GmbH', 'Hossam Marey Elite Zahnzentrum'], 'Stuttgart'))
+            .toBe('WEISS32 MVZ GmbH');
+    });
+    it('MVZ/Gesundheitszentrum sind ebenfalls Gattung', () => {
+        expect(matchEmployer('MVZ Gesundheitszentrum Stuttgart',
+            ['MVZ Zahnorama GmbH'], 'Stuttgart')).toBeNull();
+    });
+});

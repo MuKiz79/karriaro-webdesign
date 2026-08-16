@@ -22,7 +22,8 @@ import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
-import { adEvidence } from '../api/cloud-functions.js';
+import { adEvidence, jobSignals } from '../api/cloud-functions.js';
+import { deriveJobOpenings } from '../signals/employer-match.js';
 import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
@@ -272,6 +273,7 @@ export async function runScanner() {
                 reasons: opp.reasons,
                 looksAlreadyGood: opp.looksAlreadyGood,
                 hardStructural: opp.hardStructural,
+                scoreCap: opp.scoreCap,                // 69er-Deckel — gilt auch nach Peer (F13)
                 adIntent,                              // {active, signals, googleAds} — Pitch-Hook + Recompute
                 jobIntent,                             // {isHiring, signals} — zweites Kaufsignal
                 footprint,                             // für Recompute der Kaufsignal-Achse
@@ -316,6 +318,25 @@ export async function runScanner() {
         const adCands = leads.filter(l => l.opportunity >= 35)
             .sort((a, b) => b.opportunity - a.opportunity).slice(0, AD_EVIDENCE_TOP_N);
         if (adCands.length) {
+            // 2026-08-15/16 (F14, Verifikations-Befund f): Die echte Stellenzahl
+            // lief bisher NUR im Einzel-Check — im Scan war jobOpenings fest null,
+            // Hiring zählte damit nie als bewiesener Käufer (hiring_page 10 statt
+            // hiring 26; kontrafaktisch bis zu +32 Score entgangen). Jetzt EINE
+            // Jobsuche je Branche×Stadt (nicht je Betrieb): die Jobsuche-v6 kennt
+            // keine Arbeitgeber-Direktsuche mehr, die Zuordnung macht
+            // deriveJobOpenings über die firma-Liste. ≤18 Calls je Scan hält das
+            // 90/h-Limit auch für zwei Städte; retries 0, damit ein Fehlversuch
+            // das Budget nicht doppelt kostet — Ausfall heißt nur: Signal heute
+            // ungeprüft, nie eine erfundene Zahl.
+            const jobBranchKeys = [...new Set(adCands.map(l => l.branch.key))];
+            const jobsByBranch = new Map();
+            await runWithConcurrency(jobBranchKeys, 2, async (bk) => {
+                if (state.aborted) return;
+                const b = BRANCH_BY_TYPE[bk];
+                const r = await jobSignals({ was: b?.q || bk, wo: city, size: 100, retries: 0 }).catch(() => null);
+                if (r?.ok) jobsByBranch.set(bk, r);
+            });
+
             let aDone = 0;
             await runWithConcurrency(adCands, 3, async (l) => {
                 if (state.aborted) return;
@@ -330,39 +351,57 @@ export async function runScanner() {
                 // als "nie geprueft". Nur ein sauberer Scan (kein WAF-Block) zaehlt.
                 l.adChecked = !!e;
                 l.adBlocked = !!(ev?.ok && ev.blocked);
-                if (!clean) { aDone++; showProgress(95, `④ Seiten-Check ${aDone}/${adCands.length}…`); return; }
+                // Ketten-Schutz + Namens-Matching übernimmt deriveJobOpenings —
+                // dieselbe Ableitung wie im Einzel-Check (employer-match.js).
+                const { openings } = deriveJobOpenings(jobsByBranch.get(l.branch.key) || null, l.name, city);
+                l.jobOpenings = openings > 0 ? openings : null;
+                // Ein WAF-Block stoppt die Neuberechnung nur, wenn auch das
+                // Job-Signal leer ist — offene Stellen sind vom Block unabhängig.
+                if (!clean && !l.jobOpenings) { aDone++; showProgress(95, `④ Seiten-Check ${aDone}/${adCands.length}…`); return; }
 
-                l.siteEvidence = {
-                    paidTools: ev.paidTools || null,
-                    careSignals: ev.careSignals || null,
-                    contactPaths: ev.contactPaths || null
-                };
-                if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
-                    const sig = [];
-                    if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
-                    if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
-                    if (e.microsoftAds?.found) sig.push('Microsoft Ads');
-                    // googleAds-Form beibehalten, damit assessBuyingIntent dieselbe
-                    // Evidenz liest wie beim ersten Durchlauf.
-                    l.adIntent = { active: true, signals: sig, googleAds: { ...(l.adIntent?.googleAds || {}), signals: sig, active: true } };
-                    if (e.metaPixel?.found) l.footprint = { ...(l.footprint || {}), hasFbPixel: true, fbPixelSource: e.metaPixel.source };
+                if (clean) {
+                    l.siteEvidence = {
+                        paidTools: ev.paidTools || null,
+                        careSignals: ev.careSignals || null,
+                        contactPaths: ev.contactPaths || null
+                    };
+                    // F15 (2026-08-16): CMS-Version aus dem Quelltext (Generator-
+                    // Meta / wp-includes-?ver) — NUR Lücken füllen, die PSI-
+                    // Erkennung hat Vorrang. Erst mit Version trägt das EOL-Signal
+                    // (hartes Strukturzeichen) im Scan überhaupt.
+                    const tv = ev.techVersion;
+                    if (tv?.version && !l.tech.version && (!l.tech.cms || l.tech.cms === tv.cms)) {
+                        l.tech = { ...l.tech, cms: l.tech.cms || tv.cms, version: tv.version };
+                        l.cms = l.tech.cms; l.version = l.tech.version;
+                    }
+                    if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
+                        const sig = [];
+                        if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
+                        if (e.metaPixel?.found) sig.push(e.metaPixel.confidence === 'aktiv' ? 'Meta-Pixel aktiv' : 'Meta-Pixel konfiguriert (GTM-Container)');
+                        if (e.microsoftAds?.found) sig.push('Microsoft Ads');
+                        // googleAds-Form beibehalten, damit assessBuyingIntent dieselbe
+                        // Evidenz liest wie beim ersten Durchlauf.
+                        l.adIntent = { active: true, signals: sig, googleAds: { ...(l.adIntent?.googleAds || {}), signals: sig, active: true } };
+                        if (e.metaPixel?.found) l.footprint = { ...(l.footprint || {}), hasFbPixel: true, fbPixelSource: e.metaPixel.source };
+                    }
                 }
                 // IMMER neu rechnen — auch ohne Werbefund tragen Werkzeuge,
-                // Pflegezustand und Kontaktwege jetzt zum Score bei.
+                // Pflegezustand, Kontaktwege und Stellenzahl jetzt zum Score bei.
                 l.buyingIntent = buildBuyingIntent({
                     adIntent: l.adIntent, footprint: l.footprint, jobIntent: l.jobIntent,
-                    place: l.place, siteEv: l.siteEvidence
+                    place: l.place, siteEv: l.siteEvidence || null, jobOpenings: l.jobOpenings
                 });
                 const re = computeOpportunity({
                     ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
                     techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
                     adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
-                    contactPaths: l.siteEvidence.contactPaths,
+                    contactPaths: l.siteEvidence?.contactPaths || null,
                     seasonal: seasonalTriggerFor(l.place.primaryType)
                 });
                 l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                 l.badnessScore = re.badnessScore; l.reasons = re.reasons;
                 l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
+                l.scoreCap = re.scoreCap;
                 aDone++;
                 showProgress(95 + Math.round((aDone / adCands.length) * 1), `④ Seiten-Check ${aDone}/${adCands.length}…`);
             });
@@ -401,6 +440,7 @@ export async function runScanner() {
                         const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
+                        l.scoreCap = re.scoreCap;
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
                     }
                 }
@@ -420,6 +460,13 @@ export async function runScanner() {
             if (!p || p.mult === 1.0) continue;
             l.peerPressure = p;
             l.opportunity = Math.max(0, Math.min(100, Math.round(l.opportunity * p.mult)));
+            // 2026-08-15 (Verifikations-Befund d2): Der Aufschlag lief NACH den
+            // 69er-Deckeln und hob gedeckelte Leads auf 75 — in Karlsruhe standen
+            // SECHS der Top-10 nur dadurch über der HOT-Schwelle. Wettbewerbsdruck
+            // ist ein Verstärker, kein Ersatz für ein hartes Strukturzeichen →
+            // die Invariante gilt auch hier. (Alte gespeicherte Scans ohne
+            // scoreCap-Feld bleiben unverändert — null deckelt nicht.)
+            if (l.scoreCap) l.opportunity = Math.min(l.opportunity, l.scoreCap);
             l.leadScore = l.opportunity;
             if (p.chip && !l.reasons.includes(p.chip)) l.reasons.push(p.chip);
         }
@@ -482,12 +529,15 @@ export function reopenScan(entry) {
  * Ad-Erkennung, Job-Signal, Bewertungs-Frische) plus die optionale Seiten-
  * Evidenz aus dem adEvidence-Endpoint. KEIN zusätzlicher Netz-Zugriff.
  */
-function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = null }) {
+function buildBuyingIntent({ adIntent, footprint, jobIntent, place, siteEv = null, jobOpenings = null }) {
     return assessBuyingIntent({
         googleAds: adIntent?.googleAds || (adIntent ? { signals: adIntent.signals || [], active: !!adIntent.active } : null),
         footprint,
         jobSignal: jobIntent,
-        jobOpenings: null,               // echte Stellenzahl bleibt dem Einzel-Check vorbehalten (1 API-Call je Lead)
+        // 2026-08-15 (F14): echte Stellenzahl kommt seit dem Seiten-Check-Pass
+        // auch im Scan an (Top-60, deriveJobOpenings). Pass 1 hat sie noch nicht
+        // → null = „ungeprüft", nie eine erfundene Zahl.
+        jobOpenings,
         reviewRecency: place?.reviewRecency || null,
         paidTools: siteEv?.paidTools || null,
         careSignals: siteEv?.careSignals || null

@@ -15,8 +15,9 @@ const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
 const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
-const { scanPaidTools, scanCareSignals, scanContactPaths } = require("./lib/site-evidence.js");
+const { scanPaidTools, scanCareSignals, scanContactPaths, scanTechVersion } = require("./lib/site-evidence.js");
 const { bfsgPflichtLage } = require("./lib/bfsg-scope.js");
+const { mapJobsucheV6 } = require("./lib/jobsuche-map.js");
 const {
     PITCH_SYS, PITCH_CSP, buildPitchUserMessage, sanitizePitchHtml, pitchId, pitchNotFoundHtml
 } = require("./lib/pitch-generator.js");
@@ -1772,6 +1773,7 @@ exports.adEvidence = onRequest(
                     careSignals: cached.careSignals || null,
                     contactPaths: cached.contactPaths || null,
                     bfsgScope: cached.bfsgScope || null,
+                    techVersion: cached.techVersion || null,
                     fetchedAt: cached.fetchedAt || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
@@ -1797,6 +1799,7 @@ exports.adEvidence = onRequest(
                     // geprüft. `null` unterdrückt das Rechtsargument, ein
                     // „ausgenommen_wahrscheinlich" wäre hier eine erfundene Entwarnung.
                     bfsgScope: null,
+                    techVersion: null,
                     fetchedAt: new Date().toISOString(),
                     meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
                 };
@@ -1844,6 +1847,11 @@ exports.adEvidence = onRequest(
                 // die sichere Richtung, anders als bei paidTools (Schema 2), wo ein
                 // fehlendes Feld wie „nichts gefunden" gewirkt haette.
                 bfsgScope: bfsgPflichtLage({ html, paidToolKeys: scanPaidTools(html).keys }),
+                // F15 (2026-08-16): CMS+Version aus Generator-Meta bzw.
+                // wp-includes-?ver — speist client-seitig das EOL-Signal.
+                // Ohne Schema-Bump: fehlt das Feld im Alt-Cache, liest der
+                // Client null = „ungeprüft" (sichere Richtung, nur aufwertend).
+                techVersion: scanTechVersion(html),
                 fetchedAt: new Date().toISOString(),
                 meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
             };
@@ -1864,7 +1872,9 @@ exports.adEvidence = onRequest(
 // und Budget-Signal und damit ein echtes Kaufsignal.
 // ════════════════════════════════════════════════════════════════════════════
 
-const JOBS_API_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v4/jobs";
+// 2026-08-16: v4 ist ABGESCHALTET (403 auf jeden Aufruf — der Endpoint war
+// still tot). v6 antwortet 200; Schema-Mapping in lib/jobsuche-map.js.
+const JOBS_API_URL = "https://rest.arbeitsagentur.de/jobboerse/jobsuche-service/pc/v6/jobs";
 const JOBS_API_KEY = "jobboerse-jobsuche";   // offizielle statische Public-clientId der Bundesagentur
 const JOBS_CACHE_HOURS = 6;
 
@@ -1880,7 +1890,10 @@ exports.jobSignals = onRequest(
         const was = String(b.was || "").trim().slice(0, 80);
         const wo = String(b.wo || "").trim().slice(0, 80);
         const arbeitgeber = String(b.arbeitgeber || "").trim().slice(0, 120);
-        const size = Math.min(Math.max(parseInt(b.size, 10) || 5, 1), 25);
+        // size-Deckel 25 → 100: Der Scanner sucht jetzt BRANCHENWEIT (eine Suche
+        // je Branche×Stadt statt je Betrieb) und matcht die Betriebe client-seitig
+        // über die firma-Liste — dafür braucht das Fenster mehr Treffer.
+        const size = Math.min(Math.max(parseInt(b.size, 10) || 5, 1), 100);
         if (!was && !arbeitgeber) return res.status(400).json({ error: "was oder arbeitgeber erforderlich" });
 
         const cacheKey = crypto.createHash("sha256").update(`${was}|${wo}|${arbeitgeber}|${size}`).digest("hex").slice(0, 24);
@@ -1894,20 +1907,18 @@ exports.jobSignals = onRequest(
         try {
             const url = new URL(JOBS_API_URL);
             if (was) url.searchParams.set("was", was);
+            // ⚠️ v6 kennt den Parameter `arbeitgeber` NICHT mehr (liefert leer,
+            // empirisch selbst für Hansgrohe/Edeka). Für Alt-Aufrufer (Einzel-
+            // Check) wird der Firmenname als Volltext-`was` gesucht; die
+            // Zuordnung macht ohnehin deriveJobOpenings über die firma-Liste.
+            else if (arbeitgeber) url.searchParams.set("was", arbeitgeber);
             if (wo) { url.searchParams.set("wo", wo); url.searchParams.set("umkreis", "25"); }
-            if (arbeitgeber) url.searchParams.set("arbeitgeber", arbeitgeber);
             url.searchParams.set("size", String(size));
             const r = await fetch(url, { headers: { "X-API-Key": JOBS_API_KEY }, signal: AbortSignal.timeout(20000) });
             if (!r.ok) return res.status(502).json({ error: `Jobsuche ${r.status}` });
             const data = await r.json();
-            const jobs = (data.stellenangebote || []).map(s => ({
-                titel: s.titel || null,
-                arbeitgeber: s.arbeitgeber || null,
-                ort: (s.arbeitsort && s.arbeitsort.ort) || null,
-                eintrittsdatum: s.eintrittsdatum || null
-            }));
-            const employers = [...new Set(jobs.map(j => j.arbeitgeber).filter(Boolean))];
-            const payload = { ok: true, total: data.maxErgebnisse || jobs.length, count: jobs.length, employers, jobs };
+            const { jobs, employers, total } = mapJobsucheV6(data);
+            const payload = { ok: true, total, count: jobs.length, employers, jobs };
             const expiresAtMs = Date.now() + JOBS_CACHE_HOURS * 3600000;
             db.collection("jobSignals").doc(cacheKey).set({
                 payload, expiresAtMs,

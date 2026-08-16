@@ -27,6 +27,13 @@ const HOTEL_CHAINS = [
     'aohostels', 'a-and-o', 'generator', 'st-christophers', 'meininger',
     'ibis', 'mercure', 'novotel', 'sofitel', 'mgallery',
     'premierinn', 'premier-inn', 'travelodge', 'b-b-hotels', 'bb-hotels',
+    // 2026-08-15 — Rangfolge-Verifikation: 'radisson' matcht das VERKETTETE
+    // 'radissonhotels' nicht (der Token-Matcher kennt keine Teilstrings —
+    // absichtlich, gegen False-Positives). Konzern-Domains, die den Markennamen
+    // mit einem Suffix verschmelzen, brauchen deshalb einen EIGENEN Eintrag.
+    'radissonhotels', 'marriotthotels', 'hiltonhotels', 'accorhotels',
+    'mcdreams', 'mcdreamshotels', 'intercityhotel', 'dormero', 'ghotel',
+    'achat-hotels', 'placestostay', 'centro-hotels',
 ];
 
 // ══════════════════════════════════════
@@ -89,6 +96,11 @@ const MEDICAL_CHAINS = [
     'vivantes', 'charite', 'uniklinik', 'universitaetsklinikum',
     'dental21', 'zmvz', 'dr-z', 'dentaloft', 'denttabs',
     'zahneins', 'zahn1', 'collar',
+    // 2026-08-15 — Tierarzt-/Praxis-Ketten (Rangfolge-Verifikation: AniCura
+    // [Mars-Konzern] und Rex [rex.app, Praxis-Kette] standen in den Top-10;
+    // dort entscheidet kein Inhaber vor Ort über eine Website).
+    'anicura', 'evidensia', 'rex', 'felmo', 'filu',
+    'colosseumdental', 'dentalone', 'kfo-abc',
 ];
 
 // ══════════════════════════════════════

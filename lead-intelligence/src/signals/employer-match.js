@@ -46,6 +46,13 @@ const GENERIC = new Set([
     'autohaus', 'kfz', 'werkstatt', 'autoservice', 'automobile', 'garage',
     'apotheke', 'physiotherapie', 'physiopraxis', 'therapie', 'tierarzt',
     'tierarztpraxis', 'tierklinik', 'klinik', 'zentrum', 'center', 'centrum',
+    // 2026-08-16 — Live-Fund beim Verdrahten der Branchen-Jobsuche: „WEISS32
+    // Zahnzentrum" matchte „Hossam Marey Elite Zahnzentrum" über den Token
+    // 'zahnzentrum' ('zahnarztzentrum' stand drin, das gebräuchlichere
+    // Kompositum nicht). Ein falscher Match dichtet einem FREMDEN Betrieb ein
+    // Kaufsignal an — Präzision vor Recall.
+    'zahnzentrum', 'zahnklinik', 'zahngesundheit', 'mvz', 'aerztehaus',
+    'gesundheitszentrum', 'versorgungszentrum', 'medizinisches',
     'fitness', 'fitnessstudio', 'sportstudio', 'gym',
     'spedition', 'logistik', 'transporte', 'umzuege', 'umzug',
     'floristik', 'blumen', 'gaertnerei', 'garten', 'landschaftsbau',

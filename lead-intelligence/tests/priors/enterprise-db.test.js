@@ -158,3 +158,41 @@ describe('checkEnterpriseDB — Robustness', () => {
         }
     });
 });
+
+// ════════════════════════════════════════════════════════════════════════════
+// 2026-08-15 — Ketten-Lücke aus der Rangfolge-Verifikation. Vier ECHTE Ketten
+// standen in den Top-10 der Städte-Scans; der Token-Matcher übersah sie, weil
+// verschmolzene Konzern-Domains ('radissonhotels') keinen eigenen Eintrag
+// hatten. Gegenprobe in BEIDE Richtungen: die Kette MUSS fallen, der ähnlich
+// klingende Einzelbetrieb darf NICHT fallen.
+// ════════════════════════════════════════════════════════════════════════════
+
+describe('checkEnterpriseDB — Ketten aus dem Städte-Scan (2026-08-15)', () => {
+    const realeKetten = [
+        'radissonhotels.com',     // Radisson Blu Karlsruhe — globaler Konzern
+        'anicura.de',             // AniCura — Mars-Tochter, Tierklinik-Kette
+        'mcdreamshotels.de',      // McDreams — deutsche Budget-Hotelkette
+        'rex.app'                 // Rex Tierarztpraxis — Praxis-Kette
+    ];
+    for (const d of realeKetten) {
+        it(`kennt die Kette ${d}`, () => {
+            const r = checkEnterpriseDB(d);
+            expect(r.isEnterprise, `${d} muss Enterprise sein`).toBe(true);
+        });
+    }
+
+    // Gegenprobe: Unabhängige Betriebe mit ähnlichen Namen bleiben drin —
+    // ein Filter, der zu viel frisst, kostet echte Leads statt falscher.
+    const unabhaengig = [
+        'schlosshotelkarlsruhe.de',   // unabhängiges Hotel (stand korrekt R9)
+        'rexroth-elektro.de',         // 'rexroth' ist EIN Token, nicht 'rex'
+        'tierarztpraxis-weingarten.de',
+        'hotel-krone-stuttgart.de'
+    ];
+    for (const d of unabhaengig) {
+        it(`verschont den Einzelbetrieb ${d}`, () => {
+            const r = checkEnterpriseDB(d);
+            expect(r.isEnterprise, `unerwarteter Match: ${r.match} (${r.category})`).toBe(false);
+        });
+    }
+});

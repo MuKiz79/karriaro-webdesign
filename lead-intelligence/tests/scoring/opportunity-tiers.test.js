@@ -476,3 +476,51 @@ describe('Nicht gemessen ≠ negativ gemessen (Korrekturen 2026-08-08)', () => {
         expect(echt.buySignal.mult).toBe(1.55);
     });
 });
+
+describe('scoreCap — die Konvergenz-Schranke ist eine exportierte Invariante (F13, 2026-08-15)', () => {
+    // Verifikations-Befund d2: Der Peer-Multiplikator im Scanner lief NACH den
+    // Deckeln und hob gedeckelte 69er auf 75 — in Karlsruhe standen sechs der
+    // Top-10 nur dadurch über der HOT-Schwelle. computeOpportunity exportiert
+    // den Deckel jetzt, damit JEDER nachgelagerte Multiplikator ihn erneut
+    // anwenden kann. Der Scanner tut das (scanner.js, Peer-Block).
+    const starkOhneStruktur = {
+        // Perf 24 macht viel Badness, ist aber KEIN hartes Strukturzeichen —
+        // exakt die Klasse der sechs Karlsruher Durchbrecher.
+        ws: { perf: 24, viewport: true, isHttps: true },
+        tech: {},
+        place: { rating: 4.8, userRatingCount: 200, primaryType: 'lawyer', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 15, velocity: 5, n: 5 },
+        adIntent: { active: true, signals: ['Google Ads'] }
+    };
+
+    it('deckelt ohne hartes Strukturzeichen EXAKT bei 69 und exportiert scoreCap', () => {
+        const r = computeOpportunity({ ...starkOhneStruktur });
+        expect(r.hardStructural).toBe(0);
+        expect(r.opportunity).toBe(69);      // vorher nur "<70" geprüft — jetzt der exakte Deckel
+        expect(r.scoreCap).toBe(69);
+    });
+
+    it('exportiert KEINEN Deckel, wenn ein hartes Strukturzeichen da ist', () => {
+        const r = computeOpportunity({ ...starkOhneStruktur, ws: { ...starkOhneStruktur.ws, isHttps: false } });
+        expect(r.hardStructural).toBeGreaterThanOrEqual(1);
+        expect(r.scoreCap).toBeNull();
+    });
+
+    it('Ruf unprüfbar (Bewertungen ohne Note) ⇒ scoreCap 69 auch MIT Strukturzeichen', () => {
+        const r = computeOpportunity({
+            ...starkOhneStruktur,
+            ws: { ...starkOhneStruktur.ws, isHttps: false },
+            place: { ...starkOhneStruktur.place, rating: 0, userRatingCount: 200 }
+        });
+        expect(r.scoreCap).toBe(69);
+    });
+
+    it('Gegenprobe Scanner-Semantik: Peer-Aufschlag ×1.15 darf einen 69er nie über 70 heben', () => {
+        // Nachbau des Scanner-Peer-Blocks (scanner.js) — die eine Zeile, um die
+        // es geht, mit dem exportierten Deckel.
+        const r = computeOpportunity({ ...starkOhneStruktur });
+        let opp = Math.max(0, Math.min(100, Math.round(r.opportunity * 1.15)));
+        if (r.scoreCap) opp = Math.min(opp, r.scoreCap);
+        expect(opp).toBe(69);
+    });
+});
