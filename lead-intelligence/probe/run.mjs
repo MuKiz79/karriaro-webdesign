@@ -15,6 +15,7 @@ import { runPsi, loadPsiRecord } from './phases/02-psi.mjs';
 import { runAdEvidence } from './phases/03-adevidence.mjs';
 import { runVision } from './phases/04-vision.mjs';
 import { pass1, pass2, scoreAll } from './lib/orchestration.mjs';
+import { checkEnterpriseDB } from './lib/app.mjs';
 
 const city = process.argv[2];
 if (!city || city.startsWith('--')) { console.error('Stadt fehlt. Nutzung: node probe/run.mjs <Stadt> [--phase=…]'); process.exit(1); }
@@ -63,8 +64,16 @@ if (want('psi') && (force || !existsSync(psiIndexFile))) {
 const psiIndex = readJson(psiIndexFile);
 
 // Kandidaten mit PSI-Ableitungen anreichern (ohne Screenshots — Speicher).
+// Der Enterprise-/Ketten-Filter läuft hier ERNEUT über die gecachten
+// Kandidaten: Phase 01 speichert nur die Durchgelassenen, und der Filter ist
+// seit 2026-08-16 um Ketten (radissonhotels, anicura, …) erweitert — ein
+// Re-Score soll dem AKTUELLEN Scanner entsprechen, nicht dem vom Scan-Tag.
 function candidatesWithPsi() {
-    return places.candidates.map(cand => {
+    return places.candidates.filter(cand => {
+        const host = new URL(cand.place.websiteUri).hostname.replace(/^www\./, '');
+        const ent = checkEnterpriseDB(host);
+        return !ent.isEnterprise && !ent.isCompetitor;
+    }).map(cand => {
         const domain = new URL(cand.place.websiteUri).hostname.replace(/^www\./, '');
         const rec = loadPsiRecord(dir, domain);
         if (!rec) return { ...cand, psi: { psiStatus: 'failed' } };

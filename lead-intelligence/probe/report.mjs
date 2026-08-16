@@ -236,24 +236,26 @@ const html = `<title>Lead-Verifikation Stuttgart + Karlsruhe</title>
 <div class="wrap">
 
 <header>
-  <div class="eyebrow">Karriaro · Lead Intelligence · Verifikation vom 15.08.2026</div>
+  <div class="eyebrow">Karriaro · Lead Intelligence · Verifikation 15.08. · Nachtrag: alle 5 Befunde behoben 16.08.2026</div>
   <h1>Findet das Werkzeug die richtigen Kunden?</h1>
   <p class="lede">Empirische Prüfung der Rangfolge auf echten Daten: zwei Städte, ${st.stats.scored + ka.stats.scored} bewertete Betriebe,
-  jede Top-Platzierung adversarial gegengeprüft. Die Probe rechnet nachweislich bitgleich zur App (Eichung E1) und
-  misst das IST-Verhalten — einschließlich seiner Defekte.</p>
+  jede Top-Platzierung adversarial gegengeprüft. Die Probe rechnet nachweislich bitgleich zur App (Eichung E1).
+  <strong>Stand 16.08.: Alle fünf am 15.08. gefundenen Defekte sind repariert, deployt und hier eingerechnet</strong> —
+  Tabellen und Versandliste zeigen die Rangfolge NACH den Fixes.</p>
 
   <div class="ampeln">
-    ${ampel('warn', 'Zielgruppen-Treffer', `Die alte Fehlklasse ist weg: kein einziger „ausgebuchte Praxis ohne Kaufsignal"-Fall mehr, der Kernfall (RA&nbsp;Voggel vor Zahnarzt) steht real auf Rang&nbsp;2. Aber die Sichtprüfung fand eine NEUE: je Stadt stehen 2&nbsp;<strong>Ketten</strong> in den Top-10 (Radisson&nbsp;Blu, AniCura, McDreams, Rex) — Befund&nbsp;4 unten.`)}
-    ${ampel('ok', 'Kaufsignal-Priorisierung', `Stuttgart: 8/10 der Spitze zahlen nachweislich für Kundengewinnung (Vergleichsgruppe: 42&nbsp;%). Karlsruhe: 6/10 (vs. 32&nbsp;%). Alle Top-5-Kaufbelege unabhängig bestätigt.`)}
-    ${ampel('fail', 'Erfolgswahrscheinlichkeit', `Nicht belegbar — <strong>0 versendete Mails, 0 Antworten, 0 Bewertungen</strong> (Firestore, heute geprüft). Die Rangfolge ist plausibel, aber unbewiesen. Der Beweis beginnt mit der Versandliste unten.`)}
+    ${ampel('ok', 'Zielgruppen-Treffer', `Kein „ausgebuchte Praxis ohne Kaufsignal"-Fall, der Kernfall (RA&nbsp;Voggel vor Zahnarzt) steht real auf Rang&nbsp;2 — und die am 15.08. entdeckten <strong>Ketten</strong> (Radisson&nbsp;Blu, AniCura, McDreams, Rex) sind seit dem Filter-Fix ganz aus dem Lauf.`)}
+    ${ampel('ok', 'Kaufsignal-Priorisierung', `Stuttgart: 8/10 der Spitze zahlen nachweislich für Kundengewinnung (Vergleichsgruppe: ${pct(st.m.a.quote3160)}). Karlsruhe: ${st === ka ? '' : ''}${ka.m.a.provenTop10}/10 (vs. ${pct(ka.m.a.quote3160)}). Kaufbelege der Spitze unabhängig bestätigt.`)}
+    ${ampel('fail', 'Erfolgswahrscheinlichkeit', `Nicht belegbar — <strong>0 versendete Mails, 0 Antworten, 0 Bewertungen</strong> (Firestore, 15.08. geprüft). Die Rangfolge ist plausibel, aber unbewiesen. Der Beweis beginnt mit der Versandliste unten.`)}
   </div>
 </header>
 
 <section id="eichung">
   <h2>Eichung: Die Probe misst die App, nicht sich selbst</h2>
   <p>Bevor irgendein Urteil zählt: Die Probe-Orchestrierung wurde gegen die Ground-Truth-Fixtures der App geeicht —
-  <strong>15/15 Checks, exakte Score-Gleichheit</strong> mit direktem <span class="mono">computeOpportunity</span>-Aufruf,
-  inklusive Werbe-Merge, WAF-Block-Pfad, Vision-Semantik und Peer-Reihenfolge. Alle 61 Ground-Truth-Tests grün.</p>
+  <strong>21/21 Checks, exakte Score-Gleichheit</strong> mit direktem <span class="mono">computeOpportunity</span>-Aufruf,
+  inklusive Werbe-Merge, WAF-Block-Pfad, Vision-Semantik, Peer-Deckel (F13), Versions-Merge (F15) und Jobs-Pfad (F14).
+  Alle 65 Ground-Truth-Tests grün.</p>
   <p class="small muted">Umfang: 18 Branchen je Stadt (Tiefe 0) · Stuttgart ${st.stats.candidates} Kandidaten (${st.stats.psiFailed} PSI-Ausfälle fallen wie in der App still raus) ·
   Karlsruhe ${ka.stats.candidates} (${ka.stats.psiFailed}) · je 60 Seiten-Checks (adEvidence, 0 geblockt) · Kosten ≈ 1,44&nbsp;$ Places, PSI/Checks gratis bzw. gecacht.
   Eichungs-Nebenbefund: Das EOL-Signal (CMS abgekündigt) trägt im Scan nur, wenn <span class="mono">detectTech</span> die Versionsnummer findet.</p>
@@ -290,8 +292,8 @@ const html = `<title>Lead-Verifikation Stuttgart + Karlsruhe</title>
         <td><span class="pass">4/5</span> + 1 Drift-Fall</td><td><span class="pass">4/5</span> + 1 Bot-Abwehr</td></tr>
       <tr><td><strong>d</strong> Deckel-Integrität (vor Peer)</td><td>Kein Score ≥ 70 ohne hartes Strukturzeichen</td>
         <td><span class="pass">PASS</span> — 0 Verstöße</td><td><span class="pass">PASS</span> — 0</td></tr>
-      <tr><td><strong>d2</strong> Peer-Deckel-Durchbruch</td><td>Befund quantifizieren</td>
-        <td><span class="warn">4 Leads</span> (Ränge 5, 6, 8, 9)</td><td><span class="fail">6 Leads</span> (Ränge 4–9!)</td></tr>
+      <tr><td><strong>d2</strong> Peer-Deckel-Durchbruch</td><td>seit Fix F13: 0 erlaubt</td>
+        <td><span class="pass">0</span> <span class="muted small">(vor Fix: 4)</span></td><td><span class="pass">0</span> <span class="muted small">(vor Fix: 6)</span></td></tr>
       <tr><td><strong>e</strong> Chips = Faktoren</td><td>Report-Begründungen zu 100 % aus Rohfaktoren</td>
         <td><span class="pass">PASS</span> — 0 Perf-Chips ohne Messung</td><td><span class="pass">PASS</span> — 0</td></tr>
       <tr><td><strong>f</strong> Hiring-Defekt</td><td>Betroffene + Rang-Delta beziffern</td>
@@ -310,56 +312,69 @@ const html = `<title>Lead-Verifikation Stuttgart + Karlsruhe</title>
   <p>Jeder score-tragende Beleg wurde auf einem <em>unabhängigen</em> Weg nachgeprüft: eigener HTML-Abruf, GTM-Container einzeln geladen
   und auf Conversion-Marker durchsucht, Performance als Median aus drei frischen PSI-Läufen, SSL und Kontaktwege direkt getestet.</p>
   ${st.adv.map(r => advCard(r, stShots[r.domain])).join('')}
-  <p class="small muted">Sichtprüfung: Rang 2 (Voggel) ist sichtbar eine 2017er-Blog-Vorlage — der Relaunch-Fall steht.
-  Rang 1 (zbc.dental) <em>wirkt</em> modern; der Fall ruht auf Technik (Squarespace-Baukasten, Perf ~53, aktive Anzeigen), nicht auf Optik —
-  die Ansprache darf also nicht „Ihre Seite wirkt veraltet" lauten. Bei Rang 3–5 verdeckt der Cookie-Banner den Screenshot (Grenze der Sichtprüfung).
-  Karlsruhe analog 4/5: alle Kaufbelege (AW-Tag, Conversion-Marker, Jameda/WhatsApp/WooCommerce) bestätigt; Rang 2 blockt automatisierte
-  Abrufe (403), PSI bestätigt dort die Messwerte.</p>
+  <p class="small muted"><strong>Ergebnis über beide Städte: Jeder score-tragende Kaufsignal- und Struktur-Beleg wurde unabhängig
+  bestätigt, keiner widerlegt</strong> — AW-Tags, Conversion-Marker in selbst geladenen GTM-Containern, Display-Requests im frischen
+  Seitenlauf, Doctolib/Shopify/WooCommerce im selbst geholten HTML, fehlendes SSL, fehlende Kontaktwege. Zwei ehrliche Einschränkungen:
+  (1) <em>Perf-Punktwerte streuen zwischen PSI-Läufen</em> (über vier Messrunden dokumentiert, z. B. 68–81 bei Johnnys Werkstatt;
+  die score-relevanten Bänder blieben meist stabil, die Wirkung liegt bei ≤5 Badness-Punkten) — Performance ist als Beleg im
+  Anschreiben deshalb zweite Wahl hinter Struktur und Kaufsignal. (2) Elektro Röckel blockt automatisierte Abrufe (403 auf meinen
+  Fetch; PSI erreicht die Seite und bestätigt die Werte). Sichtprüfung: Voggel (R2) ist sichtbar eine 2017er-Blog-Vorlage;
+  zbc.dental (R1) <em>wirkt</em> modern — der Fall ruht auf Technik (Squarespace, Perf ~53, aktive Anzeigen), die Ansprache darf
+  nicht „Ihre Seite wirkt veraltet" lauten. Bei mehreren Karten verdeckt der Cookie-Banner den Screenshot (Grenze der Sichtprüfung).</p>
 </section>
 
 <section id="defekte">
-  <h2>Was die Prüfung an der App selbst gefunden hat</h2>
+  <h2>Die fünf Befunde vom 15.08. — und ihr Status nach dem Fix-Sprint vom 16.08.</h2>
 
-  <div class="kachel kachel--fail">
-    <h3>1 · Die Bild-Prüfung ist still tot — auch in der Live-App</h3>
-    <p><span class="mono">analyzeScreenshot</span> antwortet auf jeden echten Aufruf mit <strong>HTTP 500</strong>:
-    die Function parst die Modell-Antwort mit <span class="mono">JSON.parse</span>, das Modell liefert inzwischen
-    <span class="mono">\`\`\`json</span>-Zäune. Der Scanner fängt den Fehler und macht ohne Vision weiter — seit dem
-    Modell-Update fällt also niemandem auf, dass die Stufe fehlt. Wirkung: „modern, aber langsam"-Seiten werden nicht mehr
-    gedämpft. Fix ist eine Zeile (Zäune strippen vor dem Parse) im app-Repo, us-central1.</p>
-  </div>
-
-  <div class="kachel kachel--warn">
-    <h3>2 · Der Wettbewerbs-Aufschlag durchbricht den 69er-Deckel</h3>
-    <p>Die Konvergenz-Schranke („nie HOT ohne hartes Strukturzeichen") wird VOR dem Peer-Multiplikator angewandt —
-    der Aufschlag hebt gedeckelte 69er auf 75. In Karlsruhe stehen dadurch <strong>sechs der Top-10</strong> über der
-    HOT-Schwelle (Ränge 4–9), in Stuttgart vier. Diese Leads haben echte Kaufsignale, aber kein hartes Strukturzeichen —
-    ihr Fall ist weicher, als der Score suggeriert. Empfehlung: Deckel NACH dem Peer-Aufschlag erneut anwenden.</p>
-  </div>
-
-  <div class="kachel kachel--warn">
-    <h3>3 · „Stellt ein" macht im Scan nie einen bewiesenen Käufer</h3>
-    <p>Der Scanner übergibt die echte Stellenzahl nie (<span class="mono">jobOpenings: null</span>) — Hiring zählt dadurch
-    immer als schwaches Signal (10 statt 26 Punkte) und löst den Kaufsignal-Multiplikator nie aus. Kontrafaktisch nachgerechnet:
-    5 Stuttgarter und 9 Karlsruher Leads verlieren dadurch bis zu <strong>+32 Score</strong>. Ein wachsender Betrieb ohne Anzeigen
-    bleibt so systematisch unter dem Radar. Empfehlung: <span class="mono">jobSignals</span>-Endpoint für die Top-60 in den Scan nehmen (je 1 Call).</p>
-  </div>
-
-  <div class="kachel kachel--warn">
-    <h3>4 · Der Enterprise-Filter kennt keine Ketten — die neue „nicht mein Klientel"-Klasse</h3>
-    <p>Kein Automatik-Check hat das gefunden, erst die Sichtprüfung der Namen: In den Top-10 stehen
-    <strong>Radisson&nbsp;Blu Karlsruhe</strong> (<span class="mono">radissonhotels.com</span> — globaler Konzern),
-    <strong>AniCura</strong> (<span class="mono">anicura.de</span> — Mars-Tochter, europaweite Tierklinik-Kette),
-    <strong>McDreams</strong> (deutsche Hotelkette) und <strong>Rex Tierarztpraxis</strong> (<span class="mono">rex.app</span> — Praxis-Kette).
-    Alle vier werben — die Kaufsignale stimmen. Aber dort entscheidet kein Inhaber vor Ort über eine Website;
-    das ist dieselbe Fehlklasse wie im Juli, nur eine Ebene höher. <span class="mono">checkEnterpriseDB</span> filtert
-    Enterprise- und Konkurrenz-Domains, kennt aber keine Hotel-/Praxis-Ketten. Empfehlung: Ketten-Liste ergänzen +
-    Heuristik „Domain gehört erkennbar einer Marke mit vielen Standorten". In der Versandliste unten sind die zwei
-    betroffenen Stuttgarter Einträge markiert und ersetzt.</p>
+  <div class="kachel kachel--ok">
+    <h3>1 · Bild-Prüfung war still tot — BEHOBEN ✓</h3>
+    <p><span class="mono">analyzeScreenshot</span> warf bei jedem echten Aufruf <strong>HTTP 500</strong> (das Modell legt
+    <span class="mono">\`\`\`json</span>-Zäune um die Antwort, die Function parste nackt). Der Scanner fing den Fehler —
+    seit dem Modell-Update lief kein Scan mehr mit Vision, unbemerkt. <strong>Fix deployt</strong> (robuster Parser, betraf
+    auch analyzeContent + analyzeReviews); Live-Retest mit exakt dem zuvor scheiternden Aufruf: <strong>200</strong> mit
+    echtem Verdikt („zbc.dental: modern, designEra aktuell" — deckt sich mit der Sichtprüfung).</p>
   </div>
 
   <div class="kachel kachel--ok">
-    <h3>5 · Was standhielt</h3>
+    <h3>2 · Peer-Aufschlag durchbrach den 69er-Deckel — BEHOBEN ✓</h3>
+    <p>Der Wettbewerbs-Aufschlag lief NACH der Konvergenz-Schranke und hob gedeckelte 69er auf 75 — in Karlsruhe standen
+    <strong>sechs der Top-10</strong> nur dadurch über der HOT-Schwelle, in Stuttgart vier. Der Deckel ist jetzt eine
+    exportierte Invariante (<span class="mono">scoreCap</span>) und gilt auch nach dem Aufschlag.
+    <strong>Nachgemessen: 0 Durchbrüche in beiden Städten</strong> — die Tabellen oben zeigen die ehrliche Spitze:
+    werbende Praxen ohne hartes Strukturzeichen stehen bei 69, nicht bei 75.</p>
+  </div>
+
+  <div class="kachel kachel--ok">
+    <h3>3 · „Stellt ein" machte nie einen bewiesenen Käufer — BEHOBEN ✓ (+ 2 tiefere Funde)</h3>
+    <p>Beim Verdrahten der echten Stellenzahl kam heraus: <strong>die Bundesagentur hat die v4-API abgeschaltet</strong>
+    (jeder Aufruf 403) — der Job-Endpoint war auch im Einzel-Check still tot. Umstellung auf v6; dort gibt es keine
+    Arbeitgeber-Direktsuche mehr, deshalb sucht der Scan jetzt EINMAL je Branche×Stadt und ordnet die Treffer über die
+    Firmennamen zu (≤18 Aufrufe statt 60). Dabei zweiter Fund: „WEISS32 <em>Zahnzentrum</em>" hätte einen FREMDEN Betrieb
+    („Hossam Marey Elite <em>Zahnzentrum</em>") als Hiring-Beweis geerbt — das Gattungswort fehlte in der Stoppliste;
+    ergänzt, mit Gegenprobe. Live belegt: Branchen-Suche Zahnarzt×Stuttgart → 97 Stellen, 58 Arbeitgeber, exakte Zuordnung.
+    <span class="muted">Wirkt ab dem nächsten frischen Scan — die Tabellen hier tragen noch keine Job-Daten (Cache).</span></p>
+  </div>
+
+  <div class="kachel kachel--ok">
+    <h3>4 · Enterprise-Filter kannte keine Ketten — BEHOBEN ✓</h3>
+    <p>Radisson&nbsp;Blu (<span class="mono">radissonhotels.com</span>), AniCura (Mars-Tochter), McDreams und Rex
+    (<span class="mono">rex.app</span>) standen mit echten Werbe-Signalen in den Top-10 — aber dort entscheidet kein
+    Inhaber vor Ort über eine Website. Der Filter kennt jetzt verschmolzene Konzern-Domains und Praxis-/Hotelketten;
+    Gegenprobe: unabhängige Betriebe wie das Schlosshotel Karlsruhe bleiben drin. <strong>Nachgemessen: alle vier sind
+    aus dem Lauf</strong> (${st.stats.scored}/${ka.stats.scored} statt 290/288 Leads), die Versandliste ist ohne Ketten-Ersatzlogik sauber.</p>
+  </div>
+
+  <div class="kachel kachel--ok">
+    <h3>5 · EOL-Signal hing an der Versionserkennung — BEHOBEN ✓</h3>
+    <p>Das stärkste Strukturzeichen (CMS abgekündigt) trug im Scan nur, wenn PSI die Versionsnummer fand — selten.
+    Der Seiten-Check liest sie jetzt aus dem Quelltext (Generator-Meta, sonst Core-Assets — nie Plugin-Versionen).
+    Live belegt: <span class="mono">0711strafrecht.de</span> meldet „WordPress&nbsp;4.8" (EOL&nbsp;2022) — Voggels
+    Relaunch-Fall ist damit hart belegt statt heuristisch. <span class="muted">Wirkt ab frischem Seiten-Check;
+    Alt-Cache liest „ungeprüft".</span></p>
+  </div>
+
+  <div class="kachel kachel--ok">
+    <h3>6 · Was schon am 15.08. standhielt</h3>
     <p>Deckel-Integrität vor Peer: 0 Verstöße in 578 Leads. Bedarfsdruck-Dämpfer: kein einziger „ausgebuchte Praxis"-Fall oben;
     Zahnärzte in der Spitze sind ausnahmslos solche, die <em>selbst werben</em> (AW-Tag im HTML nachgewiesen). Die „Nicht gemessen ≠ negativ"-Fixes:
     0 Perf-Chips ohne Messung. Reputations-Gate: ein werbender Anwalt mit 4,9★ und Perf 94 landet korrekt auf 0 — das Werkzeug
@@ -374,7 +389,7 @@ const html = `<title>Lead-Verifikation Stuttgart + Karlsruhe</title>
     <li><strong>Keine Erfolgswahrscheinlichkeit.</strong> Es gibt null Versanddaten. „Sehr hohe Erfolgsaussicht" wäre erfunden — belegbar ist nur: <em>die Vorbedingungen stimmen jetzt</em>.</li>
     <li><strong>Antwortrate ist derzeit unmessbar.</strong> Der CRM-Status „geantwortet" fließt nicht in den Lern-Speicher — erfasst wird erst gewonnen/verloren ab Angebots-Stufe. Deshalb hat die Versandliste eigene Tracking-Spalten.</li>
     <li><strong>Das Daumen-Lernsystem ist ungenutzt:</strong> 0 von 40 Bewertungen. Die Rangfolge ist reine Heuristik — kalibriert an deinem Urteil ist noch nichts.</li>
-    <li>Ab Rang 61 ist das Kaufsignal <em>nie geprüft</em>; Vision lief wegen Defekt 1 für keinen Lead; Saison-Faktor gilt für August; die Probe kennt deine „bereits kontaktiert"-Liste nicht.</li>
+    <li>Ab Rang 61 ist das Kaufsignal <em>nie geprüft</em>. Die Tabellen hier tragen noch KEINE Vision-Verdikte, Job-Daten und Quelltext-Versionen — die Fixes 1, 3 und 5 wirken ab dem nächsten frischen Scan (der Cache stammt vom 15.08.). Saison-Faktor gilt für August; die Probe kennt deine „bereits kontaktiert"-Liste nicht.</li>
   </ul>
 </section>
 
@@ -387,9 +402,8 @@ const html = `<title>Lead-Verifikation Stuttgart + Karlsruhe</title>
     <thead><tr><th>Kohorte</th><th>#</th><th>Score</th><th>Betrieb</th><th>Branche</th><th>💸</th><th>Kontaktweg</th><th>Begründung</th><th>Versendet</th><th>Antwort</th><th>Termin</th></tr></thead>
     <tbody>${versandRows(ST.verify, ST.scored.leads)}</tbody>
   </table></div>
-  <p class="small muted">McDreams (R8) und Rex (R9) sind als Ketten ersetzt durch die nächsten Nicht-Ketten-Ränge (Befund&nbsp;4) —
-  beide Ersatz-Leads werben selbst. Karlsruhe-Liste liegt bereit (<span class="mono">probe/data/karlsruhe/06-verify.json</span>;
-  dort vor Versand ebenso Radisson&nbsp;Blu und AniCura ersetzen).
+  <p class="small muted">Seit dem Ketten-Fix (Befund&nbsp;4) ist die Liste ohne Ersatzlogik sauber — Radisson, AniCura,
+  McDreams und Rex sind gar nicht mehr im Lauf. Karlsruhe-Liste liegt bereit (<span class="mono">probe/data/karlsruhe/06-verify.json</span>).
   Hinweis zu R2 Voggel: kein Kontaktweg auf der Seite (bestätigt) — Ansprache über Telefonnummer aus dem Google-Profil.
   Bei zbc.dental (R1) Technik-Argument statt Optik-Argument verwenden.</p>
 </section>

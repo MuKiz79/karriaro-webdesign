@@ -78,10 +78,26 @@ for (const l of scored.leads.slice(0, N)) {
                     if (/AW-\d{6,}|"conversion"|adWordsId|google_conversion|doubleclick\.net/.test(c.text)) awInContainer = true;
                 }
             }
-            const adsConfirmed = awDirect || awInContainer;
+            let adsConfirmed = awDirect || awInContainer;
+            let quelle = `eigener Fetch: ${gtmIds.length} GTM-Container (${gtmIds.join(', ') || '—'}), ${containerChecked} geladen`;
+            let wie = awDirect ? 'AW-Tag im HTML' : 'Conversion-Marker im Container';
+            // Display-Remarketing feuert oft erst aus JS/Consent heraus und ist im
+            // rohen HTML unsichtbar — die Beweisklasse des Scans ist dort die
+            // NETZWERK-Beobachtung (PSI). Unabhängige Bestätigung = frischer
+            // PSI-Lauf, Requests auf doubleclick/googlesyndication greppen.
+            if (!adsConfirmed) {
+                try {
+                    const psi2 = l._psi2 || await fetchPsi(l.websiteUri, process.env.PSI_KEY);
+                    l._psi2 = psi2;
+                    const reqs = (psi2?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');
+                    if (/doubleclick\.net|googlesyndication|googleadservices|googleads\./.test(reqs)) {
+                        adsConfirmed = true; quelle = '2. PSI-Lauf, Netzwerk-Requests'; wie = 'Display-/Ads-Requests beim Seitenlauf';
+                    }
+                } catch { /* bleibt unbestätigt */ }
+            }
             belege.push({
-                beleg: '💸 Google Ads', quelle: `eigener Fetch: ${gtmIds.length} GTM-Container (${gtmIds.join(', ') || '—'}), ${containerChecked} geladen`,
-                ergebnis: adsConfirmed ? `bestätigt (${awDirect ? 'AW-Tag im HTML' : 'Conversion-Marker im Container'})` : 'NICHT unabhängig bestätigt',
+                beleg: '💸 Google Ads', quelle,
+                ergebnis: adsConfirmed ? `bestätigt (${wie})` : 'NICHT unabhängig bestätigt',
                 ok: adsConfirmed
             });
         }
