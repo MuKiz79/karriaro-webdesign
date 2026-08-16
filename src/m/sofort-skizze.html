@@ -823,7 +823,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         function consequenceFor(label) {
             var l = (label || '').toLowerCase();
             if (/lcp|ladezeit|performance/.test(l)) return 'Viele Besucher springen ab, bevor die Seite geladen ist.';
-            if (/bfsg|barrierefrei|wcag/.test(l)) return 'Barrierefreiheit ist seit 2025 Pflicht — Lücken können abgemahnt werden.';
+            // 2026-08-14: Der Kommentar oben verspricht „UWG-sicher" — genau diese
+            // Zeile war es nicht. Sie behauptete Pflicht und Abmahnbarkeit pauschal,
+            // obwohl das BFSG die meisten Betriebe nicht erfasst (§§ 1, 3 BFSG).
+            if (/bfsg|barrierefrei|wcag/.test(l)) return 'Besucher, die die Schrift vergrößern oder per Tastatur bedienen, kommen an diesen Stellen nicht weiter.';
             if (/localbusiness|lokales schema|schema/.test(l)) return 'Ohne lokale Daten findet Google Sie in der Umgebung schwerer.';
             if (/telefon|anruf|klickbar/.test(l)) return 'Am Handy kein Klick zum Anruf bedeutet verlorene Anfragen.';
             if (/formular|anfrage/.test(l)) return 'Jede Hürde im Anfrageweg kostet Kontakte.';

@@ -670,14 +670,29 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             const bfClass = bf.risk === 'kritisch' || bf.risk === 'hoch' ? 'severity-high'
                 : bf.risk === 'mittel' ? 'severity-mid' : 'severity-low';
             bfsgCard.className = 'result-card ' + bfClass;
+            // 2026-08-14 — Die dritte Kachel zeigte bis heute einen aus dem Score
+            // abgeleiteten Geldbetrag, den § 37 BFSG so nicht kennt — und das jedem
+            // Besucher, auch den weitaus meisten, die dem Gesetz gar nicht unterliegen.
+            // Der eigene Ratgeber /bfsg-website-pflicht sagte zwei Klicks weiter das
+            // Gegenteil. An ihrer Stelle steht jetzt die geprüfte Betroffenheitslage.
+            // ⚠️ Wortlaut hier bewusst neutral: dieser Kommentar wird mit ausgeliefert
+            // und würde sonst jeden künftigen Sweep als Fehlalarm auslösen.
+            const lage = bf.pflichtLage || null;
+            const lageWert = lage && lage.label ? lage.label : 'nicht geprüft';
+            const lageHint = lage && lage.lage === 'moeglich'
+                ? 'Online-Abschluss gefunden'
+                : lage && lage.lage === 'ausgenommen_wahrscheinlich'
+                    ? 'kein Online-Abschluss gefunden'
+                    : 'Betroffenheit offen';
             bfsgCard.innerHTML = `
-                <h3>BFSG-Compliance (Barrierefreiheitsstärkungsgesetz)</h3>
+                <h3>Barrierefreiheit (WCAG 2.2 AA)</h3>
                 <div class="stat-grid">
-                    <div class="stat-cell"><div class="stat-label">Score</div><div class="stat-value">${bf.complianceScore}%</div><div class="stat-hint">WCAG-Anforderungen erfüllt</div></div>
-                    <div class="stat-cell"><div class="stat-label">Risiko</div><div class="stat-value">${escape(bf.risk || '—')}</div><div class="stat-hint">Bußgeld-Stufe</div></div>
-                    <div class="stat-cell"><div class="stat-label">Maximales Bußgeld</div><div class="stat-value">${escape(bf.fine || '—')}</div><div class="stat-hint">seit Juni 2025</div></div>
+                    <div class="stat-cell"><div class="stat-label">Score</div><div class="stat-value">${bf.complianceScore}%</div><div class="stat-hint">geprüfte Kriterien erfüllt</div></div>
+                    <div class="stat-cell"><div class="stat-label">Befund</div><div class="stat-value">${escape(bf.label || '—')}</div><div class="stat-hint">Schwere der Barrieren</div></div>
+                    <div class="stat-cell"><div class="stat-label">BFSG-Pflicht</div><div class="stat-value">${escape(lageWert)}</div><div class="stat-hint">${escape(lageHint)}</div></div>
                 </div>
                 ${bf.pitchArg ? `<div class="pitch-quote">${escape(bf.pitchArg)}</div>` : ''}
+                ${lage && lage.vorbehalt ? `<p class="muted" style="margin-top:12px;font-size:14px">${escape(lage.vorbehalt)} <a href="/bfsg-website-pflicht">Die drei Bedingungen im Überblick</a></p>` : ''}
             `;
         } else {
             bfsgCard.remove();
@@ -705,7 +720,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         const sum = document.getElementById('r-summary');
         sum.innerHTML = `
             <h3>Was bedeutet das für Sie?</h3>
-            <p>${escape(d.summary || 'Ihre Website hat ungenutztes Potenzial. Eine moderne, schnelle und barrierefreie Website verbessert Ihre Sichtbarkeit bei Google und schützt Sie vor BFSG-Bußgeldern.')}</p>
+            <p>${escape(d.summary || 'Ihre Website hat ungenutztes Potenzial. Eine moderne, schnelle und barrierefreie Website verbessert Ihre Sichtbarkeit bei Google und erreicht Besucher, die heute an Ihrer Seite scheitern.')}</p>
             ${d.leadScore != null ? `<p class="muted" style="margin-top:12px">Gesamt-Score: <span class="badge ${d.leadScore >= 55 ? 'badge-red' : 'badge-green'}">${d.leadScore}/100 · ${d.leadScore >= 55 ? 'Handlungsbedarf' : 'kein dringender Handlungsbedarf'}</span></p>` : ''}
         `;
 

@@ -2461,13 +2461,19 @@ App.uxAudit = {
 App.futureReadiness = {
     checks: [
         {
-            id: 'bfsg', name: 'BFSG-Compliance (Barrierefreiheit)',
-            description: 'Seit Juni 2025 gesetzlich vorgeschrieben. Bussgelder bis 100.000€. Erste Abmahnwellen laufen.',
-            stat: '0% der deutschen Websites sind vollstaendig konform (AccessiWay 2025). 96% haben WCAG-Fehler.',
+            // 2026-08-14: Rechtsfolge entfernt (Details im Commit). Sie galt hier fuer
+            // JEDEN Besucher, obwohl das BFSG die weitaus meisten geprueften Betriebe
+            // nicht erfasst — die drei Bedingungen stehen korrekt auf
+            // /bfsg-website-pflicht. Der Massstab bleibt, die Drohung ist weg.
+            // ⚠️ Wortlaut hier bewusst neutral: dieser Kommentar wird mit ausgeliefert
+            // und wuerde sonst jeden kuenftigen Sweep als Fehlalarm ausloesen.
+            id: 'bfsg', name: 'Barrierefreiheit (WCAG)',
+            description: 'WCAG 2.2 AA ist der Massstab, den auch das BFSG zugrunde legt. Unabhaengig von einer Pflicht: Barrieren kosten Besucher.',
+            stat: '96% der untersuchten Startseiten haben WCAG-Fehler (WebAIM Million 2024).',
             check: (ws) => ws.a11y >= 80,
             score: (ws) => ws.a11y,
-            weight: 3,  // Kritisch — gesetzlich
-            pitch: 'Barrierefreiheit ist keine Option mehr — es ist Gesetz. Ihre Website erreicht ${score}/100. Die ersten Abmahnungen laufen bereits.'
+            weight: 3,
+            pitch: 'Ihre Website erreicht ${score}/100 bei der Barrierefreiheit. Wer die Schrift vergroessert, per Tastatur bedient oder bei Sonnenlicht auf dem Handy liest, kommt an diesen Stellen nicht weiter.'
         },
         {
             id: 'chatbot', name: 'KI-Chatbot / Sofort-Antworten',
