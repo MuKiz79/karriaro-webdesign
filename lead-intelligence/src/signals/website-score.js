@@ -35,8 +35,30 @@ export function extractWebsiteScore(psiData) {
         // 1 = perfekt
         viewport: audits['viewport']?.score !== 0,
         viewportMissing: audits['viewport']?.score === 0 && !audits['viewport']?.warnings?.length,
-        isHttps: (psiData?.lighthouseResult?.finalDisplayedUrl || '').startsWith('https')
+        isHttps: (psiData?.lighthouseResult?.finalDisplayedUrl || '').startsWith('https'),
+        // F16 (2026-08-16): CrUX-Felddaten — echte Chrome-Nutzer der letzten
+        // 28 Tage, stecken in DERSELBEN PSI-Antwort und wurden nie gelesen.
+        // Realfall zbc.dental: Labor-LCP 8,7–18,9 s, Feld-p75 2,3 s = FAST —
+        // ein „Ihre Seite ist langsam"-Anschreiben wäre vom Inhaber in einer
+        // Minute widerlegbar gewesen. `null` = keine Felddaten (kleine Sites
+        // haben oft keine) = neutral, nie eine Richtung erfinden.
+        crux: extractCrux(psiData)
     };
+}
+
+/**
+ * F16: p75-LCP der echten Nutzer. URL-Ebene bevorzugt, Origin als Rückfall
+ * (PSI liefert beides; kleine Seiten haben oft nur Origin-Daten oder keine).
+ * @returns {{lcpMs:number|null, category:'FAST'|'AVERAGE'|'SLOW', source:'url'|'origin'}|null}
+ */
+function extractCrux(psiData) {
+    for (const [source, exp] of [['url', psiData?.loadingExperience], ['origin', psiData?.originLoadingExperience]]) {
+        const lcp = exp?.metrics?.LARGEST_CONTENTFUL_PAINT_MS;
+        if (lcp?.category) {
+            return { lcpMs: typeof lcp.percentile === 'number' ? lcp.percentile : null, category: lcp.category, source };
+        }
+    }
+    return null;
 }
 
 /**

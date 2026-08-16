@@ -524,3 +524,63 @@ describe('scoreCap — die Konvergenz-Schranke ist eine exportierte Invariante (
         expect(opp).toBe(69);
     });
 });
+
+describe('F16 — CrUX-Felddaten als Labor-Korrektiv (2026-08-16)', () => {
+    // Realfall zbc.dental: Labor-LCP 8,7–18,9 s (Perf 53), aber echte Nutzer
+    // p75 = 2,3 s = FAST. Die Formel las nur das Labor — ein „Ihre Seite ist
+    // langsam"-Anschreiben wäre vom Inhaber in einer Minute widerlegt worden.
+    const NUR_PERF = {
+        // Kein hartes Strukturzeichen — die Klasse, die der Design-Floor (32) trägt.
+        ws: { perf: 45, viewport: true, isHttps: true },
+        tech: {},
+        place: { rating: 4.8, userRatingCount: 120, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 20, velocity: 3, n: 5 }
+    };
+
+    it('Feld FAST hebt den Design-Floor auf und halbiert die Perf-Badness', () => {
+        const ohne = computeOpportunity({ ...NUR_PERF });
+        const mit = computeOpportunity({ ...NUR_PERF, ws: { ...NUR_PERF.ws, crux: { lcpMs: 2268, category: 'FAST', source: 'url' } } });
+        expect(ohne.badnessScore).toBeGreaterThanOrEqual(32);   // Floor trägt den Fall
+        expect(mit.badnessScore).toBeLessThan(15);              // Floor weg, Perf halbiert
+        expect(mit.opportunity).toBeLessThan(ohne.opportunity);
+        expect(mit.reasons).toContain('⚡ Feld: schnell (echte Nutzer)');
+    });
+
+    it('Feld SLOW bestätigt das Labor: Badness unverändert + eigener Chip', () => {
+        const ohne = computeOpportunity({ ...NUR_PERF });
+        const mit = computeOpportunity({ ...NUR_PERF, ws: { ...NUR_PERF.ws, crux: { lcpMs: 5100, category: 'SLOW', source: 'origin' } } });
+        expect(mit.badnessScore).toBe(ohne.badnessScore);
+        expect(mit.opportunity).toBe(ohne.opportunity);
+        expect(mit.reasons).toContain('🐌 Feld: langsam (echte Nutzer)');
+    });
+
+    it('keine Felddaten / AVERAGE = exakt das bisherige Verhalten (Regressionsschutz)', () => {
+        const ohne = computeOpportunity({ ...NUR_PERF });
+        const avg = computeOpportunity({ ...NUR_PERF, ws: { ...NUR_PERF.ws, crux: { lcpMs: 3400, category: 'AVERAGE', source: 'url' } } });
+        expect(avg.opportunity).toBe(ohne.opportunity);
+        expect(avg.badnessScore).toBe(ohne.badnessScore);
+        expect(avg.reasons).not.toContain('⚡ Feld: schnell (echte Nutzer)');
+    });
+
+    it('zbc-Klasse: Baukasten+Ads-Fall ÜBERLEBT Feld-FAST — nur der Perf-Anteil fällt', () => {
+        // Feld-FAST widerlegt das PERF-Argument, nicht den Baukasten-Fall. Der
+        // Lead bleibt (zurecht) hoch — aber der Chip warnt vor dem falschen
+        // Anschreiben-Argument.
+        const zbc = {
+            ws: { perf: 53, viewport: true, isHttps: true, crux: { lcpMs: 2268, category: 'FAST', source: 'url' } },
+            tech: { isBaukasten: true, cms: 'Squarespace' },
+            place: { rating: 5.0, userRatingCount: 56, primaryType: 'dentist', businessStatus: 'OPERATIONAL' },
+            reviewRecency: { daysSinceLast: 20, velocity: 4, n: 5 },
+            adIntent: { active: true, signals: ['Google Ads'] }
+        };
+        const r = computeOpportunity(zbc);
+        expect(r.hardStructural).toBeGreaterThanOrEqual(1);
+        expect(r.opportunity).toBeGreaterThanOrEqual(70);       // Fall trägt weiter
+        expect(r.reasons).toContain('⚡ Feld: schnell (echte Nutzer)');
+    });
+
+    it('Floor bleibt bei SLOW und bei fehlenden Felddaten aktiv (Gegenprobe)', () => {
+        const slow = computeOpportunity({ ...NUR_PERF, ws: { ...NUR_PERF.ws, crux: { lcpMs: 6000, category: 'SLOW', source: 'url' } } });
+        expect(slow.badnessScore).toBeGreaterThanOrEqual(32);
+    });
+});

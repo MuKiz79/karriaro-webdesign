@@ -45,3 +45,30 @@ describe('extractWebsiteScore', () => {
         expect(ws.perf).toBe(0);
     });
 });
+
+describe('F16 — CrUX-Extraktion (2026-08-16)', () => {
+    const base = { lighthouseResult: { categories: {}, audits: {} } };
+
+    it('URL-Ebene wird bevorzugt', () => {
+        const ws = extractWebsiteScore({
+            ...base,
+            loadingExperience: { metrics: { LARGEST_CONTENTFUL_PAINT_MS: { percentile: 2268, category: 'FAST' } } },
+            originLoadingExperience: { metrics: { LARGEST_CONTENTFUL_PAINT_MS: { percentile: 4000, category: 'SLOW' } } }
+        });
+        expect(ws.crux).toEqual({ lcpMs: 2268, category: 'FAST', source: 'url' });
+    });
+
+    it('Origin als Rückfall, wenn die URL keine Felddaten hat', () => {
+        const ws = extractWebsiteScore({
+            ...base,
+            loadingExperience: { metrics: {} },
+            originLoadingExperience: { metrics: { LARGEST_CONTENTFUL_PAINT_MS: { percentile: 3100, category: 'AVERAGE' } } }
+        });
+        expect(ws.crux).toEqual({ lcpMs: 3100, category: 'AVERAGE', source: 'origin' });
+    });
+
+    it('keine Felddaten ⇒ null — nie eine Richtung erfinden', () => {
+        expect(extractWebsiteScore(base).crux).toBeNull();
+        expect(extractWebsiteScore({}).crux).toBeNull();
+    });
+});

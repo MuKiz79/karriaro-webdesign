@@ -280,11 +280,22 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (!isHttps) { b += 22; hardStructural++; }                  // F3: SSL/Vertrauen
 
     // Perf: gedeckelt & weich (war (100-perf)*0.45 ⇒ bis 45). Nur der Slow-Tail nudged (F0).
+    // F16 (2026-08-16): CrUX-Felddaten als Korrektiv. Das Labor simuliert gedrosseltes
+    // 4G — die p75-Erfahrung ECHTER Nutzer kann dem widersprechen (zbc.dental: Labor-LCP
+    // bis 18,9 s, Feld 2,3 s = FAST). Feld „FAST" halbiert die Labor-Perf-Badness und
+    // hebt den Design-Floor auf; „SLOW" bestätigt das Labor (kein Aufschlag — keine
+    // neue handgesetzte Zahl, aber ein eigener Chip: von echten Nutzern bestätigt ist
+    // das stärkste Perf-Argument im Anschreiben). AVERAGE/keine Daten = neutral.
+    const cruxFast = ws.crux?.category === 'FAST';
+    const cruxSlow = ws.crux?.category === 'SLOW';
+    let perfB = 0;
     if (perfKnown) {
-        if (perf < 40) b += 14;
-        else if (perf < 55) b += 9;
-        else if (perf < 70) b += 5;
+        if (perf < 40) perfB = 14;
+        else if (perf < 55) perfB = 9;
+        else if (perf < 70) perfB = 5;
+        if (cruxFast) perfB = Math.round(perfB * 0.5);
     }
+    b += perfB;
     b += Math.max(0, 60 - (ws.seo ?? 60)) * 0.10;
     b += Math.max(0, 60 - (ws.a11y ?? 60)) * 0.10;
 
@@ -293,7 +304,9 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // wäre die Badness ~0 → Score 0 → Vision nie erreicht. Schnelle Seiten ausgenommen.
     // ⚠️ `perfKnown` PFLICHT: ohne ihn hebt ein fehlgeschlagener PSI-Lauf (Default 50)
     //    die Badness auf 32, obwohl über die Seite nichts bekannt ist.
-    if (hardStructural === 0 && perfKnown && perf < 70) b = Math.max(b, 32);
+    // ⚠️ F16: erleben echte Nutzer die Seite als schnell (CrUX FAST), gibt es keinen
+    //    Perf-getragenen Relaunch-Fall — der Floor entfällt, übrige Signale zählen normal.
+    if (hardStructural === 0 && perfKnown && perf < 70 && !cruxFast) b = Math.max(b, 32);
     // Badness-Sättigung ab ~46: weitere Flags geben abnehmenden Ertrag — reiner FLAG-COUNT
     // bläst das Produkt nicht linear auf (Multi-Flag-Low-Value kann Single-Flag-Premium nicht
     // davonlaufen), ein starkes Signal allein klärt aber weiter die HOT-Schwelle.
@@ -366,6 +379,12 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
     reasons.push(`Perf ${perf}`);
+    // F16: Die Feld-Lage gehört SICHTBAR neben den Laborwert — sie entscheidet,
+    // ob Performance im Anschreiben überhaupt als Argument taugt. „Feld: schnell"
+    // ist eine Warnung (Perf-Argument vom Inhaber in einer Minute widerlegbar),
+    // „Feld: langsam" ist das stärkste Perf-Argument (echte Nutzer, nicht Labor).
+    if (cruxFast && perfKnown && perf < 70) reasons.push('⚡ Feld: schnell (echte Nutzer)');
+    else if (cruxSlow) reasons.push('🐌 Feld: langsam (echte Nutzer)');
     if (!isHttps) reasons.push('kein SSL');
     if (noMobile) reasons.push('nicht mobil');
     if (lg.chip) reasons.push(lg.chip);
