@@ -584,3 +584,59 @@ describe('F16 — CrUX-Felddaten als Labor-Korrektiv (2026-08-16)', () => {
         expect(slow.badnessScore).toBeGreaterThanOrEqual(32);
     });
 });
+
+describe('F17 — „frisch investiert kauft nicht nochmal" (2026-08-17, Founder-Kriterium)', () => {
+    // Realfall Poppenbütteler Hof: Founder erkannte am Auftritt, dass die
+    // Seite kürzlich modernisiert wurde — die Formel kannte das Kriterium nicht.
+    const MONAT = 30 * 86400000;
+    const hotel = {
+        ws: { perf: 44, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Squarespace' },
+        place: { rating: 4.1, userRatingCount: 276, primaryType: 'hotel', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 21, velocity: 3, n: 5 },
+        adIntent: { active: true, signals: ['Google Ads'] }
+    };
+
+    it('Relaunch-Verdacht (CMS-Wechsel) dämpft ×0.5 und erklärt sich im Chip', () => {
+        const ohne = computeOpportunity({ ...hotel });
+        const mit = computeOpportunity({ ...hotel, siteAge: { relaunchVerdacht: true, cmsThen: 'WordPress', cmsNow: 'Squarespace' } });
+        expect(mit.investFactor).toBe(0.5);
+        expect(mit.opportunity).toBeLessThan(ohne.opportunity);
+        expect(mit.reasons.join(' ')).toContain('🆕 frisch investiert');
+        expect(mit.reasons.join(' ')).toContain('WordPress → Squarespace');
+    });
+
+    it('junge Domain (< 18 Monate, RDAP) dämpft ebenfalls', () => {
+        const r = computeOpportunity({ ...hotel, siteAge: { relaunchVerdacht: null, domainRegisteredMs: Date.now() - 6 * MONAT } });
+        expect(r.investFactor).toBe(0.5);
+        expect(r.reasons.join(' ')).toContain('Domain jünger als 18 Mon.');
+    });
+
+    it('MÄNGEL-AUSNAHME: neue Seite ohne SSL wird NICHT gedämpft — schlecht gekauft = ansprechbar', () => {
+        const r = computeOpportunity({
+            ...hotel, ws: { ...hotel.ws, isHttps: false },
+            siteAge: { relaunchVerdacht: true, cmsThen: 'WordPress', cmsNow: 'Squarespace' }
+        });
+        expect(r.investFactor).toBe(1.0);
+        expect(r.reasons.join(' ')).toContain('🆕 neu, aber mangelhaft');
+    });
+
+    it('ungeprüft (kein siteAge / Verdacht null / alte Domain) = neutral, kein Chip', () => {
+        const basis = computeOpportunity({ ...hotel });
+        for (const siteAge of [null, { relaunchVerdacht: null }, { relaunchVerdacht: false, domainRegisteredMs: Date.now() - 60 * MONAT }]) {
+            const r = computeOpportunity({ ...hotel, siteAge });
+            expect(r.opportunity).toBe(basis.opportunity);
+            expect(r.investFactor).toBe(1.0);
+            expect(r.reasons.join(' ')).not.toContain('🆕');
+        }
+    });
+
+    it('Gegenprobe: der Dämpfer halbiert wirklich den Roh-Score (kein No-Op über Deckel)', () => {
+        // hotel hat hardStructural ≥ 1 (Baukasten) — kein 69er-Deckel, der die
+        // Halbierung verschleiern könnte. Test grün aus dem richtigen Grund.
+        const ohne = computeOpportunity({ ...hotel });
+        const mit = computeOpportunity({ ...hotel, siteAge: { relaunchVerdacht: true, cmsThen: 'WordPress', cmsNow: 'Squarespace' } });
+        expect(ohne.opportunity).toBeGreaterThanOrEqual(70);
+        expect(mit.opportunity).toBeLessThanOrEqual(Math.ceil(ohne.opportunity * 0.6));
+    });
+});

@@ -374,6 +374,9 @@ export async function runScanner() {
                         l.tech = { ...l.tech, cms: l.tech.cms || tv.cms, version: tv.version };
                         l.cms = l.tech.cms; l.version = l.tech.version;
                     }
+                    // F17 (2026-08-17): Website-Alter/Relaunch-Verdacht vom Server —
+                    // Founder-Kriterium „frisch investiert kauft nicht nochmal".
+                    l.siteAge = ev.siteAge || null;
                     if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
                         const sig = [];
                         if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
@@ -396,6 +399,7 @@ export async function runScanner() {
                     techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
                     adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
                     contactPaths: l.siteEvidence?.contactPaths || null,
+                    siteAge: l.siteAge || null,
                     seasonal: seasonalTriggerFor(l.place.primaryType)
                 });
                 l.opportunity = re.opportunity; l.leadScore = re.opportunity;
@@ -437,7 +441,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, siteAge: l.siteAge || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         l.scoreCap = re.scoreCap;

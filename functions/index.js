@@ -13,11 +13,12 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
-const { runLightAudit, detectBlockedResponse, fetchHtml } = require("./lib/light-audit.js");
+const { runLightAudit, detectBlockedResponse, fetchHtml, detectTechFromHtml } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
 const { scanPaidTools, scanCareSignals, scanContactPaths, scanTechVersion } = require("./lib/site-evidence.js");
 const { bfsgPflichtLage } = require("./lib/bfsg-scope.js");
 const { mapJobsucheV6 } = require("./lib/jobsuche-map.js");
+const { ermittleSiteAge } = require("./lib/site-age.js");
 const {
     PITCH_SYS, PITCH_CSP, buildPitchUserMessage, sanitizePitchHtml, pitchId, pitchNotFoundHtml
 } = require("./lib/pitch-generator.js");
@@ -1774,6 +1775,7 @@ exports.adEvidence = onRequest(
                     contactPaths: cached.contactPaths || null,
                     bfsgScope: cached.bfsgScope || null,
                     techVersion: cached.techVersion || null,
+                    siteAge: cached.siteAge || null,
                     fetchedAt: cached.fetchedAt || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
@@ -1800,6 +1802,7 @@ exports.adEvidence = onRequest(
                     // „ausgenommen_wahrscheinlich" wäre hier eine erfundene Entwarnung.
                     bfsgScope: null,
                     techVersion: null,
+                    siteAge: null,
                     fetchedAt: new Date().toISOString(),
                     meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
                 };
@@ -1852,6 +1855,19 @@ exports.adEvidence = onRequest(
                 // Ohne Schema-Bump: fehlt das Feld im Alt-Cache, liest der
                 // Client null = „ungeprüft" (sichere Richtung, nur aufwertend).
                 techVersion: scanTechVersion(html),
+                // F17 (2026-08-17): Website-Alter + Relaunch-Verdacht (RDAP,
+                // Wayback-CDX, Archiv-Snapshot-CMS-Vergleich) — Founder-Kriterium
+                // „frisch investiert kauft nicht nochmal". Jede Quelle einzeln
+                // dreiwertig; Archiv-Ausfälle liefern null = ungeprüft. Ohne
+                // Schema-Bump: Alt-Cache → null → neutral (sichere Richtung).
+                siteAge: await (async () => {
+                    try {
+                        const target = finalUrl || url;
+                        const domain = new URL(target).hostname.replace(/^www\./, "");
+                        const cmsNow = (detectTechFromHtml(html, target) || {}).cms || null;
+                        return await ermittleSiteAge(target, domain, cmsNow);
+                    } catch { return null; }
+                })(),
                 fetchedAt: new Date().toISOString(),
                 meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
             };

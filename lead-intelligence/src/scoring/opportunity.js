@@ -251,7 +251,7 @@ export const MIN_REVIEWS_VALUE = 8;
  *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number,
  *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null, siteAge = null }) {
     // ⚠️ KORREKTUR 2026-08-08: Ein fehlender PSI-Wert wurde auf 50 defaultet — und
     // 50 liegt unter BEIDEN Perf-Schwellen (<55 → +9 Badness) und unter dem
     // Design-Floor (<70 → Badness mindestens 32). Eine Seite, die PSI gar nicht
@@ -348,8 +348,22 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const vm = valueMult(businessStrength, rating, reviews, MIN_REVIEWS_VALUE);
     const dp = demandPressure(place.primaryType, businessStrength, bs.proven);
     const rf = reachFactor(contactPaths);
+    // F17 (2026-08-17, Founder-Kriterium): „Wer erst vor kurzem in eine neue
+    // Website investiert hat, beauftragt nicht gleich nochmal eine — außer sie
+    // hat erhebliche Mängel." Frisch = CMS-Wechsel im Archiv-Fenster (~13 Mon.)
+    // ODER Domain jünger als 18 Monate (RDAP). Die MÄNGEL-AUSNAHME hebt den
+    // Dämpfer auf: eine neue Seite ohne SSL / ohne Mobile / auf EOL-CMS / mit
+    // Veraltet-Verdikt wurde schlecht gekauft — der Inhaber ist ansprechbar.
+    // siteAge fehlt (Alt-Cache, Archiv down, nie geprüft) ⇒ neutral 1.0.
+    const MONAT_MS = 30 * 86400000;
+    const domainJung = typeof siteAge?.domainRegisteredMs === 'number'
+        && (Date.now() - siteAge.domainRegisteredMs) < 18 * MONAT_MS;
+    const frischInvestiert = siteAge?.relaunchVerdacht === true || domainJung;
+    const erheblicheMaengel = !isHttps || noMobile || !!ta.cmsEolYear || visionOutdated;
+    const investFactor = frischInvestiert && !erheblicheMaengel ? 0.5 : 1.0;
+
     let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
-        * buySignalMult * dp.factor * rf.factor * (seasonalActive ? 1.10 : 1.0);
+        * buySignalMult * dp.factor * rf.factor * investFactor * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -385,6 +399,15 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // „Feld: langsam" ist das stärkste Perf-Argument (echte Nutzer, nicht Labor).
     if (cruxFast && perfKnown && perf < 70) reasons.push('⚡ Feld: schnell (echte Nutzer)');
     else if (cruxSlow) reasons.push('🐌 Feld: langsam (echte Nutzer)');
+    // F17: Frisch-Investiert gehört SICHTBAR in die Liste — mit Grund.
+    if (frischInvestiert) {
+        const grund = siteAge?.relaunchVerdacht === true
+            ? `Relaunch < 13 Mon. (${siteAge.cmsThen} → ${siteAge.cmsNow})`
+            : 'Domain jünger als 18 Mon.';
+        reasons.push(erheblicheMaengel
+            ? `🆕 neu, aber mangelhaft — ${grund}`
+            : `🆕 frisch investiert — ${grund}`);
+    }
     if (!isHttps) reasons.push('kein SSL');
     if (noMobile) reasons.push('nicht mobil');
     if (lg.chip) reasons.push(lg.chip);
@@ -411,6 +434,8 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         // Bedarfsdruck-Faktor (1.0 = kein Abschlag, 0.70 = kapazitaetsgebunden ohne Kaufsignal).
         demandFactor: dp.factor,
         // Erreichbarkeit (1.0 = ok oder ungeprueft, <1 = geprueft ohne Kontaktweg).
-        reachFactor: rf.factor
+        reachFactor: rf.factor,
+        // F17: Frisch-Investiert-Daempfer (0.5) — 1.0 bei Maengel-Ausnahme oder ungeprueft.
+        investFactor
     };
 }

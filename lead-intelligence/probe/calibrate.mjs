@@ -218,5 +218,25 @@ function asCandidate(fix, branchKey) {
     check('Hiring macht proven: Bedarfsdruck-Dämpfer fällt', [lead.buySignal.proven, lead.passes.at(-1).demandFactor], [true, 1.0]);
 }
 
+
+// ── E1g: Frisch-Investiert-Dämpfer (F17) ──
+{
+    const ev = {
+        ok: true, blocked: null, adEvidence: { googleAds: { found: true, confidence: 'aktiv' }, metaPixel: { found: false }, microsoftAds: { found: false } },
+        paidTools: null, careSignals: null, contactPaths: { checked: true, hasMailto: true },
+        techVersion: null,
+        siteAge: { relaunchVerdacht: true, cmsThen: 'WordPress', cmsNow: 'Squarespace', domainRegisteredMs: null }
+    };
+    const frisch = {
+        ws: { perf: 44, viewport: true, isHttps: true }, tech: { isBaukasten: true, cms: 'Squarespace' },
+        place: { rating: 4.1, userRatingCount: 276, primaryType: 'hotel', businessStatus: 'OPERATIONAL', websiteUri: 'https://frisch-hotel.de', displayName: { text: 'Frisch' }, reviewRecency: { daysSinceLast: 21, velocity: 3, n: 5 } }
+    };
+    const [lead] = pass1({ candidates: [asCandidate(frisch, 'hotel')], month: MONTH });
+    const vorher = lead.opportunity;
+    pass2({ leads: [lead], adevMap: { [lead.domain]: ev }, month: MONTH });
+    check('F17: Relaunch-Verdacht dämpft im Pass 2', lead.opportunity < vorher, true);
+    check('F17: Chip erklärt den Grund', lead.reasons.some(r => r.includes('frisch investiert')), true);
+}
+
 console.log(failures === 0 ? '\nE1-EICHUNG BESTANDEN — Probe = App.' : `\n✘ E1 FEHLGESCHLAGEN: ${failures} Abweichung(en). STOPP.`);
 process.exit(failures === 0 ? 0 : 1);
