@@ -20,3 +20,17 @@ test('eine Seite unbekannt ⇒ null — nie aus einer Lücke ein Urteil machen',
     assert.equal(bewerteRelaunch('WordPress', null), null);
     assert.equal(bewerteRelaunch(null, null), null);
 });
+
+const { bewerteKonstanz } = require('../lib/site-age.js');
+
+test('A5: Konstanz nur bei drei GLEICHEN Zeitpunkten', () => {
+    assert.equal(bewerteKonstanz('Wix', 'Wix', 'Wix'), true);
+    assert.equal(bewerteKonstanz('WordPress', 'Wix', 'Wix'), false);   // vor 4 J. anders = kein 4-J.-Stillstand
+    assert.equal(bewerteKonstanz('Wix', 'WordPress', 'Wix'), false);
+});
+
+test('A5: jede Lücke ⇒ null — Archiv-Ausfall wird nie zum Stillstands-Beleg', () => {
+    assert.equal(bewerteKonstanz(null, 'Wix', 'Wix'), null);
+    assert.equal(bewerteKonstanz('Wix', null, 'Wix'), null);
+    assert.equal(bewerteKonstanz('Wix', 'Wix', null), null);
+});

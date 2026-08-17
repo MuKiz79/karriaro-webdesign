@@ -251,7 +251,7 @@ export const MIN_REVIEWS_VALUE = 8;
  *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number,
  *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null, siteAge = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null, siteAge = null, ki = null }) {
     // ⚠️ KORREKTUR 2026-08-08: Ein fehlender PSI-Wert wurde auf 50 defaultet — und
     // 50 liegt unter BEIDEN Perf-Schwellen (<55 → +9 Badness) und unter dem
     // Design-Floor (<70 → Badness mindestens 32). Eine Seite, die PSI gar nicht
@@ -362,8 +362,30 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const erheblicheMaengel = !isHttps || noMobile || !!ta.cmsEolYear || visionOutdated;
     const investFactor = frischInvestiert && !erheblicheMaengel ? 0.5 : 1.0;
 
+    // B4+B5 (2026-08-17, Founder-Zielbild „im KI-Zeitalter mithalten"): Der
+    // Brummer, den KI-Suchen nicht zitieren KÖNNEN, ist Karriaros Kern-Fall.
+    // Zwei Belege, beide aus geprüften Quellen (Sprint-230-Detektoren):
+    //   · Zitier-Crawler per robots.txt ausgesperrt (oai-searchbot/Perplexity/
+    //     claude-searchbot — Training-Bots zählen bewusst NICHT, KB-Hausregel)
+    //   · kein Unternehmens-Schema im HTML (KI kann den Betrieb nicht als
+    //     Entität lesen)
+    // Verstärker wie Peer (max ×1.15, NIE ein Abschlag — gute KI-Sichtbarkeit
+    // macht den Lead nicht schlechter, nur das Argument schwächer). Ungeprüft
+    // (Alt-Cache, robots nicht lesbar) ⇒ neutral.
+    const kiBlockiert = ki?.robots?.fetched === true && (ki.robots.blockedBots || []).length > 0;
+    const kiOhneSchema = !!ki?.entity && ki.entity.hasOrg === false;
+    const kiFactor = (kiBlockiert || kiOhneSchema) ? 1.15 : 1.0;
+
+    // A5 (2026-08-17, Founder-Zielbild „seit längerem nicht modernisiert"):
+    // dieselbe technische Basis über ≥4 Jahre (drei Archiv-Zeitpunkte) ist der
+    // POSITIVE Stillstands-Beleg — bisher wurde Alter nur indirekt über
+    // EOL/Baukasten vermutet. null = Archiv nicht prüfbar ⇒ neutral.
+    const stillstand = siteAge?.konstanz4J === true;
+    const stillstandFactor = stillstand ? 1.2 : 1.0;
+
     let opp = badnessScore * lg.factor * vm.mult * dealFactor(place.primaryType)
-        * buySignalMult * dp.factor * rf.factor * investFactor * (seasonalActive ? 1.10 : 1.0);
+        * buySignalMult * dp.factor * rf.factor * investFactor * kiFactor * stillstandFactor
+        * (seasonalActive ? 1.10 : 1.0);
     if (looksAlreadyGood) opp *= 0.35;
 
     // Konvergenz-Schranke (F1/F7/F8): ohne >=1 hartes Strukturzeichen nie HOT (gedeckelt
@@ -399,6 +421,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // „Feld: langsam" ist das stärkste Perf-Argument (echte Nutzer, nicht Labor).
     if (cruxFast && perfKnown && perf < 70) reasons.push('⚡ Feld: schnell (echte Nutzer)');
     else if (cruxSlow) reasons.push('🐌 Feld: langsam (echte Nutzer)');
+    // B4+B5/A5: auch diese Gründe gehören SICHTBAR in die Liste.
+    if (kiBlockiert) reasons.push(`🤖 KI-Zitier-Crawler blockiert (${ki.robots.blockedBots.join(', ')})`);
+    else if (kiOhneSchema) reasons.push('🤖 für KI kaum lesbar — kein Unternehmens-Schema');
+    if (stillstand) reasons.push('🕰 Basis seit ≥4 J. unverändert (Archiv)');
     // F17: Frisch-Investiert gehört SICHTBAR in die Liste — mit Grund.
     if (frischInvestiert) {
         const grund = siteAge?.relaunchVerdacht === true
@@ -436,6 +462,10 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         // Erreichbarkeit (1.0 = ok oder ungeprueft, <1 = geprueft ohne Kontaktweg).
         reachFactor: rf.factor,
         // F17: Frisch-Investiert-Daempfer (0.5) — 1.0 bei Maengel-Ausnahme oder ungeprueft.
-        investFactor
+        investFactor,
+        // B4+B5: KI-Sichtbarkeits-Verstaerker (1.15 bei Blockade/fehlendem Schema, sonst 1.0).
+        kiFactor,
+        // A5: Stillstands-Verstaerker (1.2 bei >=4 J. gleicher Basis, sonst 1.0).
+        stillstandFactor
     };
 }

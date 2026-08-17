@@ -377,6 +377,9 @@ export async function runScanner() {
                     // F17 (2026-08-17): Website-Alter/Relaunch-Verdacht vom Server —
                     // Founder-Kriterium „frisch investiert kauft nicht nochmal".
                     l.siteAge = ev.siteAge || null;
+                    // B4+B5 (2026-08-17): KI-Sichtbarkeit (Entitäts-Schema +
+                    // Zitier-Crawler-Zugang) — Founder-Zielbild „KI-Zeitalter".
+                    l.ki = ev.ki || null;
                     if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
                         const sig = [];
                         if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
@@ -399,7 +402,7 @@ export async function runScanner() {
                     techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
                     adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
                     contactPaths: l.siteEvidence?.contactPaths || null,
-                    siteAge: l.siteAge || null,
+                    siteAge: l.siteAge || null, ki: l.ki || null,
                     seasonal: seasonalTriggerFor(l.place.primaryType)
                 });
                 l.opportunity = re.opportunity; l.leadScore = re.opportunity;
@@ -441,7 +444,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, siteAge: l.siteAge || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
+                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, siteAge: l.siteAge || null, ki: l.ki || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
                         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
                         l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
                         l.scoreCap = re.scoreCap;
@@ -684,6 +687,7 @@ function renderLeadWorkspace(city, leads, filters) {
                 <select class="ws-select" data-action="sort">
                     <option value="score"${filters.sort === 'score' ? ' selected' : ''}>Sort: Score ↓</option>
                     <option value="buy"${filters.sort === 'buy' ? ' selected' : ''}>Sort: Kaufsignal zuerst</option>
+                    <option value="ambition"${filters.sort === 'ambition' ? ' selected' : ''}>Sort: Ambition (will mithalten)</option>
                     <option value="uncertain"${filters.sort === 'uncertain' ? ' selected' : ''}${trained?.besser ? '' : ' disabled'}>Sort: am unsichersten (lehrreichste)</option>
                     <option value="reviews"${filters.sort === 'reviews' ? ' selected' : ''}>Sort: Reviews ↓</option>
                     <option value="perf"${filters.sort === 'perf' ? ' selected' : ''}>Sort: Performance ↑</option>

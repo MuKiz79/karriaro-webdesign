@@ -64,6 +64,17 @@ export function applyFilters(leads, f = {}) {
             const ub = typeof b.uncertainty === 'number' ? b.uncertainty : Infinity;
             return ua - ub || (b.leadScore - a.leadScore);
         });
+    } else if (f.sort === 'ambition') {
+        // B6 (2026-08-17, Founder-Zielbild B): „Gründer, die im KI-Zeitalter
+        // mithalten wollen" — sortiert nach der Kaufsignal-EVIDENZSUMME
+        // (Anzeigen, Stellen, bezahlte Werkzeuge, Pflege, Kanäle), nicht nach
+        // Website-Schwäche. Zeigt dieselbe Liste aus der Ambitions-Perspektive;
+        // Leads ohne geprüfte Evidenz (intentScore null) ans Ende.
+        out.sort((a, b) => {
+            const ia = typeof a.buySignal?.intentScore === 'number' ? a.buySignal.intentScore : -1;
+            const ib = typeof b.buySignal?.intentScore === 'number' ? b.buySignal.intentScore : -1;
+            return (ib - ia) || (b.leadScore - a.leadScore);
+        });
     } else if (f.sort === 'buy') {
         // Bewiesene Spender zuerst, innerhalb der Gruppe nach Score.
         out.sort((a, b) => (hasBuySignal(b) - hasBuySignal(a)) || (b.leadScore - a.leadScore));

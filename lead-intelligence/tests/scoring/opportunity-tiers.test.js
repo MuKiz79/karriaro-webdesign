@@ -640,3 +640,73 @@ describe('F17 — „frisch investiert kauft nicht nochmal" (2026-08-17, Founder
         expect(mit.opportunity).toBeLessThanOrEqual(Math.ceil(ohne.opportunity * 0.6));
     });
 });
+
+describe('B4+B5/A5 — KI-Achse + Stillstands-Beleg (2026-08-17, Founder-Zielbilder)', () => {
+    const brummer = {
+        // Brummt (Reviews frisch, stark), Website mit hartem Zeichen — Basisfall.
+        ws: { perf: 52, viewport: true, isHttps: true },
+        tech: { isBaukasten: true, cms: 'Wix' },
+        place: { rating: 4.8, userRatingCount: 180, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' },
+        reviewRecency: { daysSinceLast: 18, velocity: 4, n: 5 }
+    };
+
+    it('B5: blockierte Zitier-Crawler verstärken ×1.15 + Chip mit Bot-Namen', () => {
+        const ohne = computeOpportunity({ ...brummer });
+        const mit = computeOpportunity({ ...brummer, ki: { entity: { hasOrg: true }, robots: { fetched: true, blockedBots: ['perplexitybot', 'oai-searchbot'] } } });
+        expect(mit.kiFactor).toBe(1.15);
+        expect(mit.opportunity).toBeGreaterThan(ohne.opportunity);
+        expect(mit.reasons.join(' ')).toContain('🤖 KI-Zitier-Crawler blockiert (perplexitybot');
+    });
+
+    it('B4: fehlendes Unternehmens-Schema verstärkt ×1.15 + Chip', () => {
+        const r = computeOpportunity({ ...brummer, ki: { entity: { hasOrg: false }, robots: { fetched: true, blockedBots: [] } } });
+        expect(r.kiFactor).toBe(1.15);
+        expect(r.reasons.join(' ')).toContain('🤖 für KI kaum lesbar');
+    });
+
+    it('Gegenprobe: KI-sichtbar (Schema da, Crawler offen) = neutral, KEIN Abschlag, kein Chip', () => {
+        const ohne = computeOpportunity({ ...brummer });
+        const r = computeOpportunity({ ...brummer, ki: { entity: { hasOrg: true }, robots: { fetched: true, blockedBots: [] } } });
+        expect(r.kiFactor).toBe(1.0);
+        expect(r.opportunity).toBe(ohne.opportunity);
+        expect(r.reasons.join(' ')).not.toContain('🤖');
+    });
+
+    it('ungeprüft (kein ki / robots nicht lesbar) = neutral — Lücke ist kein Befund', () => {
+        const ohne = computeOpportunity({ ...brummer });
+        for (const ki of [null, { entity: null, robots: { fetched: false, blockedBots: [] } }]) {
+            const r = computeOpportunity({ ...brummer, ki });
+            expect(r.kiFactor).toBe(1.0);
+            expect(r.opportunity).toBe(ohne.opportunity);
+        }
+    });
+
+    it('A5: ≥4 Jahre gleiche Basis verstärkt ×1.2 + Chip 🕰', () => {
+        const ohne = computeOpportunity({ ...brummer });
+        const mit = computeOpportunity({ ...brummer, siteAge: { konstanz4J: true, relaunchVerdacht: false } });
+        expect(mit.stillstandFactor).toBe(1.2);
+        expect(mit.opportunity).toBeGreaterThan(ohne.opportunity);
+        expect(mit.reasons.join(' ')).toContain('🕰 Basis seit ≥4 J. unverändert');
+    });
+
+    it('A5-Gegenprobe: konstanz4J false/null = neutral', () => {
+        const ohne = computeOpportunity({ ...brummer });
+        for (const siteAge of [null, { konstanz4J: null }, { konstanz4J: false }]) {
+            const r = computeOpportunity({ ...brummer, siteAge });
+            expect(r.stillstandFactor).toBe(1.0);
+            expect(r.opportunity).toBe(ohne.opportunity);
+        }
+    });
+
+    it('Zusammenspiel: Stillstand + KI-Lücke + Brummen = der Karriaro-Traumfall steigt deutlich', () => {
+        const basis = computeOpportunity({ ...brummer });
+        const traum = computeOpportunity({
+            ...brummer,
+            siteAge: { konstanz4J: true },
+            ki: { entity: { hasOrg: false }, robots: { fetched: true, blockedBots: [] } }
+        });
+        expect(traum.opportunity).toBeGreaterThan(basis.opportunity);
+        // ×1.2 × ×1.15 = +38 % vor Clamp/Deckel
+        expect(traum.stillstandFactor * traum.kiFactor).toBeCloseTo(1.38, 2);
+    });
+});

@@ -128,3 +128,21 @@ describe('hasBuySignal — neue proven-Semantik', () => {
         expect(hasBuySignal({ buySignal: { proven: false, intentScore: 44 } })).toBe(false);
     });
 });
+
+describe('B6 — Sortierung „Ambition" (2026-08-17)', () => {
+    const leads = [
+        { name: 'A', leadScore: 90, buySignal: { intentScore: 12 } },
+        { name: 'B', leadScore: 40, buySignal: { intentScore: 58 } },
+        { name: 'C', leadScore: 70, buySignal: { intentScore: null } },
+        { name: 'D', leadScore: 60, buySignal: { intentScore: 58 } }
+    ];
+    it('sortiert nach Kaufsignal-Evidenzsumme, Gleichstand nach Score, ungeprüft ans Ende', () => {
+        const out = applyFilters(leads, { sort: 'ambition' });
+        expect(out.map(l => l.name)).toEqual(['D', 'B', 'A', 'C']);
+    });
+    it('verändert die Eingabe nicht und lässt Standard-Sortierung unberührt', () => {
+        applyFilters(leads, { sort: 'ambition' });
+        expect(leads[0].name).toBe('A');
+        expect(applyFilters(leads, {}).map(l => l.name)).toEqual(['A', 'C', 'D', 'B']);
+    });
+});

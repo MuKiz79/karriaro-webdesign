@@ -113,10 +113,13 @@ async function cmsImArchiv(url, monateZurueck = 13) {
  * (aus dem frischen HTML — hier nicht nochmal fetchen).
  */
 async function ermittleSiteAge(url, domain, cmsNow) {
-    const [rdapMs, firstArchivedMs, cmsThen] = await Promise.all([
+    const [rdapMs, firstArchivedMs, cmsThen, cmsVor4J] = await Promise.all([
         rdapRegisteredMs(domain),
         cdxFirstArchivedMs(domain),
-        cmsNow ? cmsImArchiv(url) : Promise.resolve(null)
+        cmsNow ? cmsImArchiv(url) : Promise.resolve(null),
+        // A5 (2026-08-17): zweiter Blick ~4 Jahre zurück — die POSITIVE Hälfte
+        // des Founder-Kriteriums „seit längerem nicht modernisiert".
+        cmsNow ? cmsImArchiv(url, 48) : Promise.resolve(null)
     ]);
     // crt.sh nur als Fallback anfragen (langsam) — RDAP hat Vorrang.
     const crtMs = rdapMs === null ? await crtshFirstCertMs(domain) : null;
@@ -125,10 +128,24 @@ async function ermittleSiteAge(url, domain, cmsNow) {
         domainRegisteredQuelle: rdapMs !== null ? 'rdap' : (crtMs !== null ? 'crtsh' : null),
         firstArchivedMs,
         cmsThen,
+        cmsVor4J,
         cmsNow: cmsNow || null,
         relaunchVerdacht: bewerteRelaunch(cmsThen, cmsNow),
+        // true = dieselbe technische Basis über ≥4 Jahre (beide Archiv-Punkte
+        // gleich wie heute) — der Stillstands-BELEG. ⚠️ Redesign INNERHALB
+        // desselben CMS bleibt unsichtbar (dokumentierte Grenze, wie F17).
+        konstanz4J: bewerteKonstanz(cmsVor4J, cmsThen, cmsNow),
         checkedAt: new Date().toISOString()
     };
+}
+
+/**
+ * Pure: Stillstand über ~4 Jahre — nur wenn ALLE drei Zeitpunkte dasselbe CMS
+ * zeigen. Eine Lücke (Archiv down, CMS unerkannt) ⇒ null, nie ein Urteil.
+ */
+function bewerteKonstanz(cmsVor4J, cmsThen, cmsNow) {
+    if (!cmsVor4J || !cmsThen || !cmsNow) return null;
+    return cmsVor4J === cmsNow && cmsThen === cmsNow;
 }
 
 /**
@@ -140,4 +157,4 @@ function bewerteRelaunch(cmsThen, cmsNow) {
     return cmsThen !== cmsNow;
 }
 
-module.exports = { ermittleSiteAge, bewerteRelaunch, cdxFirstArchivedMs, rdapRegisteredMs, cmsImArchiv };
+module.exports = { ermittleSiteAge, bewerteRelaunch, bewerteKonstanz, cdxFirstArchivedMs, rdapRegisteredMs, cmsImArchiv };

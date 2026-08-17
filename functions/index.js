@@ -13,7 +13,7 @@ const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const { runAuditPipeline, detectTech, checkFreshness } = require("./lib/audit-pipeline.js");
-const { runLightAudit, detectBlockedResponse, fetchHtml, detectTechFromHtml } = require("./lib/light-audit.js");
+const { runLightAudit, detectBlockedResponse, fetchHtml, detectTechFromHtml, fetchRobotsTxt, detectAiCrawlerAccess, detectEntitySignals } = require("./lib/light-audit.js");
 const { scanHtmlForAdTags, scanGtmContainer, buildAdEvidence, MAX_CONTAINERS } = require("./lib/ad-evidence.js");
 const { scanPaidTools, scanCareSignals, scanContactPaths, scanTechVersion } = require("./lib/site-evidence.js");
 const { bfsgPflichtLage } = require("./lib/bfsg-scope.js");
@@ -1776,6 +1776,7 @@ exports.adEvidence = onRequest(
                     bfsgScope: cached.bfsgScope || null,
                     techVersion: cached.techVersion || null,
                     siteAge: cached.siteAge || null,
+                    ki: cached.ki || null,
                     fetchedAt: cached.fetchedAt || null,
                     meta: { ...(cached.meta || {}), fromCache: true, durationMs: Date.now() - startMs }
                 });
@@ -1803,6 +1804,7 @@ exports.adEvidence = onRequest(
                     bfsgScope: null,
                     techVersion: null,
                     siteAge: null,
+                    ki: null,
                     fetchedAt: new Date().toISOString(),
                     meta: { finalUrl, htmlBytes: html.length, durationMs: Date.now() - startMs }
                 };
@@ -1866,6 +1868,21 @@ exports.adEvidence = onRequest(
                         const domain = new URL(target).hostname.replace(/^www\./, "");
                         const cmsNow = (detectTechFromHtml(html, target) || {}).cms || null;
                         return await ermittleSiteAge(target, domain, cmsNow);
+                    } catch { return null; }
+                })(),
+                // B4+B5 (2026-08-17): KI-Sichtbarkeit für den Scanner — Karriaros
+                // Kernversprechen als Scan-Kriterium. Wiederverwendet die
+                // evidenzbasierten GEO-Detektoren (Sprint 230): Entitäts-Schema aus
+                // dem HTML + robots.txt-Zugang der ZITIER-Crawler (oai-searchbot/
+                // Perplexity/claude-searchbot — Training-Bots zählen bewusst NICHT,
+                // KB-Hausregel). robots nicht lesbar → fetched:false = ungeprüft.
+                ki: await (async () => {
+                    try {
+                        const robotsTxt = await fetchRobotsTxt(finalUrl || url);
+                        return {
+                            entity: detectEntitySignals(html),
+                            robots: detectAiCrawlerAccess(robotsTxt)
+                        };
                     } catch { return null; }
                 })(),
                 fetchedAt: new Date().toISOString(),

@@ -140,6 +140,8 @@ export function pass2({ leads, adevMap, month, jobsByBranch = new Map(), city = 
             }
             // F17 (2026-08-17): Website-Alter/Relaunch-Verdacht wie scanner.js.
             l.siteAge = ev.siteAge || null;
+            // B4+B5 (2026-08-17): KI-Sichtbarkeit wie scanner.js.
+            l.ki = ev.ki || null;
             if (e && (e.googleAds?.found || e.metaPixel?.found || e.microsoftAds?.found)) {
                 const sig = [];
                 if (e.googleAds?.found) sig.push(e.googleAds.confidence === 'aktiv' ? 'Google Ads aktiv' : 'Google Ads konfiguriert (GTM-Container)');
@@ -158,7 +160,7 @@ export function pass2({ leads, adevMap, month, jobsByBranch = new Map(), city = 
             techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
             adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
             contactPaths: l.siteEvidence?.contactPaths || null,
-            siteAge: l.siteAge || null,
+            siteAge: l.siteAge || null, ki: l.ki || null,
             seasonal: seasonalTriggerFor(l.place.primaryType, month)
         });
         l.opportunity = re.opportunity; l.leadScore = re.opportunity;
@@ -197,7 +199,7 @@ export function pass3({ leads, visionMap, month }) {
                 techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
                 adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
                 contactPaths: l.siteEvidence?.contactPaths || null,
-                siteAge: l.siteAge || null,
+                siteAge: l.siteAge || null, ki: l.ki || null,
                 seasonal: seasonalTriggerFor(l.place.primaryType, month), visionOutdated: true
             });
             l.opportunity = re.opportunity; l.leadScore = re.opportunity;
