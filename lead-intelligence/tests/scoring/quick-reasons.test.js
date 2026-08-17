@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { quickReasons } from '../../src/scoring/quick-reasons.js';
+import { quickReasons, scanFazit } from '../../src/scoring/quick-reasons.js';
 
 const texte = r => quickReasons(r).belege.map(b => b.text);
 const arten = r => quickReasons(r).belege.map(b => b.kind);
@@ -86,5 +86,59 @@ describe('quickReasons — Belege der Schnellsuche-Karte', () => {
         expect(belege).toEqual([{ kind: 'gegenprobe', text: 'Tempo nicht messbar — kein Tempo-Argument' }]);
         expect(fazit.stufe).toBe('schwach');
         expect(() => quickReasons()).not.toThrow();
+    });
+});
+
+describe('scanFazit — Urteil für die Region-Scan-Liste', () => {
+    it('Mangel + bewiesenes Kaufsignal = der stärkste Fall', () => {
+        const f = scanFazit({ hardStructural: 2, buySignal: { proven: true }, adChecked: true, ki: {}, siteAge: { konstanz4J: true } });
+        expect(f.stufe).toBe('stark');
+        expect(f.text).toMatch(/Belegter Mangel UND bewiesenes Kaufsignal/);
+        expect(f.ungeprueft).toEqual([]);
+    });
+
+    it('Mangel ohne Kaufsignal bleibt mittel und sagt das auch', () => {
+        const f = scanFazit({ hardStructural: 1, buySignal: { proven: false }, adChecked: true, ki: {}, siteAge: {} });
+        expect(f.stufe).toBe('mittel');
+        expect(f.text).toMatch(/Kaufbereitschaft ist offen/);
+    });
+
+    it('Kaufsignal ohne Mangel: ehrlich als Wirkungs-, nicht Defekt-Fall', () => {
+        const f = scanFazit({ hardStructural: 0, buySignal: { adActive: true }, adChecked: true, ki: {}, siteAge: {} });
+        expect(f.stufe).toBe('mittel');
+        expect(f.text).toMatch(/nicht ein Defekt/);
+    });
+
+    it('weder noch = schwach', () => {
+        expect(scanFazit({ hardStructural: 0, adChecked: true, ki: {}, siteAge: {} }).stufe).toBe('schwach');
+    });
+
+    it('eine schon zeitgemäße Seite schlägt alles andere', () => {
+        const f = scanFazit({ hardStructural: 1, buySignal: { proven: true }, looksAlreadyGood: true });
+        expect(f.stufe).toBe('schwach');
+        expect(f.text).toMatch(/wenig zu verkaufen/);
+    });
+
+    it('nennt den Deckel, wenn er greift', () => {
+        expect(scanFazit({ hardStructural: 0, scoreCap: 69 }).text).toMatch(/Score gedeckelt/);
+        expect(scanFazit({ hardStructural: 0, scoreCap: null }).text).not.toMatch(/gedeckelt/);
+    });
+
+    it('unterscheidet „nie geprüft" von „geprüft und geblockt"', () => {
+        expect(scanFazit({ adChecked: false }).ungeprueft).toContain('Anzeigen (nur die vorderen Ränge werden geprüft)');
+        expect(scanFazit({ adChecked: false, adBlocked: true }).ungeprueft).toContain('Anzeigen (Seite hat den Prüfer geblockt)');
+        // Vollständig geprüft heißt: Anzeigen sauber gescannt, KI-Signale da UND
+        // ein Archiv-Urteil (true/false) — ein siteAge ohne konstanz4J ist offen.
+        expect(scanFazit({ adChecked: true, ki: {}, siteAge: { konstanz4J: false } }).ungeprueft).toEqual([]);
+    });
+
+    it('meldet den Archiv-Ausfall getrennt vom fehlenden Seitenalter', () => {
+        expect(scanFazit({ adChecked: true, ki: {}, siteAge: null }).ungeprueft).toContain('Alter der Seite');
+        expect(scanFazit({ adChecked: true, ki: {}, siteAge: { konstanz4J: null } }).ungeprueft).toContain('Stillstand (Archiv lieferte nichts)');
+    });
+
+    it('ist robust gegen einen leeren Lead', () => {
+        expect(() => scanFazit()).not.toThrow();
+        expect(scanFazit().stufe).toBe('schwach');
     });
 });

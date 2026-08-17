@@ -113,6 +113,58 @@ export function quickReasons(r = {}) {
 }
 
 /**
+ * Fazit für die Region-Scan-Liste: taugt dieser Lead für ein Anschreiben?
+ *
+ * Der Founder hat dieselbe Frage schon an der Scanner-Liste gestellt („Warum
+ * sollte ich die Beiden anschreiben? Bitte erklären", 2026-08-16) — die Chips
+ * dort nennen die Einzelbefunde, aber nie das Urteil daraus. Diese Zeile
+ * verdichtet die zwei Achsen, die über einen Auftrag entscheiden: gibt es einen
+ * BELEGTEN Mangel, und gibt es ein BEWIESENES Kaufsignal.
+ *
+ * Und sie nennt, was bei DIESEM Lead ungeprüft blieb — der Scanner prüft
+ * Anzeigen/Seitenalter/KI-Sichtbarkeit nur für die vorderen Ränge; ohne den
+ * Hinweis liest sich „kein Kaufsignal" wie ein Befund, obwohl es eine Lücke ist.
+ *
+ * @param {object} l Lead aus dem Region-Scan
+ * @returns {{stufe:'stark'|'mittel'|'schwach', text:string, ungeprueft:string[]}}
+ */
+export function scanFazit(l = {}) {
+    const hart = typeof l.hardStructural === 'number' ? l.hardStructural : 0;
+    const proven = !!(l.buySignal?.proven || l.buySignal?.adActive || l.buySignal?.hiring);
+
+    let stufe, text;
+    if (l.looksAlreadyGood) {
+        stufe = 'schwach';
+        text = 'Die Seite wirkt bereits zeitgemäß — hier gibt es wenig zu verkaufen.';
+    } else if (hart >= 1 && proven) {
+        stufe = 'stark';
+        text = 'Belegter Mangel UND bewiesenes Kaufsignal — der stärkste Fall im Scan.';
+    } else if (hart >= 1) {
+        stufe = 'mittel';
+        text = 'Belegter Mangel, aber kein bewiesenes Kaufsignal — der Anlass trägt, die Kaufbereitschaft ist offen.';
+    } else if (proven) {
+        stufe = 'mittel';
+        text = 'Zahlt für Kundengewinnung, aber kein struktureller Mangel — Anlass wäre Wirkung, nicht ein Defekt.';
+    } else {
+        stufe = 'schwach';
+        text = 'Weder struktureller Mangel noch Kaufsignal — schwacher Fall.';
+    }
+    if (l.scoreCap === 69) {
+        text += ' Score gedeckelt: kein hartes Strukturzeichen bzw. Ruf unprüfbar.';
+    }
+
+    // Was bei DIESEM Lead nicht geprüft wurde — dreiwertig, nie geraten.
+    const ungeprueft = [];
+    if (l.adBlocked) ungeprueft.push('Anzeigen (Seite hat den Prüfer geblockt)');
+    else if (!l.adChecked) ungeprueft.push('Anzeigen (nur die vorderen Ränge werden geprüft)');
+    if (!l.ki) ungeprueft.push('KI-Sichtbarkeit');
+    if (!l.siteAge) ungeprueft.push('Alter der Seite');
+    else if (l.siteAge.konstanz4J === null || l.siteAge.konstanz4J === undefined) ungeprueft.push('Stillstand (Archiv lieferte nichts)');
+
+    return { stufe, text, ungeprueft };
+}
+
+/**
  * Feld-Beleg mit Sekunden, wenn PSI den p75-Wert mitgeliefert hat.
  * Ohne Zahl bleibt der Satz stehen — aber ohne erfundene Präzision.
  */

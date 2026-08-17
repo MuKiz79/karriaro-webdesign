@@ -1069,6 +1069,18 @@
     font-size: 0.74rem;
     color: var(--muted);
 }
+/* Urteil aus den Chips darüber (2026-08-17): „taugt der Lead fürs Anschreiben?" */
+.ws-lead-fazit {
+    margin-top: 3px;
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+.ws-fazit-stark { color: var(--text); font-weight: 600; }
+.ws-fazit-mittel { color: var(--text); }
+.ws-fazit-schwach { color: var(--text); opacity: 0.75; }
+/* Die Lücken bleiben lesbar — sie sind der Unterschied zwischen
+   „geprüft und nichts gefunden" und „nie geprüft". */
+.ws-lead-offen { color: var(--muted); font-weight: 400; }
 
 .ws-lead-actions {
     display: flex;

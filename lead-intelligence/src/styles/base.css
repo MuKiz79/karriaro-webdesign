@@ -9,7 +9,12 @@
     /* Karriaro-Markenpalette: Navy / Creme / Messing */
     --bg: #F1EFE7;        /* Creme */
     --text: #16202C;      /* Navy */
-    --muted: #6B7280;     /* warmes Grau */
+    /* ⚠️ Gemessen 2026-08-17: #6B7280 lag auf dem KARTEN-Grund bei 4,63:1 (gerade
+       bestanden), auf dem etwas dunkleren Seiten-Grund --bg aber nur bei 4,20:1 —
+       und dort steht die Adresszeile jeder Lead-Karte. Ein Grenzwert gilt nur für
+       den Grund, gegen den er gewählt wurde: #666D79 besteht auf BEIDEN
+       (4,53 / 4,99). Dunkles Thema unberührt (--muted dort 6,14:1). */
+    --muted: #666D79;     /* warmes Grau */
     --accent: #C9A24B;    /* Messing */
     --accent-ink: #16202C;/* Textfarbe AUF Messing-Flächen (Buttons) */
     --green: #2E9E54;     /* gedämpftes Grün — Lead-Qualität, nicht Marke */

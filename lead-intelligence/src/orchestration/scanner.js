@@ -48,6 +48,7 @@ import { getCachedPlaces, setCachedPlaces, countUncached, getCachedScore, setCac
 import { getAlreadyKnown } from '../crm/known.js';
 import { escapeHtml } from '../lib/escape-html.js';
 import { saveSearch } from '../crm/saved-searches.js';
+import { scanFazit } from '../scoring/quick-reasons.js';
 
 const BRANCHES = [
     { key: 'dentist',           q: 'Zahnarzt',          name: 'Zahnärzte' },
@@ -753,6 +754,13 @@ function renderLeadCard(l) {
         const muted = /Bild: modern/i.test(r) ? ' ws-chip-muted' : '';
         return `<span class="ws-lead-tech${muted}">${escapeHtml(r)}</span>`;
     }).join(' ');
+    // Die Chips nennen die Einzelbefunde, aber nie das Urteil daraus — der
+    // Founder musste zweimal nachfragen, warum er einen Lead anschreiben soll
+    // (2026-08-16/17). Diese Zeile sagt es, samt der Lücken DIESES Leads.
+    const fz = scanFazit(l);
+    const fazitZeile = `<div class="ws-lead-fazit ws-fazit-${fz.stufe}">${escapeHtml(fz.text)}${
+        fz.ungeprueft.length ? `<span class="ws-lead-offen"> · ungeprüft: ${escapeHtml(fz.ungeprueft.join(', '))}</span>` : ''
+    }</div>`;
 
     return `
         <div class="ws-lead ws-lead-${scoreClass}" data-key="${escapeHtml(l.key)}" data-url="${escapeHtml(l.websiteUri)}">
@@ -766,6 +774,7 @@ function renderLeadCard(l) {
                     <span class="ws-lead-branch">${escapeHtml(l.branch.name)}</span>
                     ${reasons}
                 </div>
+                ${fazitZeile}
                 ${l.address ? `<div class="ws-lead-line3">${escapeHtml(l.address)}</div>` : ''}
             </div>
             <div class="ws-lead-actions">
