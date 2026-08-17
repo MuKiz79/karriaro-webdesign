@@ -55,9 +55,14 @@ describe('deriveJobOpenings', () => {
         ...over
     });
 
-    it('liefert die Gesamtzahl, wenn der Arbeitgeber sauber matcht', () => {
+    it('zählt die EIGENEN Stellen des gematchten Arbeitgebers, nie das Fenster-Total', () => {
+        // 2026-08-17: erwartete früher `openings: 4` (= total) — das stammte aus
+        // der v4-Arbeitgeber-DIREKTSUCHE, wo alle Treffer dem Betrieb gehörten.
+        // Seit der Branchen-Suche (v6) enthält das Fenster fremde Betriebe;
+        // total zu übernehmen schrieb real einem Tierarzt 16 Stellen zu, von
+        // denen eine seine war. Exakt zählen: 2 von total 4.
         expect(deriveJobOpenings(payload(), 'Zahnarztpraxis Dr. Müller'))
-            .toEqual({ openings: 4, employer: 'Dr. Mueller GmbH' });
+            .toEqual({ openings: 2, employer: 'Dr. Mueller GmbH' });
     });
 
     it('liefert 0 ohne Match — lieber kein Signal als ein erfundenes', () => {
@@ -97,5 +102,34 @@ describe('Gattungs-Komposita (2026-08-16, Live-Fund Branchen-Jobsuche)', () => {
     it('MVZ/Gesundheitszentrum sind ebenfalls Gattung', () => {
         expect(matchEmployer('MVZ Gesundheitszentrum Stuttgart',
             ['MVZ Zahnorama GmbH'], 'Stuttgart')).toBeNull();
+    });
+});
+
+describe('deriveJobOpenings zählt EXAKT (2026-08-17, TGZ-Fund)', () => {
+    // Realfall: Branchen-Suche Tierarzt×Hamburg, total 16 — aber nur EINE
+    // Stelle („Reinigungskraft") gehörte dem gematchten Betrieb. Die alte
+    // ≤25-Abkürzung schrieb ihm alle 16 zu → „starkes Wachstum" aus dem Nichts.
+    const payload = {
+        ok: true, total: 16,
+        employers: ['Tiergesundheitszentrum Hamburg GbR Dres. Ehlers / Schirren', 'Andere Praxis'],
+        jobs: [
+            { arbeitgeber: 'Tiergesundheitszentrum Hamburg GbR Dres. Ehlers / Schirren', titel: 'Reinigungskraft' },
+            { arbeitgeber: 'Andere Praxis', titel: 'Tierarzt' },
+            { arbeitgeber: 'Andere Praxis', titel: 'TFA' }
+        ]
+    };
+    it('kleines Fenster: exakt zählen, nie das Fenster-Total übernehmen', () => {
+        const d = deriveJobOpenings(payload, 'Tiergesundheitszentrum Hamburg', 'Hamburg');
+        expect(d.openings).toBe(1);      // vorher: 16
+        expect(d.employer).toMatch(/Tiergesundheitszentrum/);
+    });
+    it('Gegenprobe: mehrere echte Stellen zählen weiter voll', () => {
+        const viele = { ...payload, jobs: [...payload.jobs,
+            { arbeitgeber: 'Tiergesundheitszentrum Hamburg GbR Dres. Ehlers / Schirren', titel: 'TFA' },
+            { arbeitgeber: 'Tiergesundheitszentrum Hamburg GbR Dres. Ehlers / Schirren', titel: 'Tierarzt' }] };
+        expect(deriveJobOpenings(viele, 'Tiergesundheitszentrum Hamburg', 'Hamburg').openings).toBe(3);
+    });
+    it('kein Match ⇒ 0 (unverändert)', () => {
+        expect(deriveJobOpenings(payload, 'Völlig Anderer Betrieb XYZQ', 'Hamburg').openings).toBe(0);
     });
 });

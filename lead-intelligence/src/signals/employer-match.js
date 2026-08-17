@@ -141,10 +141,14 @@ export function matchEmployer(placeName, employers, cityHint = '') {
 /**
  * Leitet aus einer Jobsuche-Antwort die belastbare Zahl offener Stellen ab.
  *
- * Ketten-Schutz: Bei sehr vielen Treffern (`total > 25`) hat die Suche
- * offensichtlich breit gestreut — dann zählen nur die Stellen, deren
- * Arbeitgeber exakt dem gematchten Namen entspricht. Sonst würde ein
- * Allerweltsname wie „Müller" hunderte fremde Stellen einsammeln.
+ * 2026-08-17 — IMMER exakt zählen, sobald der Arbeitgeber identifiziert ist.
+ * Die alte Abkürzung „bei total ≤ 25 zählt das ganze Fenster" stammte aus der
+ * Arbeitgeber-DIREKTSUCHE (v4: alle Treffer gehörten dem Betrieb). Seit der
+ * Branchen-Suche (v6, F14) enthält das Fenster FREMDE Betriebe — real wurden
+ * einem Tierarzt 16 Stellen zugeschrieben, von denen genau EINE seine war
+ * („Reinigungskraft"), und das Werkzeug machte daraus ein starkes
+ * Wachstumssignal samt Score 100. Zählen statt schätzen; das Fenster-Total
+ * ist nur noch der Kontext, nie die Antwort.
  *
  * @param {Object|null} payload - Antwort der jobSignals-Function
  * @param {string} placeName
@@ -156,10 +160,9 @@ export function deriveJobOpenings(payload, placeName, cityHint = '') {
     const employer = matchEmployer(placeName, payload.employers, cityHint);
     if (!employer) return { openings: 0, employer: null };
 
-    const total = typeof payload.total === 'number' ? payload.total : 0;
-    if (total > 25) {
-        const exact = (payload.jobs || []).filter(j => j.arbeitgeber === employer).length;
-        return { openings: exact, employer };
-    }
-    return { openings: total, employer };
+    const exact = (payload.jobs || []).filter(j => j.arbeitgeber === employer).length;
+    // Arbeitgeber steht in der employers-Liste, also stammt er aus jobs[] —
+    // exact ist damit ≥ 1, sofern der Aufrufer beide aus derselben Antwort
+    // reicht. Der Max-Guard schützt nur gegen inkonsistente Alt-Caches.
+    return { openings: Math.max(exact, 1), employer };
 }
