@@ -27,6 +27,8 @@ import { STADTTEILE } from '../data/stadtteile.js';
 import { getCachedPlaces, setCachedPlaces } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { saveSearch } from '../crm/saved-searches.js';
+import { quickReasons } from '../scoring/quick-reasons.js';
+import { escapeHtml } from '../lib/escape-html.js';
 
 // Baukasten aus URL erkennbar
 const BAUKASTEN_URL = [
@@ -159,10 +161,14 @@ export async function runBatchSearch() {
                 const screenshot = psi?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
 
                 // Quick-Score: Wie schlecht ist die Website? (0 = perfekt, 100 = katastrophal)
+                // ⚠️ 2026-08-17: Eine PSI-Kategorie ohne Score liefert 0 — das ergab
+                // vorher den vollen Aufschlag (Perf +100, A11y +50) für eine Seite,
+                // über die NICHTS bekannt ist, und schob sie an die Spitze der Liste.
+                // Nicht gemessen ist neutral, nicht katastrophal (Playbook §2).
                 let badnessScore = 0;
-                badnessScore += Math.max(0, 100 - ws.perf);           // Perf 30 → +70
-                badnessScore += Math.max(0, 100 - ws.seo) * 0.3;     // SEO 40 → +18
-                badnessScore += Math.max(0, 100 - ws.a11y) * 0.5;    // A11y 50 → +25
+                if (ws.perfKnown !== false) badnessScore += Math.max(0, 100 - ws.perf);   // Perf 30 → +70
+                if (ws.seoKnown !== false) badnessScore += Math.max(0, 100 - ws.seo) * 0.3;  // SEO 40 → +18
+                if (ws.a11yKnown !== false) badnessScore += Math.max(0, 100 - ws.a11y) * 0.5; // A11y 50 → +25
                 if (!ws.isHttps) badnessScore += 30;
                 if (ws.viewportMissing) badnessScore += 25;
                 if (tech.isBaukasten) badnessScore += 20;
@@ -174,7 +180,14 @@ export async function runBatchSearch() {
                 return {
                     ...c,
                     perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
+                    // Mess-Lücken mitführen: quickReasons darf aus einer Lücke
+                    // keinen Mangel machen, und der Score tut es oben auch nicht.
+                    perfKnown: ws.perfKnown, seoKnown: ws.seoKnown, a11yKnown: ws.a11yKnown,
                     isHttps: ws.isHttps,
+                    viewportMissing: ws.viewportMissing,
+                    // CrUX-Felddaten (F16): entscheidet, ob Tempo überhaupt ein
+                    // Argument ist — steckt in derselben PSI-Antwort, kostet nichts.
+                    crux: ws.crux || null,
                     cms: tech.cms || c.baukasten?.name || '',
                     isBaukasten: tech.isBaukasten || !!c.baukasten,
                     screenshot,
@@ -248,6 +261,26 @@ export function reopenBatch(entry) {
 // VISUELLES ERGEBNIS: Screenshot-Cards
 // ══════════════════════════════════════
 
+/**
+ * „Warum kommt die Seite in Frage?" — die Belege unter der Prozentzahl.
+ *
+ * Founder-Auftrag 2026-08-17: drei Zahlen ohne Beleg zwingen dazu, jede Seite
+ * selbst zu öffnen. Die Belege stehen deshalb IN der Karte, mit dem gemessenen
+ * Wert, den das Anschreiben zitieren kann — und mit dem, was dagegen spricht.
+ */
+function renderWhy(r) {
+    const { belege, fazit, ungeprueft } = quickReasons(r);
+    if (!belege.length) return '';
+    const chips = belege
+        .map(b => `<span class="prospect-why-chip why-${b.kind}">${escapeHtml(b.text)}</span>`)
+        .join('');
+    return `<div class="prospect-why">
+        <div class="prospect-why-chips">${chips}</div>
+        <div class="prospect-why-fazit why-fazit-${fazit.stufe}">${escapeHtml(fazit.text)}</div>
+        <div class="prospect-why-note">Schnellprüfung — ungeprüft bleibt: ${escapeHtml(ungeprueft.join(' · '))}. Das sieht erst die Einzel-Analyse.</div>
+    </div>`;
+}
+
 function renderProspectingResults(query, results) {
     const stats = state._batchStats || {};
 
@@ -295,6 +328,7 @@ function renderProspectingResults(query, results) {
                     <span style="color:${oppColor};font-weight:700">${r.opportunity}% Chance</span>
                     <span class="metric-desc">Website: ${r.badnessScore}/200 schlecht · Geschäft: ${r.businessStrength}/100 stark</span>
                 </div>
+                ${renderWhy(r)}
                 <div class="prospect-actions">
                     <a href="#" class="crm-reanalyze btn-primary" data-url="${r.url}" style="font-size:12px;padding:6px 14px">Einzel-Analyse</a>
                     <button class="crm-btn-export" data-save-domain="${r.domain}" data-save-url="${r.url}" data-save-name="${r.name}" data-save-type="${r.type}" data-save-score="${r.opportunity}" data-save-perf="${r.perf}" data-save-reviews="${r.reviews}">Im CRM</button>

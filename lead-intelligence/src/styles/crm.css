@@ -219,6 +219,12 @@
 }
 .crm-lead-meta a:hover { text-decoration: underline; }
 .crm-reanalyze { color: var(--accent); font-size: 11px; }
+/* ⚠️ Gleiche Spezifität (0,1,0) wie `.btn-primary` in base.css — und crm.css wird
+   SPÄTER gebündelt, also gewann die Zeile darüber. Auf der Schnellsuche-Karte
+   trägt derselbe Link beide Klassen: Messing-Text auf Messing-Fläche = 1:1,
+   der Knopf „Einzel-Analyse" war eine leere goldene Pille (Founder-Screenshot
+   2026-08-17). Override MUSS direkt hinter der Regel stehen, die er aufhebt. */
+.crm-reanalyze.btn-primary { color: var(--accent-ink); }
 .crm-lead-dates {
     font-size: 11px;
     color: var(--muted);

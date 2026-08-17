@@ -27,6 +27,17 @@ export function extractWebsiteScore(psiData) {
 
     return {
         perf, a11y, bp, seo, avg,
+        // ⚠️ 2026-08-17: Die vier Zahlen oben defaulten auf 0, wenn Lighthouse die
+        // Kategorie NICHT messen konnte (runtimeError, NO_FCP, blockierter Bot).
+        // Eine 0 liest sich aber wie „katastrophal gemessen" — genau die Klasse
+        // „nicht gemessen wird wie negativ gemessen behandelt" (Playbook §2).
+        // Der `perfKnown`-Schutz in scoring/opportunity.js lief deshalb ins Leere:
+        // `typeof ws.perf === 'number'` war IMMER wahr. Diese Flags sind additiv
+        // (bestehende Leser unberührt) und machen die Lücke sichtbar.
+        perfKnown: typeof cats.performance?.score === 'number',
+        a11yKnown: typeof cats.accessibility?.score === 'number',
+        bpKnown: typeof cats['best-practices']?.score === 'number',
+        seoKnown: typeof cats.seo?.score === 'number',
         fcp: audits['first-contentful-paint']?.displayValue || '--',
         lcp: audits['largest-contentful-paint']?.displayValue || '--',
         cls: audits['cumulative-layout-shift']?.displayValue || '--',

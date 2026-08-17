@@ -710,3 +710,42 @@ describe('B4+B5/A5 — KI-Achse + Stillstands-Beleg (2026-08-17, Founder-Zielbil
         expect(traum.stillstandFactor * traum.kiFactor).toBeCloseTo(1.38, 2);
     });
 });
+
+describe('Mess-Lücke bleibt Lücke: perfKnown greift jetzt wirklich (2026-08-17)', () => {
+    // Der Schutz war seit dem 08.08. eingebaut, aber WIRKUNGSLOS: extractWebsiteScore
+    // liefert bei nicht messbarer Kategorie eine 0 — also immer eine Zahl, und
+    // `typeof ws.perf === 'number'` war damit immer wahr. Eine Seite, über die PSI
+    // nichts sagen konnte, bekam den vollen Perf-Aufschlag plus Design-Floor 32.
+    const place = { rating: 4.6, userRatingCount: 120, primaryType: 'hair_salon', businessStatus: 'OPERATIONAL' };
+    const reviewRecency = { daysSinceLast: 20, velocity: 3, n: 5 };
+    const sauber = { viewport: true, isHttps: true };
+
+    it('nicht gemessene Perf erzeugt weder Badness noch Design-Floor', () => {
+        const gemessen = computeOpportunity({ ws: { ...sauber, perf: 0, perfKnown: true }, tech: {}, place, reviewRecency });
+        const luecke = computeOpportunity({ ws: { ...sauber, perf: 0, perfKnown: false }, tech: {}, place, reviewRecency });
+        expect(gemessen.badnessScore).toBeGreaterThanOrEqual(32);   // Floor greift bei echter 0
+        expect(luecke.badnessScore).toBe(0);
+        expect(luecke.opportunity).toBeLessThan(gemessen.opportunity);
+    });
+
+    it('zeigt keine erfundene Zahl im Chip', () => {
+        const r = computeOpportunity({ ws: { ...sauber, perf: 0, perfKnown: false }, tech: {}, place, reviewRecency });
+        expect(r.reasons).toContain('Tempo nicht messbar');
+        expect(r.reasons.join(' ')).not.toMatch(/Perf \d/);
+    });
+
+    it('nicht gemessenes SEO/A11y zählt ebenfalls nicht als Mangel', () => {
+        const luecke = computeOpportunity({ ws: { ...sauber, perf: 80, perfKnown: true, seo: 0, seoKnown: false, a11y: 0, a11yKnown: false }, tech: {}, place, reviewRecency });
+        const echt = computeOpportunity({ ws: { ...sauber, perf: 80, perfKnown: true, seo: 0, seoKnown: true, a11y: 0, a11yKnown: true }, tech: {}, place, reviewRecency });
+        expect(luecke.badnessScore).toBe(0);
+        expect(echt.badnessScore).toBeGreaterThan(0);
+    });
+
+    it('gespeicherte Scans OHNE die neuen Flags behalten ihre Rangfolge', () => {
+        // Rückwärtskompatibilität: fehlt `perfKnown`, gilt der Wert wie bisher als gemessen.
+        const alt = computeOpportunity({ ws: { ...sauber, perf: 38 }, tech: {}, place, reviewRecency });
+        const neu = computeOpportunity({ ws: { ...sauber, perf: 38, perfKnown: true }, tech: {}, place, reviewRecency });
+        expect(alt.opportunity).toBe(neu.opportunity);
+        expect(alt.reasons).toContain('Perf 38');
+    });
+});

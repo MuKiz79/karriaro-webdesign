@@ -512,6 +512,42 @@
     margin-top: 4px;
 }
 
+/* „Warum kommt die Seite in Frage?" (2026-08-17) — Belege statt nur Prozentzahl. */
+.prospect-why {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+}
+.prospect-why-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.prospect-why-chip {
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--bg);
+}
+/* Farbe trägt nie die Bedeutung allein — der Text jedes Chips benennt den
+   Befund vollständig (Barrierefreiheit + Schwarz-Weiß-Druck). */
+.why-geschaeft { border-color: color-mix(in srgb, var(--green) 45%, var(--border)); }
+.why-mangel { border-color: color-mix(in srgb, var(--red) 45%, var(--border)); }
+/* ⚠️ Gemessen 2026-08-17: `--muted` ist gegen den KARTEN-Grund kalibriert (4,63:1),
+   der Chip sitzt aber auf dem etwas dunkleren `--bg` — dort nur 4,20:1, also
+   durchgefallen. Die Gegenprobe wird deshalb über die gestrichelte Kontur und
+   den Wortlaut markiert, nicht über eine schwächere Textfarbe. */
+.why-gegenprobe { border-style: dashed; }
+.prospect-why-fazit { font-size: 12px; line-height: 1.45; }
+.why-fazit-stark { color: var(--text); font-weight: 600; }
+.why-fazit-mittel { color: var(--text); }
+.why-fazit-schwach { color: var(--muted); }
+.prospect-why-note { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
 @media (max-width: 559px) {
     .prospect-card { flex-direction: column; }
     .prospect-screenshot { width: 100%; min-height: 180px; }

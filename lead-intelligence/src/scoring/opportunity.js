@@ -258,7 +258,14 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // messen konnte, bekam dadurch Problem-Belege aus dem Nichts. Der Default
     // bleibt für die Anzeige, ist aber als UNGEMESSEN markiert und löst weder
     // Perf-Badness noch den Floor aus.
-    const perfKnown = typeof ws.perf === 'number';
+    // ⚠️ 2026-08-17: `typeof ws.perf === 'number'` allein war WIRKUNGSLOS —
+    // extractWebsiteScore liefert bei nicht messbarer Kategorie eine 0, also
+    // immer eine Zahl. Der Schutz unten (kein Perf-Badness, kein Design-Floor)
+    // hat deshalb nie gegriffen; eine Seite, die Lighthouse gar nicht messen
+    // konnte, bekam Perf-0-Belege aus dem Nichts. `perfKnown === false` ist das
+    // explizite „nicht gemessen"; fehlt das Feld (Alt-Cache), bleibt es beim
+    // alten Verhalten, damit gespeicherte Scans ihre Rangfolge behalten.
+    const perfKnown = ws.perfKnown !== false && typeof ws.perf === 'number';
     const perf = perfKnown ? ws.perf : 50;
     const isHttps = ws.isHttps !== false;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
@@ -296,8 +303,12 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         if (cruxFast) perfB = Math.round(perfB * 0.5);
     }
     b += perfB;
-    b += Math.max(0, 60 - (ws.seo ?? 60)) * 0.10;
-    b += Math.max(0, 60 - (ws.a11y ?? 60)) * 0.10;
+    // Dieselbe Regel wie bei Perf: eine nicht gemessene Kategorie ist neutral
+    // (60 = Schwelle, also kein Aufschlag), nie ein Mangel-Beleg.
+    const seoVal = ws.seoKnown === false ? 60 : (ws.seo ?? 60);
+    const a11yVal = ws.a11yKnown === false ? 60 : (ws.a11y ?? 60);
+    b += Math.max(0, 60 - seoVal) * 0.10;
+    b += Math.max(0, 60 - a11yVal) * 0.10;
 
     // Design-Relaunch-Floor (F2): CURRENT-Tech ohne hartes Strukturzeichen, aber müder
     // Lab-Profile (perf<70) ist eine legitime Design/Conversion-Relaunch-Lead. Ohne Floor
@@ -414,7 +425,9 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
     if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
-    reasons.push(`Perf ${perf}`);
+    // Der Anzeige-Default 50 darf NIE als gemessener Wert erscheinen — sonst
+    // steht eine erfundene Zahl im Chip und der Founder pitcht sie.
+    reasons.push(perfKnown ? `Perf ${perf}` : 'Tempo nicht messbar');
     // F16: Die Feld-Lage gehört SICHTBAR neben den Laborwert — sie entscheidet,
     // ob Performance im Anschreiben überhaupt als Argument taugt. „Feld: schnell"
     // ist eine Warnung (Perf-Argument vom Inhaber in einer Minute widerlegbar),

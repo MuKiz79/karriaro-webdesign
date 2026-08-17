@@ -46,6 +46,33 @@ describe('extractWebsiteScore', () => {
     });
 });
 
+describe('Mess-Lücken sind als Lücke markiert (2026-08-17)', () => {
+    it('gemessene Kategorien melden known=true', () => {
+        const ws = extractWebsiteScore(mockPsi());
+        expect(ws.perfKnown).toBe(true);
+        expect(ws.a11yKnown).toBe(true);
+        expect(ws.seoKnown).toBe(true);
+        expect(ws.bpKnown).toBe(true);
+    });
+
+    it('Kategorie ohne Score (Lighthouse-Fehler) meldet known=false — die 0 ist KEIN Messwert', () => {
+        // PSI liefert bei runtimeError/NO_FCP eine Kategorie ohne `score`.
+        // Ohne dieses Flag las die 0 sich wie „katastrophal gemessen".
+        const ws = extractWebsiteScore(mockPsi({ categories: { performance: {}, seo: { score: null } } }));
+        expect(ws.perf).toBe(0);
+        expect(ws.perfKnown).toBe(false);
+        expect(ws.seoKnown).toBe(false);
+        expect(ws.a11yKnown).toBe(true);      // die anderen bleiben unberührt
+    });
+
+    it('gar keine PSI-Antwort ⇒ nichts gilt als gemessen', () => {
+        const ws = extractWebsiteScore(null);
+        expect(ws.perfKnown).toBe(false);
+        expect(ws.seoKnown).toBe(false);
+        expect(ws.a11yKnown).toBe(false);
+    });
+});
+
 describe('F16 — CrUX-Extraktion (2026-08-16)', () => {
     const base = { lighthouseResult: { categories: {}, audits: {} } };
 
