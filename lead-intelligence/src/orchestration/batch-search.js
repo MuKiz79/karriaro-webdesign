@@ -107,7 +107,9 @@ export async function runBatchSearch() {
         seen.add(domain);
         if (known.has(domain)) { filteredCount++; continue; }
 
-        const db = checkEnterpriseDB(domain);
+        // Name + Typ mitgeben — sonst bleibt die Kammer-/Innungs-/Bildungsträger-
+        // Gruppe auf Domain-Muster beschränkt und übersieht Markennamen.
+        const db = checkEnterpriseDB(domain, { name: p.displayName?.text, primaryType: p.primaryType });
         if (db.isCompetitor || db.isEnterprise) { filteredCount++; continue; }
 
         const reviews = p.userRatingCount || 0;

@@ -66,7 +66,9 @@ export async function runPlaces({ city }) {
             if (p.businessStatus && p.businessStatus !== 'OPERATIONAL') { filtered.nichtOperational++; continue; }
             let host;
             try { host = new URL(p.websiteUri).hostname.replace(/^www\./, ''); } catch { filtered.kaputteUrl++; continue; }
-            const ent = checkEnterpriseDB(host);
+            // scanner.js gibt seit 2026-08-18 Name + Places-Typ mit (Kammern/
+            // Innungen/öffentliche Bildungsträger) — der Spiegel muss das auch.
+            const ent = checkEnterpriseDB(host, { name: p.displayName?.text, primaryType: p.primaryType });
             if (ent.isEnterprise || ent.isCompetitor) { filtered.enterprise++; continue; }
             raw.push({ branch, bi, host, place: p });
         }

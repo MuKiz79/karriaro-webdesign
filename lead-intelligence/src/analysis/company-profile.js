@@ -29,7 +29,10 @@ export function analyzeCompanyProfile(url, psiData, place, contentAnalysis = nul
     const domainBase = domain.split('.')[0].toLowerCase();
 
     // ── 3. Großunternehmen-Erkennung via Datenbank (300+ Einträge) ──
-    const dbResult = checkEnterpriseDB(domain);
+    const dbResult = checkEnterpriseDB(domain, {
+        name: place?.displayName?.text || place?.name,
+        primaryType: place?.primaryType
+    });
 
     // Zusätzliche Signale aus Network Requests (für unbekannte Unternehmen)
     const urls = (psiData?.lighthouseResult?.audits?.['network-requests']?.details?.items || []).map(i => i.url || '').join(' ');

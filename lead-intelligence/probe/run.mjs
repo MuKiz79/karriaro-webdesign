@@ -71,7 +71,7 @@ const psiIndex = readJson(psiIndexFile);
 function candidatesWithPsi() {
     return places.candidates.filter(cand => {
         const host = new URL(cand.place.websiteUri).hostname.replace(/^www\./, '');
-        const ent = checkEnterpriseDB(host);
+        const ent = checkEnterpriseDB(host, { name: cand.place.displayName?.text, primaryType: cand.place.primaryType });
         return !ent.isEnterprise && !ent.isCompetitor;
     }).map(cand => {
         const domain = new URL(cand.place.websiteUri).hostname.replace(/^www\./, '');

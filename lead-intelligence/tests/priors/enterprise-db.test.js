@@ -196,3 +196,109 @@ describe('checkEnterpriseDB — Ketten aus dem Städte-Scan (2026-08-15)', () =>
         });
     }
 });
+
+describe('Kammern, Innungen & öffentliche Bildungsträger (2026-08-18)', () => {
+    const pb = (domain, meta) => checkEnterpriseDB(domain, meta);
+
+    it('erkennt Kammern an der Domain — auch in der Kurzform mit Ort', () => {
+        for (const d of ['hwk-hamburg.de', 'ihk-koeln.de', 'handwerkskammer.de',
+            'aerztekammer-bw.de', 'rechtsanwaltskammer-berlin.de']) {
+            const r = pb(d);
+            expect(r.isPublicBody, d).toBe(true);
+            expect(r.isEnterprise, d).toBe(true);      // bestehende Aufrufer filtern weiter
+            expect(r.category, d).toBe('publicbody');
+        }
+    });
+
+    it('erkennt Innungen und Kreishandwerkerschaften', () => {
+        expect(pb('elektro-innung-hamburg.de').isPublicBody).toBe(true);
+        expect(pb('kreishandwerkerschaft-koeln.de').isPublicBody).toBe(true);
+        expect(pb('zentralverband-shk.de').isPublicBody).toBe(true);
+    });
+
+    it('erkennt öffentliche Bildungsträger', () => {
+        expect(pb('vhs-hamburg.de').isPublicBody).toBe(false);   // 'vhs' bewusst NICHT als Muster
+        expect(pb('volkshochschule-koeln.de').isPublicBody).toBe(true);
+        expect(pb('berufsbildungszentrum-dresden.de').isPublicBody).toBe(true);
+    });
+
+    it('ELBCAMPUS: Markenname ohne jeden Hinweis — der Auslöserfall', () => {
+        // Weder Domain noch Name nennen die Handwerkskammer Hamburg.
+        const r = pb('elbcampus.de', { name: 'ELBCAMPUS Hamburg', primaryType: 'educational_institution' });
+        expect(r.isPublicBody).toBe(true);
+        expect(r.match).toBe('elbcampus');
+    });
+
+    it('greift über den NAMEN, wenn die Domain nichts verrät', () => {
+        // Gemessen: Handwerkskammer Hamburg → association_or_organization.
+        const r = pb('hh-beispiel.de', { name: 'Handwerkskammer Hamburg', primaryType: 'association_or_organization' });
+        expect(r.isPublicBody).toBe(true);
+        expect(r.match).toBe('handwerkskammer');
+    });
+
+    it('Typ + typ-eigenes Wort: der Fachverband fällt raus', () => {
+        const r = pb('nfe.de', {
+            name: 'NFE Norddeutscher Fachverband Elektro- und Informationstechnik e.V.',
+            primaryType: 'association_or_organization'
+        });
+        expect(r.isPublicBody).toBe(true);
+    });
+
+    it('Verwaltungstypen fallen ohne jedes Wort raus', () => {
+        expect(pb('beispiel-stadt.de', { name: 'Bürgeramt', primaryType: 'city_hall' }).isPublicBody).toBe(true);
+        expect(pb('x.de', { name: 'Amtsgericht', primaryType: 'courthouse' }).isPublicBody).toBe(true);
+    });
+
+    // ── GEGENPROBEN: ein falsch ausgeschlossener Lead ist für immer unsichtbar ──
+
+    it('der Kammerjäger bleibt drin — „kammer" allein schließt nichts aus', () => {
+        const r = pb('kammerjaeger-mueller.de', { name: 'Kammerjäger Müller', primaryType: 'pest_control_service' });
+        expect(r.isPublicBody).toBe(false);
+        expect(r.isEnterprise).toBe(false);
+    });
+
+    it('die private Sprach-/Kosmetikschule bleibt drin — Typ allein trägt nie', () => {
+        for (const name of ['Sprachschule Aktiv Hamburg', 'Kosmetik-Akademie Nord', 'Musikschule Klangwerk']) {
+            const r = pb('beispiel-schule.de', { name, primaryType: 'educational_institution' });
+            expect(r.isPublicBody, name).toBe(false);
+        }
+    });
+
+    it('der Sportverein bleibt drin, solange kein Verbands-Wort im Namen steht', () => {
+        expect(pb('sv-beispiel.de', { name: 'SV Beispiel 1920', primaryType: 'association_or_organization' }).isPublicBody).toBe(false);
+    });
+
+    it('Betriebe mit ähnlichen Silben bleiben unberührt — Token, nicht Teilstring', () => {
+        // Gemessen: 'innung' matcht NICHT in 'innungsbau', 'vhs' ist bewusst kein
+        // Muster (sonst fiele der VHS-Digitalisierer raus).
+        for (const d of ['innungsbau-mueller.de', 'campus-friseur.de',
+            'bildungsurlaub-reisen.de', 'vhs-digitalisieren.de']) {
+            expect(pb(d).isPublicBody, d).toBe(false);
+        }
+    });
+
+    it('Kurzform hwk/ihk: der Betrieb gewinnt, sobald Places einen Gewerbetyp nennt', () => {
+        // Ohne Places-Daten bleibt der Ausschluss (Kammern dominieren diese Domains).
+        expect(pb('hwk-elektro.de').isPublicBody).toBe(true);
+        expect(pb('ihk-media.de').isPublicBody).toBe(true);
+        // Mit konkretem Gewerbetyp NICHT — ein zu Unrecht gefilterter Handwerker
+        // wäre in keiner Liste mehr sichtbar.
+        expect(pb('hwk-elektro.de', { name: 'HWK Elektro Krause', primaryType: 'electrician' }).isPublicBody).toBe(false);
+        expect(pb('ihk-media.de', { name: 'IHK Media GmbH', primaryType: 'marketing_agency' }).isPublicBody).toBe(false);
+        // Die echte Kammer bleibt draußen — ihr Typ ist kein Gewerbe.
+        expect(pb('hwk-hamburg.de', { name: 'Handwerkskammer Hamburg', primaryType: 'association_or_organization' }).isPublicBody).toBe(true);
+        // Und die ausgeschriebene Form ist NIE überstimmbar.
+        expect(pb('handwerkskammer-koeln.de', { name: 'X', primaryType: 'electrician' }).isPublicBody).toBe(true);
+    });
+
+    it('ohne Places-Daten funktioniert weiterhin das Domain-Muster', () => {
+        expect(pb('hwk-koeln.de', null).isPublicBody).toBe(true);
+        expect(pb('friseur-mueller.de', null).isPublicBody).toBe(false);
+    });
+
+    it('bestehende Ketten-Erkennung unverändert', () => {
+        const r = pb('motel-one.com');
+        expect(r.category).toBe('hotel');
+        expect(r.isPublicBody).toBe(false);
+    });
+});

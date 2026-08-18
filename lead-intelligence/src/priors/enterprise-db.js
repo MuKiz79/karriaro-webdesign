@@ -146,6 +146,73 @@ const DAX_COMPANIES = [
 ];
 
 // ══════════════════════════════════════
+// KAMMERN, INNUNGEN & ÖFFENTLICHE BILDUNGSTRÄGER
+// ══════════════════════════════════════
+// Founder-Auftrag 2026-08-18, ausgelöst von ELBCAMPUS Hamburg (dem Bildungs-
+// zentrum der Handwerkskammer Hamburg), das mit 67 % Chance in der Liste stand.
+// Solche Häuser vergeben Websites über Ausschreibungen und Gremien, nie über
+// eine Direktansprache beim Inhaber — es gibt dort keinen Inhaber.
+//
+// ⚠️ Diese Gruppe ist NICHT über Markennamen fassbar (genau das zeigt ELBCAMPUS:
+// weder Name noch Domain nennen die Kammer). Sie braucht deshalb drei Signale;
+// siehe `publicBodyMatch` weiter unten. Hier stehen nur die Domain-Muster.
+const PUBLIC_BODY = [
+    // Kammern (Domain schreibt meist die Kurzform + Ort: hwk-hamburg.de)
+    'handwerkskammer', 'handelskammer', 'hwk', 'ihk', 'aerztekammer',
+    'zahnaerztekammer', 'apothekerkammer', 'rechtsanwaltskammer',
+    'steuerberaterkammer', 'architektenkammer', 'ingenieurkammer',
+    'notarkammer', 'tieraerztekammer', 'landwirtschaftskammer',
+    'pflegekammer', 'psychotherapeutenkammer', 'wirtschaftskammer',
+    // Innungen & Kreishandwerkerschaften
+    'innung', 'innungen', 'kreishandwerkerschaft', 'handwerkerschaft',
+    'innungsverband', 'fachverband', 'zentralverband',
+    // Öffentliche Bildungsträger
+    'volkshochschule', 'berufsbildungszentrum', 'berufsfoerderungswerk',
+    'berufsbildungswerk', 'bildungswerk', 'berufsakademie',
+    // ⚠️ Markenname ohne jeden Hinweis auf den Träger — nur per Einzeleintrag
+    // fassbar. Beleg: Impressum elbcampus.de = Handwerkskammer Hamburg.
+    'elbcampus',
+];
+
+// Wortmarken im BETRIEBSNAMEN (Google-Places-`displayName`). Bewusst als
+// zusammengesetzte Formen: ein blankes „kammer" würde den Kammerjäger und das
+// Kammerorchester mitnehmen — und ein Kammerjäger ist Zielgruppe, kein Ausschluss.
+const PUBLIC_BODY_NAME = new RegExp([
+    '(handwerks|handels|ärzte|aerzte|zahnärzte|zahnaerzte|apotheker|rechtsanwalts',
+    '|steuerberater|architekten|ingenieur|notar|tierärzte|tieraerzte|landwirtschafts',
+    '|pflege|psychotherapeuten|wirtschafts)kammer',
+    '|industrie- und handelskammer|\\bihk\\b|\\bhwk\\b',
+    '|\\binnung\\b|\\binnungen\\b|kreishandwerkerschaft|innungsverband',
+    '|volkshochschule|berufsbildungszentrum|berufsförderungswerk',
+    '|berufsfoerderungswerk|berufsbildungswerk|bildungswerk'
+].join(''), 'i');
+
+// Google-Places-Typen, die für sich allein schon Verwaltung/Gremium bedeuten.
+// Empirisch geprüft (2026-08-18, echte Places-Abfrage):
+//   Handwerkskammer Hamburg → association_or_organization
+//   ELBCAMPUS / Volkshochschule → educational_institution
+const PUBLIC_BODY_TYPES = new Set([
+    'city_hall', 'local_government_office', 'courthouse', 'embassy',
+    'fire_station', 'police', 'post_office'
+]);
+
+// ⚠️ Diese beiden Typen NICHT allein ausschließen: `association_or_organization`
+// trägt auch den Sportverein und die Genossenschaft, `educational_institution`
+// auch die private Sprach-, Musik- oder Nachhilfeschule — und die ist ein
+// Betrieb mit Inhaber, also Zielgruppe. Ein falsch ausgeschlossener Lead ist für
+// den Founder für IMMER unsichtbar; ein falsch behaltener kostet ihn einen Blick.
+// Deshalb zählen sie nur zusammen mit einem Wort, das für DIESEN Typ eindeutig
+// ist — je Typ ein eigenes Vokabular, weil dieselben Wörter anderswo harmlos sind
+// („Akademie" gehört zur Kosmetik-Akademie, die Zielgruppe ist).
+// Kurzformen, die auch Betriebs-Initialen sein können — siehe publicBodyMatch.
+const AMBIGUOUS_SHORT = new Set(['hwk', 'ihk']);
+
+const PUBLIC_BODY_WEAK_BY_TYPE = {
+    association_or_organization: /(verband|verein|e\.\s?v\.|genossenschaft|gilde|zunft|kammer|körperschaft|koerperschaft)/i,
+    educational_institution: /(berufsschule|berufskolleg|gewerbeschule|fachschule|staatlich|landesinstitut|schulzentrum|bildungsstätte|bildungsstaette|öffentlich|oeffentlich)/i
+};
+
+// ══════════════════════════════════════
 // WEBDESIGN / IT / MARKETING — Konkurrenz
 // ══════════════════════════════════════
 const COMPETITORS = [
@@ -210,18 +277,72 @@ export function patternMatches(domainBase, pattern) {
 }
 
 /**
+ * Kammer / Innung / öffentlicher Bildungsträger?
+ *
+ * Drei Signale, weil keines allein reicht:
+ *   1. Domain-Muster (hwk-hamburg.de, vhs-…, innung-…)
+ *   2. Wortmarke im Betriebsnamen (Google Places `displayName`)
+ *   3. Places-Typ — allein nur bei Verwaltungstypen; `association_or_organization`
+ *      und `educational_institution` NUR zusammen mit Signal 1 oder 2.
+ *
+ * @param {string} domainBase erste Domain-Marke, klein
+ * @param {{name?:string, primaryType?:string}|null} meta Places-Daten, falls vorhanden
+ * @returns {string|null} der Beleg, der gegriffen hat — oder null
+ */
+function publicBodyMatch(domainBase, meta) {
+    const typ = meta?.primaryType ? String(meta.primaryType) : '';
+    // ⚠️ „hwk"/„ihk" sind fast immer Kammern (hwk-hamburg.de), können aber auch
+    // die Initialen eines Betriebs sein (hwk-elektro.de) — und zwar SOWOHL in der
+    // Domain ALS AUCH im Namen. Nennt Places einen konkreten Gewerbetyp, gewinnt
+    // der Betrieb: ein zu Unrecht ausgeschlossener Handwerker taucht in KEINER
+    // Liste mehr auf. Die ausgeschriebenen Formen sind nie überstimmbar.
+    const gewerbetypBekannt = !!typ && !PUBLIC_BODY_TYPES.has(typ) && !PUBLIC_BODY_WEAK_BY_TYPE[typ];
+    const zaehlt = (treffer) => !(gewerbetypBekannt && AMBIGUOUS_SHORT.has(treffer.toLowerCase()));
+
+    for (const pattern of PUBLIC_BODY) {
+        if (patternMatches(domainBase, pattern) && zaehlt(pattern)) return pattern;
+    }
+    const name = meta?.name ? String(meta.name) : '';
+    const nameHit = name && PUBLIC_BODY_NAME.exec(name);
+    if (nameHit && zaehlt(nameHit[0])) return nameHit[0].toLowerCase();
+
+    if (typ && PUBLIC_BODY_TYPES.has(typ)) return typ;
+
+    // Typ + typ-eigenes Wort: „Norddeutscher Fachverband … e.V." als
+    // association_or_organization greift, der Sportverein ohne solches Wort nicht.
+    const weak = PUBLIC_BODY_WEAK_BY_TYPE[typ];
+    if (weak && name) {
+        const hit = weak.exec(name);
+        if (hit) return `${typ}:${hit[0].toLowerCase()}`;
+    }
+    // Der Typ allein trägt nie — ohne Wort bleibt der Lead drin.
+    return null;
+}
+
+/**
  * Prüft ob eine Domain zu einem bekannten Konzern/Kette gehört
  * @param {string} domain - z.B. "nh-hotels.com" oder "motel-one.com"
- * @returns {{ isEnterprise: boolean, isCompetitor: boolean, match: string|null, category: string|null }}
+ * @param {{name?:string, primaryType?:string}|null} meta - Places-Daten (optional).
+ *   Ohne sie greift für Kammern/Innungen/Bildungsträger nur das Domain-Muster —
+ *   ELBCAMPUS wäre dann nur über seinen Einzeleintrag zu fassen.
+ * @returns {{ isEnterprise: boolean, isCompetitor: boolean, isPublicBody: boolean, match: string|null, category: string|null }}
  */
-export function checkEnterpriseDB(domain) {
+export function checkEnterpriseDB(domain, meta = null) {
     const domainBase = String(domain || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('.')[0].toLowerCase();
 
     // Konkurrenz-Check
     for (const pattern of COMPETITOR_SET) {
         if (patternMatches(domainBase, pattern)) {
-            return { isEnterprise: false, isCompetitor: true, match: pattern, category: 'competitor' };
+            return { isEnterprise: false, isCompetitor: true, isPublicBody: false, match: pattern, category: 'competitor' };
         }
+    }
+
+    // Kammern / Innungen / öffentliche Bildungsträger — eigene Gruppe, aber
+    // dieselbe Wirkung: `isEnterprise` bleibt true, damit JEDER bestehende
+    // Aufrufer sie ohne Änderung aussortiert.
+    const pb = publicBodyMatch(domainBase, meta);
+    if (pb) {
+        return { isEnterprise: true, isCompetitor: false, isPublicBody: true, match: pb, category: 'publicbody' };
     }
 
     // Enterprise-Check
@@ -229,19 +350,19 @@ export function checkEnterpriseDB(domain) {
         if (category === 'competitor') continue;
         for (const pattern of patterns) {
             if (patternMatches(domainBase, pattern)) {
-                return { isEnterprise: true, isCompetitor: false, match: pattern, category };
+                return { isEnterprise: true, isCompetitor: false, isPublicBody: false, match: pattern, category };
             }
         }
     }
 
-    return { isEnterprise: false, isCompetitor: false, match: null, category: null };
+    return { isEnterprise: false, isCompetitor: false, isPublicBody: false, match: null, category: null };
 }
 
 /**
  * Statistiken über die Datenbank
  */
 export const DB_STATS = {
-    totalPatterns: ALL_PATTERNS.length + COMPETITORS.length,
+    totalPatterns: ALL_PATTERNS.length + PUBLIC_BODY.length + COMPETITORS.length,
     categories: Object.keys(ALL_CHAINS).length,
     hotels: HOTEL_CHAINS.length,
     restaurants: RESTAURANT_CHAINS.length,
@@ -252,5 +373,6 @@ export const DB_STATS = {
     auto: AUTO_CHAINS.length,
     craft: CRAFT_CHAINS.length,
     dax: DAX_COMPANIES.length,
+    publicbody: PUBLIC_BODY.length,
     competitors: COMPETITORS.length
 };

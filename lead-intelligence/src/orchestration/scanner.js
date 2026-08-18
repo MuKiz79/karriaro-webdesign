@@ -191,7 +191,10 @@ export async function runScanner() {
             let host;
             try { host = new URL(p.websiteUri).hostname.replace(/^www\./, ''); } catch { continue; }
             if (known.has(host)) continue;
-            const ent = checkEnterpriseDB(host);
+            // Name + Places-Typ mitgeben: Kammern, Innungen und öffentliche
+            // Bildungsträger tragen ihre Art oft NUR dort (elbcampus.de verrät
+            // die Handwerkskammer weder in der Domain noch im Namen).
+            const ent = checkEnterpriseDB(host, { name: p.displayName?.text, primaryType: p.primaryType });
             if (ent.isEnterprise || ent.isCompetitor) continue;
             raw.push({ branch, bi, host, place: p });
         }
