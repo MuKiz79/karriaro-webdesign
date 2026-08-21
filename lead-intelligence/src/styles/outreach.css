@@ -65,6 +65,8 @@
 
 /* Sticky-Footer */
 .studio-footer { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; padding: 14px 18px; background: var(--card, #fff); border: 1px solid var(--border, #e5e0d8); border-radius: var(--radius, 12px); box-shadow: 0 -4px 16px rgba(0,0,0,.06); }
-.studio-footer-info { font-size: 13px; font-weight: 600; }
+.studio-footer-info { font-size: 13px; font-weight: 600; display: flex; flex-direction: column; gap: 2px; }
+.studio-budget { font-size: 12px; font-weight: 500; color: var(--muted, #6b6256); }
+.studio-budget.is-maxed { color: var(--orange, #ff9f0a); font-weight: 600; }
 .studio-footer-actions { display: flex; gap: 10px; }
 .studio-send-gmail:disabled { opacity: .6; cursor: progress; }
