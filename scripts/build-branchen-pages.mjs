@@ -236,7 +236,7 @@ function buildPage(b) {
     </script>
     <style>${STYLE}</style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <script src="/js/attribution.js?v=199" defer></script>
+    <script src="/js/attribution.js?v=201" defer></script>
     <script src="/js/track-goals.js?v=252" defer></script>
 </head>
 <body>
@@ -258,7 +258,7 @@ function buildPage(b) {
             <h1>${b.h1}</h1>
             <p class="subhead">${b.heroSub}</p>
             <div style="margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-                <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch — Antwort in 24 h</a>
+                <a href="#kontakt" class="btn" data-cta="hero-primary">Erstgespräch anfragen</a>
                 <a href="${TEL_HREF}" class="btn-ghost" data-cta="tel-hero">Anrufen: ${TEL}</a>
             </div>
             <span class="price-anchor"><strong>Festpreis ab 1.290 €</strong>, einmalig — kein Abo. Erst Entwurf, dann zahlen.</span>
@@ -309,7 +309,7 @@ ${faqVisible}
     <section class="fade-in" id="kontakt">
         <div class="wrap-xs" style="text-align: center;">
             <h2>Webseite erstellen lassen.</h2>
-            <p class="subhead" style="margin-bottom: 36px;">Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich.</p>
+            <p class="subhead" style="margin-bottom: 36px;">Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung. Kostenlos und unverbindlich.</p>
             <form id="kontakt-form" data-lead="kwd-branche-${b.slug}-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="quelle" value="webdesign-fuer-${b.slug}">
                 <input type="hidden" name="branche" value="${b.name}">

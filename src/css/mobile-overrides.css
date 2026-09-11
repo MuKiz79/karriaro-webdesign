@@ -522,7 +522,7 @@
     }
     /* Eine echte Beispielseite (Browser-Frame) als Beweis im Hero, tappt zu #demos.
        (Founder 2026-06-25: Beispielseiten in den Hero; fokussiert = EINE Demo.) */
-    /* 2026-07-19 Fold-Dichte: 48-h-CTA muss VOLLSTÄNDIG über den ~664px-Fold
+    /* 2026-07-19 Fold-Dichte: der Entwurf-CTA muss VOLLSTÄNDIG über den ~664px-Fold
        (iPhone 13 inkl. Safari-Leisten, gemessen). Reihenfolge Demo → CTA → Preis
        kommt aus der Build-Mutation raiseHeroCtaAboveFold; hier die engeren
        Abstände + kompaktere Demo-Höhe. Die Hero-Guards von WhatsApp/Concierge

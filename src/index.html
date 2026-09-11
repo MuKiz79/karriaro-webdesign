@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.</title>
-    <meta name="description" content="Handcodierte Website-Unikate für lokale Unternehmen — mit eingebauten Werkzeugen, für die KI-Auffindbarkeit optimiert. Ihr Entwurf in 48 h, kostenfrei. Ab 1.290 € einmalig, ohne Abo.">
+    <meta name="description" content="Handcodierte Website-Unikate für lokale Unternehmen — mit eingebauten Werkzeugen, für die KI-Auffindbarkeit optimiert. Sie sehen zuerst einen kostenfreien Entwurf. Ab 1.290 € einmalig, ohne Abo.">
     <meta name="keywords" content="Webdesign, Website erstellen, lokale Unternehmen, Sprachsuche, BFSG, SEO, Webdesign Agentur, handcodiert">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://karriaro-webdesign.de/">
     <meta property="og:title" content="Karriaro Webdesign | Ein Unikat, das mitarbeitet. Ab 1.290 €.">
-    <meta property="og:description" content="Handcodierte Website-Unikate für lokale Unternehmen — mit eingebauten Werkzeugen, für die KI-Auffindbarkeit optimiert. Ihr Entwurf in 48 h, kostenfrei. Ab 1.290 € einmalig, ohne Abo.">
+    <meta property="og:description" content="Handcodierte Website-Unikate für lokale Unternehmen — mit eingebauten Werkzeugen, für die KI-Auffindbarkeit optimiert. Sie sehen zuerst einen kostenfreien Entwurf. Ab 1.290 € einmalig, ohne Abo.">
     <meta property="og:image" content="https://karriaro-webdesign.de/images/og-image.jpg">
     <meta property="og:locale" content="de_DE">
     <meta property="og:site_name" content="Karriaro · Webdesign-Manufaktur">
@@ -178,7 +178,7 @@
                 "@type": "HowToStep",
                 "position": 1,
                 "name": "Anfrage senden",
-                "text": "Erzählen Sie uns von Ihrem Vorhaben. Wir melden uns innerhalb von 24 Stunden."
+                "text": "Erzählen Sie uns von Ihrem Vorhaben. Sie erhalten eine persönliche Antwort."
             },
             {
                 "@type": "HowToStep",
@@ -206,11 +206,11 @@
     <!-- Sprint 50 — Hauptseite nutzt jetzt shared karriaro-tools.js statt inline-Block (DRY zu Sub-Pages) -->
     <link rel="stylesheet" href="/css/karriaro-tools.css">
     <!-- Sprint 199 — First-Touch-Attribution (cookiefrei): utm/gclid am Lead, window.krTrack. Zuerst laden. -->
-    <script src="/js/attribution.js?v=200" defer></script>
+    <script src="/js/attribution.js?v=201" defer></script>
     <script src="/js/track-goals.js?v=252" defer></script>
     <script src="/js/karriaro-tools.js" defer></script>
     <!-- Sprint 168 — Audit Magic-Moment (URL-Input + Editorial-Scan + Result) -->
-    <script src="/js/audit-magic-moment.js?v=427" defer></script>
+    <script src="/js/audit-magic-moment.js?v=428" defer></script>
     <!-- Sprint 39 — Award-Foundation: Custom-Type-System (Fraunces Display + Inter Body + JetBrains Mono Eyebrow + Cormorant Pull-Quote) -->
     <!-- Performance — blockierend: definiert @font-face für die Above-fold-Typografie (Fraunces H1);
          der Font selbst ist im <head> vorgeladen. -->
@@ -976,6 +976,43 @@
             text-decoration: none;
             border-bottom: 1px solid rgba(20, 32, 43, 0.25);
         }
+        /* 2026-09-10 — Echte Google-Bewertung im ersten Bildschirm: ruhige Editorial-Zeile
+           (Messing-Haarlinie, Serif-Kursive) statt Karte. Die große Fassung bleibt in „Über uns". */
+        .hero-with-photo .kr-hero-review {
+            margin: 26px 0 0;
+            padding: 2px 0 2px 18px;
+            border-left: 2px solid var(--color-gold);
+            max-width: 470px;
+            text-align: left;
+        }
+        .kr-hero-review-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .kr-hero-review-stars { display: inline-flex; gap: 3px; }
+        .kr-hero-review-stars svg { width: 13px; height: 13px; fill: var(--color-gold); display: block; }
+        .kr-hero-review-source {
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--color-graphite-soft);
+        }
+        .kr-hero-review-quote { margin: 0; padding: 0; border: 0; }
+        .kr-hero-review-quote p {
+            margin: 0;
+            font-family: var(--font-pull-quote);
+            font-style: italic;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--color-indigo-strong);
+        }
+        .kr-hero-review-cite { margin-top: 8px; font-family: var(--font-body); font-size: 13px; color: var(--color-graphite-soft); }
+        .kr-hero-review-cite a { color: var(--color-onyx); text-decoration: none; border-bottom: 1px solid rgba(20, 32, 43, 0.25); }
+        .kr-hero-review-cite a:hover { border-color: var(--color-gold); }
+        /* Der Hero-Grund bleibt im OS-Dunkelmodus hell (--surface), die Text-Tokens drehen aber auf
+           Hell — gemessen 1,4:1. Die Bewertungszeile hält deshalb ihre hellen Grundfarben fest. */
+        @media (prefers-color-scheme: dark) {
+            .hero-with-photo .kr-hero-review .kr-hero-review-quote p { color: #061320; }
+            .hero-with-photo .kr-hero-review .kr-hero-review-source,
+            .hero-with-photo .kr-hero-review .kr-hero-review-cite { color: #525E6B; }
+            .hero-with-photo .kr-hero-review .kr-hero-review-cite a { color: #14202B; }
+        }
 
         /* Hero-Mockup (Premium-Atelier) */
         .hero-mockup-block {
@@ -1634,6 +1671,11 @@
             .hero-with-photo .hero-value-list li { text-align: left; }
             .hero-with-photo .hero-provenance { margin-left: auto; margin-right: auto; text-align: center; }
             .hero-with-photo .hero-cta-row { align-items: center; }
+            .hero-with-photo .kr-hero-review {
+                margin-left: auto; margin-right: auto; text-align: center;
+                border-left: 0; padding: 16px 0 0; border-top: 1px solid rgba(201, 162, 75, 0.5);
+            }
+            .kr-hero-review-head { justify-content: center; }
             .hero-mockup-block { align-items: center; }
             .mockup-caption { padding-left: 0; align-items: center; text-align: center; }
             .branche-switcher { justify-content: center; }
@@ -3741,6 +3783,15 @@
         }
         .kr-audit-result-leadform-consent input { margin-top: 2px; flex: 0 0 auto; }
         .kr-audit-result-leadform-consent a { color: var(--color-graphite); }
+        /* 2026-09-10 — optionale Einwilligung unter der Pflicht-Zustimmung + Hinweiszeile */
+        .kr-audit-result-leadform-consent--optional { margin-top: 10px; }
+        .kr-audit-result-leadform-hint {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: var(--color-graphite-soft);
+            margin: 8px 0 0;
+        }
         .kr-audit-result-leadform-hp {
             position: absolute;
             left: -9999px;
@@ -4176,8 +4227,28 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 </p>
                 <p class="hero-price-spec">Ab 1.290&nbsp;€ einmalig · Wartung ab 99 €/Mt. · Zahlung erst nach Ihrem Entwurf</p>
                 <div class="hero-cta-row">
-                    <a href="#kontakt" class="btn">Ihr Entwurf in 48 Stunden — kostenfrei anfordern</a>
+                    <a href="#kontakt" class="btn">Kostenfreien Entwurf anfordern</a>
                 </div>
+                <!-- 2026-09-10 — Echte Google-Bewertung im ersten Bildschirm. Wortlaut, Name und
+                     Sterne unverändert aus src/data/reviews.json; kein Bild, kein Fremd-Skript. -->
+                <figure class="kr-hero-review" data-kr-review-hero>
+                    <div class="kr-hero-review-head">
+                        <span class="kr-hero-review-stars" role="img" aria-label="5 von 5 Sternen">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </span>
+                        <span class="kr-hero-review-source">Google-Bewertung</span>
+                    </div>
+                    <blockquote class="kr-hero-review-quote">
+                        <p>„Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!“</p>
+                    </blockquote>
+                    <figcaption class="kr-hero-review-cite">
+                        Ilyas Kablan · <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener" data-cta="rating-hero">Auf Google ansehen</a>
+                    </figcaption>
+                </figure>
                 <a href="/ki-zitier-check" class="hero-audit-link">
                     Kennt die KI Ihren Betrieb? <span>Live prüfen →</span>
                 </a>
@@ -4263,9 +4334,9 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     <!-- CRO 2026-07-05 — Kurz-Anfrage direkt nach dem Hero: fängt kalten Ads-Intent sofort, statt ihn erst nach ~11 Sektionen zum Formular scrollen zu lassen -->
     <section id="kurz-anfrage" aria-label="Schnelle Anfrage" class="kr-quickask">
         <div class="kr-quickask-inner">
-            <p class="hero-eyebrow" style="text-align:center;">Anfrage · Antwort in 24 h</p>
+            <p class="hero-eyebrow" style="text-align:center;">Anfrage · Persönliche Antwort</p>
             <h2 class="kr-quickask-h">Erzählen Sie uns kurz, worum es geht.</h2>
-            <p class="kr-quickask-sub">Ein Satz genügt. Sie erhalten binnen 24 Stunden konkrete Vorschläge — unverbindlich, erst der Entwurf, dann Ihre Entscheidung.</p>
+            <p class="kr-quickask-sub">Ein Satz genügt. Sie erhalten eine persönliche Antwort mit konkreten Vorschlägen — unverbindlich, erst der Entwurf, dann Ihre Entscheidung.</p>
             <form data-lead="kwd-quickask" class="kr-quickask-form">
                 <div class="kr-quickask-grid">
                     <label class="kr-letter-field"><span>Ihr Name</span><input type="text" name="name" required></label>
@@ -4277,7 +4348,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                     <input type="text" id="quick-firma" name="firma" tabindex="-1" autocomplete="off">
                 </div>
                 <div class="kr-quickask-foot">
-                    <button type="submit" class="submit-btn" data-kr-magnetic><span>Unverbindlich anfragen — Antwort in 24 h</span></button>
+                    <button type="submit" class="submit-btn" data-kr-magnetic><span>Unverbindlich anfragen</span></button>
                     <label class="kr-letter-privacy kr-quickask-privacy"><input type="checkbox" name="privacy" required><span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span></label>
                 </div>
                 <p class="kr-quickask-reassure">Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? <a href="https://wa.me/491742796784?text=Guten%20Tag%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Website." rel="nofollow">WhatsApp</a> oder <a href="tel:+491742796784">anrufen</a>.</p>
@@ -4512,7 +4583,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                 <p class="kr-wr-formel"></p>
                 <p class="kr-wr-summe"></p>
                 <p class="kr-wr-qual">Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft.</p>
-                <a class="kr-wr-cta" href="#kurz-anfrage">Entwurf anfordern — in 48 Stunden, kostenfrei</a>
+                <a class="kr-wr-cta" href="#kurz-anfrage">Kostenfreien Entwurf anfordern</a>
             </div>
             <p class="kr-wr-note" id="kr-wr-note">Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose.</p>
         </div>
@@ -5683,7 +5754,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             </div>
 
             <p style="text-align: center; margin-top: 40px; font-size: 14px; color: var(--color-graphite-soft);">
-                Noch eine Frage? <a href="#kontakt" style="color: var(--color-indigo); text-decoration: underline;">Direkt fragen — Antwort innerhalb 24 Stunden.</a>
+                Noch eine Frage? <a href="#kontakt" style="color: var(--color-indigo); text-decoration: underline;">Direkt fragen — Sie erhalten eine persönliche Antwort.</a>
             </p>
         </div>
     </section>
@@ -5863,7 +5934,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
     <!-- Sprint 41 — Kontakt als Stempel-Briefkarte + Founder-Letter -->
     <section id="kontakt" aria-label="Kontakt" class="fade-in kr-letter-section">
         <div class="wrap" style="max-width: 760px;">
-            <p class="hero-eyebrow" style="margin-bottom: 14px; text-align: center;">Anfrage · Ihr Entwurf in 48 Stunden</p>
+            <p class="hero-eyebrow" style="margin-bottom: 14px; text-align: center;">Anfrage · Erst der Entwurf, dann Ihre Entscheidung</p>
 
             <article class="kr-letter-card">
                 <!-- Stempel oben rechts -->
@@ -5885,10 +5956,10 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                     <p class="kr-letter-greeting">Schön, dass Sie hier sind,</p>
                     <p>
                         Ihre Anfrage landet direkt bei uns — nicht in einem Ticket-System, nicht bei einem Account-Manager-Karussell.
-                        Wir antworten binnen 24 Stunden mit <strong>konkreten Vorschlägen</strong> statt einer Discovery-Call-Einladung in drei Wochen.
+                        Sie erhalten eine persönliche Antwort mit <strong>konkreten Vorschlägen</strong> statt einer bloßen Einladung zum Discovery-Call.
                     </p>
                     <p>
-                        Schreiben Sie in zwei Sätzen, worum es geht — Ihre Branche genügt, dazu Ihre aktuelle Website, falls vorhanden. Sie erhalten binnen 48 Stunden einen ersten Entwurf Ihrer neuen Website: kostenfrei und unverbindlich. Sie sehen, was Sie bekommen, bevor Sie sich entscheiden — und passt es nicht, sagen wir es Ihnen offen.
+                        Schreiben Sie in zwei Sätzen, worum es geht — Ihre Branche genügt, dazu Ihre aktuelle Website, falls vorhanden. Sie erhalten einen ersten Entwurf Ihrer neuen Website: kostenfrei und unverbindlich. Sie sehen, was Sie bekommen, bevor Sie sich entscheiden — und passt es nicht, sagen wir es Ihnen offen.
                     </p>
                     <p class="kr-letter-sig-line">— Karriaro Team</p>
                     <svg class="kr-letter-signature" viewBox="0 0 220 70" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -5898,7 +5969,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
 
                 <form id="kontakt-form" data-lead="kwd-kontakt-form" class="kr-letter-form">
                     <input type="hidden" name="paket" id="paket-field" value="">
-                    <input type="hidden" name="angebot" value="Entwurf-48h">
+                    <input type="hidden" name="angebot" value="Entwurf-kostenfrei">
                     <div id="paket-badge" class="kr-letter-paket-badge" style="display: none;"></div>
                     <label id="wartung-checkbox" class="kr-letter-wartung" style="display: none;">
                         <input type="checkbox" name="wartung" value="Wartung & Hosting (99 €/Monat)">
@@ -5935,7 +6006,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                         <span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span>
                     </label>
                     <button type="submit" class="submit-btn kr-letter-submit" data-kr-magnetic>
-                        <span>Entwurf anfordern — in 48 Stunden bei Ihnen</span>
+                        <span>Kostenfreien Entwurf anfordern</span>
                         <span class="kr-letter-submit-stamp" aria-hidden="true">
                             <svg viewBox="0 0 36 36" width="20" height="20"><circle cx="18" cy="18" r="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/><path d="M11,18 L16,23 L25,13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
@@ -6231,8 +6302,8 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
                     alt: 'Vorschau-Bild für Dachdecker-Meister Berger',
                     url: 'dachdecker-berger.de',
                     label: 'Dachdecker Berger · Dachdecker-Werkzeuge',
-                    story: 'Foto vom Dach hochladen, Festpreis innerhalb 48 Stunden.',
-                    features: ['Foto-Upload zur Anfrage', 'Festpreis in 48 Stunden', 'Sturm-Notdienst', 'Projekt-Galerie', 'Sanierungs-Konfigurator', 'Innungs-Zertifikat'],
+                    story: 'Foto vom Dach hochladen, Festpreis-Anfrage direkt aus dem Foto.',
+                    features: ['Foto-Upload zur Anfrage', 'Festpreis-Anfrage per Foto', 'Sturm-Notdienst', 'Projekt-Galerie', 'Sanierungs-Konfigurator', 'Innungs-Zertifikat'],
                     meta: 'Professional · ca. 2–3 Wochen',
                     href: '/portfolio/dachdecker-meisterbetrieb.html'
                 },
@@ -6512,7 +6583,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
         <svg class="kr-cta-float-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
-        Entwurf anfordern<span class="kr-cta-float-sub">· kostenfrei · in 48 h</span>
+        Entwurf anfordern<span class="kr-cta-float-sub">· kostenfrei · unverbindlich</span>
     </a>
     <script>
         (function () {
@@ -6779,7 +6850,7 @@ html.kr-splash-lock,html.kr-splash-lock body{overflow:hidden!important}
             <h2 class="kr-gp-title" id="kr-gp-title">Ihre Website.<br><em>Ihr Preis.</em></h2>
             <p class="kr-gp-text">Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren.</p>
             <p class="kr-gp-deadline">Bewerbungen werden laufend geprüft. Das Programm endet, sobald alle zehn Plätze vergeben sind.</p>
-            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort innerhalb von 48 Stunden</p>
+            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort</p>
             <a class="kr-gp-cta" href="/referenzprogramm#bewerben" id="kr-gp-cta">Für einen Platz bewerben</a>
             <button type="button" class="kr-gp-later" data-gp-close>Vielleicht später</button>
         </div>

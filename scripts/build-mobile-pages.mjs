@@ -395,7 +395,7 @@ function rewriteHeroDemoTease(html) {
 
 function raiseHeroCtaAboveFold(html) {
     // 2026-07-19: Auf ~664px-Viewports (iPhone 13 mit Safari-Leisten) lag der
-    // 48-h-Entwurf-Button ~50px unterm Fold — und die Hero-Guards von WhatsApp/
+    // Entwurf-Button ~50px unterm Fold — und die Hero-Guards von WhatsApp/
     // Concierge hielten ihn deshalb für „nicht im Viewport" und blendeten ihre
     // Pillen mitten am Fold ein. Mobile-Reihenfolge: Demo-Karte → CTA →
     // Preiszeile (als Reassurance „Zahlung erst nach Ihrem Entwurf" direkt
@@ -403,12 +403,9 @@ function raiseHeroCtaAboveFold(html) {
     return html.replace(
         /(<p class="hero-price-spec">[\s\S]*?<\/p>)(\s*)(<div class="hero-cta-row">[\s\S]*?<\/div>)/,
         '$3$2$1'
-    ).replace(
-        // Einzeilig auf 390px (der Desktop-Volltext bricht 2-zeilig = +20px Fold-Höhe);
-        // Versprechen identisch, Register wie Trust-Strip („Entwurf in 48 h, …").
-        '>Ihr Entwurf in 48 Stunden — kostenfrei anfordern</a>',
-        '>Entwurf in 48 h — kostenfrei anfordern</a>'
     );
+    // 2026-09-10: Die frühere Kürzung des Hero-Knopftexts entfällt — die Quelle trägt
+    // keine Zeitzusage mehr, und der alte Wortlaut kam dort schon vorher nicht mehr vor.
 }
 
 function rewriteHeroSubhead(html) {

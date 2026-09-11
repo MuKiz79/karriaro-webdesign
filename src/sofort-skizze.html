@@ -270,6 +270,8 @@
         .ss-leadcap.is-done .ss-leadcap-form { display: none; }
         .ss-leadcap-done { display: none; font-family: var(--ss-serif); font-size: 19px; color: #fff; }
         .ss-leadcap.is-done .ss-leadcap-done { display: block; }
+        .ss-leadcap-done-doi { display: block; margin-top: 10px; font-family: var(--ss-sans); font-size: 13.5px; line-height: 1.5; color: rgba(241,239,231,.82); }
+        .ss-leadcap-done-doi[hidden] { display: none; }
         .ss-leadcap .ss-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
         @media (max-width: 720px) { .ss-leadcap { grid-template-columns: 1fr; gap: 20px; } }
         .ss-prospect-tools { --accent: var(--ss-accent-tool, var(--ss-accent)); --kr-gold: var(--ss-accent-tool, var(--ss-accent)); background: var(--ss-surface); border: 1px solid var(--ss-line); border-radius: 6px; padding: 16px; min-width: 0; overflow-x: hidden; }
@@ -548,10 +550,11 @@
                         <input type="email" name="email" autocomplete="email" placeholder="Ihre E-Mail" required>
                         <span class="ss-hp" aria-hidden="true"><input type="text" name="hp" tabindex="-1" autocomplete="off"></span>
                         <label class="ss-leadcap-consent"><input type="checkbox" id="ss-leadcap-consent" required><span>Ich bin mit der Kontaktaufnahme einverstanden (<a href="/datenschutz">Datenschutz</a>).</span></label>
+                        <label class="ss-leadcap-consent"><input type="checkbox" id="ss-leadcap-marketing"><span>Ja, Karriaro Webdesign darf mir bis zu drei E-Mails mit Hinweisen zu meiner Website und einem unverbindlichen Angebot für eine neue Website senden. Die Einwilligung ist freiwillig; ich kann sie jederzeit widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an kontakt@karriaro.de. Mehr in der <a href="/datenschutz">Datenschutzerklärung</a>.</span></label>
                         <button type="submit" class="ss-leadcap-submit" id="ss-leadcap-submit">Skizze sichern</button>
                         <span class="ss-leadcap-msg" id="ss-leadcap-msg" aria-live="polite"></span>
                     </form>
-                    <div class="ss-leadcap-done">✓ Danke — wir melden uns in Kürze mit Ihrer Konzept-Skizze.</div>
+                    <div class="ss-leadcap-done">✓ Danke — Sie erhalten eine persönliche Antwort zu Ihrer Konzept-Skizze.<span class="ss-leadcap-done-doi" id="ss-leadcap-done-doi" hidden>Die zusätzlichen Hinweise senden wir erst, nachdem Sie Ihre Einwilligung über den Link in unserer gesonderten Bestätigungs-E-Mail bestätigt haben.</span></div>
                 </div>
 
                 <div class="ss-actions">
@@ -1072,6 +1075,9 @@
             // Lead-Erfassung zurücksetzen (neues Ergebnis = neue Erfassung möglich).
             var lc = document.getElementById('ss-leadcap');
             if (lc) { lc.classList.remove('is-done'); var lm = document.getElementById('ss-leadcap-msg'); if (lm) { lm.textContent = ''; lm.classList.remove('is-err'); } }
+            // Optionale Einwilligung gilt je Erfassung — bei neuem Ergebnis nie vorausgewählt stehen lassen.
+            var lmk = document.getElementById('ss-leadcap-marketing'); if (lmk) lmk.checked = false;
+            var ldoi = document.getElementById('ss-leadcap-done-doi'); if (ldoi) ldoi.hidden = true;
             var brand = data.brand || {};
             var copy = data.copy || {};
             var widget = data.widget || BRANCHE_WIDGET.generic;
@@ -1354,13 +1360,17 @@
             if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'Bitte eine gültige E-Mail angeben.'; msg.classList.add('is-err'); f.email.focus(); return; }
             if (!document.getElementById('ss-leadcap-consent').checked) { msg.textContent = 'Bitte der Kontaktaufnahme zustimmen.'; msg.classList.add('is-err'); return; }
             var d = lastData || {};
+            // Optionale Einwilligung (Version 2026-09-10): nur true bei aktiv gesetztem Häkchen.
+            var mitEinwilligung = document.getElementById('ss-leadcap-marketing').checked === true;
             var payload = {
                 url: (d.brand && d.brand.domain) || domainOf(urlInput.value),
                 email: email, name: f.name.value || '',
                 branche: (d.widget && d.widget.key) || '',
                 score: d.audit ? d.audit.score : null,
                 topLeak: d.audit ? d.audit.topLeak : '',
-                consent: true, hp: ''
+                consent: true, hp: '',
+                marketingConsent: mitEinwilligung,
+                consentVersion: '2026-09-10'
             };
             leadSubmitting = true; btn.disabled = true; btn.textContent = 'Wird gesendet …';
             msg.textContent = ''; msg.classList.remove('is-err');
@@ -1372,6 +1382,8 @@
                 clearTimeout(to);
                 return r.json().then(function (j) { if (!r.ok || j.error) throw new Error(j.error || 'Fehler'); return j; });
             }).then(function () {
+                var doi = document.getElementById('ss-leadcap-done-doi');
+                if (doi) doi.hidden = !mitEinwilligung;
                 document.getElementById('ss-leadcap').classList.add('is-done');
             }).catch(function (err) {
                 clearTimeout(to);

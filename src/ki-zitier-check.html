@@ -141,6 +141,11 @@
         .kz-lead-submit:hover { filter: brightness(1.06); }
         .kz-lead-submit:disabled { opacity: 0.55; cursor: progress; }
         .kz-lead-note { margin: 12px 0 0; font-size: 14px; color: rgba(241, 239, 231, 0.92); }
+        /* 2026-09-10 — Pflicht-Zustimmung Datenschutz + optionale Einwilligung (nie vorausgewählt).
+           .kz-cta a macht jeden Link zum Goldknopf — hier ausdrücklich zurück auf Fließtext-Link. */
+        .kz-lead-consent { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; font-size: 13px; line-height: 1.5; color: rgba(241, 239, 231, 0.86); cursor: pointer; }
+        .kz-lead-consent input { margin-top: 3px; width: 16px; height: 16px; flex: 0 0 auto; accent-color: var(--kz-gold); }
+        .kz-cta .kz-lead-consent a { display: inline; padding: 0; background: none; border-radius: 0; font-weight: 500; color: var(--kz-gold); text-decoration: underline; text-underline-offset: 2px; }
         .kz-cta-secondary { display: flex; flex-wrap: wrap; gap: 14px 26px; justify-content: center; align-items: center; margin-top: 22px; }
         .kz-cta-secondary a { display: inline; background: none; padding: 0; border-radius: 0; font-weight: 500; font-size: 15px; color: rgba(241, 239, 231, 0.9); border-bottom: 1px solid rgba(201, 162, 75, 0.55); }
         .kz-cta-secondary a.kz-cta-money { color: var(--kz-gold); font-weight: 600; }
@@ -304,7 +309,7 @@
                 <div class="kz-cta" id="kz-cta">
                     <p class="kz-cta-eyebrow">Ihr Maßnahmenplan</p>
                     <h3>Damit die KI Sie beim Namen nennt.</h3>
-                    <p>Wir melden uns persönlich binnen 24 Stunden mit Ihrem Maßnahmenplan: priorisierte Schritte, damit die KI Sie zitiert — auf Wunsch inklusive eines kostenfreien Entwurfs Ihrer neuen Website in 48 Stunden.</p>
+                    <p>Sie erhalten eine persönliche Antwort mit Ihrem Maßnahmenplan: priorisierte Schritte, damit die KI Sie zitiert — auf Wunsch inklusive eines kostenfreien Entwurfs Ihrer neuen Website.</p>
                     <form id="kz-lead-form" data-lead="kwd-zitier-check-lead" class="kz-lead-form" novalidate>
                         <input type="hidden" name="quelle" value="ki-zitier-check">
                         <input type="hidden" name="firma" id="kz-lead-firma">
@@ -318,6 +323,9 @@
                             <input id="kz-lead-email" name="email" type="email" required placeholder="name@firma.de" autocomplete="email" autocapitalize="none" spellcheck="false" />
                             <button type="submit" class="kz-lead-submit" id="kz-lead-submit"><span>Maßnahmenplan anfordern</span></button>
                         </div>
+                        <label class="kz-lead-consent"><input type="checkbox" name="privacy" id="kz-lead-privacy" required><span>Ich stimme der <a href="/datenschutz">Datenschutzerklärung</a> zu.</span></label>
+                        <label class="kz-lead-consent"><input type="checkbox" id="kz-lead-marketing"><span>Ja, Karriaro Webdesign darf mir bis zu drei E-Mails mit Hinweisen zu meiner Website und einem unverbindlichen Angebot für eine neue Website senden. Die Einwilligung ist freiwillig; ich kann sie jederzeit widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an kontakt@karriaro.de. Mehr in der <a href="/datenschutz">Datenschutzerklärung</a>.</span></label>
+                        <input type="hidden" name="werbeeinwilligung" id="kz-lead-werbe" value="nein">
                         <p class="kz-lead-note" id="kz-lead-note" hidden></p>
                     </form>
                     <div class="kz-cta-secondary">
@@ -617,6 +625,34 @@
                 });
             });
 
+            // Optionale Einwilligung (Häkchen #kz-lead-marketing): nach erfolgreicher Anfrage
+            // Double-Opt-In anstoßen. Versendet wird erst nach Klick auf den Bestätigungslink.
+            var CONSENT_VERSION = '2026-09-10';
+            function nurDomain(v) {
+                return String(v || '').trim().toLowerCase()
+                    .replace(/^https?:\/\//, '').replace(/^www\./, '').split(/[\/?#]/)[0].slice(0, 120);
+            }
+            function einwilligungAnfordern(emailWert, domainWert, note) {
+                var body = { email: emailWert, source: 'ki-zitier', consentVersion: CONSENT_VERSION };
+                if (domainWert) body.domain = domainWert;
+                var ctrl = new AbortController();
+                var to = setTimeout(function () { ctrl.abort(); }, 15000);
+                return fetch(FN_BASE + '/einwilligungAnfordern', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                    signal: ctrl.signal
+                }).then(function (r) {
+                    clearTimeout(to);
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    if (note) note.textContent += ' Die zusätzlichen Hinweise senden wir erst, nachdem Sie Ihre Einwilligung über den Link in unserer gesonderten Bestätigungs-E-Mail bestätigt haben.';
+                }).catch(function (err) {
+                    clearTimeout(to);
+                    console.warn('[ki-zitier-check] Einwilligung konnte nicht angefordert werden:', err && err.message ? err.message : err);
+                    if (note) note.textContent += ' Die Bestätigungs-E-Mail für die zusätzlichen Hinweise ließ sich gerade nicht anfordern — schreiben Sie uns dafür gern an kontakt@karriaro.de.';
+                });
+            }
+
             // Lead-Capture im Ergebnis → Formspree (Konvention f/mjggbdre), inline Success.
             var leadForm = document.getElementById('kz-lead-form');
             if (leadForm) {
@@ -625,7 +661,14 @@
                     var lbtn = document.getElementById('kz-lead-submit');
                     var note = document.getElementById('kz-lead-note');
                     var email = document.getElementById('kz-lead-email');
+                    var privacy = document.getElementById('kz-lead-privacy');
+                    var marketing = document.getElementById('kz-lead-marketing');
+                    var werbe = document.getElementById('kz-lead-werbe');
                     if (email && !email.checkValidity()) { email.reportValidity(); return; }
+                    if (privacy && !privacy.checked) { privacy.reportValidity(); return; }
+                    // Stand des optionalen Häkchens beim Absenden festhalten (Formspree: ja/nein).
+                    var mitEinwilligung = !!(marketing && marketing.checked);
+                    if (werbe) werbe.value = mitEinwilligung ? 'ja' : 'nein';
                     lbtn.disabled = true; lbtn.querySelector('span').textContent = 'Wird gesendet …';
                     var fd = new FormData(leadForm);
                     try { if (window.krAttributionFlat) { var a = window.krAttributionFlat(); Object.keys(a).forEach(function (k) { fd.append(k, a[k]); }); } } catch (e) {}
@@ -637,7 +680,11 @@
                                 if (row) row.style.display = 'none';
                                 var lbl = leadForm.querySelector('.kz-lead-label');
                                 if (lbl) lbl.style.display = 'none';
-                                if (note) { note.hidden = false; note.textContent = 'Danke — wir melden uns persönlich binnen 24 Stunden mit Ihrem Maßnahmenplan.'; }
+                                Array.prototype.forEach.call(leadForm.querySelectorAll('.kz-lead-consent'), function (c) { c.style.display = 'none'; });
+                                if (note) { note.hidden = false; note.textContent = 'Danke — Sie erhalten eine persönliche Antwort mit Ihrem Maßnahmenplan.'; }
+                                if (mitEinwilligung) {
+                                    einwilligungAnfordern(email ? email.value.trim() : '', nurDomain((document.getElementById('kz-lead-domain') || {}).value), note);
+                                }
                             } else { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; }
                         })
                         .catch(function () { lbtn.disabled = false; lbtn.querySelector('span').textContent = 'Fehler — erneut versuchen'; });
@@ -645,6 +692,6 @@
             }
         })();
     </script>
-    <script src="/js/attribution.js" defer></script>
+    <script src="/js/attribution.js?v=201" defer></script>
 </body>
 </html>

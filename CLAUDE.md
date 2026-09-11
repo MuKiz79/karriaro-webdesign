@@ -6,8 +6,9 @@ und überschreiben generische Defaults.
 
 ## Geschäftsmodell (kurz)
 
-Karriaro = Kölner Webdesign-Manufaktur für handcodierte Premium-Websites
-(Legal-Sitz Schiltach). Preisarchitektur 1.290–3.990 € einmalig (Essential /
+Karriaro = Webdesign-Manufaktur für handcodierte Websites (Sitz Schiltach,
+Arbeit DACH-weit) — seit 10.09.2026 ohne Köln-Bezug (§ 5 UWG, keine
+Betriebsstätte in Köln). Preisarchitektur 1.290–3.990 € einmalig (Essential /
 Professional / Premium / Premium+). Zielgruppe: lokaler Mittelstand DACH
 (Handwerk, Beauty, Immobilien, Gastronomie, Medizin, Recht). Kern-Tagline:
 

@@ -16,6 +16,8 @@
     'use strict';
 
     var FN_BASE = 'https://europe-west1-apex-executive.cloudfunctions.net';
+    // Version des optionalen Einwilligungstexts im Bericht-Formular (data-audit-lead-marketing).
+    var CONSENT_VERSION = '2026-09-10';
     var MIN_SCAN_MS = 2500;
     var MAX_SCAN_MS = 18000;
     var LOG = function () {
@@ -353,8 +355,16 @@
                 '<label class="kr-audit-result-leadform-consent">' +
                     '<input type="checkbox" name="consent" required data-audit-lead-consent>' +
                     '<span>Ich stimme der Verarbeitung meiner Angaben zur Erstellung des Berichts zu ' +
-                    '(<a href="/datenschutz">Datenschutz</a>). Kein Newsletter.</span>' +
+                    '(<a href="/datenschutz">Datenschutz</a>).</span>' +
                 '</label>' +
+                // Optional, nie vorausgewählt — Wortlaut = Einwilligungstext Version 2026-09-10.
+                '<label class="kr-audit-result-leadform-consent kr-audit-result-leadform-consent--optional">' +
+                    '<input type="checkbox" name="marketingConsent" data-audit-lead-marketing>' +
+                    '<span>Ja, Karriaro Webdesign darf mir bis zu drei E-Mails mit Hinweisen zu meiner Website und einem unverbindlichen Angebot für eine neue Website senden. ' +
+                    'Die Einwilligung ist freiwillig; ich kann sie jederzeit widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an kontakt@karriaro.de. ' +
+                    'Mehr in der <a href="/datenschutz">Datenschutzerklärung</a>.</span>' +
+                '</label>' +
+                '<p class="kr-audit-result-leadform-hint">Ohne Ihr zusätzliches Häkchen erhalten Sie nur den angeforderten Bericht.</p>' +
                 '<input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" ' +
                     'class="kr-audit-result-leadform-hp" data-audit-lead-hp>' +
                 '<p class="kr-audit-result-leadform-msg" data-audit-lead-msg hidden></p>' +
@@ -373,7 +383,7 @@
                     'Eine weitere Adresse prüfen' +
                 '</button>' +
             '</div>' +
-            '<p class="kr-audit-result-trust">Antwort in 24 h.</p>' +
+            '<p class="kr-audit-result-trust">Sie erhalten eine persönliche Antwort.</p>' +
             '</article>';
     }
 
@@ -475,6 +485,7 @@
     function wireLeadForm(form, url, result) {
         var emailEl = form.querySelector('[data-audit-lead-email]');
         var consentEl = form.querySelector('[data-audit-lead-consent]');
+        var marketingEl = form.querySelector('[data-audit-lead-marketing]');
         var hpEl = form.querySelector('[data-audit-lead-hp]');
         var submitEl = form.querySelector('[data-audit-lead-submit]');
         var msgEl = form.querySelector('[data-audit-lead-msg]');
@@ -495,11 +506,18 @@
                 return;
             }
             if (submitEl) { submitEl.disabled = true; submitEl.textContent = 'Wird gesendet …'; }
+            // Nur true, wenn das optionale Häkchen aktiv gesetzt wurde. Nach attribution()
+            // eingemischt, damit kein Attributionsfeld den Wert überschreiben kann.
+            var mitEinwilligung = !!(marketingEl && marketingEl.checked);
             track('Magic Audit Lead', { domain: domain });
             fetch(FN_BASE + '/requestAudit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.assign({ url: url, name: '', email: email, consent: true, company: '' }, attribution()))
+                body: JSON.stringify(Object.assign(
+                    { url: url, name: '', email: email, consent: true, company: '' },
+                    attribution(),
+                    { marketingConsent: mitEinwilligung, consentVersion: CONSENT_VERSION }
+                ))
             }).then(function (res) {
                 return res.json().then(function (j) { return { ok: res.ok, j: j }; });
             }).then(function (r) {
@@ -510,6 +528,9 @@
                     : '';
                 form.innerHTML = '<p class="kr-audit-result-leadform-msg kr-audit-result-leadform-msg--ok">' +
                     'Der ausführliche Bericht ist unterwegs an <em>' + escapeHtml(email) + '</em>.' + link +
+                    (mitEinwilligung
+                        ? ' Die zusätzlichen Hinweise senden wir erst, nachdem Sie Ihre Einwilligung über den Link in unserer gesonderten Bestätigungs-E-Mail bestätigt haben.'
+                        : '') +
                     '</p>';
                 track('Magic Audit Lead Sent', { domain: domain });
             }).catch(function () {
