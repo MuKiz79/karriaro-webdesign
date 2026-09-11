@@ -1,12 +1,23 @@
 /**
  * Gmail-Entwürfe — assistierter Versand. Erstellt fertige Entwürfe im Gmail-
- * Konto des Gründers (Scope gmail.compose: erstellen/lesen, NICHT senden). Der
- * Gründer prüft & sendet manuell → Domain-Reputation + UWG-§7 gewahrt.
+ * Konto des Gründers; er prüft und sendet selbst.
+ *
+ * Rechtlich ändert das Selbst-Absenden nichts: Eine Werbe-Mail ohne vorherige
+ * ausdrückliche Einwilligung, Anfrage oder Bestandskundenbeziehung ist auch dann
+ * unzulässig, wenn ein Mensch auf „Senden" klickt (§ 7 Abs. 2 Nr. 2 UWG). Deshalb
+ * lässt createGmailDrafts nur Entwürfe durch, deren mitgeführte Gate-Prüfung
+ * erlaubt ist (nurMitGrundlage) — die letzte Schranke vor dem Konto.
+ *
+ * Technisch: Der Scope gmail.compose erlaubt nicht nur Entwürfe, sondern auch das
+ * Senden (drafts.send / messages.send). Diese Datei ruft ausschliesslich
+ * drafts.create auf; das ist eine Entscheidung im Code, keine Grenze des Scopes.
  *
  * @module outreach/gmail-drafts
  */
 
 import { buildMimeMessage, toBase64Url } from './mime.js';
+import { nurMitGrundlage } from './kontakt-grundlage.js';
+import { mitVersandKopf } from '../strategy/compliance.js';
 
 const GMAIL_DRAFTS_URL = 'https://gmail.googleapis.com/gmail/v1/users/me/drafts';
 const SCOPE = 'https://www.googleapis.com/auth/gmail.compose';
@@ -38,22 +49,27 @@ export async function getGoogleAccessToken({ forceReauth = false } = {}) {
 }
 
 /**
- * Erstellt für jeden Entwurf einen Gmail-Draft. Sequenziell mit 429-Backoff;
- * bei Token-Ablauf (401) einmal re-authentifizieren und fortsetzen.
+ * Erstellt für jeden erlaubten Entwurf einen Gmail-Draft. Sequenziell mit
+ * 429-Backoff; bei Token-Ablauf (401) einmal re-authentifizieren und fortsetzen.
  *
- * @param {Array<{to,subject,body,bodyHtml}>} drafts
+ * @param {Array<{to,subject,body,bodyHtml,from?,listUnsubscribe?,grundlage}>} drafts
  * @param {(done:number,total:number)=>void} [onProgress]
- * @returns {Promise<{created:number, failed:number}>}
+ * @returns {Promise<{created:number, failed:number, blockiert:number}>}
  */
 export async function createGmailDrafts(drafts, onProgress = () => {}) {
+    const { erlaubt, blockiert } = nurMitGrundlage(drafts);
+    if (blockiert.length) console.warn(`Gmail-Entwürfe: ${blockiert.length} Entwurf/Entwürfe ohne erlaubte Kontaktgrundlage oder Empfänger nicht angelegt.`);
+    if (!erlaubt.length) return { created: 0, failed: 0, blockiert: blockiert.length };
+
     let token = await getGoogleAccessToken();
     let created = 0, failed = 0, reauthed = false;
-    const total = drafts.length;
+    const total = erlaubt.length;
     const MAX_RETRIES = 4;            // deckelt 403/429-Wiederholung gegen Endlosschleife
     let retryIndex = -1, retries = 0; // pro Entwurf gezählt (zurückgesetzt beim nächsten)
 
-    for (let i = 0; i < drafts.length; i++) {
-        const d = drafts[i];
+    for (let i = 0; i < erlaubt.length; i++) {
+        // Absender und List-Unsubscribe ergänzen, falls der Aufrufer sie nicht mitgab.
+        const d = mitVersandKopf(erlaubt[i]);
         try {
             const raw = toBase64Url(buildMimeMessage(d));
             const resp = await fetch(GMAIL_DRAFTS_URL, {
@@ -83,9 +99,10 @@ export async function createGmailDrafts(drafts, onProgress = () => {}) {
             if (resp.ok) created++; else failed++;
         } catch (err) {
             if (/Anmeldung erforderlich/.test(err.message)) throw err;
+            console.error('Gmail-Entwurf fehlgeschlagen:', err);
             failed++;
         }
         onProgress(i + 1, total);
     }
-    return { created, failed };
+    return { created, failed, blockiert: blockiert.length };
 }

@@ -15,12 +15,17 @@ import { detectJobSignals } from '../signals/job-signal.js';
 import { generateGoogleReport } from '../strategy/google-report.js';
 import { saveLead } from '../crm/leads.js';
 import { generatePersonalEmail } from '../strategy/email-generator.js';
-import { printLetter, copyLinkedIn, showCallSheet, runPitch } from './render-channels.js';
+import { printLetter, copyLinkedIn, showCallSheet, runPitch, ladeGrundlageFuerCheck } from './render-channels.js';
+import { compliancify, complianceBlock } from '../strategy/compliance.js';
+import { baueMailtoHref } from '../outreach/mime.js';
+import { RECHTSHINWEISE } from '../outreach/kontakt-grundlage.js';
+import { config, PREIS_EINSTIEG } from '../config.js';
 import { buildOutreachPack } from '../strategy/outreach.js';
 import { buildPitchInputs } from '../strategy/pitch-inputs.js';
 import { escapeHtml } from '../lib/escape-html.js';
 import { buildSequence } from '../templates/sequences.js';
-import { analyzeTechAge } from '../analysis/tech-age.js';
+import { analyzeTechAge, formatiereDatum } from '../analysis/tech-age.js';
+import { httpsBefund, phpBefund } from '../analysis/trigger-events.js';
 import { saveSnapshot } from '../crm/rescan.js';
 import { saveLeadPage, getCalendarUrl } from '../api/cloud-functions.js';
 import { saveFeedback, extractSignals, getFeedbackStats, SKIP_REASONS } from '../learning/score-feedback.js';
@@ -290,9 +295,10 @@ export function renderFunnel(funnelEl, decEl, r) {
         <div class="card card-accent anim-in">
             <div class="stat-row"><span class="stat-label">Erwarteter Wert</span><span class="stat-value">${r.expectedValue > 0 ? '+' : ''}${r.expectedValue} €</span></div>
             <div class="stat-row"><span class="stat-label">Kelly-Allokation</span><span class="stat-value">${r.kelly.optimalHours}h/Woche · ${r.kelly.recommendation}</span></div>
-            <div class="stat-row"><span class="stat-label">Bester Kanal</span><span class="stat-value">${r.channelResult.best?.name || 'E-Mail'}</span></div>
-            <div class="stat-row"><span class="stat-label">Time-to-Conversion</span><span class="stat-value">${r.survival.label}</span></div>
-            <div class="stat-row"><span class="stat-label">Nächste Aktion</span><span class="stat-value">${r.nextAction.action}</span></div>
+            <div class="stat-row"><span class="stat-label">Bester Kanal</span><span class="stat-value">${escapeHtml(r.channelResult.best?.name || 'E-Mail')}</span></div>
+            <div class="stat-row"><span class="stat-label">Time-to-Conversion</span><span class="stat-value">${escapeHtml(r.survival.label)}</span></div>
+            <div class="stat-row"><span class="stat-label">Nächste Aktion</span><span class="stat-value">${escapeHtml(r.nextAction.action)}</span></div>
+            <div class="metric-desc" style="margin-top:6px;font-size:11px">Kanal und Aktion sind Scoring-Empfehlungen, keine Erlaubnis: E-Mail, LinkedIn/XING und Anruf nur mit Kontaktgrundlage — siehe Outreach-Paket.</div>
         </div>`;
 }
 
@@ -569,9 +575,9 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
                     <div class="tech-age-hint">${lastChanged}</div>
                 </div>
                 <div class="tech-age-cell">
-                    <div class="tech-age-label">EOL-Status</div>
-                    <div class="tech-age-value" style="color:${techAge.cmsEolYear ? 'var(--red)' : 'var(--muted)'}">${techAge.cmsEolYear ? `seit ${techAge.cmsEolYear}` : '—'}</div>
-                    <div class="tech-age-hint">${techAge.cmsEolYear ? 'keine Sicherheitsupdates' : ''}</div>
+                    <div class="tech-age-label">Sicherheitsupdates</div>
+                    <div class="tech-age-value" style="color:${techAge.eol ? 'var(--red)' : 'var(--muted)'}">${techAge.eol ? (techAge.cmsEolYear ? `keine seit ${techAge.cmsEolYear}` : 'keine mehr') : (techAge.supportBis ? `bis ${formatiereDatum(techAge.supportBis)}` : '—')}</div>
+                    <div class="tech-age-hint">${techAge.eol ? (techAge.eolText || '') : (techAge.supportBis ? 'für diese Version' : '')}</div>
                 </div>
             </div>
             <p class="tech-age-verdict">${techAge.composite}</p>
@@ -608,22 +614,27 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
     html += `<div class="card anim-in"><div class="section-label">Betreff-Optimierung (Snov.io 2026)</div><div class="stat-row"><span class="stat-label">Zahlen im Betreff</span><span class="stat-value good">+45% Open Rate</span></div><div class="stat-row"><span class="stat-label">Vor- und Nachname</span><span class="stat-value">33% Open Rate</span></div><div class="stat-row"><span class="stat-label">Betreff als Frage</span><span class="stat-value">+10% Open Rate</span></div><div class="stat-row"><span class="stat-label">Email-Länge</span><span class="stat-value">< 80 Wörter optimal</span></div></div>`;
     html += `<div class="card card-accent anim-in"><div class="section-label">Optimales Timing</div><div class="timing-best">Bester Versandtag: Dienstag (28.2% Open) · Bester Reply-Tag: Mittwoch (5.8%)</div><div class="timing-detail">Uhrzeit: 7-11 Uhr · Saison: ${r.seasonFactor}%</div></div>`;
 
-    // Pitch
+    // Pitch-Vorlage — der Text bleibt als Analyse sichtbar; „Kopieren" ist ein
+    // Nachrichten-Ausgang und wird erst nach dem Kontakt-Gate freigeschaltet (unten).
     const pitchLines = [];
     if (ws.perf < 65) pitchLines.push(`Googles Performance-Score liegt bei ${ws.perf}/100`);
     if (!ws.isHttps) pitchLines.push('kein SSL-Zertifikat');
     if (ws.seo < 75) pitchLines.push(`SEO-Score bei ${ws.seo}/100`);
     if (tech.isBaukasten) pitchLines.push(`läuft auf ${tech.cms}`);
-    if (pitchLines.length > 0) {
-        html += `<div class="pitch-box anim-in"><h3>Pitch-Vorlage</h3><p>Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${pitchLines.join(', ')}.\n\nDas sind Punkte die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne Websites — handcodiert, ab 990 Euro.\n\nDarf ich Ihnen zeigen wie Ihre neue Seite aussehen könnte?\n\nViele Grüße\nMuammer Kizilaslan\nkarriaro-webdesign.de</p><button class="btn-copy-large" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='Kopiert!'})">Kopieren</button></div>`;
+    const pitchVorlage = pitchLines.length > 0
+        ? `Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${pitchLines.join(', ')}.\n\nDas sind Punkte, die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne Websites — handcodiert, ${PREIS_EINSTIEG} einmalig. Sie sehen zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen könnte?\n\nViele Grüße\n${config.profile?.name || 'Muammer Kizilaslan'}\n${config.profile?.portfolio || 'karriaro-webdesign.de'}`
+        : null;
+    if (pitchVorlage) {
+        html += `<div class="pitch-box anim-in"><h3>Pitch-Vorlage</h3><p style="white-space:pre-wrap">${escapeHtml(pitchVorlage)}</p><button class="btn-copy-large" id="btn-copy-pitchvorlage" disabled style="opacity:.5;cursor:not-allowed">Kontaktgrundlage wird geprüft…</button></div>`;
     }
 
-    // Sequence — Vorlagen aus templates/sequences.js (Single Source of Truth)
+    // Sequence — Vorlagen aus templates/sequences.js (Single Source of Truth).
+    // Kopieren ebenfalls erst nach dem Kontakt-Gate.
     const seqMails = buildSequence(data);
     html += `<div class="section-label" style="margin:16px 0 8px">5-Schritt Follow-up-Sequenz</div>`;
-    for (const m of seqMails) {
-        html += `<div class="pitch-box sequence-step anim-in"><h3>Tag ${m.day} — ${m.subject}</h3><p>${m.body}</p><button class="btn-copy" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent).then(()=>{this.textContent='✓'})">Kopieren</button></div>`;
-    }
+    seqMails.forEach((m, i) => {
+        html += `<div class="pitch-box sequence-step anim-in"><h3>Tag ${m.day} — ${escapeHtml(m.subject)}</h3><p>${escapeHtml(m.body)}</p><button class="btn-copy" data-seq-idx="${i}" disabled style="opacity:.5;cursor:not-allowed">Kopieren</button></div>`;
+    });
 
     stratEl.innerHTML = html;
 
@@ -646,36 +657,40 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
     if (data.drift?.drifted) {
         actionsExtra += `<div class="card card-alert anim-in"><div style="font-size:13px;font-weight:600;color:var(--orange)">Score verändert: ${data.drift.previousScore} → ${r.leadScore}</div></div>`;
     }
-    // Legacy-E-Mail (für CRM-Save-Hook und Fallback wenn Outreach-Pack nicht verfügbar)
+    // Legacy-E-Mail (für den CRM-Save-Hook) — liefert keinen geratenen Empfänger mehr.
     const email = generatePersonalEmail(data);
 
     // ── Outreach-Paket (Tech-Alter + Konkurrenz + BFSG + Mockup → E-Mail) ──
+    // Das Paket ist Analyse und entsteht immer. Jeder Nachrichten-Ausgang (Kopieren,
+    // mailto, Brief, Anruf, LinkedIn, Pitch-Vorlage, Sequenz) bleibt deaktiviert,
+    // bis das Kontakt-Gate geantwortet hat (ladeGrundlageFuerCheck, unten).
     const pack = buildOutreachPack(data);
     if (pack.available) {
         const variant = pack.primary;
         const argsList = pack.allArgs.slice(0, 5).map(a =>
-            `<li><strong>${a.short}</strong> — ${a.text}</li>`
+            `<li><strong>${escapeHtml(a.short)}</strong> — ${escapeHtml(a.text)}</li>`
         ).join('');
         const competitorsList = pack.competitors.length > 0
             ? `<div class="outreach-block"><div class="outreach-block-label">Konkurrenz-Spiegel</div>
-                ${pack.competitors.map(c => `<div class="outreach-comp">${c.name} · ★${c.rating} (${c.reviews} Bewertungen)${c.website ? ` · <a href="${c.website}" target="_blank" rel="noopener">site</a>` : ''}</div>`).join('')}
+                ${pack.competitors.map(c => `<div class="outreach-comp">${escapeHtml(c.name)} · ★${escapeHtml(c.rating)} (${escapeHtml(c.reviews)} Bewertungen)${c.website && /^https?:\/\//i.test(c.website) ? ` · <a href="${escapeHtml(c.website)}" target="_blank" rel="noopener">site</a>` : ''}</div>`).join('')}
               </div>`
             : '';
         const mockupBlock = pack.mockupHeadline
             ? `<div class="outreach-block outreach-mockup"><div class="outreach-block-label">Mockup-Vorschlag</div>
-                <div class="outreach-mockup-headline">"${pack.mockupHeadline}"</div>
-                ${pack.mockupSubline ? `<div class="outreach-mockup-subline">${pack.mockupSubline}</div>` : ''}
+                <div class="outreach-mockup-headline">"${escapeHtml(pack.mockupHeadline)}"</div>
+                ${pack.mockupSubline ? `<div class="outreach-mockup-subline">${escapeHtml(pack.mockupSubline)}</div>` : ''}
               </div>`
             : '';
         const tonesHtml = pack.variants.map((v, i) => `
-            <button class="outreach-tone-btn${i === 0 ? ' active' : ''}" data-tone-idx="${i}">${v.tone}</button>
+            <button class="outreach-tone-btn${i === 0 ? ' active' : ''}" data-tone-idx="${i}">${escapeHtml(v.tone)}</button>
         `).join('');
 
-        actionsExtra += `<div class="outreach-pack anim-in" id="outreach-pack" data-pack='${JSON.stringify(pack.variants).replace(/'/g, '&#39;')}'>
+        actionsExtra += `<div class="outreach-pack anim-in" id="outreach-pack">
             <h3 class="outreach-title">📬 Outreach-Paket</h3>
             <div class="outreach-meta">
-                Hauptanker: <strong>${pack.bestPitchAngle}</strong> · Empfänger: <code>${pack.recipientEmail}</code>
+                Hauptanker: <strong>${escapeHtml(pack.bestPitchAngle)}</strong> · Empfänger: <code id="outreach-recipient">${escapeHtml(pack.recipientEmail || 'keine Adresse gefunden')}</code>
             </div>
+            <p class="uwg-note" id="outreach-grundlage">Kontaktgrundlage wird geprüft …</p>
 
             <div class="outreach-block">
                 <div class="outreach-block-label">Schmerz-Stack (priorisiert)</div>
@@ -686,23 +701,24 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             ${mockupBlock}
 
             <div class="outreach-channels">
-                <div class="outreach-block-label">Legal &amp; wirkungsvoll — empfohlen statt Kalt-Mail</div>
+                <div class="outreach-block-label">Kanäle</div>
+                <p class="call-legal">Brief: ohne Einwilligung zulässig, solange kein Widerspruch vorliegt. E-Mail, LinkedIn und XING brauchen eine vorherige ausdrückliche Einwilligung oder eine Anfrage des Betriebs (E-Mail zusätzlich: Bestandskunde). Ein Anruf braucht einen konkreten, vorher dokumentierten Anlass aus der Sphäre des Betriebs. LinkedIn und Anruf sind keine Alternative zur Einwilligung.</p>
                 <div class="channel-btn-row">
-                    <button class="channel-btn" id="ch-letter">📄 Werbebrief drucken</button>
-                    <button class="channel-btn" id="ch-call">📞 Anruf-Leitfaden</button>
-                    <button class="channel-btn" id="ch-linkedin">💼 LinkedIn-Nachricht</button>
+                    <button class="channel-btn" id="ch-letter" disabled style="opacity:.5;cursor:not-allowed">📄 Werbebrief drucken</button>
+                    <button class="channel-btn" id="ch-call" disabled style="display:none">📞 Anruf-Leitfaden</button>
+                    <button class="channel-btn" id="ch-linkedin" disabled style="opacity:.5;cursor:not-allowed">💼 LinkedIn-Nachricht</button>
                     <button class="channel-btn channel-btn-primary" id="ch-pitch">✨ Pitch-Seite erzeugen</button>
                 </div>
+                <div class="metric-desc" id="ch-gruende" style="margin-top:6px;font-size:12px"></div>
             </div>
 
             <div class="outreach-email">
                 <div class="outreach-block-label">E-Mail-Variante <span class="outreach-tonebar">${tonesHtml}</span></div>
-                <p class="uwg-note">⚠️ Kalt-E-Mail an Firmen ohne Einwilligung ist in DE abmahnfähig (UWG §7). Bevorzugen Sie Brief, LinkedIn oder Anruf — die E-Mail nur bei bestehendem Kontakt/Einwilligung.</p>
-                <div class="outreach-subject" id="outreach-subject">${variant.subject}</div>
-                <pre class="outreach-body" id="outreach-body">${variant.body}</pre>
+                <div class="outreach-subject" id="outreach-subject">${escapeHtml(variant.subject)}</div>
+                <pre class="outreach-body" id="outreach-body">${escapeHtml(variant.body)}</pre>
                 <div class="outreach-actions">
-                    <button class="btn-copy-large" id="btn-copy-outreach">E-Mail kopieren</button>
-                    <a href="mailto:${pack.recipientEmail}?subject=${encodeURIComponent(variant.subject)}&body=${encodeURIComponent(variant.body)}" class="btn-copy-large" style="text-decoration:none;text-align:center" id="btn-mailto-outreach">In E-Mail-App öffnen</a>
+                    <button class="btn-copy-large" id="btn-copy-outreach" disabled style="opacity:.5;cursor:not-allowed">E-Mail kopieren</button>
+                    <a class="btn-copy-large" style="text-decoration:none;text-align:center;opacity:.45;cursor:not-allowed" id="btn-mailto-outreach" aria-disabled="true" title="Kontaktgrundlage wird geprüft">In E-Mail-App öffnen</a>
                 </div>
                 <div class="outreach-hint">Wörter: <span id="outreach-words">${variant.wordCount}</span> · &lt; 80 = optimal</div>
             </div>
@@ -711,44 +727,159 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
 
     actionsEl.innerHTML = `${actionsExtra}<div class="actions-center"><button class="btn-primary" id="btn-save-crm" style="background:var(--text)">Im CRM speichern</button><a href="https://karriaro-webdesign.de/#kontakt" class="btn-cta-link">Kostenlos beraten lassen</a></div>`;
 
-    // Outreach: Tonalität wechseln
+    // ── Kontakt-Gate für alle Nachrichten-Ausgänge dieses Checks ──
+    // Zustand je Render; ein späterer Render desselben Containers entwertet ein
+    // noch laufendes Laden (Token), damit keine alte Prüfung neue Knöpfe freischaltet.
+    const renderToken = {};
+    actionsEl._kontaktGateToken = renderToken;
+    const gate = { mail: null, linkedin: null, anruf: null, brief: null, varianten: pack.available ? pack.variants : [], decorated: null };
+    const nichtGeprueft = 'Kontaktgrundlage wird geprüft …';
+    const setzeAus = (btn, grund) => { if (!btn) return; btn.disabled = true; btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.title = grund || ''; };
+    const setzeAn = (btn) => { if (!btn) return; btn.disabled = false; btn.style.opacity = ''; btn.style.cursor = ''; btn.title = ''; };
+    const packEl = document.getElementById('outreach-pack');
+    const aktivIdx = () => parseInt(packEl?.querySelector('.outreach-tone-btn.active')?.dataset.toneIdx || '0', 10);
+
+    const zeigeVariante = (idx) => {
+        const v = gate.varianten[idx] || gate.varianten[0];
+        if (!v) return;
+        document.getElementById('outreach-subject').textContent = v.subject;
+        document.getElementById('outreach-body').textContent = v.body;
+        document.getElementById('outreach-words').textContent = v.wordCount;
+        const mailto = document.getElementById('btn-mailto-outreach');
+        if (!mailto) return;
+        const empfaenger = gate.mail?.erlaubt ? gate.decorated?.recipientEmail : null;
+        const href = empfaenger
+            ? baueMailtoHref({ to: empfaenger, subject: v.subject, kern: v.textKern ?? v.body, pflicht: v.pflichtteil?.text || '' })
+            : null;
+        if (href) {
+            mailto.href = href;
+            mailto.style.opacity = ''; mailto.style.cursor = '';
+            mailto.removeAttribute('aria-disabled'); mailto.title = '';
+        } else {
+            mailto.removeAttribute('href');
+            mailto.style.opacity = '.45'; mailto.style.cursor = 'not-allowed';
+            mailto.setAttribute('aria-disabled', 'true');
+            mailto.title = !gate.mail ? nichtGeprueft
+                : !gate.mail.erlaubt ? gate.mail.grund
+                : !empfaenger ? 'Kein Empfänger gefunden'
+                : 'Text zu lang für einen mailto-Link — bitte kopieren';
+        }
+    };
+    const meldeNichtZulaessig = (p) => showToast(`Nicht zulässig: ${p?.grund || nichtGeprueft}`);
+
     if (pack.available) {
-        const packEl = document.getElementById('outreach-pack');
-        const variants = pack.variants;
         packEl?.querySelectorAll('.outreach-tone-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 packEl.querySelectorAll('.outreach-tone-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                const idx = parseInt(this.dataset.toneIdx, 10);
-                const v = variants[idx];
-                document.getElementById('outreach-subject').textContent = v.subject;
-                document.getElementById('outreach-body').textContent = v.body;
-                document.getElementById('outreach-words').textContent = v.wordCount;
-                const mailto = document.getElementById('btn-mailto-outreach');
-                if (mailto) mailto.href = `mailto:${pack.recipientEmail}?subject=${encodeURIComponent(v.subject)}&body=${encodeURIComponent(v.body)}`;
+                zeigeVariante(parseInt(this.dataset.toneIdx, 10));
             });
         });
         document.getElementById('btn-copy-outreach')?.addEventListener('click', function() {
-            const activeIdx = parseInt(packEl.querySelector('.outreach-tone-btn.active')?.dataset.toneIdx || '0', 10);
-            const v = variants[activeIdx];
+            if (!gate.mail?.erlaubt || !gate.decorated?.recipientEmail) { meldeNichtZulaessig(gate.mail?.erlaubt ? { grund: 'Kein Empfänger gefunden.' } : gate.mail); return; }
+            const v = gate.varianten[aktivIdx()];
             navigator.clipboard.writeText(v.copyText).then(() => {
                 this.textContent = 'Kopiert ✓';
                 showToast('E-Mail in Zwischenablage kopiert');
-            });
+            }).catch(e => console.warn('Zwischenablage nicht verfügbar:', e));
         });
-        // Legale Kanäle (Brief/Anruf/LinkedIn) — bauen aus demselben pack.
-        document.getElementById('ch-letter')?.addEventListener('click', () => printLetter(data, pack));
-        document.getElementById('ch-call')?.addEventListener('click', () => showCallSheet(data, pack));
-        document.getElementById('ch-linkedin')?.addEventListener('click', function() { copyLinkedIn(data, pack, this); });
+        document.getElementById('btn-mailto-outreach')?.addEventListener('click', (e) => {
+            if (!e.currentTarget.getAttribute('href')) { e.preventDefault(); showToast(e.currentTarget.title || nichtGeprueft); }
+        });
+        // Kanäle — jeder mit seiner eigenen Prüfung (die Builder liefern ohne erlaubte Prüfung keinen Text).
+        document.getElementById('ch-letter')?.addEventListener('click', () => printLetter(data, pack, gate.brief));
+        document.getElementById('ch-call')?.addEventListener('click', () => showCallSheet(data, pack, gate.anruf));
+        document.getElementById('ch-linkedin')?.addEventListener('click', function() { copyLinkedIn(data, pack, this, gate.linkedin); });
+        // Pitch-Seite darf immer erzeugt werden; die Mail prüft runPitch frisch nach der Erzeugung.
         document.getElementById('ch-pitch')?.addEventListener('click', function() { runPitch(data, this); });
     }
 
-    // Copy Email (Legacy — falls vorhanden)
-    document.getElementById('btn-copy-email')?.addEventListener('click', function() {
-        navigator.clipboard.writeText(email.copyText).then(() => {
-            this.textContent = 'Kopiert ✓';
-            showToast('E-Mail in Zwischenablage kopiert');
-        });
+    const pitchBtn = document.getElementById('btn-copy-pitchvorlage');
+    pitchBtn?.addEventListener('click', function() {
+        if (!gate.mail?.erlaubt) { meldeNichtZulaessig(gate.mail); return; }
+        const cb = complianceBlock(config.profile, gate.mail);
+        navigator.clipboard.writeText(pitchVorlage + (cb ? cb.text : ''))
+            .then(() => { this.textContent = 'Kopiert ✓'; })
+            .catch(e => console.warn('Zwischenablage nicht verfügbar:', e));
+    });
+    const seqBtns = [...stratEl.querySelectorAll('[data-seq-idx]')];
+    seqBtns.forEach(b => b.addEventListener('click', function() {
+        if (!gate.mail?.erlaubt) { meldeNichtZulaessig(gate.mail); return; }
+        const m = seqMails[parseInt(this.dataset.seqIdx, 10)];
+        const cb = complianceBlock(config.profile, gate.mail);
+        navigator.clipboard.writeText(`Betreff: ${m.subject}\n\n${m.body}${cb ? cb.text : ''}`)
+            .then(() => { this.textContent = '✓'; })
+            .catch(e => console.warn('Zwischenablage nicht verfügbar:', e));
+    }));
+
+    ladeGrundlageFuerCheck(data).then(k => {
+        if (actionsEl._kontaktGateToken !== renderToken) return;
+        gate.mail = k.pruefe('email');
+        gate.linkedin = k.pruefe('linkedin');
+        gate.anruf = k.pruefe('anruf');
+        gate.brief = k.pruefe('brief');
+
+        const mailFrei = gate.mail.erlaubt;
+        if (pack.available) {
+            if (mailFrei) {
+                // Double-Opt-In: Den Namen der einwilligenden Person kennen wir nicht. Die
+                // Anrede mit dem Impressums-Inhaber nur, wenn dessen persönliche Adresse
+                // die eingewilligte ist — sonst die formelle Sammelanrede (wie im Studio).
+                let basis = pack;
+                if (gate.mail.grundlage === 'doi' && data.contactData?.owner) {
+                    const persoenlich = (data.contactData.emails || []).map(e => String(e).trim().toLowerCase());
+                    if (!persoenlich.includes(gate.mail.empfaenger)) {
+                        const ohneAnrede = buildOutreachPack({ ...data, contactData: { ...data.contactData, owner: null } });
+                        if (ohneAnrede.available) basis = ohneAnrede;
+                    }
+                }
+                gate.decorated = compliancify(basis, data.contactData, config.profile, gate.mail);
+                gate.varianten = gate.decorated.variants;
+                const rec = document.getElementById('outreach-recipient');
+                if (rec) rec.textContent = gate.decorated.recipientEmail || 'keine Adresse gefunden';
+            }
+            zeigeVariante(aktivIdx());
+            const copyBtn = document.getElementById('btn-copy-outreach');
+            if (mailFrei && gate.decorated?.recipientEmail) setzeAn(copyBtn);
+            else setzeAus(copyBtn, mailFrei ? 'Kein Empfänger gefunden' : gate.mail.grund);
+
+            const grundEl = document.getElementById('outreach-grundlage');
+            if (grundEl) {
+                grundEl.textContent = mailFrei
+                    ? `E-Mail zulässig — ${gate.mail.grund}${gate.mail.hinweis ? ` ${gate.mail.hinweis}` : ''}`
+                    : `E-Mail gesperrt — ${gate.mail.grund}${gate.mail.gesperrt ? '' : ` ${gate.mail.rechtshinweis}`}`;
+            }
+
+            const letterBtn = document.getElementById('ch-letter');
+            if (gate.brief.erlaubt) setzeAn(letterBtn); else setzeAus(letterBtn, gate.brief.grund);
+            const liBtn = document.getElementById('ch-linkedin');
+            if (gate.linkedin.erlaubt) setzeAn(liBtn); else setzeAus(liBtn, gate.linkedin.grund);
+            const callBtn = document.getElementById('ch-call');
+            if (callBtn) {
+                if (gate.anruf.erlaubt) { callBtn.style.display = ''; setzeAn(callBtn); }
+                else { callBtn.style.display = 'none'; callBtn.disabled = true; }
+            }
+            const gruende = document.getElementById('ch-gruende');
+            if (gruende) {
+                const zeilen = [];
+                if (!gate.brief.erlaubt) zeilen.push(`Brief: ${gate.brief.grund}`);
+                if (!gate.linkedin.erlaubt) zeilen.push(`LinkedIn/XING: ${gate.linkedin.grund}`);
+                if (!gate.anruf.erlaubt) zeilen.push(`Anruf-Leitfaden nicht angeboten: ${gate.anruf.grund}${gate.anruf.gesperrt ? '' : ` ${RECHTSHINWEISE.anruf}`}`);
+                gruende.textContent = zeilen.join(' · ');
+            }
+        }
+
+        if (pitchBtn) {
+            if (mailFrei) { setzeAn(pitchBtn); pitchBtn.textContent = 'Kopieren'; }
+            else { setzeAus(pitchBtn, gate.mail.grund); pitchBtn.textContent = gate.mail.gesperrt ? 'Kopieren gesperrt — Betrieb gesperrt' : 'Kopieren gesperrt — keine Kontaktgrundlage'; }
+        }
+        seqBtns.forEach(b => { if (mailFrei) setzeAn(b); else setzeAus(b, gate.mail.grund); });
+    }).catch(e => {
+        console.error('Kontaktgrundlage nicht prüfbar — alle Nachrichten-Ausgänge bleiben gesperrt:', e);
+        if (actionsEl._kontaktGateToken !== renderToken) return;
+        const grundEl = document.getElementById('outreach-grundlage');
+        if (grundEl) grundEl.textContent = 'Kontaktgrundlage nicht prüfbar — E-Mail, LinkedIn, Anruf und Brief bleiben gesperrt.';
+        if (pitchBtn) pitchBtn.textContent = 'Kopieren gesperrt — Grundlage nicht prüfbar';
     });
 
     // CRM Save + Snapshot
@@ -763,6 +894,9 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             reviews: data.place?.userRatingCount || 0,
             rating: data.place?.rating || null,
             contactEmail: email.to,
+            // Ein im Impressum gefundener Werbewiderspruch gehört an den Lead: saveLead
+            // hält ihn klebrig und trägt die Domain in die Sperrliste ein. Nur das Flag.
+            ...(data.contactData?.werbewiderspruch === true ? { contactData: { werbewiderspruch: true } } : {}),
             // Reichen Pitch-Blob mitspeichern → späterer Massen-Outreach ohne Re-Fetch.
             pitchInputs: buildPitchInputs(data)
         };
@@ -777,7 +911,7 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
             problems: data.bfsgScore?.pitchArg ? [data.bfsgScore.pitchArg] : [],
             mockupHeadline: data.mockupSuggestion?.headline || null
         };
-        saveLeadPage(pageData).catch(() => null);
+        saveLeadPage(pageData).catch(e => { console.warn('Analyse-Seite nicht gespeichert:', e); return null; });
 
         this.textContent = 'Gespeichert ✓';
         this.disabled = true;
@@ -801,6 +935,75 @@ export function renderStrategy(stratEl, expertEl, actionsEl, data) {
 // ══════════════════════════════════════
 // 9. Signal Analyse + BFSG + Trigger + Tech + Composite
 // ══════════════════════════════════════
+
+// ══════════════════════════════════════
+// Server-Messung (adEvidence, EVIDENCE_SCHEMA 3)
+// ══════════════════════════════════════
+
+const MESS_TON = { gut: 'var(--green)', warn: 'var(--orange)', schlecht: 'var(--red)', neutral: 'var(--muted)' };
+const HOSTER_ANZEIGE = { strato: 'Strato', ionos: 'IONOS' };
+const HOSTER_QUELLE = { mx: 'laut MX-Eintrag', ns: 'laut Nameserver' };
+
+function messChip(text, ton) {
+    const c = MESS_TON[ton] || MESS_TON.neutral;
+    return `<span class="badge" data-ton="${ton}" style="background:${c}20;color:${c};font-size:11px;padding:2px 8px;margin:0 6px 6px 0;display:inline-block">${escapeHtml(text)}</span>`;
+}
+
+/**
+ * Server-Messung des Einzel-Checks als knappe Chips: HTTPS, PHP, Hoster.
+ * Nur Anzeige vorhandener Daten (V6). null heißt „nicht gemessen" und erscheint
+ * neutral — nie als Mangel. HTTPS wird über httpsBefund gedeutet (derselbe Schutz
+ * gegen einen Widerspruch zur PSI-Endadresse wie in Trigger und Pitch), PHP über
+ * phpBefund (nur eol === true mit Version ist ein Befund).
+ *
+ * @param {{ws?:object, httpsCheck?:object|null, php?:object|null, hoster?:object|null}} data
+ * @returns {string} HTML-Karte oder '' (keine der drei Messungen vorhanden)
+ */
+export function serverMessungHtml(data) {
+    const hc = data?.httpsCheck || null;
+    const php = data?.php || null;
+    const hoster = data?.hoster || null;
+    if (!hc && !php && !hoster) return '';
+
+    const chips = [];
+    // HTTPS
+    if (!hc || hc.checked !== true || typeof hc.reachable !== 'boolean') {
+        chips.push(messChip('HTTPS: nicht gemessen', 'neutral'));
+    } else {
+        const hb = httpsBefund(data?.ws, hc);
+        if (hb.gemessen && hb.ohneHttps) {
+            chips.push(messChip('HTTPS nicht erreichbar (gemessen)', 'schlecht'));
+        } else if (!hb.gemessen) {
+            // Messung sagt „nicht erreichbar", PSI hat die Seite aber per https geladen.
+            chips.push(messChip('HTTPS: Messung widersprüchlich', 'neutral'));
+        } else {
+            chips.push(messChip('HTTPS erreichbar', 'gut'));
+            if (hb.zertifikatFremd) chips.push(messChip('Zertifikat passt nicht zum Host', 'schlecht'));
+            else if (hc.certValidForHost === true) chips.push(messChip('Zertifikat passt zum Host', 'gut'));
+            if (hb.ohneWeiterleitung) chips.push(messChip('Keine Weiterleitung auf HTTPS', 'warn'));
+            else if (hc.redirectsToHttps === true) chips.push(messChip('Leitet auf HTTPS um', 'gut'));
+        }
+    }
+
+    // PHP
+    const pb = phpBefund(php, hoster);
+    if (pb) chips.push(messChip(pb.text, 'schlecht'));
+    else if (php?.version && php.eol === false) chips.push(messChip(`PHP ${php.version} — noch unterstützt`, 'gut'));
+    else if (php?.version) chips.push(messChip(`PHP ${php.version} — Support-Stand unbekannt`, 'neutral'));
+    else chips.push(messChip(php ? 'PHP-Version nicht erkennbar' : 'PHP: nicht gemessen', 'neutral'));
+
+    // Hoster
+    const hKey = hoster?.name === 'strato' || hoster?.name === 'ionos' ? hoster.name : null;
+    if (hKey) chips.push(messChip(`Hoster: ${HOSTER_ANZEIGE[hKey]}${HOSTER_QUELLE[hoster.quelle] ? ` (${HOSTER_QUELLE[hoster.quelle]})` : ''}`, 'neutral'));
+    else chips.push(messChip(hoster ? 'Hoster: nicht erkannt' : 'Hoster: nicht gemessen', 'neutral'));
+
+    return `<div class="card anim-in" id="server-messung">
+            <div class="section-label">Server-Messung</div>
+            <div>${chips.join('')}</div>
+            ${pb?.hosterHinweis ? `<div class="metric-desc" style="margin-top:4px">${escapeHtml(pb.hosterHinweis)}.</div>` : ''}
+            <div class="metric-desc" style="margin-top:4px;font-size:11px">„nicht gemessen" heißt: keine Aussage — kein Mangel.</div>
+        </div>`;
+}
 
 export function renderSignals(el, data) {
     let html = '';
@@ -910,6 +1113,9 @@ export function renderSignals(el, data) {
             }).join('')}
         </div>`;
     }
+
+    // Server-Messung (HTTPS/PHP/Hoster aus adEvidence) — nur Anzeige, null = nicht gemessen
+    html += serverMessungHtml(data);
 
     // Tech Depth
     const td = data.techDepth;
@@ -1021,16 +1227,24 @@ export function renderSignals(el, data) {
     }
 
     // Contact Enrichment
+    // 2026-09-10: Adressen und Nummern nur als Text. Ein mailto-/tel-Direktlink
+    // hier ging am Kontakt-Gate vorbei — Nachrichten-Ausgänge liegen ausschliesslich
+    // im Outreach-Paket. Werte stammen aus der Impressums-Auswertung → escapen.
     const cd = data.contactData;
     if (cd && !cd.error) {
+        const socialLinks = Object.entries(cd.social || {})
+            .filter(([, v]) => typeof v === 'string' && /^https?:\/\//i.test(v))
+            .map(([k, v]) => `<a href="${escapeHtml(v)}" target="_blank" rel="noopener">${escapeHtml(k)}</a>`);
         html += `<div class="card anim-in">
             <div class="section-label">Kontaktdaten (aus Impressum)</div>
-            ${cd.owner ? `<div class="stat-row"><span class="stat-label">Inhaber</span><span class="stat-value">${cd.owner}</span></div>` : ''}
-            ${cd.emails?.length > 0 ? `<div class="stat-row"><span class="stat-label">E-Mail (persönlich)</span><span class="stat-value">${cd.emails.map(e => `<a href="mailto:${e}">${e}</a>`).join(', ')}</span></div>` : ''}
-            ${cd.genericEmails?.length > 0 && !cd.emails?.length ? `<div class="stat-row"><span class="stat-label">E-Mail (generisch)</span><span class="stat-value">${cd.genericEmails.join(', ')}</span></div>` : ''}
-            ${cd.phones?.length > 0 ? `<div class="stat-row"><span class="stat-label">Telefon</span><span class="stat-value">${cd.phones.map(p => `<a href="tel:${p.replace(/\s/g,'')}">${p}</a>`).join(', ')}</span></div>` : ''}
-            ${Object.keys(cd.social || {}).length > 0 ? `<div class="stat-row"><span class="stat-label">Social</span><span class="stat-value">${Object.entries(cd.social).map(([k,v]) => `<a href="${v}" target="_blank">${k}</a>`).join(' · ')}</span></div>` : ''}
-            <div class="metric-desc" style="margin-top:6px">Kontakt-Score: ${cd.contactScore || 0}% · ${cd.quality === 'persönlich' ? 'Persönliche E-Mail gefunden' : cd.quality === 'generisch' ? 'Nur info@-Adresse' : 'Keine E-Mail gefunden'}</div>
+            ${cd.werbewiderspruch === true ? `<div class="highlight-box-red" style="margin-bottom:8px;font-size:12px">Werbewiderspruch im Impressum — die Domain steht auf der Sperrliste und wird über keinen Kanal beworben.</div>` : ''}
+            ${cd.owner ? `<div class="stat-row"><span class="stat-label">${escapeHtml(cd.ownerRole || 'Inhaber')}</span><span class="stat-value">${escapeHtml(cd.owner)}</span></div>` : ''}
+            ${cd.emails?.length > 0 ? `<div class="stat-row"><span class="stat-label">E-Mail (persönlich)</span><span class="stat-value">${cd.emails.map(e => escapeHtml(e)).join(', ')}</span></div>` : ''}
+            ${cd.genericEmails?.length > 0 && !cd.emails?.length ? `<div class="stat-row"><span class="stat-label">E-Mail (generisch)</span><span class="stat-value">${cd.genericEmails.map(e => escapeHtml(e)).join(', ')}</span></div>` : ''}
+            ${cd.phones?.length > 0 ? `<div class="stat-row"><span class="stat-label">Telefon</span><span class="stat-value">${cd.phones.map(p => escapeHtml(p)).join(', ')}</span></div>` : ''}
+            ${socialLinks.length > 0 ? `<div class="stat-row"><span class="stat-label">Social</span><span class="stat-value">${socialLinks.join(' · ')}</span></div>` : ''}
+            <div class="metric-desc" style="margin-top:6px">Kontakt-Score: ${Number(cd.contactScore) || 0}% · ${cd.quality === 'persönlich' ? 'Persönliche E-Mail gefunden' : cd.quality === 'generisch' ? 'Nur info@-Adresse' : 'Keine E-Mail gefunden'}</div>
+            <div class="metric-desc" style="margin-top:4px;font-size:11px">Impressumsdaten dienen der Einordnung, nicht der Werbung. E-Mail, Anruf und Nachrichten nur mit Kontaktgrundlage — siehe Outreach-Paket.</div>
         </div>`;
     }
 

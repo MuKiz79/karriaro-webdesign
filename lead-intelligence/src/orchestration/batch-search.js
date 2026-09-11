@@ -1,7 +1,7 @@
 /**
  * Batch Search — Prospecting-Tool: Screenshot-First
  *
- * "Zeig mir die schlechtesten Websites von Friseuren in Köln
+ * "Zeig mir die schlechtesten Websites von Friseuren in Stuttgart
  *  die trotzdem ein gutes Geschäft haben."
  *
  * Phase 1: 50+ Kandidaten sammeln (alle Stadtteile, parallel)
@@ -24,11 +24,20 @@ import { showToast } from '../ui/render-components.js';
 import { saveFeedback } from '../learning/score-feedback.js';
 import { runWithConcurrency } from '../lib/concurrency.js';
 import { STADTTEILE } from '../data/stadtteile.js';
-import { getCachedPlaces, setCachedPlaces } from '../api/scan-cache.js';
+import { getCachedPlaces, setCachedPlaces, countUncached, deriveReviewRecency } from '../api/scan-cache.js';
 import { getAlreadyKnown } from '../crm/known.js';
 import { saveSearch } from '../crm/saved-searches.js';
 import { quickReasons } from '../scoring/quick-reasons.js';
+import { computeOpportunity } from '../scoring/opportunity.js';
+import { analyzeTechAge } from '../analysis/tech-age.js';
+import { seasonalTriggerFor } from '../analysis/trigger-events.js';
+import { zeigeKostenModal } from './scanner.js';
 import { escapeHtml } from '../lib/escape-html.js';
+
+// Kennung der Score-Formel in gespeicherten Ergebnissen. Ältere Läufe (ohne
+// Kennung) trugen die Summen-Formel mit Badness bis 200 — ihre Karten behalten
+// die alte Beschriftung, damit keine Zahl falsch etikettiert wird.
+const SCORE_MODELL = 'opportunity';
 
 // Baukasten aus URL erkennbar
 const BAUKASTEN_URL = [
@@ -57,25 +66,39 @@ export async function runBatchSearch() {
         return;
     }
     if (!config.fnUrl) { showError('Cloud Function URL fehlt.'); return; }
-    state.aborted = false;
-    document.getElementById('btn-batch').disabled = true;
     const max = parseInt(document.getElementById('batch-max').value);
-
-    // ══════════════════════════════════════
-    // PHASE 1: Kandidaten sammeln (parallel, alle Stadtteile)
-    // ══════════════════════════════════════
-    showLoading('Sammle Kandidaten (bitte Tab offen lassen)...');
 
     const parts = query.trim().split(/\s+/);
     const city = parts.length >= 2 ? parts.slice(1).join(' ') : '';
     const branch = parts[0] || query;
 
-    const queries = [query];
-    if (city) {
-        // Kopie vor sort() — STADTTEILE ist geteilter Modul-Zustand (auch vom Scanner genutzt).
-        const st = [...(STADTTEILE[city.toLowerCase()] || [])].sort(() => Math.random() - 0.5).slice(0, 5);
-        for (const s of st) queries.push(`${branch} ${city} ${s}`);
+    // 2026-09-10: Kostenangabe VOR dem bezahlten Places-Aufruf — wie im Region-Scan.
+    // Die Stadtteile sind jetzt fest (die ersten fünf der Liste) statt zufällig:
+    // nur so trifft ein Wiederholungslauf den Cache und die Kostenangabe stimmt.
+    const stadtteile = city ? (STADTTEILE[city.toLowerCase()] || []).slice(0, 5) : [];
+    const nurStadt = [query];
+    const mitStadtteilen = [query, ...stadtteile.map(s => `${branch} ${city} ${s}`)];
+    const optionen = [{ label: 'Nur die Stadt', suchen: 1, neu: countUncached(nurStadt), queries: nurStadt }];
+    if (stadtteile.length) {
+        optionen.push({ label: `Stadt + ${stadtteile.length} Stadtteile`, suchen: mitStadtteilen.length, neu: countUncached(mitStadtteilen), queries: mitStadtteilen });
     }
+    const wahl = await zeigeKostenModal({
+        eyebrow: `Stadt-Suche · ${query}`,
+        titel: 'Wie breit soll gesucht werden?',
+        sub: 'Jede neue Google-Suche kostet ~0,04 $. Bereits gecachte Suchen sind gratis, PageSpeed ist immer kostenlos.',
+        optionen,
+        empfohlen: optionen.length - 1
+    });
+    if (wahl === null) return;
+    const queries = optionen[wahl].queries;
+
+    state.aborted = false;
+    document.getElementById('btn-batch').disabled = true;
+
+    // ══════════════════════════════════════
+    // PHASE 1: Kandidaten sammeln (parallel, gewählte Gebiete)
+    // ══════════════════════════════════════
+    showLoading('Sammle Kandidaten (bitte Tab offen lassen)...');
 
     // Concurrency-Limit 2: schützt Places-API-Quota. Cache-first (geteilter Scan-Cache):
     // bereits gesuchte Gebiete sind gratis — auch über Scanner/Batch hinweg.
@@ -84,8 +107,16 @@ export async function runBatchSearch() {
         const results = await runWithConcurrency(queries, 2, async q => {
             const cached = getCachedPlaces(q);
             if (cached) return { places: cached };
-            const r = await searchPlaces(q, 10).catch(() => ({ places: [] }));
-            if (r?.places?.length) setCachedPlaces(q, r.places);
+            const r = await searchPlaces(q, 10).catch(e => {
+                console.warn(`searchPlaces(${q}) fehlgeschlagen:`, e?.message || e);
+                return { places: [] };
+            });
+            if (r?.places?.length) {
+                setCachedPlaces(q, r.places);
+                // Frische Treffer tragen reviews[], aber noch keine reviewRecency —
+                // hier ableiten, damit frisch und gecacht gleich gescort werden.
+                for (const fp of r.places) { if (!fp.reviewRecency) fp.reviewRecency = deriveReviewRecency(fp.reviews); }
+            }
             return r;
         });
         for (const r of results) if (r?.places) allPlaces.push(...r.places);
@@ -162,25 +193,23 @@ export async function runBatchSearch() {
                 const tech = detectTech(psi);
                 const screenshot = psi?.lighthouseResult?.audits?.['final-screenshot']?.details?.data || null;
 
-                // Quick-Score: Wie schlecht ist die Website? (0 = perfekt, 100 = katastrophal)
-                // ⚠️ 2026-08-17: Eine PSI-Kategorie ohne Score liefert 0 — das ergab
-                // vorher den vollen Aufschlag (Perf +100, A11y +50) für eine Seite,
-                // über die NICHTS bekannt ist, und schob sie an die Spitze der Liste.
-                // Nicht gemessen ist neutral, nicht katastrophal (Playbook §2).
-                let badnessScore = 0;
-                if (ws.perfKnown !== false) badnessScore += Math.max(0, 100 - ws.perf);   // Perf 30 → +70
-                if (ws.seoKnown !== false) badnessScore += Math.max(0, 100 - ws.seo) * 0.3;  // SEO 40 → +18
-                if (ws.a11yKnown !== false) badnessScore += Math.max(0, 100 - ws.a11y) * 0.5; // A11y 50 → +25
-                if (!ws.isHttps) badnessScore += 30;
-                if (ws.viewportMissing) badnessScore += 25;
-                if (tech.isBaukasten) badnessScore += 20;
-                if (c.baukasten) badnessScore += 15; // URL-Baukasten Bonus
-
-                // Opportunity = Wie schlecht die Website × Wie gut das Geschäft
-                const opportunity = Math.round(badnessScore * 0.6 + c.businessStrength * 0.4);
+                // 2026-09-10: dieselbe transparente Formel wie der Region-Scan
+                // (scoring/opportunity.js) statt einer eigenen Summe. Die alte
+                // Formel gewichtete Labor-Tempo mit bis zu +100 und kannte weder
+                // Liveness noch Deckel — dieselbe Seite bekam in beiden Werkzeugen
+                // verschiedene Zahlen. computeOpportunity behandelt fehlende Werte
+                // neutral (perfKnown/seoKnown, fehlende Bewertungs-Frische = 1.0).
+                const techAge = analyzeTechAge(tech, {});
+                const place = c.place?.reviewRecency ? c.place : { ...c.place, reviewRecency: deriveReviewRecency(c.place?.reviews) };
+                const opp = computeOpportunity({
+                    ws, tech, place, websiteUri: c.url, techAge,
+                    reviewRecency: place.reviewRecency,
+                    seasonal: seasonalTriggerFor(place.primaryType)
+                });
 
                 return {
                     ...c,
+                    scoreModell: SCORE_MODELL,
                     perf: ws.perf, seo: ws.seo, a11y: ws.a11y,
                     // Mess-Lücken mitführen: quickReasons darf aus einer Lücke
                     // keinen Mangel machen, und der Score tut es oben auch nicht.
@@ -191,12 +220,23 @@ export async function runBatchSearch() {
                     // Argument ist — steckt in derselben PSI-Antwort, kostet nichts.
                     crux: ws.crux || null,
                     cms: tech.cms || c.baukasten?.name || '',
+                    // Version mitführen: quickReasons belegt damit ein Support-Ende.
+                    version: tech.version || null,
                     isBaukasten: tech.isBaukasten || !!c.baukasten,
                     screenshot,
-                    badnessScore: Math.round(badnessScore),
-                    opportunity
+                    badnessScore: opp.badnessScore,
+                    businessStrength: opp.businessStrength,
+                    opportunity: opp.opportunity,
+                    reasons: opp.reasons,
+                    hardStructural: opp.hardStructural,
+                    scoreCap: opp.scoreCap,
+                    looksAlreadyGood: opp.looksAlreadyGood,
+                    anlaesse: opp.anlaesse
                 };
-            } catch { return null; }
+            } catch (e) {
+                console.warn(`Stadt-Suche: Analyse von ${c.domain} fehlgeschlagen:`, e?.message || e);
+                return null;
+            }
         }));
         results.push(...br.filter(Boolean));
         if (i + 3 < toScan.length && !state.aborted) await delay(300);
@@ -283,11 +323,20 @@ function renderWhy(r) {
     </div>`;
 }
 
+// ⚠️ #batch-results wird nie ersetzt, nur sein innerHTML. Jede Sortierung rief
+// renderProspectingResults erneut auf und band die Klick-Handler ein weiteres
+// Mal an — nach drei Sortierklicks speicherte ein „Im CRM" viermal. Muster wie
+// in scanner.js (wsController).
+let batchController = null;
+
 function renderProspectingResults(query, results) {
     const stats = state._batchStats || {};
+    batchController?.abort();
+    batchController = new AbortController();
+    const signal = batchController.signal;
 
     let html = `<div class="crm-header">
-        <h2 class="crm-title">Leads für "${query}"</h2>
+        <h2 class="crm-title">Leads für „${escapeHtml(query)}“</h2>
         <div class="crm-actions-top">
             <button class="crm-btn-export" id="btn-export-csv">CSV Export</button>
             <button class="crm-btn-export" id="btn-save-batch" style="background:var(--text);color:#fff">Alle speichern</button>
@@ -307,35 +356,45 @@ function renderProspectingResults(query, results) {
     // Lead Cards mit Screenshots
     html += `<div class="prospect-grid">`;
     for (const r of results) {
-        const oppColor = r.opportunity >= 80 ? 'var(--green)' : r.opportunity >= 50 ? 'var(--orange)' : 'var(--muted)';
+        const neu = r.scoreModell === SCORE_MODELL;
+        const oppColor = neu
+            ? (r.opportunity >= 70 ? 'var(--green)' : r.opportunity >= 50 ? 'var(--orange)' : 'var(--muted)')
+            : (r.opportunity >= 80 ? 'var(--green)' : r.opportunity >= 50 ? 'var(--orange)' : 'var(--muted)');
         const perfColor = r.perf >= 75 ? 'good' : r.perf >= 50 ? 'ok' : 'bad';
+        const e = escapeHtml;
+        // Die neue Formel ist ein Score 0–100 (HOT ≥ 70), keine Wahrscheinlichkeit —
+        // „% Chance" hätte eine Präzision behauptet, die es nicht gibt.
+        const scoreZeile = neu
+            ? `<span style="color:${oppColor};font-weight:700">Score ${r.opportunity}</span>
+                    <span class="metric-desc">Website-Mängel ${r.badnessScore}/100 · Geschäft ${r.businessStrength}/100${r.scoreCap === 69 ? ' · gedeckelt (kein hartes Strukturzeichen)' : ''}</span>`
+            : `<span style="color:${oppColor};font-weight:700">${r.opportunity}% Chance</span>
+                    <span class="metric-desc">Website: ${r.badnessScore}/200 schlecht · Geschäft: ${r.businessStrength}/100 stark</span>`;
 
         html += `<div class="prospect-card anim-in">
             <div class="prospect-screenshot">
-                ${r.screenshot ? `<img src="${r.screenshot}" alt="${r.name}" loading="lazy">` : '<div class="prospect-no-screenshot">Kein Screenshot</div>'}
+                ${r.screenshot ? `<img src="${e(r.screenshot)}" alt="${e(r.name)}" loading="lazy">` : '<div class="prospect-no-screenshot">Kein Screenshot</div>'}
             </div>
             <div class="prospect-info">
-                <div class="prospect-name">${r.name}</div>
+                <div class="prospect-name">${e(r.name)}</div>
                 <div class="prospect-meta">
-                    <a href="${r.url}" target="_blank">${r.domain}</a> · ${r.type || ''}
+                    <a href="${e(r.url)}" target="_blank" rel="noopener">${e(r.domain)}</a> · ${e(r.type || '')}
                 </div>
                 <div class="prospect-stats">
                     <span>★ ${r.rating || '—'}</span>
                     <span>${r.reviews} Bew.</span>
-                    <span class="${perfColor}">Perf ${r.perf}</span>
-                    ${r.isBaukasten ? `<span class="bad">${r.cms}</span>` : ''}
-                    ${!r.isHttps ? '<span class="bad">Kein SSL</span>' : ''}
+                    <span class="${perfColor}">${r.perfKnown === false ? 'Tempo nicht messbar' : `Perf ${r.perf}`}</span>
+                    ${r.isBaukasten ? `<span class="bad">${e(r.cms)}</span>` : ''}
+                    ${r.isHttps === false ? '<span class="bad">Kein SSL</span>' : ''}
                 </div>
                 <div class="prospect-opportunity">
-                    <span style="color:${oppColor};font-weight:700">${r.opportunity}% Chance</span>
-                    <span class="metric-desc">Website: ${r.badnessScore}/200 schlecht · Geschäft: ${r.businessStrength}/100 stark</span>
+                    ${scoreZeile}
                 </div>
                 ${renderWhy(r)}
                 <div class="prospect-actions">
-                    <a href="#" class="crm-reanalyze btn-primary" data-url="${r.url}" style="font-size:12px;padding:6px 14px">Einzel-Analyse</a>
-                    <button class="crm-btn-export" data-save-domain="${r.domain}" data-save-url="${r.url}" data-save-name="${r.name}" data-save-type="${r.type}" data-save-score="${r.opportunity}" data-save-perf="${r.perf}" data-save-reviews="${r.reviews}">Im CRM</button>
-                    <button class="fb-btn fb-correct" data-fb-domain="${r.domain}" data-fb-score="${r.opportunity}" data-fb-action="correct" title="Guter Lead">✓</button>
-                    <select class="fb-skip-select" data-fb-domain="${r.domain}" data-fb-score="${r.opportunity}">
+                    <a href="#" class="crm-reanalyze btn-primary" data-url="${e(r.url)}" style="font-size:12px;padding:6px 14px">Einzel-Analyse</a>
+                    <button class="crm-btn-export" data-save-domain="${e(r.domain)}" data-save-url="${e(r.url)}" data-save-name="${e(r.name)}" data-save-type="${e(r.type)}" data-save-score="${r.opportunity}" data-save-perf="${r.perf}" data-save-reviews="${r.reviews}">Im CRM</button>
+                    <button class="fb-btn fb-correct" data-fb-domain="${e(r.domain)}" data-fb-score="${r.opportunity}" data-fb-action="correct" title="Guter Lead">✓</button>
+                    <select class="fb-skip-select" data-fb-domain="${e(r.domain)}" data-fb-score="${r.opportunity}">
                         <option value="">Skip</option>
                         <option value="too_modern">Website gut</option>
                         <option value="too_big">Zu groß</option>
@@ -383,7 +442,7 @@ function renderProspectingResults(query, results) {
         document.getElementById('input-batch')?.classList.add('hidden');
         document.getElementById('input-scanner')?.classList.add('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    }, { signal });
 
     // CRM Save (einzeln)
     el.addEventListener('click', async (e) => {
@@ -396,7 +455,7 @@ function renderProspectingResults(query, results) {
         });
         btn.textContent = '✓'; btn.disabled = true;
         showToast(`${btn.dataset.saveDomain} gespeichert`);
-    });
+    }, { signal });
 
     // Batch Save
     document.getElementById('btn-save-batch')?.addEventListener('click', async function() {
@@ -407,7 +466,8 @@ function renderProspectingResults(query, results) {
 
     // CSV
     document.getElementById('btn-export-csv')?.addEventListener('click', () => {
-        const h = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','CMS','Chance','Website-Score','Geschäfts-Stärke'];
+        const neu = results.some(r => r.scoreModell === SCORE_MODELL);
+        const h = ['Name','Domain','URL','Branche','Sterne','Bewertungen','Performance','CMS', neu ? 'Score' : 'Chance', neu ? 'Website-Mängel (0-100)' : 'Website-Score', 'Geschäfts-Stärke'];
         const rows = results.map(r => [r.name,r.domain,r.url,r.type,r.rating,r.reviews,r.perf,r.cms,r.opportunity,r.badnessScore,r.businessStrength]);
         const csv = [h,...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(';')).join('\n');
         const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
@@ -416,8 +476,8 @@ function renderProspectingResults(query, results) {
     });
 
     // Feedback
-    el.addEventListener('click', (e) => { const b = e.target.closest('[data-fb-action="correct"]'); if (!b) return; saveFeedback(b.dataset.fbDomain, parseInt(b.dataset.fbScore), 'correct', {branch:'batch'}); b.classList.add('active'); showToast(`${b.dataset.fbDomain}: ✓`); });
-    el.addEventListener('change', (e) => { const s = e.target.closest('.fb-skip-select'); if (!s||!s.value) return; saveFeedback(s.dataset.fbDomain, parseInt(s.dataset.fbScore), 'too_high', {branch:'batch'}, s.options[s.selectedIndex].text, s.value); s.style.color='var(--red)'; s.disabled=true; showToast(`${s.dataset.fbDomain}: ${s.options[s.selectedIndex].text}`); });
+    el.addEventListener('click', (e) => { const b = e.target.closest('[data-fb-action="correct"]'); if (!b) return; saveFeedback(b.dataset.fbDomain, parseInt(b.dataset.fbScore), 'correct', {branch:'batch'}); b.classList.add('active'); showToast(`${b.dataset.fbDomain}: ✓`); }, { signal });
+    el.addEventListener('change', (e) => { const s = e.target.closest('.fb-skip-select'); if (!s||!s.value) return; saveFeedback(s.dataset.fbDomain, parseInt(s.dataset.fbScore), 'too_high', {branch:'batch'}, s.options[s.selectedIndex].text, s.value); s.style.color='var(--red)'; s.disabled=true; showToast(`${s.dataset.fbDomain}: ${s.options[s.selectedIndex].text}`); }, { signal });
 }
 
 function cleanup() { hideLoading(); hideProgress(); document.getElementById('btn-batch').disabled = false; }

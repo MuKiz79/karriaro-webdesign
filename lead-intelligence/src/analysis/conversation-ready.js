@@ -3,14 +3,22 @@
  * Ist der Lead JETZT bereit für ein Gespräch? Zeitbasierte Dringlichkeits-Signale.
  */
 
-export function assessConversationReadiness(ws, tech, place, wayback, futureReadiness) {
+import { httpsBefund, CHROME_HTTPS_WARNUNG } from './trigger-events.js';
+import { bewerteCmsVersion } from './tech-age.js';
+
+export function assessConversationReadiness(ws, tech, place, wayback, futureReadiness, httpsCheck = null) {
     const triggers = [];
     let readiness = 0;
 
-    // SSL fehlt = Browser-Warnung JETZT
-    if (!ws.isHttps) {
-        triggers.push({ urgency: 'sofort', label: 'Browser zeigt "Nicht sicher"', detail: 'Jeder Besucher sieht die Warnung — aktiver Kundenverlust', impact: 5 });
-        readiness += 5;
+    // HTTPS: gemessen (adEvidence.httpsCheck) schlägt die PSI-Ableitung (httpsBefund).
+    // 2026-09-10: kein „jeder Besucher sieht die Warnung" mehr — Chrome warnt nur neue
+    // Besucher, und ohne Messung ist nicht einmal belegt, dass HTTPS fehlt.
+    const hb = httpsBefund(ws, httpsCheck);
+    if (hb.ohneHttps) {
+        triggers.push(hb.gemessen
+            ? { urgency: 'sofort', label: 'Seite ohne HTTPS', detail: `${CHROME_HTTPS_WARNUNG}; Browser markieren sie schon heute als „Nicht sicher"`, impact: 5 }
+            : { urgency: 'sofort', label: 'Seite lädt ohne HTTPS', detail: 'Browser markieren sie als „Nicht sicher"', impact: 4 });
+        readiness += hb.gemessen ? 5 : 4;
     }
 
     // 2026-08-14: kein „Abmahnrisiko" mehr — das behauptete eine Rechtsfolge, die
@@ -30,11 +38,12 @@ export function assessConversationReadiness(ws, tech, place, wayback, futureRead
         readiness += 2;
     }
 
-    // Alte WordPress-Version
-    if (tech.version) {
-        const v = parseInt(tech.version);
-        if (v > 0 && v < 6) {
-            triggers.push({ urgency: 'hoch', label: `WordPress ${tech.version} (veraltet)`, detail: 'Sicherheitsupdates laufen aus — Sicherheitsrisiko', impact: 3 });
+    // CMS ohne Sicherheitsupdates — nur, was die gemessene Version belegt (tech-age.js).
+    // Früher: jede WordPress-Version unter 6 galt als „Sicherheitsupdates laufen aus".
+    if (tech?.version && tech?.cms) {
+        const sv = bewerteCmsVersion(tech.cms, tech.version);
+        if (sv.eol) {
+            triggers.push({ urgency: 'hoch', label: `${sv.cms || tech.cms} ${tech.version}`, detail: sv.text, impact: 3 });
             readiness += 3;
         }
     }

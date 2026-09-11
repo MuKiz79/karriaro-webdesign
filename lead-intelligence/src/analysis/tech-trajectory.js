@@ -1,9 +1,18 @@
 /**
  * 8. Technology Debt Trajectory
  * Nicht nur "wie alt ist die Tech jetzt" sondern "wie schnell veraltet sie?"
+ *
+ * 2026-09-10: Die Support-Lage kommt aus der gemessenen Version (analysis/tech-age.js,
+ * bewerteCmsVersion). Die frühere Einstufung nach Hauptversion hielt jede WordPress-
+ * Version unter 5 für ungepatcht und jede unter 6 für „bald ohne Updates" — beides
+ * stimmt nicht (ab 4.7 wird weiter gepatcht). Behauptet wird nur, was die Version belegt.
  */
 
-export function assessTechTrajectory(tech, wayback) {
+import { bewerteCmsVersion } from './tech-age.js';
+
+const MONAT_MS = 30.44 * 86400000;
+
+export function assessTechTrajectory(tech, wayback, jetzt = new Date()) {
     const trajectory = { current: '', timeToRisk: null, urgency: 'low', label: '' };
 
     if (tech.isBaukasten) {
@@ -12,28 +21,30 @@ export function assessTechTrajectory(tech, wayback) {
         trajectory.urgency = 'chronic';
         trajectory.label = `${tech.cms} ist eine permanente Limitierung — kein "Verfallsdatum" aber ein ständiger Nachteil gegenüber individuellen Websites`;
         trajectory.pitchArg = `Baukasten-Systeme wie ${tech.cms} setzen strukturelle Grenzen die nicht überwunden werden können — egal wie viel Sie optimieren`;
-    } else if (tech.version) {
-        const v = parseFloat(tech.version);
-        // WordPress-Versionen und ihr Support-Status
-        if (tech.cms?.includes('WordPress')) {
-            if (v < 5) {
-                trajectory.current = `WordPress ${tech.version} (kritisch veraltet)`;
-                trajectory.timeToRisk = 0;
-                trajectory.urgency = 'critical';
-                trajectory.label = `WordPress ${tech.version} hat KEINE Sicherheitsupdates mehr. Die Website ist ein Sicherheitsrisiko — jetzt.`;
-                trajectory.pitchArg = `WordPress ${tech.version} bekommt keine Sicherheitsupdates mehr. Hacker-Angriffe auf veraltete WordPress-Versionen sind eine der häufigsten Ursachen für gehackte Websites.`;
-            } else if (v < 6) {
-                trajectory.current = `WordPress ${tech.version} (veraltet)`;
-                trajectory.timeToRisk = 6;  // ~6 Monate bis kritisch
-                trajectory.urgency = 'high';
-                trajectory.label = `WordPress ${tech.version} — Sicherheitsupdates laufen in den nächsten Monaten aus`;
-                trajectory.pitchArg = `WordPress ${tech.version} nähert sich dem Ende des Supports. In wenigen Monaten gibt es keine Sicherheitsupdates mehr.`;
-            } else {
-                trajectory.current = `WordPress ${tech.version} (aktuell)`;
-                trajectory.timeToRisk = 24;
-                trajectory.urgency = 'low';
-                trajectory.label = 'WordPress-Version ist aktuell — kein dringender Handlungsbedarf aus technischer Sicht';
-            }
+    } else if (tech.version && tech.cms) {
+        const sv = bewerteCmsVersion(tech.cms, tech.version, jetzt);
+        const name = `${sv.cms || tech.cms} ${tech.version}`;
+        if (sv.status === 'eol') {
+            trajectory.current = `${name} (ohne Sicherheitsupdates)`;
+            trajectory.timeToRisk = 0;
+            trajectory.urgency = 'critical';
+            trajectory.label = `${name}: ${sv.text}.`;
+            trajectory.pitchArg = `${name} läuft ${sv.text}.`;
+        } else if (sv.status === 'gepflegt') {
+            trajectory.current = `${name} (gepflegt)`;
+            const endeMs = sv.supportBis ? Date.parse(sv.supportBis) : NaN;
+            const jetztMs = jetzt instanceof Date ? jetzt.getTime() : Number(jetzt);
+            trajectory.timeToRisk = Number.isFinite(endeMs) ? Math.max(0, Math.round((endeMs - jetztMs) / MONAT_MS)) : null;
+            trajectory.urgency = trajectory.timeToRisk !== null && trajectory.timeToRisk <= 6 ? 'medium' : 'low';
+            trajectory.label = `${name}: ${sv.text}`;
+        } else if (sv.status === 'nicht-aktuell') {
+            trajectory.current = `${name} (nicht aktuell)`;
+            trajectory.urgency = 'medium';
+            trajectory.label = `${name} ist nicht die neueste Version${sv.text ? ` — ${sv.text}` : ''}`;
+        } else {
+            trajectory.current = name;
+            trajectory.urgency = 'unknown';
+            trajectory.label = 'Support-Lage dieser Version ist nicht belegt';
         }
     } else {
         trajectory.current = tech.cms || 'Nicht erkannt';

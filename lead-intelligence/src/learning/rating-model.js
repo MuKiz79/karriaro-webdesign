@@ -114,7 +114,8 @@ export function extractFeatures(l) {
 
         wettbewerbsdruck: num(l?.peerPressure?.mult) ?? 1.0,
         baukasten: bool01(l?.isBaukasten),
-        cmsTot: bool01(l?.tech?.cms && l?.cmsEolYear),
+        // Scan-Leads tragen seit 2026-09-10 datierte Anlässe; cmsEolYear bleibt als Rückfall für Alt-Leads.
+        cmsTot: bool01((l?.anlaesse || []).some(a => a && a.art === 'cms-eol') || (l?.tech?.cms && l?.cmsEolYear)),
 
         bedarfsdruck: num(l?.demandFactor) ?? 1.0,
         erreichbarkeit: num(l?.reachFactor) ?? 1.0,

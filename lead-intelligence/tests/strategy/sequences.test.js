@@ -27,4 +27,29 @@ describe('sequences', () => {
         expect(seq).toHaveLength(5);
         expect(seq[0].subject).toContain('Ihre-Website');
     });
+
+    // 2026-09-10 — Preis aus config.PREISE, keine Lieferzeit-Zusage, keine Referenz ohne Beleg.
+    it('letzte Nachricht nennt den Einstiegspreis aus der einen Quelle, ohne Zeitzusage', () => {
+        const seq = buildSequence({ url: 'https://x.de', ws: {}, revenue: { yearlyLoss: 12000, roi: 3 } });
+        const letzte = seq[4].body;
+        expect(letzte).toContain('ab 1.290 € einmalig');
+        expect(letzte).not.toMatch(/990 ?€|\b990\b/);
+        expect(letzte).toMatch(/Nach unserer Schätzung/);
+        expect(letzte).toMatch(/rund 2 Monaten/);          // 1.290 / (12.000 / 12) = 1,29 → 2
+    });
+
+    it('keine Tempo-Zusagen, keine unbelegte Referenz, kein verdrehtes 24-%-Zitat', () => {
+        const alle = buildSequence({ url: 'https://x.de', ws: { a11y: 90 }, revenue: null }).map(m => m.subject + ' ' + m.body).join(' ');
+        expect(alle).not.toMatch(/Wochen|binnen|innerhalb .*Stunden|48 Stunden|fertig in/i);
+        expect(alle).not.toMatch(/Kolbe/);
+        expect(alle).not.toMatch(/mehr Traffic/);
+        // Wortlaut „kostenfreier Entwurf" wie in allen anderen Ausgängen
+        expect(alle).not.toMatch(/kostenlos/i);
+        expect(alle).toMatch(/Ein kostenfreier Entwurf für x\.de/);
+    });
+
+    it('ohne ROI keine Amortisations-Behauptung', () => {
+        const seq = buildSequence({ url: 'https://x.de', ws: {}, revenue: { yearlyLoss: 12000, roi: 0.5 } });
+        expect(seq[4].body).not.toMatch(/Schätzung|Monaten/);
+    });
 });

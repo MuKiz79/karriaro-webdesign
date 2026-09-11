@@ -1,17 +1,32 @@
 /**
  * #2 Personalisierte E-Mail-Generator
- * Generiert eine sofort sendbare E-Mail basierend auf allen Lead-Daten.
- * Nutzt Profil-Daten (SuperPrompt) + Lead-Analyse-Ergebnisse.
+ * Erzeugt einen E-Mail-ENTWURF basierend auf allen Lead-Daten (Profil + Analyse).
+ * Ob er an den Betrieb gehen darf, entscheidet ausschliesslich das Kontakt-Gate
+ * (outreach/kontakt-grundlage.js).
+ *
+ * Kein erratener Empfänger: Ohne gefundene Adresse bleibt `to` null. Eine
+ * geratene info@<domain> war nie verifiziert und wanderte als contactEmail in
+ * gespeicherte Leads.
  */
-import { config } from '../config.js';
+import { config, PREIS_EINSTIEG } from '../config.js';
+import { httpsBefund, CHROME_HTTPS_WARNUNG } from '../analysis/trigger-events.js';
+
+function ersteAdresse(contact) {
+    const kandidaten = [
+        ...(Array.isArray(contact?.allEmails) ? contact.allEmails : []),
+        ...(Array.isArray(contact?.emails) ? contact.emails : []),
+        ...(Array.isArray(contact?.genericEmails) ? contact.genericEmails : [])
+    ];
+    const e = kandidaten.find(x => typeof x === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(x.trim()));
+    return e ? e.trim() : null;
+}
 
 /**
- * Generiert eine personalisierte Kalt-E-Mail
+ * Generiert einen personalisierten E-Mail-Entwurf
  * @param {Object} data - state.lastResult (alle Analyse-Daten)
- * @returns {Object} { subject, body, copyText }
+ * @returns {Object} { to:string|null, toHinweis:string|null, subject, body, copyText }
  */
 export function generatePersonalEmail(data) {
-    const r = data.result;
     const ws = data.ws;
     const tech = data.tech;
     const domain = new URL(data.url).hostname.replace('www.', '');
@@ -57,8 +72,16 @@ export function generatePersonalEmail(data) {
     if (ws.perf < 40) {
         args.push({ type: 'perf', text: `Google bewertet die Ladegeschwindigkeit mit ${ws.perf}/100 — das kostet Sie Sichtbarkeit und Kunden.`, subject: `${domain}: Google-Performance nur ${ws.perf}/100` });
     }
-    if (!ws.isHttps) {
-        args.push({ type: 'ssl', text: `Der Browser zeigt "Nicht sicher" an — jeder Besucher sieht das.`, subject: `${domain}: Browser warnt Ihre Besucher` });
+    // 2026-09-11: siehe strategy/outreach.js — gemessen schlägt abgeleitet, kein „jeder Besucher".
+    const hb = httpsBefund(ws, data.httpsCheck);
+    if (hb.ohneHttps) {
+        args.push({
+            type: 'ssl',
+            text: hb.gemessen
+                ? `Ihre Seite ist nicht über HTTPS erreichbar. ${CHROME_HTTPS_WARNUNG}.`
+                : `Ihre Seite lädt ohne HTTPS — Browser markieren sie als „Nicht sicher".`,
+            subject: `${domain}: Browser markieren Ihre Seite als „Nicht sicher"`
+        });
     }
     if (tech.isBaukasten) {
         args.push({ type: 'baukasten', text: `Ihre Website läuft auf ${tech.cms} — ein System das Design, Geschwindigkeit und SEO strukturell begrenzt.`, subject: `${domain}: Warum ${tech.cms} Sie ausbremst` });
@@ -74,35 +97,43 @@ export function generatePersonalEmail(data) {
 
     // Ohne echten Ansprechpartner ist die formelle Sammelanrede korrekt —
     // "Sehr geehrte/r <Firmenname>" liest sich wie eine Serienmail.
+    // 2026-09-11: Anrede aus enrichContact (ownerAnrede/ownerTitel). Ohne erkannte Anrede
+    // bleibt es formell bei der Sammelanrede statt „Sehr geehrte/r Vorname Nachname".
+    const anrede = contact?.ownerAnrede === 'Herr' || contact?.ownerAnrede === 'Frau' ? contact.ownerAnrede : null;
+    const nachname = contactPerson ? contactPerson.trim().split(/\s+/).slice(-1)[0] : '';
+    const persoenlich = anrede && nachname ? `${anrede} ${contact?.ownerTitel ? contact.ownerTitel + ' ' : ''}${nachname}` : null;
     let greeting, closing;
     if (tone === 'freundlich') {
-        greeting = contactPerson ? `Hallo ${firstName},` : `Guten Tag,`;
+        greeting = persoenlich ? `Hallo ${persoenlich},` : `Guten Tag,`;
         closing = `Herzliche Grüße`;
     } else if (tone === 'direkt') {
-        greeting = contactPerson ? `Guten Tag ${contactPerson},` : `Guten Tag,`;
+        greeting = persoenlich ? `Guten Tag ${persoenlich},` : (contactPerson ? `Guten Tag ${contactPerson},` : `Guten Tag,`);
         closing = `Mit besten Grüßen`;
     } else {
-        greeting = contactPerson ? `Sehr geehrte/r ${contactPerson},` : `Sehr geehrte Damen und Herren,`;
+        greeting = persoenlich ? `${anrede === 'Frau' ? 'Sehr geehrte' : 'Sehr geehrter'} ${persoenlich},` : `Sehr geehrte Damen und Herren,`;
         closing = `Mit freundlichen Grüßen`;
     }
 
+    // Preis aus config.PREISE (eine Quelle); keine Lieferzeit-Zusage als Rückfall.
     const body = `${greeting}
 
 ${bestArg.text}
 
 ${args.length > 1 ? `Darüber hinaus: ${args.slice(1, 3).map(a => a.text).join(' ')}` : ''}
 
-Ich baue moderne Websites — handcodiert, ${p.priceRange || 'ab 1.290€'}, ${p.usp || 'in 2 Wochen fertig'}.
+Ich baue moderne Websites — handcodiert, ${PREIS_EINSTIEG} einmalig${p.usp ? ', ' + p.usp : ''}.
 
-Darf ich Ihnen in einem kurzen 15-Minuten-Call zeigen, wie Ihre neue Website aussehen könnte? Keine Verpflichtung.
+Darf ich Ihnen in einem kurzen Gespräch zeigen, wie Ihre neue Website aussehen könnte? Sie sehen zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.
 
 ${closing}
 ${senderName}
 ${senderCompany}
 ${p.location ? p.location + '\n' : ''}${p.portfolio ? p.portfolio : 'karriaro-webdesign.de'}`;
 
+    const to = ersteAdresse(contact);
     return {
-        to: contact?.allEmails?.[0] || `info@${domain}`,
+        to,
+        toHinweis: to ? null : 'Keine E-Mail-Adresse gefunden — ohne gefundene Adresse gibt es keinen Empfänger.',
         subject: bestArg.subject,
         body: body.trim(),
         args,

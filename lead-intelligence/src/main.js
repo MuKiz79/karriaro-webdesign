@@ -6,13 +6,13 @@
 import { config, loadConfig, saveConfig } from './config.js';
 import { state } from './state.js';
 import { loadCloudSettings, saveCloudSettings } from './crm/settings.js';
-import { checkReminders } from './crm/reminders.js';
+import { checkReminders, dismissReminder } from './crm/reminders.js';
 import { SEQUENCE_STEPS } from './templates/sequences.js';
 import { openStudio } from './ui/render-outreach.js';
 import { loadAutoScanConfig, saveAutoScanConfig, isAutoScanDue, getNewLeads } from './crm/auto-scan.js';
 import { runSingleCheck } from './orchestration/single-check.js';
 import { runBatchSearch, reopenBatch } from './orchestration/batch-search.js';
-import { runScanner, requestNotificationPermissionOnGesture, reopenScan } from './orchestration/scanner.js';
+import { runScanner, requestNotificationPermissionOnGesture, reopenScan, runNeueroeffnungen, runEmpfehlungspartner } from './orchestration/scanner.js';
 import { renderCRM, cleanupInboundListener } from './ui/render-crm.js';
 import { renderSetupGate } from './ui/setup-gate.js';
 import { showRegionRadar } from './ui/render-radar.js';
@@ -194,6 +194,16 @@ function initButtons() {
     });
 
 
+    // Sonder-Modi im Scanner (2026-09-10): eigene Listen neben dem Kunden-Scoring.
+    document.getElementById('btn-neueroeffnungen')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
+        runNeueroeffnungen();
+    });
+    document.getElementById('btn-partner')?.addEventListener('click', () => {
+        if (!ensureAccess()) return;
+        runEmpfehlungspartner();
+    });
+
     // Regionen-Radar: welche Stadt lohnt? (live Stellen-Aktivität) → füllt das Stadt-Feld.
     document.getElementById('btn-radar')?.addEventListener('click', () => {
         if (!ensureAccess()) return;
@@ -366,14 +376,15 @@ function openSettings() {
             <div class="hint" style="margin-bottom:12px">Diese Daten werden in Pitches und E-Mail-Vorlagen verwendet.</div>
 
             ${field('cfg-name', 'Mein Name', p.name, 'Muammer Kizilaslan')}
+            ${field('cfg-email', 'Absender-E-Mail', p.email, 'kontakt@karriaro.de')}
             ${field('cfg-company', 'Mein Unternehmen', p.company, 'Karriaro Webdesign')}
             ${field('cfg-role', 'Meine Rolle', p.role, 'Gründer & Webdesigner')}
-            ${field('cfg-services', 'Meine Leistungen', p.services, 'Handcodierte Websites, SEO, BFSG-Compliance')}
-            ${field('cfg-price', 'Preisbereich', p.priceRange, '1.290-3.990€ einmalig, kein Abo')}
+            ${field('cfg-services', 'Meine Leistungen', p.services, 'Handcodierte Websites, SEO, Barrierefreiheit')}
+            ${field('cfg-price', 'Preisbereich (nur Profil – Mails nutzen die Paketpreise)', p.priceRange, '1.290–3.990 € einmalig, kein Abo')}
             ${field('cfg-target', 'Meine Zielgruppe', p.targetGroup, 'Lokale Unternehmen (Handwerk, Gastronomie, Ärzte, Makler)')}
-            ${field('cfg-usp', 'Mein USP', p.usp, 'Kein Baukasten, kein Template. Handcodiert, in 2 Wochen fertig.')}
+            ${field('cfg-usp', 'Mein USP', p.usp, 'Kein Baukasten, kein Template. Handcodiert.')}
             ${field('cfg-location', 'Mein Standort', p.location, 'Schwarzwald / Ortenau')}
-            ${field('cfg-portfolio', 'Referenz-Projekte', p.portfolio, 'karriaro-webdesign.de, Spedition Kolbe')}
+            ${field('cfg-portfolio', 'Referenz-Projekte', p.portfolio, 'karriaro-webdesign.de')}
             <label>Tonalität</label>
             <select id="cfg-tone"><option value="professionell" ${p.tone==='professionell'?'selected':''}>Professionell</option><option value="freundlich" ${p.tone==='freundlich'?'selected':''}>Freundlich</option><option value="direkt" ${p.tone==='direkt'?'selected':''}>Direkt</option></select>
 
@@ -402,6 +413,7 @@ function openSettings() {
             const fnInput = document.getElementById('cfg-fn-url').value.trim().replace(/\/$/, '');
             config.fnUrl = (fnInput && !fnInput.includes('cloudfunctions.net')) ? fnInput : '/api';
             config.profile.name = document.getElementById('cfg-name').value.trim();
+            config.profile.email = document.getElementById('cfg-email').value.trim();
             config.profile.company = document.getElementById('cfg-company').value.trim();
             config.profile.role = document.getElementById('cfg-role').value.trim();
             config.profile.services = document.getElementById('cfg-services').value.trim();
@@ -502,10 +514,19 @@ function showReminders() {
     banner.style.cssText = 'border-left:3px solid var(--accent);margin:80px auto 0;max-width:680px;padding:16px 20px';
     banner.innerHTML = `
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:6px">Follow-Up fällig (${due.length})</div>
-        ${due.slice(0, 3).map(r => `<div class="stat-row"><span class="stat-label">${r.name || r.domain} — Tag ${r.touchDay}</span><span class="stat-value"><button class="crm-btn-export" data-followup-domain="${r.domain}" data-followup-day="${r.touchDay}">Folge-Entwurf</button> · seit ${r.daysSince} Tagen</span></div>`).join('')}
+        ${due.slice(0, 3).map(r => `<div class="stat-row"><span class="stat-label">${escapeHtml(r.name || r.domain)} — Tag ${r.touchDay}</span><span class="stat-value"><button class="crm-btn-export" data-followup-domain="${escapeHtml(r.domain)}" data-followup-day="${r.touchDay}">Folge-Entwurf</button> <button class="crm-btn-export" data-dismiss-id="${escapeHtml(r.id)}" data-dismiss-day="${r.touchDay}">Ausblenden</button> · seit ${r.daysSince} Tagen</span></div>`).join('')}
     `;
     // Folge-Entwurf → Studio mit passender touchNumber (Sequenz-Schritt).
     banner.addEventListener('click', (e) => {
+        // Ausblenden: dismissReminder schreibt über updateLead (auch Firestore).
+        const dis = e.target.closest('[data-dismiss-id]');
+        if (dis) {
+            dis.disabled = true;
+            dismissReminder(dis.dataset.dismissId, dis.dataset.dismissDay)
+                .then(res => { if (res?.ok) dis.closest('.stat-row')?.remove(); else dis.disabled = false; })
+                .catch(err => { console.error('Erinnerung ausblenden:', err); dis.disabled = false; });
+            return;
+        }
         const btn = e.target.closest('[data-followup-domain]');
         if (!btn) return;
         const lead = due.find(r => r.domain === btn.dataset.followupDomain);

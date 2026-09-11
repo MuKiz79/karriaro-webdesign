@@ -22,18 +22,18 @@ import { searchPlaces } from '../api/places.js';
 import { detectTech } from '../signals/tech-detect.js';
 import { detectGoogleAds } from '../signals/google-ads.js';
 import { detectJobSignals } from '../signals/job-signal.js';
-import { adEvidence, jobSignals } from '../api/cloud-functions.js';
+import { adEvidence, jobSignals, placesAnfragenAus } from '../api/cloud-functions.js';
 import { deriveJobOpenings } from '../signals/employer-match.js';
 import { analyzeDigitalFootprint } from '../signals/digital-footprint.js';
 import { extractWebsiteScore } from '../signals/website-score.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { computeOpportunity } from '../scoring/opportunity.js';
-import { applyFilters, hasBuySignal, isReachable } from './lead-filters.js';
+import { applyFilters, hasBuySignal, isReachable, hasDatedAnlass, filterNeueroeffnungen, sortierePartner } from './lead-filters.js';
 import { setRating, getAllRatings, getRatingStats } from '../learning/lead-ratings.js';
 import { extractFeatures, trainRatingModel, predictLeads, blendRanks } from '../learning/rating-model.js';
 import { assessBuyingIntent } from '../analysis/buying-intent.js';
 import { computePeerPressure } from '../analysis/peer-pressure.js';
-import { analyzeTechAge } from '../analysis/tech-age.js';
+import { analyzeTechAge, ergaenzeTechVersion } from '../analysis/tech-age.js';
 import { seasonalTriggerFor } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
 import { analyzeScreenshot } from '../api/cloud-functions.js';
@@ -80,21 +80,34 @@ const MIN_REVIEWS = 8;
 // Tiefen-Suche: zusätzlich pro Branche in N Stadtteilen suchen (bricht den
 // Prominenz-Bias). Tiefen-Stufen zentral definiert (Modal + Default leiten sich
 // daraus ab). Gedrosselt gegen das Places-Rate-Limit (30/60s im Backend).
+// `seiten` (V7, 2026-09-10): Ergebnisseiten je Suche. Jede Seite ist eine eigene,
+// bezahlte Places-Anfrage — das Kostenmodal rechnet deshalb Suchen × Seiten.
+// Nur „Tief" holt mehr als eine Seite: dort sollen gerade die weniger
+// prominenten Betriebe jenseits der ersten 20 Treffer auftauchen.
 const DEPTH_TIERS = [
-    { label: 'Schnell · stadtweit', districts: 0 },
-    { label: 'Mittel · + 3 Stadtteile', districts: 3 },
-    { label: 'Tief · + 6 Stadtteile', districts: 6 }
+    { label: 'Schnell · stadtweit', districts: 0, seiten: 1 },
+    { label: 'Mittel · + 3 Stadtteile', districts: 3, seiten: 1 },
+    { label: 'Tief · + 6 Stadtteile · bis zu 2 Seiten je Suche', districts: 6, seiten: 2 }
 ];
 const DISTRICTS_PER_SCAN = Math.max(...DEPTH_TIERS.map(t => t.districts));
 const SEARCH_CONCURRENCY = 2; // niedriger → schont das 30/60s-Backend-Limit
 
+// Cache-Schlüssel je Seitenzahl: ein Eintrag mit EINER Ergebnisseite darf eine
+// Suche mit zwei Seiten nicht als „gratis" ausweisen (und umgekehrt).
+function placesSchluessel(q, seiten = 1) {
+    return seiten > 1 ? `${q} ::seiten=${seiten}` : q;
+}
+
 // searchPlaces mit Backoff-Retries gegen Rate-Limit (Tiefen-Scan feuert viele Suchen).
-async function searchPlacesRetry(q, max) {
+async function searchPlacesRetry(q, max, opts = {}) {
     const waits = [3000, 6000];
     for (let i = 0; ; i++) {
-        try { return await searchPlaces(q, max); }
-        catch {
-            if (i >= waits.length) return null;
+        try { return await searchPlaces(q, max, opts); }
+        catch (e) {
+            if (i >= waits.length) {
+                console.warn(`searchPlaces(${q}) endgültig fehlgeschlagen:`, e?.message || e);
+                return null;
+            }
             await new Promise(r => setTimeout(r, waits[i]));
         }
     }
@@ -110,41 +123,64 @@ function buildQueriesFor(city, districts) {
     return out;
 }
 
-// Kosten-Bestätigung mit Tiefen-Wahl. Cache-Treffer sind gratis, neue Suchen ~0,04 $.
-// Liefert das gewählte Stadtteil-Array oder null (Abbruch).
-function confirmScanCost(city) {
+/**
+ * Kosten-Bestätigung vor bezahlten Places-Anfragen — gemeinsam für Region-Scan,
+ * Stadt-Suche (batch-search.js) und Empfehlungspartner, damit überall dieselbe
+ * Rechnung steht: neue Suchen × Seiten × PLACES_COST_USD. Cache-Treffer sind gratis.
+ *
+ * @param {{eyebrow:string, titel:string, sub:string, hinweis?:string, empfohlen?:number,
+ *          optionen:Array<{label:string, suchen:number, neu:number, seiten?:number}>}} p
+ * @returns {Promise<number|null>} Index der gewählten Option oder null (Abbruch)
+ */
+export function zeigeKostenModal({ eyebrow, titel, sub, hinweis = '', optionen, empfohlen = 0 }) {
     return new Promise(resolve => {
-        const all = pickDistricts(city, DISTRICTS_PER_SCAN);
-        const opts = DEPTH_TIERS.map(t => {
-            const districts = all.slice(0, t.districts);
-            const qs = buildQueriesFor(city, districts).map(x => x.q);
-            const newN = countUncached(qs);
-            return { label: t.label, districts, total: qs.length, newN, costUsd: +(newN * PLACES_COST_USD).toFixed(2) };
+        const opts = (optionen || []).map(o => {
+            const seiten = Math.max(1, o.seiten || 1);
+            const anfragen = o.neu * seiten;               // Obergrenze: Folgeseiten nur, wenn es sie gibt
+            return { ...o, seiten, anfragen, costUsd: +(anfragen * PLACES_COST_USD).toFixed(2) };
         });
-
         const el = document.createElement('div');
         el.className = 'scan-cost-overlay';
         el.innerHTML = `
             <div class="scan-cost-card">
-                <p class="hero-eyebrow">Region-Scan · ${escapeHtml(city)}</p>
-                <h2 class="scan-cost-title">Wie tief soll gesucht werden?</h2>
-                <p class="scan-cost-sub">Jede Google-Suche kostet ~0,04 $. Bereits gecachte Gebiete sind <strong>gratis</strong>, PageSpeed ist immer kostenlos. Mehrere Läufe füllen den Cache — Wiederholungen werden günstiger.</p>
+                <p class="hero-eyebrow">${escapeHtml(eyebrow)}</p>
+                <h2 class="scan-cost-title">${escapeHtml(titel)}</h2>
+                <p class="scan-cost-sub">${escapeHtml(sub)}</p>
+                ${hinweis ? `<p class="sonder-hinweis">${escapeHtml(hinweis)}</p>` : ''}
                 <div class="scan-cost-opts">
                     ${opts.map((o, i) => `
-                        <button class="scan-cost-opt${i === 1 ? ' recommended' : ''}" data-i="${i}">
+                        <button class="scan-cost-opt${i === empfohlen ? ' recommended' : ''}" data-i="${i}">
                             <span class="sco-label">${escapeHtml(o.label)}</span>
-                            <span class="sco-meta">${o.total} Suchen · ${o.newN} neu${o.newN < o.total ? ` · ${o.total - o.newN} gratis (Cache)` : ''}</span>
-                            <span class="sco-cost">${o.costUsd === 0 ? 'gratis' : '≈ ' + o.costUsd.toFixed(2) + ' $'}</span>
+                            <span class="sco-meta">${o.suchen} Suche${o.suchen === 1 ? '' : 'n'} · ${o.neu} neu${o.neu < o.suchen ? ` · ${o.suchen - o.neu} gratis (Cache)` : ''}${o.seiten > 1 && o.neu > 0 ? ` · bis zu ${o.anfragen} Anfragen (${o.seiten} Seiten je Suche)` : ''}</span>
+                            <span class="sco-cost">${o.costUsd === 0 ? 'gratis' : (o.seiten > 1 ? 'bis ≈ ' : '≈ ') + o.costUsd.toFixed(2) + ' $'}</span>
                         </button>`).join('')}
                 </div>
                 <button class="scan-cost-cancel" data-cancel>Abbrechen</button>
             </div>`;
         document.body.appendChild(el);
         const close = (val) => { el.remove(); resolve(val); };
-        el.querySelectorAll('.scan-cost-opt').forEach(b => b.addEventListener('click', () => close(opts[+b.dataset.i].districts)));
+        el.querySelectorAll('.scan-cost-opt').forEach(b => b.addEventListener('click', () => close(+b.dataset.i)));
         el.querySelector('[data-cancel]').addEventListener('click', () => close(null));
         el.addEventListener('click', (e) => { if (e.target === el) close(null); });
     });
+}
+
+// Kosten-Bestätigung mit Tiefen-Wahl. Liefert {districts, seiten} oder null (Abbruch).
+async function confirmScanCost(city) {
+    const all = pickDistricts(city, DISTRICTS_PER_SCAN);
+    const tiers = DEPTH_TIERS.map(t => {
+        const districts = all.slice(0, t.districts);
+        const qs = buildQueriesFor(city, districts).map(x => placesSchluessel(x.q, t.seiten));
+        return { label: t.label, districts, seiten: t.seiten, suchen: qs.length, neu: countUncached(qs) };
+    });
+    const i = await zeigeKostenModal({
+        eyebrow: `Region-Scan · ${city}`,
+        titel: 'Wie tief soll gesucht werden?',
+        sub: 'Jede Google-Suche kostet ~0,04 $ je Ergebnisseite. Bereits gecachte Gebiete sind gratis, PageSpeed ist immer kostenlos. Mehrere Läufe füllen den Cache — Wiederholungen werden günstiger.',
+        optionen: tiers,
+        empfohlen: 1
+    });
+    return i === null ? null : { districts: tiers[i].districts, seiten: tiers[i].seiten };
 }
 
 let lastResults = []; // letzte Scanner-Ausgabe — fuer Filter/Sort ohne Re-Run
@@ -156,8 +192,9 @@ export async function runScanner() {
     if (!config.fnUrl) { showError('Scanner braucht Cloud Function URL.'); return; }
 
     // Kosten-Bestätigung mit Tiefen-Wahl (Cache-Treffer gratis). Abbruch → raus.
-    const districts = await confirmScanCost(city);
-    if (districts === null) return;
+    const wahl = await confirmScanCost(city);
+    if (wahl === null) return;
+    const { districts, seiten } = wahl;
 
     state.aborted = false;
     document.getElementById('btn-scanner').disabled = true;
@@ -174,12 +211,18 @@ export async function runScanner() {
 
     const raw = [];
     let qDone = 0;
+    let placesAnfragen = 0;   // tatsächlich abgerechnete Anfragen (pagesFetched), für die Abschlussmeldung
     await runWithConcurrency(queries, SEARCH_CONCURRENCY, async ({ branch, bi, q }) => {
         if (state.aborted) return;
-        const cached = getCachedPlaces(q);
-        const res = cached ? { places: cached } : await searchPlacesRetry(q, PLACES_PER_BRANCH);
+        const key = placesSchluessel(q, seiten);
+        const cached = getCachedPlaces(key);
+        const res = cached ? { places: cached } : await searchPlacesRetry(q, PLACES_PER_BRANCH, { maxPages: seiten });
+        if (!cached && res) placesAnfragen += placesAnfragenAus(res);
         if (!cached && res?.places) {
-            setCachedPlaces(q, res.places);
+            // Teilergebnis (eine Folgeseite scheiterte) nicht unter dem N-Seiten-Schlüssel
+            // cachen — sonst gälte es 14 Tage lang als vollständige Suche.
+            if (!res.pageError) setCachedPlaces(key, res.places);
+            else console.warn('Places-Teilergebnis nicht gecacht:', q, res.pageError);
             // Frische Places tragen reviews[] aber noch keine abgeleitete reviewRecency →
             // hier ableiten, damit der FRISCHE Pfad identisch zum gecachten scort.
             for (const fp of res.places) { if (!fp.reviewRecency) fp.reviewRecency = deriveReviewRecency(fp.reviews); }
@@ -283,6 +326,7 @@ export async function runScanner() {
                 footprint,                             // für Recompute der Kaufsignal-Achse
                 buyingIntent,                          // volle Evidenz-Summe (11+ Signale) — UI + Pitch
                 buySignal: opp.buySignal,              // {adActive, hiring, proven, tier, mult} — Filter/Sortierung
+                anlaesse: opp.anlaesse,                // Anlässe mit Datum — Filter „📅", score-neutral
                 conversionRate: result.conversionRate || 0,
                 expectedValue: result.expectedValue || 0,
                 isBaukasten: !!tech.isBaukasten,
@@ -359,9 +403,19 @@ export async function runScanner() {
                 // dieselbe Ableitung wie im Einzel-Check (employer-match.js).
                 const { openings } = deriveJobOpenings(jobsByBranch.get(l.branch.key) || null, l.name, city);
                 l.jobOpenings = openings > 0 ? openings : null;
+                // V6 (EVIDENCE_SCHEMA 3, 2026-09-10): HTTPS-Messung, PHP-Version,
+                // Hoster. Eigene Messungen (TLS-Handshake, Header, DNS) — ein
+                // HTML-Block der Bot-Wall entwertet sie nicht; der Server liefert
+                // selbst null, wo er nichts gemessen hat. Alt-Cache ohne Felder → null.
+                if (ev?.ok) {
+                    l.httpsCheck = ev.httpsCheck || null;
+                    l.php = ev.php || null;
+                    l.hoster = ev.hoster || null;
+                }
+                const v6Befund = !!(l.httpsCheck?.checked || l.php?.version || l.hoster?.name);
                 // Ein WAF-Block stoppt die Neuberechnung nur, wenn auch das
-                // Job-Signal leer ist — offene Stellen sind vom Block unabhängig.
-                if (!clean && !l.jobOpenings) { aDone++; showProgress(95, `④ Seiten-Check ${aDone}/${adCands.length}…`); return; }
+                // Job-Signal und die V6-Messungen leer sind — beide sind vom Block unabhängig.
+                if (!clean && !l.jobOpenings && !v6Befund) { aDone++; showProgress(95, `④ Seiten-Check ${aDone}/${adCands.length}…`); return; }
 
                 if (clean) {
                     l.siteEvidence = {
@@ -373,9 +427,12 @@ export async function runScanner() {
                     // Meta / wp-includes-?ver) — NUR Lücken füllen, die PSI-
                     // Erkennung hat Vorrang. Erst mit Version trägt das EOL-Signal
                     // (hartes Strukturzeichen) im Scan überhaupt.
-                    const tv = ev.techVersion;
-                    if (tv?.version && !l.tech.version && (!l.tech.cms || l.tech.cms === tv.cms)) {
-                        l.tech = { ...l.tech, cms: l.tech.cms || tv.cms, version: tv.version };
+                    // 2026-09-10: Lückenfüllen über ergaenzeTechVersion — die alte
+                    // Bedingung verglich mit „Nicht erkannt (…)" und griff dadurch
+                    // für Joomla/TYPO3/Contao/Shopware nie.
+                    const ergaenzt = ergaenzeTechVersion(l.tech, ev.techVersion);
+                    if (ergaenzt !== l.tech) {
+                        l.tech = ergaenzt;
                         l.cms = l.tech.cms; l.version = l.tech.version;
                     }
                     // F17 (2026-08-17): Website-Alter/Relaunch-Verdacht vom Server —
@@ -401,18 +458,7 @@ export async function runScanner() {
                     adIntent: l.adIntent, footprint: l.footprint, jobIntent: l.jobIntent,
                     place: l.place, siteEv: l.siteEvidence || null, jobOpenings: l.jobOpenings
                 });
-                const re = computeOpportunity({
-                    ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
-                    techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency,
-                    adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
-                    contactPaths: l.siteEvidence?.contactPaths || null,
-                    siteAge: l.siteAge || null, ki: l.ki || null,
-                    seasonal: seasonalTriggerFor(l.place.primaryType)
-                });
-                l.opportunity = re.opportunity; l.leadScore = re.opportunity;
-                l.badnessScore = re.badnessScore; l.reasons = re.reasons;
-                l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
-                l.scoreCap = re.scoreCap;
+                uebernimmOpportunity(l, computeOpportunity(oppEingaben(l)));
                 aDone++;
                 showProgress(95 + Math.round((aDone / adCands.length) * 1), `④ Seiten-Check ${aDone}/${adCands.length}…`);
             });
@@ -448,10 +494,7 @@ export async function runScanner() {
                     } else if (modern === false) {
                         // Veraltet = harter Relaunch-Trigger → mit visionOutdated:true neu rechnen
                         // (zählt zu hardStructural, Konvergenz-Schranke greift sauber statt blind ×1.15).
-                        const re = computeOpportunity({ ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri, techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place.reviewRecency, adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent, contactPaths: l.siteEvidence?.contactPaths || null, siteAge: l.siteAge || null, ki: l.ki || null, seasonal: seasonalTriggerFor(l.place.primaryType), visionOutdated: true });
-                        l.opportunity = re.opportunity; l.leadScore = re.opportunity;
-                        l.badnessScore = re.badnessScore; l.reasons = re.reasons; l.hardStructural = re.hardStructural;
-                        l.scoreCap = re.scoreCap;
+                        uebernimmOpportunity(l, computeOpportunity(oppEingaben(l, { visionOutdated: true })));
                         if (!l.reasons.includes('Bild: veraltet')) l.reasons.push('Bild: veraltet');
                     }
                 }
@@ -509,7 +552,285 @@ export async function runScanner() {
     persistFilters({}); // setze URL-Hash auf default
     renderLeadWorkspace(city, leads, getActiveFilters());
 
-    notifyDone(`Scan fertig: ${leads.length} Leads gefunden, ${leads.filter(l => l.leadScore >= 60).length} mit Score ≥60`);
+    notifyDone(`Scan fertig: ${leads.length} Leads gefunden, ${leads.filter(l => l.leadScore >= 60).length} mit Score ≥60${placesAnfragen ? ` · ${placesAnfragen} bezahlte Places-Anfragen` : ''}`);
+}
+
+/**
+ * Eingaben für computeOpportunity aus einem Scan-Lead — EINE Stelle für alle
+ * Neuberechnungen (Seiten-Check, Bild-Check). Vorher standen zwei handgeschriebene
+ * Aufrufe nebeneinander; ein neues Feld (httpsCheck/php/hoster) hätte in einem
+ * davon gefehlt, und die spätere Bild-Neuberechnung hätte den Befund still gelöscht.
+ */
+function oppEingaben(l, extra = {}) {
+    return {
+        ws: l.ws, tech: l.tech, place: l.place, websiteUri: l.websiteUri,
+        techAge: analyzeTechAge(l.tech, {}), reviewRecency: l.place?.reviewRecency || null,
+        adIntent: l.adIntent, jobIntent: l.jobIntent, buyingIntent: l.buyingIntent,
+        contactPaths: l.siteEvidence?.contactPaths || null,
+        siteAge: l.siteAge || null, ki: l.ki || null,
+        httpsCheck: l.httpsCheck || null, php: l.php || null, hoster: l.hoster || null,
+        seasonal: seasonalTriggerFor(l.place?.primaryType),
+        ...extra
+    };
+}
+
+/** Ergebnis einer Neuberechnung aufs Lead schreiben — dieselben Felder an jeder Stelle. */
+function uebernimmOpportunity(l, re) {
+    l.opportunity = re.opportunity; l.leadScore = re.opportunity;
+    l.badnessScore = re.badnessScore; l.reasons = re.reasons;
+    l.hardStructural = re.hardStructural; l.buySignal = re.buySignal;
+    l.scoreCap = re.scoreCap; l.looksAlreadyGood = re.looksAlreadyGood;
+    l.anlaesse = re.anlaesse;
+}
+
+// ─────────── Sonder-Modi: Neueröffnungen & Empfehlungspartner (2026-09-10) ───────────
+
+const HINWEIS_NEUEROEFFNUNG = 'Kontakt nur persönlich oder wenn der Betrieb selbst anfragt – keine Werbe-Mail ohne Einwilligung.';
+const HINWEIS_PARTNER = 'Erstkontakt persönlich, nicht per Kalt-Mail.';
+
+const PARTNER_BRANCHEN = [
+    { key: 'werbetechnik', q: 'Werbetechnik', name: 'Werbetechnik' },
+    { key: 'fotograf',     q: 'Fotograf',     name: 'Fotografen' },
+    { key: 'druckerei',    q: 'Druckerei',    name: 'Druckereien' },
+    { key: 'it_service',   q: 'IT-Service',   name: 'IT-Service' }
+];
+
+/** Nur http(s)-Adressen als Link — Places-Daten sind Fremddaten. */
+function sichererLink(url) {
+    try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? u.href : null; }
+    catch { return null; }
+}
+
+/**
+ * Branchen-Wahl für Neueröffnungen mit Live-Kosten. Diese Suche läuft bewusst
+ * OHNE Places-Cache (der Cache kennt weder den Zusatz noch `openingDate`) —
+ * jede Branche ist also eine bezahlte Anfrage.
+ * @returns {Promise<Array|null>} gewählte Branchen oder null (Abbruch)
+ */
+function waehleNeueroeffnungsBranchen(city) {
+    return new Promise(resolve => {
+        const el = document.createElement('div');
+        el.className = 'scan-cost-overlay';
+        el.innerHTML = `
+            <div class="scan-cost-card">
+                <p class="hero-eyebrow">Neueröffnungen · ${escapeHtml(city)}</p>
+                <h2 class="scan-cost-title">Welche Branche?</h2>
+                <p class="scan-cost-sub">Sucht Betriebe, die Google als „eröffnet demnächst“ führt — ohne Voraussetzung an Website oder Bewertungen. Diese Suche wird nicht gecacht; jede Branche ist eine Google-Suche (~0,04 $).</p>
+                <p class="sonder-hinweis">${escapeHtml(HINWEIS_NEUEROEFFNUNG)}</p>
+                <label class="radar-label" for="neu-branche">Branche</label>
+                <select class="radar-input" id="neu-branche">
+                    <option value="all">Alle ${BRANCHES.length} Branchen</option>
+                    ${BRANCHES.map(b => `<option value="${escapeHtml(b.key)}">${escapeHtml(b.name)}</option>`).join('')}
+                </select>
+                <div class="scan-cost-opts" style="margin-top:12px">
+                    <button class="scan-cost-opt recommended" data-start>
+                        <span class="sco-label">Suche starten</span>
+                        <span class="sco-meta" data-meta></span>
+                        <span class="sco-cost" data-cost></span>
+                    </button>
+                </div>
+                <button class="scan-cost-cancel" data-cancel>Abbrechen</button>
+            </div>`;
+        document.body.appendChild(el);
+        const sel = el.querySelector('#neu-branche');
+        const auswahl = () => sel.value === 'all' ? BRANCHES.slice() : BRANCHES.filter(b => b.key === sel.value);
+        const aktualisiere = () => {
+            const n = auswahl().length;
+            el.querySelector('[data-meta]').textContent = `${n} Suche${n === 1 ? '' : 'n'} · ${n} bezahlte Anfrage${n === 1 ? '' : 'n'}`;
+            el.querySelector('[data-cost]').textContent = `≈ ${(n * PLACES_COST_USD).toFixed(2)} $`;
+        };
+        aktualisiere();
+        sel.addEventListener('change', aktualisiere);
+        const close = (val) => { el.remove(); resolve(val); };
+        el.querySelector('[data-start]').addEventListener('click', () => close(auswahl()));
+        el.querySelector('[data-cancel]').addEventListener('click', () => close(null));
+        el.addEventListener('click', (e) => { if (e.target === el) close(null); });
+    });
+}
+
+/**
+ * Modus „Neueröffnungen": Branche × Stadt, nur businessStatus FUTURE_OPENING,
+ * eigene Liste (kein Kunden-Scoring, kein Outreach-Knopf).
+ */
+export async function runNeueroeffnungen() {
+    const city = document.getElementById('scanner-city')?.value.trim();
+    if (!city) { showError('Bitte zuerst eine Stadt eingeben.'); return; }
+    if (!config.fnUrl) { showError('Neueröffnungen brauchen die Cloud Function URL.'); return; }
+    const branchen = await waehleNeueroeffnungsBranchen(city);
+    if (!branchen || !branchen.length) return;
+
+    state.aborted = false;
+    const btn = document.getElementById('btn-neueroeffnungen');
+    if (btn) btn.disabled = true;
+    showProgress(4, `Neueröffnungen in ${city} suchen…`);
+    const eintraege = [];
+    let anfragen = 0, fehlgeschlagen = 0, fertig = 0;
+    // Prüfung 2026-09-10: Ein Backend vor V7 ignoriert includeFutureOpening still
+    // und liefert nie FUTURE_OPENING — die leere Liste hieß dann „keine gefunden".
+    // `pagesFetched` ist das V7-Kennzeichen; fehlt es überall, ist nichts gemessen.
+    let serverKenntZusatz = false;
+    await runWithConcurrency(branchen, SEARCH_CONCURRENCY, async (b) => {
+        if (state.aborted) return;
+        const res = await searchPlacesRetry(`${b.q} ${city}`, PLACES_PER_BRANCH, { includeFutureOpening: true });
+        if (res) anfragen += placesAnfragenAus(res); else fehlgeschlagen++;
+        if (typeof res?.pagesFetched === 'number') serverKenntZusatz = true;
+        for (const p of (res?.places || [])) eintraege.push({ branch: b, place: p });
+        fertig++;
+        showProgress(4 + Math.round((fertig / branchen.length) * 92), `Neueröffnungen … ${fertig}/${branchen.length} Branchen`);
+    });
+    hideProgress();
+    if (btn) btn.disabled = false;
+    if (state.aborted) return;
+    if (!serverKenntZusatz && fehlgeschlagen < branchen.length) {
+        console.warn('Neueröffnungen: Backend ohne V7 (kein pagesFetched) — FUTURE_OPENING nicht abgefragt.');
+    }
+    renderNeueroeffnungen(city, filterNeueroeffnungen(eintraege), { anfragen, fehlgeschlagen, branchen: branchen.length, serverKenntZusatz });
+}
+
+function renderNeueroeffnungen(city, liste, meta) {
+    wsController?.abort();          // Workspace-Klicks dürfen hier nichts mehr auslösen
+    wsController = null;
+    const el = document.getElementById('batch-results');
+    const zeilen = liste.map(e => {
+        const link = e.websiteUri ? sichererLink(e.websiteUri) : null;
+        return `
+        <div class="sonder-eintrag">
+            <div class="sonder-datum">${e.eroeffnung ? `Eröffnung laut Google: ${escapeHtml(e.eroeffnung)}` : 'Eröffnungsdatum nicht angegeben'}</div>
+            <div class="sonder-body">
+                <div class="ws-lead-line1">
+                    <span class="ws-lead-name">${escapeHtml(e.name)}</span>
+                    ${link ? `<span class="ws-lead-domain"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">${escapeHtml(hostnameOf(link))}</a></span>` : ''}
+                </div>
+                <div class="ws-lead-line2"><span class="ws-lead-branch">${escapeHtml(e.branch?.name || e.typ || '')}</span></div>
+                ${e.address ? `<div class="ws-lead-line3">${escapeHtml(e.address)}</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+    el.innerHTML = `
+        <div class="ws-header">
+            <div class="ws-title">
+                <h2>Neueröffnungen in ${escapeHtml(city)}</h2>
+                <div class="ws-stats">
+                    <span><strong>${liste.length}</strong> Betriebe vor dem Start</span>
+                    <span>${meta.branchen} Branche${meta.branchen === 1 ? '' : 'n'} · ${meta.anfragen} bezahlte Places-Anfrage${meta.anfragen === 1 ? '' : 'n'}${meta.fehlgeschlagen ? ` · ${meta.fehlgeschlagen} Suche${meta.fehlgeschlagen === 1 ? '' : 'n'} fehlgeschlagen` : ''}</span>
+                </div>
+            </div>
+        </div>
+        <p class="sonder-hinweis">${escapeHtml(HINWEIS_NEUEROEFFNUNG)}</p>
+        <div class="ws-list">
+            ${liste.length ? zeilen : `<div class="ws-empty">${meta.fehlgeschlagen >= meta.branchen
+                ? 'Alle Suchen sind fehlgeschlagen — es liegt kein Ergebnis vor, auch kein leeres.'
+                : !meta.serverKenntZusatz
+                    ? 'Der Server wertet die Suche nach Neueröffnungen noch nicht aus — diese Liste ist ungeprüft, nicht leer.'
+                    : 'Keine Betriebe mit dem Status „eröffnet demnächst“ gefunden. Nicht jede Neueröffnung ist bei Google vorab eingetragen.'}</div>`}
+        </div>`;
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/**
+ * Voreinstellung „Empfehlungspartner finden": Werbetechnik, Fotograf, Druckerei,
+ * IT-Service. Sortiert nach Bewertungszahl, KEIN Kunden-Scoring (ein Partner ist
+ * kein Kunde und darf nicht als „zu kleiner Betrieb" genullt werden).
+ */
+export async function runEmpfehlungspartner() {
+    const city = document.getElementById('scanner-city')?.value.trim();
+    if (!city) { showError('Bitte zuerst eine Stadt eingeben.'); return; }
+    if (!config.fnUrl) { showError('Die Partnersuche braucht die Cloud Function URL.'); return; }
+    const queries = PARTNER_BRANCHEN.map(b => ({ branch: b, q: `${b.q} ${city}` }));
+    const wahl = await zeigeKostenModal({
+        eyebrow: `Empfehlungspartner · ${city}`,
+        titel: 'Empfehlungspartner finden',
+        sub: 'Werbetechnik, Fotografen, Druckereien und IT-Service vor Ort — Betriebe, die mit Ihren künftigen Kunden ohnehin zu tun haben. Sortiert nach Bewertungszahl, ohne Kunden-Scoring. Gecachte Suchen sind gratis.',
+        hinweis: HINWEIS_PARTNER,
+        optionen: [{ label: 'Vier Partner-Branchen suchen', suchen: queries.length, neu: countUncached(queries.map(x => x.q)) }]
+    });
+    if (wahl === null) return;
+
+    state.aborted = false;
+    const btn = document.getElementById('btn-partner');
+    if (btn) btn.disabled = true;
+    showProgress(4, `Empfehlungspartner in ${city} suchen…`);
+    const roh = [];
+    let anfragen = 0, fehlgeschlagen = 0, fertig = 0;
+    await runWithConcurrency(queries, SEARCH_CONCURRENCY, async ({ branch, q }) => {
+        if (state.aborted) return;
+        const cached = getCachedPlaces(q);
+        const res = cached ? { places: cached } : await searchPlacesRetry(q, PLACES_PER_BRANCH);
+        if (!cached) { if (res) anfragen += placesAnfragenAus(res); else fehlgeschlagen++; }
+        if (!cached && res?.places) setCachedPlaces(q, res.places);
+        for (const p of (res?.places || [])) roh.push({ branch, place: p });
+        fertig++;
+        showProgress(4 + Math.round((fertig / queries.length) * 92), `Empfehlungspartner … ${fertig}/${queries.length}`);
+    });
+    hideProgress();
+    if (btn) btn.disabled = false;
+    if (state.aborted) return;
+
+    const gesehen = new Set();
+    const liste = [];
+    for (const { branch, place: p } of roh) {
+        if (p.businessStatus && p.businessStatus !== 'OPERATIONAL') continue;
+        const name = p.displayName?.text || '';
+        const host = p.websiteUri ? hostnameOf(p.websiteUri) : null;
+        const schluessel = host || `${name.toLowerCase()}|${(p.formattedAddress || '').toLowerCase()}`;
+        if (!name || gesehen.has(schluessel)) continue;
+        gesehen.add(schluessel);
+        const ent = host ? checkEnterpriseDB(host, { name, primaryType: p.primaryType }) : { isEnterprise: false, isCompetitor: false };
+        if (ent.isEnterprise) continue;   // Ketten/Kammern sind keine lokalen Empfehlungsgeber
+        liste.push({
+            branch, name, host,
+            websiteUri: p.websiteUri || null,
+            rating: typeof p.rating === 'number' && p.rating > 0 ? p.rating : null,
+            reviews: p.userRatingCount || 0,
+            address: p.formattedAddress || null,
+            mitbewerber: !!ent.isCompetitor
+        });
+    }
+    renderPartner(city, sortierePartner(liste), { anfragen, fehlgeschlagen });
+}
+
+function renderPartner(city, liste, meta) {
+    wsController?.abort();
+    wsController = null;
+    const el = document.getElementById('batch-results');
+    const jeBranche = PARTNER_BRANCHEN.map(b => `${b.name} ${liste.filter(x => x.branch.key === b.key).length}`).join(' · ');
+    const zeilen = liste.map(e => {
+        const link = e.websiteUri ? sichererLink(e.websiteUri) : null;
+        const note = e.rating !== null ? `${e.rating.toFixed(1).replace('.', ',')}★ · ` : '';
+        return `
+        <div class="sonder-eintrag">
+            <div class="sonder-datum">${note}${e.reviews} Bewertung${e.reviews === 1 ? '' : 'en'}</div>
+            <div class="sonder-body">
+                <div class="ws-lead-line1">
+                    <span class="ws-lead-name">${escapeHtml(e.name)}</span>
+                    ${link ? `<span class="ws-lead-domain"><a href="${escapeHtml(link)}" target="_blank" rel="noopener">${escapeHtml(e.host || hostnameOf(link))}</a></span>` : ''}
+                </div>
+                <div class="ws-lead-line2">
+                    <span class="ws-lead-branch">${escapeHtml(e.branch.name)}</span>
+                    ${e.mitbewerber ? '<span class="ws-lead-tech ws-chip-muted">vermutlich selbst Web-/IT-Agentur</span>' : ''}
+                </div>
+                ${e.address ? `<div class="ws-lead-line3">${escapeHtml(e.address)}</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+    el.innerHTML = `
+        <div class="ws-header">
+            <div class="ws-title">
+                <h2>Empfehlungspartner in ${escapeHtml(city)}</h2>
+                <div class="ws-stats">
+                    <span><strong>${liste.length}</strong> Betriebe · nach Bewertungszahl</span>
+                    <span>${escapeHtml(jeBranche)}</span>
+                    <span>${meta.anfragen} bezahlte Places-Anfrage${meta.anfragen === 1 ? '' : 'n'}${meta.fehlgeschlagen ? ` · ${meta.fehlgeschlagen} fehlgeschlagen` : ''}</span>
+                </div>
+            </div>
+        </div>
+        <p class="sonder-hinweis">${escapeHtml(HINWEIS_PARTNER)}</p>
+        <div class="ws-list">
+            ${liste.length ? zeilen : '<div class="ws-empty">Keine passenden Betriebe gefunden.</div>'}
+        </div>`;
+    el.classList.remove('hidden');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 /**
@@ -594,7 +915,10 @@ function getActiveFilters() {
         // Ungeprüfte Leads bleiben sichtbar (siehe isReachable).
         reach:    h.get('reach') === '1',
         // Nur noch nicht bewertete zeigen — der schnellste Weg zu Menge.
-        unrated:  h.get('unrated') === '1'
+        unrated:  h.get('unrated') === '1',
+        // Anlass mit Datum (Chrome-Warnung, PHP-/CMS-Support-Ende). Nur Filter —
+        // der Score bleibt unberührt (alt ≠ Kaufsignal).
+        anlass:   h.get('anlass') === '1'
     };
 }
 
@@ -609,6 +933,7 @@ function persistFilters(updates) {
     if (next.buy) h.set('buy', '1');
     if (next.reach) h.set('reach', '1');
     if (next.unrated) h.set('unrated', '1');
+    if (next.anlass) h.set('anlass', '1');
     const str = h.toString();
     location.hash = str ? '#' + str : '';
 }
@@ -640,6 +965,7 @@ function renderLeadWorkspace(city, leads, filters) {
     const buyers = leads.filter(hasBuySignal).length;
     const unreachable = leads.filter(l => !isReachable(l)).length;
     const unbewertet = leads.filter(l => !l.urteil).length;
+    const mitAnlass = leads.filter(hasDatedAnlass).length;
 
     // Branchen-Filter-Liste — nur die Branchen, die echte Leads haben
     const branchCounts = {};
@@ -679,6 +1005,9 @@ function renderLeadWorkspace(city, leads, filters) {
             </div>
             <div class="ws-pills" data-pill-group="reach">
                 <button class="ws-pill${filters.reach ? ' active' : ''}" data-reach="${filters.reach ? '0' : '1'}" title="Blendet Betriebe aus, bei denen die Prüfung keinen Kontaktweg gefunden hat (ungeprüfte bleiben sichtbar)">${filters.reach ? '✓ ' : ''}✉ erreichbar${unreachable ? ` (−${unreachable})` : ''}</button>
+            </div>
+            <div class="ws-pills" data-pill-group="anlass">
+                <button class="ws-pill${filters.anlass ? ' active' : ''}" data-anlass="${filters.anlass ? '0' : '1'}" title="Nur Betriebe mit einem Anlass, der an einem Datum hängt: Chrome-Warnung ab Oktober 2026 (gemessen), PHP- oder CMS-Version ohne Sicherheitsupdates. Geprüft werden vor allem die vorderen Ränge. Ändert den Score nicht.">${filters.anlass ? '✓ ' : ''}📅 Anlass mit Datum (${mitAnlass})</button>
             </div>
             <div class="ws-pills" data-pill-group="buy">
                 <button class="ws-pill${filters.buy ? ' active' : ''}" data-buy="${filters.buy ? '0' : '1'}" title="Nur Betriebe mit bewiesenem Kaufsignal — schaltet Anzeigen oder stellt ein">${filters.buy ? '✓ ' : ''}💸 nur Kaufsignal (${buyers})</button>
@@ -819,6 +1148,8 @@ function bindWorkspaceEvents(el) {
                 persistFilters({ reach: pill.dataset.reach === '1' });
             } else if (group === 'unrated') {
                 persistFilters({ unrated: pill.dataset.unrated === '1' });
+            } else if (group === 'anlass') {
+                persistFilters({ anlass: pill.dataset.anlass === '1' });
             }
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
@@ -854,7 +1185,7 @@ function bindWorkspaceEvents(el) {
 
         // Reset
         if (e.target.dataset.action === 'reset-filters') {
-            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false, reach: false, unrated: false });
+            persistFilters({ minScore: 0, branch: 'all', sort: 'score', baukasten: false, buy: false, reach: false, unrated: false, anlass: false });
             renderLeadWorkspace(lastCity, lastResults, getActiveFilters());
             return;
         }

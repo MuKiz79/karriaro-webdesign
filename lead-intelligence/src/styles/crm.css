@@ -340,8 +340,265 @@
     margin-top: 8px;
 }
 
+/* ══════════════════════════════════════
+   Kontaktgrundlage, Einwilligungen, Sperrliste, Partner (2026-09-10)
+   Farbige Zustände tragen die Farbe im Rand/Grund, die SCHRIFT bleibt --text:
+   --green/--orange auf hellem Grund liegen unter 4,5:1.
+   ══════════════════════════════════════ */
+.crm-btn-export.is-active { color: var(--text); border-color: var(--text); }
+.crm-btn-primary { color: var(--text); border-color: var(--accent); }
+.crm-btn-primary:hover { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.crm-btn-export:disabled { opacity: 0.55; cursor: default; }
+
+.crm-hinweis-banner {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--red) 8%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--red) 45%, var(--border));
+    border-radius: var(--radius-sm);
+}
+
+.crm-quelle-filter { margin-top: 8px; }
+.crm-filter-btn-quelle { font-weight: 500; }
+
+/* Kennzeichen unter dem Lead-Namen */
+.crm-lead-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+.crm-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left-width: 3px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+.crm-badge-ok { border-left-color: var(--green); background: color-mix(in srgb, var(--green) 8%, var(--card)); }
+.crm-badge-warn { border-left-color: var(--orange); background: color-mix(in srgb, var(--orange) 8%, var(--card)); }
+.crm-badge-bad { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 8%, var(--card)); }
+.crm-badge-accent { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--card)); }
+.crm-badge-neutral { border-left-color: var(--muted); }
+
+.crm-lead-card.is-gesperrt { box-shadow: inset 3px 0 0 var(--red); }
+
+/* Aufklappbarer Bereich je Lead */
+.crm-lead-details {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+.crm-lead-details > summary {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    list-style-position: inside;
+}
+.crm-lead-details > summary:hover { color: var(--text); }
+.crm-lead-details[open] > summary { color: var(--text); margin-bottom: 10px; }
+.crm-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+.crm-fieldset {
+    margin: 0;
+    padding: 10px 12px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    min-width: 0;
+}
+.crm-fieldset > legend {
+    padding: 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.crm-feld {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+}
+.crm-feld select,
+.crm-feld input {
+    padding: 6px 8px;
+    font-size: 12px;
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    min-width: 0;
+}
+.crm-feld select:focus,
+.crm-feld input:focus { border-color: var(--accent); }
+.crm-feld input:disabled { opacity: 0.6; }
+.crm-kg-befund {
+    margin: 0 0 4px;
+    padding: 6px 8px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--bg);
+    border-left: 3px solid var(--muted);
+    border-radius: 4px;
+}
+.crm-kg-traegt { border-left-color: var(--green); }
+.crm-kg-unvollstaendig,
+.crm-kg-traegt_nicht { border-left-color: var(--orange); }
+.crm-kg-entfallen,
+.crm-kg-gesperrt { border-left-color: var(--red); }
+.crm-kg-vorschlag {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0;
+    padding: 6px 8px;
+    font-size: 12px;
+    color: var(--text);
+    background: color-mix(in srgb, var(--accent) 10%, var(--card));
+    border-radius: 6px;
+}
+.crm-kg-erklaerung,
+.crm-hinweis {
+    margin: 6px 0 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--muted);
+}
+.crm-provision-summe {
+    margin: 8px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+}
+.crm-details-fehler {
+    margin: 10px 0 0;
+    padding: 6px 8px;
+    font-size: 12px;
+    color: var(--text);
+    border-left: 3px solid var(--red);
+    background: color-mix(in srgb, var(--red) 8%, var(--card));
+    border-radius: 4px;
+}
+/* Klassenregel darf das hidden-Attribut nie überstimmen */
+.crm-details-fehler[hidden] { display: none; }
+.crm-details-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Panel „Einwilligungen" */
+.crm-einw-panel { margin-bottom: 20px; }
+.crm-einw-leer,
+.crm-einw-zaehler {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+.crm-einw-liste {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.crm-einw-zeile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+}
+.crm-einw-haupt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.crm-einw-meta {
+    grid-column: 1;
+    font-size: 11px;
+    color: var(--muted);
+}
+.crm-einw-zeile > button { grid-column: 2; grid-row: 1 / span 2; }
+.crm-einw-adresse { font-size: 13px; font-weight: 600; color: var(--text); overflow-wrap: anywhere; }
+.crm-einw-domain { font-size: 12px; color: var(--muted); }
+.crm-einw-status-bestaetigt { border-left-color: var(--green); }
+.crm-einw-status-offen,
+.crm-einw-status-abgelaufen { border-left-color: var(--muted); }
+.crm-einw-status-gestoppt { border-left-color: var(--orange); }
+.crm-einw-status-widerrufen { border-left-color: var(--red); background: color-mix(in srgb, var(--red) 10%, var(--card)); }
+/* Widerrufen deutlich markieren: roter Randstreifen + durchgestrichene Adresse */
+.crm-einw-widerrufen { border-color: color-mix(in srgb, var(--red) 45%, var(--border)); box-shadow: inset 3px 0 0 var(--red); }
+.crm-einw-widerrufen .crm-einw-adresse { text-decoration: line-through; }
+
+/* Dialog Verlust-Grund */
+.crm-dialog {
+    max-width: 420px;
+    width: calc(100% - 32px);
+    padding: 0;
+    color: var(--text);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+.crm-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
+.crm-dialog-form { padding: 18px 20px; }
+.crm-dialog-title { font-size: 15px; font-weight: 700; }
+.crm-dialog-sub { font-size: 12px; color: var(--muted); margin: 2px 0 10px; }
+.crm-dialog-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 13px;
+    cursor: pointer;
+}
+.crm-dialog-hint { color: var(--muted); font-size: 12px; }
+.crm-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 559px) {
+    .crm-details-grid { grid-template-columns: minmax(0, 1fr); }
+    .crm-actions-top { flex-wrap: wrap; }
+    .crm-einw-zeile { grid-template-columns: minmax(0, 1fr); }
+    .crm-einw-zeile > button { grid-column: 1; grid-row: auto; justify-self: start; }
     .crm-stats { grid-template-columns: repeat(2, 1fr); }
     .crm-stats .crm-stat:last-child { grid-column: span 2; }
     .crm-pipeline { flex-wrap: wrap; }
@@ -444,6 +701,11 @@
     border-color: var(--red);
 }
 .hot-lead-btn-primary:hover { opacity: 0.9; }
+.hot-lead-btn-gesperrt {
+    border-color: var(--red);
+    color: var(--red);
+    cursor: default;
+}
 
 @keyframes hotPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(255,69,58,0.6); }

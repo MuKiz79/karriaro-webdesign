@@ -1,7 +1,30 @@
 /**
  * CRM View Renderer — Pipeline, Suche, Export, Responsive
+ *
+ * Seit 2026-09-10 zusätzlich:
+ *   • Kontaktgrundlage je Lead (Double-Opt-In / Anfrage / Bestandskunde / keine)
+ *   • Panel „Einwilligungen" (consents/{id}, nur lesen + Strecke stoppen)
+ *   • Sperrliste: „Nicht mehr kontaktieren", Verlust-Grund, Werbewiderspruch
+ *   • Partner-Pipeline: Quelle, Partnercode, Provision
+ * Die HTML-Bausteine sind als reine Funktionen exportiert (tests/crm/render-crm.test.js).
  */
-import { loadLeads, updateLead, deleteLead, deleteAllLeads, exportCSV } from '../crm/leads.js';
+import {
+    loadLeads, updateLead, deleteLead, deleteAllLeads, exportCSV,
+    KONTAKT_GRUNDLAGE_ARTEN, KONTAKT_GRUNDLAGE_LABELS, KONTAKT_GRUNDLAGE_ERKLAERUNG,
+    QUELLEN, QUELLEN_LABELS, PROVISION_STATUS, PROVISION_STATUS_LABELS, VERLUST_GRUENDE,
+    sperrgrundFuerVerlust, normalisiereKontaktGrundlage, normalisiereProvision, leiteQuelleAb,
+    hatWerbewiderspruch, beurteileKontaktGrundlage, kontaktGrundlageAusEinwilligung,
+    baueDetailUpdates, provisionsBetrag, datumDe, datumFuerEingabe
+} from '../crm/leads.js';
+import {
+    ladeEinwilligungenMitStatus, stoppeSequenz, einwilligungsStatus,
+    EINWILLIGUNGS_STATUS_LABELS, EINWILLIGUNGS_QUELLEN, MAX_SEQUENZ_SCHRITTE
+} from '../crm/consents.js';
+import { loadSuppression, addSuppression, isSuppressed, normalizeDomain } from '../crm/suppression.js';
+import { pruefeMailErlaubnis } from '../outreach/kontakt-grundlage.js';
+import { complianceBlock } from '../strategy/compliance.js';
+import { baueMailtoHref } from '../outreach/mime.js';
+import { config } from '../config.js';
 import { currentUser } from '../crm/firebase.js';
 import { recordOutcome, getCalibration } from '../learning/feedback-loop.js';
 import { calculateStats } from '../crm/stats.js';
@@ -28,6 +51,24 @@ let inboundUnsubscribe = null;
 let lastNotifiedHotSlugs = new Set();
 let cachedHotLeads = [];
 
+// Aufgeklappte Detail-Bereiche überleben das Re-Render nach dem Speichern.
+const offeneDetails = new Set();
+
+// Einwilligungen kurz zwischenspeichern: jede Status-Änderung rendert das CRM neu,
+// und ohne Cache würde jedes Mal die ganze consents-Collection gelesen.
+const EINWILLIGUNGS_CACHE_MS = 60 * 1000;
+let einwilligungsCache = { wert: null, at: 0 };
+
+function leereEinwilligungsCache() { einwilligungsCache = { wert: null, at: 0 }; }
+
+async function einwilligungenLesen() {
+    if (einwilligungsCache.wert && Date.now() - einwilligungsCache.at < EINWILLIGUNGS_CACHE_MS) return einwilligungsCache.wert;
+    const wert = await ladeEinwilligungenMitStatus();
+    // Nur ein gelungenes Lesen cachen — ein Fehler soll beim nächsten Render neu versucht werden.
+    einwilligungsCache = wert.geladen ? { wert, at: Date.now() } : { wert: null, at: 0 };
+    return wert;
+}
+
 export function cleanupInboundListener() {
     if (typeof inboundUnsubscribe === 'function') {
         try { inboundUnsubscribe(); } catch {}
@@ -35,6 +76,9 @@ export function cleanupInboundListener() {
     inboundUnsubscribe = null;
     lastNotifiedHotSlugs = new Set();
     cachedHotLeads = [];
+    // Sign-Out: Einwilligungen des alten Kontos nicht weiter anzeigen
+    leereEinwilligungsCache();
+    offeneDetails.clear();
 }
 
 export async function renderCRM(filter = 'alle', searchQuery = '') {
@@ -85,21 +129,43 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         });
     }
 
-    const leads = await loadLeads();
+    const [leads, einw, gesperrtSet] = await Promise.all([
+        loadLeads(),
+        einwilligungenLesen(),
+        loadSuppression()
+    ]);
+    const rerender = () => renderCRM(filter, searchQuery);
+    const showConsents = el.dataset.showConsents === 'true';
 
     // Eingeloggt, aber noch keine Leads → freundlicher Start-Hinweis statt leerer Tabelle.
+    // Einwilligungen können trotzdem vorliegen (sie kommen von der Website, nicht aus dem CRM).
     if (leads.length === 0 && !searchQuery) {
         el.innerHTML = `<div class="brand-empty">
             <div class="brand-empty-eyebrow">Pipeline</div>
             <h3>Noch keine Leads gespeichert</h3>
             <p>Starten Sie unter „Finden" mit einer Website, einer Stadt oder einer ganzen Region — gespeicherte Leads erscheinen dann hier.</p>
             <button class="btn-primary" data-action="goto-finden">Zu „Finden"</button>
-        </div>`;
+        </div>
+        ${einw.einwilligungen.length > 0 || !einw.geladen ? einwilligungenPanelHtml(einw) : ''}`;
         el.querySelector('[data-action="goto-finden"]')?.addEventListener('click', () => {
             document.querySelector('.nav-btn[data-view="finden"]')?.click();
         }, { signal });
+        bindeEinwilligungsAktionen(el, einw, signal, rerender);
         return;
     }
+
+    // Werbewiderspruch aus dem Impressum → Sperrliste. saveLead/updateLead tragen ihn
+    // beim Speichern ein; hier werden Leads nachgezogen, die auf einem anderen Gerät
+    // oder vor dieser Regel gespeichert wurden. addSuppression dedupliziert.
+    const mitWiderspruch = leads.filter(hatWerbewiderspruch);
+    let nachgetragen = 0;
+    for (const l of mitWiderspruch) {
+        if (isSuppressed(l.domain, gesperrtSet)) continue;
+        const r = await addSuppression(l.domain, 'opt_out');
+        if (r?.ok) { gesperrtSet.add(normalizeDomain(l.domain)); nachgetragen++; }
+    }
+    if (nachgetragen > 0) showToast(`${nachgetragen} Lead(s) mit Werbewiderspruch auf die Sperrliste gesetzt`);
+    const istGesperrt = (l) => hatWerbewiderspruch(l) || isSuppressed(l.domain, gesperrtSet);
 
     // Suche
     let searched = leads;
@@ -109,11 +175,16 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             (l.name || '').toLowerCase().includes(q) ||
             (l.domain || '').toLowerCase().includes(q) ||
             (l.type || '').toLowerCase().includes(q) ||
-            (l.notes || '').toLowerCase().includes(q)
+            (l.notes || '').toLowerCase().includes(q) ||
+            (l.partnerCode || '').toLowerCase().includes(q)
         );
     }
 
-    const filtered = filter === 'alle' ? searched : searched.filter(l => l.status === filter);
+    // Quelle-Filter (Partner-Pipeline) — liegt VOR dem Status-Filter, damit die Zähler
+    // der Status-Knöpfe zur gewählten Quelle passen.
+    const quelleFilter = el.dataset.quelleFilter || 'alle';
+    const nachQuelle = filterNachQuelle(searched, quelleFilter);
+    const filtered = filter === 'alle' ? nachQuelle : nachQuelle.filter(l => l.status === filter);
 
     // ── Stats ──
     const pipelineLeads = leads.filter(l => ['kontaktiert', 'interessiert', 'angebot'].includes(l.status));
@@ -129,23 +200,33 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     let html = '';
 
     // ── Hot-Leads-Sektion (Inbound mit Heat ≥ 60) ──
-    html += `<div id="crm-hot-leads">${renderHotLeadsHtml(cachedHotLeads)}</div>`;
+    html += `<div id="crm-hot-leads">${renderHotLeadsHtml(cachedHotLeads, { gesperrt: gesperrtSet })}</div>`;
 
     // ── Header mit Aktionen ──
+    const bestaetigtAnzahl = einw.einwilligungen.filter(e => einwilligungsStatus(e) === 'bestaetigt').length;
     html += `<div class="crm-header">
         <h2 class="crm-title">Lead-CRM</h2>
         <div class="crm-actions-top">
             <button class="crm-btn-export crm-btn-studio" data-action="studio">✉ Outreach-Studio</button>
+            <button class="crm-btn-export${showConsents ? ' is-active' : ''}" data-action="toggleConsents" aria-expanded="${showConsents}">Einwilligungen${einw.geladen ? ` (${bestaetigtAnzahl})` : ''}</button>
             <button class="crm-btn-export" data-action="toggleStats">Wissenschaft</button>
             <button class="crm-btn-export" data-action="export">CSV Export</button>
             <button class="crm-btn-export crm-btn-danger" data-action="deleteAll">Alle löschen</button>
         </div>
     </div>`;
 
+    // ── Einwilligungen (toggle, default geschlossen) ──
+    if (showConsents) html += einwilligungenPanelHtml(einw);
+
     // ── Statistik-Panel (toggle, default geschlossen) ──
     const showStats = el.dataset.showStats === 'true';
     if (showStats) {
         html += renderStatisticsPanel();
+    }
+
+    // ── Hinweis Werbewiderspruch ──
+    if (mitWiderspruch.length > 0) {
+        html += `<div class="crm-hinweis-banner" role="note">${mitWiderspruch.length} Lead(s) mit Werbewiderspruch im Impressum — auf der Sperrliste, keine Werbung an diese Betriebe.</div>`;
     }
 
     // ── Pipeline-Visualisierung (Mini-Kanban) ──
@@ -187,17 +268,19 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
 
     // ── Suche + Filter ──
     html += `<div class="crm-toolbar">
-        <input type="text" class="crm-search" placeholder="Lead suchen..." value="${searchQuery}" data-action="search">
+        <input type="text" class="crm-search" placeholder="Lead suchen..." value="${escapeAttr(searchQuery)}" data-action="search">
         <div class="crm-filters">`;
     for (const s of STATUSES) {
-        const count = s === 'alle' ? searched.length : searched.filter(l => l.status === s).length;
+        const count = s === 'alle' ? nachQuelle.length : nachQuelle.filter(l => l.status === s).length;
         html += `<button class="crm-filter-btn${s === filter ? ' active' : ''}" data-filter="${s}">${s === 'alle' ? 'Alle' : STATUS_LABELS[s]} (${count})</button>`;
     }
-    html += `</div></div>`;
+    html += `</div>
+        ${quelleFilterHtml(searched, quelleFilter)}
+    </div>`;
 
     // ── Lead-Liste ──
     if (filtered.length === 0) {
-        html += `<div class="crm-empty">${searchQuery ? `Keine Leads für "${searchQuery}"` : `Keine Leads in "${filter === 'alle' ? 'Alle' : STATUS_LABELS[filter] || filter}"`}</div>`;
+        html += `<div class="crm-empty">${searchQuery ? `Keine Leads für "${escapeAttr(searchQuery)}"` : `Keine Leads in "${filter === 'alle' ? 'Alle' : STATUS_LABELS[filter] || filter}"`}</div>`;
     } else {
         html += `<div class="crm-list">`;
         for (const l of filtered) {
@@ -205,16 +288,19 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             const scoreBg = (l.leadScore || 0) >= 55 ? 'rgba(48,209,88,0.1)' : (l.leadScore || 0) >= 30 ? 'rgba(255,159,10,0.1)' : 'rgba(255,69,58,0.1)';
             const savedDate = l.savedAt ? new Date(l.savedAt).toLocaleDateString('de-DE') : '';
             const updatedDate = l.updatedAt ? timeAgo(l.updatedAt) : '';
+            const gesperrt = istGesperrt(l);
+            const befund = befundMitGate(l, beurteileKontaktGrundlage(l, { einwilligungen: einw.einwilligungen, geladen: einw.geladen, gesperrt, vollstaendig: einw.vollstaendig }), { einw, gesperrt });
+            const verlust = l.status === 'verloren' && l.verlustGrund ? VERLUST_GRUENDE.find(g => g.id === l.verlustGrund)?.label : null;
 
-            html += `<div class="card crm-lead-card anim-in">
+            html += `<div class="card crm-lead-card anim-in${gesperrt ? ' is-gesperrt' : ''}">
                 <div class="crm-lead-top">
                     <input type="checkbox" class="crm-lead-select" data-lead-id="${l.id}" title="Für Outreach-Studio auswählen">
                     <div class="crm-lead-score" style="background:${scoreBg};color:${scoreColor}">${l.leadScore || 0}</div>
                     <div class="crm-lead-info">
-                        <div class="crm-lead-name">${l.name || l.domain}</div>
+                        <div class="crm-lead-name">${escapeAttr(l.name || l.domain)}</div>
                         <div class="crm-lead-meta">
-                            <a href="${l.url || 'https://' + l.domain}" target="_blank" rel="noopener">${l.domain}</a>
-                            ${l.type ? ` · ${l.type}` : ''}
+                            <a href="${escapeAttr(l.url || 'https://' + l.domain)}" target="_blank" rel="noopener">${escapeAttr(l.domain)}</a>
+                            ${l.type ? ` · ${escapeAttr(l.type)}` : ''}
                             ${l.perf ? ` · Perf ${l.perf}` : ''}
                             ${l.seo ? ` · SEO ${l.seo}` : ''}
                             · <a href="#" class="crm-reanalyze" data-url="${l.url || 'https://' + l.domain}">neu analysieren</a>
@@ -222,7 +308,9 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                         <div class="crm-lead-dates">
                             ${savedDate ? `Gespeichert: ${savedDate}` : ''}
                             ${updatedDate ? ` · ${updatedDate}` : ''}
+                            ${verlust ? ` · Verloren: ${escapeAttr(verlust)}` : ''}
                         </div>
+                        ${leadBadgesHtml(l, befund, { gesperrt })}
                     </div>
                     <div class="crm-lead-actions">
                         <select class="crm-status-select" data-lead-id="${l.id}" data-action="status" data-domain="${l.domain}" data-score="${l.leadScore || 0}" data-branch="${l.type || ''}" data-prev-status="${l.status || 'neu'}" style="color:${STATUS_COLORS[l.status] || 'var(--muted)'}">
@@ -236,6 +324,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
                     ${l.expectedValue ? `<span class="crm-lead-ev">EV: ${l.expectedValue}€</span>` : ''}
                     ${l.status === 'angebot' || l.status === 'interessiert' ? `<button class="crm-btn-outcome crm-btn-won" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-branch="${l.type || ''}" data-outcome="kunde" title="Kunde geworden">✓ Gewonnen</button><button class="crm-btn-outcome crm-btn-lost" data-lead-id="${l.id}" data-domain="${l.domain}" data-score="${l.leadScore}" data-branch="${l.type || ''}" data-outcome="verloren" title="Lead verloren">✗ Verloren</button>` : ''}
                 </div>
+                ${leadDetailsHtml(l, befund, { gesperrt, offen: offeneDetails.has(l.id) })}
             </div>`;
         }
         html += `</div>`;
@@ -308,6 +397,8 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
 
     el.innerHTML = html;
 
+    const leadById = (id) => leads.find(l => l.id === id) || null;
+
     // ── Events (mit AbortController für Cleanup) ──
     // Status-Änderung — Reihenfolge: updateLead AWAIT first (Race-Fix), dann recordOutcome
     // NUR wenn Firestore-Sync ok. prev-status verhindert Doppel-Logs. Score 0 = Konkurrenz/
@@ -323,7 +414,17 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             const { domain, score, branch } = e.target.dataset;
             const numScore = parseInt(score) || 0;
 
-            const result = await updateLead(id, { status: newStatus });
+            // Verloren: Grund abfragen. Abbrechen = Status bleibt, wie er war.
+            const zusatz = {};
+            if (newStatus === 'verloren' && prevStatus !== 'verloren') {
+                const lead = leadById(id);
+                const grund = await frageVerlustGrund(lead?.name || domain);
+                if (!grund) { e.target.value = prevStatus; return; }
+                zusatz.verlustGrund = grund;
+            }
+
+            const result = await updateLead(id, { status: newStatus, ...zusatz });
+            const gesperrtHinweis = zusatz.verlustGrund ? await sperreNachVerlust(domain, zusatz.verlustGrund) : '';
 
             // recordOutcome NUR wenn Sync ok + Score > 0 (Score 0 = Konkurrenz/Enterprise)
             if (isNewOutcome && result.firestoreSynced && numScore > 0) {
@@ -335,7 +436,7 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             } else {
                 showToast(
                     isNewOutcome && newStatus === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' :
-                    isNewOutcome && newStatus === 'verloren' ? 'Als verloren markiert.' :
+                    isNewOutcome && newStatus === 'verloren' ? `Als verloren markiert.${gesperrtHinweis}` :
                     `Status → ${STATUS_LABELS[newStatus] || newStatus}`
                 );
             }
@@ -343,6 +444,24 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             renderCRM(filter, searchQuery);
         }
     }, { signal });
+
+    // Kontaktgrundlage: Erklärung zur gewählten Art sofort anzeigen (ohne Speichern)
+    el.addEventListener('change', (e) => {
+        if (e.target.dataset.feld !== 'kg-art') return;
+        const box = e.target.closest('[data-details-id]');
+        const erkl = box?.querySelector('[data-erklaerung]');
+        if (erkl) erkl.textContent = KONTAKT_GRUNDLAGE_ERKLAERUNG[e.target.value] || '';
+        const keine = e.target.value === 'keine';
+        box?.querySelectorAll('[data-feld="kg-datum"], [data-feld="kg-nachweis"]').forEach(inp => { inp.disabled = keine || e.target.value === 'doi'; });
+    }, { signal });
+
+    // Aufgeklappte Details merken. `toggle` blubbert nicht — in der Capture-Phase kommt es trotzdem an.
+    el.addEventListener('toggle', (e) => {
+        const box = e.target.closest?.('details[data-details-id]');
+        if (!box || box !== e.target) return;
+        if (box.open) offeneDetails.add(box.dataset.detailsId);
+        else offeneDetails.delete(box.dataset.detailsId);
+    }, { capture: true, signal });
 
     // Notes (blur + Enter)
     el.addEventListener('blur', async (e) => {
@@ -375,6 +494,14 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
     el.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-filter]');
         if (btn) renderCRM(btn.dataset.filter, searchQuery);
+    }, { signal });
+
+    // Quelle-Filter
+    el.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-quelle-filter]');
+        if (!btn) return;
+        el.dataset.quelleFilter = btn.dataset.quelleFilter;
+        renderCRM(filter, searchQuery);
     }, { signal });
 
     // Suche (debounced)
@@ -418,19 +545,78 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
         if (!btn) return;
         const { leadId, domain, score, outcome, branch } = btn.dataset;
         const numScore = parseInt(score) || 0;
-        const result = await updateLead(leadId, { status: outcome });
+        const zusatz = {};
+        if (outcome === 'verloren') {
+            const grund = await frageVerlustGrund(leadById(leadId)?.name || domain);
+            if (!grund) return;
+            zusatz.verlustGrund = grund;
+        }
+        const result = await updateLead(leadId, { status: outcome, ...zusatz });
+        const gesperrtHinweis = zusatz.verlustGrund ? await sperreNachVerlust(domain, zusatz.verlustGrund) : '';
         if (result.firestoreSynced && numScore > 0) {
             recordOutcome(domain, numScore, outcome, branch || null);
         }
         if (!result.firestoreSynced) {
             showToast('Sync-Fehler — Änderung nur lokal gespeichert');
         } else {
-            showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : 'Als verloren markiert.');
+            showToast(outcome === 'kunde' ? 'Glückwunsch! Als Kunde markiert.' : `Als verloren markiert.${gesperrtHinweis}`);
         }
         renderCRM(filter, searchQuery);
     }, { signal });
 
-    // CSV Export + Alle löschen + Wissenschafts-Toggle
+    // Details speichern: Kontaktgrundlage, Quelle, Partner, Provision
+    el.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-action="save-details"]');
+        if (!btn) return;
+        const id = btn.dataset.leadId;
+        const lead = leadById(id);
+        const box = btn.closest('[data-details-id]');
+        if (!lead || !box) return;
+        const werte = leseDetailWerte(box);
+        const { updates, fehler } = baueDetailUpdates(werte, lead, { einwilligungen: einw.einwilligungen, geladen: einw.geladen });
+        const fehlerBox = box.querySelector('[data-fehler]');
+        if (fehler.length > 0) {
+            if (fehlerBox) { fehlerBox.textContent = fehler.join(' '); fehlerBox.hidden = false; }
+            return;
+        }
+        const bisherStatus = lead.provision ? normalisiereProvision(lead.provision).status : 'offen';
+        if (updates.provision && updates.provision.status !== 'offen' && updates.provision.status !== bisherStatus
+            && !confirm('Ist der vollständige Zahlungseingang des Kunden verbucht und sind Offenlegung und Zustimmung des Kunden dokumentiert?')) {
+            return;
+        }
+        btn.disabled = true;
+        const result = await updateLead(id, updates);
+        showToast(result.firestoreSynced ? 'Angaben gespeichert' : 'Nur lokal gespeichert — Sync-Fehler');
+        renderCRM(filter, searchQuery);
+    }, { signal });
+
+    // Bestätigte Einwilligung als Kontaktgrundlage übernehmen
+    el.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-action="uebernehme-doi"]');
+        if (!btn) return;
+        const e1 = einw.einwilligungen.find(x => x.id === btn.dataset.einwilligungId);
+        if (!e1 || einwilligungsStatus(e1) !== 'bestaetigt') { showToast('Diese Einwilligung trägt nicht mehr.'); return; }
+        btn.disabled = true;
+        const result = await updateLead(btn.dataset.leadId, { kontaktGrundlage: kontaktGrundlageAusEinwilligung(e1) });
+        showToast(result.firestoreSynced ? 'Double-Opt-In als Kontaktgrundlage übernommen' : 'Nur lokal gespeichert — Sync-Fehler');
+        renderCRM(filter, searchQuery);
+    }, { signal });
+
+    // Nicht mehr kontaktieren → Sperrliste
+    el.addEventListener('click', async (e) => {
+        const btn = e.target.closest('[data-action="suppress"]');
+        if (!btn) return;
+        const domain = btn.dataset.domain;
+        if (!domain || !confirm(`${domain} auf die Sperrliste setzen? Dieser Betrieb wird danach nicht mehr kontaktiert.`)) return;
+        btn.disabled = true;
+        const r = await addSuppression(domain, 'manual');
+        showToast(!r?.ok ? 'Sperrliste: Domain nicht lesbar' : r.firestoreSynced ? 'Auf die Sperrliste gesetzt' : 'Lokal gesperrt — Sync-Fehler');
+        renderCRM(filter, searchQuery);
+    }, { signal });
+
+    bindeEinwilligungsAktionen(el, einw, signal, rerender);
+
+    // CSV Export + Alle löschen + Wissenschafts-Toggle + Einwilligungen-Toggle
     el.addEventListener('click', async (e) => {
         if (e.target.dataset.action === 'export') {
             exportCSV(filtered.length > 0 ? filtered : leads);
@@ -454,44 +640,353 @@ export async function renderCRM(filter = 'alle', searchQuery = '') {
             el.dataset.showStats = el.dataset.showStats === 'true' ? 'false' : 'true';
             renderCRM(filter, searchQuery);
         }
+        if (e.target.dataset.action === 'toggleConsents') {
+            el.dataset.showConsents = showConsents ? 'false' : 'true';
+            renderCRM(filter, searchQuery);
+        }
     }, { signal });
 
     // Outreach-Studio: angehakte Leads (sonst die gefilterte Liste) übernehmen.
+    // Gesperrte Betriebe (Sperrliste, Werbewiderspruch) gehen nie ins Studio.
     el.addEventListener('click', (e) => {
         if (e.target.dataset.action !== 'studio') return;
         const checked = new Set([...el.querySelectorAll('.crm-lead-select:checked')].map(c => c.dataset.leadId));
-        let selection = checked.size > 0 ? filtered.filter(l => checked.has(l.id)) : filtered;
-        if (selection.length === 0) { showToast('Keine Leads zum Anschreiben.'); return; }
+        const kandidaten = checked.size > 0 ? filtered.filter(l => checked.has(l.id)) : filtered;
+        const selection = kandidaten.filter(l => !istGesperrt(l));
+        const ausgelassen = kandidaten.length - selection.length;
+        if (selection.length === 0) { showToast(ausgelassen > 0 ? 'Alle gewählten Leads sind gesperrt.' : 'Keine Leads zum Anschreiben.'); return; }
+        if (ausgelassen > 0) showToast(`${ausgelassen} gesperrte Lead(s) nicht übernommen`);
         if (selection.length > 50 && !confirm(`${selection.length} Leads ins Outreach-Studio übernehmen? Für Top-Leads kann das KI-Kosten verursachen.`)) return;
         openStudio(selection);
     }, { signal });
 }
 
+// ══════════════════════════════════════
+// Einwilligungen, Kontaktgrundlage, Partner — reine HTML-Bausteine
+// ══════════════════════════════════════
+
+/** Leads nach Quelle filtern. 'alle' | eine Quelle aus QUELLEN | 'ohne' (keine Angabe). */
+export function filterNachQuelle(leads, quelleFilter = 'alle') {
+    if (!Array.isArray(leads)) return [];
+    if (quelleFilter === 'alle' || !quelleFilter) return leads;
+    if (quelleFilter === 'ohne') return leads.filter(l => !leiteQuelleAb(l));
+    return leads.filter(l => leiteQuelleAb(l) === quelleFilter);
+}
+
+/**
+ * Die Karte darf nie „trägt" sagen, wo das Versand-Gate (V9) nein sagt. Das Gate
+ * kennt Regeln, die die Anzeige-Beurteilung nicht wiederholt (höchstens drei
+ * E-Mails je Einwilligung, Datum in der Zukunft) — statt sie ein zweites Mal zu
+ * schreiben, entscheidet hier das Gate selbst über den Befund „trägt".
+ */
+export function befundMitGate(lead, befund, { einw = {}, gesperrt = false } = {}) {
+    if (befund?.stufe !== 'traegt') return befund;
+    try {
+        const g = pruefeMailErlaubnis(lead, {
+            einwilligungen: Array.isArray(einw.einwilligungen) ? einw.einwilligungen : [],
+            einwilligungenGeladen: einw.geladen === true,
+            gesperrt,
+            kanal: 'email'
+        });
+        if (g?.erlaubt) return befund;
+        return { ...befund, stufe: 'traegt_nicht', text: g?.grund || 'Das Versand-Gate lässt keine E-Mail zu.' };
+    } catch (e) {
+        console.warn('Kontakt-Gate im CRM nicht auswertbar:', e);
+        return { ...befund, stufe: 'nicht_pruefbar', text: 'Versand-Gate nicht auswertbar — die Grundlage lässt sich gerade nicht prüfen.' };
+    }
+}
+
+export function quelleFilterHtml(leads, aktiv = 'alle') {
+    const optionen = [['alle', 'Alle Quellen'], ...QUELLEN.map(q => [q, QUELLEN_LABELS[q]]), ['ohne', 'Ohne Angabe']];
+    return `<div class="crm-filters crm-quelle-filter" aria-label="Nach Quelle filtern">
+        ${optionen.map(([wert, label]) => {
+            const n = filterNachQuelle(leads, wert).length;
+            if (n === 0 && wert !== 'alle' && wert !== aktiv) return '';
+            return `<button class="crm-filter-btn crm-filter-btn-quelle${wert === aktiv ? ' active' : ''}" data-quelle-filter="${wert}">${escapeAttr(label)} (${n})</button>`;
+        }).join('')}
+    </div>`;
+}
+
+const BEFUND_BADGE = {
+    traegt: { klasse: 'ok', label: (l) => KONTAKT_GRUNDLAGE_LABELS[normalisiereKontaktGrundlage(l.kontaktGrundlage).art] },
+    unvollstaendig: { klasse: 'warn', label: () => 'Grundlage unvollständig' },
+    traegt_nicht: { klasse: 'warn', label: () => 'Grundlage trägt nicht' },
+    entfallen: { klasse: 'bad', label: () => 'Einwilligung entfallen' },
+    nicht_pruefbar: { klasse: 'neutral', label: () => 'Double-Opt-In nicht prüfbar' },
+    keine: { klasse: 'neutral', label: () => 'Keine Kontaktgrundlage' },
+    gesperrt: { klasse: 'bad', label: (l) => (hatWerbewiderspruch(l) ? 'Werbewiderspruch — gesperrt' : 'Gesperrt') }
+};
+
+/** Kleine Kennzeichen unter dem Lead-Namen: Kontaktgrundlage, DOI-Vorschlag, Quelle, Partner. */
+export function leadBadgesHtml(lead, befund, { gesperrt = false } = {}) {
+    const teile = [];
+    const b = BEFUND_BADGE[befund?.stufe] || BEFUND_BADGE.keine;
+    teile.push(`<span class="crm-badge crm-badge-${b.klasse}" title="${escapeAttr(befund?.text || '')}">${escapeAttr(b.label(lead))}</span>`);
+    if (befund?.vorschlag && !gesperrt) {
+        teile.push(`<span class="crm-badge crm-badge-accent">Double-Opt-In vom ${escapeAttr(datumDe(befund.vorschlag.confirmedAt))}</span>`);
+    }
+    const quelle = leiteQuelleAb(lead);
+    if (quelle) teile.push(`<span class="crm-badge crm-badge-neutral">Quelle: ${escapeAttr(QUELLEN_LABELS[quelle])}</span>`);
+    if (lead?.partnerCode) {
+        const p = lead.provision ? normalisiereProvision(lead.provision) : null;
+        teile.push(`<span class="crm-badge crm-badge-neutral">Partner ${escapeAttr(lead.partnerCode)}${p ? ` · Provision ${escapeAttr(PROVISION_STATUS_LABELS[p.status])}` : ''}</span>`);
+    }
+    return `<div class="crm-lead-badges">${teile.join('')}</div>`;
+}
+
+function euro(n) {
+    return typeof n === 'number' && Number.isFinite(n)
+        ? n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+        : '';
+}
+
+/** Aufklappbarer Bereich je Lead: Kontaktgrundlage, Quelle & Partner, Sperrliste. */
+export function leadDetailsHtml(lead, befund, { gesperrt = false, offen = false } = {}) {
+    const id = escapeAttr(lead?.id || '');
+    const kg = normalisiereKontaktGrundlage(lead?.kontaktGrundlage);
+    const quelle = leiteQuelleAb(lead);
+    const p = lead?.provision ? normalisiereProvision(lead.provision) : null;
+    const summe = provisionsBetrag(p);
+    const satzProzent = Math.round((p?.satz ?? 0.10) * 1000) / 10;
+    const vorschlag = befund?.vorschlag && !gesperrt ? befund.vorschlag : null;
+    const datumGesperrt = kg.art === 'keine' || kg.art === 'doi';
+
+    return `<details class="crm-lead-details" data-details-id="${id}"${offen ? ' open' : ''}>
+        <summary>Kontaktgrundlage, Quelle und Partner</summary>
+        <div class="crm-details-grid">
+            <fieldset class="crm-fieldset">
+                <legend>Kontaktgrundlage</legend>
+                <p class="crm-kg-befund crm-kg-${escapeAttr(befund?.stufe || 'keine')}">${escapeAttr(befund?.text || '')}</p>
+                ${befund?.stufe === 'traegt' && kg.art === 'doi' ? `<p class="crm-hinweis">Die Einwilligung gilt nur für die bestätigte Adresse und nur für Hinweise zur Website samt Angebot (höchstens drei E-Mails).</p>` : ''}
+                ${vorschlag ? `<div class="crm-kg-vorschlag">
+                    <span>Double-Opt-In vom ${escapeAttr(datumDe(vorschlag.confirmedAt))}${vorschlag.email ? ` für ${escapeAttr(vorschlag.email)}` : ''}.</span>
+                    <button type="button" class="crm-btn-export" data-action="uebernehme-doi" data-lead-id="${id}" data-einwilligung-id="${escapeAttr(vorschlag.id)}">Als Grundlage übernehmen</button>
+                </div>` : ''}
+                <label class="crm-feld">Art
+                    <select data-feld="kg-art">
+                        ${KONTAKT_GRUNDLAGE_ARTEN.map(a => `<option value="${a}"${kg.art === a ? ' selected' : ''}>${escapeAttr(KONTAKT_GRUNDLAGE_LABELS[a])}</option>`).join('')}
+                    </select>
+                </label>
+                <p class="crm-kg-erklaerung" data-erklaerung>${escapeAttr(KONTAKT_GRUNDLAGE_ERKLAERUNG[kg.art])}</p>
+                <label class="crm-feld">Datum
+                    <input type="date" data-feld="kg-datum" value="${escapeAttr(datumFuerEingabe(kg.datum))}"${datumGesperrt ? ' disabled' : ''}>
+                </label>
+                <label class="crm-feld">Nachweis
+                    <input type="text" data-feld="kg-nachweis" maxlength="500" value="${escapeAttr(kg.nachweis || '')}" placeholder="z. B. Anfrage über das Kontaktformular, abgelegt unter …"${datumGesperrt ? ' disabled' : ''}>
+                </label>
+            </fieldset>
+            <fieldset class="crm-fieldset">
+                <legend>Quelle und Partner</legend>
+                <label class="crm-feld">Quelle
+                    <select data-feld="quelle">
+                        <option value=""${quelle ? '' : ' selected'}>Nicht angegeben</option>
+                        ${QUELLEN.map(q => `<option value="${q}"${quelle === q ? ' selected' : ''}>${escapeAttr(QUELLEN_LABELS[q])}</option>`).join('')}
+                    </select>
+                </label>
+                <label class="crm-feld">Partnercode
+                    <input type="text" data-feld="partner-code" maxlength="40" value="${escapeAttr(lead?.partnerCode || '')}">
+                </label>
+                <label class="crm-feld">Provision (${escapeAttr(String(satzProzent).replace('.', ','))} %)
+                    <select data-feld="provision-status">
+                        ${PROVISION_STATUS.map(s => `<option value="${s}"${(p?.status || 'offen') === s ? ' selected' : ''}>${escapeAttr(PROVISION_STATUS_LABELS[s])}</option>`).join('')}
+                    </select>
+                </label>
+                <label class="crm-feld">Auftragswert netto (€)
+                    <input type="text" inputmode="decimal" data-feld="provision-betrag" value="${escapeAttr(p?.betragNetto != null ? String(p.betragNetto).replace('.', ',') : '')}" placeholder="z. B. 1.990">
+                </label>
+                ${summe !== null ? `<p class="crm-provision-summe">Provision: ${escapeAttr(euro(summe))} netto</p>` : ''}
+                <p class="crm-hinweis">Provision nur nach vollständigem Zahlungseingang; Offenlegung gegenüber dem Kunden und dessen Zustimmung dokumentieren.</p>
+            </fieldset>
+        </div>
+        <p class="crm-details-fehler" data-fehler role="alert" hidden></p>
+        <div class="crm-details-actions">
+            <button type="button" class="crm-btn-export crm-btn-primary" data-action="save-details" data-lead-id="${id}">Speichern</button>
+            ${gesperrt
+                ? `<span class="crm-badge crm-badge-bad">Auf der Sperrliste</span>`
+                : `<button type="button" class="crm-btn-export crm-btn-danger" data-action="suppress" data-domain="${escapeAttr(lead?.domain || '')}">Nicht mehr kontaktieren</button>`}
+        </div>
+    </details>`;
+}
+
+/**
+ * Panel „Einwilligungen". Nicht lesbar (kein Admin, Netz) wird ausdrücklich
+ * gesagt — sonst sieht „nicht gemessen" aus wie „keine Einwilligungen".
+ * @param {{einwilligungen:Array, geladen:boolean, fehler:string|null}} einw
+ */
+export function einwilligungenPanelHtml(einw, now = Date.now()) {
+    const liste = Array.isArray(einw?.einwilligungen) ? einw.einwilligungen : [];
+    let inhalt;
+    if (!einw?.geladen) {
+        inhalt = `<p class="crm-einw-leer">Einwilligungen nicht lesbar${einw?.fehler ? ` (${escapeAttr(einw.fehler)})` : ''}. Solange sie nicht gelesen werden können, trägt keine Double-Opt-In-Grundlage.</p>`;
+    } else if (liste.length === 0) {
+        inhalt = `<p class="crm-einw-leer">Noch keine Einwilligungen eingegangen.</p>`;
+    } else {
+        const zaehler = {};
+        for (const e of liste) { const s = einwilligungsStatus(e, now); zaehler[s] = (zaehler[s] || 0) + 1; }
+        const kopf = Object.entries(EINWILLIGUNGS_STATUS_LABELS)
+            .filter(([s]) => zaehler[s])
+            .map(([s, label]) => `${escapeAttr(label)}: ${zaehler[s]}`).join(' · ');
+        inhalt = `<p class="crm-einw-zaehler">${kopf}</p>
+        ${einw.vollstaendig === false ? `<p class="crm-einw-leer">Angezeigt werden nur die neuesten ${liste.length} Einwilligungen; ältere sind nicht geladen.</p>` : ''}
+        <ul class="crm-einw-liste">${liste.map(e => einwilligungZeileHtml(e, now)).join('')}</ul>`;
+    }
+    return `<section class="card crm-einw-panel anim-in" aria-label="Einwilligungen">
+        <div class="section-label">Einwilligungen (Double-Opt-In)</div>
+        ${inhalt}
+    </section>`;
+}
+
+export function einwilligungZeileHtml(e, now = Date.now()) {
+    const status = einwilligungsStatus(e, now);
+    const daten = [];
+    if (e.createdAt) daten.push(`angefordert ${datumDe(e.createdAt)}`);
+    if (e.confirmedAt) daten.push(`bestätigt ${datumDe(e.confirmedAt)}`);
+    if (e.revokedAt) daten.push(`widerrufen ${datumDe(e.revokedAt)}`);
+    if (status === 'bestaetigt' && e.nextSendAt) daten.push(`nächste E-Mail ${datumDe(e.nextSendAt)}`);
+    const schritt = e.confirmedAt ? `Schritt ${Math.min(e.sequenceStep, MAX_SEQUENZ_SCHRITTE)} von ${MAX_SEQUENZ_SCHRITTE}` : 'Strecke nicht gestartet';
+    const quelle = e.source ? (EINWILLIGUNGS_QUELLEN[e.source] || e.source) : 'Quelle unbekannt';
+    const stoppbar = status === 'bestaetigt' || status === 'offen';
+    return `<li class="crm-einw-zeile crm-einw-${status}">
+        <div class="crm-einw-haupt">
+            <span class="crm-badge crm-einw-status crm-einw-status-${status}">${escapeAttr(EINWILLIGUNGS_STATUS_LABELS[status])}</span>
+            <span class="crm-einw-adresse">${escapeAttr(e.email || '—')}</span>
+            ${e.domain ? `<span class="crm-einw-domain">${escapeAttr(e.domain)}</span>` : ''}
+        </div>
+        <div class="crm-einw-meta">${escapeAttr(schritt)} · ${escapeAttr(quelle)}${daten.length ? ` · ${escapeAttr(daten.join(' · '))}` : ''}</div>
+        ${stoppbar ? `<button type="button" class="crm-btn-export crm-btn-danger" data-action="stoppe-sequenz" data-einwilligung-id="${escapeAttr(e.id)}">Strecke stoppen</button>` : ''}
+    </li>`;
+}
+
+function bindeEinwilligungsAktionen(el, einw, signal, rerender) {
+    el.addEventListener('click', async (ev) => {
+        const btn = ev.target.closest('[data-action="stoppe-sequenz"]');
+        if (!btn) return;
+        const e1 = (einw?.einwilligungen || []).find(x => x.id === btn.dataset.einwilligungId);
+        const wer = e1?.email || e1?.domain || 'diese Einwilligung';
+        if (!confirm(`Nachfass-Strecke für ${wer} stoppen? Danach geht aus dieser Einwilligung keine E-Mail mehr hinaus. Hier lässt sich das nicht zurücknehmen.`)) return;
+        btn.disabled = true;
+        const r = await stoppeSequenz(btn.dataset.einwilligungId);
+        if (r.ok) {
+            leereEinwilligungsCache();
+            showToast('Nachfass-Strecke gestoppt');
+        } else {
+            btn.disabled = false;
+            showToast(`Nicht gestoppt: ${r.fehler || 'unbekannter Fehler'}`);
+            return;
+        }
+        rerender();
+    }, { signal });
+}
+
+/** Formularwerte eines Detail-Bereichs lesen (DOM → baueDetailUpdates). */
+function leseDetailWerte(box) {
+    const wert = (feld) => box.querySelector(`[data-feld="${feld}"]`)?.value ?? '';
+    return {
+        kgArt: wert('kg-art'),
+        kgDatum: wert('kg-datum'),
+        kgNachweis: wert('kg-nachweis'),
+        quelle: wert('quelle'),
+        partnerCode: wert('partner-code'),
+        provisionStatus: wert('provision-status'),
+        provisionBetrag: wert('provision-betrag')
+    };
+}
+
+/** Verlust-Grund → ggf. Sperrliste. Liefert einen Zusatz für den Toast. */
+async function sperreNachVerlust(domain, grundId) {
+    const sperrgrund = sperrgrundFuerVerlust(grundId);
+    if (!sperrgrund || !domain) return '';
+    const r = await addSuppression(domain, sperrgrund);
+    return r?.ok ? ' Auf die Sperrliste gesetzt.' : ' Sperrliste: nicht eingetragen.';
+}
+
+/**
+ * Fragt den Verlust-Grund in einem Dialog ab.
+ * @returns {Promise<string|null>} Grund-ID oder null (abgebrochen)
+ */
+function frageVerlustGrund(name) {
+    if (typeof document === 'undefined') return Promise.resolve(null);
+    const d = document.createElement('dialog');
+    if (typeof d.showModal !== 'function') {
+        // Rückfall ohne <dialog>: nummerierte Auswahl
+        const text = VERLUST_GRUENDE.map((g, i) => `${i + 1} = ${g.label}`).join('\n');
+        const antwort = prompt(`Warum verloren?\n${text}`, '');
+        const g = VERLUST_GRUENDE[parseInt(antwort, 10) - 1];
+        return Promise.resolve(g ? g.id : null);
+    }
+    return new Promise((resolve) => {
+        d.className = 'crm-dialog';
+        d.innerHTML = `<form method="dialog" class="crm-dialog-form">
+            <div class="crm-dialog-title">Warum verloren?</div>
+            ${name ? `<div class="crm-dialog-sub">${escapeAttr(name)}</div>` : ''}
+            ${VERLUST_GRUENDE.map(g => `<label class="crm-dialog-option">
+                <input type="radio" name="verlustGrund" value="${g.id}" required>
+                <span>${escapeAttr(g.label)}${g.sperrgrund ? ' <span class="crm-dialog-hint">— kommt auf die Sperrliste</span>' : ''}</span>
+            </label>`).join('')}
+            <div class="crm-dialog-actions">
+                <button type="button" class="crm-btn-export" data-dialog="abbrechen">Abbrechen</button>
+                <button type="submit" value="ok" class="crm-btn-export crm-btn-primary">Als verloren markieren</button>
+            </div>
+        </form>`;
+        d.querySelector('[data-dialog="abbrechen"]').addEventListener('click', () => d.close(''), { once: true });
+        d.addEventListener('close', () => {
+            const wahl = d.returnValue === 'ok' ? d.querySelector('input[name="verlustGrund"]:checked')?.value : null;
+            d.remove();
+            resolve(wahl || null);
+        }, { once: true });
+        document.body.appendChild(d);
+        d.showModal();
+    });
+}
+
 // ── Hot-Leads-Rendering ──
-function renderHotLeadsHtml(hotLeads) {
+// Name, Domain und Adresse stammen aus dem ÖFFENTLICHEN Audit-Formular → jede
+// Ausgabe escapen (sonst Stored-XSS im angemeldeten CRM). Gesperrte Domains
+// (Sperrliste, Werbewiderspruch) bekommen keinen E-Mail-Knopf.
+const EMAIL_MUSTER = /^[^\s@<>"'?&#]+@[^\s@<>"'?&#]+\.[^\s@<>"'?&#]+$/;
+
+export function renderHotLeadsHtml(hotLeads, { gesperrt = null } = {}) {
     if (!hotLeads || hotLeads.length === 0) return '';
     const cards = hotLeads.slice(0, 6).map(l => {
         const pulseClass = l.tier === 'very_hot' ? ' hot-pulse' : '';
         const badge = l.tier === 'very_hot' ? '🔥 Heißer Lead' : '🔥 Warm';
         const lastSeen = l.lastVisitAtMs ? timeAgo(l.lastVisitAtMs) : 'noch keine Page-Visits';
-        const visits = l.visitCount > 0 ? ` · ${l.visitCount} Visits` : '';
-        const ctas = l.ctaClicks > 0 ? ` · ${l.ctaClicks} CTA-Klicks` : '';
-        const auditUrl = `https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(l.slug)}`;
-        const mailto = l.email
-            ? `mailto:${l.email}?subject=${encodeURIComponent('Ihr Audit für ' + l.domain)}&body=${encodeURIComponent('Hallo ' + (l.name || '') + ',\n\nvielen Dank für die Audit-Anfrage. Schön, dass Sie sich die Ergebnisse angesehen haben — ich würde gerne ein 30-Minuten-Gespräch dazu mit Ihnen führen.\n\n')}`
-            : '#';
+        const visits = Number(l.visitCount) > 0 ? ` · ${Number(l.visitCount)} Visits` : '';
+        const ctas = Number(l.ctaClicks) > 0 ? ` · ${Number(l.ctaClicks)} CTA-Klicks` : '';
+        const auditUrl = `https://karriaro-webdesign.de/audit?slug=${encodeURIComponent(l.slug || '')}`;
+        const email = typeof l.email === 'string' && EMAIL_MUSTER.test(l.email.trim()) ? l.email.trim() : '';
+        const istGesperrt = !!l.domain && isSuppressed(l.domain, gesperrt);
+        // Antwort auf die eigene Anfrage (Grundlage „anfrage"): derselbe Pflichtteil wie
+        // jede Mail aus dem Werkzeug — Absender, Abmeldeweg, Widerspruchshinweis.
+        // 2026-09-11: Der Text verrät nicht mehr, dass Seitenaufrufe gemessen werden.
+        const pflicht = email
+            ? (complianceBlock(config.profile, { erlaubt: true, kanal: 'email', grundlage: 'anfrage', datum: l.createdAtMs || null })?.text || '')
+            : '';
+        const mailto = email
+            ? (baueMailtoHref({
+                to: email,
+                subject: 'Ihre Website-Prüfung' + (l.domain ? ' für ' + l.domain : ''),
+                kern: `Guten Tag${l.name ? ' ' + l.name : ''},\n\nvielen Dank für Ihre Anfrage zur Website-Prüfung. Gern bespreche ich die Ergebnisse in einem kurzen Gespräch mit Ihnen — passt Ihnen ein Termin in den nächsten Tagen?\n\nViele Grüße`,
+                pflicht
+            }) || '')
+            : '';
+        const mailKnopf = istGesperrt
+            ? `<span class="hot-lead-btn hot-lead-btn-gesperrt">Auf der Sperrliste — keine E-Mail</span>`
+            : mailto
+                ? `<a href="${escapeAttr(mailto)}" class="hot-lead-btn hot-lead-btn-primary">E-Mail schreiben</a>`
+                : '';
         return `<div class="hot-lead-card${pulseClass}">
             <div class="hot-lead-top">
                 <span class="hot-lead-badge">${badge}</span>
-                <span class="hot-lead-heat">${l.heat}</span>
+                <span class="hot-lead-heat">${escapeAttr(l.heat)}</span>
             </div>
-            <div class="hot-lead-domain">${l.domain || '—'}</div>
-            <div class="hot-lead-meta">${l.name || '—'}${l.email ? ' · ' + l.email : ''}</div>
-            <div class="hot-lead-meta">${l.techHeadline || ''}${visits}${ctas}</div>
+            <div class="hot-lead-domain">${escapeAttr(l.domain || '—')}</div>
+            <div class="hot-lead-meta">${escapeAttr(l.name || '—')}${l.email ? ' · ' + escapeAttr(l.email) : ''}</div>
+            <div class="hot-lead-meta">${escapeAttr(l.techHeadline || '')}${visits}${ctas}</div>
             <div class="hot-lead-meta">Letzter Visit: ${lastSeen}</div>
             <div class="hot-lead-actions">
-                <a href="${mailto}" class="hot-lead-btn hot-lead-btn-primary">E-Mail schreiben</a>
-                <a href="${auditUrl}" target="_blank" rel="noopener" class="hot-lead-btn">Audit-Seite öffnen</a>
+                ${mailKnopf}
+                <a href="${escapeAttr(auditUrl)}" target="_blank" rel="noopener" class="hot-lead-btn">Audit-Seite öffnen</a>
             </div>
         </div>`;
     }).join('');
@@ -506,6 +1001,7 @@ function renderHotLeadsHtml(hotLeads) {
 
 function notifyHotLead(lead) {
     if (!lead) return;
+    if (lead.domain && isSuppressed(lead.domain)) return;
     if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
     try {
         const n = new Notification('🔥 Heißer Lead — sofort kontaktieren', {

@@ -12,6 +12,7 @@
  */
 
 import { analyzeTechAge } from '../analysis/tech-age.js';
+import { httpsBefund, phpBefund, datierteAnlaesse } from '../analysis/trigger-events.js';
 
 const BAUKASTEN_URL = [
     { re: /\.wixsite\.com|static\.wixstatic/i, name: 'Wix' },
@@ -251,7 +252,7 @@ export const MIN_REVIEWS_VALUE = 8;
  *            looksAlreadyGood:boolean, reasons:string[], hardStructural:number,
  *            adIntent:boolean, buySignal:{adActive:boolean, hiring:boolean, mult:number}}}
  */
-export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null, siteAge = null, ki = null }) {
+export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri = '', techAge = null, reviewRecency = null, visionOutdated = false, adIntent = null, jobIntent = null, seasonal = null, buyingIntent = null, contactPaths = null, siteAge = null, ki = null, httpsCheck = null, php = null, hoster = null }) {
     // ⚠️ KORREKTUR 2026-08-08: Ein fehlender PSI-Wert wurde auf 50 defaultet — und
     // 50 liegt unter BEIDEN Perf-Schwellen (<55 → +9 Badness) und unter dem
     // Design-Floor (<70 → Badness mindestens 32). Eine Seite, die PSI gar nicht
@@ -267,11 +268,20 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     // alten Verhalten, damit gespeicherte Scans ihre Rangfolge behalten.
     const perfKnown = ws.perfKnown !== false && typeof ws.perf === 'number';
     const perf = perfKnown ? ws.perf : 50;
-    const isHttps = ws.isHttps !== false;
+    // 2026-09-10 (adEvidence.httpsCheck, EVIDENCE_SCHEMA 3): „kein HTTPS +22" nur
+    // noch bei GEMESSENEM reachable === false. PSI lädt bei einer Seite ohne
+    // Weiterleitung die http-Fassung und meldete dann „kein SSL", obwohl HTTPS
+    // erreichbar ist. reachable === true ⇒ kein Mangel (höchstens weicher Chip).
+    // Fehlt die Messung, gilt die bisherige Logik — ohne jede Score-Änderung.
+    const hb = httpsBefund(ws, httpsCheck);
+    const isHttps = !hb.ohneHttps;
     const noMobile = ws.viewport === false || ws.viewportMissing === true;
     const ub = urlBaukasten(websiteUri);
     const baukasten = !!tech.isBaukasten || !!ub;
     const ta = techAge || analyzeTechAge(tech, {});
+    // `eol` kommt aus der datierten Support-Tabelle (tech-age.js). `cmsEolYear`
+    // bleibt als Rückfall für gespeicherte techAge-Objekte ohne das Feld.
+    const taEol = ta.eol === true || !!ta.cmsEolYear;
     const reviews = place.userRatingCount || 0;
     const rating = place.rating || 0;
 
@@ -280,7 +290,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     let b = 0;
     let hardStructural = 0;
     if (baukasten) { b += 34; hardStructural++; }                 // F4: ~94% zuverlässig
-    if (ta.cmsEolYear) { b += 34; hardStructural++; }             // F4: sicherheits-totes EOL-CMS
+    if (taEol) { b += 34; hardStructural++; }                     // F4: sicherheits-totes EOL-CMS
     else if ((ta.techSeverity || 0) >= 4) { b += 22; hardStructural++; }
     else if ((ta.techSeverity || 0) >= 2) b += 9;                 // weich, KEIN hartes Signal
     if (noMobile) { b += 24; hardStructural++; }                  // F3: nicht-mobil
@@ -331,7 +341,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     //    als gesättigter Multiplikator ein, nicht additiv. ──
     const businessStrength = Math.min(100, Math.round(Math.log2(Math.max(1, reviews)) * (rating || 3) * 3));
 
-    const looksAlreadyGood = perf >= 70 && isHttps && !baukasten && !ta.cmsEolYear
+    const looksAlreadyGood = perf >= 70 && isHttps && !baukasten && !taEol
         && (ta.techSeverity || 0) < 2 && hardStructural === 0;
 
     // ── KAUFSIGNAL-Achse (stärkstes billiges Signal): zahlt für Google-/Meta-Anzeigen
@@ -370,7 +380,7 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     const domainJung = typeof siteAge?.domainRegisteredMs === 'number'
         && (Date.now() - siteAge.domainRegisteredMs) < 18 * MONAT_MS;
     const frischInvestiert = siteAge?.relaunchVerdacht === true || domainJung;
-    const erheblicheMaengel = !isHttps || noMobile || !!ta.cmsEolYear || visionOutdated;
+    const erheblicheMaengel = !isHttps || noMobile || taEol || visionOutdated;
     const investFactor = frischInvestiert && !erheblicheMaengel ? 0.5 : 1.0;
 
     // B4+B5 (2026-08-17, Founder-Zielbild „im KI-Zeitalter mithalten"): Der
@@ -424,7 +434,13 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
     if (toolSig) reasons.push(`🧾 ${toolSig.label}`);
     if (seasonalActive) reasons.push('⏰ Saison jetzt');  // Timing-Fenster der Branche
     if (baukasten) reasons.push(ub || tech.cms || 'Baukasten');
-    if (ta.cmsEolYear) reasons.push(`${ta.cms} veraltet`);
+    if (taEol) {
+        // Mit gemessener Version den datierten, zitierbaren Befund zeigen. Ein
+        // techAge ohne eolText (gespeicherter Alt-Stand) behält den Kurz-Chip.
+        reasons.push(ta.eolText
+            ? `${ta.eolDatum ? '📅 ' : ''}${ta.cms}${ta.version ? ' ' + ta.version : ''} ${ta.eolText}`
+            : `${ta.cms} veraltet`);
+    }
     // Der Anzeige-Default 50 darf NIE als gemessener Wert erscheinen — sonst
     // steht eine erfundene Zahl im Chip und der Founder pitcht sie.
     reasons.push(perfKnown ? `Perf ${perf}` : 'Tempo nicht messbar');
@@ -447,7 +463,18 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
             ? `🆕 neu, aber mangelhaft — ${grund}`
             : `🆕 frisch investiert — ${grund}`);
     }
-    if (!isHttps) reasons.push('kein SSL');
+    if (!isHttps) {
+        reasons.push(hb.gemessen ? '📅 kein HTTPS — Chrome warnt neue Besucher ab 10/2026' : 'kein SSL');
+    } else if (hb.gemessen && hb.ohneWeiterleitung) {
+        reasons.push('HTTPS ohne Weiterleitung');          // weich: kein Score-Beitrag
+    }
+    // PHP ohne Sicherheitsupdates: Anlass mit Datum, bewusst OHNE Score-Beitrag
+    // (Lehre: alt ≠ Kaufsignal). Nur sichtbar und filterbar.
+    const pb = phpBefund(php, hoster);
+    if (pb) {
+        reasons.push(`${pb.datum ? '📅 ' : ''}${pb.text}`);
+        if (pb.hosterHinweis) reasons.push(`💶 ${pb.hosterName}: Aufpreis für altes PHP auf der Rechnung prüfen`);
+    }
     if (noMobile) reasons.push('nicht mobil');
     if (lg.chip) reasons.push(lg.chip);
     if (dp.chip) reasons.push(dp.chip);   // kapazitätsgebunden + etabliert + kein Kaufsignal
@@ -479,6 +506,11 @@ export function computeOpportunity({ ws = {}, tech = {}, place = {}, websiteUri 
         // B4+B5: KI-Sichtbarkeits-Verstaerker (1.15 bei Blockade/fehlendem Schema, sonst 1.0).
         kiFactor,
         // A5: Stillstands-Verstaerker (1.2 bei >=4 J. gleicher Basis, sonst 1.0).
-        stillstandFactor
+        stillstandFactor,
+        // 2026-09-10: Anlässe mit Datum (Chrome-Warnung, PHP-/CMS-Support-Ende).
+        // Score-neutral — speisen den Scanner-Filter „📅 Anlass mit Datum".
+        anlaesse: datierteAnlaesse({ ws, tech, techAge: ta, httpsCheck, php, hoster }),
+        // Ob die HTTPS-Aussage auf einer Messung beruht (true) oder auf PSI (false).
+        httpsGemessen: hb.gemessen
     };
 }

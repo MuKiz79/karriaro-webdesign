@@ -6,10 +6,28 @@
  * window-/Firestore-Zugriffe sind guarded, damit die reine Logik unter Vitest
  * (node) ohne Browser läuft.
  *
+ * Wer schreibt hier hinein (2026-09-10):
+ *   • Outreach-Studio: „Abgemeldet / kein Interesse" → 'opt_out', „Unzustellbar" → 'bounced'
+ *   • enrichContact meldet einen Werbewiderspruch im Impressum → 'opt_out'
+ *   • CRM: Verlust mit Grund „Kein Interesse / abgemeldet" → 'opt_out'
+ * Das Kontakt-Gate (outreach/kontakt-grundlage.js) blockiert gesperrte Domains
+ * über JEDEN Kanal — auch den Brief.
+ *
  * @module crm/suppression
  */
 
 const LS_KEY = 'karriaro_suppression';
+
+/** Sperrgründe mit Anzeigetext. */
+export const SPERRGRUENDE = {
+    manual: 'Manuell gesperrt',
+    bounced: 'Unzustellbar',
+    opt_out: 'Abgemeldet / kein Interesse / Werbewiderspruch',
+    already_contacted: 'Bereits kontaktiert'
+};
+
+/** Gründe, die einen schwächeren bestehenden Eintrag ersetzen. */
+const STARKE_GRUENDE = new Set(['opt_out', 'bounced']);
 
 function win() { return typeof window !== 'undefined' ? window : null; }
 function fb() { return win()?.__firebase || null; }
@@ -25,7 +43,7 @@ export function normalizeDomain(domain) {
 
 function getLocal() {
     if (!hasLS()) return [];
-    try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch (e) { console.warn('Sperrliste in localStorage unlesbar:', e); return []; }
 }
 function setLocal(list) {
     if (hasLS()) localStorage.setItem(LS_KEY, JSON.stringify(list));
@@ -50,8 +68,13 @@ export async function loadSuppression() {
             );
             const snap = await fb().fns.getDocs(q);
             const list = snap.docs.map(d => d.data());
-            setLocal(list);
-            return new Set(list.map(e => normalizeDomain(e.domain)));
+            // Lokale Einträge, die noch nicht synchronisiert sind, nicht verlieren:
+            // eine Sperre darf nie durch einen Ladevorgang verschwinden.
+            const cloud = new Set(list.map(e => normalizeDomain(e.domain)));
+            const nurLokal = getLocal().filter(e => !cloud.has(normalizeDomain(e.domain)));
+            const zusammen = [...list, ...nurLokal];
+            setLocal(zusammen);
+            return new Set(zusammen.map(e => normalizeDomain(e.domain)));
         } catch (e) { console.error('Suppression load:', e); }
     }
     return loadSuppressionLocal();
@@ -68,17 +91,29 @@ export function isSuppressed(domain, set = null) {
 }
 
 /**
- * Trägt eine Domain dauerhaft aus. Dedupliziert. reason ∈
- * 'manual' | 'bounced' | 'opt_out' | 'already_contacted'.
+ * Trägt eine Domain dauerhaft aus. Dedupliziert; ein stärkerer Grund (opt_out,
+ * bounced) ersetzt einen schwächeren. reason ∈ Schlüssel von SPERRGRUENDE.
  */
 export async function addSuppression(domain, reason = 'manual') {
     const d = normalizeDomain(domain);
     if (!d) return { ok: false };
+    const grund = SPERRGRUENDE[reason] ? reason : 'manual';
+    if (grund !== reason) console.warn(`Unbekannter Sperrgrund „${reason}" — als 'manual' eingetragen.`);
 
     const local = getLocal();
-    if (!local.some(e => normalizeDomain(e.domain) === d)) {
-        local.push({ domain: d, reason, at: Date.now() });
+    const idx = local.findIndex(e => normalizeDomain(e.domain) === d);
+    // Der Grund, der nach diesem Aufruf gilt — auch für Firestore. Ohne diese
+    // Trennung überschrieb ein späteres „manuell sperren" dort einen belegten
+    // Werbewiderspruch (opt_out), während lokal der starke Grund stehen blieb.
+    let wirksam = grund;
+    if (idx < 0) {
+        local.push({ domain: d, reason: grund, at: Date.now() });
         setLocal(local);
+    } else if (STARKE_GRUENDE.has(grund) && local[idx].reason !== grund && !STARKE_GRUENDE.has(local[idx].reason)) {
+        local[idx] = { ...local[idx], reason: grund, at: Date.now() };
+        setLocal(local);
+    } else if (SPERRGRUENDE[local[idx].reason]) {
+        wirksam = local[idx].reason;
     }
 
     const user = currentUser();
@@ -87,7 +122,7 @@ export async function addSuppression(domain, reason = 'manual') {
         const id = `${user.uid}_${d.replace(/[^a-zA-Z0-9]/g, '_')}`;
         await fb().fns.setDoc(
             fb().fns.doc(fb().db, 'suppression', id),
-            { uid: user.uid, domain: d, reason, at: fb().fns.serverTimestamp() },
+            { uid: user.uid, domain: d, reason: wirksam, at: fb().fns.serverTimestamp() },
             { merge: true }
         );
         return { ok: true, firestoreSynced: true };

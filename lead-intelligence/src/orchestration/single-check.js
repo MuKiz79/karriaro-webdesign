@@ -9,7 +9,9 @@ import { analyzeSocialSignals } from '../analysis/social-signals.js';
 import { compareSocialPresence } from '../analysis/social-comparison.js';
 import { analyzeSignalStack } from '../analysis/signal-stacking.js';
 import { checkBFSGCompliance } from '../analysis/bfsg-compliance.js';
-import { detectTriggerEvents } from '../analysis/trigger-events.js';
+import { detectTriggerEvents, httpsBefund, CHROME_HTTPS_WARNUNG } from '../analysis/trigger-events.js';
+import { ergaenzeTechVersion, bewerteCmsVersion, kanonischerCmsName } from '../analysis/tech-age.js';
+import { escapeHtml } from '../lib/escape-html.js';
 import { checkSchema } from '../analysis/schema-check.js';
 import { calculatePXIndex } from '../analysis/px-index.js';
 import { analyzeContentFreshness } from '../analysis/content-freshness.js';
@@ -29,6 +31,7 @@ import { extractWebsiteScore } from '../signals/website-score.js';
 import { analyzeDigitalFootprint as analyzeFootprint } from '../signals/digital-footprint.js';
 import { scoreLead } from '../scoring/lead-scorer.js';
 import { calculateRevenueLoss } from '../math/revenue-model.js';
+import { PREISE } from '../config.js';
 import { auditUX } from '../analysis/ux-audit.js';
 import { verifyFeatureClaim } from '../analysis/claim-verify.js';
 import { checkFreshness } from '../analysis/wayback-freshness.js';
@@ -192,7 +195,7 @@ export async function runSingleCheck() {
             result = { leadScore: 50, conversionRate: 2.0, ci: { lower: 0.5, upper: 5 }, ciMargin: 2, N: 100,
                 stages: [], bottleneck: null, drivers: [], kelly: { optimalHours: 2, recommendation: 'Standard' },
                 channelResult: { best: { name: 'E-Mail' }, all: [] }, survival: { label: '~14 Tage' },
-                nextAction: { action: 'E-Mail senden', state: 'Kalt' }, dealSize: 990, expectedValue: 0,
+                nextAction: { action: 'Kontaktgrundlage prüfen', state: 'Kalt' }, dealSize: PREISE.essential.betrag, expectedValue: 0,
                 sensitivity: [], seasonFactor: 100, timePerLead: 2 };
         }
 
@@ -328,6 +331,19 @@ function renderResult(data) {
 function runLocalAnalysis(p) {
     const { ws, tech, psiData, place, competitors, footprint, revenue, result, reviewSentiment, wayback, screenshotAnalysis, contentAnalysis, companyProfile, adEvidenceResult = null, jobsApiResult = null, businessName = null } = p;
 
+    // adEvidence: nur ein erfolgreicher Abruf zählt. Hinter einer Bot-Wall liefert
+    // der Server paidTools/careSignals/techVersion selbst als null — „nicht
+    // gesehen" darf nie wie „nichts gefunden" gelesen werden.
+    const ev = adEvidenceResult?.ok ? adEvidenceResult : null;
+    const evSauber = ev && !ev.blocked ? ev : null;
+    // F15 wie im Scanner: CMS-Version aus dem Quelltext füllt nur Lücken der
+    // PSI-Erkennung (Joomla/TYPO3/Contao/Shopware kennt oft NUR der Quelltext).
+    const techV = ergaenzeTechVersion(tech, evSauber?.techVersion);
+    // V6 (EVIDENCE_SCHEMA 3): eigene Messungen, null = nicht gemessen.
+    const httpsCheck = ev?.httpsCheck || null;
+    const php = ev?.php || null;
+    const hoster = ev?.hoster || null;
+
     // Ads- und Job-Signale kommen GRATIS aus denselben PSI-Network-Requests.
     // Sie wurden bis 2026-07-25 zwar berechnet, aber nur im Tab "Experimentell"
     // angezeigt — an detectSurgeIntent/assessDigitalMaturity wurde hart `null`
@@ -345,9 +361,9 @@ function runLocalAnalysis(p) {
 
     const surgeIntent = detectSurgeIntent(fp, jobSignal, googleAds, place);
     const digitalMaturity = assessDigitalMaturity(fp, googleAds, psiData);
-    const conversationReady = assessConversationReadiness(ws, tech, place, wayback, null);
+    const conversationReady = assessConversationReadiness(ws, techV, place, wayback, null, httpsCheck);
     const stakeholder = detectStakeholder(psiData, place);
-    const techTrajectory = assessTechTrajectory(tech, wayback);
+    const techTrajectory = assessTechTrajectory(techV, wayback);
     const localSEO = assessLocalSEO(ws, place, psiData);
     const emotionalReady = assessEmotionalReadiness(reviewSentiment);
     const revenueWeighted = calculateRevenueWeighted(result.conversionRate / 100, place?.primaryType || '_default', result.dealSize);
@@ -358,8 +374,8 @@ function runLocalAnalysis(p) {
     // — kein adEvidence, Bot-Wall, oder ein Cache-Dokument von vor 2026-08-14 —
     // ist sie `null` und es wird KEINE Rechtsfolge behauptet.
     const bfsgScore = checkBFSGCompliance(psiData, adEvidenceResult?.bfsgScope || null);
-    const triggerEvents = detectTriggerEvents({ ws, tech, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors });
-    const techDepth = analyzeTechDepth(psiData, tech);
+    const triggerEvents = detectTriggerEvents({ ws, tech: techV, place, wayback, footprint, psiData, contentAnalysis, socialSignals, competitors, httpsCheck, php, hoster });
+    const techDepth = analyzeTechDepth(psiData, techV, { php, hoster });
     const contentFreshness = analyzeContentFreshness(psiData, contentAnalysis, wayback);
     const pxIndex = calculatePXIndex(ws, psiData, contentAnalysis, screenshotAnalysis);
     const schemaCheck = checkSchema(psiData);
@@ -385,7 +401,11 @@ function runLocalAnalysis(p) {
         jobOpenings,
         reviewRecency: reviewVelocity?.available
             ? { daysSinceLast: reviewVelocity.daysSinceLastReview, velocity: reviewVelocity.velocity, n: reviewVelocity.n }
-            : null
+            : null,
+        // 2026-09-10: bezahlte Werkzeuge + Pflegezustand kamen bisher nur im
+        // Scanner an — der Einzel-Check rechnete die Kaufsignal-Achse ohne sie.
+        paidTools: evSauber?.paidTools || null,
+        careSignals: evSauber?.careSignals || null
     });
     // Killer-Kombi: zahlt fuer Klicks UND leitet sie auf eine messbar schwache Seite.
     const adWaste = computeAdWaste({ ws, adsActive: buyingIntent.adsActive });
@@ -403,7 +423,11 @@ function runLocalAnalysis(p) {
         pxIndex, schemaCheck, messagingCheck, signalStack, compositeScore, feedbackInsight,
         reviewVelocity, gbpDynamics, wpSecurity, cognitiveLoad, decision,
         googleAds, jobSignal, buyingIntent, adWaste,
-        adEvidence: adEvidenceResult, jobsApi: jobsApiResult, jobOpenings, matchedEmployer
+        adEvidence: adEvidenceResult, jobsApi: jobsApiResult, jobOpenings, matchedEmployer,
+        // Überschreibt im state.lastResult das PSI-tech (Spread NACH `tech`), damit
+        // Tech-Karte, Pitch und Trigger dieselbe ergänzte Version sehen.
+        tech: techV,
+        httpsCheck, php, hoster
     };
 }
 
@@ -497,9 +521,15 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             emailArgs.push(`Googles Geschwindigkeits-Bewertung liegt bei ${ws.perf}/100`);
         }
 
-        if (!ws.isHttps) {
-            problems.push(`<strong>Kein Sicherheitszertifikat</strong> — Browser zeigt "Nicht sicher". Jeder zweite Besucher verlässt die Seite sofort.`);
-            emailArgs.push(`der Browser zeigt "Nicht sicher" an`);
+        // HTTPS: gemessen (httpsCheck) schlägt die PSI-Ableitung. Der frühere
+        // Zusatz über abspringende Besucher hatte keine Quelle und ist entfernt.
+        const hb = httpsBefund(ws, data.httpsCheck);
+        if (hb.gemessen && hb.ohneHttps) {
+            problems.push(`<strong>${CHROME_HTTPS_WARNUNG}.</strong> Die Seite ist per HTTPS nicht erreichbar (gemessen).`);
+            emailArgs.push('Chrome zeigt ab Oktober 2026 neuen Besuchern eine Warnung vor Ihrer Seite');
+        } else if (hb.ohneHttps) {
+            problems.push(`<strong>Seite lädt ohne HTTPS</strong> — Browser markieren sie als „Nicht sicher“.`);
+            emailArgs.push('der Browser markiert die Seite als „Nicht sicher“');
         }
 
         if (tech.isBaukasten) {
@@ -552,8 +582,14 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
             problems.push(`<strong>Wachstumssignale erkannt:</strong> ${data.surgeIntent.signals.map(s => s.label).join(', ')}. ${data.surgeIntent.pitchArg}`);
         }
 
-        if (data.techTrajectory?.urgency === 'critical') {
-            problems.push(data.techTrajectory.pitchArg);
+        // Prüfung 2026-09-10: Hier stand der Satz der Tech-Trajectory, die WordPress
+        // nur nach der Hauptversion einstuft — damit galt auch eine gepflegte
+        // 4.7–4.9 als ohne Updates, dazu kam eine Angriffs-Behauptung ohne Quelle.
+        // Jetzt dieselbe datierte Tabelle wie Scoring, Trigger und Tech-Karte;
+        // `tech` ist hier bereits um die Quelltext-Version ergänzt.
+        const cmsSupport = tech?.version && !tech.isBaukasten ? bewerteCmsVersion(tech.cms, tech.version) : null;
+        if (cmsSupport?.eol) {
+            problems.push(`<strong>${escapeHtml(`${kanonischerCmsName(tech.cms)} ${tech.version} ${cmsSupport.text}`)}.</strong>`);
         }
 
         // ── Module 11-15 ──
@@ -625,7 +661,7 @@ function generateExplanation(r, ws, tech, data, uxAudit) {
 
         if (ws.perf < 50) pros.push(`Googles Geschwindigkeits-Score ist niedrig (${ws.perf}/100) — ein gutes Argument`);
         if (tech.isBaukasten) pros.push(`Läuft auf ${tech.cms} — Baukasten mit klaren Grenzen`);
-        if (!ws.isHttps) pros.push(`Kein SSL-Zertifikat — Browser-Warnung ist ein starkes Argument`);
+        if (httpsBefund(ws, data.httpsCheck).ohneHttps) pros.push(`Keine HTTPS-Verbindung — Browser-Warnung ist ein starkes Argument`);
         if (ws.perf >= 65) cons.push(`Die Website ist technisch in Ordnung (${ws.perf}/100) — schwerer zu argumentieren warum eine neue nötig ist`);
         if (!data.place) cons.push(`Wir konnten keine Google-Bewertungen finden — unklar ob das Unternehmen aktiv ist und Budget hat`);
         if (data.place?.userRatingCount < 10) cons.push(`Nur ${data.place?.userRatingCount || 0} Google-Bewertungen — möglicherweise ein sehr kleines Unternehmen`);

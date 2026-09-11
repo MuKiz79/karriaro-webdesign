@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyFilters, hasBuySignal, isReachable } from '../../src/orchestration/lead-filters.js';
+import { applyFilters, hasBuySignal, isReachable, hasDatedAnlass, filterNeueroeffnungen, formatiereOeffnungsdatum, sortierePartner } from '../../src/orchestration/lead-filters.js';
 
 const lead = (o = {}) => ({
     name: o.name || 'Betrieb',
@@ -144,5 +144,84 @@ describe('B6 — Sortierung „Ambition" (2026-08-17)', () => {
         applyFilters(leads, { sort: 'ambition' });
         expect(leads[0].name).toBe('A');
         expect(applyFilters(leads, {}).map(l => l.name)).toEqual(['A', 'C', 'D', 'B']);
+    });
+});
+
+describe('Filter „📅 Anlass mit Datum" (2026-09-10)', () => {
+    const mitChrome = { name: 'Chrome', leadScore: 40, anlaesse: [{ art: 'chrome-warnung', datum: '2026-10', text: 'x' }] };
+    const mitPhp = { name: 'PHP', leadScore: 80, anlaesse: [{ art: 'php-eol', datum: '2022-11-28', text: 'x' }] };
+    const ohneDatum = { name: 'Contao', leadScore: 90, anlaesse: [{ art: 'cms-eol', datum: null, text: 'Nicht-LTS' }] };
+    const alt = { name: 'Alt', leadScore: 95 };                                   // gespeicherter Scan ohne Feld
+    const leer = { name: 'Leer', leadScore: 70, anlaesse: [] };
+
+    it('erkennt nur Anlässe MIT Datum', () => {
+        expect(hasDatedAnlass(mitChrome)).toBe(true);
+        expect(hasDatedAnlass(mitPhp)).toBe(true);
+        expect(hasDatedAnlass(ohneDatum)).toBe(false);
+        expect(hasDatedAnlass(alt)).toBe(false);
+        expect(hasDatedAnlass(null)).toBe(false);
+    });
+
+    it('filtert, sortiert aber weiter nach Score — der Anlass hebt keinen Score', () => {
+        const r = applyFilters([mitChrome, ohneDatum, alt, leer, mitPhp], { anlass: true });
+        expect(r.map(x => x.name)).toEqual(['PHP', 'Chrome']);
+        expect(r.map(x => x.leadScore)).toEqual([80, 40]);
+    });
+
+    it('Gegenprobe: ohne Filter bleibt alles sichtbar', () => {
+        expect(applyFilters([mitChrome, ohneDatum, alt], {})).toHaveLength(3);
+    });
+});
+
+describe('Neueröffnungen — eigene Liste ohne Website-/Bewertungs-Tor', () => {
+    const b = { key: 'restaurant', name: 'Restaurants' };
+    const place = (o) => ({ displayName: { text: o.name }, businessStatus: o.status, formattedAddress: o.adr || 'Hauptstr. 1, 70173 Stuttgart', id: o.id, openingDate: o.od, websiteUri: o.web, userRatingCount: o.rev });
+
+    it('nur FUTURE_OPENING — auch ohne Website und ohne Bewertungen', () => {
+        const r = filterNeueroeffnungen([
+            { branch: b, place: place({ name: 'Neu ohne alles', status: 'FUTURE_OPENING', id: 'a' }) },
+            { branch: b, place: place({ name: 'Läuft schon', status: 'OPERATIONAL', id: 'b', web: 'https://x.de', rev: 90 }) },
+            { branch: b, place: place({ name: 'Geschlossen', status: 'CLOSED_PERMANENTLY', id: 'c' }) }
+        ]);
+        expect(r.map(x => x.name)).toEqual(['Neu ohne alles']);
+        expect(r[0].websiteUri).toBeNull();
+    });
+
+    it('dedupliziert über ID bzw. Name+Adresse und sortiert nach Eröffnung, unbekannt ans Ende', () => {
+        const r = filterNeueroeffnungen([
+            { branch: b, place: place({ name: 'Später', status: 'FUTURE_OPENING', id: 'x', od: { year: 2026, month: 12, day: 1 } }) },
+            { branch: b, place: place({ name: 'Ohne Datum', status: 'FUTURE_OPENING', id: 'y' }) },
+            { branch: b, place: place({ name: 'Früher', status: 'FUTURE_OPENING', id: 'z', od: { year: 2026, month: 10, day: 15 } }) },
+            { branch: b, place: place({ name: 'Früher', status: 'FUTURE_OPENING', id: 'z', od: { year: 2026, month: 10, day: 15 } }) }
+        ]);
+        expect(r.map(x => x.name)).toEqual(['Früher', 'Später', 'Ohne Datum']);
+        expect(r[0].eroeffnung).toBe('15.10.2026');
+    });
+
+    it('formatiert das Datum nie genauer als Google es liefert', () => {
+        expect(formatiereOeffnungsdatum({ year: 2026, month: 10, day: 1 })).toBe('01.10.2026');
+        expect(formatiereOeffnungsdatum({ year: 2026, month: 10 })).toBe('10/2026');
+        expect(formatiereOeffnungsdatum({ year: 2027 })).toBe('2027');
+        expect(formatiereOeffnungsdatum('2026-11-03')).toBe('03.11.2026');
+        expect(formatiereOeffnungsdatum(null)).toBeNull();
+        expect(formatiereOeffnungsdatum({ year: 0 })).toBeNull();
+    });
+});
+
+describe('Empfehlungspartner — nach Bewertungszahl, ohne Kunden-Scoring', () => {
+    it('sortiert nach Bewertungen, dann Note, dann Name', () => {
+        const r = sortierePartner([
+            { name: 'B', reviews: 12, rating: 4.9 },
+            { name: 'A', reviews: 120, rating: 4.1 },
+            { name: 'C', reviews: 12, rating: 4.9 },
+            { name: 'D', reviews: 12, rating: 5.0 },
+            { name: 'E' }
+        ]);
+        expect(r.map(x => x.name)).toEqual(['A', 'D', 'B', 'C', 'E']);
+    });
+    it('lässt die Eingabe unberührt', () => {
+        const ein = [{ name: 'x', reviews: 1 }, { name: 'y', reviews: 5 }];
+        sortierePartner(ein);
+        expect(ein[0].name).toBe('x');
     });
 });

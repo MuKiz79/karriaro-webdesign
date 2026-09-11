@@ -4,7 +4,13 @@ import { buildOutreachPack } from '../../src/strategy/outreach.js';
 const baseData = {
     url: 'https://www.beispiel-friseur.de',
     ws: { perf: 35, isHttps: true, viewport: true, seo: 60, a11y: 65 },
-    tech: { cms: 'WordPress', version: '4.9.0', isBaukasten: false },
+    // 2026-09-10: war 4.9.0. Die korrigierte Support-Tabelle (analysis/tech-age.js)
+    // weiss, dass die 4er-Reihe ab 4.7 weiter Sicherheitsupdates bekommt — 4.9 ist
+    // damit kein hartes Tech-Alter mehr (gemessen: severity 3). Die Fixture soll
+    // aber genau einen harten Anker tragen, gegen den die Barrierefreiheit ohne
+    // geprüfte Pflichtlage NICHT gewinnen darf. 4.0 ist seit 09/2022 ohne Updates
+    // (severity 5) — in der alten wie in der neuen Tabelle.
+    tech: { cms: 'WordPress', version: '4.0.0', isBaukasten: false },
     place: {
         displayName: { text: 'Friseur Beispiel' },
         userRatingCount: 80,
@@ -120,6 +126,25 @@ describe('buildOutreachPack', () => {
         expect(pack.competitors.find(c => c.name.includes('Parkhaus'))).toBeUndefined();
     });
 
+    it('Mailtext nennt nur Mitbewerber derselben Branche und nur Gemessenes', () => {
+        const data = {
+            ...baseData,
+            competitors: [
+                { displayName: { text: 'Friseur A' }, rating: 4.8, userRatingCount: 120, primaryType: 'hair_salon' },
+                { displayName: { text: 'JET Tankstelle' }, rating: 4.4, userRatingCount: 678, primaryType: 'gas_station' },
+                { displayName: { text: 'Friseur B' }, rating: 4.6, userRatingCount: 95, primaryType: 'hair_salon' }
+            ]
+        };
+        const arg = buildOutreachPack(data).allArgs.find(a => a.type === 'competitors');
+        expect(arg).toBeTruthy();
+        expect(arg.text).toContain('Friseur A, Friseur B');          // Gegenprobe: gleiche Branche bleibt
+        expect(arg.text).not.toContain('Tankstelle');
+        expect(arg.text).not.toMatch(/modernere|ranken|Schwachstellen/);
+        // Nur EIN branchengleicher Mitbewerber → kein Vergleichs-Argument
+        const einer = buildOutreachPack({ ...data, competitors: data.competitors.slice(0, 2) });
+        expect(einer.allArgs.find(a => a.type === 'competitors')).toBeUndefined();
+    });
+
     it('each variant body stays under ~120 words', () => {
         const pack = buildOutreachPack(baseData);
         for (const v of pack.variants) {
@@ -148,5 +173,53 @@ describe('buildOutreachPack', () => {
         expect(typeof pack.primary.subject).toBe('string');
         expect(typeof pack.primary.body).toBe('string');
         expect(pack.primary.body).not.toContain('<');
+    });
+});
+
+// 2026-09-10 — kein geratener Empfänger, Preise aus einer Quelle, keine Zeitzusagen.
+describe('buildOutreachPack — Empfänger, Preise, Zusagen', () => {
+    it('ohne gefundene Adresse KEIN Empfänger (früher: geratene info@<domain>)', () => {
+        const pack = buildOutreachPack(baseData);
+        expect(pack.recipientEmail).toBeNull();
+        expect(pack.recipientHinweis).toMatch(/Keine E-Mail-Adresse gefunden/);
+    });
+
+    it('gefundene Adresse wird Empfänger (Gegenprobe)', () => {
+        const pack = buildOutreachPack({ ...baseData, contactData: { owner: null, genericEmails: ['info@beispiel-friseur.de'] } });
+        expect(pack.recipientEmail).toBe('info@beispiel-friseur.de');
+        expect(pack.recipientHinweis).toBeNull();
+    });
+
+    it('der Profil-Freitext „Preisbereich" landet nicht in der Mail — Preis kommt aus PREISE', async () => {
+        const { config } = await import('../../src/config.js');
+        const vorher = config.profile.priceRange;
+        config.profile.priceRange = 'ab 990 €';
+        try {
+            const pack = buildOutreachPack(baseData);   // hair_salon → Essential
+            for (const v of pack.variants) {
+                expect(v.body).toContain('ab 1.290 € einmalig');
+                expect(v.body).not.toContain('990 €');
+            }
+        } finally {
+            config.profile.priceRange = vorher;
+        }
+    });
+
+    it('keine Lieferzeit-, Reaktionszeit- oder Verknappungs-Zusage in irgendeiner Variante und Stufe', () => {
+        const typen = [['hair_salon'], ['plumber'], ['dentist'], ['lawyer']];
+        for (const types of typen) {
+            for (const touchNumber of [1, 3]) {
+                const pack = buildOutreachPack({
+                    ...baseData, touchNumber,
+                    tier: types[0] === 'lawyer' ? 'premium-plus' : null,
+                    place: { ...baseData.place, types, primaryType: types[0] }
+                });
+                for (const v of pack.variants) {
+                    const t = `${v.subject} ${v.body} ${v.bodyHtml}`;
+                    expect(t).not.toMatch(/Tagen online|24h|SLA|limitiert|Maklerprovision|refinanziert|in 2 Wochen|48 Stunden/);
+                    expect(t).toMatch(/erst der Entwurf, dann Ihre Entscheidung/);
+                }
+            }
+        }
     });
 });

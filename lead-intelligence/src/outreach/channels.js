@@ -1,16 +1,26 @@
 /**
- * Kanal-Outputs — verwandelt das Outreach-Paket (buildOutreachPack) in LEGALE,
- * hochkonvertierende Kanaele statt nur Kalt-Mail (UWG §7: Kalt-Mail/-Anruf an
- * DE-Firmen ohne Einwilligung sind abmahnfaehig):
- *   • Werbebrief (Post)  — rechtlich unkritisch, persoenlich, Mockup eingebettet
- *   • Anruf-Leitfaden    — Telefon + Hook + Gespraechs-/Einwand-Leitfaden
- *   • LinkedIn/Xing 1:1  — kurzer, persoenlicher Erst-Kontakt
+ * Kanal-Outputs — verwandelt das Outreach-Paket (buildOutreachPack) in Texte für
+ * weitere Kanäle. Welcher Kanal zulässig ist, entscheidet das Kontakt-Gate
+ * (outreach/kontakt-grundlage.js); jeder Builder hier bekommt dessen Prüfung und
+ * liefert ohne erlaubte Prüfung KEINEN Nachrichtentext:
+ *
+ *   • Werbebrief (Post) — ohne Einwilligung zulässig, solange kein Widerspruch
+ *     vorliegt; der Widerspruchshinweis steht im Brief.
+ *   • Anruf-Leitfaden   — nur mit konkretem, vorher dokumentiertem Anlass aus der
+ *     Sphäre des Betriebs (Anfrage oder Bestandskunde); das Risiko einer
+ *     Fehleinschätzung trägt der Anrufer.
+ *   • LinkedIn/XING     — braucht wie E-Mail eine vorherige ausdrückliche
+ *     Einwilligung; kein Ausweichkanal. Hier nur als Antwort auf eine Anfrage.
+ *   • Pitch-Mail        — wie jede E-Mail nur mit Grundlage und Pflichtteil.
  *
  * Reine Builder (kein DOM) → leicht testbar. Quelle = `data` (Single-Check-Result)
  * + `pack` (buildOutreachPack). Reuse statt Neubau.
  * @module outreach/channels
  */
-import { config } from '../config.js';
+import { config, absender, PREIS_EINSTIEG, ABMELDUNG } from '../config.js';
+import { complianceBlock } from '../strategy/compliance.js';
+import { datumDe } from '../crm/leads.js';
+import { normalisiereEmail } from '../crm/consents.js';
 
 function recipientPerson(data) {
     return data?.contactData?.owner || null;
@@ -25,15 +35,22 @@ function topArgs(pack, n) {
 }
 function sender() {
     const p = config.profile || {};
+    const a = absender(p);
     return {
-        name: p.name || 'Muammer Kizilaslan',
-        company: p.company || 'Karriaro Webdesign',
+        name: a.name,
+        company: a.firma,
         location: p.location || '',
-        portfolio: p.portfolio || 'karriaro-webdesign.de',
-        priceRange: p.priceRange || 'ab 1.290 €',
-        email: p.email || 'kontakt@karriaro.de',
-        phone: p.phone || ''
+        portfolio: a.web,
+        email: a.email,
+        anschrift: a.anschrift
     };
+}
+function gesperrt(pruefung, kanal) {
+    if (!pruefung) return { erlaubt: false, grund: 'Kontaktgrundlage noch nicht geprüft.' };
+    if (pruefung.kanal !== kanal) return { erlaubt: false, grund: 'Die Prüfung gilt für einen anderen Kanal.' };
+    // Bei Sperrliste/Werbewiderspruch hilft keine Grundlage — dort kein Einwilligungs-Rechtshinweis.
+    if (!pruefung.erlaubt) return { erlaubt: false, grund: pruefung.grund, rechtshinweis: pruefung.gesperrt ? null : pruefung.rechtshinweis };
+    return null;
 }
 // Branche → die eingebauten Werkzeuge, die in der Pitch-Mail genannt werden
 // (knapp, ehrlich; gleiche Logik wie die generierte Seite).
@@ -48,11 +65,32 @@ function toolsClauseFor(branche) {
     return 'ein Anfrage-Assistent und eine klare Leistungsübersicht';
 }
 
+/** Einstieg der Pitch-Mail passend zur Grundlage — keine Kaltakquise-Formel. */
+function pitchEinstieg(pruefung, s, biz) {
+    if (pruefung.grundlage === 'doi') {
+        return `vielen Dank, dass Sie uns erlaubt haben, Ihnen Hinweise zu Ihrer Website zu senden. Mein Name ist ${s.name} von ${s.company} — wir bauen handcodierte Websites für das KI-Zeitalter.`;
+    }
+    if (pruefung.grundlage === 'anfrage') {
+        return `vielen Dank für Ihre Anfrage. Mein Name ist ${s.name} von ${s.company} — wir bauen handcodierte Websites für das KI-Zeitalter, und für ${biz} haben wir uns die Website genauer angesehen.`;
+    }
+    return `hier meldet sich ${s.name} von ${s.company}. Wir haben uns die Website von ${biz} noch einmal genauer angesehen.`;
+}
+
 /**
- * Pitch-Mail im Avenius-Register — verweist auf die GENERIERTE,
- * teilbare Pitch-Seite. Liefert {subject, body, recipientEmail}. Reine Funktion.
+ * Pitch-Mail im Avenius-Register — verweist auf die GENERIERTE, teilbare
+ * Pitch-Seite. Ohne erlaubte E-Mail-Prüfung kein Text (die Seite selbst darf
+ * trotzdem erzeugt werden).
+ *
+ * @param {object} data
+ * @param {string} pitchUrl
+ * @param {object|null} pruefung  pruefeMailErlaubnis(..., {kanal:'email'})
+ * @returns {{erlaubt:boolean, grund?:string, subject:string|null, body:string|null,
+ *           textKern?:string, pflichtteil?:object, recipientEmail:string|null, listUnsubscribe?:object}}
  */
-export function buildPitchEmail(data, pitchUrl) {
+export function buildPitchEmail(data, pitchUrl, pruefung = null) {
+    const sperre = gesperrt(pruefung, 'email');
+    if (sperre) return { ...sperre, subject: null, body: null, recipientEmail: null };
+
     const s = sender();
     const biz = businessName(data);
     const person = recipientPerson(data);
@@ -60,16 +98,17 @@ export function buildPitchEmail(data, pitchUrl) {
     const city = (data?.place?.formattedAddress || '').split(',').pop()?.trim() || 'Ihrer Region';
     const rating = data?.place?.rating;
     const reviews = data?.place?.userRatingCount;
-    const greeting = person ? `Sehr geehrte/r ${person},` : 'Sehr geehrte Damen und Herren,';
+    // Bei Double-Opt-In ist der Impressums-Inhaber nicht zwingend die einwilligende Person.
+    const greeting = person && pruefung.grundlage !== 'doi' ? `Sehr geehrte/r ${person},` : 'Sehr geehrte Damen und Herren,';
 
     const substanz = (rating && reviews)
         ? `${biz} gehört mit ${String(rating).replace('.', ',')} Sternen aus rund ${reviews} Bewertungen zu den gut bewerteten Adressen in ${city}. Das ist Substanz, die man online sehen sollte.`
         : `${biz} hat sich in ${city} eine echte Reputation erarbeitet — Substanz, die man online sehen sollte.`;
 
-    const body = [
+    const textKern = [
         greeting,
         '',
-        `mein Name ist ${s.name} von ${s.company} — wir bauen handcodierte Websites für das KI-Zeitalter und achten darauf, wie sich Betriebe in der Region online präsentieren. ${biz} ist uns dabei aufgefallen.`,
+        pitchEinstieg(pruefung, s, biz),
         '',
         substanz,
         '',
@@ -81,21 +120,29 @@ export function buildPitchEmail(data, pitchUrl) {
         '',
         'Vor allem ist sie auf das vorbereitet, was gerade beginnt: Immer mehr Menschen fragen heute nicht Google, sondern ChatGPT oder Perplexity. Damit diese KI-Assistenten Sie verstehen und empfehlen können, haben wir Ihr Haus maschinenlesbar hinterlegt — daran arbeiten heute die wenigsten.',
         '',
-        `Wir sind eine kleine Manufaktur — kein Baukasten, jede Seite ein handcodiertes Unikat. Der Entwurf ist unverbindlich und gehört Ihnen als Gesprächsgrundlage. Eine solche Seite ist ein einmaliges Projekt, kein Abo — ${s.priceRange.replace(/^ab\s*/, 'je nach Umfang ab ')}.`,
+        `Wir sind eine kleine Manufaktur — kein Baukasten, jede Seite ein handcodiertes Unikat. Der Entwurf ist unverbindlich und gehört Ihnen als Gesprächsgrundlage: erst der Entwurf, dann Ihre Entscheidung. Eine solche Seite ist ein einmaliges Projekt, kein Abo — je nach Umfang ${PREIS_EINSTIEG}.`,
         '',
-        'Hätten Sie in den nächsten Tagen 15 Minuten für ein kurzes Telefonat?',
+        'Hätten Sie Zeit für ein kurzes Telefonat?',
         '',
         'Mit besten Grüßen',
         s.name,
-        `${s.company} — handcodierte Websites für das KI-Zeitalter`,
-        [s.email, s.portfolio].filter(Boolean).join(' · '),
-        s.phone
-    ].filter(l => l !== undefined && l !== null).join('\n');
+        `${s.company} — handcodierte Websites für das KI-Zeitalter`
+    ].join('\n');
+
+    const cb = complianceBlock(config.profile, pruefung);
+    const recipientEmail = pruefung.grundlage === 'doi'
+        ? pruefung.empfaenger
+        : (pruefung.empfaenger || normalisiereEmail(data?.contactData?.allEmails?.[0]) || normalisiereEmail(data?.contactData?.email) || null);
 
     return {
+        erlaubt: true,
         subject: `Ein Entwurf für ${biz} — als Gesprächsgrundlage`,
-        body,
-        recipientEmail: data?.contactData?.allEmails?.[0] || data?.contactData?.email || null
+        textKern,
+        pflichtteil: { text: cb.text, html: cb.html },
+        body: textKern + cb.text,
+        recipientEmail,
+        listUnsubscribe: cb.listUnsubscribe,
+        grundlage: pruefung
     };
 }
 
@@ -104,39 +151,60 @@ function esc(s) {
 }
 
 /**
- * Anruf-Leitfaden — Telefon + Hook + Gespraechs-/Einwand-Leitfaden.
- * @returns {{biz, phone, opener, problems:string[], offer, objections:Array<{q,a}>}}
+ * Anruf-Leitfaden — nur mit Anlass (Anfrage oder Bestandskunde).
+ * @param {object} data
+ * @param {object} pack
+ * @param {object|null} pruefung  pruefeMailErlaubnis(..., {kanal:'anruf'})
+ * @returns {{erlaubt:boolean, grund?:string, biz?, phone?, anlass?, opener?, problems?:string[], offer?, objections?:Array<{q,a}>, nachDemGespraech?:string}}
  */
-export function buildCallSheet(data, pack) {
+export function buildCallSheet(data, pack, pruefung = null) {
+    const sperre = gesperrt(pruefung, 'anruf');
+    if (sperre) return sperre;
     const s = sender();
     const person = recipientPerson(data);
     const args = topArgs(pack, 3);
+    const anrede = person ? `, ${person}` : '';
+    const datum = datumDe(pruefung.datum);
+    const opener = pruefung.grundlage === 'anfrage'
+        ? `Guten Tag${anrede}, mein Name ist ${s.name} von ${s.company}. Sie hatten uns${datum ? ` am ${datum}` : ''} angefragt — dazu rufe ich an. Passt es gerade?`
+        : `Guten Tag${anrede}, hier ist ${s.name} von ${s.company}. Ich melde mich wegen Ihrer Website — passt es gerade?`;
     return {
+        erlaubt: true,
         biz: businessName(data),
         phone: data?.place?.nationalPhoneNumber || data?.place?.internationalPhoneNumber || '— keine Nummer —',
-        opener: `Guten Tag${person ? ', ' + person : ''}, mein Name ist ${s.name} von ${s.company}. Ich habe mir Ihre Website angeschaut — haben Sie 30 Sekunden?`,
+        anlass: pruefung.grund,
+        opener,
         problems: args.map(a => a.short || a.text).filter(Boolean),
-        offer: 'Ich mache Ihnen unverbindlich einen ersten Entwurf Ihrer neuen Seite — kostenlos, ohne Verpflichtung.',
+        offer: 'Sie sehen zuerst einen kostenfreien Entwurf Ihrer neuen Seite — erst der Entwurf, dann Ihre Entscheidung.',
         objections: [
-            { q: '„Keine Zeit / kein Interesse."', a: 'Verstehe. Darf ich Ihnen den Entwurf einfach per Post oder E-Mail schicken? Dann sehen Sie in Ruhe, ob es etwas für Sie ist.' },
-            { q: '„Was kostet das?"', a: `Eine handcodierte Seite ${s.priceRange}, einmalig, kein Abo. Aber erst kommt der Entwurf — der ist kostenlos.` },
-            { q: '„Haben schon jemanden / machen wir selbst."', a: 'Gut möglich, dass Ihre Seite passt. Mein Entwurf ist trotzdem kostenlos — vergleichen Sie einfach, kostet Sie nichts.' }
-        ]
+            { q: '„Keine Zeit / kein Interesse."', a: 'Verstehe, dann halte ich Sie nicht länger auf. Vielen Dank für Ihre Zeit.' },
+            { q: '„Was kostet das?"', a: `Eine handcodierte Seite ${PREIS_EINSTIEG}, einmalig, kein Abo. Sie sehen zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.` },
+            { q: '„Haben schon jemanden / machen wir selbst."', a: 'Gut möglich, dass das gut passt. Dann danke ich Ihnen für das Gespräch.' }
+        ],
+        // Art. 21 Abs. 4 DSGVO: spätestens bei der ersten Kommunikation, getrennt von
+        // den übrigen Informationen.
+        widerspruch: 'Im Gespräch ausdrücklich sagen: Sie können der Nutzung Ihrer Daten für Werbung jederzeit widersprechen — ein kurzes Wort genügt, dann melden wir uns nicht mehr.',
+        nachDemGespraech: 'Sagt der Betrieb „kein Interesse", tragen Sie ihn als abgemeldet ein — dann wird er über keinen Kanal mehr kontaktiert.'
     };
 }
 
 /**
- * LinkedIn/Xing 1:1 — kurzer Vernetzungs- + Erst-Nachricht-Entwurf (anderes
- * Register als E-Mail: knapp, persoenlich, kein Werbeblock).
- * @returns {{connect:string, message:string}}
+ * LinkedIn/Xing 1:1 — nur als Antwort auf eine Anfrage.
+ * @param {object} data
+ * @param {object} pack
+ * @param {object|null} pruefung  pruefeMailErlaubnis(..., {kanal:'linkedin'})
+ * @returns {{erlaubt:boolean, grund?:string, connect?:string, message?:string}}
  */
-export function buildLinkedIn(data, pack) {
+export function buildLinkedIn(data, pack, pruefung = null) {
+    const sperre = gesperrt(pruefung, 'linkedin');
+    if (sperre) return sperre;
     const s = sender();
     const biz = businessName(data);
     const arg = topArgs(pack, 1)[0];
     return {
-        connect: `Guten Tag, ich habe mir ${biz} angesehen und hätte einen konkreten Gedanken zu Ihrer Website. Verbinden wir uns gern?`,
-        message: `Guten Tag,\n\n${arg?.text || `mir ist an Ihrer Website (${biz}) etwas aufgefallen, das Sie vermutlich Anfragen kostet.`}\n\nIch baue handcodierte Websites für lokale Betriebe. Wenn Sie mögen, mache ich Ihnen unverbindlich einen ersten Entwurf — ohne Verpflichtung. Wäre das interessant?\n\nBeste Grüße\n${s.name}\n${s.portfolio}`
+        erlaubt: true,
+        connect: `Guten Tag, danke für Ihre Anfrage zu ${biz} — gern vernetzen wir uns dazu.`,
+        message: `Guten Tag,\n\nvielen Dank für Ihre Anfrage. ${arg?.text || `Ich habe mir die Website von ${biz} angesehen.`}\n\nWenn Sie mögen, sehen Sie zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.\n\nBeste Grüße\n${s.name}\n${s.portfolio}\n\nSie können der Nutzung Ihrer Daten für Werbung jederzeit widersprechen (Art. 21 Abs. 2 DSGVO) — eine kurze Antwort genügt.`
     };
 }
 
@@ -144,6 +212,8 @@ export function buildLinkedIn(data, pack) {
  * Vollstaendiges, druckfertiges A4-Werbebrief-Dokument (komplettes HTML inkl.
  * Print-CSS) — fuer ein eigenes Druck-Fenster. Mockup-Bild eingebettet, wenn
  * vorhanden (data.mockup.svgDataUrl), sonst die Mockup-Headline als Text.
+ * Ob gedruckt werden darf (Sperrliste, Werbewiderspruch), prüft der Aufrufer
+ * mit pruefeMailErlaubnis(..., {kanal:'brief'}).
  * @returns {string} HTML-Dokument
  */
 export function buildLetter(data, pack) {
@@ -160,6 +230,7 @@ export function buildLetter(data, pack) {
     const mockup = data?.mockup?.svgDataUrl
         ? `<figure class="mockup"><img src="${esc(data.mockup.svgDataUrl)}" alt="Entwurf Ihrer neuen Website">${pack?.mockupHeadline ? `<figcaption>Ein erster Entwurf, eigens für Sie: „${esc(pack.mockupHeadline)}"</figcaption>` : ''}</figure>`
         : (pack?.mockupHeadline ? `<p class="mockup-text">Ein erster Entwurf-Gedanke, eigens für Sie: <strong>„${esc(pack.mockupHeadline)}"</strong></p>` : '');
+    const widerspruch = `Sie können der Verwendung Ihrer Daten für Werbung jederzeit widersprechen (Art. 21 Abs. 2 DSGVO) — formlos per E-Mail an ${ABMELDUNG.email} oder per Post an ${s.company}, ${s.anschrift}. Wir schreiben Ihnen dann nicht mehr.`;
 
     return `<!doctype html><html lang="de"><head><meta charset="utf-8">
 <title>Brief an ${esc(biz)}</title>
@@ -181,6 +252,7 @@ export function buildLetter(data, pack) {
   .signature { margin-top: 9mm; }
   .signature .name { font-weight: bold; }
   .accent { color: #C9A24B; }
+  .widerspruch { margin-top: 10mm; font-size: 9pt; color: #555; }
   @media screen { body { box-shadow: 0 2px 24px rgba(0,0,0,.12); margin: 24px auto; background: #fff; } .print-hint { position: fixed; top: 12px; right: 12px; } }
   @media print { .print-hint { display: none; } }
 </style></head>
@@ -200,11 +272,12 @@ export function buildLetter(data, pack) {
   ${support.map(t => `<p>${esc(t)}</p>`).join('')}
   <p>Damit Sie sehen, was möglich wäre, habe ich mir die Freiheit genommen, Ihnen <strong>unverbindlich einen ersten Entwurf</strong> zu skizzieren:</p>
   ${mockup}
-  <p>Wenn Sie mögen, zeige ich Ihnen in einem kurzen Gespräch, wie Ihre neue Website aussehen könnte — handcodiert, ${esc(s.priceRange)}, einmalig und ohne Abo. Eine kurze Antwort genügt, ganz ohne Verpflichtung.</p>
+  <p>Wenn Sie mögen, zeige ich Ihnen in einem kurzen Gespräch, wie Ihre neue Website aussehen könnte — handcodiert, ${esc(PREIS_EINSTIEG)}, einmalig und ohne Abo. Eine kurze Antwort genügt, ganz ohne Verpflichtung.</p>
   <div class="signature">
     <p>Mit freundlichen Grüßen</p>
     <p class="name">${esc(s.name)}</p>
     <p>${esc(s.company)} · <span class="accent">${esc(s.portfolio)}</span></p>
   </div>
+  <p class="widerspruch">${esc(widerspruch)}</p>
 </body></html>`;
 }

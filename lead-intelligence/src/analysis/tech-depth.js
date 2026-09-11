@@ -1,15 +1,20 @@
 /**
  * #5 Technographic Depth — Erweiterte CMS/Tech-Erkennung
- * Version, Theme, Plugin-Anzahl, jQuery, PHP aus Network-Requests
+ * Version, Theme, Plugin-Anzahl, jQuery, PHP (gemessen via adEvidence)
  */
+import { bewerteCmsVersion, kanonischerCmsName } from './tech-age.js';
+import { phpBefund } from './trigger-events.js';
 
 /**
  * Tiefe Technologie-Analyse aus PageSpeed-Daten
  * @param {Object} psiData - PageSpeed Insights Response
- * @param {Object} tech - Basis Tech-Detection
+ * @param {Object} tech - Basis Tech-Detection (ggf. um adEvidence.techVersion ergänzt)
+ * @param {{php?:{version:string|null, eol:boolean|null, eolDatum:string|null}|null,
+ *          hoster?:{name:'strato'|'ionos'|null, quelle:string|null}|null, jetzt?:Date}} [extra]
+ *        php/hoster aus adEvidence (EVIDENCE_SCHEMA 3). null = nicht gemessen.
  * @returns {Object} Erweiterte Tech-Analyse
  */
-export function analyzeTechDepth(psiData, tech) {
+export function analyzeTechDepth(psiData, tech, { php = null, hoster = null, jetzt = new Date() } = {}) {
     const audits = psiData?.lighthouseResult?.audits || {};
     const netItems = audits['network-requests']?.details?.items || [];
     const allUrls = netItems.map(i => i.url || '').join('\n');
@@ -24,12 +29,19 @@ export function analyzeTechDepth(psiData, tech) {
         // NICHT mehr selbst /ver=X/ matchen — das matcht zufaellige Plugin/jQuery-Versionen.
         const wpVersion = tech?.version || null;
         if (wpVersion) {
-            const v = parseFloat(wpVersion);
-            if (v < 6.0) {
-                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: 'Sicherheitsupdates enden bald', severity: 'hoch' });
+            // ⚠️ KORREKTUR 2026-09-10: vorher „< 6.0 → Sicherheitsupdates enden bald"
+            // für JEDE Version unter 6. Jetzt die datierte Support-Tabelle: ab 4.7
+            // erscheinen weiter Sicherheitsupdates — dort höchstens „nicht aktuell".
+            const sv = bewerteCmsVersion('WordPress', wpVersion, jetzt);
+            const [maj, min] = String(wpVersion).split('.').map(n => parseInt(n, 10));
+            if (sv.eol) {
+                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: sv.text, severity: 'hoch', datum: sv.eolDatum });
                 securityRisk += 3;
                 obsoleteScore += 3;
-            } else if (v < 6.4) {
+            } else if (sv.status === 'nicht-aktuell') {
+                findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: 'Nicht die aktuelle Hauptversion', severity: 'mittel' });
+                obsoleteScore += 1;
+            } else if (maj === 6 && Number.isFinite(min) && min < 4) {
                 findings.push({ type: 'cms_version', label: `WordPress ${wpVersion}`, risk: 'Nicht die aktuelle Version', severity: 'mittel' });
                 obsoleteScore += 1;
             }
@@ -39,7 +51,6 @@ export function analyzeTechDepth(psiData, tech) {
         const themeMatch = allUrls.match(/wp-content\/themes\/([a-zA-Z0-9_-]+)/i);
         if (themeMatch) {
             const theme = themeMatch[1];
-            const oldThemes = ['flavor', 'flavor_flavoursome', 'flavor_flavour', 'flavoursome', 'flavor_flavourous'];
             findings.push({ type: 'theme', label: `Theme: ${theme}`, risk: null, severity: 'info' });
         }
 
@@ -53,6 +64,15 @@ export function analyzeTechDepth(psiData, tech) {
         } else if (uniquePlugins > 8) {
             findings.push({ type: 'plugins', label: `${uniquePlugins} Plugins erkannt`, risk: 'Überdurchschnittlich viele Plugins', severity: 'mittel' });
             obsoleteScore += 1;
+        }
+    } else if (tech?.cms && tech?.version && !tech.isBaukasten) {
+        // ── Andere CMS mit gemessener Version (Joomla/TYPO3/Contao/Shopware/…,
+        //    Version aus adEvidence.techVersion) — gleiche Tabelle. ──
+        const sv = bewerteCmsVersion(tech.cms, tech.version, jetzt);
+        if (sv.eol) {
+            findings.push({ type: 'cms_version', label: `${kanonischerCmsName(tech.cms)} ${tech.version}`, risk: sv.text, severity: 'hoch', datum: sv.eolDatum });
+            securityRisk += 3;
+            obsoleteScore += 3;
         }
     }
 
@@ -88,15 +108,30 @@ export function analyzeTechDepth(psiData, tech) {
         obsoleteScore += 1;
     }
 
-    // ── PHP-Version (aus Headers oder Patterns) ──
-    const phpMatch = allUrls.match(/X-Powered-By:\s*PHP\/(\d+\.\d+)/i);
-    if (phpMatch && parseFloat(phpMatch[1]) < 8.0) {
-        findings.push({ type: 'server', label: `PHP ${phpMatch[1]}`, risk: 'Veraltete PHP-Version — Sicherheitsrisiko', severity: 'hoch' });
+    // ── PHP-Version (gemessen, adEvidence.php) ──
+    // ⚠️ KORREKTUR 2026-09-10: Die alte Erkennung suchte „X-Powered-By: PHP/x" in
+    // einer Liste von Request-URLs — ein Header steht dort nie, die Prüfung hat
+    // also in keinem einzigen Lauf etwas gefunden. Jetzt die serverseitige
+    // Messung: nur eol === true mit Version zählt, null bleibt ungeprüft.
+    const pb = phpBefund(php, hoster);
+    if (pb) {
+        findings.push({
+            type: 'server', label: `PHP ${pb.version}`,
+            risk: pb.text.slice(`PHP ${pb.version} `.length),
+            severity: 'hoch', datum: pb.datum, hinweis: pb.hosterHinweis
+        });
         securityRisk += 3;
     }
 
     // ── Gesamt-Bewertung ──
     const techAge = obsoleteScore >= 6 ? 'legacy' : obsoleteScore >= 3 ? 'veraltet' : obsoleteScore >= 1 ? 'akzeptabel' : 'modern';
+
+    // Prüfung 2026-09-10: Der Satz zählte JEDEN Befund mit Schwere „hoch" als
+    // Sicherheitsrisiko — auch Bootstrap 3, ein reiner Design-Befund — und endete
+    // mit einer Aussage über Angriffe, die keine Messung belegt. Gezählt wird nur
+    // noch, was eine Sicherheitsaussage trägt (Software ohne Updates, alte JS-Bibliothek).
+    const sicherheit = findings.filter(f => f.severity === 'hoch' && (f.type === 'cms_version' || f.type === 'server' || f.type === 'js_lib'));
+    const hochLabels = findings.filter(f => f.severity === 'hoch').map(f => f.label);
 
     return {
         findings,
@@ -104,10 +139,13 @@ export function analyzeTechDepth(psiData, tech) {
         obsoleteScore,
         securityRisk,
         pluginCount: findings.find(f => f.type === 'plugins')?.label?.match(/\d+/)?.[0] || 0,
-        pitchArg: securityRisk >= 3
-            ? `Ihre Website hat ${findings.filter(f => f.severity === 'hoch').length} Sicherheitsrisiken: ${findings.filter(f => f.severity === 'hoch').slice(0, 2).map(f => f.label).join(', ')}. Das sind konkrete Angriffspunkte.`
-            : obsoleteScore >= 4
-                ? `Die Technologie Ihrer Website ist veraltet: ${findings.filter(f => f.severity === 'hoch').map(f => f.label).join(', ')}. Eine moderne Basis würde Geschwindigkeit, Sicherheit und SEO sofort verbessern.`
+        // PHP-Lage für die UI: null = nicht gemessen (kein „alles gut").
+        php: pb ? { version: pb.version, datum: pb.datum, text: pb.text } : null,
+        hosterHinweis: pb?.hosterHinweis || null,
+        pitchArg: securityRisk >= 3 && sicherheit.length
+            ? `Ihre Website nutzt veraltete Software mit Sicherheitsbezug: ${sicherheit.slice(0, 2).map(f => f.risk ? `${f.label} (${f.risk})` : f.label).join(', ')}.`
+            : obsoleteScore >= 4 && hochLabels.length
+                ? `Die Technologie Ihrer Website ist veraltet: ${hochLabels.join(', ')}.`
                 : null,
         funnelImpact: {
             interest: securityRisk >= 3 ? 3 : obsoleteScore >= 3 ? 2 : 0,

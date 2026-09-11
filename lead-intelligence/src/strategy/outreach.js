@@ -8,56 +8,61 @@
  * Mailto / CRM-Save weiterverarbeitet wird.
  */
 
-import { config } from '../config.js';
+import { config, PREISE, preisText, preisAb } from '../config.js';
 import { analyzeTechAge } from '../analysis/tech-age.js';
+import { httpsBefund, CHROME_HTTPS_WARNUNG } from '../analysis/trigger-events.js';
 import { siteLooksModern } from '../analysis/claim-verify.js';
 
 /**
  * Sprint 46 — 4-Tier-Pricing-Architektur (siehe Memory project_karriaro_webdesign_pricing).
  * Branchen-spezifischer Pricing-Reveal in Mail-3 statt generischem "ab 1.290€".
  * Tier-Mapping basiert auf Marketing-Plan ICP-Zuordnung.
+ *
+ * 2026-09-10 — Beträge kommen aus config.PREISE (eine Quelle). Entfernt wurden
+ * Lieferzeit-Zusagen je Paket, eine Zeitzusage im Care+-Text, ein nicht belegter
+ * Provisions-Vergleich und eine Verknappungs-Angabe im Betreff — nichts davon ist
+ * belegt, und eine Zusage ohne Deckung gehört nicht in eine Kundennachricht.
+ * Care-Preise: wie auf karriaro-webdesign.de (index.html, website-kosten.html).
  */
 const TIERS = {
     essential: {
-        name: 'Essential',
-        price: '1.290 €',
-        priceRange: 'ab 1.290 €',
-        priceRaw: 1290,
+        name: PREISE.essential.name,
+        price: preisText(PREISE.essential.betrag),
+        priceRange: preisAb('essential'),
+        priceRaw: PREISE.essential.betrag,
         care: '99 €/Monat',
-        deliverable: 'in ca. 7 Tagen online',
-        reveal: 'Komplett bei 1.290 € einmalig, danach 99 €/Mt Care optional (Hosting + Backups + Quartals-Update).',
+        reveal: `Komplett bei ${preisText(PREISE.essential.betrag)} einmalig, danach 99 €/Mt Care optional (Hosting + Backups + Quartals-Update).`,
         // Sprint 50 — Tier-spezifische Subject-Line für Touch 1 (Erstkontakt)
-        subjectLine: 'Website für {branche} ab 1.290 € — handcodiert, EAA-konform'
+        // 2026-09-11: „EAA-konform" raus — eine Konformitätszusage im Betreff, die
+        // weder geprüft noch für jeden Betrieb überhaupt einschlägig ist (§ 5 UWG).
+        subjectLine: `Website für {branche} ${preisAb('essential')} — handcodiert`
     },
     professional: {
-        name: 'Professional',
-        price: '1.990 €',
-        priceRange: 'ab 1.990 €',
-        priceRaw: 1990,
+        name: PREISE.professional.name,
+        price: preisText(PREISE.professional.betrag),
+        priceRange: preisAb('professional'),
+        priceRaw: PREISE.professional.betrag,
         care: '99 €/Monat',
-        deliverable: 'in ca. 14 Tagen online',
-        reveal: '1.990 € einmalig, danach 99 €/Mt Care optional. Inkl. ein Branchen-Werkzeug-Light (Termin-Widget oder Preis-Rechner) und lokale SEO.',
-        subjectLine: 'Branchen-Werkzeug + Website für {branche} — 1.990 € einmalig'
+        reveal: `${preisText(PREISE.professional.betrag)} einmalig, danach 99 €/Mt Care optional. Inkl. ein Branchen-Werkzeug-Light (Termin-Widget oder Preis-Rechner) und lokale SEO.`,
+        subjectLine: `Branchen-Werkzeug + Website für {branche} — ${preisText(PREISE.professional.betrag)} einmalig`
     },
     premium: {
-        name: 'Premium',
-        price: '2.990 €',
-        priceRange: 'ab 2.990 €',
-        priceRaw: 2990,
+        name: PREISE.premium.name,
+        price: preisText(PREISE.premium.betrag),
+        priceRange: preisAb('premium'),
+        priceRaw: PREISE.premium.betrag,
         care: '199 €/Monat Care+',
-        deliverable: 'in ca. 21 Tagen online',
-        reveal: '2.990 € einmalig — entspricht ~0,3 % einer Maklerprovision / einem Privatpatienten-Paket / einem Beratungsmandat. Care+ 199 €/Mt mit SEO-Report und 24h-SLA.',
-        subjectLine: 'Premium-Webdesign + Branchen-KI für {branche} — 2.990 €'
+        reveal: `${preisText(PREISE.premium.betrag)} einmalig, danach 199 €/Mt Care+ optional mit SEO-Report.`,
+        subjectLine: `Premium-Webdesign + Branchen-KI für {branche} — ${preisText(PREISE.premium.betrag)}`
     },
     'premium-plus': {
-        name: 'Premium+',
-        price: '3.990 €',
-        priceRange: 'ab 3.990 €',
-        priceRaw: 3990,
+        name: PREISE['premium-plus'].name,
+        price: preisText(PREISE['premium-plus'].betrag),
+        priceRange: preisAb('premium-plus'),
+        priceRaw: PREISE['premium-plus'].betrag,
         care: '199 €/Monat Care+',
-        deliverable: 'in ca. 28 Tagen online',
-        reveal: '3.990 € einmalig inkl. Mandantenportal mit verschlüsseltem Upload und DSGVO-Compliance-Pflege quartalsweise. Ein Mandat refinanziert die Website.',
-        subjectLine: 'Anwalt-Pilot: DSGVO-Compliance + Webdesign — 3.990 € (limitierter Slot)'
+        reveal: `${preisText(PREISE['premium-plus'].betrag)} einmalig inkl. Mandantenportal mit verschlüsseltem Upload und DSGVO-Compliance-Pflege quartalsweise.`,
+        subjectLine: `Anwalt-Pilot: Webdesign für Kanzleien — ${preisText(PREISE['premium-plus'].betrag)}`
     }
 };
 
@@ -323,7 +328,9 @@ function buildPainArguments(data, techAge) {
     // 3) Tech-Alter — der vom User gewünschte Anker.
     // Vision-Tor: wirkt die Seite sichtbar modern UND ist das CMS nicht verlässlich
     // alt (kein EOL), dann ist "veraltet" widerlegt → kein tech_age-Argument.
-    const cmsReallyOld = !!techAge.cmsEolYear || (techAge.techSeverity || 0) >= 4;
+    // 2026-09-11: `eol` ist das vollständige Support-Signal der GEMESSENEN Version
+    // (tech-age.js); cmsEolYear gibt es nur, wenn das Datum genau belegt ist.
+    const cmsReallyOld = techAge.eol === true || (techAge.techSeverity || 0) >= 4;
     if (techAge.pitchArg && !(visionModern && !cmsReallyOld)) {
         args.push({
             type: 'tech_age',
@@ -331,14 +338,22 @@ function buildPainArguments(data, techAge) {
             short: techAge.cms ? `${techAge.cms}${techAge.majorVersion ? ' ' + techAge.majorVersion + '.x' : ''}` : 'Veraltete Technik',
             text: techAge.pitchArg,
             subjectAlt: techAge.cmsEolYear
-                ? `${domain}: ${techAge.cms} ${techAge.majorVersion}.x seit ${techAge.cmsEolYear} ohne Sicherheitsupdates`
-                : `${domain} läuft auf ${techAge.cms}${techAge.majorVersion ? ' ' + techAge.majorVersion + '.x' : ''}`
+                // Genaue Version statt „4.x": die Support-Lage gilt je Version, nicht je Hauptversion.
+                ? `${domain}: ${techAge.cms} ${techAge.version || techAge.majorVersion + '.x'} seit ${techAge.cmsEolYear} ohne Sicherheitsupdates`
+                : techAge.eol && techAge.eolText
+                    ? `${domain}: ${techAge.cms} ${techAge.version || techAge.majorVersion + '.x'} ${techAge.eolText}`
+                    : `${domain} läuft auf ${techAge.cms}${techAge.majorVersion ? ' ' + techAge.majorVersion + '.x' : ''}`
         });
     }
 
     // 4) Konkurrenz-Spiegel
+    // 2026-09-10: derselbe Branchen-Filter wie am Pack unten (primaryType) — ohne
+    // ihn konnte ein branchenfremder Betrieb als Mitbewerber im Mailtext stehen.
+    // Der Satz sagt nur, was gemessen ist (Bewertung und Bewertungszahl); über
+    // Gestaltung oder Suchposition der Mitbewerber liegt keine Messung vor.
+    const zielTyp = data.place?.primaryType || null;
     const competitors = (data.competitors || []).filter(c =>
-        c?.userRatingCount > 30 && c.rating >= 4.0
+        c?.userRatingCount > 30 && c.rating >= 4.0 && (!zielTyp || c?.primaryType === zielTyp)
     ).slice(0, 3);
     if (competitors.length >= 2) {
         const names = competitors.map(c => c.displayName?.text || '—').join(', ');
@@ -346,7 +361,7 @@ function buildPainArguments(data, techAge) {
             type: 'competitors',
             severity: 4,
             short: `${competitors.length} Konkurrenten verglichen`,
-            text: `Ihre direkten Mitbewerber ${names} haben modernere Auftritte und ranken bei Google höher. Ein Vergleich der Schwachstellen erkläre ich gern in 15 Minuten.`,
+            text: `Ihre Mitbewerber ${names} sind bei Google gut bewertet — den Vergleich zeige ich Ihnen gern.`,
             subjectAlt: `${domain}: Vergleich mit ${competitors.length} Konkurrenten`
         });
     }
@@ -385,13 +400,18 @@ function buildPainArguments(data, techAge) {
             subjectAlt: `${domain}: Google-Performance nur ${ws.perf}/100`
         });
     }
-    if (!ws.isHttps) {
+    // 2026-09-11: kein „jeder Besucher sieht das" — Chrome warnt nur neue Besucher,
+    // und ohne Messung (httpsCheck) ist nur die PSI-Ableitung belegt.
+    const hb = httpsBefund(ws, data.httpsCheck);
+    if (hb.ohneHttps) {
         args.push({
             type: 'ssl',
             severity: 4,
             short: 'SSL fehlt',
-            text: `Der Browser zeigt "Nicht sicher" an — jeder Besucher sieht das.`,
-            subjectAlt: `${domain}: Browser warnt Ihre Besucher`
+            text: hb.gemessen
+                ? `Ihre Seite ist nicht über HTTPS erreichbar. ${CHROME_HTTPS_WARNUNG}.`
+                : `Ihre Seite lädt ohne HTTPS — Browser markieren sie als „Nicht sicher".`,
+            subjectAlt: `${domain}: Browser markieren Ihre Seite als „Nicht sicher"`
         });
     }
     // Ad-Intent = stärkster Hook (severity 6 → führt): zahlt für Anzeigen, leitet
@@ -429,8 +449,10 @@ function buildEmail(data, args, primaryArg, supportingArgs, profile, tone = 'pro
     // Sprint 46 — Tier-basierter Pricing-Reveal statt generischem priceRange.
     const tierKey = inferTier(data, profile);
     const tier = TIERS[tierKey];
-    const priceRange = profile.priceRange || tier.priceRange;
-    const usp = profile.usp || tier.deliverable;
+    // Preis ausschliesslich aus config.PREISE (über TIERS) — der freie Profiltext
+    // „Preisbereich" darf keinen veralteten Betrag in eine Mail tragen.
+    const priceRange = tier.priceRange;
+    const uspTeil = profile.usp ? `, ${profile.usp}` : '';
     const portfolio = profile.portfolio || 'karriaro-webdesign.de';
 
     // Ohne echten Ansprechpartner: formelle Sammelanrede statt "Sehr geehrte/r <Firmenname>".
@@ -455,9 +477,9 @@ ${primaryArg.text}
 
 ${supporting}
 ${pricingReveal}
-Ich baue moderne Websites — handcodiert, ${priceRange}, ${usp}.
+Ich baue moderne Websites — handcodiert, ${priceRange} einmalig${uspTeil}.
 
-Darf ich Ihnen in 15 Minuten zeigen, wie Ihre neue Seite aussehen könnte? Keine Verpflichtung.
+Darf ich Ihnen zeigen, wie Ihre neue Seite aussehen könnte? Sie sehen zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.
 
 ${closing}
 ${senderName}
@@ -474,8 +496,8 @@ ${mockupHtml ? mockupHtml + '<div style="height:16px"></div>' : ''}<p>${escapeHt
 <p>${escapeHtmlSafe(primaryArg.text)}</p>
 ${supporting ? `<p style="color:#6e6e73">${escapeHtmlSafe(supporting)}</p>` : ''}
 ${touchNumber >= 3 ? `<p style="background:#F8F4ED;border-left:3px solid #8A7B5C;padding:12px 16px;border-radius:6px"><strong>Preislich konkret für Ihre Branche:</strong> ${escapeHtmlSafe(tier.reveal)} Quellcode gehört Ihnen — kein Abo, kein Vendor-Lock-In.</p>` : ''}
-<p>Ich baue moderne Websites — handcodiert, ${escapeHtmlSafe(priceRange)}, ${escapeHtmlSafe(usp)}.</p>
-<p>Darf ich Ihnen in 15 Minuten zeigen, wie Ihre neue Seite aussehen könnte? Keine Verpflichtung.</p>
+<p>Ich baue moderne Websites — handcodiert, ${escapeHtmlSafe(priceRange)} einmalig${escapeHtmlSafe(uspTeil)}.</p>
+<p>Darf ich Ihnen zeigen, wie Ihre neue Seite aussehen könnte? Sie sehen zuerst einen kostenfreien Entwurf — erst der Entwurf, dann Ihre Entscheidung.</p>
 <p>${escapeHtmlSafe(closing)}<br>${escapeHtmlSafe(senderName)}<br>${escapeHtmlSafe(senderCompany)}${profile.location ? '<br>' + escapeHtmlSafe(profile.location) : ''}<br><a href="https://${escapeHtmlSafe(portfolio)}" style="color:#1A2E40">${escapeHtmlSafe(portfolio)}</a></p>
 </div>`;
 
@@ -538,7 +560,12 @@ export function buildOutreachPack(data) {
     return {
         available: true,
         domain,
-        recipientEmail: data.contactData?.allEmails?.[0] || `info@${domain}`,
+        // Kein erratener Empfänger: eine info@<domain> ohne Beleg ging früher als
+        // Empfänger durch. Ohne gefundene Adresse bleibt er leer, mit Hinweis.
+        recipientEmail: data.contactData?.allEmails?.[0] || data.contactData?.emails?.[0] || data.contactData?.genericEmails?.[0] || null,
+        recipientHinweis: (data.contactData?.allEmails?.[0] || data.contactData?.emails?.[0] || data.contactData?.genericEmails?.[0])
+            ? null
+            : 'Keine E-Mail-Adresse gefunden — ohne gefundene Adresse gibt es keinen Empfänger.',
         primaryArg,
         supportingArgs,
         allArgs: args,

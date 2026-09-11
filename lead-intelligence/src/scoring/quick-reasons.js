@@ -21,8 +21,13 @@
  * @module scoring/quick-reasons
  */
 
+import { httpsBefund, phpBefund, CHROME_HTTPS_WARNUNG } from '../analysis/trigger-events.js';
+import { bewerteCmsVersion, kanonischerCmsName } from '../analysis/tech-age.js';
+
 /**
- * @typedef {{kind:'geschaeft'|'mangel'|'gegenprobe', text:string}} Beleg
+ * `hinweis` (2026-09-10): prüfenswert, aber weder Mangel noch Gegenargument —
+ * z.B. der Hoster-Aufpreis für altes PHP („in der Regel", nie sicher).
+ * @typedef {{kind:'geschaeft'|'mangel'|'gegenprobe'|'hinweis', text:string}} Beleg
  */
 
 /**
@@ -52,13 +57,38 @@ export function quickReasons(r = {}) {
         belege.push({ kind: 'mangel', text: r.cms ? `Baukasten: ${r.cms}` : 'Baukasten-Seite' });
         hart++;
     }
-    if (r.isHttps === false) {
+    // HTTPS: gemessen (httpsCheck) schlägt die PSI-Ableitung. Der Chrome-Satz
+    // steht NUR bei gemessenem reachable === false; ist HTTPS erreichbar und
+    // fehlt nur die Weiterleitung, bleibt es ein Hinweis ohne Mangel-Gewicht.
+    const hb = httpsBefund({ isHttps: r.isHttps }, r.httpsCheck);
+    if (hb.gemessen && hb.ohneHttps) {
+        belege.push({ kind: 'mangel', text: CHROME_HTTPS_WARNUNG });
+        hart++;
+    } else if (hb.ohneHttps) {
         belege.push({ kind: 'mangel', text: 'kein SSL — Browser warnt Besucher' });
         hart++;
+    } else if (hb.gemessen && hb.ohneWeiterleitung) {
+        belege.push({ kind: 'hinweis', text: 'HTTPS vorhanden, leitet aber nicht automatisch um' });
     }
     if (r.viewportMissing === true) {
         belege.push({ kind: 'mangel', text: 'nicht für Handy gebaut' });
         hart++;
+    }
+    // Support-Ende der GEMESSENEN CMS-Version — dieselbe datierte Tabelle wie
+    // im Scoring (analysis/tech-age.js). Ohne Version keine Aussage.
+    if (!r.isBaukasten && r.cms && r.version) {
+        const sv = bewerteCmsVersion(r.cms, r.version);
+        if (sv.eol) {
+            belege.push({ kind: 'mangel', text: `${kanonischerCmsName(r.cms)} ${r.version} ${sv.text}` });
+            hart++;
+        }
+    }
+    // PHP ohne Sicherheitsupdates: Beleg, aber kein hartes Strukturzeichen —
+    // das Scoring zählt es bewusst nicht, das Fazit soll dasselbe sagen.
+    const pb = phpBefund(r.php, r.hoster);
+    if (pb) {
+        belege.push({ kind: 'mangel', text: pb.text });
+        if (pb.hosterHinweis) belege.push({ kind: 'hinweis', text: pb.hosterHinweis });
     }
 
     // ── 3. Tempo: Labor UND Feld. Das Feld entscheidet, ob es ein Argument ist. ──

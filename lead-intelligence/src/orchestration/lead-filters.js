@@ -40,8 +40,21 @@ export function isReachable(l) {
 }
 
 /**
+ * Hat der Lead einen Anlass mit DATUM (Chrome-Warnung ab 10/2026, PHP- oder
+ * CMS-Version ohne Sicherheitsupdates seit …)?
+ *
+ * Bewusst nur ein FILTER, kein Score-Aufschlag: „alt" ist kein Kaufsignal. Der
+ * Anlass hilft beim Formulieren, nicht beim Sortieren. `anlaesse` kommt aus
+ * computeOpportunity (analysis/trigger-events.js → datierteAnlaesse). Leads aus
+ * gespeicherten Scans ohne das Feld fallen heraus — ungeprüft ist kein Anlass.
+ */
+export function hasDatedAnlass(l) {
+    return Array.isArray(l?.anlaesse) && l.anlaesse.some(a => !!(a && a.datum));
+}
+
+/**
  * @param {Array} leads
- * @param {{minScore:number, branch:string, sort:string, baukasten:boolean, buy:boolean, reach:boolean, unrated:boolean}} f
+ * @param {{minScore:number, branch:string, sort:string, baukasten:boolean, buy:boolean, reach:boolean, unrated:boolean, anlass:boolean}} f
  * @returns {Array} neue, gefilterte + sortierte Liste (Eingabe bleibt unberührt)
  */
 export function applyFilters(leads, f = {}) {
@@ -51,6 +64,7 @@ export function applyFilters(leads, f = {}) {
     if (f.baukasten) out = out.filter(l => l.isBaukasten);
     if (f.buy) out = out.filter(hasBuySignal);
     if (f.reach) out = out.filter(isReachable);
+    if (f.anlass) out = out.filter(hasDatedAnlass);
     // `urteil` wird vom Aufrufer aufs Lead hydriert (scanner.js) — dieses Modul
     // bleibt dadurch pure und DOM-/Store-frei, die Bestandstests gelten weiter.
     if (f.unrated) out = out.filter(l => !l.urteil);
@@ -88,4 +102,86 @@ export function applyFilters(leads, f = {}) {
         out.sort((a, b) => b.leadScore - a.leadScore);
     }
     return out;
+}
+
+// ─────────── Sonder-Listen: Neueröffnungen & Empfehlungspartner (2026-09-10) ───────────
+// Beide Listen laufen bewusst NEBEN dem Kunden-Scoring: eine Neueröffnung hat
+// noch keine Website und keine Bewertungen, ein Empfehlungspartner ist kein
+// Kunde. Durch computeOpportunity geschickt, würden beide als „zu kleiner
+// Betrieb" genullt.
+
+/** Places `openingDate` → {year,month,day} | ISO-String → Zeitwert, unbekannt → null. */
+function oeffnungsTeile(d) {
+    if (!d) return null;
+    if (typeof d === 'object') {
+        const y = Number(d.year), m = Number(d.month), t = Number(d.day);
+        if (!Number.isFinite(y) || y <= 0) return null;
+        return { y, m: Number.isFinite(m) && m > 0 ? m : null, t: Number.isFinite(t) && t > 0 ? t : null };
+    }
+    const s = String(d).match(/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?/);
+    if (!s) return null;
+    return { y: +s[1], m: s[2] ? +s[2] : null, t: s[3] ? +s[3] : null };
+}
+
+/**
+ * Eröffnungsdatum so genau, wie Google es liefert — nie genauer:
+ * {year:2026,month:10,day:1} → „01.10.2026", nur Monat → „10/2026", nur Jahr → „2026".
+ * @returns {string|null}
+ */
+export function formatiereOeffnungsdatum(d) {
+    const p = oeffnungsTeile(d);
+    if (!p) return null;
+    const zz = n => String(n).padStart(2, '0');
+    if (p.m && p.t) return `${zz(p.t)}.${zz(p.m)}.${p.y}`;
+    if (p.m) return `${zz(p.m)}/${p.y}`;
+    return String(p.y);
+}
+
+function oeffnungsSortwert(d) {
+    const p = oeffnungsTeile(d);
+    return p ? p.y * 10000 + (p.m || 12) * 100 + (p.t || 31) : Infinity;
+}
+
+/**
+ * Neueröffnungen aus Places-Treffern: NUR businessStatus FUTURE_OPENING, OHNE
+ * websiteUri- und OHNE Bewertungs-Tor (beides hat ein Betrieb vor dem Start
+ * meist nicht). Dedupliziert über Place-ID bzw. Name+Adresse, sortiert nach
+ * Eröffnungsdatum (unbekannt ans Ende).
+ * @param {Array<{branch:object, place:object}>} eintraege
+ */
+export function filterNeueroeffnungen(eintraege) {
+    const gesehen = new Set();
+    const out = [];
+    for (const e of eintraege || []) {
+        const p = e?.place;
+        if (!p || p.businessStatus !== 'FUTURE_OPENING') continue;
+        const name = p.displayName?.text || '';
+        const schluessel = p.id || `${name.toLowerCase()}|${(p.formattedAddress || '').toLowerCase()}`;
+        if (!name && !p.id) continue;
+        if (gesehen.has(schluessel)) continue;
+        gesehen.add(schluessel);
+        out.push({
+            branch: e.branch || null,
+            name: name || '—',
+            address: p.formattedAddress || null,
+            websiteUri: p.websiteUri || null,
+            typ: p.primaryTypeDisplayName?.text || null,
+            openingDate: p.openingDate || null,
+            eroeffnung: formatiereOeffnungsdatum(p.openingDate)
+        });
+    }
+    return out.sort((a, b) => oeffnungsSortwert(a.openingDate) - oeffnungsSortwert(b.openingDate) || a.name.localeCompare(b.name));
+}
+
+/**
+ * Empfehlungspartner (Werbetechnik, Fotograf, Druckerei, IT-Service): sortiert
+ * nach Bewertungszahl — sichtbare lokale Verankerung —, dann Note, dann Name.
+ * KEIN Kunden-Scoring. Fehlende Bewertungszahl zählt als 0 (ans Ende), nie als Strafe.
+ * @param {Array<{reviews?:number, rating?:number|null, name?:string}>} liste
+ */
+export function sortierePartner(liste) {
+    return (liste || []).slice().sort((a, b) =>
+        ((b.reviews || 0) - (a.reviews || 0))
+        || ((b.rating || 0) - (a.rating || 0))
+        || String(a.name || '').localeCompare(String(b.name || '')));
 }

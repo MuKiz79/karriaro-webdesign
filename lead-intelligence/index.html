@@ -108,13 +108,23 @@
         <div class="input-area hidden" id="input-scanner">
             <p class="input-hint">Welche Branche hat das grösste Potenzial? Testet automatisch alle Branchen.</p>
             <div class="input-row">
-                <input type="text" id="scanner-city" placeholder="Stadt, z.B. Köln">
+                <input type="text" id="scanner-city" placeholder="Stadt, z.B. Stuttgart">
                 <button class="btn-primary" id="btn-scanner">Branchen scannen</button>
             </div>
-            <button class="btn-radar" id="btn-radar" title="Welche Stadt lohnt? Live-Wirtschaftspuls über offene Stellen mehrerer Branchen">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
-                <span>Regionen-Radar — welche Stadt lohnt?</span>
-            </button>
+            <div class="scanner-modi">
+                <button class="btn-radar" id="btn-radar" title="Welche Stadt lohnt? Live-Wirtschaftspuls über offene Stellen mehrerer Branchen">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+                    <span>Regionen-Radar — welche Stadt lohnt?</span>
+                </button>
+                <button class="btn-radar" id="btn-neueroeffnungen" title="Betriebe, die Google als „eröffnet demnächst“ führt — Kontakt nur persönlich oder auf Anfrage des Betriebs">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
+                    <span>Neueröffnungen</span>
+                </button>
+                <button class="btn-radar" id="btn-partner" title="Werbetechnik, Fotografen, Druckereien und IT-Service vor Ort — nach Bewertungszahl, ohne Kunden-Scoring">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M11 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5"/></svg>
+                    <span>Empfehlungspartner finden</span>
+                </button>
+            </div>
         </div>
         </div>
     </section>

@@ -142,3 +142,49 @@ describe('scanFazit — Urteil für die Region-Scan-Liste', () => {
         expect(scanFazit().stufe).toBe('schwach');
     });
 });
+
+describe('quickReasons — HTTPS-Messung, CMS- und PHP-Support (2026-09-10)', () => {
+    const CHROME = 'Chrome zeigt ab Oktober 2026 neuen Besuchern eine Warnung vor dieser Seite';
+
+    it('gemessen nicht erreichbar → Chrome-Satz als Mangel, nicht der PSI-Satz', () => {
+        const r = { reviews: 20, rating: 4.5, isHttps: false, httpsCheck: { checked: true, reachable: false } };
+        const t = texte(r);
+        expect(t).toContain(CHROME);
+        expect(t).not.toContain('kein SSL — Browser warnt Besucher');
+        expect(quickReasons(r).fazit.stufe).toBe('stark');
+    });
+
+    it('Gegenprobe (Prüfung): PSI lud https, Messung sagt nicht erreichbar → kein Chrome-Satz, kein Mangel', () => {
+        const r = { reviews: 20, rating: 4.5, isHttps: true, httpsCheck: { checked: true, reachable: false } };
+        const { belege } = quickReasons(r);
+        expect(belege.map(b => b.text)).not.toContain(CHROME);
+        expect(belege.filter(b => b.kind === 'mangel')).toHaveLength(0);
+    });
+
+    it('Gegenprobe: HTTPS erreichbar ohne Weiterleitung → nur Hinweis, kein Mangel, kein Chrome-Satz', () => {
+        const r = { reviews: 20, rating: 4.5, isHttps: false, httpsCheck: { checked: true, reachable: true, redirectsToHttps: false } };
+        const { belege, fazit } = quickReasons(r);
+        expect(belege.filter(b => b.kind === 'mangel')).toHaveLength(0);
+        expect(belege).toContainEqual({ kind: 'hinweis', text: 'HTTPS vorhanden, leitet aber nicht automatisch um' });
+        expect(belege.map(b => b.text)).not.toContain(CHROME);
+        expect(fazit.stufe).toBe('schwach');
+    });
+
+    it('ohne Messung bleibt der bisherige Satz (Alt-Scans)', () => {
+        expect(texte({ reviews: 5, isHttps: false })).toContain('kein SSL — Browser warnt Besucher');
+    });
+
+    it('WordPress 4.5 ist ein belegter Mangel mit Datum, 4.9 nicht', () => {
+        expect(texte({ reviews: 30, cms: 'WordPress', version: '4.5', isHttps: true })).toContain('WordPress 4.5 ohne Sicherheitsupdates seit 07/2025');
+        const neu = quickReasons({ reviews: 30, cms: 'WordPress', version: '4.9.18', isHttps: true });
+        expect(neu.belege.map(b => b.text).join(' ')).not.toMatch(/Sicherheitsupdates/);
+    });
+
+    it('PHP ohne Updates + Hoster-Hinweis (IONOS), PHP zählt nicht als hartes Strukturzeichen', () => {
+        const r = { reviews: 30, isHttps: true, php: { version: '8.0', eol: true, eolDatum: '2023-11-26' }, hoster: { name: 'ionos', quelle: 'ns' } };
+        const { belege, fazit } = quickReasons(r);
+        expect(belege).toContainEqual({ kind: 'mangel', text: 'PHP 8.0 ohne Sicherheitsupdates seit 26.11.2023' });
+        expect(belege).toContainEqual({ kind: 'hinweis', text: 'Hoster berechnen für veraltetes PHP in der Regel einen Aufpreis – prüfen Sie Ihre letzte Rechnung' });
+        expect(fazit.text).not.toMatch(/struktureller Mangel, im Anschreiben/);
+    });
+});

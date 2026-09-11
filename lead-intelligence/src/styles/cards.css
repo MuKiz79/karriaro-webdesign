@@ -1482,3 +1482,26 @@
 .agg-hot { background: rgba(255,69,58,.14); color: var(--red, #ff453a); }
 .agg-pick { font-size: 12px; padding: 5px 12px; border: 1px solid var(--accent); background: transparent; color: var(--accent); border-radius: 999px; cursor: pointer; white-space: nowrap; }
 .agg-pick:hover { background: var(--accent); color: #fff; }
+
+/* ── Anlässe, Neueröffnungen, Empfehlungspartner (2026-09-10) ── */
+/* Hinweis-Chip der Schnellsuche: prüfenswert, weder Mangel noch Gegenargument.
+   Unterscheidung über die gepunktete Kontur + Wortlaut, nicht über blassere Schrift
+   (gleiche Kontrast-Begründung wie .why-gegenprobe). */
+.why-hinweis { border-style: dotted; }
+.scanner-modi { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.scanner-modi .btn-radar { margin-top: 10px; }
+.sonder-hinweis {
+    font-size: 13px; line-height: 1.5; color: var(--text);
+    margin: 0 0 14px; padding: 10px 14px;
+    border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    border-radius: 8px; background: var(--bg);
+}
+.sonder-eintrag {
+    display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 14px; align-items: start;
+    padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card);
+}
+.sonder-datum { font-size: 12.5px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.sonder-body { min-width: 0; }
+@media (max-width: 559px) {
+    .sonder-eintrag { grid-template-columns: 1fr; gap: 6px; }
+}

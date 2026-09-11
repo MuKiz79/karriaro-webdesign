@@ -62,10 +62,10 @@ const CHECKS = [
     },
     {
         id: 'https', name: 'HTTPS-Verschluesselung',
-        description: 'Google Chrome zeigt "Nicht sicher" an. Pflicht fuer jede serioese Website.',
+        description: 'Ohne HTTPS markieren Browser die Seite als „Nicht sicher".',
         check: (ws) => ws.isHttps,
         weight: 3,
-        pitch: 'Ihr Browser zeigt "Nicht sicher" — das schreckt jeden zweiten Besucher sofort ab.'
+        pitch: 'Ihre Seite lädt ohne HTTPS — Browser markieren sie als „Nicht sicher".'
     },
     {
         id: 'speed', name: 'Core Web Vitals (Google-Standard)',

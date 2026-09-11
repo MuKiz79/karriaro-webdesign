@@ -37,6 +37,35 @@ async function callWebdesign(endpoint, body, opts = {}) {
     }
 }
 
+// ─── Places-Paging (V7, 2026-09-10) ───
+// searchPlaces akzeptiert maxPages (1–3) und includeFutureOpening. JEDE Seite ist
+// eine eigene, bezahlte Places-Anfrage — deshalb liegen Obergrenze und
+// Anfragen-Zählung hier zentral, damit Kostenmodal und Aufruf dieselbe Zahl sehen.
+export const PLACES_MAX_PAGES = 3;
+
+/**
+ * Body-Zusatz für searchPlaces. Ohne Angaben (oder maxPages 1) ein LEERES Objekt —
+ * die Anfrage bleibt dann byte-gleich zum bisherigen Verhalten.
+ * @param {{maxPages?:number, includeFutureOpening?:boolean}} [opts]
+ * @returns {{maxPages?:number, includeFutureOpening?:true}}
+ */
+export function placesSeitenParameter({ maxPages, includeFutureOpening } = {}) {
+    const out = {};
+    const n = Math.floor(Number(maxPages));
+    if (Number.isFinite(n) && n > 1) out.maxPages = Math.min(PLACES_MAX_PAGES, n);
+    if (includeFutureOpening === true) out.includeFutureOpening = true;
+    return out;
+}
+
+/**
+ * Tatsächlich abgerechnete Places-Anfragen einer Antwort. `pagesFetched` fehlt bei
+ * einem Backend vor V7 — dann war es genau eine Anfrage.
+ */
+export function placesAnfragenAus(res) {
+    const n = Math.floor(Number(res?.pagesFetched));
+    return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
 /** A1: LLM Content-Analyse */
 export function analyzeContent(url) { return call('analyzeContent', { url }); }
 

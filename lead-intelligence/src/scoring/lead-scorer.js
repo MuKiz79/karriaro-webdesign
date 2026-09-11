@@ -38,7 +38,8 @@ function recommendAction(stages, ws, tech, place) {
         return { action: 'Betreff optimieren — Firmennamen + Euro-Zahl', state: 'Kalt' };
     }
     if (bn.name === 'Interesse') {
-        if (!ws.isHttps) return { action: 'SSL-Warnung-Screenshot in die E-Mail', state: 'Kalt' };
+        // 2026-09-10: Empfehlungen sind keine Versanderlaubnis (outreach/kontakt-grundlage.js).
+        if (!ws.isHttps) return { action: 'SSL-Warnung-Screenshot in den Problem-Report', state: 'Kalt' };
         if (!ws.viewport) return { action: 'Mobile-Screenshot zeigen', state: 'Kalt' };
         return { action: 'Umsatzverlust-Zahl in den Betreff', state: 'Kalt' };
     }
@@ -48,7 +49,7 @@ function recommendAction(stages, ws, tech, place) {
     if (bn.name === 'Abschluss') {
         return { action: 'ROI-Argument staerken: "Amortisiert sich in X Monaten"', state: 'Im Gespraech' };
     }
-    return { action: 'E-Mail mit Problem-Report senden', state: 'Kalt' };
+    return { action: 'Kontaktgrundlage klären, dann Problem-Report', state: 'Kalt' };
 }
 
 /**

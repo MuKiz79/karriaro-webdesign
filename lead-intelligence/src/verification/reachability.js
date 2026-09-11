@@ -49,6 +49,13 @@ export function verifyReachable({ contact = null, deliverability = null } = {}) 
         evidenceState,
         email,
         owner: contact?.owner || null,
+        // V3 (2026-09-10): Rolle, Anrede und Werbewiderspruch reisen mit, sonst entstehen
+        // sie in enrichContact und kommen bei Anrede und Sperrliste nie an (Schema-Drift).
+        // impressumGeladen false = Widerspruch NICHT geprüft, nicht „kein Widerspruch".
+        ownerRole: contact?.ownerRole ?? null,
+        ownerAnrede: contact?.ownerAnrede ?? null,
+        werbewiderspruch: contact?.werbewiderspruch === true,
+        impressumGeladen: contact?.impressumGeladen ?? null,
         deliverability: deliverability ? {
             score: deliverability.score ?? null,
             spf: !!deliverability.spf,
