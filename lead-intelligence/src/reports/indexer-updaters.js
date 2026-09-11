@@ -17,7 +17,7 @@ export function buildSitemapBlock(reports, today) {
     ];
     for (const r of liveReports) {
         lines.push(
-            '    <url><loc>https://karriaro-webdesign.de/audit/' + r.slug + '/</loc><lastmod>' + (r.erhebungDate || date) + '</lastmod><priority>0.7</' + 'priority></' + 'url>'
+            '    <url><loc>https://karriaro-webdesign.de/audit/' + r.slug + '/</loc><lastmod>' + (r.aktualisiertAm || r.veroeffentlichtAm || r.erhebungDate || date) + '</lastmod><priority>0.7</' + 'priority></' + 'url>'
         );
     }
     lines.push('    ' + END_MARKER);

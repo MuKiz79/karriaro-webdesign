@@ -1,0 +1,112 @@
+{
+  "brancheKey": "moving_company",
+  "brancheSlug": "umzugsfirmen",
+  "brancheName": "Umzugsfirmen",
+  "stadtName": "Stuttgart und Karlsruhe",
+  "stadtSlug": "stuttgart-und-karlsruhe",
+  "slug": "umzugsfirmen-stuttgart-und-karlsruhe",
+  "erhebungDate": "2026-08-15",
+  "erhebungMonth": "2026-08",
+  "n": 38,
+  "stats": {
+    "perf": {
+      "n": 38,
+      "median": 63,
+      "p25": 57,
+      "p75": 76.5,
+      "mean": 66.6,
+      "min": 30,
+      "max": 100
+    },
+    "seo": {
+      "n": 38,
+      "median": 100,
+      "p25": 92,
+      "p75": 100,
+      "mean": 94.8,
+      "min": 73,
+      "max": 100
+    },
+    "a11y": {
+      "n": 38,
+      "median": 89,
+      "p25": 84,
+      "p75": 95,
+      "mean": 87.8,
+      "min": 50,
+      "max": 100
+    }
+  },
+  "techStack": {
+    "WordPress": {
+      "count": 26,
+      "share": 0.684
+    },
+    "kein CMS erkannt": {
+      "count": 11,
+      "share": 0.289
+    },
+    "Jimdo": {
+      "count": 1,
+      "share": 0.026
+    }
+  },
+  "baukasten": {
+    "count": 1,
+    "share": 0.026
+  },
+  "ssl": {
+    "missingCount": 2,
+    "missingShare": 0.053
+  },
+  "mobile": {
+    "missingCount": 0,
+    "missingShare": 0
+  },
+  "tests": [
+    {
+      "kind": "mann-whitney",
+      "label": "WordPress gegen ohne erkanntes CMS (PageSpeed Performance)",
+      "groupA": {
+        "label": "WordPress",
+        "n": 26,
+        "median": 59
+      },
+      "groupB": {
+        "label": "Ohne erkanntes CMS",
+        "n": 11,
+        "median": 71
+      },
+      "u": 104.5,
+      "z": -1.279,
+      "p": 0.201,
+      "verdict": "Kein belastbarer Unterschied (p=0.201, n=26 gegen n=11)."
+    }
+  ],
+  "methodology": {
+    "source": "Google Places (Suche nach Branche und Stadt) und PageSpeed Insights (Lighthouse, mobile Messung, eine Messung je Website)",
+    "filter": "Die ersten bis zu 20 Treffer je Stadt mit eigener Website, mindestens 8 Google-Bewertungen und Status „geöffnet“; große Unternehmen, Ketten, Kammern und Webdesign-Anbieter ausgeschlossen; Websites ohne auswertbare PageSpeed-Messung entfallen",
+    "minSampleSize": 30,
+    "instrumentation": "Messstrecke von Karriaro Webdesign (CMS-Erkennung per Heuristik)",
+    "anonymization": "nur Kennzahlen je Branche",
+    "license": "CC BY 4.0 — Quellenangabe karriaro-webdesign.de"
+  },
+  "stichprobe": {
+    "staedte": [
+      {
+        "name": "Stuttgart",
+        "n": 20
+      },
+      {
+        "name": "Karlsruhe",
+        "n": 18
+      }
+    ],
+    "zusammengefasst": true,
+    "messVon": "2026-08-15",
+    "messBis": "2026-08-15"
+  },
+  "refKennung": "U-000",
+  "veroeffentlichtAm": "2026-09-11",
+  "aktualisiertAm": "2026-09-11"
+}

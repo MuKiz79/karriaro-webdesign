@@ -1,0 +1,116 @@
+{
+  "brancheKey": "electrician",
+  "brancheSlug": "elektrobetriebe",
+  "brancheName": "Elektrobetriebe",
+  "stadtName": "Stuttgart und Karlsruhe",
+  "stadtSlug": "stuttgart-und-karlsruhe",
+  "slug": "elektrobetriebe-stuttgart-und-karlsruhe",
+  "erhebungDate": "2026-08-15",
+  "erhebungMonth": "2026-08",
+  "n": 36,
+  "stats": {
+    "perf": {
+      "n": 36,
+      "median": 67,
+      "p25": 60.5,
+      "p75": 77.3,
+      "mean": 69.6,
+      "min": 35,
+      "max": 97
+    },
+    "seo": {
+      "n": 36,
+      "median": 92,
+      "p25": 85,
+      "p75": 100,
+      "mean": 91.4,
+      "min": 69,
+      "max": 100
+    },
+    "a11y": {
+      "n": 36,
+      "median": 86,
+      "p25": 75.8,
+      "p75": 91,
+      "mean": 82.5,
+      "min": 53,
+      "max": 100
+    }
+  },
+  "techStack": {
+    "kein CMS erkannt": {
+      "count": 21,
+      "share": 0.583
+    },
+    "WordPress": {
+      "count": 13,
+      "share": 0.361
+    },
+    "Jimdo": {
+      "count": 1,
+      "share": 0.028
+    },
+    "Wix": {
+      "count": 1,
+      "share": 0.028
+    }
+  },
+  "baukasten": {
+    "count": 2,
+    "share": 0.056
+  },
+  "ssl": {
+    "missingCount": 1,
+    "missingShare": 0.028
+  },
+  "mobile": {
+    "missingCount": 0,
+    "missingShare": 0
+  },
+  "tests": [
+    {
+      "kind": "mann-whitney",
+      "label": "WordPress gegen ohne erkanntes CMS (PageSpeed Performance)",
+      "groupA": {
+        "label": "WordPress",
+        "n": 13,
+        "median": 65
+      },
+      "groupB": {
+        "label": "Ohne erkanntes CMS",
+        "n": 21,
+        "median": 69
+      },
+      "u": 111.5,
+      "z": -0.886,
+      "p": 0.376,
+      "verdict": "Kein belastbarer Unterschied (p=0.376, n=13 gegen n=21)."
+    }
+  ],
+  "methodology": {
+    "source": "Google Places (Suche nach Branche und Stadt) und PageSpeed Insights (Lighthouse, mobile Messung, eine Messung je Website)",
+    "filter": "Die ersten bis zu 20 Treffer je Stadt mit eigener Website, mindestens 8 Google-Bewertungen und Status „geöffnet“; große Unternehmen, Ketten, Kammern und Webdesign-Anbieter ausgeschlossen; Websites ohne auswertbare PageSpeed-Messung entfallen",
+    "minSampleSize": 30,
+    "instrumentation": "Messstrecke von Karriaro Webdesign (CMS-Erkennung per Heuristik)",
+    "anonymization": "nur Kennzahlen je Branche",
+    "license": "CC BY 4.0 — Quellenangabe karriaro-webdesign.de"
+  },
+  "stichprobe": {
+    "staedte": [
+      {
+        "name": "Stuttgart",
+        "n": 19
+      },
+      {
+        "name": "Karlsruhe",
+        "n": 17
+      }
+    ],
+    "zusammengefasst": true,
+    "messVon": "2026-08-15",
+    "messBis": "2026-08-15"
+  },
+  "refKennung": "E-708",
+  "veroeffentlichtAm": "2026-09-11",
+  "aktualisiertAm": "2026-09-11"
+}

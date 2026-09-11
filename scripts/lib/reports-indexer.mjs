@@ -48,7 +48,12 @@ export function writeSitemapBlock(reports) {
         console.warn('! sitemap.xml fehlt — kein Auto-Update.');
         return null;
     }
-    const reportsForUpdater = reports.map(r => ({ slug: r.slug, erhebungDate: r.json.erhebungDate }));
+    const reportsForUpdater = reports.map(r => ({
+        slug: r.slug,
+        veroeffentlichtAm: r.json.veroeffentlichtAm,
+        aktualisiertAm: r.json.aktualisiertAm,
+        erhebungDate: r.json.erhebungDate
+    }));
     const content = readFileSync(sitemapPath, 'utf8');
     const updated = updateSitemap(content, reportsForUpdater);
     if (updated !== content) {

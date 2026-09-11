@@ -85,7 +85,7 @@ const PAGES = [
     { path: '/webdesign-nuernberg.html', name: 'City · Nuernberg' },
     { path: '/webdesign-stuttgart.html', name: 'City · Stuttgart' },
     // Web-Index — Branchen-Reports (Sprint 143)
-    { path: '/audit/friseure-koeln-preview/', name: 'Web-Index · Friseure Köln (Preview)' },
+    { path: '/audit/zahnaerzte-stuttgart-und-karlsruhe/', name: 'Web-Index · Zahnärzte Stuttgart & Karlsruhe' },
     // Web-Index Hub (Sprint 161)
     { path: '/audit/', name: 'Web-Index · Hub' }
 ];

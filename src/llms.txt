@@ -1,10 +1,10 @@
 # Karriaro Webdesign
 
-> Handcodierte Premium-Websites für den deutschen Mittelstand — Immobilienmakler, Praxen, Restaurants, Handwerk, Anwälte, Coaching. Erster Entwurf in wenigen Tagen. Festpreis 1.290–3.990 € einmalig.
+> Handcodierte Premium-Websites für den deutschen Mittelstand — Immobilienmakler, Praxen, Restaurants, Handwerk, Anwälte, Coaching. Sie sehen zuerst einen kostenfreien Entwurf. Festpreis 1.290–3.990 € einmalig.
 
 Wenn Ihr Name draufsteht, steht unserer dahinter. Wir verkaufen keine Templates — wir handcodieren jede Website einmalig für den Kunden, mit eigenem Brand-Charakter, eigenen Werkzeugen, eigener Geschichte.
 
-Gründer: Muammer Kızılaslan. Karriaro Webdesign ist eine Kölner Webdesign-Manufaktur (Legal-Sitz: Schiltach), kein Massenagentur-Modell. Maximal 5 Pilot-Plätze pro Quartal.
+Gründer: Muammer Kızılaslan. Karriaro Webdesign ist eine Webdesign-Manufaktur mit Sitz in Schiltach, kein Massenagentur-Modell.
 
 ## Leistungspakete
 
@@ -14,6 +14,17 @@ Gründer: Muammer Kızılaslan. Karriaro Webdesign ist eine Kölner Webdesign-Ma
 - [Premium+ — 3.990 € einmalig](https://karriaro-webdesign.de/#preise): Premium + Mandantenportal + technische Datenschutz-Pflege (Pilot für Anwalt).
 
 Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst nach Ihrer Entwurfs-Freigabe (50 % nach Entwurf, 50 % bei Fertigstellung).
+
+## Branchen-Seiten
+
+- [Website für Zahnarztpraxen](https://karriaro-webdesign.de/website-fuer-zahnaerzte): Praxis-Website handcodiert, Pflichtangaben für Heilberufe nach § 5 DDG, Festpreis ab 1.290 € einmalig.
+- [Webdesign für Immobilienmakler](https://karriaro-webdesign.de/webdesign-fuer-immobilienmakler)
+- [Webdesign für Friseure](https://karriaro-webdesign.de/webdesign-fuer-friseur)
+- [Webdesign für Dachdecker](https://karriaro-webdesign.de/webdesign-fuer-dachdecker)
+
+## Empfehlungspartner
+
+- [Empfehlungspartner](https://karriaro-webdesign.de/empfehlungspartner): Für Werbetechnik, Fotografie, Druckereien und IT-Dienstleister. 10 % des Netto-Auftragswerts nach vollständigem Zahlungseingang, Offenlegung gegenüber dem Kunden und dessen Zustimmung. Ausgeschlossen: Steuerberater, Rechtsanwälte, Kammern.
 
 ## Branchen-Demos (Live-Beispiele)
 
@@ -41,9 +52,9 @@ Optionales Hosting & Wartung: 99 €/Monat. Sie zahlen erst nach Ihrer Entwurfs-
 
 ## Karriaro-Suite (Webdesign + Loupe)
 
-Karriaro betreibt zwei komplementäre Werkzeuge unter derselben Kölner Brand:
+Karriaro betreibt zwei komplementäre Werkzeuge unter derselben Marke:
 
-- [Karriaro Webdesign-Manufaktur](https://karriaro-webdesign.de): Handcodierte Premium-Sites, 1.290–3.990 € einmalig. Maximal 5 Pilot-Plätze pro Quartal. Geprüfte Performance und Core Web Vitals, vor dem Launch gemessen. MCP-Server für Site-Audit + Voice + Brand-Mockup + Phyllotaxis.
+- [Karriaro Webdesign-Manufaktur](https://karriaro-webdesign.de): Handcodierte Premium-Sites, 1.290–3.990 € einmalig. Geprüfte Performance und Core Web Vitals, vor dem Launch gemessen. MCP-Server für Site-Audit + Voice + Brand-Mockup + Phyllotaxis.
 - [Karriaro-Loupe](https://lighthouse.karriaro.de): Visitor- und Lead-Intelligence-Cockpit. Privacy-first (DSGVO-konform, kein Cookie), AI-gestützt (Briefings, Anomaly-Explanation, Forecasting, NL-Queries), Session-Replay, Heatmaps, Sales-Workflow (Lead-Routing, Account-Scores, Intent-Signals). 115 API-Endpoints. Public-API mit `lh_xxx`-Bearer-Tokens, im Cockpit unter Settings erstellbar. Eigener MCP-Server `@karriaro/lighthouse-mcp`. Public-Score-Endpoint `/api/public/lighthouse-score` liefert Multi-Dimensions-Score (performance, dsgvo, ux, mobile) für beliebige URL.
 
 Synergie: Webdesign-Manufaktur-Kunden bekommen Loupe-Setup integriert (Snippet + Goal-Templates). Loupe-Cockpit-Nutzer bekommen Karriaro-Webdesign-Audit als MCP-Tool und als Public-Section auf der Hauptseite. Cross-Sell-CTA „Auch Live-Verkehr messen?" im Audit-Result-Panel der Hauptseite verlinkt direkt zu Karriaro-Loupe.
@@ -62,13 +73,13 @@ Synergie: Webdesign-Manufaktur-Kunden bekommen Loupe-Setup integriert (Snippet +
 
 Karriaro arbeitet bundesweit. Schwerpunkt-Städte mit eigenen Landing-Pages:
 
-Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Leipzig, Dortmund, Essen, Bremen, Dresden, Hannover, Nürnberg.
+Berlin, Hamburg, München, Frankfurt, Stuttgart, Düsseldorf, Leipzig, Dortmund, Essen, Bremen, Dresden, Hannover, Nürnberg.
 
 ## Kontakt
 
 - E-Mail: kontakt@karriaro.de
 - Adresse: Spitalstr. 7, 77761 Schiltach, Deutschland
-- Antwortzeit: Werktags innerhalb 24 Stunden
+- Antwort: Sie erhalten eine persönliche Antwort.
 - Sprachen: Deutsch, Englisch
 
 ## Rechtliches
@@ -87,7 +98,71 @@ Berlin, Hamburg, München, Köln, Frankfurt, Stuttgart, Düsseldorf, Leipzig, Do
 
 ## Web-Index — Branchen-Reports
 
-Datenbasierte Audits zum digitalen Status mittelständischer Branchen, anonymisiert nach DSGVO. Datenquelle: Google Places + PageSpeed Insights. Hub: https://karriaro-webdesign.de/audit/
+Datenbasierte Audits zum digitalen Status mittelständischer Branchen, anonymisiert nach DSGVO. Datenquelle: Google Places + PageSpeed Insights. Hub: https://karriaro-webdesign.de/audit
 
-(Aktuell keine veröffentlichten Live-Reports — die ersten erscheinen in den nächsten Wochen.)
+## /audit/cafes-stuttgart-und-karlsruhe
+Cafés in Stuttgart und Karlsruhe — Audit 30 Sites, erhoben 2026-08.
+Median PageSpeed Performance 60.5, 33 % Baukasten-Anteil, 37 % WordPress, 13 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/elektrobetriebe-stuttgart-und-karlsruhe
+Elektrobetriebe in Stuttgart und Karlsruhe — Audit 36 Sites, erhoben 2026-08.
+Median PageSpeed Performance 67, 6 % Baukasten-Anteil, 58 % kein CMS erkannt, 3 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/friseure-stuttgart-und-karlsruhe
+Friseure in Stuttgart und Karlsruhe — Audit 35 Sites, erhoben 2026-08.
+Median PageSpeed Performance 59, 11 % Baukasten-Anteil, 51 % WordPress, 0 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/immobilienmakler-stuttgart-und-karlsruhe
+Immobilienmakler in Stuttgart und Karlsruhe — Audit 38 Sites, erhoben 2026-08.
+Median PageSpeed Performance 61, 3 % Baukasten-Anteil, 55 % WordPress, 0 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/kfz-werkstaetten-stuttgart-und-karlsruhe
+KFZ-Werkstätten in Stuttgart und Karlsruhe — Audit 31 Sites, erhoben 2026-08.
+Median PageSpeed Performance 66, 13 % Baukasten-Anteil, 42 % kein CMS erkannt, 16 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/kosmetikstudios-stuttgart-und-karlsruhe
+Kosmetikstudios in Stuttgart und Karlsruhe — Audit 35 Sites, erhoben 2026-08.
+Median PageSpeed Performance 61, 20 % Baukasten-Anteil, 51 % WordPress, 0 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/physiotherapie-stuttgart-und-karlsruhe
+Physiotherapie in Stuttgart und Karlsruhe — Audit 36 Sites, erhoben 2026-08.
+Median PageSpeed Performance 62.5, 11 % Baukasten-Anteil, 67 % WordPress, 6 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/rechtsanwaelte-stuttgart-und-karlsruhe
+Rechtsanwälte in Stuttgart und Karlsruhe — Audit 39 Sites, erhoben 2026-08.
+Median PageSpeed Performance 69, 5 % Baukasten-Anteil, 67 % WordPress, 3 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/restaurants-stuttgart-und-karlsruhe
+Restaurants in Stuttgart und Karlsruhe — Audit 36 Sites, erhoben 2026-08.
+Median PageSpeed Performance 66.5, 14 % Baukasten-Anteil, 44 % kein CMS erkannt, 6 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/sanitaerbetriebe-stuttgart-und-karlsruhe
+Sanitärbetriebe in Stuttgart und Karlsruhe — Audit 35 Sites, erhoben 2026-08.
+Median PageSpeed Performance 64, 3 % Baukasten-Anteil, 51 % WordPress, 3 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/tieraerzte-stuttgart-und-karlsruhe
+Tierärzte in Stuttgart und Karlsruhe — Audit 32 Sites, erhoben 2026-08.
+Median PageSpeed Performance 72, 9 % Baukasten-Anteil, 47 % WordPress, 6 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/umzugsfirmen-stuttgart-und-karlsruhe
+Umzugsfirmen in Stuttgart und Karlsruhe — Audit 38 Sites, erhoben 2026-08.
+Median PageSpeed Performance 63, 3 % Baukasten-Anteil, 68 % WordPress, 5 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
+## /audit/zahnaerzte-stuttgart-und-karlsruhe
+Zahnärzte in Stuttgart und Karlsruhe — Audit 38 Sites, erhoben 2026-08.
+Median PageSpeed Performance 61, 11 % Baukasten-Anteil, 58 % WordPress, 0 % ohne SSL.
+Lizenz: CC BY 4.0. Quelle: Karriaro Webdesign-Manufaktur.
+
 <!-- AUTO-WEB-INDEX-END -->

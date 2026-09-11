@@ -36,6 +36,19 @@ describe('buildSitemapBlock', () => {
         expect(block).toContain('/audit/zahnaerzte-koeln/');
         expect(block).not.toContain('friseure-muenchen-preview');
     });
+    it('lastmod nennt das Veröffentlichungsdatum, nicht den Messtag', () => {
+        const block = buildSitemapBlock([fixtureReport('friseure-koeln', { veroeffentlichtAm: '2026-09-11' })], '2026-09-12');
+        expect(block).toContain('/audit/friseure-koeln/</loc><lastmod>2026-09-11</lastmod>');
+        expect(block).not.toContain('<lastmod>2026-05-24</lastmod>');
+    });
+    it('lastmod folgt einer späteren Aktualisierung', () => {
+        const block = buildSitemapBlock([fixtureReport('friseure-koeln', { veroeffentlichtAm: '2026-09-11', aktualisiertAm: '2026-10-02' })], '2026-10-03');
+        expect(block).toContain('/audit/friseure-koeln/</loc><lastmod>2026-10-02</lastmod>');
+    });
+    it('Altbestand ohne Veröffentlichungsdatum fällt auf den Messtag zurück', () => {
+        const block = buildSitemapBlock([fixtureReport('friseure-koeln')], '2026-09-12');
+        expect(block).toContain('/audit/friseure-koeln/</loc><lastmod>2026-05-24</lastmod>');
+    });
 });
 
 describe('buildLlmsBlock', () => {

@@ -1,0 +1,120 @@
+{
+  "brancheKey": "hair_salon",
+  "brancheSlug": "friseure",
+  "brancheName": "Friseure",
+  "stadtName": "Stuttgart und Karlsruhe",
+  "stadtSlug": "stuttgart-und-karlsruhe",
+  "slug": "friseure-stuttgart-und-karlsruhe",
+  "erhebungDate": "2026-08-15",
+  "erhebungMonth": "2026-08",
+  "n": 35,
+  "stats": {
+    "perf": {
+      "n": 35,
+      "median": 59,
+      "p25": 55,
+      "p75": 75.5,
+      "mean": 63.3,
+      "min": 28,
+      "max": 93
+    },
+    "seo": {
+      "n": 35,
+      "median": 92,
+      "p25": 92,
+      "p75": 100,
+      "mean": 92.3,
+      "min": 46,
+      "max": 100
+    },
+    "a11y": {
+      "n": 35,
+      "median": 90,
+      "p25": 82,
+      "p75": 92,
+      "mean": 86.2,
+      "min": 63,
+      "max": 100
+    }
+  },
+  "techStack": {
+    "WordPress": {
+      "count": 18,
+      "share": 0.514
+    },
+    "kein CMS erkannt": {
+      "count": 12,
+      "share": 0.343
+    },
+    "Wix": {
+      "count": 3,
+      "share": 0.086
+    },
+    "Jimdo": {
+      "count": 1,
+      "share": 0.029
+    },
+    "Webflow": {
+      "count": 1,
+      "share": 0.029
+    }
+  },
+  "baukasten": {
+    "count": 4,
+    "share": 0.114
+  },
+  "ssl": {
+    "missingCount": 0,
+    "missingShare": 0
+  },
+  "mobile": {
+    "missingCount": 0,
+    "missingShare": 0
+  },
+  "tests": [
+    {
+      "kind": "mann-whitney",
+      "label": "WordPress gegen ohne erkanntes CMS (PageSpeed Performance)",
+      "groupA": {
+        "label": "WordPress",
+        "n": 18,
+        "median": 59
+      },
+      "groupB": {
+        "label": "Ohne erkanntes CMS",
+        "n": 12,
+        "median": 59.5
+      },
+      "u": 98,
+      "z": -0.423,
+      "p": 0.672,
+      "verdict": "Kein belastbarer Unterschied (p=0.672, n=18 gegen n=12)."
+    }
+  ],
+  "methodology": {
+    "source": "Google Places (Suche nach Branche und Stadt) und PageSpeed Insights (Lighthouse, mobile Messung, eine Messung je Website)",
+    "filter": "Die ersten bis zu 20 Treffer je Stadt mit eigener Website, mindestens 8 Google-Bewertungen und Status „geöffnet“; große Unternehmen, Ketten, Kammern und Webdesign-Anbieter ausgeschlossen; Websites ohne auswertbare PageSpeed-Messung entfallen",
+    "minSampleSize": 30,
+    "instrumentation": "Messstrecke von Karriaro Webdesign (CMS-Erkennung per Heuristik)",
+    "anonymization": "nur Kennzahlen je Branche",
+    "license": "CC BY 4.0 — Quellenangabe karriaro-webdesign.de"
+  },
+  "stichprobe": {
+    "staedte": [
+      {
+        "name": "Stuttgart",
+        "n": 16
+      },
+      {
+        "name": "Karlsruhe",
+        "n": 19
+      }
+    ],
+    "zusammengefasst": true,
+    "messVon": "2026-08-15",
+    "messBis": "2026-08-15"
+  },
+  "refKennung": "F-615",
+  "veroeffentlichtAm": "2026-09-11",
+  "aktualisiertAm": "2026-09-11"
+}

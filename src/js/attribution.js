@@ -24,16 +24,41 @@
 
     var KEY = 'kr_attribution';
     var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'msclkid'];
+    // Empfehlungspartner (/empfehlungspartner): ?partner=<code> aus dem persönlichen
+    // Empfehlungslink. Nur Buchstaben, Ziffern und Bindestrich, 2–40 Zeichen.
+    var PARTNER_RE = /^[a-z0-9][a-z0-9-]{1,39}$/i;
 
     function read() {
         try { return JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) { return null; }
     }
 
+    function partnerAusUrl() {
+        try {
+            var v = new URLSearchParams(location.search || '').get('partner');
+            v = v ? String(v).trim() : '';
+            return PARTNER_RE.test(v) ? v.toLowerCase() : null;
+        } catch (e) { return null; }
+    }
+
     function capture() {
         var existing = read();
-        if (existing) return existing; // First-Touch bleibt unangetastet
+        if (existing) {
+            // First-Touch bleibt unangetastet. Einzige Ergänzung: öffnet jemand den
+            // Partner-Link erst später in derselben Sitzung, wird der fehlende Partner
+            // nachgetragen — ein schon erfasster Partner wird nie überschrieben.
+            if (!existing.partner) {
+                var spaeterPartner = partnerAusUrl();
+                if (spaeterPartner) {
+                    existing.partner = spaeterPartner;
+                    try { sessionStorage.setItem(KEY, JSON.stringify(existing)); } catch (e) {}
+                }
+            }
+            return existing;
+        }
 
         var data = {};
+        var partner = partnerAusUrl();
+        if (partner) data.partner = partner;
         try {
             var p = new URLSearchParams(location.search || '');
             PARAMS.forEach(function (k) {
@@ -56,7 +81,7 @@
     // Flaches Objekt nur mit gesetzten Feldern — für FormData-Append / JSON-Payloads.
     window.krAttributionFlat = function () {
         var out = {};
-        PARAMS.concat(['referrer', 'landing']).forEach(function (k) {
+        PARAMS.concat(['partner', 'referrer', 'landing']).forEach(function (k) {
             if (attribution && attribution[k]) out[k] = attribution[k];
         });
         return out;

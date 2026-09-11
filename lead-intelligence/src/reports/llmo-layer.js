@@ -56,7 +56,11 @@ export function buildDatasetSchema(report) {
         license: 'https://creativecommons.org/licenses/by/4.0/',
         creator: PUBLISHER,
         publisher: PUBLISHER,
-        datePublished: report.erhebungDate,
+        // Veröffentlichung ≠ Messung: datePublished/dateModified nennen den Tag, an dem die
+        // Seite erschien bzw. zuletzt neu gebaut wurde; die Messung steht in temporalCoverage.
+        // Rückfall auf den Messtag nur für Altbestände ohne eigenes Datum.
+        datePublished: report.veroeffentlichtAm || report.erhebungDate,
+        dateModified: report.aktualisiertAm || report.veroeffentlichtAm || report.erhebungDate,
         temporalCoverage: report.erhebungMonth,
         spatialCoverage: {
             '@type': 'Place',
@@ -92,8 +96,8 @@ export function buildArticleSchema(report) {
             `${pct(report.baukasten.share)} % Baukasten-Anteil, ${pct(report.ssl.missingShare)} % ohne SSL.`,
         url,
         mainEntityOfPage: url,
-        datePublished: report.erhebungDate,
-        dateModified: report.erhebungDate,
+        datePublished: report.veroeffentlichtAm || report.erhebungDate,
+        dateModified: report.aktualisiertAm || report.veroeffentlichtAm || report.erhebungDate,
         inLanguage: 'de-DE',
         author: PUBLISHER,
         publisher: PUBLISHER,

@@ -50,6 +50,7 @@ export function reportToHubCard(report, slugFromDir) {
         n: report.n,
         erhebungDate: report.erhebungDate,
         erhebungMonth: report.erhebungMonth,
+        veroeffentlichtAm: report.veroeffentlichtAm || null,
         medianPerf: (report.stats && report.stats.perf) ? report.stats.perf.median : null,
         baukastenShare: (report.baukasten && report.baukasten.share) || 0,
         sslMissingShare: (report.ssl && report.ssl.missingShare) || 0,
@@ -137,7 +138,7 @@ function liveCollection(cards) {
             '@type': 'Article',
             headline: 'Web-Index ' + c.brancheName + ' ' + c.stadtName + ' ' + year,
             url: 'https://karriaro-webdesign.de' + c.href,
-            datePublished: c.erhebungDate
+            datePublished: c.veroeffentlichtAm || c.erhebungDate
         };
     });
     return {
