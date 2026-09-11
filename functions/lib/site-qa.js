@@ -310,7 +310,7 @@ function rankBM25(queryTokens, chunks, k = 8) {
 // (Vertrauens-Regel: kein ungedeckter Roh-LLM-Text an Besucher).
 const SITE_ASK_NOT_FOUND = "Dazu finde ich auf unserer Website keine verlässliche Aussage — und raten möchte ich nicht. Am besten klären Sie das direkt mit uns: im kostenlosen, unverbindlichen Erstgespräch oder über das Kontaktformular auf der Startseite.";
 
-const SITE_ASK_SYSTEM = `Du bist die sachliche Auskunft auf der Website von Karriaro Webdesign (Kölner Webdesign-Manufaktur für handcodierte Websites). Du beantwortest Besucherfragen AUSSCHLIESSLICH aus den nummerierten AUSZÜGEN im User-Prompt — die Auszüge sind deine einzige Wissensquelle.
+const SITE_ASK_SYSTEM = `Du bist die sachliche Auskunft auf der Website von Karriaro Webdesign (Manufaktur für handcodierte Websites). Du beantwortest Besucherfragen AUSSCHLIESSLICH aus den nummerierten AUSZÜGEN im User-Prompt — die Auszüge sind deine einzige Wissensquelle.
 
 REGELN:
 - Jede inhaltliche Aussage deiner Antwort muss durch mindestens einen Auszug gedeckt sein. Gib die belegenden Auszüge als citations (chunkId, maximal 4) an.

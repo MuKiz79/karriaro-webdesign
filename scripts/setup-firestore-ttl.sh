@@ -15,7 +15,10 @@ DATABASE="(default)"
 
 echo "Sprint-82 TTL-Setup fuer ${PROJECT_ID}..."
 
-for collection in auditRequests auditAnalytics quickAudits rateLimitCounters sofortSkizze sofortLeads sofortSignals sofortDaily; do
+# 2026-09-10 — consents: Einwilligungs-Nachweise (unbestaetigt 30 Tage, sonst 3 Jahre
+# nach letzter Nutzung bzw. Widerruf). visits: Unterkollektion von auditRequests
+# (trackLeadView), 90 Tage — Collection-Group-Policy greift in jeder visits-Unterkollektion.
+for collection in auditRequests auditAnalytics quickAudits rateLimitCounters sofortSkizze sofortLeads sofortSignals sofortDaily consents visits; do
     echo "→ TTL ${collection}.expiresAt"
     # `gcloud firestore fields ttls update` setzt die Policy idempotent.
     gcloud firestore fields ttls update expiresAt \

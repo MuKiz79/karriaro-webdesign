@@ -21,6 +21,10 @@ const { scanPaidTools } = require('./site-evidence.js');
 // Sprint 82 — TECH_PATTERNS jetzt Single-Source via tech-patterns.js
 // (vorher in light-audit.js + audit-pipeline.js dupliziert).
 const { TECH_PATTERNS, BAUKASTEN_SUBDOMAIN } = require('./tech-patterns.js');
+// 2026-09-10 (B2) — Website-Signale für adEvidence (V6): HTTPS, PHP, Hoster.
+const { pruefeHttps, HTTPS_UNGEPRUEFT } = require('./https-pruefung.js');
+const { bewertePhpAusHeadern, ermittleHoster, PHP_UNBEKANNT, HOSTER_UNBEKANNT } = require('./php-hoster.js');
+const logger = require('./logger.js');
 
 async function fetchHtml(url, timeoutMs = 8000) {
     // Sprint 240 — globales fetch + per-Hop resolvePublicAddress statt safeFetchs custom-undici-
@@ -61,6 +65,147 @@ async function fetchHtml(url, timeoutMs = 8000) {
         return { html, finalUrl, headers };
     }
     throw new Error('SSRF blocked: too many redirects');
+}
+
+// ─────────────────────── Website-Signale (V6, EVIDENCE_SCHEMA 3) ───────────────────────
+
+const WEBSITE_SIGNALE_FRIST_MS = 10000;
+
+/** Nur echte Wahrheitswerte durchlassen — alles andere ist „nicht gemessen". */
+function dreiwertig(wert) {
+    return wert === true || wert === false ? wert : null;
+}
+
+/** Wartet höchstens `ms`; danach gilt der Teil als nicht gemessen. Wirft nie. */
+function mitFrist(auftrag, ms, ersatz, log, bezeichnung) {
+    let uhr;
+    const frist = new Promise(resolve => {
+        uhr = setTimeout(() => {
+            log(`website-signale: ${bezeichnung} nach ${ms} ms nicht gemessen`, {});
+            resolve(ersatz);
+        }, ms);
+    });
+    const lauf = Promise.resolve()
+        .then(auftrag)
+        .catch(err => {
+            log(`website-signale: ${bezeichnung} fehlgeschlagen`, { grund: err && err.message });
+            return ersatz;
+        });
+    return Promise.race([lauf, frist]).finally(() => clearTimeout(uhr));
+}
+
+/**
+ * HTTPS-Prüfung, PHP-Version und Hoster für den adEvidence-Endpoint.
+ *
+ * Bekommt die Header der HTML-Abholung, die adEvidence ohnehin macht
+ * (fetchHtml liefert sie mit) — PHP kostet damit keinen weiteren Abruf.
+ * HTTPS und Hoster laufen parallel, jeder Teil mit eigener Frist; die Funktion
+ * wirft nie und liefert immer alle drei Felder in der Form von V6.
+ *
+ * Geprüft wird der Host von `finalUrl` (dort liegt die Seite tatsächlich),
+ * ersatzweise der von `url`.
+ *
+ * Hinter einer Bot-Wall (`blocked`) stammen die Header vom Sperr-Filter, nicht
+ * vom Betrieb → php bleibt ungeprüft. HTTPS und DNS hängen nicht am HTML und
+ * werden trotzdem gemessen.
+ *
+ * Ist der HTML-Abruf über https:// erfolgreich zu Ende gegangen, hat fetch
+ * Zertifikatskette, Laufzeit und Hostnamen bereits geprüft. Liefert der
+ * TLS-Handshake danach nichts (Netz-Schluckauf), ist HTTPS trotzdem belegt;
+ * widerspricht er (Zertifikat ungültig), bleibt das Zertifikat unbelegt.
+ *
+ * Wirft nie und rejected nie: index.js startet den Aufruf vor den GTM-Abrufen
+ * und wartet erst danach — eine Ablehnung in diesem Fenster wäre eine
+ * unbehandelte Promise-Ablehnung und beendete den Prozess.
+ *
+ * @param {{url?:string, finalUrl?:string, headers?:object, blocked?:boolean}} eingabe
+ * @param {object} [deps] pruefeHttps, ermittleHoster, httpsDeps, hosterDeps, heute, fristMs, log
+ * @returns {Promise<{httpsCheck:object, php:object, hoster:object}>}
+ */
+async function ermittleWebsiteSignale(eingabe, deps) {
+    try {
+        return await websiteSignaleBerechnen(eingabe || {}, deps || {});
+    } catch (err) {
+        try {
+            logger.info('website-signale: unerwarteter Fehler, alles nicht gemessen', { grund: err && err.message });
+        } catch (_) { /* Logging darf das Ergebnis nicht kippen */ }
+        return { httpsCheck: { ...HTTPS_UNGEPRUEFT }, php: { ...PHP_UNBEKANNT }, hoster: { ...HOSTER_UNBEKANNT } };
+    }
+}
+
+async function websiteSignaleBerechnen({ url, finalUrl, headers, blocked = false }, deps) {
+    const {
+        pruefeHttps: httpsPruefer = pruefeHttps,
+        ermittleHoster: hosterPruefer = ermittleHoster,
+        httpsDeps = {},
+        hosterDeps = {},
+        heute = new Date(),
+        fristMs = WEBSITE_SIGNALE_FRIST_MS,
+        log = (nachricht, kontext) => logger.info(nachricht, kontext)
+    } = deps;
+
+    let php;
+    try {
+        php = blocked ? { ...PHP_UNBEKANNT } : bewertePhpAusHeadern(headers, { heute });
+    } catch (err) {
+        log('website-signale: PHP-Bewertung fehlgeschlagen', { grund: err.message });
+        php = { ...PHP_UNBEKANNT };
+    }
+
+    let host = null;
+    let httpsBelegt = false;
+    for (const kandidat of [finalUrl, url]) {
+        if (!kandidat || typeof kandidat !== 'string') continue;
+        try {
+            const u = new URL(/^https?:\/\//i.test(kandidat) ? kandidat : `https://${kandidat}`);
+            if (!u.hostname) continue;
+            host = u.hostname;
+            httpsBelegt = kandidat === finalUrl && u.protocol === 'https:' && /^https:\/\//i.test(kandidat);
+            break;
+        } catch (_) {
+            log('website-signale: URL nicht lesbar', { url: String(kandidat).slice(0, 200) });
+        }
+    }
+
+    const phpAusgabe = { version: typeof php.version === 'string' ? php.version : null, eol: dreiwertig(php.eol), eolDatum: typeof php.eolDatum === 'string' ? php.eolDatum : null };
+    if (!host) {
+        return { httpsCheck: { ...HTTPS_UNGEPRUEFT }, php: phpAusgabe, hoster: { ...HOSTER_UNBEKANNT } };
+    }
+
+    const [roherHttps, roherHoster] = await Promise.all([
+        mitFrist(() => httpsPruefer(host, httpsDeps), fristMs, { ...HTTPS_UNGEPRUEFT }, log, 'HTTPS-Prüfung'),
+        mitFrist(() => hosterPruefer(host, hosterDeps), fristMs, { ...HOSTER_UNBEKANNT }, log, 'Hoster')
+    ]);
+
+    // Neu zusammensetzen statt durchreichen: nur die V6-Felder, nur gültige Werte.
+    const h = roherHttps || {};
+    let reachable = dreiwertig(h.reachable);
+    let certValidForHost = reachable === true ? dreiwertig(h.certValidForHost) : null;
+    const redirectsToHttps = dreiwertig(h.redirectsToHttps);
+    if (httpsBelegt) {
+        if (reachable !== true) {
+            reachable = true;
+            certValidForHost = true;
+        } else if (certValidForHost === false) {
+            log('website-signale: Zertifikat widersprüchlich gemessen', { host });
+            certValidForHost = null;
+        }
+    }
+    const httpsCheck = {
+        checked: reachable !== null || redirectsToHttps !== null,
+        reachable,
+        certValidForHost,
+        redirectsToHttps
+    };
+
+    const hosterName = roherHoster && (roherHoster.name === 'strato' || roherHoster.name === 'ionos') ? roherHoster.name : null;
+    const hosterQuelle = hosterName && (roherHoster.quelle === 'mx' || roherHoster.quelle === 'ns') ? roherHoster.quelle : null;
+
+    return {
+        httpsCheck,
+        php: phpAusgabe,
+        hoster: hosterName && hosterQuelle ? { name: hosterName, quelle: hosterQuelle } : { ...HOSTER_UNBEKANNT }
+    };
 }
 
 function detectTechFromHtml(html, finalUrl) {
@@ -990,6 +1135,7 @@ module.exports = {
     detectTechFromHtml,
     bfsgHeuristic,
     fetchHtml,
+    ermittleWebsiteSignale,
     fetchPlaceType,
     guessBranchFromUrl,
     normalizePlacesType,

@@ -95,6 +95,20 @@
           "functionId": "mcpHandler",
           "region": "europe-west1"
         }
+      },
+      {
+        "source": "/einwilligung",
+        "function": {
+          "functionId": "einwilligungBestaetigen",
+          "region": "europe-west1"
+        }
+      },
+      {
+        "source": "/abmelden",
+        "function": {
+          "functionId": "abmelden",
+          "region": "europe-west1"
+        }
       }
     ]
   }

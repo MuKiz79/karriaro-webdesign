@@ -1,246 +1,278 @@
 {
- "builtAt": "2026-06-14T03:26:13.327Z",
- "chunkCount": 300,
+ "builtAt": "2026-09-11T05:04:29.531Z",
+ "chunkCount": 310,
  "chunks": [
   {
    "id": "index-0",
    "url": "/",
    "anchor": "",
-   "heading": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.. Karriaro. Webdesign. Manufaktur · Köln · Handcodiert. . Zum Hauptinhalt springen Werkschau FAQ Preis Blog EN Erstgespräch . № 01 · Manufaktur · Handcodiert in Köln ."
+   "heading": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.. Karriaro. Webdesign. Über 20 Jahre in der Tech-Branche. . Zum Hauptinhalt springen Werkschau FAQ Preis Blog EN Erstgespräch . Webseite erstellen lassen ."
   },
   {
    "id": "index-2",
    "url": "/",
-   "anchor": "audit-magic-title",
-   "heading": "Sie haben schon eine Website?",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Sie haben schon eine Website?. Erfüllt sie heutige Standards für Google und KI-Suche — und die gesetzliche Barrierefreiheit (BFSG)? In fünf Sekunden geprüft — keine Anmeldung, keine Speicherung ohne Zustimmung. Ihre Website-Adresse Prüfen → Wird geprüft …. Goldener Winkel · 137,5°. . Neu · KI-Sichtbarkeit."
+   "anchor": "kurz-anfrage",
+   "heading": "Erzählen Sie uns kurz, worum es geht.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Erzählen Sie uns kurz, worum es geht.. Ein Satz genügt. Sie erhalten eine persönliche Antwort mit konkreten Vorschlägen — unverbindlich, erst der Entwurf, dann Ihre Entscheidung. Ihr Name E-Mail Worum geht es? (ein Satz genügt) . Firma . Unverbindlich anfragen Ich stimme der Datenschutzerklärung zu. Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? WhatsApp oder anrufen . . Der Wandel · Google → KI."
   },
   {
    "id": "index-3",
    "url": "/",
-   "anchor": "kispiegel-title",
-   "heading": "Ihre Kunden fragen die KI. Findet sie Sie?",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Ihre Kunden fragen die KI. Findet sie Sie?. „Wer macht das in meiner Stadt?\" — immer öfter beantwortet das ChatGPT, nicht Google. Sehen Sie in Sekunden, was die KI heute über Ihr Unternehmen weiß — ehrlich, mit konkreten Schritten zur Auffindbarkeit. KI-Sichtbarkeit prüfen → KI-Zitier-Check → . Live-KI-Analyse · keine Anmeldung · in Sekunden. Frage an die KI. „Was weißt du über meinen Betrieb?\". „Ich habe kaum belastbare Informationen über …\". 14 /100 KI-Sichtbar . . . № 03 · Performance-Beweis."
+   "anchor": "kiw-title",
+   "heading": "Ihre Kunden fragen heute die KI. Kennt sie Ihren Betrieb?",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ihre Kunden fragen heute die KI. Kennt sie Ihren Betrieb?. Immer mehr Menschen suchen nicht mehr in einer langen Trefferliste, sondern fragen ChatGPT direkt nach einer Empfehlung — und bekommen einen einzigen Rat statt zehn blauer Links. Wer dort nicht auftaucht, existiert für sie nicht. google.de . Gestern · Zehn blaue Links. . . . . . . . . ↓ 46 weitere Ergebnisse — die kaum jemand sieht. . chatgpt.com Illustration . Heute · Eine Empfehlung. „Welchen Webdesigner empfiehlst du für mein Café?\". Für ein Café empfehle ich einen lokalen Anbieter — zu Ihrem Betrieb finde ich allerdings keine Informationen. Für ein Café empfehle ich Ihren Betrieb — handcodiert, schnell, mit passenden Referenzen. . . Strukturierte Daten KI-Concierge Maschinenlesbare Fakten Editorial-Content Blitzschnelle Ladezeit . Wir bauen die Grundlage, damit die KI Ihren Betrieb findet — und Ihre Seite zitieren kann. Kennt die KI Ihren Betrieb? Live prüfen → . № 02 · Erste Einschätzung."
+  },
+  {
+   "id": "index-4",
+   "url": "/",
+   "anchor": "audit-magic-title",
+   "heading": "Sie haben schon eine Website?",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Sie haben schon eine Website?. Erfüllt sie heutige Standards für Google und KI-Suche — und die gesetzliche Barrierefreiheit (BFSG)? In fünf Sekunden geprüft — keine Anmeldung, keine Speicherung ohne Zustimmung. Ihre Website-Adresse Prüfen → Wird geprüft …. Goldener Winkel · 137,5°. . Rechenhilfe."
   },
   {
    "id": "index-5",
    "url": "/",
-   "anchor": "",
-   "heading": "Sehen Sie, wer Ihre Seite besucht.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Sehen Sie, wer Ihre Seite besucht.. . Karriaro-Loupe · Besucher-Cockpit LIVE . 47 Besucher heute . 3 Gerade live . 2:14 Ø Verweildauer . KI Besucher aus Stuttgart war 3× auf der Preis-Seite — Follow-up vorschlagen. . Beispiel-Ansicht — Ihr Cockpit zeigt die echten Besucher Ihrer Seite. Tool aus eigener Werkstatt. Den LCP-Wert oben misst Karriaro-Loupe — unser eigenes Visitor-Cockpit, das auf jeder Karriaro-Seite mitläuft. Wer hat Ihre Webseite besucht, woher, wie lange, was angeklickt. In Care+ inkludiert. Für Care-Kunden separat zubuchbar (15 €/Mt). . Mehr erfahren . № 05 · Branchen-Werkzeuge."
+   "anchor": "kr-wr-h",
+   "heading": "Was kostet Sie Ihre aktuelle Website?",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Was kostet Sie Ihre aktuelle Website?. Eine Seite, die keine Anfragen bringt, kostet still — jeden Monat. Rechnen Sie mit Ihren eigenen Zahlen; wir tragen nichts ein. Durchschnittlicher Auftragswert € Mehr Aufträge im Monat — Ihre Annahme 1 2 3 . . . Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft. Kostenfreien Entwurf anfordern . Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose. . Neu · KI-Sichtbarkeit."
   },
   {
    "id": "index-6",
    "url": "/",
-   "anchor": "",
-   "heading": "Werkzeuge, die Ihre Branche kennt — und Ihre Wettbewerber nicht haben.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Werkzeuge, die Ihre Branche kennt — und Ihre Wettbewerber nicht haben.. Probieren Sie es aus. Jedes Werkzeug ist live verbaut — kein Plugin, kein Drittanbieter, kein Abo. Wir bauen sie selbst im Atelier, damit sie für Sie arbeiten. . Dachdecker Immobilien Coaching Praxis Friseur Sanitär Restaurant Spedition . Live-Werkzeug · Dachdecker-Demo."
-  },
-  {
-   "id": "index-7",
-   "url": "/",
-   "anchor": "",
-   "heading": "BAFA-Förderrechner",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "BAFA-Förderrechner. Eigentümer berechnet sofort den maximalen Bundeszuschuss für die Dachsanierung. Kein 30-Minuten-Beratungstermin, keine Telefonschleife. Volle Dachdecker-Demo ansehen → . Postleitzahl Dachfläche (m²) Solar mitfördern? Nein Ja, PV-Modul Förderung berechnen Ihre Förder-Spanne (BAFA + KfW + Klimabonus). — € bis — €. Daten eingeben für Live-Berechnung. . Live-Werkzeug · Immobilien-Demo."
+   "anchor": "kispiegel-title",
+   "heading": "Ihre Kunden fragen die KI. Findet sie Sie?",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ihre Kunden fragen die KI. Findet sie Sie?. „Wer macht das in meiner Stadt?\" — immer öfter beantwortet das ChatGPT, nicht Google. Sehen Sie in Sekunden, was die KI heute über Ihr Unternehmen weiß — ehrlich, mit konkreten Schritten zur Auffindbarkeit. KI-Sichtbarkeit prüfen → KI-Zitier-Check → . Live-KI-Analyse · keine Anmeldung · in Sekunden. Frage an die KI. „Was weißt du über meinen Betrieb?\". „Ich habe kaum belastbare Informationen über …\". 14 /100 KI-Sichtbar . . . № 03 · Performance-Beweis."
   },
   {
    "id": "index-8",
    "url": "/",
    "anchor": "",
-   "heading": "Wertermittlung in 60 Sekunden",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Wertermittlung in 60 Sekunden. Verkäufer gibt PLZ, Wohnfläche und Baujahr ein. Die Demo zeigt die Live-Spanne aus dem Marktpreis-Modell — kein „Wir melden uns\"-Modal. Volle Immobilien-Demo ansehen → . Postleitzahl Wohnfläche (m²) Baujahr Wert ermitteln Marktwert-Spanne (Schätzung). — € bis — €. Daten eingeben für Live-Berechnung. . Live-Werkzeug · Coaching-Demo."
+   "heading": "Sehen Sie, wer Ihre Seite besucht.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Sehen Sie, wer Ihre Seite besucht.. Während andere hoffen, sehen Sie, wer wirklich Interesse hat — und fassen genau dort nach. . Karriaro-Loupe · Besucher-Cockpit LIVE . 47 Besucher heute . 3 Gerade live . 2:14 Ø Verweildauer . KI Besucher aus Stuttgart war 3× auf der Preis-Seite — Follow-up vorschlagen. . Beispiel-Ansicht — Ihr Cockpit zeigt die echten Besucher Ihrer Seite. Tool aus eigener Werkstatt. Den LCP-Wert oben misst Karriaro-Loupe — unser eigenes Visitor-Cockpit, das auf jeder Karriaro-Seite mitläuft. Wer hat Ihre Webseite besucht, woher, wie lange, was angeklickt. In Care+ inkludiert. Für Care-Kunden separat zubuchbar (15 €/Mt). . Mehr erfahren . № 05 · Branchen-Werkzeuge."
   },
   {
    "id": "index-9",
    "url": "/",
    "anchor": "",
-   "heading": "Klarheits-Check in 60 Sekunden",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Klarheits-Check in 60 Sekunden. Fünf kurze Selbst-Einschätzungen, das System empfiehlt das passende Coaching-Format — Karriere-Pivot, Führungs-Sparring oder C-Level-Preparation. Kein Discovery-Call nötig. Volle Coaching-Demo ansehen → . Karriere-Fokus — bewerten — 1 — verschwommen 2 3 — mittel 4 5 — glasklar Team-Konstellation — bewerten — 1 — instabil 2 3 — mittel 4 5 — stabil Zeit für Strategie — bewerten — 1 — keine 2 3 — mittel 4 5 — genug Energie-Niveau — bewerten — 1 — erschöpft 2 3 — mittel 4 5 — motiviert Nächster Schritt klar? — bewerten — 1 — unklar 2 3 — mittel 4 5 — geplant Klarheits-Score berechnen Klarheits-Score & Coaching-Empfehlung. —. Alle 5 Fragen bewerten für Empfehlung. . Live-Werkzeug · Praxis-Demo."
+   "heading": "Werkzeuge, die Ihre Branche kennt — und Ihre Wettbewerber nicht haben.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Werkzeuge, die Ihre Branche kennt — und Ihre Wettbewerber nicht haben.. Probieren Sie es aus. Jedes Werkzeug ist live verbaut — kein Plugin, kein Drittanbieter, kein Abo. Wir bauen sie selbst im Atelier, damit sie für Sie arbeiten. . Dachdecker Immobilien Coaching Praxis Friseur Sanitär Restaurant Spedition . Live-Werkzeug · Dachdecker-Demo."
   },
   {
    "id": "index-10",
    "url": "/",
    "anchor": "",
-   "heading": "Symptom-Wegweiser",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Symptom-Wegweiser. Patient klickt 3 Symptome an, das System empfiehlt Behandlungstyp und Termin-Slot. Keine Diagnose (Haftung), aber strukturierte Vorab-Anamnese — spart MFA-Zeit. Volle Praxis-Demo ansehen → . Welche Symptome haben Sie? (max 3). Kopfschmerzen Fieber Husten Rückenschmerzen Schwindel Müdigkeit . Empfehlung anzeigen Empfohlene Behandlung & Termin-Slot. —. Symptome auswählen für Empfehlung. . Live-Werkzeug · Friseur-Demo."
+   "heading": "BAFA-Förderrechner",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "BAFA-Förderrechner. Eigentümer berechnet sofort den maximalen Bundeszuschuss für die Dachsanierung. Kein 30-Minuten-Beratungstermin, keine Telefonschleife. Volle Dachdecker-Demo ansehen → . Postleitzahl Dachfläche (m²) Solar mitfördern? Nein Ja, PV-Modul Förderung berechnen Ihre Förder-Spanne (BAFA + KfW + Klimabonus). — € bis — €. Daten eingeben für Live-Berechnung. . Live-Werkzeug · Immobilien-Demo."
   },
   {
    "id": "index-11",
    "url": "/",
    "anchor": "",
-   "heading": "Style-Empfehlung in 30 Sekunden",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Style-Empfehlung in 30 Sekunden. Kundin wählt Gesichtsform und Anlass — die passende Style-Empfehlung erscheint mit Bild, Preis und Beispiel-Slot. Volle Friseur-Demo ansehen → . Gesichtsform — wählen — Oval Rund Herzförmig Eckig Anlass — wählen — Alltag Business Event/Hochzeit Style finden Empfohlener Style + Beispiel-Slot. —. Auswahl treffen für Empfehlung. . Live-Werkzeug · Sanitär-Demo."
+   "heading": "Wertermittlung in 60 Sekunden",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Wertermittlung in 60 Sekunden. Verkäufer gibt PLZ, Wohnfläche und Baujahr ein. Die Demo zeigt die Live-Spanne aus dem Marktpreis-Modell — kein „Wir melden uns\"-Modal. Volle Immobilien-Demo ansehen → . Postleitzahl Wohnfläche (m²) Baujahr Wert ermitteln Marktwert-Spanne (Schätzung). — € bis — €. Daten eingeben für Live-Berechnung. . Live-Werkzeug · Coaching-Demo."
   },
   {
    "id": "index-12",
    "url": "/",
    "anchor": "",
-   "heading": "Notdienst-Pulse",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Notdienst-Pulse. Anstelle des statischen „24/7 erreichbar\" zeigt der Pulse die voraussichtliche Anrückzeit pro Region. Der Notruf-Kunde sieht in Sekunden, ob jemand kommt. Volle Sanitär-Demo ansehen → . Postleitzahl Art des Notfalls — wählen — Rohrbruch Heizungsausfall Verstopfung Wasser-Leck Anrückzeit prüfen Voraussichtliche Anrückzeit · Verfügbarkeit. —. Daten eingeben für Live-Status. . Live-Werkzeug · Restaurant-Demo."
+   "heading": "Klarheits-Check in 60 Sekunden",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Klarheits-Check in 60 Sekunden. Fünf kurze Selbst-Einschätzungen, das System empfiehlt das passende Coaching-Format — Karriere-Pivot, Führungs-Sparring oder C-Level-Preparation. Kein Discovery-Call nötig. Volle Coaching-Demo ansehen → . Karriere-Fokus — bewerten — 1 — verschwommen 2 3 — mittel 4 5 — glasklar Team-Konstellation — bewerten — 1 — instabil 2 3 — mittel 4 5 — stabil Zeit für Strategie — bewerten — 1 — keine 2 3 — mittel 4 5 — genug Energie-Niveau — bewerten — 1 — erschöpft 2 3 — mittel 4 5 — motiviert Nächster Schritt klar? — bewerten — 1 — unklar 2 3 — mittel 4 5 — geplant Klarheits-Score berechnen Klarheits-Score & Coaching-Empfehlung. —. Alle 5 Fragen bewerten für Empfehlung. . Live-Werkzeug · Praxis-Demo."
   },
   {
    "id": "index-13",
    "url": "/",
    "anchor": "",
-   "heading": "Wein-Berater",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Wein-Berater. Gast wählt das Hauptgericht, der Sommelier empfiehlt drei Weine aus der Karte mit Begründung. Volle Restaurant-Demo ansehen → . Hauptgericht — wählen — Rind / Steak Lamm Fisch / Meeresfrüchte Pasta / Vegetarisch Geflügel Preisrange (€/Flasche) bis 30 € 30–60 € über 60 € Wein-Empfehlungen anzeigen Drei Wein-Empfehlungen mit Begründung. —. Gericht wählen für Empfehlung. . Live-Werkzeug · Spedition-Demo."
+   "heading": "Symptom-Wegweiser",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Symptom-Wegweiser. Patient klickt 3 Symptome an, das System empfiehlt Behandlungstyp und Termin-Slot. Keine Diagnose (Haftung), aber strukturierte Vorab-Anamnese — spart MFA-Zeit. Volle Praxis-Demo ansehen → . Welche Symptome haben Sie? (max 3). Kopfschmerzen Fieber Husten Rückenschmerzen Schwindel Müdigkeit . Empfehlung anzeigen Empfohlene Behandlung & Termin-Slot. —. Symptome auswählen für Empfehlung. . Live-Werkzeug · Friseur-Demo."
   },
   {
    "id": "index-14",
    "url": "/",
    "anchor": "",
-   "heading": "Instant-Quote-Calculator",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Instant-Quote-Calculator. Versender füllt drei Felder aus, die Demo zeigt sofort Frachtkosten, ETA und Fahrzeug-Klasse. Trust-Anker: „24h DACH oder Geld zurück\". Volle Spedition-Demo ansehen → . Abhol-PLZ Ziel-PLZ Gewicht (kg) Frachtkosten berechnen Frachtkosten · ETA · Fahrzeug-Klasse. —. Daten eingeben für Live-Quote. . 10.538 Zeilen handcodiert . 49 interaktive Funktionen . 8 Branchen-Demos live . 0 externe Plugins . Atelier-Werkzeuge · auf Anfrage."
+   "heading": "Style-Empfehlung in 30 Sekunden",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Style-Empfehlung in 30 Sekunden. Kundin wählt Gesichtsform und Anlass — die passende Style-Empfehlung erscheint mit Bild, Preis und Beispiel-Slot. Volle Friseur-Demo ansehen → . Gesichtsform — wählen — Oval Rund Herzförmig Eckig Anlass — wählen — Alltag Business Event/Hochzeit Style finden Empfohlener Style + Beispiel-Slot. —. Auswahl treffen für Empfehlung. . Live-Werkzeug · Sanitär-Demo."
   },
   {
    "id": "index-15",
    "url": "/",
    "anchor": "",
-   "heading": "Über 100 Werkzeuge im Atelier — neue bauen wir auf Anfrage.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Über 100 Werkzeuge im Atelier — neue bauen wir auf Anfrage.. Die acht oben sind eine Auswahl. Jedes Karriaro-Werkzeug entsteht handcodiert im Atelier — kein Plugin, kein Drittanbieter, kein Abo. Es nimmt Ihnen Arbeit ab: rechnet, bucht, qualifiziert Anfragen, während Sie Ihrem Beruf nachgehen. Für nahezu jede Branche liegt etwas bereit — vom Förderrechner über den Termin-Assistenten bis zum Frachtrechner. Braucht Ihre Branche etwas, das es noch nicht gibt? Sagen Sie uns, was es können soll — wir bauen es. Werkzeug für Ihre Branche anfragen Alle Demos durchstöbern . . № 06 · Karriaro-Werkzeuge."
+   "heading": "Notdienst-Pulse",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Notdienst-Pulse. Anstelle des statischen „24/7 erreichbar\" zeigt der Pulse die voraussichtliche Anrückzeit pro Region. Der Notruf-Kunde sieht in Sekunden, ob jemand kommt. Volle Sanitär-Demo ansehen → . Postleitzahl Art des Notfalls — wählen — Rohrbruch Heizungsausfall Verstopfung Wasser-Leck Anrückzeit prüfen Voraussichtliche Anrückzeit · Verfügbarkeit. —. Daten eingeben für Live-Status. . Live-Werkzeug · Restaurant-Demo."
   },
   {
    "id": "index-16",
    "url": "/",
    "anchor": "",
-   "heading": "Karriaro · Webdesign-Manufaktur",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Karriaro · Webdesign-Manufaktur. Handcodierte Premium-Websites für den deutschen Mittelstand. Festpreis 1.290–3.990 € einmalig. Maximal fünf Pilot-Plätze pro Quartal. Performance, die wir vor dem Launch prüfen — messbar. Erstgespräch buchen → . II · Cockpit."
+   "heading": "Wein-Berater",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Wein-Berater. Gast wählt das Hauptgericht, der Sommelier empfiehlt drei Weine aus der Karte mit Begründung. Volle Restaurant-Demo ansehen → . Hauptgericht — wählen — Rind / Steak Lamm Fisch / Meeresfrüchte Pasta / Vegetarisch Geflügel Preisrange (€/Flasche) bis 30 € 30–60 € über 60 € Wein-Empfehlungen anzeigen Drei Wein-Empfehlungen mit Begründung. —. Gericht wählen für Empfehlung. . Live-Werkzeug · Spedition-Demo."
   },
   {
    "id": "index-17",
    "url": "/",
    "anchor": "",
-   "heading": "Karriaro-Loupe",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Karriaro-Loupe. Visitor- und Lead-Intelligence. Privacy-first, AI-gestützt, Session-Replay, Sales-Workflow. Für Sites, die wirklich messen wollen — und für KI-Agenten via MCP-Server abrufbar. Karriaro-Loupe ansehen ↗ . eine Brand · ein Ursprung. № 07 · Werkstatt-Logbuch."
+   "heading": "Instant-Quote-Calculator",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Instant-Quote-Calculator. Versender füllt drei Felder aus, die Demo zeigt sofort Frachtkosten, ETA und Fahrzeug-Klasse. Trust-Anker: „24h DACH oder Geld zurück\". Volle Spedition-Demo ansehen → . Abhol-PLZ Ziel-PLZ Gewicht (kg) Frachtkosten berechnen Frachtkosten · ETA · Fahrzeug-Klasse. —. Daten eingeben für Live-Quote. . 10.538 Zeilen handcodiert . 49 interaktive Funktionen . 8 Branchen-Demos live . 0 externe Plugins . Atelier-Werkzeuge · auf Anfrage."
   },
   {
    "id": "index-18",
    "url": "/",
    "anchor": "",
-   "heading": "Wie eine Karriaro-Manufaktur entsteht.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Wie eine Karriaro-Manufaktur entsteht.. Fünf Akte vom Anruf zum Live-Gang. Schriftlich zugesichert. 50/50-Zahlung. . Tag 0 ."
+   "heading": "Über 100 Werkzeuge im Atelier — neue bauen wir auf Anfrage.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Über 100 Werkzeuge im Atelier — neue bauen wir auf Anfrage.. Die acht oben sind eine Auswahl. Jedes Karriaro-Werkzeug entsteht handcodiert im Atelier — kein Plugin, kein Drittanbieter, kein Abo. Es nimmt Ihnen Arbeit ab: rechnet, bucht, qualifiziert Anfragen, während Sie Ihrem Beruf nachgehen. Für nahezu jede Branche liegt etwas bereit — vom Förderrechner über den Termin-Assistenten bis zum Frachtrechner. Braucht Ihre Branche etwas, das es noch nicht gibt? Sagen Sie uns, was es können soll — wir bauen es. Werkzeug für Ihre Branche anfragen Alle Demos durchstöbern . . № 06 · Karriaro-Werkzeuge."
   },
   {
    "id": "index-19",
    "url": "/",
    "anchor": "",
-   "heading": "Brief",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Brief. Sie erzählen, wir hören zu. 30-Minuten-Call, kein Discovery-Workshop-Theater. Sie sagen, was die Seite leisten muss — wir notieren, welche Branchen-Tools sich anbieten. . Erste Tage ."
+   "heading": "Karriaro · Webdesign-Manufaktur",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Karriaro · Webdesign-Manufaktur. Handcodierte Premium-Websites für den deutschen Mittelstand. Festpreis 1.290–3.990 € einmalig. Zum Start: zehn Plätze im Referenzprogramm — Ihre Website, Ihr Preis. Performance, die wir vor dem Launch prüfen — messbar. Entwurf anfordern → . II · Cockpit."
   },
   {
    "id": "index-20",
    "url": "/",
    "anchor": "",
-   "heading": "Skizze",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Skizze. Erster Entwurf meist innerhalb weniger Tage. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe. . Woche 1–4 ."
+   "heading": "Karriaro-Loupe",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Karriaro-Loupe. Visitor- und Lead-Intelligence. Privacy-first, AI-gestützt, Session-Replay, Sales-Workflow. Für Sites, die wirklich messen wollen — auf Wunsch fragen KI-Assistenten die Werte direkt ab (MCP). Karriaro-Loupe ansehen ↗ . eine Brand · ein Ursprung. № 07 · Werkstatt-Logbuch."
   },
   {
    "id": "index-21",
    "url": "/",
    "anchor": "",
-   "heading": "Code",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Code. Handcodiertes HTML & CSS. Keine Templates, keine Plugins, keine Page-Builder. Schema.org branchen-spezifisch. 10.538 Zeilen Beweis aus unseren bisherigen Demos — Ihre Seite kommt mit eigenem Code-Stand. . Tag vor Live ."
+   "heading": "Wie eine Karriaro-Manufaktur entsteht.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Wie eine Karriaro-Manufaktur entsteht.. Fünf Akte vom Anruf zum Live-Gang. Schriftlich zugesichert. 50/50-Zahlung. . Tag 0 ."
   },
   {
    "id": "index-22",
    "url": "/",
    "anchor": "",
-   "heading": "Audit",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Audit. BFSG-Check. Schema.org-Validator. Performance- und Mobil-Audit. Wir liefern erst, wenn die Site unsere Qualitäts-Checks besteht — kein „später korrigieren wir das\". . Live ."
+   "heading": "Brief",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Brief. Sie erzählen, wir hören zu. 30-Minuten-Call, kein Discovery-Workshop-Theater. Sie sagen, was die Seite leisten muss — wir notieren, welche Branchen-Tools sich anbieten. . Erste Tage ."
   },
   {
    "id": "index-23",
    "url": "/",
    "anchor": "",
-   "heading": "Online",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Online. Ihre Domain, Ihre Marke, ein handcodiertes Unikat. Hosting in DE/EU, barrierefrei gebaut, kein Baukasten, kein Abo-Zwang. Optional Wartung 99–199 €/Mt für Backups, Änderungen, Quartals-SEO-Report. . Schriftlich zugesichert. 50 % nach Entwurf-Freigabe, 50 % bei Fertigstellung. Wenn Ihnen der erste Entwurf nicht gefällt, brechen Sie ab — ohne weitere Zahlung. Schritt 0: Eine erste Einschätzung Ihrer aktuellen Site . . Wenn Ihr Name draufsteht, steht unserer dahinter. Karriaro-Versprechen Goldener Winkel · 137,5°. . Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!. Ilyas Kablan Google Local Guide · 58 Bewertungen Auf Google ansehen ↗ H1 CTA Demos Konzept-Skizze · Tag 1 · Bleistift & Maßstab Founder-Statement. Wir coden jede Seite selbst. Wir antworten jede Mail selbst. Und wenn etwas hakt, kümmern wir uns persönlich darum — kein anonymer Subunternehmer, an den Ihr Projekt durchgereicht wird. Wir bauen jede Seite, als wäre es unsere eigene — weil unser Name mit draufsteht. — Karriaro Team. Fünf Dinge, die wir anders machen."
+   "heading": "Skizze",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Skizze. Erster Entwurf meist innerhalb weniger Tage. Sie sehen Hierarchie, Typografie, Ton, ein konkretes Branchen-Tool im Mockup. Ein Feedback-Loop. Dann Freigabe. . Woche 1–4 ."
   },
   {
    "id": "index-24",
    "url": "/",
    "anchor": "",
-   "heading": "Online",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Online. 01 Eine Person pro Auftrag. Kein Ticket-System, keine Drei-Level-Eskalation, keine Delegation an externe Subs. . 02 Eine Konzept-Skizze pro Auftrag. Kein Template-Recycling — wir entwerfen für Ihre Branche, Ihren Wettbewerb, Ihre Sprache. . 03 HTML + CSS individuell programmiert. Kein WordPress, kein Page-Builder, kein Plugin-Stack — keine Update-Hölle. . 04 Schema.org pro Branche maßgeschneidert. Strukturierte Daten manuell zugeschnitten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte verstehen. . 05 Branchen-Werkzeuge inklusive ab Professional. Pro Demo 5–12 interaktive Funktionen — der Beweis, dass es keine Vorlage ist. . Pakete & Preise ansehen . . . № 08 · Investition."
+   "heading": "Code",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Code. Handcodiertes HTML & CSS. Keine Templates, keine Plugins, keine Page-Builder. Schema.org branchen-spezifisch. 10.538 Zeilen Beweis aus unseren bisherigen Demos — Ihre Seite kommt mit eigenem Code-Stand. . Tag vor Live ."
   },
   {
    "id": "index-25",
    "url": "/",
-   "anchor": "preis",
-   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. Vier Tiers — branchen-getrennt zugeschnitten. Wartung optional ab 99 €/Mt, jederzeit kündbar. Keine versteckten Kosten. Ihre Branche — bitte wählen, wir markieren das passende Paket — Friseur / Beauty-Salon Café / Bäckerei Florist Fitness-Studio / Yoga Dachdecker / Bauhandwerk Spedition / Logistik Klempner / Sanitär Elektriker Physiotherapie Tierarzt Hotel / Pension Autohaus Zahnarzt Facharzt / Privatpraxis Immobilien-Makler Anwalt / Kanzlei Anwalt mit Datenschutz-Bedarf . Essential. Handwerk · Beauty · Café · Florist · Gym. 1.290 € einmalig . In ca. 1–2 Wochen online — je nach Umfang & Ihrer Zuarbeit. Eine Seite, die alles zeigt (One-Pager). Kontaktformular & Google-Maps-Anbindung. Lokal auffindbar (Branche & Ort). Ein Entwurf, eine Freigabe — zügig live. + 99 €/Mt Care · Hosting · Backups · Quartals-Update · +15 €/Mt für Loupe Visitor-Cockpit zubuchbar . Essential wählen . Meist gewählt Professional. Dachdecker · Spedition · Physio · Hotel · Autohaus. 1.990 € einmalig . In ca. 2–3 Wochen online — je nach Umfang & Ihrer Zuarbeit. Bis zu 5 Unterseiten · lokale SEO. 1 Branchen-Werkzeug inklusive (z. B."
+   "anchor": "",
+   "heading": "Audit",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Audit. BFSG-Check. Schema.org-Validator. Performance- und Mobil-Audit. Wir liefern erst, wenn die Site unsere Qualitäts-Checks besteht — kein „später korrigieren wir das\". . Live ."
   },
   {
    "id": "index-26",
    "url": "/",
-   "anchor": "preis",
-   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. Termin-Widget oder Preis-Rechner). Referenz- & Leistungs-Seiten. Mitwachsend erweiterbar. + 99 €/Mt Care · Hosting · Backups · Quartals-Update · +15 €/Mt für Loupe Visitor-Cockpit zubuchbar . Professional wählen . Premium. Zahnarzt · Arzt · Immobilien · Anwalt. 2.990 € einmalig . In ca. 3–4 Wochen online — je nach Umfang & Ihrer Zuarbeit. Großzügiger Seitenumfang nach Absprache · maßgeschneidertes Editorial-Layout. Volles Branchen-Werkzeug-Set (je nach Branche). Founder-Profil & Über-uns inklusive (Karriaro-Folio). Erweiterte KI-Auffindbarkeit (FAQ-Schema · strukturierte Daten). + 199 €/Mt Care+ · Care + bis zu 1 h Content/Mt (nach Verfügbarkeit) + SEO-Report quartalsweise + Reaktionszeit i. d. R. 24 h (werktags) · Loupe Visitor-Cockpit inkl. Premium wählen . Pilot · Anwalt Premium+. Anwalt mit Datenschutz-Bedarf. 3.990 € einmalig . In ca. 4 Wochen online — je nach Umfang & Ihrer Zuarbeit. Alles aus Premium. Mandantenportal · Upload TLS-verschlüsselt, Dateien verschlüsselt gespeichert. Laufende technische Datenschutz-Pflege, vierteljährlich — rechtl. Bewertung durch Ihren Anwalt/DSB. Auf Kanzlei-Workflows zugeschnitten."
+   "anchor": "",
+   "heading": "Online",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Online. Ihre Domain, Ihre Marke, ein handcodiertes Unikat. Hosting in DE/EU, barrierefrei gebaut, kein Baukasten, kein Abo-Zwang. Optional Wartung 99–199 €/Mt für Backups, Änderungen, Quartals-SEO-Report. . Schriftlich zugesichert. 50 % nach Entwurf-Freigabe, 50 % bei Fertigstellung. Wenn Ihnen der erste Entwurf nicht gefällt, brechen Sie ab — ohne weitere Zahlung. Schritt 0: Eine erste Einschätzung Ihrer aktuellen Site . . Wenn Ihr Name draufsteht, steht unserer dahinter. Karriaro-Versprechen Goldener Winkel · 137,5°. . Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!. Ilyas Kablan Google Local Guide · 58 Bewertungen Auf Google ansehen ↗ H1 CTA Demos Konzept-Skizze · Tag 1 · Bleistift & Maßstab Founder-Statement. Wir coden jede Seite selbst. Wir antworten jede Mail selbst. Und wenn etwas hakt, kümmern wir uns persönlich darum — kein anonymer Subunternehmer, an den Ihr Projekt durchgereicht wird. Wir bauen jede Seite, als wäre es unsere eigene — weil unser Name mit draufsteht. — Karriaro Team. Fünf Dinge, die wir anders machen."
   },
   {
    "id": "index-27",
    "url": "/",
-   "anchor": "preis",
-   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. + 199 €/Mt Care+ · inkl. technische Datenschutz-Pflege . Premium+ wählen . . In jedem Paket enthalten. Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform gebaut · gesicherte Header & TLS · Schema.org & semantisches HTML · mobil & auf schnelle Ladezeit optimiert · kein Abo-Zwang. . Add-on. Karriaro-Folio · KI-getriebene Founder-Bio + LinkedIn-Audit. Schließt die About-Sektion und Founder-Story Ihrer neuen Site ab. 290 € einmalig — oder inkludiert ab Premium. . Hinzufügen . 50 % nach Entwurf-Freigabe · 50 % bei Fertigstellung · Schriftlich zugesichert. Qualitäts-Versprechen: Vor dem Launch prüfen wir jede Seite auf Barrierefreiheit (BFSG/WCAG), saubere Schema.org-Daten und Performance (Core Web Vitals). Was unsere Standards nicht erfüllt, bessern wir vor der Übergabe kostenfrei nach. Sieben Branchen-Demos ansehen — Förderrechner, Hypothek, Try-On & Co. live . . № 09 · Häufige Fragen."
+   "anchor": "",
+   "heading": "Online",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Online. 01 Eine Person pro Auftrag. Kein Ticket-System, keine Drei-Level-Eskalation, keine Delegation an externe Subs. . 02 Eine Konzept-Skizze pro Auftrag. Kein Template-Recycling — wir entwerfen für Ihre Branche, Ihren Wettbewerb, Ihre Sprache. . 03 HTML + CSS individuell programmiert. Kein WordPress, kein Page-Builder, kein Plugin-Stack — keine Update-Hölle. . 04 Schema.org pro Branche maßgeschneidert. Strukturierte Daten manuell zugeschnitten — damit Google, ChatGPT und Sprachsuche Ihre Inhalte verstehen. . 05 Branchen-Werkzeuge inklusive ab Professional. Pro Demo 5–12 interaktive Funktionen — der Beweis, dass es keine Vorlage ist. . Pakete & Preise ansehen . . . № 08 · Investition."
   },
   {
    "id": "index-28",
    "url": "/",
-   "anchor": "faq",
-   "heading": "Was Sie wissen möchten.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Was Sie wissen möchten.. Sieben Antworten, die im Erstgespräch ohnehin kommen. . Was kostet eine Website bei Karriaro? Vier Tiers, branchen-getrennt zugeschnitten: Essential 1.290 € (Handwerk · Beauty · Café · Florist · Gym), Professional 1.990 € (Dachdecker · Spedition · Physio · Hotel · Autohaus), Premium 2.990 € (Zahnarzt · Arzt · Immobilien · Anwalt), Premium+ 3.990 € (Anwalt mit Datenschutz-Bedarf, Pilot). Wartung optional: 99 €/Mt (Care) bzw. 199 €/Mt (Care+), jederzeit kündbar. Kein Abo-Zwang. Wie sind die Zahlungsbedingungen? 50 % nach dem Entwurf, 50 % bei Fertigstellung. Schriftlich zugesichert: Wenn Ihnen der erste Entwurf nicht gefällt, brechen Sie ab — ohne weitere Zahlung. Wie lange dauert es, bis meine Website fertig ist? Sie erhalten einen ersten Entwurf meist innerhalb weniger Tage nach dem Kurz-Briefing. Die fertige Website ist in der Regel in 2 bis 4 Wochen online — je nach Paket und Zuarbeit. Gefällt der Entwurf nicht, brechen Sie ab — ohne Zahlung. Bekomme ich branchenspezifische Werkzeuge auf meiner Website? Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner)."
+   "anchor": "preis",
+   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. Vier Tiers — branchen-getrennt zugeschnitten. Wartung optional ab 99 €/Mt, jederzeit kündbar. Keine versteckten Kosten. Ihre Branche — bitte wählen, wir markieren das passende Paket — Friseur / Beauty-Salon Café / Bäckerei Florist Fitness-Studio / Yoga Dachdecker / Bauhandwerk Spedition / Logistik Klempner / Sanitär Elektriker Physiotherapie Tierarzt Hotel / Pension Autohaus Zahnarzt Facharzt / Privatpraxis Immobilien-Makler Anwalt / Kanzlei Anwalt mit Datenschutz-Bedarf . Essential. Handwerk · Beauty · Café · Florist · Gym. 1.290 € einmalig . In ca. 1–2 Wochen online — je nach Umfang & Ihrer Zuarbeit. Eine Seite, die alles zeigt (One-Pager). Kontaktformular & Google-Maps-Anbindung. Lokal auffindbar (Branche & Ort). Ein Entwurf, eine Freigabe — zügig live. + 99 €/Mt Care · Hosting · Backups · Quartals-Update · +15 €/Mt für Loupe Visitor-Cockpit zubuchbar . Essential wählen . Meist gewählt Professional. Dachdecker · Spedition · Physio · Hotel · Autohaus. 1.990 € einmalig . In ca. 2–3 Wochen online — je nach Umfang & Ihrer Zuarbeit. Bis zu 5 Unterseiten · lokale SEO. 1 Branchen-Werkzeug inklusive (z. B."
   },
   {
    "id": "index-29",
    "url": "/",
-   "anchor": "faq",
-   "heading": "Was Sie wissen möchten.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Was Sie wissen möchten.. Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, Symptom-Wegweiser (Vor-Anamnese, keine Diagnose) für Praxen, Wein-Berater für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage. Warum handcodierte Websites statt WordPress? Handcodierte Websites laden dank schlankem Code spürbar schnell, sind robust, DSGVO-konform gebaut und sind für Google und KI-Assistenten technisch optimal aufbereitet. Kein Plugin-Risiko, keine Abo-Gebühren. Ist meine Website für Google und KI-Suche optimiert? Ja. Jede Website wird mit Schema.org-Strukturdaten, semantischem HTML und optimierter Ladezeit gebaut — so dass Google, ChatGPT und Sprachassistenten Ihre Inhalte zuverlässig auslesen und anzeigen können. Wer pflegt meine Website nach Lieferung? Sie können selbst pflegen — wir übergeben alles verständlich dokumentiert."
+   "anchor": "preis",
+   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. Termin-Widget oder Preis-Rechner). Referenz- & Leistungs-Seiten. Mitwachsend erweiterbar. + 99 €/Mt Care · Hosting · Backups · Quartals-Update · +15 €/Mt für Loupe Visitor-Cockpit zubuchbar . Professional wählen . Premium. Zahnarzt · Arzt · Immobilien · Anwalt. 2.990 € einmalig . In ca. 3–4 Wochen online — je nach Umfang & Ihrer Zuarbeit. Großzügiger Seitenumfang nach Absprache · maßgeschneidertes Editorial-Layout. Volles Branchen-Werkzeug-Set (je nach Branche). Founder-Profil & Über-uns inklusive (Karriaro-Folio). Erweiterte KI-Auffindbarkeit (FAQ-Schema · strukturierte Daten). + 199 €/Mt Care+ · Care + bis zu 1 h Content/Mt (nach Verfügbarkeit) + SEO-Report quartalsweise + Reaktionszeit i. d. R. 24 h (werktags) · Loupe Visitor-Cockpit inkl. Premium wählen . Pilot · Anwalt Premium+. Anwalt mit Datenschutz-Bedarf. 3.990 € einmalig . In ca. 4 Wochen online — je nach Umfang & Ihrer Zuarbeit. Alles aus Premium. Mandantenportal · Upload TLS-verschlüsselt, Dateien verschlüsselt gespeichert. Laufende technische Datenschutz-Pflege, vierteljährlich — rechtl. Bewertung durch Ihren Anwalt/DSB. Auf Kanzlei-Workflows zugeschnitten."
   },
   {
    "id": "index-30",
    "url": "/",
-   "anchor": "faq",
-   "heading": "Was Sie wissen möchten.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Was Sie wissen möchten.. Oder Sie buchen Wartung & Hosting für 99 €/Monat: Hosting, Backups, Text- und Bild-Änderungen, persönlicher Ansprechpartner. Jederzeit kündbar. . Noch eine Frage? Direkt fragen — Antwort innerhalb 24 Stunden. . Anfrage · Antwort in 24 h. Karriaro MANUFAKTUR · 2026 ."
+   "anchor": "preis",
+   "heading": "Ein Preis pro Branche. Einmal zahlen, kein Abo.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ein Preis pro Branche. Einmal zahlen, kein Abo.. + 199 €/Mt Care+ · inkl. technische Datenschutz-Pflege . Premium+ wählen . . In jedem Paket enthalten. Handcodiert (kein Baukasten, kein Plugin-Risiko) · barrierefrei nach BFSG/WCAG gebaut · DSGVO-konform gebaut · gesicherte Header & TLS · Schema.org & semantisches HTML (für Google und KI zuverlässig lesbar) · mobil & auf schnelle Ladezeit optimiert · kein Abo-Zwang. . Add-on. Karriaro-Folio · KI-getriebene Founder-Bio + LinkedIn-Audit. Schließt die About-Sektion und Founder-Story Ihrer neuen Site ab. 290 € einmalig — oder inkludiert ab Premium. . Hinzufügen . 50 % nach Entwurf-Freigabe · 50 % bei Fertigstellung · Schriftlich zugesichert. Qualitäts-Versprechen: Vor dem Launch prüfen wir jede Seite auf Barrierefreiheit (BFSG/WCAG), saubere Schema.org-Daten und Performance (Core Web Vitals). Was unsere Standards nicht erfüllt, bessern wir vor der Übergabe kostenfrei nach. Sieben Branchen-Demos ansehen — Förderrechner, Hypothek, Try-On & Co. live . . № 09 · Häufige Fragen."
   },
   {
    "id": "index-31",
    "url": "/",
+   "anchor": "faq",
+   "heading": "Was Sie wissen möchten.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Was Sie wissen möchten.. Sieben Antworten, die im Erstgespräch ohnehin kommen. . Was kostet eine Website bei Karriaro? Vier Tiers, branchen-getrennt zugeschnitten: Essential 1.290 € (Handwerk · Beauty · Café · Florist · Gym), Professional 1.990 € (Dachdecker · Spedition · Physio · Hotel · Autohaus), Premium 2.990 € (Zahnarzt · Arzt · Immobilien · Anwalt), Premium+ 3.990 € (Anwalt mit Datenschutz-Bedarf, Pilot). Wartung optional: 99 €/Mt (Care) bzw. 199 €/Mt (Care+), jederzeit kündbar. Kein Abo-Zwang. Wie sind die Zahlungsbedingungen? 50 % nach dem Entwurf, 50 % bei Fertigstellung. Schriftlich zugesichert: Wenn Ihnen der erste Entwurf nicht gefällt, brechen Sie ab — ohne weitere Zahlung. Wie lange dauert es, bis meine Website fertig ist? Sie erhalten einen ersten Entwurf meist innerhalb weniger Tage nach dem Kurz-Briefing. Die fertige Website ist in der Regel in 2 bis 4 Wochen online — je nach Paket und Zuarbeit. Gefällt der Entwurf nicht, brechen Sie ab — ohne Zahlung. Bekomme ich branchenspezifische Werkzeuge auf meiner Website? Ja. Ab Professional ist ein Branchen-Werkzeug-Light dabei (z. B. Termin-Widget oder Preis-Rechner)."
+  },
+  {
+   "id": "index-32",
+   "url": "/",
+   "anchor": "faq",
+   "heading": "Was Sie wissen möchten.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Was Sie wissen möchten.. Premium enthält das volle Set: Förderrechner BAFA+KfW für Dachdecker, Hypothekenrechner mit Tilgungsplan für Immobilien, Style-Galerie mit Foto-Vorschau für Friseure, Symptom-Wegweiser (Vor-Anamnese, keine Diagnose) für Praxen, Wein-Berater für Restaurants, Frachtquote-Rechner für Speditionen — je nach Branche. Unser Atelier hat über 100 Werkzeuge für die unterschiedlichsten Branchen, und wenn Ihres etwas Eigenes braucht, bauen wir es handcodiert auf Anfrage. Warum handcodierte Websites statt WordPress? Handcodierte Websites laden dank schlankem Code spürbar schnell, sind robust, DSGVO-konform gebaut und sind für Google und KI-Assistenten technisch optimal aufbereitet. Kein Plugin-Risiko, keine Abo-Gebühren. Ist meine Website für Google und KI-Suche optimiert? Ja. Jede Website wird mit Schema.org-Strukturdaten, semantischem HTML und optimierter Ladezeit gebaut — so dass Google, ChatGPT und Sprachassistenten Ihre Inhalte zuverlässig auslesen und anzeigen können. Wer pflegt meine Website nach Lieferung? Sie können selbst pflegen — wir übergeben alles verständlich dokumentiert."
+  },
+  {
+   "id": "index-33",
+   "url": "/",
+   "anchor": "faq",
+   "heading": "Was Sie wissen möchten.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Was Sie wissen möchten.. Oder Sie buchen Wartung & Hosting für 99 €/Monat: Hosting, Backups, Text- und Bild-Änderungen, persönlicher Ansprechpartner. Jederzeit kündbar. . Noch eine Frage? Direkt fragen — Sie erhalten eine persönliche Antwort. . Anfrage · Erst der Entwurf, dann Ihre Entscheidung. Karriaro MANUFAKTUR · 2026 ."
+  },
+  {
+   "id": "index-34",
+   "url": "/",
    "anchor": "kontakt",
    "heading": "Lassen Sie uns sprechen.",
-   "pageTitle": "Karriaro Webdesign | Handcodiert, ein Unikat aus Köln.",
-   "text": "Lassen Sie uns sprechen.. Köln · . Schön, dass Sie hier sind,. Ihre Anfrage landet direkt bei uns — nicht in einem Ticket-System, nicht bei einem Account-Manager-Karussell. Wir antworten binnen 24 Stunden mit konkreten Vorschlägen statt einer Discovery-Call-Einladung in drei Wochen. Wenn die Substanz passt, gehen wir in den 30-Minuten-Brief. Wenn nicht, sagen wir es Ihnen sofort — Sie verlieren maximal eine halbe Stunde, nicht ein Quartal. — Karriaro Team. . Wartung & Hosting dazu — 99 €/Monat Ihr Name E-Mail Ihre aktuelle Website (falls vorhanden) Wer hat Sie zu uns gebracht? (optional) Was möchten Sie erreichen? . Firma . Ich stimme der Datenschutzerklärung zu. Slot anfragen — Antwort in 24 h . . Erstgespräch buchen · 30 Min · unverbindlich"
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Lassen Sie uns sprechen.. . Schön, dass Sie hier sind,. Ihre Anfrage landet direkt bei uns — nicht in einem Ticket-System, nicht bei einem Account-Manager-Karussell. Sie erhalten eine persönliche Antwort mit konkreten Vorschlägen statt einer bloßen Einladung zum Discovery-Call. Schreiben Sie in zwei Sätzen, worum es geht — Ihre Branche genügt, dazu Ihre aktuelle Website, falls vorhanden. Sie erhalten einen ersten Entwurf Ihrer neuen Website: kostenfrei und unverbindlich. Sie sehen, was Sie bekommen, bevor Sie sich entscheiden — und passt es nicht, sagen wir es Ihnen offen. — Karriaro Team. . Wartung & Hosting dazu — 99 €/Monat Ihr Name E-Mail Ihre aktuelle Website (falls vorhanden) Wer hat Sie zu uns gebracht? (optional) Worum geht es? (ein Satz genügt) . Firma . Ich stimme der Datenschutzerklärung zu. Kostenfreien Entwurf anfordern Unverbindliche Anfrage · Festpreis ab 1.290 €, einmalig · erst der Entwurf, dann Ihre Entscheidung. Lieber direkt? Schreiben Sie uns per WhatsApp oder rufen Sie an — +49 174 2796784 . . . Entwurf anfordern · kostenfrei · unverbindlich . × Referenzprogramm · 10 Plätze · Vergabe ab sofort."
+  },
+  {
+   "id": "index-35",
+   "url": "/",
+   "anchor": "kr-gp-title",
+   "heading": "Ihre Website. Ihr Preis.",
+   "pageTitle": "Karriaro Webdesign | Handcodierte Unikate, die mitarbeiten.",
+   "text": "Ihre Website. Ihr Preis.. Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren. Bewerbungen werden laufend geprüft. Das Programm endet, sobald alle zehn Plätze vergeben sind. Bewerbung in 5 Minuten · persönliche Antwort. Für einen Platz bewerben Vielleicht später ."
   },
   {
    "id": "werkschau-0",
@@ -400,15 +432,15 @@
    "anchor": "",
    "heading": "Würde die KI Sie empfehlen?",
    "pageTitle": "KI-Zitier-Check — Würde die KI Sie empfehlen? · Karriaro Webdesign",
-   "text": "Würde die KI Sie empfehlen?. Zu wenige Signale waren messbar für einen belastbaren Zahlwert — wir zeigen deshalb bewusst keinen Score. . Vier messbare Kategorien. . So empfiehlt Claude heute. Claude-Wissen über Sie. —. . Was Ihnen zur Zitierfähigkeit fehlt. So verbessern Sie Ihre Chancen. Nicht im Score. Presse & Fachmedien: hier nicht automatisch prüfbar. Erwähnungen in vertrauenswürdigen Quellen gehören zu den stärksten Zitier-Signalen — sie lassen sich aber nicht seriös per Knopfdruck messen. Im Komplett-Audit schauen wir auch dort hin. Zum Komplett-Audit → . Nächster Schritt · On-Site. Der Zitier-Check schaut auf Ihre Signale draußen im Netz. Was Ihre eigene Website der KI technisch zeigt — und was das Trainingswissen über Sie enthält — prüft der KI-Sichtbarkeits-Spiegel. Website & Trainingswissen prüfen → ."
+   "text": "Würde die KI Sie empfehlen?. Zu wenige Signale waren messbar für einen belastbaren Zahlwert — wir zeigen deshalb bewusst keinen Score. . Vier messbare Kategorien. . So empfiehlt Claude heute. Claude-Wissen über Sie. —. . Was Ihnen zur Zitierfähigkeit fehlt. So verbessern Sie Ihre Chancen. Nicht im Score. Presse & Fachmedien: hier nicht automatisch prüfbar. Erwähnungen in vertrauenswürdigen Quellen gehören zu den stärksten Zitier-Signalen — sie lassen sich aber nicht seriös per Knopfdruck messen. Im Komplett-Audit schauen wir auch dort hin. Zum Komplett-Audit → . Nächster Schritt · On-Site. Der Zitier-Check schaut auf Ihre Signale draußen im Netz. Was Ihre eigene Website der KI technisch zeigt — und was das Trainingswissen über Sie enthält — prüft der KI-Sichtbarkeits-Spiegel. Website & Trainingswissen prüfen → . Ihr Maßnahmenplan."
   },
   {
    "id": "ki-zitier-check-2",
    "url": "/ki-zitier-check",
    "anchor": "",
-   "heading": "Soll die KI Sie beim Namen nennen?",
+   "heading": "Damit die KI Sie beim Namen nennt.",
    "pageTitle": "KI-Zitier-Check — Würde die KI Sie empfehlen? · Karriaro Webdesign",
-   "text": "Soll die KI Sie beim Namen nennen?. Genau daran arbeitet Karriaro: eine eindeutige Entität, konsistente Profile und eine handcodierte Website, die Antwortmaschinen lesen können. Erstgespräch buchen → . Stichprobe einer Engine (Claude) · Momentaufnahme · Verzeichnis-Checks best-effort. . Der KI-Zitier-Check misst öffentliche Off-Site-Signale (Google-Unternehmensprofil als Kennzahlen via Google — keine Bewertungstexte —, Verzeichnisse, Wikipedia/Wikidata) und stellt eine echte Empfehlungsfrage an die KI Claude. Der Score wird ausschließlich aus gemessenen Signalen berechnet; nicht Prüfbares wird neutral ausgewiesen und zählt nicht als Mangel. Zurück zu Karriaro Webdesign ."
+   "text": "Damit die KI Sie beim Namen nennt.. Sie erhalten eine persönliche Antwort mit Ihrem Maßnahmenplan: priorisierte Schritte, damit die KI Sie zitiert — auf Wunsch inklusive eines kostenfreien Entwurfs Ihrer neuen Website. Ihre E-Mail für Ihren Maßnahmenplan Maßnahmenplan anfordern . Ich stimme der Datenschutzerklärung zu. Ja, Karriaro Webdesign darf mir bis zu drei E-Mails mit Hinweisen zu meiner Website und einem unverbindlichen Angebot für eine neue Website senden. Die Einwilligung ist freiwillig; ich kann sie jederzeit widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an kontakt@karriaro.de. Mehr in der Datenschutzerklärung . Website fürs KI-Zeitalter — ab 1.290 € → Lieber direkt sprechen → . Stichprobe einer Engine (Claude) · Momentaufnahme · Verzeichnis-Checks best-effort. . Der KI-Zitier-Check misst öffentliche Off-Site-Signale (Google-Unternehmensprofil als Kennzahlen via Google — keine Bewertungstexte —, Verzeichnisse, Wikipedia/Wikidata) und stellt eine echte Empfehlungsfrage an die KI Claude. Der Score wird ausschließlich aus gemessenen Signalen berechnet; nicht Prüfbares wird neutral ausgewiesen und zählt nicht als Mangel. Zurück zu Karriaro Webdesign ."
   },
   {
    "id": "ki-zitier-check-3",
@@ -694,60 +726,76 @@
    "id": "webseite-erstellen-lassen-0",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Webseite erstellen lassen — handcodiert, als Unikat.",
+   "heading": "Ihre Website soll Kunden bringen.Nicht nur gut aussehen.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Webseite erstellen lassen — handcodiert, als Unikat.. Sie bekommen keine Vorlage von der Stange, sondern eine handcodierte Website, die zu Ihrem Betrieb passt — schnell, barrierefrei und so gebaut, dass Kunden Sie bei Google und KI finden. Erstgespräch — Antwort in 24 h Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf ansehen, dann zahlen. Erst Entwurf, dann Zahlung barrierefrei nach BFSG gebaut Hosting in DE/EU · DSGVO in 2–4 Wochen online . ."
+   "text": "Ihre Website soll Kunden bringen.Nicht nur gut aussehen.. Google-Bewertung . „Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!“. Ilyas Kablan · Auf Google ansehen . . . . Logo. Kontakt. . Willkommen. . Anfragen . Werkzeug . . &#10003; erledigt . . . Live gebaut nicht gerendert. Bewegen Sie die Maus. . Keine Websites von der Stange: individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen. Über 20 Jahre Erfahrung in der Tech-Branche. Kostenfreien Entwurf anfordern Anrufen: +49 174 2796784 . Festpreis ab 1.290 € · als Gründungskunde ab 1.090 €. Einmalig, kein Abo — Sie sehen zuerst einen kostenfreien Entwurf, bevor Sie sich entscheiden. Erst der Entwurf, dann die Zahlung barrierefrei nach BFSG gebaut Hosting in DE/EU · DSGVO in 2–4 Wochen online . . Anfrage · Erst der Entwurf, dann Ihre Entscheidung."
   },
   {
    "id": "webseite-erstellen-lassen-1",
    "url": "/webseite-erstellen-lassen",
-   "anchor": "",
-   "heading": "So läuft es ab.",
+   "anchor": "kurz-anfrage",
+   "heading": "Eine Minute Ihrer Zeit. Ihr kostenfreier Entwurf.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "So läuft es ab.. Vier Schritte, kein Risiko: Sie zahlen erst, wenn der Entwurf steht und Sie ihn freigeben. 1."
+   "text": "Eine Minute Ihrer Zeit. Ihr kostenfreier Entwurf.. Ein Satz genügt: Ihre Branche — und Ihre aktuelle Website, falls vorhanden. Sie erhalten einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich: Sie sehen, was Sie bekommen, bevor Sie sich entscheiden. Firma . Ich stimme der Datenschutzerklärung zu. Kostenfreien Entwurf anfordern Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? +49 174 2796784 · WhatsApp . ."
   },
   {
    "id": "webseite-erstellen-lassen-2",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Erste Einschätzung",
+   "heading": "So könnte Ihre Seite aussehen.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Erste Einschätzung. Sie schreiben uns kurz, was Sie vorhaben. Wir melden uns innerhalb von 24 Stunden mit einer ehrlichen Einschätzung — kostenlos. . 2."
+   "text": "So könnte Ihre Seite aussehen.. Beispiele aus echten Branchen — handcodiert, mit eingebauten Werkzeugen, die Anfragen erzeugen statt nur zu zeigen. Branche · Demo Friseur & Beauty Online-Buchung rund um die Uhr, Wunsch-Stylist wählbar, Live-Verfügbarkeit. Demo ansehen Branche · Demo Dachdecker & Handwerk Foto vom Dach hochladen, Festpreis-Anfrage direkt aus dem Foto — plus Sturm-Notdienst. Demo ansehen Branche · Demo Immobilienmakler Wertermittlung in 60 Sekunden und Objektsuche mit Live-Filter. Demo ansehen Branche · Demo Arzt- & Zahnarztpraxis Online-Terminbuchung, digitale Rezept-Anfrage und transparente Sprechzeiten. Demo ansehen Branche · Demo Sanitär & Heizung Anfrage-Formular statt Telefon, Notdienst-Status und Festpreis-Rechner. Demo ansehen Branche · Demo Restaurant & Gastronomie Tisch-Reservierung online, Speisekarte mit Filter und Veranstaltungs-Anfragen. Demo ansehen Branche · Demo Coaching & Beratung Erstgespräch direkt buchbar (Kalender-Integration), Methoden und Referenzen. Demo ansehen Branche · Demo Spedition & Logistik Tarif-Rechner, Frachtanfrage-Formular und Sendungs-Tracking. Demo ansehen +"
   },
   {
    "id": "webseite-erstellen-lassen-3",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Entwurf",
+   "heading": "Ihre Branche nicht dabei?",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Entwurf. Innerhalb weniger Tage sehen Sie einen ersten Entwurf Ihrer neuen Seite — konkret, nicht als Muster. . 3."
+   "text": "Ihre Branche nicht dabei?. Wir setzen viele weitere Branchen um — und begleiten auch Gründer beim Start ins Netz. Schreiben Sie uns kurz, was Sie vorhaben. Anfrage stellen . Die gezeigten Betriebe sind beispielhafte Demos, keine realen Kunden — sie zeigen, wie Ihre Branche umgesetzt aussehen kann. ."
   },
   {
    "id": "webseite-erstellen-lassen-4",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Ihre Freigabe",
+   "heading": "Mehr als eine schöne Seite — eine, die mitarbeitet.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Ihre Freigabe. Gefällt der Entwurf, geht es weiter. Gefällt er nicht, brechen Sie ab — ohne Zahlung. Erst nach Freigabe wird gezahlt. . 4."
+   "text": "Mehr als eine schöne Seite — eine, die mitarbeitet.. Im KI-Zeitalter reicht „online sein\" nicht. Ihre Seite soll gefunden werden, Anfragen bringen und Ihnen Routine abnehmen."
   },
   {
    "id": "webseite-erstellen-lassen-5",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Live in 2–4 Wochen",
+   "heading": "Werkzeuge, die Anfragen bringen",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Live in 2–4 Wochen. Wir setzen handcodiert um und bringen Ihre Website online. Der Quellcode gehört Ihnen. . ."
+   "text": "Werkzeuge, die Anfragen bringen. Online-Termine, Förder-Rechner oder Wertermittlung: eingebaute Werkzeuge nehmen Routine ab und machen aus Besuchern Anfragen — rund um die Uhr. ."
   },
   {
    "id": "webseite-erstellen-lassen-6",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Festpreise. Einmalig.",
+   "heading": "Gefunden, wo heute gesucht wird",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Festpreise. Einmalig.. Keine Abo-Gebühren, kein Baukasten-Zwang. Der Preis richtet sich nach Umfang — nicht nach Ihrem Standort. Essential. 1.290 €. Eine Seite, die alles zeigt — barrierefrei gebaut. Für Handwerk, Beauty, Café, Florist, Studio. . Professional. 1.990 €. Bis zu 5 Unterseiten, lokale SEO und ein Branchen-Werkzeug. Für Dachdecker, Spedition, Praxis, Hotel. . Premium. 2.990 €. Großzügiger Umfang nach Absprache, Branchen-Werkzeuge, Editorial-Layout. Für Zahnarzt, Makler, Kanzlei. . Premium+. 3.990 €. Premium plus Mandantenportal und technische Datenschutz-Pflege. Der Pilot für anspruchsvolle Kanzleien. . Optionale Wartung (Hosting, Backups, Updates) ab 99 €/Monat — freiwillig. Was eine Website kostet, ehrlich erklärt . ."
+   "text": "Gefunden, wo heute gesucht wird. Sauber, schnell und maschinenlesbar gebaut — damit Suchmaschinen und KI-Antwortdienste Ihre Inhalte lesen und Sie als Quelle nennen können. ."
   },
   {
    "id": "webseite-erstellen-lassen-7",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "",
+   "heading": "Schlank statt Ballast",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Schlank statt Ballast. Handcodiert, ohne Plugin-Ballast: schnell, barrierefrei nach BFSG und vorbereitet auf das, was kommt. Der Quellcode gehört Ihnen. . . Rechenhilfe."
+  },
+  {
+   "id": "webseite-erstellen-lassen-8",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "kr-wr-h",
+   "heading": "Was kostet Sie Ihre aktuelle Website?",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Was kostet Sie Ihre aktuelle Website?. Eine Seite, die keine Anfragen bringt, kostet still — jeden Monat. Rechnen Sie mit Ihren eigenen Zahlen; wir tragen nichts ein. Durchschnittlicher Auftragswert € Mehr Aufträge im Monat — Ihre Annahme 1 2 3 . . . Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft. Kostenfreien Entwurf anfordern . Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose. ."
+  },
+  {
+   "id": "webseite-erstellen-lassen-9",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
    "heading": "Eine Stimme, die zählt.",
@@ -755,39 +803,55 @@
    "text": "Eine Stimme, die zählt.. . „Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!\". Ilyas Kablan · Google Local Guide · Auf Google ansehen ↗ . ."
   },
   {
-   "id": "webseite-erstellen-lassen-8",
-   "url": "/webseite-erstellen-lassen",
-   "anchor": "",
-   "heading": "So könnte Ihre Seite arbeiten.",
-   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "So könnte Ihre Seite arbeiten.. Beispiel-Demos aus echten Branchen — mit eingebauten Werkzeugen, die Anfragen erzeugen statt nur zu zeigen. Branche · Demo"
-  },
-  {
-   "id": "webseite-erstellen-lassen-9",
-   "url": "/webseite-erstellen-lassen",
-   "anchor": "",
-   "heading": "Friseur & Beauty",
-   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Friseur & Beauty. Online-Terminbuchung gegen No-Shows, Stil-Empfehlung, Galerie — eine Seite, die rund um die Uhr Termine annimmt. Friseur-Website ansehen Branche · Demo"
-  },
-  {
    "id": "webseite-erstellen-lassen-10",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Dachdecker & Handwerk",
+   "heading": "So läuft es ab.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Dachdecker & Handwerk. Förder-Rechner (BAFA/KfW) und Foto-Anfrage, die Interessenten vorqualifizieren — bevor das Telefon klingelt. Dachdecker-Website ansehen Branche · Demo"
+   "text": "So läuft es ab.. Vier Schritte, kein Risiko: Sie zahlen erst, wenn der Entwurf steht und Sie ihn freigeben. 1."
   },
   {
    "id": "webseite-erstellen-lassen-11",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
-   "heading": "Immobilienmakler",
+   "heading": "Erste Einschätzung",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Immobilienmakler. Sofort-Wertermittlung und Live-Filter, die aus Besuchern echte Eigentümer-Anfragen machen. Makler-Website ansehen . Die gezeigten Betriebe sind beispielhafte Demos, keine realen Kunden — sie zeigen, wie Ihre Branche umgesetzt aussehen kann. ."
+   "text": "Erste Einschätzung. Sie schreiben uns kurz, was Sie vorhaben. Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung — kostenlos. . 2."
   },
   {
    "id": "webseite-erstellen-lassen-12",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "",
+   "heading": "Entwurf",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Entwurf. Innerhalb weniger Tage sehen Sie einen ersten Entwurf Ihrer neuen Seite — konkret, nicht als Muster. . 3."
+  },
+  {
+   "id": "webseite-erstellen-lassen-13",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "",
+   "heading": "Ihre Freigabe",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Ihre Freigabe. Gefällt der Entwurf, geht es weiter. Gefällt er nicht, brechen Sie ab — ohne Zahlung. Erst nach Freigabe wird gezahlt. . 4."
+  },
+  {
+   "id": "webseite-erstellen-lassen-14",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "",
+   "heading": "Live in 2–4 Wochen",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Live in 2–4 Wochen. Wir setzen handcodiert um und bringen Ihre Website online. Der Quellcode gehört Ihnen. . ."
+  },
+  {
+   "id": "webseite-erstellen-lassen-15",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "preise",
+   "heading": "Festpreise. Einmalig.",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Festpreise. Einmalig.. Keine Abo-Gebühren, kein Baukasten-Zwang. Der Preis richtet sich nach Umfang — nicht nach Ihrem Standort. Gründungs-Angebot 2026: Sie sparen 200 bis 600 € — im Gegenzug dürfen wir Ihre fertige Seite als Referenz zeigen. Essential. 1.090 €. statt 1.290 € · Gründungspreis. Eine Seite, die alles zeigt — barrierefrei gebaut. Für Handwerk, Beauty, Café, Florist, Studio. . Professional. 1.690 €. statt 1.990 € · Gründungspreis. Bis zu 5 Unterseiten, lokale SEO und ein Branchen-Werkzeug. Für Dachdecker, Spedition, Praxis, Hotel. . Premium. 2.490 €. statt 2.990 € · Gründungspreis. Großzügiger Umfang nach Absprache, Branchen-Werkzeuge, Editorial-Layout. Für Zahnarzt, Makler, Kanzlei. . Premium+. 3.390 €. statt 3.990 € · Gründungspreis. Premium plus Mandantenportal und technische Datenschutz-Pflege. Der Pilot für anspruchsvolle Kanzleien. . Optionale Wartung (Hosting, Backups, Updates) ab 99 €/Monat — freiwillig. Was eine Website kostet, ehrlich erklärt . ."
+  },
+  {
+   "id": "webseite-erstellen-lassen-16",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
    "heading": "Wie läuft es ab, wenn ich eine Webseite erstellen lasse?",
@@ -795,7 +859,7 @@
    "text": "Wie läuft es ab, wenn ich eine Webseite erstellen lasse?. In vier Schritten: kostenlose Erst­einschätzung, erster Entwurf innerhalb weniger Tage, Ihre Freigabe — und erst danach wird gezahlt. Danach ist Ihre Seite je nach Umfang in 2 bis 4 Wochen online. ."
   },
   {
-   "id": "webseite-erstellen-lassen-13",
+   "id": "webseite-erstellen-lassen-17",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
    "heading": "Was muss ich selbst liefern?",
@@ -803,7 +867,7 @@
    "text": "Was muss ich selbst liefern?. Texte, Bilder und Ihre Ziele, soweit vorhanden. Fehlt etwas, helfen wir bei Struktur und Formulierung. Je besser Ihre Zuarbeit, desto schneller — der Festpreis bleibt gleich. ."
   },
   {
-   "id": "webseite-erstellen-lassen-14",
+   "id": "webseite-erstellen-lassen-18",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
    "heading": "Was, wenn mir der Entwurf nicht gefällt?",
@@ -811,20 +875,36 @@
    "text": "Was, wenn mir der Entwurf nicht gefällt?. Dann brechen Sie ab — ohne Zahlung. Sie zahlen erst, wenn Sie den Entwurf freigeben. So tragen Sie kein Risiko. ."
   },
   {
-   "id": "webseite-erstellen-lassen-15",
+   "id": "webseite-erstellen-lassen-19",
    "url": "/webseite-erstellen-lassen",
    "anchor": "",
    "heading": "Gibt es laufende Kosten oder ein Abo?",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Gibt es laufende Kosten oder ein Abo?. Nein. Der Festpreis ist einmalig, der Quellcode gehört Ihnen. Optionale Wartung gibt es ab 99 €/Monat — freiwillig, kein Zwang. . ."
+   "text": "Gibt es laufende Kosten oder ein Abo?. Nein. Der Festpreis ist einmalig, der Quellcode gehört Ihnen. Optionale Wartung gibt es ab 99 €/Monat — freiwillig, kein Zwang. . . . Warum Karriaro."
   },
   {
-   "id": "webseite-erstellen-lassen-16",
+   "id": "webseite-erstellen-lassen-20",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "",
+   "heading": "Das Web wird zur Anwendung.",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Das Web wird zur Anwendung.. Über 20 Jahre in der Tech-Branche zeigen mir: Nutzerverhalten ändert sich schneller als die meisten Websites. Menschen googeln nicht mehr nur — sie fragen KI. Wer da sichtbar bleiben will, braucht keine Broschüre, sondern eine Anwendung, die mitarbeitet. Dafür steht Karriaro — mit meinem Namen dahinter. Muammer Kızılaslan · Gründer. Meine Geschichte → . ."
+  },
+  {
+   "id": "webseite-erstellen-lassen-21",
    "url": "/webseite-erstellen-lassen",
    "anchor": "kontakt",
    "heading": "Webseite erstellen lassen.",
    "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
-   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
+   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenfreien Entwurf anfordern Lieber telefonisch oder per WhatsApp? +49 174 2796784 · WhatsApp schreiben . . × Referenzprogramm · 10 Plätze · Vergabe ab sofort."
+  },
+  {
+   "id": "webseite-erstellen-lassen-22",
+   "url": "/webseite-erstellen-lassen",
+   "anchor": "kr-gp-title",
+   "heading": "Ihre Website. Ihr Preis.",
+   "pageTitle": "Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro",
+   "text": "Ihre Website. Ihr Preis.. Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren. Bewerbungen werden laufend geprüft. Das Programm endet, sobald alle zehn Plätze vergeben sind. Bewerbung in 5 Minuten · persönliche Antwort. Für einen Platz bewerben Vielleicht später ."
   },
   {
    "id": "website-pruefen-0",
@@ -832,7 +912,7 @@
    "anchor": "form-section",
    "heading": "Website kostenlos prüfen.",
    "pageTitle": "Website kostenlos prüfen — BFSG, Performance, SEO & KI-Auffindbarkeit | Karriaro",
-   "text": "Website kostenlos prüfen.. In Sekunden sehen Sie, wo Ihre Website steht — BFSG-Konformität, Performance, SEO und KI-Auffindbarkeit. Den ausführlichen Bericht schicken wir Ihnen per E-Mail. Ihre Website . Ihr Name . Ihre E-Mail-Adresse . Firma . Ich bin damit einverstanden, dass Karriaro meine Website analysiert und die Ergebnisse an meine E-Mail-Adresse sendet. Die Daten werden nach 90 Tagen automatisch gelöscht. Datenschutzerklärung: karriaro-webdesign.de/datenschutz . . Audit anfordern . Wir analysieren nur die öffentlich erreichbare Startseite Ihrer Website. Es findet keine automatische Anmeldung oder Newsletter-Eintragung statt."
+   "text": "Website kostenlos prüfen.. In Sekunden sehen Sie, wo Ihre Website steht — Barrierefreiheit, Performance, SEO und KI-Auffindbarkeit. Den ausführlichen Bericht schicken wir Ihnen per E-Mail. Ihre Website . Ihr Name . Ihre E-Mail-Adresse . Firma . Ich bin damit einverstanden, dass Karriaro meine Website analysiert und die Ergebnisse an meine E-Mail-Adresse sendet. Die Daten werden nach 90 Tagen automatisch gelöscht. Datenschutzerklärung: karriaro-webdesign.de/datenschutz . Ja, Karriaro Webdesign darf mir bis zu drei E-Mails mit Hinweisen zu meiner Website und einem unverbindlichen Angebot für eine neue Website senden. Die Einwilligung ist freiwillig; ich kann sie jederzeit widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an kontakt@karriaro.de. Mehr in der Datenschutzerklärung . . Audit anfordern . Wir analysieren nur die öffentlich erreichbare Startseite Ihrer Website. Ohne Ihr zusätzliches Häkchen erhalten Sie nur den angeforderten Bericht."
   },
   {
    "id": "website-pruefen-1",
@@ -840,7 +920,7 @@
    "anchor": "form-section",
    "heading": "Was wir prüfen",
    "pageTitle": "Website kostenlos prüfen — BFSG, Performance, SEO & KI-Auffindbarkeit | Karriaro",
-   "text": "Was wir prüfen. BFSG-Konformität — Barrierefreiheit nach WCAG 2.1 AA, seit dem 28.06.2025 für viele Betriebe Pflicht. Performance & Core Web Vitals — Ladezeit und Stabilität, die über Verbleib oder Absprung entscheiden. SEO-Grundlagen — Title, Meta-Description, strukturierte Daten, Canonical, Sitemap, robots.txt. KI-Auffindbarkeit — ob ChatGPT, Perplexity und Gemini Ihre Inhalte sauber lesen und einordnen können. Branchen-Standards — die Inhalte, die Kundinnen und Kunden in Ihrer Branche erwarten. ."
+   "text": "Was wir prüfen. Barrierefreiheit — gemessen nach WCAG 2.1 AA. Ob das BFSG für Ihr Angebot gilt, hängt von Angebot und Betriebsgröße ab. Performance & Core Web Vitals — Ladezeit und Stabilität, die über Verbleib oder Absprung entscheiden. SEO-Grundlagen — Title, Meta-Description, strukturierte Daten, Canonical, Sitemap, robots.txt. KI-Auffindbarkeit — ob ChatGPT, Perplexity und Gemini Ihre Inhalte sauber lesen und einordnen können. Branchen-Standards — die Inhalte, die Kundinnen und Kunden in Ihrer Branche erwarten. ."
   },
   {
    "id": "website-pruefen-2",
@@ -848,7 +928,7 @@
    "anchor": "form-section",
    "heading": "So funktioniert es",
    "pageTitle": "Website kostenlos prüfen — BFSG, Performance, SEO & KI-Auffindbarkeit | Karriaro",
-   "text": "So funktioniert es. Adresse eingeben — die erste Einschätzung erscheint in Sekunden, ohne Anmeldung. E-Mail angeben — wir senden den ausführlichen Bericht mit allen Befunden. Optional ein 30-Minuten-Gespräch, in dem wir die Hebel gemeinsam durchgehen. . № 02 · Erste Einschätzung — eine Kölner Manufaktur, kein anonymes Tool. Wir messen uns an denselben Maßstäben, die wir prüfen: securityheaders.com · MDN Observatory . Wenn Ihr Name draufsteht, steht unserer dahinter."
+   "text": "So funktioniert es. Adresse eingeben — die erste Einschätzung erscheint in Sekunden, ohne Anmeldung. E-Mail angeben — wir senden den ausführlichen Bericht mit allen Befunden. Optional ein 30-Minuten-Gespräch, in dem wir die Hebel gemeinsam durchgehen. . № 02 · Erste Einschätzung — eine handcodierte Manufaktur, kein anonymes Tool. Wir messen uns an denselben Maßstäben, die wir prüfen: securityheaders.com · MDN Observatory . Wenn Ihr Name draufsteht, steht unserer dahinter."
   },
   {
    "id": "website-pruefen-3",
@@ -856,7 +936,7 @@
    "anchor": "form-section",
    "heading": "Häufige Fragen",
    "pageTitle": "Website kostenlos prüfen — BFSG, Performance, SEO & KI-Auffindbarkeit | Karriaro",
-   "text": "Häufige Fragen. Ist der Website-Check kostenlos? Ja, die erste Einschätzung ist kostenlos und ohne Anmeldung. Für den ausführlichen Bericht geben Sie eine E-Mail-Adresse an. Was prüft das Tool? BFSG-Konformität, Performance & Core Web Vitals, SEO-Grundlagen, KI-Auffindbarkeit und branchenspezifische Standards. Was hat der Check mit dem BFSG zu tun? Das Barrierefreiheitsstärkungsgesetz gilt seit dem 28.06.2025. Der Check zeigt, wo Ihre Seite von den zugrunde liegenden WCAG-2.1-AA-Anforderungen abweicht — mehr im BFSG-Ratgeber . Wie schnell bekomme ich ein Ergebnis? Die erste Einschätzung erscheint nach wenigen Sekunden im Browser, den vollständigen Bericht kurz darauf per E-Mail. Werden meine Daten gespeichert? Geprüft wird nur die öffentlich erreichbare Startseite; keine Anmeldung, kein Newsletter. Erfasste Audit-Daten werden nach 90 Tagen automatisch gelöscht. . Weiter lesen: Ist Ihre Website BFSG-Pflicht? · Was kostet eine Website? · zur Manufaktur ."
+   "text": "Häufige Fragen. Ist der Website-Check kostenlos? Ja, die erste Einschätzung ist kostenlos und ohne Anmeldung. Für den ausführlichen Bericht geben Sie eine E-Mail-Adresse an. Was prüft das Tool? Barrierefreiheit (WCAG 2.1 AA), Performance & Core Web Vitals, SEO-Grundlagen, KI-Auffindbarkeit und branchenspezifische Standards. Was hat der Check mit dem BFSG zu tun? Das Barrierefreiheitsstärkungsgesetz gilt seit dem 28.06.2025 für bestimmte Produkte und Dienstleistungen. Der Check zeigt, wo Ihre Seite von den zugrunde liegenden WCAG-2.1-AA-Anforderungen abweicht — mehr im BFSG-Ratgeber . Wie schnell bekomme ich ein Ergebnis? Die erste Einschätzung erscheint nach wenigen Sekunden im Browser, den vollständigen Bericht kurz darauf per E-Mail. Werden meine Daten gespeichert? Geprüft wird nur die öffentlich erreichbare Startseite. Ohne Ihr zusätzliches Häkchen erhalten Sie nur den angeforderten Bericht. Erfasste Audit-Daten werden nach 90 Tagen automatisch gelöscht. . Weiter lesen: Ist Ihre Website BFSG-Pflicht? · Was kostet eine Website? · zur Manufaktur ."
   },
   {
    "id": "website-pruefen-4",
@@ -1040,7 +1120,7 @@
    "anchor": "",
    "heading": "Warum es Karriaro gibt.",
    "pageTitle": "Gründer-Story · Muammer Kızılaslan · Karriaro Webdesign",
-   "text": "Warum es Karriaro gibt.. Muammer Kızılaslan · Gründer Karriaro. Die Website ist für die meisten kleinen Unternehmen der erste Eindruck — und zugleich ihr schwächster. Zu langsam, unsichtbar für Google und KI-Suche, rechtlich angreifbar. Nicht aus eigenem Verschulden, sondern weil ihnen niemand den Standard gibt, den große Marken längst als selbstverständlich behandeln. Karriaro entstand aus über 20 Jahren Erfahrung als Digital-Executive in der Konzern-IT — vom Informatikstudium bis zur Verantwortung für große Digital-Landschaften. Dort ist alltäglich, was beim Mittelstand fehlt: Schema.org von Anfang an, BFSG-Audit vor dem Live-Gang, geprüfte Ladezeit als Mindestmaß, Websites, die für die KI-Ära gebaut sind. Wir sehen bis heute aus nächster Nähe, wie große Marken das machen — und wie wenig davon bei kleinen Unternehmen ankommt. Was der Mittelstand stattdessen bekommt: einen WordPress-Baukasten vom Cousin, ein Wix-Template aus 2019, eine Agentur-Seite für 5.000 € mit drei Slidern und null Substanz. Die Lücke ist nicht das Geld. Es ist der Standard. Niemand baut für KMU mit der Sorgfalt, die große Häuser ihren Top-Marken widmen — weil es sich im Volumengeschäft nicht rechnet."
+   "text": "Warum es Karriaro gibt.. Muammer Kızılaslan · Gründer Karriaro. Inhabergeführt · ein Ansprechpartner, keine Zwischenschicht — persönlich verantwortlich, von der ersten Skizze bis zur Live-Schaltung. . Das Nutzerverhalten kippt: Menschen googeln nicht mehr nur — sie fragen KI. Websites hören auf, Broschüren zu sein, und werden zu Anwendungen, die mitarbeiten. Doch für die meisten kleinen Unternehmen ist die Website noch der erste Eindruck — und zugleich ihr schwächster: zu langsam, unsichtbar für Google und KI-Suche, rechtlich angreifbar. Nicht aus eigenem Verschulden, sondern weil ihnen niemand den Standard gibt, den große Marken längst als selbstverständlich behandeln. Karriaro entstand aus über 20 Jahren Erfahrung als Digital-Executive in der Konzern-IT — vom Informatikstudium bis zur Verantwortung für große Digital-Landschaften. Dort ist alltäglich, was beim Mittelstand fehlt: Schema.org von Anfang an, BFSG-Audit vor dem Live-Gang, geprüfte Ladezeit als Mindestmaß, Websites, die für die KI-Ära gebaut sind. Wir sehen bis heute aus nächster Nähe, wie große Marken das machen — und wie wenig davon bei kleinen Unternehmen ankommt."
   },
   {
    "id": "gruender-1",
@@ -1048,7 +1128,7 @@
    "anchor": "",
    "heading": "Warum es Karriaro gibt.",
    "pageTitle": "Gründer-Story · Muammer Kızılaslan · Karriaro Webdesign",
-   "text": "Warum es Karriaro gibt.. Karriaro ist der Beweis, dass es sich rechnet, sobald man als Manufaktur statt als Fließband arbeitet. Für Sie heißt das: eine Website, die Anfragen bringt, in Google und KI-Antworten auftaucht und Ihr Abmahn-Risiko senkt — zum Festpreis ab 1.290 €, ohne Abo."
+   "text": "Warum es Karriaro gibt.. Was der Mittelstand stattdessen bekommt: einen WordPress-Baukasten vom Cousin, ein Wix-Template aus 2019, eine Agentur-Seite für 5.000 € mit drei Slidern und null Substanz. Die Lücke ist nicht das Geld. Es ist der Standard. Niemand baut für KMU mit der Sorgfalt, die große Häuser ihren Top-Marken widmen — weil es sich im Volumengeschäft nicht rechnet. Karriaro ist der Beweis, dass es sich rechnet, sobald man als Manufaktur statt als Fließband arbeitet. Für Sie heißt das: eine Website, die Anfragen bringt, in Google und KI-Antworten auftaucht und Ihr Abmahn-Risiko senkt — zum Festpreis ab 1.290 €, ohne Abo. Wir bauen keine ordinären Webseiten. Sondern Unikate, die mitarbeiten."
   },
   {
    "id": "gruender-2",
@@ -1072,7 +1152,7 @@
    "anchor": "",
    "heading": "Persönlich",
    "pageTitle": "Gründer-Story · Muammer Kızılaslan · Karriaro Webdesign",
-   "text": "Persönlich. Sie sprechen direkt mit dem Gründer, nicht mit einem Account-Manager. Mail, Anruf, Antwort in 24 Stunden — eine Ansprechperson vom Briefing bis Live. ."
+   "text": "Persönlich. Sie sprechen direkt mit dem Gründer, nicht mit einem Account-Manager. Mail oder Anruf, persönliche Antwort — eine Ansprechperson vom Briefing bis Live. ."
   },
   {
    "id": "gruender-5",
@@ -1104,7 +1184,7 @@
    "anchor": "",
    "heading": "Was Karriaro nicht ist",
    "pageTitle": "Gründer-Story · Muammer Kızılaslan · Karriaro Webdesign",
-   "text": "Was Karriaro nicht ist. Karriaro ist keine Werbeagentur. Wir entwerfen keine Logos, drehen keine Imagefilme, schalten keine Google-Ads. Wir bauen Websites — messbar schnell, sicher gebaut und mit Werkzeugen, die mitarbeiten. Für KMU ab 1.290 €, ohne Abo. Wenn Sie ein Branding-Refresh wollen, sind Sie woanders besser. Wenn Sie eine Website wollen, die Anfragen bringt, Abmahn-Risiken senkt und in Google steht — dann sprechen Sie mit uns. Muammer Kızılaslan. Gründer Karriaro · Köln. muammerkizilaslan.com — die Profil-Seite des Gründers ansehen → ."
+   "text": "Was Karriaro nicht ist. Karriaro ist keine Werbeagentur. Wir entwerfen keine Logos, drehen keine Imagefilme, schalten keine Google-Ads. Wir bauen Websites — messbar schnell, sicher gebaut und mit Werkzeugen, die mitarbeiten. Für KMU ab 1.290 €, ohne Abo. Wenn Sie ein Branding-Refresh wollen, sind Sie woanders besser. Wenn Sie eine Website wollen, die Anfragen bringt, Abmahn-Risiken senkt und in Google steht — dann sprechen Sie mit uns. Wie wir mit KI arbeiten, sehen Sie nicht nur in Worten: Im Labor stehen die Werkzeuge, die wir selbst gebaut haben und täglich benutzen. Muammer Kızılaslan. Gründer Karriaro. muammerkizilaslan.com — die Profil-Seite des Gründers ansehen → . ★★★★★. „Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!\" Ilyas Kablan. Google Local Guide · 58 Bewertungen. Echte Bewertung auf Google ansehen ↗ ."
   },
   {
    "id": "gruender-9",
@@ -1512,7 +1592,7 @@
    "anchor": "",
    "heading": "Webseite für Dachdecker erstellen lassen.",
    "pageTitle": "Webseite für Dachdecker erstellen lassen — handcodiert, Festpreis | Karriaro",
-   "text": "Webseite für Dachdecker erstellen lassen.. Eine Website für Ihren Betrieb, die Anfragen vorqualifiziert — mit Förder-Rechner und Foto-Upload, handcodiert und schnell, damit Sie die richtigen Aufträge bekommen. Erstgespräch — Antwort in 24 h Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
+   "text": "Webseite für Dachdecker erstellen lassen.. Eine Website für Ihren Betrieb, die Anfragen vorqualifiziert — mit Förder-Rechner und Foto-Upload, handcodiert und schnell, damit Sie die richtigen Aufträge bekommen. Erstgespräch anfragen Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
   },
   {
    "id": "webdesign-fuer-dachdecker-1",
@@ -1592,7 +1672,7 @@
    "anchor": "kontakt",
    "heading": "Webseite erstellen lassen.",
    "pageTitle": "Webseite für Dachdecker erstellen lassen — handcodiert, Festpreis | Karriaro",
-   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
+   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
   },
   {
    "id": "webdesign-fuer-friseur-0",
@@ -1600,7 +1680,7 @@
    "anchor": "",
    "heading": "Webseite für Friseure erstellen lassen.",
    "pageTitle": "Webseite für Friseure erstellen lassen — handcodiert, Festpreis | Karriaro",
-   "text": "Webseite für Friseure erstellen lassen.. Eine Website für Ihren Salon, die rund um die Uhr Termine annimmt — handcodiert, schnell und so gebaut, dass neue Kunden Sie bei Google finden. Erstgespräch — Antwort in 24 h Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
+   "text": "Webseite für Friseure erstellen lassen.. Eine Website für Ihren Salon, die rund um die Uhr Termine annimmt — handcodiert, schnell und so gebaut, dass neue Kunden Sie bei Google finden. Erstgespräch anfragen Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
   },
   {
    "id": "webdesign-fuer-friseur-1",
@@ -1680,7 +1760,7 @@
    "anchor": "kontakt",
    "heading": "Webseite erstellen lassen.",
    "pageTitle": "Webseite für Friseure erstellen lassen — handcodiert, Festpreis | Karriaro",
-   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
+   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
   },
   {
    "id": "webdesign-fuer-immobilienmakler-0",
@@ -1688,7 +1768,7 @@
    "anchor": "",
    "heading": "Webseite für Immobilien- makler erstellen lassen.",
    "pageTitle": "Webseite für Immobilienmakler erstellen lassen — handcodiert | Karriaro",
-   "text": "Webseite für Immobilien- makler erstellen lassen.. Eine Website für Ihr Maklerbüro, die aus Besuchern Eigentümer-Anfragen macht — mit Sofort-Wertermittlung und Live-Filter, handcodiert und auf Vertrauen gebaut. Erstgespräch — Antwort in 24 h Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
+   "text": "Webseite für Immobilien- makler erstellen lassen.. Eine Website für Ihr Maklerbüro, die aus Besuchern Eigentümer-Anfragen macht — mit Sofort-Wertermittlung und Live-Filter, handcodiert und auf Vertrauen gebaut. Erstgespräch anfragen Anrufen: +49 174 2796784 . Festpreis ab 1.290 € , einmalig — kein Abo. Erst Entwurf, dann zahlen. ."
   },
   {
    "id": "webdesign-fuer-immobilienmakler-1",
@@ -1768,7 +1848,7 @@
    "anchor": "kontakt",
    "heading": "Webseite erstellen lassen.",
    "pageTitle": "Webseite für Immobilienmakler erstellen lassen — handcodiert | Karriaro",
-   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten innerhalb von 24 Stunden eine ehrliche Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
+   "text": "Webseite erstellen lassen.. Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung. Kostenlos und unverbindlich. Ich stimme der Datenschutzerklärung zu. Kostenlose Einschätzung anfordern Lieber telefonisch? +49 174 2796784 . ."
   },
   {
    "id": "webdesign-hamburg-0",
@@ -2128,7 +2208,7 @@
    "anchor": "",
    "heading": "Handcodiert für Stuttgart.",
    "pageTitle": "Webdesign Stuttgart | Handcodierte Unikate, ab 1.290 € | Karriaro",
-   "text": "Handcodiert für Stuttgart.. Karriaro ist eine Webdesign-Manufaktur, gegründet in Köln. Den ersten Entwurf liefern wir meist innerhalb weniger Tage, die Zusammenarbeit läuft DACH-weit digital. Für Pilotprojekte in der Region Stuttgart sind Vor-Ort-Termine nach Absprache möglich. Wir nehmen pro Quartal maximal fünf Projekte an. Das ist kein Marketing-Satz, sondern die Bedingung dafür, dass jede Website tatsächlich von Hand entsteht — mit eigenem Charakter statt austauschbarer Vorlage. Wenn Ihr Name darauf steht, steht unserer dahinter. Ihre aktuelle Seite kostenlos prüfen lassen . ."
+   "text": "Handcodiert für Stuttgart.. Karriaro ist eine Webdesign-Manufaktur für handcodierte Premium-Websites. Den ersten Entwurf liefern wir meist innerhalb weniger Tage, die Zusammenarbeit läuft DACH-weit digital. Für Pilotprojekte in der Region Stuttgart sind Vor-Ort-Termine nach Absprache möglich. Wir nehmen pro Quartal maximal fünf Projekte an. Das ist kein Marketing-Satz, sondern die Bedingung dafür, dass jede Website tatsächlich von Hand entsteht — mit eigenem Charakter statt austauschbarer Vorlage. Wenn Ihr Name darauf steht, steht unserer dahinter. Ihre aktuelle Seite kostenlos prüfen lassen . ."
   },
   {
    "id": "webdesign-stuttgart-3",
@@ -2400,7 +2480,7 @@
    "anchor": "kontakt-fakten",
    "heading": "Kontakt",
    "pageTitle": "Impressum · Karriaro Webdesign",
-   "text": "Kontakt. E-Mail: kontakt@karriaro.de . Antwort innerhalb von 24 Stunden. ."
+   "text": "Kontakt. E-Mail: kontakt@karriaro.de ."
   }
  ]
 }

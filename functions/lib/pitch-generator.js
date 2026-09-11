@@ -54,7 +54,7 @@ AUFBAU (genau diese Abschnitte, kompakt):
    Foto-Anfrage, Angebots-Assistent. Wähle passend zur übergebenen Branche.
 5. „Gefunden werden im KI-Zeitalter“ — ehrlich gerahmt: maschinenlesbare Daten, damit KI-Assistenten
    (z. B. ChatGPT/Perplexity) den Betrieb verstehen können. Als Möglichkeit, nicht als Versprechen.
-6. KONTAKT/CTA — handcodiertes Unikat, „einmalig, kein Abo“, Preis NUR wie übergeben (z. B. „ab 2.990 €“),
+6. KONTAKT/CTA — handcodiertes Unikat, „einmalig, kein Abo“, Preis NUR wie übergeben (z. B. „ab 1.290 €“),
    CTA „30-Minuten-Erstgespräch“.
 FOOTER: dezente kleine Zeile „Konzept — unverbindlicher Entwurf der Karriaro Manufaktur“ + der echte Firmenname.
 
@@ -86,7 +86,8 @@ function buildPitchUserMessage(facts = {}) {
         (f.services && f.services.length) ? "Echte Leistungen: " + f.services.slice(0, 8).join(", ") : null,
         f.websiteUri ? "Heutige Website: " + f.websiteUri : null,
         f.accent ? "Marken-Akzentfarbe (falls passend): " + f.accent : null,
-        "Preis-Rahmen (genau so nennen, nicht ändern): " + (f.priceFrom || "ab 2.990 €") + ", einmalig, kein Abo.",
+        // V11: Einstieg Essential, einmalig (eine Quelle je Codebasis: index.js PACKAGE_TIER_LABEL).
+        "Preis-Rahmen (genau so nennen, nicht ändern): " + (f.priceFrom || "ab 1.290 €") + ", einmalig, kein Abo.",
         (f.images && f.images.length) ? ["Verfügbare BILD-URLs (nur diese, sonst keine Bilder):",
             ...f.images.slice(0, 6).map((u, i) => (i + 1) + ". " + u)].join("\n") : null,
         "",

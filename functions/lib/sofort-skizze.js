@@ -307,13 +307,13 @@ function extractBrandTokens(html, finalUrl, domain, brancheKey) {
 // 3. KI-Text — System-Prompt + forced-tool_use-Schema + Fakten + Parsing
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SOFORT_SYS = `Du bist der Marken-Texter der Kölner Webdesign-Manufaktur Karriaro.
+const SOFORT_SYS = `Du bist der Marken-Texter von Karriaro Webdesign — Manufaktur für handcodierte Websites.
 Schreibe den Text einer Konzept-Startseite für den unten beschriebenen lokalen Betrieb.
 Stütze headline, subline und found AUSSCHLIESSLICH auf die übergebenen FAKTEN. Findest du
 wenig Belastbares, sage das ehrlich und neutral in 'found' (erfinde nichts dazu).
 
 Tonalität: selbstbewusst, handwerklich, klar, ohne Buzzword-Soße, jargonfrei, Deutsch, Sie-Anrede.
-ORT: Köln ist der Sitz von Karriaro, NICHT der des Betriebs. Nenne eine Stadt/Region des Betriebs
+ORT: Nenne nie einen Ort von Karriaro. Nenne eine Stadt/Region des Betriebs
 nur, wenn sie ausdrücklich in den FAKTEN steht — erfinde niemals einen Ort.
 RECHT (UWG, verbindlich): KEINE Superlative oder Absolut-Behauptungen ('beste', 'Nr. 1',
 'führend', 'garantiert', '100 %', 'unschlagbar'). Auffindbarkeit bei Google/KI NUR als
@@ -429,7 +429,7 @@ function cap(s, n) {
 // 3b. Stufe 2 — VOLL-GENERATIV: die KI erzeugt eine komplette, eigenständige
 //     Konzept-HTML-Seite (sieht den Screenshot). Wird im Sandbox-iframe gerendert.
 // ─────────────────────────────────────────────────────────────────────────────
-const GENERATIVE_SYS = `Du bist eine preisgekrönte Web-Designerin der Kölner Manufaktur Karriaro.
+const GENERATIVE_SYS = `Du bist eine Web-Designerin der Manufaktur Karriaro Webdesign.
 Du SIEHST einen Screenshot der heutigen Website eines lokalen Betriebs. Entwirf daraus eine
 KOMPLETT NEUE, eigenständige Startseiten-Konzeptseite — einzigartig für genau diesen Betrieb.
 
