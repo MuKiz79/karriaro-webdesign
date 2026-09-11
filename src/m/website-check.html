@@ -2776,36 +2776,10 @@ App.strategy = {
 // 5 personalisierte Nachrichten
 // ══════════════════════════════════════
 App.sequence = {
-    generate(domain, ws, tech, place, revenue, prob, strategy) {
-        const name = place?.displayName?.text || domain;
-        const rev = revenue.yearlyRevenueLoss;
-        const revStr = rev > 0 ? rev.toLocaleString('de-DE') : '—';
-
-        return [
-            {
-                day: 1, subject: `${name} — Ihre Website kostet Sie Kunden`,
-                body: `Guten Tag,\n\nich habe ${domain} auf Google getestet. Die Ergebnisse:\n\n- Performance: ${ws.perf}/100 (Mobile)\n- ${!ws.isHttps ? 'Kein SSL-Zertifikat — Browser zeigen "Nicht sicher"\n- ' : ''}SEO: ${ws.seo}/100\n- Geschaetzter Umsatzverlust: ~${revStr} Euro/Jahr\n\n${tech.isBaukasten ? `Ihre Seite laeuft auf ${tech.cms}. Das limitiert Design, Geschwindigkeit und SEO strukturell.` : ''}\n\nIch baue moderne Websites fuer Unternehmen wie Ihres — handcodiert, ab 1.290 Euro einmalig. Kein Abo.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nIhr Karriaro-Team\nkarriaro-webdesign.de`
-            },
-            {
-                day: 4, subject: `Vorher/Nachher — so sah Spedition Kolbe aus`,
-                body: `Guten Tag,\n\nich hatte Ihnen vor ein paar Tagen geschrieben. Hier ein konkretes Beispiel:\n\nSpedition Kolbe — vorher eine veraltete Standard-Seite, nachher ein moderner Auftritt der Vertrauen schafft. Ergebnis: deutlich mehr Anfragen ueber die Website.\n\nFuer ${name} sehe ich aehnliches Potenzial.\n\nSchauen Sie sich das Ergebnis an: karriaro-webdesign.de\n\nBeste Gruesse\nIhr Karriaro-Team`
-            },
-            {
-                day: 8, subject: `${ws.a11y < 70 ? 'BFSG-Frist: Barrierefreiheit seit Juni 2025 Pflicht' : 'Google bevorzugt schnelle Websites — Ihre ist es nicht'}`,
-                body: ws.a11y < 70
-                    ? `Guten Tag,\n\nseit Juni 2025 gilt das Barrierefreiheitsstaerkungsgesetz (BFSG). Ihre Website erreicht ${ws.a11y}/100 im Barrierefreiheits-Test.\n\nDas ist nicht nur ein Ranking-Nachteil — es kann rechtliche Konsequenzen haben.\n\nEine neue Karriaro-Website ist von Anfang an BFSG- und DSGVO-konform.\n\nSoll ich Ihnen ein unverbindliches Angebot machen?\n\nViele Gruesse\nIhr Karriaro-Team`
-                    : `Guten Tag,\n\nGoogle hat bestaetigt: Websites die alle Core Web Vitals bestehen, erhalten bis zu 24% mehr organischen Traffic.\n\nIhre Website besteht ${prob.dimensions?.d1 ? Math.round((1 - prob.dimensions.d1.score) * 6) : '?'} von 6 Pruefungen.\n\nMit einer neuen Website von Karriaro bestehen Sie alle.\n\nViele Gruesse\nIhr Karriaro-Team`
-            },
-            {
-                day: 12, subject: `Kostenloser Entwurf fuer ${name}`,
-                body: `Guten Tag,\n\nich habe mir die Freiheit genommen, einen groben Entwurf fuer ${domain} zu erstellen. Keine Verpflichtung — ich moechte Ihnen einfach zeigen, was moeglich ist.\n\nDarf ich Ihnen den Entwurf per E-Mail oder in einem kurzen 15-Minuten-Call zeigen?\n\nAntworten Sie einfach auf diese Mail oder buchen Sie direkt: karriaro-webdesign.de\n\nViele Gruesse\nIhr Karriaro-Team`
-            },
-            {
-                day: 18, subject: `Letzte Nachricht — Angebot fuer ${name}`,
-                body: `Guten Tag,\n\ndies ist meine letzte Nachricht. Ich moechte nicht aufdringlich sein.\n\nFalls Sie irgendwann ueber eine neue Website nachdenken: karriaro-webdesign.de — ab 1.290 Euro, fertig in 1-2 Wochen, komplett handcodiert.\n\n${rev > 1990 ? `Bei einem geschaetzten Umsatzverlust von ${revStr} Euro/Jahr amortisiert sich das in ${Math.ceil(1990 / (rev / 12))} Monaten.` : ''}\n\nIch wuensche Ihnen weiterhin viel Erfolg.\n\nViele Gruesse\nIhr Karriaro-Team\nKarriaro Webdesign`
-            }
-        ];
-    }
+    // 2026-09-11: Die fünfteilige Kaltakquise-Folge ist entfernt (Referenz ohne Beleg,
+    // Rechtsfolgen-Drohung, unbelegte Google-Zahl, Werbe-Mails ohne Einwilligung).
+    // Nachfass-Entwürfe gibt es nur im Lead-Werkzeug und erst mit geprüfter Kontaktgrundlage.
+    generate() { return []; }
 };
 
 // ══════════════════════════════════════
@@ -2876,7 +2850,7 @@ App.ui = {
             'Oeffnung': 'E-Mails an diese Branche werden selten geoeffnet. Der Betreff muss besonders stark sein — am besten mit einer konkreten Zahl oder einem Problem das sofort ins Auge faellt.',
             'Interesse': 'Der Inhaber wird die E-Mail wahrscheinlich lesen, aber sein Problem nicht sofort erkennen. Zeige einen konkreten Beweis: Screenshot der mobilen Website, Konkurrenz-Vergleich, oder die Euro-Zahl des Umsatzverlusts.',
             'Gespraech': 'Interesse ist da, aber die Huerde zum Termin ist hoch. Biete etwas Kostenloses an: "Darf ich Ihnen einen Entwurf zeigen?" senkt die Hemmschwelle.',
-            'Angebot': 'Gespraeche kommen zustande, aber der Entwurf muss ueberzeugen. Zeige ein Vorher/Nachher-Beispiel (z.B. Spedition Kolbe).',
+            'Angebot': 'Gespräche kommen zustande, aber der Entwurf muss überzeugen. Zeige einen Entwurf für die eigene Seite des Betriebs statt eines fremden Vorher/Nachher-Beispiels.',
             'Abschluss': 'Der Lead findet das Angebot gut, aber zoegert beim Bezahlen. Staerke das ROI-Argument: "Die Website amortisiert sich in X Monaten."'
         };
         return explanations[bn.name] || '';
@@ -3628,9 +3602,10 @@ App.ui = {
             </div>`;
         }
 
-        // ── Follow-up-Sequenz (Modul 5) ──
-        if (extra.sequence) {
-            html += `<div class="section-title">5-Schritt Follow-up-Sequenz</div>`;
+        // ── Follow-up-Sequenz (Modul 5) — entfernt, siehe App.sequence ──
+        html += `<div class="pitch-box" style="margin-bottom:8px"><h3>Nachfass-Entwürfe</h3><p>Nur im Lead-Werkzeug und erst mit geprüfter Kontaktgrundlage (Einwilligung, eigene Anfrage des Betriebs oder Bestandskunde). Werbe-E-Mails ohne Einwilligung sind auch unter Unternehmen unzulässig (§ 7 Abs. 2 Nr. 2 UWG).</p></div>`;
+        if (extra.sequence && extra.sequence.length) {
+            html += `<div class="section-title">Follow-up-Sequenz</div>`;
             for (let i = 0; i < extra.sequence.length; i++) {
                 const s = extra.sequence[i];
                 html += `<div class="pitch-box" style="margin-bottom:8px">
@@ -3664,7 +3639,7 @@ App.ui = {
         html += `<div class="cta">
             <button class="btn-primary" id="save-single-btn" onclick="App.crm.saveFromSingle('${url}', App._lastWs, App._lastTech, App._lastProb, App._lastExtra).then(()=>{this.textContent='Gespeichert ✓';this.disabled=true})" style="margin-right:12px;background:var(--text)">Im CRM speichern</button>
             <a href="https://karriaro-webdesign.de/#kontakt" style="display:inline-block;padding:14px 28px;background:var(--accent);color:#fff;font-size:14px;font-weight:600;border-radius:12px">Kostenlos beraten lassen</a>
-            <p style="margin-top:8px;font-size:12px;color:var(--muted)">Unverbindlich. Antwort innerhalb von 24 Stunden.</p>
+            <p style="margin-top:8px;font-size:12px;color:var(--muted)">Unverbindlich. Sie erhalten eine persönliche Antwort.</p>
         </div>`;
 
         $('results').innerHTML = html;
@@ -3689,18 +3664,18 @@ App.ui = {
 
     generatePitch(domain, ws, tech, biz, prob, competitors) {
         const lines = [];
-        if (ws.perf < 50) lines.push(`Performance-Score von nur ${ws.perf}/100 auf Mobilgeraeten`);
+        if (ws.perf < 50) lines.push(`Performance-Score von nur ${ws.perf}/100 auf Mobilgeräten`);
         else if (ws.perf < 75) lines.push(`Performance bei ${ws.perf}/100`);
-        if (!ws.isHttps) lines.push('kein SSL-Zertifikat');
+        if (!ws.isHttps) lines.push('die Seite lädt ohne HTTPS');
         if (ws.seo < 75) lines.push(`SEO-Score bei ${ws.seo}/100`);
         if (ws.a11y < 70) lines.push(`Barrierefreiheit bei ${ws.a11y}/100`);
-        if (tech.isBaukasten) lines.push(`die Seite laeuft auf ${tech.cms}`);
+        if (tech.isBaukasten) lines.push(`die Seite läuft auf ${tech.cms}`);
 
         let bizLine = '';
         if (biz.available && biz.place) {
             const p = biz.place;
             if (p.rating >= 4.0 && p.userRatingCount > 20) {
-                bizLine = `\nSie haben ${p.rating} Sterne bei ${p.userRatingCount} Bewertungen — Ihre Kunden schaetzen Sie offensichtlich. Aber Ihre Website spiegelt diese Qualitaet nicht wider.`;
+                bizLine = `\nSie haben ${p.rating} Sterne bei ${p.userRatingCount} Bewertungen — Ihre Kunden schätzen Sie offensichtlich. Ihre Website zeigt diese Qualität noch nicht.`;
             }
         }
 
@@ -3712,12 +3687,12 @@ App.ui = {
 
         let text;
         if (lines.length > 0) {
-            text = `Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${lines.join(', ')}.${bizLine}${compLine}\n\nDas sind Punkte, die messbar Kunden und Google-Sichtbarkeit kosten. Ich baue moderne, schnelle Websites — handcodiert, keine Templates, ab 1.290 Euro.\n\nSchauen Sie sich karriaro-webdesign.de an. Darf ich Ihnen kostenlos zeigen, wie Ihre neue Seite aussehen koennte?\n\nViele Gruesse\nIhr Karriaro-Team\nKarriaro Webdesign`;
+            text = `Guten Tag,\n\nich habe mir ${domain} angeschaut. Ein paar Dinge fallen auf: ${lines.join(', ')}.${bizLine}${compLine}\n\nIch baue Websites — handcodiert, ohne Templates, ab 1.290 € einmalig.\n\nDarf ich Ihnen zeigen, wie Ihre neue Seite aussehen könnte? Erst der Entwurf, dann Ihre Entscheidung.\n\nViele Grüße\nMuammer Kizilaslan\nKarriaro Webdesign · karriaro-webdesign.de`;
         } else {
-            text = 'Die Website ist technisch in gutem Zustand. Redesign waere Optimierung, kein Notfall.';
+            text = 'Die Website ist technisch in gutem Zustand. Ein Redesign wäre Optimierung, kein Notfall.';
         }
 
-        return `<div class="pitch-box"><h3>Pitch-Vorlage</h3><p>${text}</p><button class="copy-btn" onclick="App.ui.copyPitch(this)">Kopieren</button></div>`;
+        return `<div class="pitch-box"><h3>Pitch-Vorlage</h3><p style="font-size:12px;opacity:.75">Nur mit Kontaktgrundlage versenden: Einwilligung, eigene Anfrage des Betriebs oder Bestandskunde.</p><p>${text}</p><button class="copy-btn" onclick="App.ui.copyPitch(this)">Kopieren</button></div>`;
     },
 
     copyPitch(btn) {

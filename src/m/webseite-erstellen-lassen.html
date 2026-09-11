@@ -31,14 +31,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
 </style>
 
     <title>Webseite erstellen lassen — Festpreis ab 1.290 €, handcodiert | Karriaro</title>
-    <meta name="description" content="Webseite erstellen lassen — handcodiert als Unikat, zum Festpreis ab 1.290 €. ✓ Ihr Entwurf in 48 h, kostenfrei ✓ Zahlung erst danach ✓ in Google & KI-Suche sichtbar.">
+    <meta name="description" content="Webseite erstellen lassen — handcodiert als Unikat, zum Festpreis ab 1.290 €. ✓ Sie sehen zuerst einen kostenfreien Entwurf ✓ Zahlung erst danach ✓ in Google & KI-Suche sichtbar.">
     <meta name="keywords" content="Webseite erstellen lassen, Website erstellen lassen, Webseite bauen lassen, Homepage erstellen lassen, Webdesigner beauftragen, Website Festpreis">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://karriaro-webdesign.de/webseite-erstellen-lassen">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://karriaro-webdesign.de/webseite-erstellen-lassen">
     <meta property="og:title" content="Webseite erstellen lassen — handcodiert, Festpreis ab 1.290 € | Karriaro">
-    <meta property="og:description" content="Handcodierte Website als Unikat, zum Festpreis. Ihr Entwurf in 48 Stunden — kostenfrei, dann entscheiden Sie. In 2–4 Wochen online.">
+    <meta property="og:description" content="Handcodierte Website als Unikat, zum Festpreis. Erst der kostenfreie Entwurf, dann Ihre Entscheidung. In 2–4 Wochen online.">
     <meta property="og:image" content="https://karriaro-webdesign.de/images/og-money.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -161,6 +161,16 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         .hero-rating .hr-stars { display: inline-flex; gap: 2px; }
         .hero-rating .hr-stars svg { width: 15px; height: 15px; fill: #C9A24B; }
         .hero-rating a { color: #1A2E40; text-decoration: underline; }
+        /* 2026-09-10 — Echte Google-Bewertung direkt unter der H1: ruhige Zitatzeile mit
+           Messing-Haarlinie, damit sie auch mobil im ersten Bildschirm steht. */
+        .hero-review { margin: 22px 0 0; padding: 2px 0 2px 16px; border-left: 2px solid #C9A24B; max-width: 480px; text-align: left; }
+        .hero-review-head { display: flex; align-items: center; gap: 9px; margin-bottom: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #6E6E73; }
+        .hero-review-stars { display: inline-flex; gap: 2px; }
+        .hero-review-stars svg { width: 13px; height: 13px; fill: #C9A24B; display: block; }
+        .hero-review blockquote { margin: 0; }
+        .hero-review blockquote p { margin: 0; font-size: 15px; line-height: 1.5; font-style: italic; color: #424245; }
+        .hero-review figcaption { margin-top: 6px; font-size: 13px; color: #6E6E73; }
+        .hero-review figcaption a { color: #1A2E40; text-decoration: underline; text-underline-offset: 2px; }
         @keyframes heroUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
         .hero-in > * { opacity: 0; animation: heroUp 0.7s cubic-bezier(0.2,0.7,0.2,1) forwards; }
         .hero-in > *:nth-child(2) { animation-delay: 0.08s; }
@@ -237,6 +247,8 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .hero-rest .price-anchor { text-align: center; }
             .hero-stage { max-width: 470px; margin: 24px auto 6px; width: 100%; }
             .werkstatt { aspect-ratio: 16/12.5; }
+            .hero-review { margin: 18px auto 0; padding: 14px 0 0; border-left: 0; border-top: 1px solid rgba(201,162,75,0.45); text-align: center; }
+            .hero-review-head { justify-content: center; }
         }
         h2 { font-size: clamp(26px, 4vw, 38px); font-weight: 600; letter-spacing: -0.02em; line-height: 1.12; }
         .subhead { font-size: clamp(17px, 2.2vw, 23px); color: #86868b; line-height: 1.5; max-width: 560px; margin: 24px auto 0; }
@@ -347,6 +359,9 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             .price-card .reg s { color: #6f7681; }
             .hero-rating { color: #9BA3AD; }
             .hero-rating a { color: #8FB0C9; }
+            .hero-review-head, .hero-review figcaption { color: #9BA3AD; }
+            .hero-review blockquote p { color: #D5D8DD; }
+            .hero-review figcaption a { color: #8FB0C9; }
             .hero-cred { color: #8A9199; }
             #kontakt .consent input[type="checkbox"] { background: #161A20; border-color: rgba(255,255,255,0.25); }
             #kontakt .consent input[type="checkbox"]:checked { background: #2C4257; border-color: #2C4257; }
@@ -390,7 +405,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
         @keyframes kr-gp-in-sheet { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
     </style>
     <script async src="https://lighthouse.karriaro.de/t.js" data-site="karriaro-webdesign"></script>
-    <script src="/js/attribution.js?v=200" defer></script>
+    <script src="/js/attribution.js?v=201" defer></script>
     <script src="/js/track-goals.js?v=252" defer></script>
 <!--KR_REVIEWS_START-->
     <script type="application/ld+json">
@@ -450,6 +465,24 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <a href="#preise" class="promo-bar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.35 7.05L22 12l-7.65 2.95L12 22l-2.35-7.05L2 12l7.65-2.95z"/></svg>Gründungs-Angebot 2026 · Sie sparen 200 bis 600 €</a>
             <p class="eyebrow">Webseite erstellen lassen</p>
             <h1>Ihre Website soll <span class="gold">Kunden bringen</span>.<span class="h1-promise">Nicht nur gut aussehen.</span></h1>
+            <!-- 2026-09-10 — Echte Google-Bewertung im ersten Bildschirm (ersetzt die reine Link-Zeile
+                 „Echte Google-Bewertung"). Wortlaut, Name und Sterne unverändert aus src/data/reviews.json. -->
+            <figure class="hero-review" data-kr-review-hero>
+                <div class="hero-review-head">
+                    <span class="hero-review-stars" role="img" aria-label="5 von 5 Sternen">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </span>
+                    <span>Google-Bewertung</span>
+                </div>
+                <blockquote>
+                    <p>„Habe meine Unternehmenswebseite durch die Karriaro Webdesign erstellen lassen. TOP! Sehr übersichtlich, alles auf dem neuesten Stand. Sehr kompetenter Ansprechpartner! Stark empfehlenswert!“</p>
+                </blockquote>
+                <figcaption>Ilyas Kablan · <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener" data-cta="rating-hero">Auf Google ansehen</a></figcaption>
+            </figure>
             </div>
                         <div class="hero-stage">
               <div class="werkstatt" aria-hidden="true">
@@ -483,24 +516,14 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             </div>
             <div class="hero-rest">
             <p class="subhead">Keine Websites von der Stange: individuelle Seiten mit eingebauten KI-Werkzeugen, die Arbeit abnehmen, Besucher in Anfragen verwandeln und Ihre Auffindbarkeit für ChatGPT und Co. erhöhen.</p>
-            <div class="hero-rating">
-                <span class="hr-stars" role="img" aria-label="5 von 5 Sternen">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                </span>
-                <a href="https://share.google/8XBj19xUXH2G4PV8l" target="_blank" rel="noopener" data-cta="rating-hero">Echte Google-Bewertung</a>
-            </div>
             <p class="hero-cred">Über 20 Jahre Erfahrung in der Tech-Branche</p>
             <div class="hero-btns" style="margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap;">
-                <a href="#kurz-anfrage" class="btn" data-cta="hero-primary">Ihr Entwurf in 48 Stunden — kostenfrei</a>
+                <a href="#kurz-anfrage" class="btn" data-cta="hero-primary">Kostenfreien Entwurf anfordern</a>
                 <a href="tel:+491742796784" class="btn-ghost" data-cta="tel-hero">Anrufen: +49 174 2796784</a>
             </div>
-            <span class="price-anchor"><strong>Festpreis ab 1.290 €</strong> · als Gründungskunde ab 1.090 €. Einmalig, kein Abo — Sie sehen Ihren Entwurf in 48 Stunden, bevor Sie sich entscheiden.</span>
+            <span class="price-anchor"><strong>Festpreis ab 1.290 €</strong> · als Gründungskunde ab 1.090 €. Einmalig, kein Abo — Sie sehen zuerst einen kostenfreien Entwurf, bevor Sie sich entscheiden.</span>
             <div class="trust-strip">
-                <span><span class="dot"></span> Entwurf in 48 h, Zahlung erst danach</span>
+                <span><span class="dot"></span> Erst der Entwurf, dann die Zahlung</span>
                 <span><span class="dot"></span> barrierefrei nach BFSG gebaut</span>
                 <span><span class="dot"></span> Hosting in DE/EU · DSGVO</span>
                 <span><span class="dot"></span> in 2–4 Wochen online</span>
@@ -514,12 +537,12 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
          sichtbar). data-lead="kwd-quickask" → gebunden vom generalisierten Submit-Handler unten. -->
     <section aria-label="Schnelle Anfrage" id="kurz-anfrage" style="border-top: 1px solid rgba(0,0,0,0.05);">
         <div class="wrap-xs" style="text-align: center;">
-            <p class="eyebrow">Anfrage · Ihr Entwurf in 48 Stunden</p>
-            <h2 style="margin-bottom: 10px;">Eine Minute Ihrer Zeit. Ihr Entwurf in 48 Stunden.</h2>
-            <p class="subhead" style="margin-bottom: 28px;">Ein Satz genügt: Ihre Branche — und Ihre aktuelle Website, falls vorhanden. Sie erhalten binnen 48 Stunden einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich: Sie sehen, was Sie bekommen, bevor Sie sich entscheiden.</p>
+            <p class="eyebrow">Anfrage · Erst der Entwurf, dann Ihre Entscheidung</p>
+            <h2 style="margin-bottom: 10px;">Eine Minute Ihrer Zeit. Ihr kostenfreier Entwurf.</h2>
+            <p class="subhead" style="margin-bottom: 28px;">Ein Satz genügt: Ihre Branche — und Ihre aktuelle Website, falls vorhanden. Sie erhalten einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich: Sie sehen, was Sie bekommen, bevor Sie sich entscheiden.</p>
             <form data-lead="kwd-quickask" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="quelle" value="webseite-erstellen-lassen-kurzanfrage">
-                <input type="hidden" name="angebot" value="Entwurf-48h">
+                <input type="hidden" name="angebot" value="Entwurf-kostenfrei">
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="message" required placeholder="Worum geht es? Ein Satz genügt — z. B. Neue Website für meinen Friseursalon.">
@@ -531,7 +554,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <input type="checkbox" name="privacy" required>
                     <span>Ich stimme der <a href="/datenschutz" style="color: var(--c-ink-muted); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
                 </label>
-                <button type="submit" class="submit-btn">Entwurf anfordern — in 48 Stunden bei Ihnen</button>
+                <button type="submit" class="submit-btn">Kostenfreien Entwurf anfordern</button>
             </form>
             <p class="muted" style="font-size: 13px; margin-top: 16px;">Festpreis ab 1.290 €, einmalig · kein Abo · Lieber direkt? <a href="tel:+491742796784" class="link-arrow" style="font-size: 13px;" data-cta="tel-kurzanfrage">+49 174 2796784</a> · <a href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Webseite." class="link-arrow" style="font-size: 13px;" target="_blank" rel="noopener" data-cta="whatsapp-kurzanfrage">WhatsApp</a></p>
         </div>
@@ -563,7 +586,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                         <span class="shot-overlay"></span>
                         <span class="shot-cap"><span class="tag">Branche · Demo</span><span class="ttl">Dachdecker &amp; Handwerk</span></span>
                     </span>
-                    <p>Foto vom Dach hochladen, Festpreis in 48 Stunden — plus Sturm-Notdienst.</p>
+                    <p>Foto vom Dach hochladen, Festpreis-Anfrage direkt aus dem Foto — plus Sturm-Notdienst.</p>
                     <span class="arrow">Demo ansehen &rarr;</span>
                 </a>
                 <a class="proof-card" href="/portfolio/immobilien-makler">
@@ -720,7 +743,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <p class="kr-wr-formel"></p>
                 <p class="kr-wr-summe"></p>
                 <p class="kr-wr-qual">Umsatz im Jahr, der nach Ihren Annahmen an der heutigen Seite vorbeiläuft.</p>
-                <a class="kr-wr-cta" href="#kurz-anfrage">Entwurf anfordern — in 48 Stunden, kostenfrei</a>
+                <a class="kr-wr-cta" href="#kurz-anfrage">Kostenfreien Entwurf anfordern</a>
             </div>
             <p class="kr-wr-note" id="kr-wr-note">Ihre Zahlen, Ihre Rechnung — eine Rechenhilfe, keine Prognose.</p>
         </div>
@@ -784,7 +807,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                 <div class="step-card">
                     <div class="step-num">1</div>
                     <h3>Erste Einschätzung</h3>
-                    <p>Sie schreiben uns kurz, was Sie vorhaben. Wir melden uns innerhalb von 24 Stunden mit einer ehrlichen Einschätzung — kostenlos.</p>
+                    <p>Sie schreiben uns kurz, was Sie vorhaben. Sie erhalten eine persönliche Antwort mit einer ehrlichen Einschätzung — kostenlos.</p>
                 </div>
                 <div class="step-card">
                     <div class="step-num">2</div>
@@ -887,10 +910,10 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
     <section class="fade-in" id="kontakt" style="background: var(--c-alt);">
         <div class="wrap-xs" style="text-align: center;">
             <h2>Webseite erstellen lassen.</h2>
-            <p class="subhead" style="margin-bottom: 36px;">Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten binnen 48 Stunden einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich.</p>
+            <p class="subhead" style="margin-bottom: 36px;">Schreiben Sie uns kurz, was Sie vorhaben — Sie erhalten einen ersten Entwurf Ihrer neuen Website. Kostenfrei und unverbindlich.</p>
             <form id="kontakt-form" data-lead="kwd-erstellen-lassen-form" style="text-align: left; display: flex; flex-direction: column; gap: 12px;">
                 <input type="hidden" name="quelle" value="webseite-erstellen-lassen">
-                <input type="hidden" name="angebot" value="Entwurf-48h">
+                <input type="hidden" name="angebot" value="Entwurf-kostenfrei">
                 <input type="text" name="name" required placeholder="Ihr Name">
                 <input type="email" name="email" required placeholder="E-Mail">
                 <input type="text" name="website" placeholder="Ihre aktuelle Website (falls vorhanden)">
@@ -899,7 +922,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
                     <input type="checkbox" name="privacy" required>
                     <span>Ich stimme der <a href="/datenschutz" style="color: var(--c-ink-muted); text-decoration: underline;">Datenschutzerklärung</a> zu.</span>
                 </label>
-                <button type="submit" class="submit-btn">Entwurf anfordern — in 48 Stunden bei Ihnen</button>
+                <button type="submit" class="submit-btn">Kostenfreien Entwurf anfordern</button>
             </form>
             <p class="muted" style="font-size: 13px; margin-top: 18px;">Lieber telefonisch oder per WhatsApp? <a href="tel:+491742796784" class="link-arrow" style="font-size: 13px;" data-cta="tel-form">+49 174 2796784</a> · <a href="https://wa.me/491742796784?text=Hallo%20Karriaro%2C%20ich%20interessiere%20mich%20f%C3%BCr%20eine%20Webseite." class="link-arrow" style="font-size: 13px;" target="_blank" rel="noopener" data-cta="whatsapp-form">WhatsApp schreiben</a></p>
         </div>
@@ -1046,7 +1069,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <h2 class="kr-gp-title" id="kr-gp-title">Ihre Website.<br><em>Ihr Preis.</em></h2>
             <p class="kr-gp-text">Für zehn ausgewählte Unternehmen entwickeln wir eine individuelle Website in echter Karriaro-Manufakturqualität. Sie entscheiden, welchen Preis Sie für angemessen halten — auch 0 €. Im Gegenzug dürfen wir das fertige Projekt als Referenz präsentieren.</p>
             <p class="kr-gp-deadline">Bewerbungen werden laufend geprüft. Das Programm endet, sobald alle zehn Plätze vergeben sind.</p>
-            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort innerhalb von 48 Stunden</p>
+            <p class="kr-gp-meta">Bewerbung in 5 Minuten · persönliche Antwort</p>
             <a class="kr-gp-cta" href="/referenzprogramm#bewerben" id="kr-gp-cta">Für einen Platz bewerben</a>
             <button type="button" class="kr-gp-later" data-gp-close>Vielleicht später</button>
         </div>

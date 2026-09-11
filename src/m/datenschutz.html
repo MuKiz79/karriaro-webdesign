@@ -122,7 +122,7 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
           "url": "https://karriaro-webdesign.de/datenschutz",
           "isPartOf": { "@id": "https://karriaro-webdesign.de/#organization" },
           "publisher": { "@id": "https://karriaro-webdesign.de/#organization" },
-          "dateModified": "2026-06-08"
+          "dateModified": "2026-09-10"
         }
       ]
     }
@@ -183,16 +183,43 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <p>Für statistische Auswertungen (anonymer Branchen-Score-Durchschnitt) speichern wir je Audit zusätzlich: erreichter Score, Branche, Anzahl gefundener Standards, sowie einen <strong>täglich rotierenden, nicht umkehrbaren Hash Ihrer IP-Adresse</strong> (kein geräteübergreifendes Tracking). Diese Daten werden nach 90&nbsp;Tagen automatisch gelöscht (Firestore-TTL-Policy auf Feld <code>expiresAt</code>).</p>
             <p>Wenn Sie zusätzlich Ihre E-Mail-Adresse hinterlassen, um ein vollständiges Audit-PDF zu erhalten, speichern wir Name, E-Mail-Adresse und die angefragte URL für die Erstellung und Zusendung des Audit-Reports. Diese Daten werden ebenfalls nach 90&nbsp;Tagen automatisch gelöscht.</p>
             <p>Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (vorvertragliche Maßnahmen auf Ihre Anfrage), für den anonymen IP-Hash und das statistische Sample Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an Qualitätssicherung und Branchen-Vergleichswerten).</p>
+            <p>Neben der Zustimmung zur Erstellung des Berichts gibt es ein zweites, freiwilliges Häkchen für E-Mail-Hinweise zu Ihrer Website (siehe „E-Mail-Hinweise nach Einwilligung“). Ohne dieses zusätzliche Häkchen erhalten Sie nur den angeforderten Bericht.</p>
+            <p><strong>Aufrufmessung der Prüfbericht-Seite.</strong> Öffnen Sie die für Sie erstellte Prüfbericht-Seite, zählen wir serverseitig die Aufrufe und die Klicks auf die Schaltfläche für ein Beratungsgespräch und halten den Zeitpunkt des letzten Besuchs fest; solange die Seite sichtbar geöffnet ist, sendet sie etwa alle 30&nbsp;Sekunden ein Aktivitätssignal. So erkennen wir, ob der Bericht angekommen ist, und können Rückfragen gezielt beantworten. Es werden keine Cookies gesetzt und keine Informationen auf Ihrem Endgerät gespeichert oder ausgelesen. Je Ereignis speichern wir den Zeitpunkt, die Art des Ereignisses sowie die IP-Adresse und die Browserkennung (User-Agent) des Aufrufs. Die Prüfbericht-Seite und ihre Zähler werden nach 90&nbsp;Tagen automatisch gelöscht; die einzelnen Ereignisse löschen wir, sobald sie für die Bearbeitung Ihrer Anfrage nicht mehr erforderlich sind. Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse an der Nachverfolgung Ihrer Anfrage).</p>
+
+            <h2>E-Mail-Hinweise nach Einwilligung</h2>
+            <p>In mehreren Formularen (Website-Prüfung, Erste Einschätzung auf der Startseite, Sofort-Skizze, KI-Zitier-Check) können Sie zusätzlich und freiwillig ein Häkchen setzen. Damit willigen Sie ein, dass wir Ihnen bis zu drei E-Mails mit Hinweisen zu Ihrer Website und einem unverbindlichen Angebot für eine neue Website senden. Das Häkchen ist nie vorausgewählt; ohne es erhalten Sie nur das, was Sie angefordert haben.</p>
+            <p><strong>Double-Opt-In:</strong> Nach dem Absenden erhalten Sie eine Bestätigungs-E-Mail ohne Werbung mit einem Bestätigungslink. Erst wenn Sie diesen Link anklicken, ist die Einwilligung wirksam und wir senden Ihnen Hinweise. Solange Sie nicht bestätigen, erhalten Sie keine Hinweis-E-Mails.</p>
+            <p><strong>Gespeicherte Nachweise:</strong> E-Mail-Adresse, gegebenenfalls die geprüfte Web-Adresse, Wortlaut und Version des Einwilligungstexts, das Formular, über das Sie eingewilligt haben (Quelle), die Zeitpunkte von Anfrage, Bestätigung und gegebenenfalls Widerruf, der Stand des Versands sowie gegebenenfalls ein Hash-Wert Ihrer IP-Adresse.</p>
+            <p><strong>Widerruf:</strong> Sie können Ihre Einwilligung jederzeit mit Wirkung für die Zukunft widerrufen – über den Abmeldelink in jeder E-Mail oder per Mail an <a href="mailto:kontakt@karriaro.de" style="color: #1A2E40;">kontakt@karriaro.de</a>. Danach senden wir Ihnen keine weiteren Hinweise.</p>
+            <p><strong>Speicherdauer:</strong> Die Nachweise bewahren wir bis zu drei Jahre nach Ihrem Widerruf bzw. nach der letzten Nutzung der Einwilligung auf, damit wir die Einwilligung nachweisen können; danach werden sie gelöscht.</p>
+            <p>Versand: über unseren E-Mail-Versanddienstleister (siehe „Auftragsverarbeiter und Empfänger“). Rechtsgrundlage für den Versand: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO (Einwilligung); für die Aufbewahrung der Nachweise: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse, die Einwilligung gemäß Art.&nbsp;7 Abs.&nbsp;1 DSGVO nachweisen zu können).</p>
+
+            <h2>Sofort-Skizze</h2>
+            <p>Auf der Seite „Sofort-Skizze“ geben Sie die Web-Adresse Ihres Betriebs ein, optional mit Branche und einem kurzen Ziel. Wir rufen Ihre Startseite serverseitig auf, lesen öffentlich sichtbare Merkmale aus (z.&nbsp;B. Firmenname, Logo, Farben, Bilder und Texte), führen eine kurze technische Prüfung durch (u.&nbsp;a. über die Google PageSpeed Insights API) und erstellen daraus eine Konzept-Skizze. Für den Entwurf lassen wir über den Dienst ScreenshotOne (screenshotone.com) Bildschirmfotos Ihrer Startseite anfertigen; der Dienst hält diese bis zu 30&nbsp;Tage in seinem Zwischenspeicher. Bildschirmfoto und Seitenmerkmale übermitteln wir zur Erstellung von Texten und Entwurf an Anthropic (Sprachmodell Claude).</p>
+            <p>Findet sich auf Ihrer Seite kein Logo, lädt Ihr Browser ersatzweise das Website-Symbol über einen Dienst von Google (google.com). Ist kein Bildschirmfoto verfügbar, ruft Ihr Browser ersatzweise eine Vorschau über den Dienst Microlink (api.microlink.io) ab. Dabei werden die eingegebene Adresse und Ihre IP-Adresse an den jeweiligen Dienst übermittelt.</p>
+            <p>Speicherdauer: Die Skizze einschließlich Entwurf speichern wir bis zu 7&nbsp;Tage, damit Sie sie per Link teilen und erneut öffnen können. Die eingegebene Web-Adresse halten wir zusammen mit Branche, Prüfwert und Anzahl der Eingaben bis zu 30&nbsp;Tage fest, um das Werkzeug zu verbessern. Danach werden die Daten automatisch gelöscht.</p>
+            <p>Wenn Sie über „Skizze sichern“ Ihre E-Mail-Adresse hinterlassen, speichern wir E-Mail-Adresse, optional Ihren Namen, die Web-Adresse, Branche, Prüfwert und den wichtigsten Befund für 90&nbsp;Tage, benachrichtigen uns selbst per E-Mail und senden Ihnen eine Eingangsbestätigung.</p>
+            <p>Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO (Ihre Zustimmung im Formular) sowie Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO (Bearbeitung Ihrer Anfrage).</p>
+
+            <h2>KI-Zitier-Check und Maßnahmenplan</h2>
+            <p>Für den KI-Zitier-Check geben Sie Firmenname, Ort, Branche und optional Ihre Web-Adresse ein. Mit diesen Angaben fragen wir serverseitig die Google Places API, öffentliche Branchenverzeichnisse (Das Örtliche, Gelbe Seiten, 11880), Wikipedia und Wikidata sowie das Sprachmodell Claude von Anthropic ab. Das Ergebnis wird 7&nbsp;Tage zwischengespeichert und danach automatisch gelöscht.</p>
+            <p>Fordern Sie im Ergebnis Ihren Maßnahmenplan an, werden Ihre E-Mail-Adresse, die Angaben aus dem Check (Firmenname, Ort, Web-Adresse, Branche, Score und Kurzfassung der Lücken), die Angabe, ob Sie das zusätzliche Einwilligungs-Häkchen gesetzt haben, sowie gegebenenfalls Herkunftsangaben (verweisende Seite, Einstiegsseite, Kampagnenparameter wie utm-Angaben oder Anzeigen-Klick-Kennungen) über Formspree (Formspree, Inc., USA) per E-Mail an uns weitergeleitet. Wir verwenden die Daten zur Bearbeitung Ihrer Anfrage und löschen sie, wenn der Zweck entfällt und keine gesetzlichen Aufbewahrungspflichten bestehen. Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;b DSGVO.</p>
+
+            <h2>Persönliche Entwurfsseiten</h2>
+            <p>Für einzelne Unternehmen erstellen wir persönliche Entwurfsseiten, die zeigen, wie eine neue Website aussehen könnte. Grundlage sind öffentlich zugängliche Angaben zum Unternehmen, etwa Firmenname, Branche, Adresse, Ort, Web-Adresse, Leistungen sowie Google-Bewertung und Anzahl der Bewertungen. Der Seitentext wird mit dem Sprachmodell Claude von Anthropic erstellt. Die Seiten werden unter karriaro-leads.web.app/pitch/… bereitgestellt, sind für Suchmaschinen gesperrt (noindex) und werden nach 90&nbsp;Tagen automatisch gelöscht.</p>
+            <p>Beim Aufruf einer Entwurfsseite zählen wir serverseitig nur die Anzahl der Aufrufe sowie den Zeitpunkt des ersten und des letzten Aufrufs. Dabei speichern wir weder IP-Adresse noch Browserkennung und setzen keine Cookies. Eine Entwurfsseite kann Schriften von Google Fonts (fonts.googleapis.com, fonts.gstatic.com) und Bilder von externen Adressen laden; dabei wird Ihre IP-Adresse an den jeweiligen Anbieter übermittelt. Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO (berechtigtes Interesse, einem Unternehmen einen konkreten Entwurf zu zeigen und zu erkennen, ob er angesehen wurde).</p>
 
             <h2>Auftragsverarbeiter und Empfänger</h2>
             <p>Im Rahmen der oben beschriebenen Verarbeitungen kommen folgende Dienstleister zum Einsatz, mit denen wir Auftragsverarbeitungsverträge (AVV) gemäß Art.&nbsp;28 DSGVO geschlossen haben oder schließen werden:</p>
             <ul style="margin: 12px 0 12px 24px; padding-left: 0; line-height: 1.7;">
                 <li><strong>Google Ireland Ltd.</strong> (Dublin, Irland) — Bereitstellung dieser Website über Firebase Hosting (Google-Infrastruktur/CDN), siehe oben.</li>
-                <li><strong>Formspree, Inc.</strong> (USA) — Weiterleitung des Kontaktformulars an unsere E-Mail-Adresse.</li>
+                <li><strong>Formspree, Inc.</strong> (USA) — Weiterleitung des Kontaktformulars und der Anfrage zum Maßnahmenplan aus dem KI-Zitier-Check an unsere E-Mail-Adresse.</li>
                 <li><strong>Google Ireland Ltd.</strong> (Dublin, Irland) — Hosting der Audit-Cloud-Function und der Firestore-Datenbank im Rechenzentrum Belgien (Region <code>europe-west1</code>), inklusive Aufrufe der Google&nbsp;Places&nbsp;API und der PageSpeed&nbsp;Insights&nbsp;API für branchen-spezifische Zusatz-Informationen.</li>
-                <li><strong>Anthropic PBC</strong> (USA) — Sprachmodell (Claude) für vertiefte Audit-Analysen. Bei Aktivierung wird der öffentlich abrufbare Text der angefragten Audit-URL an Anthropic übermittelt. Wird nur bei expliziter Anforderung eines Deep-Audits genutzt.</li>
+                <li><strong>Anthropic PBC</strong> (USA) — Sprachmodell (Claude) für vertiefte Audit-Analysen, die Sofort-Skizze, den KI-Zitier-Check und persönliche Entwurfsseiten. Übermittelt werden jeweils nur die dort beschriebenen Angaben (z.&nbsp;B. öffentlich abrufbarer Text oder ein Bildschirmfoto der angefragten Website, Firmenname, Ort und Branche).</li>
+                <li><strong>ScreenshotOne</strong> (screenshotone.com) — Bildschirmfotos der eingegebenen Website für die Sofort-Skizze, siehe oben.</li>
+                <li><strong>Microlink</strong> (api.microlink.io) — ersatzweise Website-Vorschau in der Sofort-Skizze, direkt von Ihrem Browser abgerufen, siehe oben.</li>
                 <li><strong>Internet Archive</strong> (USA) — Aufruf der Wayback-Machine zur Bestimmung des letzten Bearbeitungsdatums der angefragten Audit-URL (kein personenbezogener Datentransfer, nur die URL).</li>
-                <li><strong>Karriaros SMTP-Versand-Provider</strong> — Versand der Audit-Reports an die von Ihnen angegebene E-Mail-Adresse. Aktueller Anbieter siehe Impressum.</li>
+                <li><strong>E-Mail-Versanddienstleister (SMTP)</strong> — Versand der Audit-Reports, der Eingangsbestätigungen und der E-Mails nach Einwilligung an die von Ihnen angegebene E-Mail-Adresse.</li>
                 <li><strong>Hetzner Online GmbH</strong> (Gunzenhausen, Deutschland) — Betrieb unseres eigenen Reichweite-Servers <code>lighthouse.karriaro.de</code>, siehe oben.</li>
             </ul>
             <p>Die Übermittlung in die USA erfolgt auf Grundlage des EU-US Data Privacy Framework bzw. der Standardvertragsklauseln nach Art.&nbsp;46 DSGVO. Auf Wunsch stellen wir Ihnen Kopien dieser Garantien zur Verfügung.</p>
@@ -216,10 +243,13 @@ section h2{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter'
             <p>Eine erteilte Einwilligung können Sie jederzeit für die Zukunft widerrufen.</p>
             <p>Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.</p>
 
+            <h2>Widerspruchsrecht nach Art. 21 DSGVO</h2>
+            <p style="border-left: 2px solid #C9A24B; padding-left: 16px; color: #14202B;">Soweit wir Ihre Daten auf Grundlage von Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f DSGVO verarbeiten, können Sie dieser Verarbeitung aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit widersprechen. Verarbeiten wir Ihre Daten, um Ihnen Werbung zu senden, können Sie dem jederzeit ohne Angabe von Gründen widersprechen; wir verwenden Ihre Daten dann nicht mehr für diesen Zweck. Ein formloser Hinweis an kontakt@karriaro.de genügt.</p>
+
             <h2>Widerspruch gegen Werbe-Mails</h2>
             <p>Der Nutzung von im Rahmen der Impressumspflicht veröffentlichten Kontaktdaten zur Übersendung von nicht ausdrücklich angeforderter Werbung wird hiermit widersprochen. Wir behalten uns ausdrücklich rechtliche Schritte im Falle der unverlangten Zusendung von Werbeinformationen vor.</p>
 
-            <p style="margin-top: 48px; font-size: 13px;">Stand: Juli 2026</p>
+            <p style="margin-top: 48px; font-size: 13px;">Stand: September 2026</p>
         </div>
     </section>
 
