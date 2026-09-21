@@ -2,7 +2,7 @@ name: Deploy to Firebase Hosting
 
 # Ersetzt den alten GitHub-Pages-Deploy. Die DNS von karriaro-webdesign.de
 # zeigt seit Sprint 171 auf Firebase Hosting — das GitHub-Pages-Artefakt wurde
-# nicht mehr ausgeliefert (Deploy-Gap). Dieser Workflow deployt src/ direkt nach
+# nicht mehr ausgeliefert (Deploy-Gap). Dieser Workflow deployt relaunch/dist-live/ direkt nach
 # Firebase Hosting (Target karriaro-webdesign, Projekt apex-executive).
 #
 # AKTIVIERUNG: GitHub-Secret FIREBASE_SERVICE_ACCOUNT_APEX_EXECUTIVE setzen
