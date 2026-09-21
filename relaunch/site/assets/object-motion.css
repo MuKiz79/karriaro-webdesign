@@ -1,0 +1,45 @@
+.work-motion { position: relative; container-type: inline-size; }
+.jewelry-visual .visual-title { font-size: clamp(28px,10cqw,60px); }
+.work-motion .object-surface { position: absolute; inset: auto 0 0; height: 62%; overflow: hidden; display: block; background: #dce3d6; }
+.jewelry-visual .object-surface { background: radial-gradient(ellipse at 45% 35%, #5b5660, #29272e 80%); }
+.work-motion .object-fallback { position: absolute; inset: 0; display: block; }
+.work-motion .object-fallback img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.object-canvas { display: block; position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .45s; pointer-events: none; transform: translateY(-12px); }
+.object-canvas[data-ready=true] { opacity: 1; }
+.object-label { display: none; position: absolute; left: 24px; top: 15px; font-size: 8px; letter-spacing: .09em; text-transform: uppercase; color: #485345; }
+.jewelry-visual .object-label { color: #e8e2e8; }
+.jewelry-visual .object-canvas { transform: translateY(-30px); }
+.object-canvas[data-ready=true]:not([hidden]) ~ .object-label { display: block; }
+.object-toggle { position: absolute; z-index: 3; left: 24px; bottom: 22px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 12px; min-height: 44px; border: 1px solid #22272045; background: #f5f3edf2; color: var(--ink); font-size: 10px; line-height: 1.3; }
+.object-toggle:hover { background: #fffdf7; }
+.object-toggle-icon { width: 15px; font-size: 17px; line-height: 1; text-align: center; }
+.object-toggle:focus-visible { outline-offset: 3px; }
+.work-motion .work-open { min-height: 44px; }
+.craft-notes { grid-column: 1/-1; margin-top: 60px; padding-top: 30px; border-top: 1px solid #c2c8b8; }
+.craft-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 45px; margin-top: 35px; }
+.craft-index { display: block; color: #56614a; font-size: 10px; letter-spacing: .045em; }
+.craft-grid h3 { margin-block: 14px; font-family: var(--sans); font-weight: 450; font-size: clamp(25px,2.5vw,36px); line-height: 1.08; letter-spacing: -.035em; }
+.craft-grid p { max-width: 330px; color: #4e5848; font-size: 13px; line-height: 1.8; text-wrap: pretty; }
+@media(max-width:1050px) {
+  .object-toggle { left: 18px; bottom: 18px; padding: 8px 10px; font-size: 9px; }
+  .work-motion .work-open { right: 18px; bottom: 18px; padding: 8px 10px; gap: 10px; font-size: 10px; }
+  .craft-grid { gap: 28px; }
+}
+@media(max-width:760px) and (min-width:541px) {
+  .object-toggle { left: 12px; bottom: 12px; gap: 5px; padding-inline: 8px; font-size: 9px; }
+  .work-motion .work-open { right: 12px; bottom: 12px; padding-inline: 8px; gap: 6px; font-size: 9px; }
+  .object-label { left: 16px; font-size: 7px; }
+}
+@media(max-width:540px) {
+  .work-motion .object-surface { height: 58%; }
+  .object-toggle { left: 16px; bottom: 16px; font-size: 10px; }
+  .work-motion .work-open { right: 16px; bottom: 16px; font-size: 10px; }
+  .object-label { left: 20px; top: 13px; font-size: 8px; }
+  .craft-notes { margin-top: 20px; padding-top: 26px; }
+  .craft-notes > .eyebrow { font-size: 9px; }
+  .craft-grid { grid-template-columns: 1fr; gap: 27px; margin-top: 28px; }
+  .craft-grid > div + div { padding-top: 24px; border-top: 1px solid #c2c8b8; }
+  .craft-grid h3 { font-size: 29px; margin-block: 12px; }
+  .craft-grid p { max-width: 370px; }
+}
+@media(prefers-reduced-motion:reduce) { .object-canvas { transition: none; } }

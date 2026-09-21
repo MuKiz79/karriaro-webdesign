@@ -1,3 +1,13 @@
+# Aktueller Stand · 21.09.2026
+
+Der Inhaber hat die vollständige Ablösung des früheren Auftritts durch die Website-Designmanufaktur freigegeben. Aktuelle Website-Quelle: `relaunch/site/`, Hosting-Ausgabe: `relaunch/dist-live/`. Siehe `relaunch/README.md`.
+
+Die bisherigen Design-, Text- und Preisvorgaben unten sind für den alten `src/`-Auftritt historisch. Aktuell: KARRIARO mit rotem Punkt, Websites mit Persönlichkeit, persönliche Gestaltung durch Muammer Kizilaslan, Preise 2.990 / 4.990 / Shop ab 7.990 Euro inklusive MwSt. Kein „handcodiert“-Versprechen. Konzeptprojekte bleiben als fiktiv gekennzeichnet. Keine erfundenen Referenzen oder Geschäftsergebnisse.
+
+Die Hauptdomain ist responsiv. Die separate mobile Domain leitet um; den alten Mobile-Build/Sync nicht ausführen. Die bestehenden Backend-Funktionen sind nicht Bestandteil dieses Relaunches und bleiben unverändert. Die frühere Konfiguration bleibt unten als historische Dokumentation erhalten.
+
+---
+
 # Karriaro-Webdesign — Projekt-Kodex (Stand 2026-06)
 
 Dieser Kodex wird bei jeder Claude-Code-Session als Context-Header geladen.

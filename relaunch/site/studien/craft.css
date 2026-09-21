@@ -1,0 +1,121 @@
+/* Edition 04 — each profession has its own interaction language. */
+:root{--art-ease:cubic-bezier(.2,.7,.2,1)}
+button,a,input,summary{touch-action:manipulation}
+button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid currentColor;outline-offset:5px}
+.t-nav nav a,.edition-nav nav a,.mast nav a{font-size:14px;min-height:44px;display:inline-flex;align-items:center}
+.t-nav nav a[aria-current=location],.edition-nav nav a[aria-current=location]{text-decoration:underline;text-underline-offset:8px}
+.craft-arrive{animation:art-arrive .65s var(--art-ease) both}
+@keyframes art-arrive{from{transform:translateY(14px)}to{transform:translateY(0)}}
+/* Clara: the physical rhythm of a journal, controlled by its reader. */
+.atlas-heading h1{letter-spacing:-.06em}.leaf-content{animation:none}.leaf-content>img{transition:object-position .65s var(--art-ease)}
+.journal-turn{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #263f7040;padding:14px 0;font:12px 'Fragment Mono',monospace}
+.journal-turn>div{display:flex;gap:18px;align-items:center}.journal-turn button{border:1px solid #263f7055;background:transparent;color:#263f70;width:44px;height:44px;font-size:24px;border-radius:50%;transition:color .2s,background .2s}
+.journal-turn button:hover{background:#263f70;color:#f3f1e9}.atlas-bottom{padding-top:16px}.atlas-leaf{transition:flex .65s var(--art-ease),background .3s}
+.atlas-leaf.is-open .leaf-handle{background:#f3f1e9}.atlas-spreads:focus-within{scroll-margin-top:24px}
+/* Jonas: thinking as a legible, reactive constellation. */
+.beratung .jb-network{background:#e9e8e0}.network-heading{letter-spacing:.025em}.network-field .network-center{background:transparent;box-shadow:none!important;isolation:isolate}
+.network-center:before{content:'';position:absolute;inset:-12px;background:#e9e8e0;border-radius:50%;z-index:-1;filter:blur(18px)}
+.network-center h1{font-family:Inter,Arial,sans-serif;font-weight:500;letter-spacing:-.06em;font-size:clamp(40px,4.4vw,70px);line-height:.98}
+.network-context{display:block;max-width:34ch;font:12px/1.5 'Fragment Mono',monospace;margin:18px auto;color:#a64123}
+.network-field .network-mark{background:#a64123;color:#fff;border-radius:50%;width:44px;height:44px;font:18px var(--serif);font-size-adjust:.43}
+.network-field svg{color:#a64123}.network-node{transition:color .25s}.network-node strong{font-size:clamp(19px,1.7vw,26px)!important;letter-spacing:-.045em}.network-node small{font-size:14px!important}
+.network-node:hover,.network-node:focus-visible{color:#a64123}.network-quiet{color:#57574d}.network-bottom{position:relative}.network-index{display:none}
+/* Mila: an editorial material table, replacing the duplicated network. */
+.material-cover{background:#302e29;color:#f6f0e7;display:grid;grid-template-columns:1fr 1.15fr;grid-template-rows:auto 1fr auto;gap:20px 4vw;padding:32px 4vw 78px;isolation:isolate}
+.material-cover>header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;margin:0 0 15px;gap:30px;border-bottom:1px solid #f6f0e740;padding-bottom:22px}
+.material-cover>header>span{font:28px var(--serif);letter-spacing:-.04em;font-size-adjust:.43}.material-cover>header small{font:12px 'Fragment Mono',monospace}.material-cover>header a{font-size:14px}
+.material-cover-copy{align-self:center;z-index:2;padding-bottom:20px}.material-overline{font:12px/1.6 'Fragment Mono',monospace;display:block;max-width:34ch}
+.material-cover h1{font:400 clamp(64px,7.6vw,125px)/1.05 var(--serif);letter-spacing:-.055em;margin:34px 0 28px;white-space:nowrap;font-size-adjust:.43}
+.material-cover h1 em{color:#d2b38d}.material-cover-copy p{font-size:18px;line-height:1.6;max-width:28ch}
+.material-stage{align-self:center;min-width:0;position:relative;padding-top:20px;perspective:1200px}
+.material-main{margin:0;transform:rotateY(var(--material-x,0deg)) rotateX(var(--material-y,0deg));transition:transform .4s var(--art-ease);transform-origin:center;position:relative}
+.material-main img{width:100%;height:clamp(290px,43vh,490px);object-fit:cover;object-position:50% 50%;transition:object-position 1s var(--art-ease),filter .7s}
+.material-stage[data-material="2"] .material-main img{object-position:20% 30%;filter:brightness(1.08)}
+.material-main figcaption{font:12px/1.5 'Fragment Mono',monospace;display:flex;justify-content:space-between;gap:25px;border-bottom:1px solid #f6f0e740;padding:15px 0}
+.material-select{display:flex;gap:0;margin-top:22px}.material-select button{flex:1;padding:13px 5px;background:none;border:0;border-bottom:2px solid #f6f0e735;text-align:left;color:inherit;font:17px var(--serif);display:flex;gap:12px;align-items:center;font-size-adjust:.43}
+.material-select button>span{font:12px 'Fragment Mono',monospace;color:#d2b38d}.material-select button[aria-pressed=true]{border-color:#d2b38d}.material-select button:hover{background:#ffffff0a}
+#material-cover-note{font-size:14px;line-height:1.55;margin:18px 0 0;min-height:44px;color:#ded8cd}.material-cover-foot{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:20px;padding-top:16px;font-size:14px}
+.material-cover-foot>span{font:12px 'Fragment Mono',monospace}.folio .samples{background:#302e29}.folio .samples>img{width:100%;height:100%;object-fit:cover;transition:object-position .75s var(--art-ease),transform .75s var(--art-ease)}
+.folio .samples[data-tone=eiche]>img{object-position:25% 50%;transform:scale(1.2)}.folio .samples[data-tone=leinen]>img{object-position:60% 45%;transform:scale(1.45)}.folio .samples[data-tone=kalk]>img{object-position:80% 65%;transform:scale(1.35)}
+.folio .panel:not(.material-cover) h2{letter-spacing:-.055em}.folio .chapter-control{border-radius:0}
+/* Leon: the diagram and its result now share one continuous flow. */
+.software .workshop-intro h1{font-size:clamp(50px,6vw,90px);line-height:1.05;letter-spacing:-.055em;margin-block:24px}.workshop-summary{margin-bottom:28px}
+.flow-progress{display:grid;grid-template-columns:repeat(3,1fr);height:5px;gap:4px;background:#dbe1d5}.flow-progress i{background:#355acc;transform:scaleX(0);transform-origin:left;transition:transform .65s linear}
+.system-desk[data-phase="1"] .flow-progress i:first-child,.system-desk[data-phase="2"] .flow-progress i:nth-child(-n+2),.system-desk[data-phase="3"] .flow-progress i{transform:scaleX(1)}
+.desk-result{transition:background .4s}.system-desk[data-phase="3"] .desk-result{background:#adc7f0}.system-desk[data-phase="3"] .result-number{transform:rotate(-45deg)}.result-number{transition:transform .65s var(--art-ease)}
+.desk-core{position:relative}.system-desk.spatial .logic-sheet{box-shadow:16px 25px 0 #355acc22,0 28px 45px #18312825}
+/* Nora: a visual score made from the user's four-step rhythm. */
+.rhythm-editorial h1{letter-spacing:-.055em;word-spacing:.07em}.rhythm-score{display:grid;grid-template-columns:170px 1fr;gap:25px;align-items:center;margin:25px 0 10px;border-top:1px solid #ffffff30;padding-top:24px}
+.rhythm-score>span{font:12px/1.6 'Fragment Mono',monospace;max-width:16ch;color:#efced9}.score-bars{display:flex;align-items:center;gap:5px;height:45px}
+.score-bars i{flex:1;min-width:2px;height:var(--score-h,8px);background:#dbf87b;opacity:.35;transition:height .3s,opacity .3s,transform .3s}
+.score-bars i.is-current{opacity:1;transform:scaleY(1.2)}.rhythm-portrait{overflow:hidden}.rhythm-sticker{transition:transform .6s var(--art-ease)}.nora-rhythm-stage[data-tone="1"] .rhythm-sticker{transform:rotate(-10deg)}.nora-rhythm-stage[data-tone="2"] .rhythm-sticker{transform:rotate(12deg)}
+/* Elena: a cinematic frontispiece, not a second typographic poster. */
+.photography .edition-nav{position:absolute;left:0;right:0;top:0;z-index:5;background:transparent;border:0;color:white}
+.cinema-hero{min-height:850px;min-height:100svh;padding:130px 4vw 28px;position:relative;isolation:isolate;display:flex;flex-direction:column;color:#fff;overflow:hidden}
+.cinema-image{position:absolute;inset:0;z-index:-2}.cinema-image img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;transition:object-position 1s var(--art-ease)}
+.cinema-hero:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#090e17bb 0%,#090e1720 45%,#090e17cc 100%)}
+.cinema-hero .photo-overline{margin:0 0 38px;font-size:12px}.cinema-hero h1{font:400 clamp(68px,7vw,112px)/1.02 var(--serif);letter-spacing:-.045em;margin:0;max-width:14ch;font-size-adjust:.43}
+.cinema-hero h1 em{display:block;padding:0;color:#fff;font:italic 400 1em/1.08 var(--serif);font-size-adjust:.43}.cinema-footer{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:30px;margin-top:auto;padding-top:150px}
+.cinema-footer>p{font-size:18px;line-height:1.55}.cinema-selector{display:flex;gap:14px}.cinema-selector button{padding:0 0 10px;background:none;color:#fff;border:0;border-bottom:2px solid transparent;text-align:left}
+.cinema-selector button img{width:100px;height:70px;object-fit:cover;filter:grayscale(.6);opacity:.7;transition:opacity .3s,filter .3s,transform .4s}
+.cinema-selector button>span{font:12px 'Fragment Mono',monospace;display:block;margin-top:12px}.cinema-selector button[aria-pressed=true]{border-color:#d4ef9e}.cinema-selector button[aria-pressed=true] img{filter:none;opacity:1}.cinema-selector button:hover img{transform:translateY(-5px);opacity:1}
+.cinema-footer>a{font-size:14px;border-bottom:1px solid #ffffff80;padding-bottom:12px}.cinema-caption{font:12px 'Fragment Mono',monospace;display:block;margin-top:28px;border-top:1px solid #ffffff50;padding-top:20px}
+.photography .photo-work{padding-top:95px}.photo-gallery[data-view=contact]{transition:gap .4s}.gallery-item:hover img{filter:brightness(1.08)}
+/* David: two ways of seeing the same photographic study. */
+.arch-title{padding-bottom:30px}.arch-title h1{font-size:clamp(64px,8vw,128px);line-height:1.03;letter-spacing:-.055em}
+.arch-reveal{position:absolute;inset:0;pointer-events:none;clip-path:inset(0 calc(100% - var(--reveal,0%)) 0 0);z-index:1;background:#213adc}
+.arch-reveal img{width:100%;height:100%;object-fit:cover;transform:rotateX(var(--arch-y,0deg)) rotateY(var(--arch-x,0deg)) scale(1.015);transition:transform 1s var(--art-ease);filter:grayscale(1) contrast(1.3);mix-blend-mode:screen;opacity:.8}
+.arch-seam{position:absolute;left:var(--reveal,0%);top:0;bottom:72px;width:1px;background:white;z-index:3;pointer-events:none;opacity:var(--seam-visible,0)}
+.arch-seam>span{position:absolute;top:50%;left:-22px;width:44px;height:44px;background:white;color:#182aef;border-radius:50%;display:grid;place-items:center;font-size:22px;border:1px solid #182aef}
+.arch-exhibit-controls{z-index:4}.arch-exhibit[data-view=structure] .arch-photo{filter:none;transform:rotateX(var(--arch-y,0deg)) rotateY(var(--arch-x,0deg)) scale(1.015)}
+.arch-exhibit .arch-overlay{z-index:2;opacity:var(--guides,0);transition:opacity .3s}.arch-exhibit[data-view=structure] .arch-overlay{opacity:var(--guides,0)}
+.arch-reveal-control{display:grid;grid-template-columns:240px 1fr 65px;gap:15px 25px;align-items:center;padding:22px 0;border-bottom:1px solid #182aef33;color:#182aef}
+.arch-reveal-control label{display:flex;gap:18px;font-size:14px}.arch-reveal-control input{width:100%;min-height:44px;accent-color:#182aef;cursor:ew-resize}.arch-reveal-control output{font:14px 'Fragment Mono',monospace;text-align:right}.arch-reveal-control>span{grid-column:2/-1;font-size:12px;color:#555}
+/* Sofia: monumental serif typography and a tactile inspection table. */
+.j-hero{grid-template-columns:.85fr 1.15fr;gap:40px;align-items:center;padding-top:28px}.j-hero-title h1{font:400 clamp(62px,7.1vw,110px)/1.02 var(--serif);letter-spacing:-.055em;white-space:normal;margin:26px 0;font-size-adjust:.43}
+.j-hero-title h1 em{color:#816675}.j-hero-title p{font-size:17px}.j-cover{min-height:570px}.j-cover img{object-position:52% 50%}.j-cover-mark{line-height:.9}.j-cover-mark small{display:block;font:12px 'Fragment Mono',monospace;margin-top:16px}
+.j-inspection{grid-template-columns:1fr 260px}.j-object-controls{gap:24px}.object-focus{display:flex;flex-direction:column;margin-bottom:10px}.object-focus button{margin:0!important;padding:15px 0!important;border:0;border-bottom:1px solid #302e2940!important;text-align:left;font:14px Inter,Arial,sans-serif;background:none;color:#302e29}
+.object-focus button[aria-pressed=true]{color:#7b4d68;border-color:#7b4d68!important;font-weight:600}.j-object-image{touch-action:pan-y;cursor:zoom-in}.j-object-image.is-zoomed{touch-action:none;cursor:grab}.j-object-image.is-dragging{cursor:grabbing}.j-object-image img{transform-origin:var(--focus-x,50%) var(--focus-y,50%);user-select:none;-webkit-user-drag:none}.j-object-image.is-dragging img{transition:none}
+/* Matteo: a generous masthead and a menu with the rhythm of turning a page. */
+.culinary .t-nav,.culinary .c-hero,.culinary .c-contact{background:#dc7950}.c-mastword{grid-column:1/-1;font:400 clamp(65px,14.9vw,232px)/.96 var(--serif);letter-spacing:-.065em;white-space:nowrap;border-bottom:1px solid #261e1966;padding:0 0 30px;font-size-adjust:.43}
+.c-hero{padding-top:15px;gap:25px 5vw}.c-topline{margin:0}.c-hero-copy{padding:16px 0 30px}.c-hero h1{font:500 clamp(42px,4.3vw,68px)/1.1 Inter,Arial,sans-serif;letter-spacing:-.045em}.c-hero h1 em{font:italic 400 1.07em/1.05 var(--serif);letter-spacing:-.035em;display:inline-block;margin-top:4px;font-size-adjust:.43}.c-hero-copy p{margin:28px 0;font-size:18px}
+.c-hero-plate{transform:rotate(2deg);padding:12px;margin:12px 0;transition:transform .8s var(--art-ease)}.c-hero-plate:hover{transform:rotate(0)}.c-hero-plate img{height:340px}.dish-notes{display:flex;gap:15px;margin-top:15px;flex-wrap:wrap}.dish-notes button{font:12px 'Fragment Mono',monospace;background:none;border:0;border-bottom:1px solid transparent;padding:10px 0;color:#261e19;min-height:44px}.dish-notes button[aria-pressed=true]{border-color:#964329;color:#964329}
+.c-hero-plate figcaption{min-height:46px;font-size:12px;padding:10px 0}.c-menu-paper{transition:transform .55s var(--art-ease),background .55s}.c-menu-paper.craft-arrive{animation:menu-turn .55s var(--art-ease) both}
+@keyframes menu-turn{from{transform:perspective(1200px) rotateY(-9deg) rotate(-1deg) translateY(8px)}to{transform:perspective(1200px) rotateY(0) rotate(-2deg) translateY(0)}}
+.c-menu-choices button[aria-pressed=true]{background:#dc7950}.c-kitchen h2,.c-contact h2{letter-spacing:-.035em;line-height:1.1}.c-kitchen h2 em,.c-contact h2 em{letter-spacing:-.025em}
+/* Ada: visual time and three musical starting points. No autoplay. */
+.sound-presets{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}.sound-presets>span{font:12px 'Fragment Mono',monospace;margin-right:auto}.sound-presets button{padding:12px 20px;min-height:44px;border:1px solid #181a1c;background:transparent;color:#181a1c;font-size:14px}.sound-presets button[aria-pressed=true]{background:#181a1c;color:#e4f15d}
+.s-instrument-top{display:grid;grid-template-columns:1fr auto 70px;align-items:center}.s-instrument-top #sound-time{text-align:right;font-variant-numeric:tabular-nums;font-size:18px}.sound-timeline{height:4px;background:#e4f15d20;overflow:hidden}.sound-timeline i{display:block;height:100%;background:#e4f15d;width:var(--time-left,100%);transition:width 1s linear}
+.s-hero h1{letter-spacing:-.06em;line-height:.98}.s-wave{height:290px}.s-fields summary:hover h3{color:#e4f15d}.s-fields summary h3{transition:color .3s}
+/* The index reflects the art direction of its destination. */
+.collection-intro h1{letter-spacing:-.055em}.card-interior .design-preview{background:#302e29;color:#f6f0e7}.card-interior .preview-composition h2{font-family:var(--serif);font-size:clamp(38px,5vw,80px);line-height:1.1;letter-spacing:-.045em;font-size-adjust:.43}.card-photo .preview-composition{isolation:isolate}.card-photo .preview-composition img{opacity:.7}.card-jewelry .preview-composition h2{letter-spacing:-.035em}.card-culinary .preview-composition h2{font:400 clamp(30px,3vw,46px)/1.1 var(--serif);letter-spacing:-.03em;font-size-adjust:.43}.collection-card .preview-open{transition:background .25s,color .25s}.collection-card:hover .preview-open{background:#fff;color:#171a18}
+@media(min-width:901px) and (min-height:701px){.material-cover h1{position:relative;margin-right:-10vw}.material-cover .material-stage{padding-left:2vw}.material-cover .material-main{margin-top:55px}.material-cover-copy{padding-bottom:110px}}
+@media(max-width:1050px){.j-inspection{grid-template-columns:1fr 220px}.material-cover h1{font-size:7.8vw}.cinema-hero h1{font-size:8vw}.cinema-footer{grid-template-columns:1fr 1fr}.cinema-footer>a{grid-column:1/-1;justify-self:end}.c-mastword{font-size:14.5vw}.arch-reveal-control{grid-template-columns:210px 1fr 55px}}
+@media(max-width:900px),(max-height:700px){.material-cover{display:grid;grid-template-columns:1fr;gap:24px;padding:28px 28px 70px}.material-cover>header{grid-column:1;flex-wrap:wrap;gap:15px;margin:0}.material-cover>header small{order:3;width:100%}.material-cover>header>a{margin-left:auto;font-size:12px}.material-cover-copy{padding:0}.material-cover h1{font-size:clamp(55px,10.5vw,95px);margin:25px 0;white-space:normal}.material-stage{padding:0}.material-main img{height:380px}.material-cover-foot{grid-column:1;flex-wrap:wrap;padding:5px 0 0}.material-cover-foot>span{width:100%}.material-cover-foot a{font-size:14px}.folio .panel .material-overline{font-size:12px}}
+@media(max-width:700px){
+ .t-nav nav a,.edition-nav nav a,.mast nav a{font-size:13px;min-height:40px}.t-nav nav{gap:0 13px}.t-nav{gap:12px}
+ .journal-turn{font-size:12px;gap:15px}.journal-turn>div{gap:8px}.journal-turn>div>span{display:none}.atlas-heading h1{letter-spacing:-.05em}
+ .network-field .network-center:before{display:none}.network-field .network-center h1{font-size:clamp(38px,10vw,58px)}.network-context{font-size:12px;max-width:28ch;margin:15px auto}.network-node strong{font-size:17px!important}.network-node small{font-size:13px!important}.network-heading>span:last-child{max-width:17ch;text-align:right}
+ .material-cover{padding:24px 22px 58px!important}.material-cover h1{font-size:clamp(42px,10.9vw,72px);line-height:1.1;letter-spacing:-.05em}.material-cover>header>span{font-size:25px}.material-cover>header a{margin:0}.material-cover>header{margin-bottom:6px}.material-cover-copy p{font-size:17px}.material-main img{height:310px}.material-main figcaption{font-size:12px}.material-select button{font-size:16px;gap:7px}.material-select{margin-top:10px}.material-cover-foot{gap:15px}.material-overline{max-width:30ch}.material-main{transform:none}.folio .samples{height:270px}
+ .software .workshop-intro h1{font-size:clamp(37px,9vw,58px);line-height:1.08;margin:24px 0}.workshop-summary{margin-bottom:25px}.rhythm-editorial h1{letter-spacing:-.045em}.rhythm-score{grid-template-columns:1fr;gap:12px}.rhythm-score>span{max-width:none}.score-bars{height:36px;gap:3px}
+ .photography .edition-nav{padding:20px 5vw}.cinema-hero{padding:145px 5vw 24px;min-height:760px;min-height:100svh}.cinema-hero .photo-overline{font-size:12px;gap:20px;line-height:1.5;margin-bottom:30px}.cinema-hero .photo-overline>span{max-width:18ch}.cinema-hero h1{font-size:clamp(42px,10.1vw,69px);line-height:1.1;letter-spacing:-.045em}.cinema-hero h1 em{padding:0;margin:0;font-size:1em}.cinema-image img{object-position:42% 50%}.cinema-footer{grid-template-columns:1fr;gap:24px;padding-top:160px}.cinema-footer p{font-size:16px}.cinema-selector{gap:16px}.cinema-selector button img{width:75px;height:50px}.cinema-selector button span{font-size:12px}.cinema-footer>a{grid-column:1;justify-self:start;font-size:14px}.cinema-caption{font-size:12px;line-height:1.6}.photography .photo-work{padding-top:55px}
+ .arch-title h1{font-size:clamp(48px,10.5vw,72px);letter-spacing:-.055em;line-height:1.08}.arch-reveal-control{grid-template-columns:1fr 60px;gap:5px 20px;padding:20px 0}.arch-reveal-control label{grid-column:1/-1;justify-content:space-between}.arch-reveal-control>span{grid-column:1/-1;font-size:12px}.arch-reveal-control input{grid-row:2}.arch-reveal-control output{grid-row:2}.arch-seam{bottom:120px}.arch-reveal img{object-position:56% 50%}
+ .j-hero-title h1{font-size:clamp(59px,15vw,86px);line-height:1.04;letter-spacing:-.045em}.j-cover{min-height:0;height:390px}.j-cover-mark small{font-size:12px}.j-inspection{display:block}.object-focus{grid-column:1/-1;display:grid;grid-template-columns:1fr;gap:0}.object-focus button{font-size:14px!important;min-height:44px}.j-object-controls{gap:10px 20px}.j-object-image{height:360px}
+ .c-mastword{font-size:14.1vw;letter-spacing:-.055em;padding-bottom:20px;margin-bottom:22px}.c-hero h1{font-size:clamp(36px,9.2vw,62px);line-height:1.12;letter-spacing:-.035em}.c-hero h1 em{letter-spacing:-.025em}.c-hero-copy{padding:30px 0 10px}.c-hero-plate{margin:28px 4px 25px}.c-hero-plate img{height:290px}.dish-notes{gap:12px;margin-top:10px}.dish-notes button{font-size:12px;min-height:44px}.c-hero-plate figcaption{font-size:12px;line-height:1.6;min-height:52px}.c-kitchen h2{font-size:clamp(34px,8.5vw,56px);letter-spacing:-.03em}.c-contact h2{font-size:clamp(42px,10vw,65px);letter-spacing:-.035em}
+ .sound-presets{gap:8px}.sound-presets>span{width:100%;margin:0 0 7px}.sound-presets button{padding:12px;font-size:13px}.s-instrument-top{grid-template-columns:1fr auto;gap:12px}.s-instrument-top>span:first-child{grid-column:1/-1;max-width:none}.s-instrument-top #sound-state{max-width:none;text-align:left}.s-instrument-top #sound-time{font-size:16px;max-width:none}.s-wave{height:190px}.s-hero h1{font-size:clamp(62px,14.8vw,105px);letter-spacing:-.055em;line-height:1.02}
+ .card-interior .preview-composition h2{font-size:clamp(32px,8vw,50px)}.card-culinary .preview-composition h2{font-size:clamp(27px,7vw,40px)}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.material-main,.c-hero-plate{transform:none}.cinema-selector button:hover img{transform:none}}
+
+.arch-exhibit{touch-action:pan-y;cursor:ew-resize}.arch-photo img{-webkit-user-drag:none;user-select:none}
+
+.system-desk.spatial .desk-coordinate{display:none}
+/* Compact mobile mastheads keep the story in the first viewport. */
+.j-cover-mark small{letter-spacing:.02em}.culinary .t-name,.beratung .mast>a{word-spacing:.08em;letter-spacing:-.02em}
+@media(max-width:700px){
+.immobilien .mast,.software .mast,.training .mast{display:block;padding:18px 5vw 12px}
+.immobilien .mast nav,.software .mast nav,.training .mast nav{display:flex;flex-direction:row;justify-content:space-between;flex-wrap:wrap;gap:6px 14px;margin-top:14px;text-align:left}
+.immobilien .mast nav a,.software .mast nav a,.training .mast nav a{display:inline-flex;min-height:36px;font-size:12px;padding:0}
+.immobilien .mast small,.software .mast small,.training .mast small{max-width:none;margin-top:5px;font-size:12px}
+}
+.s-instrument:not(.is-playing) #sound-wave{opacity:0}

@@ -1,0 +1,13 @@
+import {lightStudy,renderModel} from './pavilion.mjs?v=d8658afc6d30';
+export {lightStudy};
+export function lightArea(sun,opening){const p=lightStudy(sun,opening).patch;return Math.abs(p.reduce((s,a,i)=>{const b=p[(i+1)%p.length];return s+a[0]*b[2]-b[0]*a[2]},0))/2;}
+export function renderAtlas(sun=45,opening=65,view='raum',rotation=0,lift=0){
+ const d=lightStudy(sun,opening),a=d.width/2;
+ if(view==='raum')return renderModel(sun,opening,rotation,lift).replaceAll('#214bdf','#9a3825').replaceAll('#fff1bc','#eed087');
+ if(view==='grundriss'){
+  const p=([x,,z])=>`${480+x*95},${310+z*95}`;
+  return `<rect x="195" y="120" width="570" height="380" fill="#deded5"/><path d="M195 500V120H765" fill="none" stroke="#29352f" stroke-width="14"/><path d="M195 500H765" stroke="#9a3825" stroke-width="2"/><g stroke="#bdc1b7">${[-2,-1,0,1,2].map(x=>`<path d="M${480+x*95} 120V500"/>`).join('')}</g><polygon points="${d.patch.map(p).join(' ')}" fill="#eed087"/><rect x="${480-a*95}" y="227" width="${d.width*95}" height="166" fill="none" stroke="#9a3825" stroke-dasharray="6 5"/><rect x="219" y="154" width="442" height="50" fill="#9c7960"/><g stroke="#58655a" fill="none"><path d="M195 545H765M195 534V556M765 534V556M815 120V500M804 120H826M804 500H826"/></g><g fill="#29352f" font-size="17" font-family="Inter,sans-serif"><text x="480" y="580" text-anchor="middle">6,00 m</text><text x="849" y="322" transform="rotate(90 849 322)">4,00 m</text><text x="480" y="74" text-anchor="middle">GESCHLOSSENER RÜCKEN</text><text x="480" y="482" text-anchor="middle">OFFEN ZUM ORT</text></g>`;
+ }
+ const left=480-a*95,right=480+a*95,patch=d.patch.length?d.patch.map(v=>v[0]):[0],lo=Math.max(-3,Math.min(...patch)),hi=Math.min(3,Math.max(...patch));
+ return `<path d="M195 430H765" stroke="#29352f" stroke-width="16"/><path d="M195 430V183" stroke="#29352f" stroke-width="14"/><path d="M195 183H${left}M${right} 183H765" stroke="#29352f" stroke-width="18"/><polygon points="${left},183 ${right},183 ${480+hi*95},421 ${480+lo*95},421" fill="#eed087" fill-opacity=".38"/><path d="M${480+lo*95} 420H${480+hi*95}" stroke="#ce9a32" stroke-width="5"/><rect x="218" y="380" width="442" height="24" fill="#9c7960"/><path d="M240 404V423M631 404V423" stroke="#765a45" stroke-width="8"/><g stroke="#58655a" fill="none"><path d="M825 183V430M814 183H836M814 430H836M${left} 128H${right}M${left} 116V140M${right} 116V140"/></g><g fill="#29352f" font-size="17" font-family="Inter,sans-serif"><text x="480" y="100" text-anchor="middle">ÖFFNUNG ${d.width.toFixed(2).replace('.',',')} m</text><text x="856" y="314" transform="rotate(90 856 314)">2,60 m</text><text x="480" y="496" text-anchor="middle">LICHTKORRIDOR / SCHEMATISCHE PROJEKTION</text></g>`;
+}

@@ -1,0 +1,82 @@
+/* Compact introduction; the design demonstration is part of the first impression. */
+.hero { padding-top: 38px; }
+.hero .hero-introduction { align-items: center; gap: clamp(30px,5vw,80px); }
+.hero .hero-heading h1 { font-size: clamp(64px,7.3vw,112px); }
+.hero .hero-promise { max-width: none; margin-top: 20px; font-size: 14px; line-height: 1.65; }
+.hero .hero-introduction .hero-bottom { flex: 0 1 410px; max-width: 410px; margin: 0; gap: 18px; }
+.hero .hero-bottom .hero-offer { font-size: 25px; line-height: 1.25; letter-spacing: -.025em; }
+.hero-offer strong { display: block; font-weight: 500; }
+.hero-offer > span { display: block; margin-top: 13px; max-width: 350px; font-size: 17px; line-height: 1.6; letter-spacing: 0; }
+.hero .hero-bottom .hero-service { max-width: none; font-size: 12px; line-height: 1.6; color: #50584d; }
+.hero .hero-actions { display: flex; flex-wrap: nowrap; gap: 20px; width: 100%; margin-top: 0; }
+.hero .hero-actions .button { flex: none; font-size: 12px; padding: 14px 18px; min-height: 48px; gap: 22px; }
+.hero .hero-work-link { margin: 0; font-size: 11px; white-space: nowrap; gap: 10px; color: var(--ink); }
+.hero .design-experience { margin-top: 34px; }
+.hero .design-intro { display: flex; flex-direction: row; align-items: center; gap: 22px; margin: 0; padding: 17px 22px; border: 1px solid #d8d9ce; border-bottom: 0; background: #eeeee6; }
+.hero .design-intro > p { max-width: 360px; }
+.hero .design-intro > p strong { font-size: 16px; }
+.hero .design-intro .design-hint { font-size: 12px; margin-top: 4px; }
+.hero .design-ready .design-picker, .design-ready .hero .design-picker { gap: 7px; }
+.hero .design-picker .design-picker-hint { font-size: 11px; }
+.hero .design-picker .design-tabs { flex-wrap: nowrap; gap: 7px; }
+.hero .design-picker .design-tab { font-size: 12px; min-height: 44px; padding: 10px 14px; gap: 9px; background: #f9f8f3; }
+.hero .design-stage { border: 1px solid #d8d9ce; }
+@media(max-width:1050px) {
+  .hero .hero-introduction { gap: 30px; }
+  .hero .hero-heading h1 { font-size: 6.7vw; }
+  .hero .hero-introduction .hero-bottom { flex-basis: 350px; }
+  .hero .hero-bottom .hero-offer { font-size: 23px; }
+  .hero-offer > span { font-size: 16px; }
+  .hero .hero-actions { gap: 14px; }
+  .hero .hero-actions .button { padding-inline: 14px; gap: 15px; }
+  .hero .design-intro { padding: 15px; gap: 18px; }
+  .hero .design-intro > p strong { font-size: 14px; }
+  .hero .design-picker .design-tab { padding-inline: 10px; font-size: 11px; }
+  .hero .design-tab-number { display: none; }
+}
+@media(max-width:760px) {
+  .hero { padding-top: 26px; }
+  .hero .hero-introduction { display: block; }
+  .hero .hero-heading h1 { font-size: clamp(44px,12.7vw,86px); }
+  .hero .hero-introduction .hero-bottom { max-width: 580px; margin-top: 22px; gap: 12px; }
+  .hero .hero-promise { margin-top: 14px; font-size: 13px; }
+  .hero .design-intro { align-items: stretch; flex-direction: column; gap: 12px; }
+  .hero .design-intro > p { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; max-width: none; }
+  .hero .design-intro .design-hint { margin: 0; font-size: 11px; }
+  .hero .design-picker .design-tabs { justify-content: stretch; }
+  .hero .design-picker .design-tab { flex: 1; }
+}
+@media(max-width:540px) {
+  .hero { padding-top: 24px; }
+  .hero .hero-heading h1 { font-size: 13.4vw; }
+  .hero .hero-promise { font-size: 12px; line-height: 1.6; margin-top: 12px; }
+  .hero .hero-promise br { display: none; }
+  .hero .hero-introduction .hero-bottom { margin-top: 19px; gap: 11px; }
+  .hero .hero-bottom .hero-offer { font-size: 20px; line-height: 1.25; }
+  .hero-offer strong br { display: none; }
+  .hero-offer > span { font-size: 15px; line-height: 1.5; margin-top: 8px; max-width: none; }
+  .hero .hero-bottom .hero-service { font-size: 11px; line-height: 1.5; }
+  .hero .hero-actions { gap: 12px; margin-top: 2px; }
+  .hero .hero-actions .button { width: auto; min-height: 46px; font-size: 11px; padding: 12px; gap: 12px; }
+  .hero .hero-work-link { font-size: 10px; gap: 6px; }
+  .hero .design-experience { margin-top: 24px; }
+  .hero .design-intro { padding: 12px 10px; gap: 8px; }
+  .hero .design-intro > p strong { font-size: 13px; }
+  .hero .design-intro .design-hint { display: none; }
+  .hero .design-picker .design-picker-hint { font-size: 11px; }
+  .hero .design-picker .design-tabs { gap: 5px; }
+  .hero .design-picker .design-tab { min-height: 46px; font-size: 10px; padding: 9px 2px; flex-direction: row; gap: 5px; }
+  .hero .design-picker .design-tab-swatch { height: 7px; width: 7px; }
+}
+@media(max-width:540px) {
+  /* Put the image beside the editorial title so the visual starts immediately on phones. */
+  .hero .design-stage[data-design=editorial] .stage-title { top: 116px; font-size: clamp(32px,9vw,38px); }
+  .hero .design-stage[data-design=editorial] .stage-description { top: 223px; max-width: 43%; font-size: 7px; }
+  .hero .design-stage[data-design=editorial] .stage-image { top: 86px; left: 57%; width: 39%; height: calc(100% - 115px); }
+  .hero .design-stage[data-design=editorial] .stage-swatch { left: 6%; top: 65%; width: 38%; height: 24%; }
+  .hero .design-stage[data-design=editorial] .stage-caption { top: 81px; font-size: 5px; }
+  .hero .design-stage[data-design=editorial] .stage-cross { display: none; }
+}
+@media(max-width:360px) {
+  .hero .design-picker .design-tab-swatch { display: none; }
+}

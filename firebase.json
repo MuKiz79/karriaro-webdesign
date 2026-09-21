@@ -17,16 +17,175 @@
     }
   ],
   "hosting": {
-    "target": "karriaro-webdesign",
-    "public": "src",
+    "public": "relaunch/dist-live",
     "ignore": [
-      "src/m/**",
-      "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
     "cleanUrls": true,
     "trailingSlash": false,
+    "redirects": [
+      {
+        "source": "/webseite-erstellen-lassen",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/webdesign-stuttgart",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/webdesign-fuer-friseur",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/webdesign-fuer-dachdecker",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/webdesign-fuer-immobilienmakler",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/website-fuer-zahnaerzte",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/referenzprogramm",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/empfehlungspartner",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/gruender",
+        "destination": "/#manufaktur",
+        "type": 301
+      },
+      {
+        "source": "/website-kosten",
+        "destination": "/#preise",
+        "type": 301
+      },
+      {
+        "source": "/bfsg-website-pflicht",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/website-pruefen",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/ki-zitier-check",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/sofort-skizze",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/labor",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/audit",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/audit/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/blog",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/blog/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/portfolio",
+        "destination": "/arbeiten",
+        "type": 301
+      },
+      {
+        "source": "/portfolio/**",
+        "destination": "/arbeiten",
+        "type": 301
+      },
+      {
+        "source": "/en",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/en/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/success",
+        "destination": "/#kontakt",
+        "type": 301
+      },
+      {
+        "source": "/success.html",
+        "destination": "/#kontakt",
+        "type": 301
+      },
+      {
+        "source": "/kurz-anfrage",
+        "destination": "/#kontakt",
+        "type": 301
+      },
+      {
+        "source": "/m",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/m/**",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/danke",
+        "destination": "/#kontakt",
+        "type": 301
+      },
+      {
+        "source": "/danke.html",
+        "destination": "/#kontakt",
+        "type": 301
+      },
+      {
+        "source": "/images/og-image.jpg",
+        "destination": "/assets/brand/karriaro-preview.png",
+        "type": 301
+      },
+      {
+        "source": "/werkschau",
+        "destination": "/arbeiten",
+        "type": 301
+      }
+    ],
     "headers": [
       {
         "source": "**",
@@ -54,7 +213,7 @@
         ]
       },
       {
-        "source": "**/*.@(jpg|jpeg|png|svg|webp|avif|ico|woff2)",
+        "source": "**/*.@(css|js|mjs)",
         "headers": [
           {
             "key": "Cache-Control",
@@ -63,11 +222,20 @@
         ]
       },
       {
-        "source": "**/*.@(css|js)",
+        "source": "**/*.@(woff2|woff)",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public, max-age=2592000"
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(jpg|jpeg|png|svg|webp|avif|ico|mp4)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=604800"
           }
         ]
       },
@@ -77,6 +245,37 @@
           {
             "key": "Cache-Control",
             "value": "public, max-age=300, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/assets/portrait/**",
+        "headers": [
+          {
+            "key": "X-Robots-Tag",
+            "value": "noindex"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/studien/**",
+        "headers": [
+          {
+            "key": "X-Robots-Tag",
+            "value": "noindex, follow"
           }
         ]
       }
@@ -110,6 +309,7 @@
           "region": "europe-west1"
         }
       }
-    ]
+    ],
+    "target": "karriaro-webdesign"
   }
 }
