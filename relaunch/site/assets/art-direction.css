@@ -60,6 +60,26 @@ html.kr-motion .lead-stage.kr-reveal>img+img{transition-delay:.22s}
 .market-case{background:#ddd8ce;color:#292722}.market-case .case-screen>span{background:#292722;color:#f5f1e9}.market-case .case-detail{border-top-color:#29272255}
 @media(max-width:760px){.lead-stage--zwei{grid-template-columns:1fr;aspect-ratio:auto}.lead-stage--zwei img{height:auto;aspect-ratio:auto;width:100%}.software-case{grid-template-columns:1fr;padding:25px 20px;margin-inline:calc(var(--gutter) * -1);gap:28px}}
 
+/* Two compact, live website stages keep the newest concepts visible on the home page. */
+.home-concept-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
+.home-concept{min-width:0;padding:29px;background:#20372f;color:#f1f0e6}
+.home-concept--tisch{background:#7a3149;color:#f8eccd}
+.home-concept-top{display:flex;justify-content:space-between;gap:15px;padding-bottom:14px;border-bottom:1px solid #fff5;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.home-concept-top span:last-child{text-align:right}
+.home-concept h3{font-size:clamp(40px,4.3vw,69px);line-height:1.02;letter-spacing:-.052em;font-weight:450;margin:24px 0 18px}
+.home-concept h3 em{font-family:var(--serif,Georgia,serif);font-weight:400}
+.home-concept>p{font-size:15px;line-height:1.6;max-width:460px;min-height:72px}
+.home-concept-screen{display:block;margin-top:31px;background:#f4f1e7;color:#243129;box-shadow:0 18px 40px #1113;transition:transform .3s}
+.home-concept-screen:hover,.home-concept-screen:focus-visible{transform:translateY(-4px)}
+.home-concept-screen .website-browser-bar{background:#f4f1e7;color:#343b33;font-size:11px;min-height:43px}
+.home-concept-screen .website-live-frame{aspect-ratio:1.5}
+.home-concept-screen .website-live-frame iframe{width:200%;height:200%;transform:scale(.5)}
+.home-concept-open{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:48px;padding:8px 15px;background:#f4f1e7;border-top:1px solid #d8d4c9;font-size:13px}
+.home-concept-open span{font-size:24px;line-height:1}
+@media(max-width:760px){.home-concept-pair{grid-template-columns:1fr;gap:14px;margin-inline:calc(var(--gutter) * -1)}.home-concept{padding:24px 20px}.home-concept h3{font-size:clamp(41px,10vw,62px)}.home-concept>p{min-height:0;font-size:15px}.home-concept-screen .website-live-frame iframe{width:270%;height:270%;transform:scale(.37037)}}
+@media(max-width:370px){.home-concept-top{font-size:10px}.home-concept h3{font-size:42px}}
+@media(prefers-reduced-motion:reduce){.home-concept-screen{transition:none}}
+
 /* Marke (20.09.2026, Entscheidung des Inhabers): KARRIARO mit rotem Punkt, wie der Namenszug auf muammerkizilaslan.com. Der Punkt ist ein Kreis auf der Grundlinie (0,36 em, Rot #c34632); der Abstand gleicht die negative Laufweite der Wortmarke aus. Die Seite selbst bleibt monochrom, --accent bleibt Tinte. */
 :root{--signature:#c34632}
 .brand-dot{display:inline-block;width:.36em;height:.36em;min-width:5px;min-height:5px;margin-inline-start:.235em;border-radius:50%;background:var(--signature);vertical-align:baseline}

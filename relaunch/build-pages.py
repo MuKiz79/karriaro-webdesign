@@ -23,7 +23,7 @@ def page(title, description, path, content, noindex=False):
     return h + '<body><a class="skip-link" href="#inhalt">Zum Inhalt springen</a>' + header + '<main id="inhalt">' + content + '</main>' + footer + preview + '</body></html>\n'
 
 projects = [
- ('kante','KANTE / Räume','Handwerk','kante-workshop.webp','Handwerk erleben: Fassadenbild, Materialwahl und eine mehrstufige Projektskizze zum Ausprobieren.'),
+ ('kante','KANTE / Räume','Handwerk','kante-window-detail-v3.webp','Fenster, Fassade und Raum aus einer präzisen Idee. Mit Materialwahl und Projektskizze.'),
  ('waldruehe','WALDRUHE','Unterkunft','waldruehe-house.webp','Unterkunft entdecken: Bildgeschichte, Raumansicht und Reiseplaner mit Datum, Gästen und Stimmung.'),
  ('tischundton','TISCH & TON','Lokaler Handel','tischundton-stilllife.webp','Ein kompletter Demo-Shop: sechs Produkte, Suche, Filter, Details, Mengen und Kasse zum Ausprobieren.'),
  ('shop','FORM / Objekte','Onlineshop','sofia-silver.webp','Eine Kollektion, Produktvarianten, Warenkorb und vollständiger Demo-Checkout: ein Shop zum Ausprobieren.'),
@@ -39,17 +39,35 @@ projects = [
  ('klang','Ada Lind','Klanggestaltung','ada-portrait.webp','Raum und Klang erkunden: eine interaktive Studie mit bewusst startbarer Audiowiedergabe.')
 ]
 projects.sort(key=lambda p: ['kante','waldruehe','tischundton','shop','interior','kulinarik','fotografie','architektur','schmuck','immobilien','software','training','beratung','klang'].index(p[0]))
-intro = '<section class="page-hero wrap"><p class="eyebrow">Websites entdecken</p><h1>Öffnen. Erkunden.<br><em>Ausprobieren.</em></h1><p>Meine veröffentlichte Website und vierzehn eigene Konzeptprojekte. Entdecken Sie unterschiedliche Branchen, Gestaltungen und Besucherwege.</p></section>'
-intro += '<section class="published-work wrap" aria-labelledby="published-title"><a href="https://muammerkizilaslan.com/" aria-label="Veröffentlichte Website von Muammer Kizilaslan öffnen"><img src="/assets/projects/muammerkizilaslan-desktop-poster.webp" width="1920" height="862" alt="Die veröffentlichte persönliche Website von Muammer Kizilaslan mit ihrem Themen-Netz"></a><div><span class="work-type">Eigene Website · Veröffentlicht</span><h2 id="published-title">Kein Lebenslauf.<br>Eine Denkweise.</h2><p>Mein persönlicher Auftritt. Konzept, Gestaltung und technische Umsetzung aus einer Hand. Live unter muammerkizilaslan.com.</p><a class="text-link" href="https://muammerkizilaslan.com/">Veröffentlichte Website öffnen ↗</a></div></section><div class="wrap concept-heading"><h2>Vierzehn eigene Perspektiven.</h2><p>Konzeptwebsites mit fiktiven Personen und Produkten. Zum Öffnen und Ausprobieren.</p></div>'
-cards = '<section class="collection wrap" aria-label="Alle Arbeiten">'
-for slug,name,kind,image,description in projects:
-    fresh = slug in {'kante','waldruehe','tischundton'}
-    project_url = f'/studien/{slug}.html' + ('?v=20260923b' if fresh else '')
-    src = f'/assets/websites/{slug}.png'
-    thumb = f'<span class="website-live-frame" aria-hidden="true"><iframe src="{project_url}" title="Vorschau: {name}" tabindex="-1" loading="lazy" sandbox=""></iframe></span>' if fresh else f'<img src="{src}" alt="Tatsächliche Startseitenansicht der Website {name}" loading="lazy" width="1280" height="960">'
-    cards += f'<article class="collection-item"><a href="{project_url}" class="website-browser" aria-label="Website {name} öffnen"><span class="website-browser-bar"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>{kind} · Website-Konzept</span><span aria-hidden="true">↗</span></span>{thumb}<span class="website-browser-action">Website öffnen <span aria-hidden="true">↗</span></span></a><div class="work-caption"><div><span class="work-type">Eigenes Website-Konzept · {kind}</span><h2>{name}</h2></div><a class="text-link" href="{project_url}">Website öffnen ↗</a></div><p>{description}</p></article>'
-cards += '</section><div class="wrap"><p class="collection-note">Die vierzehn Konzeptwebsites sind eigene Entwürfe mit fiktiven Betrieben, Personen und KI-generierten Bildmotiven. Sie zeigen Gestaltung und technische Umsetzung, keine realen Kundenaufträge oder Geschäftsergebnisse. Kontakt- und Geschäftsvorgänge sind Demos.</p><section class="simple-cta" aria-label="Projektanfrage"><h2>Und Ihr <em>Auftritt?</em></h2><a class="button button-dark" href="/#kontakt">Projekt besprechen <span aria-hidden="true">↗</span></a></section></div>'
-(SITE/'arbeiten.html').write_text(page('Arbeiten', 'Ausgewählte Websites und eigenständige Designstudien der Karriaro Website-Designmanufaktur.', 'arbeiten', intro+cards))
+featured_slugs = ('kante', 'waldruehe', 'tischundton')
+featured = {
+    'kante': ('Handwerk · Fenster & Räume', 'Die Linie entscheidet.', 'Ein Handwerksbetrieb braucht einen Auftritt, der Präzision zeigt, bevor er sie behauptet.', 'Ein architektonischer Bildrhythmus führt von Material und Raum zur bedienbaren Projektskizze.', 'Material und Vorhaben wählen'),
+    'waldruehe': ('Unterkunft · Rückzugsort', 'Ein Ort, der bleibt.', 'Eine Unterkunft wird erst interessant, wenn man sich einen Aufenthalt darin vorstellen kann.', 'Haus und Innenraum erzählen eine stille Geschichte; der Reiseplaner macht daraus eine persönliche Idee.', 'Aufenthalt zusammenstellen'),
+    'tischundton': ('Handel · Feinkost & Tischkultur', 'Ein Tisch voller Möglichkeiten.', 'Ein kleiner Laden benötigt digital mehr als ein schönes Produktregal.', 'Die Bildwelt weckt Appetit; Suche, Auswahl, Warenkorb und Demo-Kasse zeigen den Weg bis zum Kauf.', 'Demo-Shop ausprobieren'),
+}
+
+def project_url(slug):
+    return f'/studien/{slug}.html' + ('?v=20260923c' if slug in featured_slugs else '')
+
+intro = '<section class="page-hero gallery-hero wrap"><p class="eyebrow">Karriaro / Werkschau</p><h1>Jede Aufgabe<br><em>eine eigene Welt.</em></h1><p>Hier sehen Sie Websites, die sich öffnen und bedienen lassen. Gestaltung, Inhalt und Funktion folgen jeweils einer anderen Idee.</p><nav class="gallery-jump" aria-label="Bereiche der Werkschau"><a href="#veroeffentlicht">Veröffentlicht ↘</a><a href="#konzepte">Ausgewählte Konzepte ↘</a><a href="#archiv">Weitere Entwürfe ↘</a></nav></section>'
+intro += '<section class="published-work wrap" id="veroeffentlicht" aria-labelledby="published-title"><a href="https://muammerkizilaslan.com/" aria-label="Veröffentlichte Website von Muammer Kizilaslan öffnen"><img src="/assets/projects/muammerkizilaslan-desktop-poster.webp" width="1920" height="862" alt="Die veröffentlichte persönliche Website von Muammer Kizilaslan mit ihrem Themen-Netz"></a><div><span class="work-type">Eigene Website · Veröffentlicht</span><h2 id="published-title">Kein Lebenslauf.<br>Eine Denkweise.</h2><p>Mein persönlicher Auftritt. Konzept, Gestaltung und technische Umsetzung aus einer Hand. Live unter muammerkizilaslan.com.</p><a class="text-link" href="https://muammerkizilaslan.com/">Veröffentlichte Website öffnen ↗</a></div></section>'
+
+gallery = '<section class="gallery-featured" id="konzepte" aria-labelledby="featured-title"><div class="wrap gallery-section-intro"><p class="eyebrow">Ausgewählte Konzepte / Zum Ausprobieren</p><h2 id="featured-title">Drei Branchen.<br><em>Drei eigene Antworten.</em></h2><p>Fiktive Betriebe, bewusst unterschiedlich gestaltet. Öffnen Sie die Websites und testen Sie, wie die jeweilige Idee funktioniert.</p></div>'
+for index, slug in enumerate(featured_slugs, start=1):
+    _, name, kind, _, _ = next(project for project in projects if project[0] == slug)
+    label, headline, task, decision, action = featured[slug]
+    url = project_url(slug)
+    gallery += f'<article class="gallery-feature gallery-feature--{slug}"><div class="wrap gallery-feature-inner"><div class="gallery-feature-top"><span>{index:02d} / {len(featured_slugs):02d}</span><span>Eigenes Website-Konzept · fiktiver Betrieb</span></div><div class="gallery-feature-layout"><div class="gallery-feature-copy"><p class="eyebrow">{label}</p><h3>{headline}</h3><p class="gallery-feature-name">{name}</p><dl><div><dt>Die Aufgabe</dt><dd>{task}</dd></div><div><dt>Die Idee</dt><dd>{decision}</dd></div></dl><a class="gallery-feature-cta" href="{url}">{action} <span aria-hidden="true">↗</span></a></div><a class="gallery-feature-screen" href="{url}" aria-label="Website-Konzept {name} öffnen"><span class="gallery-screen-bar"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>{kind} / Website-Vorschau</span><span aria-hidden="true">↗</span></span><span class="website-live-frame" aria-hidden="true"><iframe src="{url}" title="Vorschau: {name}" tabindex="-1" loading="lazy" sandbox=""></iframe></span><span class="gallery-screen-foot">Website öffnen <span aria-hidden="true">↗</span></span></a></div></div></article>'
+gallery += '</section>'
+
+archive_projects = [project for project in projects if project[0] not in featured_slugs]
+gallery += f'<section class="gallery-archive wrap" id="archiv" aria-labelledby="archive-title"><div class="gallery-archive-head"><div><p class="eyebrow">Weitere Entwürfe</p><h2 id="archive-title">Die Sammlung<br><em>wächst weiter.</em></h2></div><p>{len(archive_projects)} weitere Website-Konzepte: vom Onlineshop über Architektur bis Klang. Jedes Projekt lässt sich öffnen; neue Arbeiten ergänzen diese Sammlung.</p></div><div class="gallery-index">'
+for index, (slug, name, kind, image, description) in enumerate(archive_projects, start=1):
+    gallery += f'<a class="gallery-index-row" href="{project_url(slug)}" aria-label="Website-Konzept {name} öffnen"><span class="gallery-index-number">{index:02d}</span><strong>{name}</strong><span class="gallery-index-kind">{kind}</span><span class="gallery-index-action" aria-hidden="true">↗</span></a>'
+gallery += '</div></section><div class="wrap"><p class="collection-note">Die Konzeptwebsites sind eigene Entwürfe mit fiktiven Betrieben, Personen oder Produkten und teils KI-generierten Bildmotiven. Sie zeigen Gestaltung und technische Umsetzung, keine Kundenaufträge oder Geschäftsergebnisse. Kontakt- und Geschäftsvorgänge sind Demos.</p><section class="simple-cta" aria-label="Projektanfrage"><h2>Und Ihr <em>Auftritt?</em></h2><a class="button button-dark" href="/#kontakt">Projekt besprechen <span aria-hidden="true">↗</span></a></section></div>'
+gallery_page = page('Webdesign-Beispiele und Website-Konzepte', 'Entdecken Sie Karriaros veröffentlichte Website und bedienbare Webdesign-Konzepte für Handwerk, Unterkunft, Handel und weitere Branchen.', 'arbeiten', intro+gallery)
+gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/assets/gallery.css"></head>')
+(SITE/'arbeiten.html').write_text(gallery_page)
 
 # Keep the existing legal wording in local source files for independent review.
 for slug,title in [('impressum','Impressum'),('datenschutz','Datenschutzerklärung'),('agb','Allgemeine Geschäftsbedingungen')]:
