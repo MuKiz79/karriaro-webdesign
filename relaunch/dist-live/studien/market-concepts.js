@@ -24,6 +24,10 @@
         ? kanteCopy[selected.choice] + ' ' + kanteMaterial[selected.material] + ' setzt den Ton; das Ziel „' + kanteGoal[selected.goal] + '“ gibt die Richtung vor.'
         : 'Wählen Sie zuerst einen Bereich. Material und Ziel können Sie bereits verändern.';
       result.querySelector('small').textContent = kanteMaterial[selected.material] + ' · ' + kanteGoal[selected.goal];
+      const cutaway = document.querySelector('#kante-cutaway');
+      cutaway.dataset.material = selected.material;
+      cutaway.dataset.goal = selected.goal;
+      cutaway.dataset.choice = selected.choice || 'fenster';
     };
     document.querySelectorAll('[data-kante-pick]').forEach(link => link.addEventListener('click', () => {
       document.querySelector('[data-kante-choice="' + link.dataset.kantePick + '"]').click();
@@ -83,6 +87,29 @@
     });
     departure.addEventListener('change', render);
     guests.addEventListener('change', render);
+  }
+
+  const times = {
+    morgen: { time: '07:30', kicker: 'DER ERSTE BLICK', title: 'Der Morgen gehört Ihnen.', copy: 'Nebel zwischen den Bäumen. Ein Kaffee am Fenster. Kein Termin, der den Tag vorgibt.', mood: 'ruhe' },
+    mittag: { time: '14:00', kicker: 'EIN WEG HINAUS', title: 'Draußen wird der Kopf frei.', copy: 'Die Tür fällt zu, der Wald beginnt. Wie weit der Weg führt, entscheiden nur Sie.', mood: 'wege' },
+    abend: { time: '20:15', kicker: 'WIEDER HIER', title: 'Das Licht wartet schon.', copy: 'Ein warmes Fenster im Dunkel. Der Tag darf enden, ohne dass etwas fehlen muss.', mood: 'zeit' }
+  };
+  const timeButtons = [...document.querySelectorAll('button[data-wald-time]')];
+  if (timeButtons.length) {
+    let activeTime = 'morgen';
+    timeButtons.forEach(button => button.addEventListener('click', () => {
+      activeTime = button.dataset.waldTime;
+      setGroup(timeButtons, button);
+      const scene = times[activeTime];
+      document.querySelector('#wald-time-interaction').dataset.waldTime = activeTime;
+      document.querySelector('#wald-time-display').textContent = scene.time;
+      document.querySelector('#wald-time-kicker').textContent = scene.kicker;
+      document.querySelector('#wald-time-title').textContent = scene.title;
+      document.querySelector('#wald-time-copy').textContent = scene.copy;
+    }));
+    document.querySelector('#wald-time-plan').addEventListener('click', () => {
+      document.querySelector('[data-wald-choice="' + times[activeTime].mood + '"]').click();
+    });
   }
 
   // TISCH & TON: a complete, local-only shop demonstration.
@@ -152,6 +179,44 @@
     if (detail.open) detail.close();
     if (!cart.open) cart.showModal();
   };
+  const tableScenes = {
+    abend: { kicker: 'FÜR HEUTE ABEND', title: 'Ein Abend, der bleiben darf.', copy: 'Brot brechen, Öl teilen, noch ein bisschen sitzen bleiben.', ids: ['bread', 'oil', 'bowl'], number: '01 — 03' },
+    morgen: { kicker: 'FÜR MORGEN FRÜH', title: 'Der Morgen hat Zeit.', copy: 'Kaffee aufsetzen, die Schale füllen, langsam anfangen.', ids: ['coffee', 'pear', 'bowl'], number: '02 — 03' },
+    geschenk: { kicker: 'ZUM MITBRINGEN', title: 'Ein guter Grund, vorbeizukommen.', copy: 'Drei kleine Dinge, die einen Abend besonders machen.', ids: ['pear', 'chocolate', 'oil'], number: '03 — 03' }
+  };
+  const table = document.querySelector('#tischprobe');
+  let tableScene = 'abend';
+  const tableButtons = [...document.querySelectorAll('[data-table-choice]')];
+  const renderTable = () => {
+    const scene = tableScenes[tableScene];
+    table.dataset.tableScene = tableScene;
+    document.querySelector('#table-scene-kicker').textContent = scene.kicker;
+    document.querySelector('#table-scene-title').textContent = scene.title;
+    document.querySelector('#table-scene-copy').textContent = scene.copy;
+    document.querySelector('#table-scene-number').textContent = scene.number;
+    const list = document.querySelector('#table-products');
+    list.replaceChildren();
+    scene.ids.forEach(id => {
+      const item = document.createElement('li');
+      const name = document.createElement('span');
+      const price = document.createElement('strong');
+      name.textContent = catalog[id].name;
+      price.textContent = money(catalog[id].cents);
+      item.append(name, price);
+      list.append(item);
+    });
+    document.querySelector('#table-total').textContent = money(scene.ids.reduce((sum, id) => sum + catalog[id].cents, 0));
+  };
+  tableButtons.forEach(button => button.addEventListener('click', () => {
+    tableScene = button.dataset.tableChoice;
+    setGroup(tableButtons, button);
+    renderTable();
+  }));
+  document.querySelector('#table-add').addEventListener('click', () => {
+    tableScenes[tableScene].ids.forEach(id => order.set(id, Math.min((order.get(id) || 0) + 1, 20)));
+    renderCart();
+    if (!cart.open) cart.showModal();
+  });
   const showDetail = id => {
     detailId = id;
     const product = catalog[id];

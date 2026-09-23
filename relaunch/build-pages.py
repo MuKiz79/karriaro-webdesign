@@ -25,7 +25,7 @@ def page(title, description, path, content, noindex=False):
 projects = [
  ('kante','KANTE / Räume','Handwerk','kante-window-detail-v3.webp','Fenster, Fassade und Raum aus einer präzisen Idee. Mit Materialwahl und Projektskizze.'),
  ('waldruehe','WALDRUHE','Unterkunft','waldruehe-house.webp','Unterkunft entdecken: Bildgeschichte, Raumansicht und Reiseplaner mit Datum, Gästen und Stimmung.'),
- ('tischundton','TISCH & TON','Lokaler Handel','tischundton-stilllife.webp','Ein kompletter Demo-Shop: sechs Produkte, Suche, Filter, Details, Mengen und Kasse zum Ausprobieren.'),
+ ('tischundton','TISCH & TON','Lokaler Handel','tischundton-brand-stilllife-v3.webp','Eine eigene Markenwelt mit Tischprobe und Demo-Shop: Produkte nach Anlass zusammenstellen und bis zur Kasse ausprobieren.'),
  ('shop','FORM / Objekte','Onlineshop','sofia-silver.webp','Eine Kollektion, Produktvarianten, Warenkorb und vollständiger Demo-Checkout: ein Shop zum Ausprobieren.'),
  ('interior','Mila Hartmann','Interior Design','mila-evening.webp','Leistungen, Materialauswahl und Projektanfrage: ein vollständiger Besucherweg für ein Interior-Studio.'),
  ('fotografie','Elena Voss','Fotografie','elena-coast.webp','Ein visueller Essay zwischen Küste und Stille. Mit Bildpaaren, Galerie und eigenen Zusammenstellungen.'),
@@ -43,7 +43,7 @@ featured_slugs = ('kante', 'waldruehe', 'tischundton')
 featured = {
     'kante': ('Handwerk · Fenster & Räume', 'Die Linie entscheidet.', 'Ein Handwerksbetrieb braucht einen Auftritt, der Präzision zeigt, bevor er sie behauptet.', 'Ein architektonischer Bildrhythmus führt von Material und Raum zur bedienbaren Projektskizze.', 'Material und Vorhaben wählen'),
     'waldruehe': ('Unterkunft · Rückzugsort', 'Ein Ort, der bleibt.', 'Eine Unterkunft wird erst interessant, wenn man sich einen Aufenthalt darin vorstellen kann.', 'Haus und Innenraum erzählen eine stille Geschichte; der Reiseplaner macht daraus eine persönliche Idee.', 'Aufenthalt zusammenstellen'),
-    'tischundton': ('Handel · Feinkost & Tischkultur', 'Ein Tisch voller Möglichkeiten.', 'Ein kleiner Laden benötigt digital mehr als ein schönes Produktregal.', 'Die Bildwelt weckt Appetit; Suche, Auswahl, Warenkorb und Demo-Kasse zeigen den Weg bis zum Kauf.', 'Demo-Shop ausprobieren'),
+    'tischundton': ('Handel · Feinkost & Tischkultur', 'Ein Tisch voller Möglichkeiten.', 'Ein kleiner Laden benötigt digital mehr als ein schönes Produktregal.', 'Eine eigene Verpackungswelt und die Tischprobe machen Anlässe erlebbar; der Demo-Shop führt die Auswahl bis zur Kasse.', 'Tischprobe ausprobieren'),
 }
 
 def project_url(slug):

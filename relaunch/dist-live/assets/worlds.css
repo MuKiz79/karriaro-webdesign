@@ -28,7 +28,7 @@
 .hero-world-result strong,.hero-world-result small{display:block}
 .hero-world-result strong{font-size:16px;font-weight:600;line-height:1.2;letter-spacing:-.02em}
 .hero-world-result small{font-size:12px;line-height:1.4;opacity:.8;margin-top:5px}
-.hero-world-action{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #ffffff55;padding-top:10px;font-size:12px;font-weight:650}
+.hero-world-action{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid #ffffff55;padding-top:10px;margin-top:auto;font-size:12px;font-weight:650}
 .hero-world-action span{font-size:21px;line-height:.7}
 .hero-worlds-note{font-size:11px;color:#69645d;line-height:1.5;margin:9px 0 16px}
 .art-hero .hero-work-link{margin:0 0 32px}

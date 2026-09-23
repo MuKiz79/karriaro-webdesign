@@ -42,6 +42,9 @@ test('KANTE service choice, material and goal produce a coherent local project b
   assert.equal(q('[data-kante-choice="fassade"]').getAttribute('aria-pressed'), 'true');
   assert.equal(q('[data-kante-material="holz"]').getAttribute('aria-pressed'), 'true');
   assert.match(q('#kante-result').textContent, /Fassade.*Holz.*Mehr Ruhe/s);
+  assert.equal(q('#kante-cutaway').dataset.choice, 'fassade');
+  assert.equal(q('#kante-cutaway').dataset.material, 'holz');
+  assert.equal(q('#kante-cutaway').dataset.goal, 'ruhe');
   assert.equal(requests(), 0);
   await window.happyDOM.close();
 });
@@ -60,6 +63,20 @@ test('WALDRUHE forms a dated trip idea and rejects reversed dates without a book
   q('#stay-arrival').value = '2026-10-15';
   q('#stay-arrival').dispatchEvent(new window.Event('change'));
   assert.equal(q('#stay-departure').value, '');
+  assert.equal(requests(), 0);
+  await window.happyDOM.close();
+});
+
+test('WALDRUHE day rhythm changes the scene and carries its mood into the trip idea', async () => {
+  const { window, q, requests } = await setup('waldruehe');
+  q('button[data-wald-time="abend"]').click();
+  assert.equal(q('#wald-time-interaction').dataset.waldTime, 'abend');
+  assert.equal(q('#wald-time-display').textContent, '20:15');
+  assert.equal(q('button[data-wald-time="abend"]').getAttribute('aria-pressed'), 'true');
+  q('#wald-time-plan').addEventListener('click', event => event.preventDefault());
+  q('#wald-time-plan').click();
+  assert.equal(q('[data-wald-choice="zeit"]').getAttribute('aria-pressed'), 'true');
+  assert.match(q('#wald-result').textContent, /Zeit für zwei/);
   assert.equal(requests(), 0);
   await window.happyDOM.close();
 });
@@ -85,6 +102,22 @@ test('TISCH & TON filters products, adjusts quantities and ends checkout as a lo
   q('#finish-demo').click();
   assert.equal(q('#checkout-confirmation').hidden, false);
   assert.equal(q('#checkout-flow').hidden, true);
+  assert.equal(requests(), 0);
+  await window.happyDOM.close();
+});
+
+test('TISCH & TON occasion changes the table composition and adds exactly its three products', async () => {
+  const { window, q, requests } = await setup('tischundton');
+  q('[data-table-choice="morgen"]').click();
+  assert.equal(q('#tischprobe').dataset.tableScene, 'morgen');
+  assert.equal(q('[data-table-choice="morgen"]').getAttribute('aria-pressed'), 'true');
+  assert.match(q('#table-scene-title').textContent, /Morgen/);
+  assert.match(q('#table-products').textContent, /Morgengold.*Birne.*Schale/s);
+  assert.equal(q('#table-total').textContent, '55,00 €');
+  q('#table-add').click();
+  assert.equal(q('#cart-count').textContent, '3');
+  assert.equal(q('#cart-total').textContent, '55,00 €');
+  assert.equal(q('#demo-cart').open, true);
   assert.equal(requests(), 0);
   await window.happyDOM.close();
 });
