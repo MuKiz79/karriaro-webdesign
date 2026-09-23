@@ -1,0 +1,64 @@
+/* Karriaro's own graphic language: one origin, three deliberate strokes. */
+.art-hero-top .eyebrow::before,
+.editorial-work-intro .eyebrow::before,
+.offer-section .section-heading>.eyebrow::before,
+.designer-intro .eyebrow::before,
+.services .section-heading>.eyebrow::before,
+.faq-section .section-heading>.eyebrow::before,
+.contact-copy>.eyebrow::before,
+.gallery-hero>.eyebrow::before,
+.gallery-section-intro>.eyebrow::before,
+.signature-copy>.eyebrow::before{
+  content:"";display:block;flex:0 0 7px;width:7px;height:7px;border-radius:50%;background:var(--signature,#c34632)
+}
+.signature-bridge{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#efefeb}
+.signature-bridge-inner{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);gap:clamp(42px,7vw,125px);align-items:center;padding-block:clamp(60px,7vw,105px)}
+.signature-copy{align-self:center;max-width:440px}
+.signature-copy .eyebrow{color:#5e5e5a;margin-bottom:34px}
+.signature-copy h2{font:500 clamp(52px,5.8vw,88px)/.98 var(--sans);letter-spacing:-.065em;text-wrap:balance}
+.signature-copy h2 em{font:400 1.16em/.8 var(--serif);letter-spacing:-.045em;color:var(--signature,#c34632)}
+.signature-copy>p:not(.eyebrow){max-width:38ch;margin-top:32px;color:#555550;font-size:17px;line-height:1.7}
+.signature-copy>a{display:inline-flex;align-items:center;justify-content:space-between;gap:55px;margin-top:29px;padding:8px 0;border-bottom:1px solid #171717;font-size:14px;min-width:186px;transition:color .2s,border-color .2s}
+.signature-copy>a span{font-size:22px;line-height:1}
+.signature-copy>a:hover{color:var(--signature,#c34632);border-color:currentColor}
+.signature-art{position:relative;overflow:hidden;isolation:isolate;min-width:0;background:#161919;color:#f0eee8;box-shadow:0 18px 42px #17171718}
+.signature-art::before{content:"";position:absolute;inset:8% 3%;z-index:-1;background:radial-gradient(ellipse at 52% 50%,#acaaa51c 0,transparent 53%);pointer-events:none}
+.signature-art-top,.signature-art-foot{display:flex;justify-content:space-between;gap:20px;padding:20px 25px;font-size:11px;line-height:1.35;letter-spacing:.09em;text-transform:uppercase}
+.signature-art-top{border-bottom:1px solid #ffffff30}
+.signature-art-foot{border-top:1px solid #ffffff30;color:#c5c8c2}
+.signature-art-top span:last-child,.signature-art-foot span:last-child{text-align:right}
+.signature-art svg{display:block;width:100%;height:auto;max-height:440px;margin:auto}
+.signature-grid{fill:none;stroke:#d7dbd1;stroke-opacity:.14;stroke-width:1}
+.signature-guide{fill:none;stroke:#d7dbd1;stroke-opacity:.28;stroke-width:1;stroke-dasharray:3 8}
+.signature-letter{fill:none;stroke:url(#signature-light);stroke-width:12;stroke-linecap:square;stroke-linejoin:miter}
+.signature-stroke-one{stroke:#e7e8df;stroke-opacity:.9}
+.signature-stroke-three{stroke:#aeb6b0;stroke-opacity:.9}
+.signature-origin-ring{fill:none;stroke:#c34632;stroke-opacity:.52;stroke-width:1}
+.signature-origin{fill:#c34632}
+.signature-measures{fill:#c9ccc5;font:11px var(--body,Arial,sans-serif);letter-spacing:1.3px}
+.signature-measures path{fill:none;stroke:#c9ccc5;stroke-opacity:.52;stroke-width:1}
+html.signature-ready .signature-stroke{stroke-dasharray:400;stroke-dashoffset:400}
+html.signature-ready .signature-bridge.is-active .signature-stroke-one{animation:signature-draw .82s cubic-bezier(.55,.05,.15,.95) .12s forwards}
+html.signature-ready .signature-bridge.is-active .signature-stroke-two{animation:signature-draw .78s cubic-bezier(.55,.05,.15,.95) .8s forwards}
+html.signature-ready .signature-bridge.is-active .signature-stroke-three{animation:signature-draw .78s cubic-bezier(.55,.05,.15,.95) 1.35s forwards}
+html.signature-ready .signature-bridge.is-active .signature-origin-ring{transform-origin:208px 205px;animation:signature-pulse 1.2s ease-out .85s both}
+@keyframes signature-draw{to{stroke-dashoffset:0}}
+@keyframes signature-pulse{0%{opacity:0;transform:scale(.55)}35%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:scale(1)}}
+.offer-section .section-heading{position:relative}
+.offer-section .section-heading::after{content:"";position:absolute;right:0;top:7px;width:min(18vw,220px);height:1px;background:linear-gradient(90deg,#c3463200,#c34632);pointer-events:none}
+.designer-section .designer-intro>.eyebrow{color:#f4f3ef}
+@media(max-width:900px){.signature-bridge-inner{gap:35px}.signature-copy h2{font-size:clamp(45px,6vw,67px)}.signature-copy>p:not(.eyebrow){font-size:15px}}
+@media(max-width:760px){
+  .signature-bridge-inner{grid-template-columns:1fr;gap:33px;padding-block:65px}
+  .signature-copy{max-width:590px}
+  .signature-copy .eyebrow{margin-bottom:20px}
+  .signature-copy h2{font-size:clamp(48px,11.2vw,70px)}
+  .signature-copy>p:not(.eyebrow){margin-top:20px;font-size:16px}
+  .signature-copy>a{margin-top:18px}
+  .signature-art{margin-inline:calc(var(--gutter) * -1);box-shadow:none}
+  .signature-art-top,.signature-art-foot{padding:15px var(--gutter);font-size:10px}
+  .signature-art svg{max-height:none}
+  .offer-section .section-heading::after{width:20vw}
+}
+@media(max-width:370px){.signature-measures{font-size:10px}.signature-art-top,.signature-art-foot{font-size:9px}}
+@media(prefers-reduced-motion:reduce){html.signature-ready .signature-stroke{stroke-dasharray:none;stroke-dashoffset:0}html.signature-ready .signature-bridge.is-active .signature-stroke,html.signature-ready .signature-bridge.is-active .signature-origin-ring{animation:none}}
