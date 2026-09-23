@@ -24,6 +24,7 @@
 .art-hero .lead-stage--film{aspect-ratio:2.8}
 .art-hero .lead-stage--film img,.art-hero .lead-stage--film video{object-fit:cover;object-position:center 43%}
 .art-hero .lead-facts{grid-template-columns:1fr 1fr 1fr;gap:30px}
+.editorial-work .home-concept-pair{margin-top:0}
 
 /* The three offers have distinct proportions: two sites, one broader shop brief. */
 .offer-v2 .price-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
@@ -32,12 +33,6 @@
 .offer-v2 .price-option-shop{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(35px,6vw,100px);padding:36px 40px}
 .offer-v2 .price-option-shop .shop-price-details{height:auto}
 .offer-v2 .price-option-shop ul{margin-top:0}
-
-/* A case image alone looked like a mood board. Frame the built website itself. */
-.market-case .case-screen>.website-browser-bar{display:flex;background:#eee9de;color:#292722;min-height:40px;padding:8px 14px;font-size:11px}
-.market-case .case-screen>.website-live-frame{display:block;aspect-ratio:1.28;background:#eee9de;padding:0}
-.market-case .case-screen>.website-live-frame iframe{width:200%;height:200%;transform:scale(.5)}
-.market-case .case-screen>span:last-child{background:#292722;color:#f5f1e9}
 
 @media(max-width:900px){
   .hero-edition{grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:25px}
@@ -69,8 +64,6 @@
   .offer-v2 .price-option:not(.price-option-shop){min-height:0}
   .offer-v2 .price-option-shop{grid-column:auto;display:flex;gap:0;padding:28px 22px}
   .offer-v2 .price-option-shop ul{margin-top:23px}
-  .market-case .case-screen>.website-live-frame{aspect-ratio:1.45}
-  .market-case .case-screen>.website-live-frame iframe{width:350%;height:350%;transform:scale(.285714)}
 }
 @media(max-width:370px){.hero-edition-meta{font-size:8px}.art-hero .hero-edition h1{font-size:11.5vw}}
 @media(prefers-reduced-motion:reduce){.hero-edition-preview{transition:none}}
