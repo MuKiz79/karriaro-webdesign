@@ -23,9 +23,9 @@ def page(title, description, path, content, noindex=False):
     return h + '<body><a class="skip-link" href="#inhalt">Zum Inhalt springen</a>' + header + '<main id="inhalt">' + content + '</main>' + footer + preview + '</body></html>\n'
 
 projects = [
- ('kante','KANTE / Räume','Handwerk','kante-workshop.webp','Ein Fenster- und Fassadenbetrieb mit eigenem Projektfinder: Leistungen verstehen und die erste Anfrage vorbereiten.'),
- ('waldruehe','WALDRUHE','Unterkunft','waldruehe-house.webp','Ein Haus im Schwarzwald als Erlebnis: Stimmung, Tagesrhythmus und Aufenthaltswunsch führen durch die Seite.'),
- ('tischundton','TISCH & TON','Lokaler Handel','tischundton-stilllife.webp','Feinkost mit Charakter: Produkte nach Anlass filtern und im Demo-Warenkorb sammeln.'),
+ ('kante','KANTE / Räume','Handwerk','kante-workshop.webp','Handwerk erleben: Fassadenbild, Materialwahl und eine mehrstufige Projektskizze zum Ausprobieren.'),
+ ('waldruehe','WALDRUHE','Unterkunft','waldruehe-house.webp','Unterkunft entdecken: Bildgeschichte, Raumansicht und Reiseplaner mit Datum, Gästen und Stimmung.'),
+ ('tischundton','TISCH & TON','Lokaler Handel','tischundton-stilllife.webp','Ein kompletter Demo-Shop: sechs Produkte, Suche, Filter, Details, Mengen und Kasse zum Ausprobieren.'),
  ('shop','FORM / Objekte','Onlineshop','sofia-silver.webp','Eine Kollektion, Produktvarianten, Warenkorb und vollständiger Demo-Checkout: ein Shop zum Ausprobieren.'),
  ('interior','Mila Hartmann','Interior Design','mila-evening.webp','Leistungen, Materialauswahl und Projektanfrage: ein vollständiger Besucherweg für ein Interior-Studio.'),
  ('fotografie','Elena Voss','Fotografie','elena-coast.webp','Ein visueller Essay zwischen Küste und Stille. Mit Bildpaaren, Galerie und eigenen Zusammenstellungen.'),
@@ -44,9 +44,10 @@ intro += '<section class="published-work wrap" aria-labelledby="published-title"
 cards = '<section class="collection wrap" aria-label="Alle Arbeiten">'
 for slug,name,kind,image,description in projects:
     fresh = slug in {'kante','waldruehe','tischundton'}
+    project_url = f'/studien/{slug}.html' + ('?v=20260923b' if fresh else '')
     src = f'/assets/websites/{slug}.png'
-    thumb = f'<span class="website-live-frame" aria-hidden="true"><iframe src="/studien/{slug}.html" title="Vorschau: {name}" tabindex="-1" loading="lazy" sandbox=""></iframe></span>' if fresh else f'<img src="{src}" alt="Tatsächliche Startseitenansicht der Website {name}" loading="lazy" width="1280" height="960">'
-    cards += f'<article class="collection-item"><a href="/studien/{slug}.html" class="website-browser" aria-label="Website {name} öffnen"><span class="website-browser-bar"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>{kind} · Website-Konzept</span><span aria-hidden="true">↗</span></span>{thumb}<span class="website-browser-action">Website öffnen <span aria-hidden="true">↗</span></span></a><div class="work-caption"><div><span class="work-type">Eigenes Website-Konzept · {kind}</span><h2>{name}</h2></div><a class="text-link" href="/studien/{slug}.html">Website öffnen ↗</a></div><p>{description}</p></article>'
+    thumb = f'<span class="website-live-frame" aria-hidden="true"><iframe src="{project_url}" title="Vorschau: {name}" tabindex="-1" loading="lazy" sandbox=""></iframe></span>' if fresh else f'<img src="{src}" alt="Tatsächliche Startseitenansicht der Website {name}" loading="lazy" width="1280" height="960">'
+    cards += f'<article class="collection-item"><a href="{project_url}" class="website-browser" aria-label="Website {name} öffnen"><span class="website-browser-bar"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>{kind} · Website-Konzept</span><span aria-hidden="true">↗</span></span>{thumb}<span class="website-browser-action">Website öffnen <span aria-hidden="true">↗</span></span></a><div class="work-caption"><div><span class="work-type">Eigenes Website-Konzept · {kind}</span><h2>{name}</h2></div><a class="text-link" href="{project_url}">Website öffnen ↗</a></div><p>{description}</p></article>'
 cards += '</section><div class="wrap"><p class="collection-note">Die vierzehn Konzeptwebsites sind eigene Entwürfe mit fiktiven Betrieben, Personen und KI-generierten Bildmotiven. Sie zeigen Gestaltung und technische Umsetzung, keine realen Kundenaufträge oder Geschäftsergebnisse. Kontakt- und Geschäftsvorgänge sind Demos.</p><section class="simple-cta" aria-label="Projektanfrage"><h2>Und Ihr <em>Auftritt?</em></h2><a class="button button-dark" href="/#kontakt">Projekt besprechen <span aria-hidden="true">↗</span></a></section></div>'
 (SITE/'arbeiten.html').write_text(page('Arbeiten', 'Ausgewählte Websites und eigenständige Designstudien der Karriaro Website-Designmanufaktur.', 'arbeiten', intro+cards))
 

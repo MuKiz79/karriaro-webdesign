@@ -16,10 +16,11 @@
     viewButtons.forEach(button => button.setAttribute('aria-pressed',String(button.dataset.previewView === view)));
   };
   const updateTitle = path => {
-    const slug = path.split('/').pop().replace(/\.html$/,'');
+    const page = new URL(path, location.href);
+    const slug = page.pathname.split('/').pop().replace(/\.html$/,'');
     title.textContent = names[slug] || 'Karriaro · Website-Konzept';
     frame.title = title.textContent + ' — bedienbare Website';
-    openLink.href = path;
+    openLink.href = page.pathname + page.search;
     const inquiry=dialog.querySelector('#preview-inquiry');
     inquiry.dataset.project=names[slug]?slug:'';
     inquiry.href='/?beispiel='+slug+'#kontakt';
@@ -42,7 +43,7 @@
     clearTimeout(loadTimer);
     status.hidden = true;
     try {
-      const path = frame.contentWindow.location.pathname;
+      const path = frame.contentWindow.location.pathname + frame.contentWindow.location.search;
       if(path.startsWith('/studien/')) updateTitle(path);
       const child = frame.contentDocument;
       child.querySelectorAll('[data-karriaro-inquiry]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();dialog.querySelector('#preview-inquiry').click();}));
@@ -69,10 +70,10 @@
     oldOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     resetView(link.dataset.previewInitial === 'mobile' ? 'mobile' : 'desktop');
-    updateTitle(url.pathname);
+    updateTitle(url.pathname + url.search);
     status.textContent = 'Die Website wird geöffnet …';
     status.hidden = false;
-    frame.src = url.pathname;
+    frame.src = url.pathname + url.search;
     dialog.showModal();
     dialog.querySelector('#preview-close').focus({preventScroll:true});
     loadTimer = setTimeout(() => {
