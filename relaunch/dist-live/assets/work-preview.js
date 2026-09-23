@@ -2,7 +2,7 @@
   'use strict';
   const dialog = document.querySelector('#work-preview');
   if (!dialog || typeof dialog.showModal !== 'function') return;
-  const names = { shop:'FORM · Onlineshop', architektur:'David Kern · Architektur', schmuck:'Sofia Brandt · Schmuckdesign', fotografie:'Elena Voss · Fotografie', interior:'Mila Hartmann · Interior Design', immobilien:'Clara Winter · Immobilien', kulinarik:'Matteo Rossi · Kulinarik', software:'Leon Weber · Software', training:'Nora Seidel · Bewegung', beratung:'Jonas Bergmann · Beratung', klang:'Ada Lind · Klanggestaltung' };
+  const names = { kante:'KANTE · Handwerk', waldruehe:'WALDRUHE · Unterkunft', tischundton:'TISCH & TON · Lokaler Handel', shop:'FORM · Onlineshop', architektur:'David Kern · Architektur', schmuck:'Sofia Brandt · Schmuckdesign', fotografie:'Elena Voss · Fotografie', interior:'Mila Hartmann · Interior Design', immobilien:'Clara Winter · Immobilien', kulinarik:'Matteo Rossi · Kulinarik', software:'Leon Weber · Software', training:'Nora Seidel · Bewegung', beratung:'Jonas Bergmann · Beratung', klang:'Ada Lind · Klanggestaltung' };
   const frame = dialog.querySelector('iframe');
   const title = dialog.querySelector('#preview-title');
   const openLink = dialog.querySelector('#preview-open');
@@ -63,7 +63,7 @@
     const link = event.target.closest('a[href]');
     if(!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.closest('dialog')) return;
     const url = new URL(link.href,location.href);
-    if(url.origin !== location.origin || !/^\/studien\/(?:shop|architektur|schmuck|fotografie|interior|immobilien|kulinarik|software|training|beratung|klang)(?:\.html)?$/.test(url.pathname)) return;
+    if(url.origin !== location.origin || !/^\/studien\/(?:kante|waldruehe|tischundton|shop|architektur|schmuck|fotografie|interior|immobilien|kulinarik|software|training|beratung|klang)(?:\.html)?$/.test(url.pathname)) return;
     event.preventDefault();
     originLink = link;
     oldOverflow = document.body.style.overflow;

@@ -57,6 +57,7 @@ html.kr-motion .lead-stage.kr-reveal>img+img{transition-delay:.22s}
 @media(max-width:760px){.lead-card{margin:10px 0 0;width:auto}}
 .software-case{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:35px 50px;padding:42px;background:#e9edf0;color:#113041}.software-case .case-open{border-color:currentColor}.software-case .case-screen>span{background:#f1ff70;color:#113041}.software-case .case-detail{grid-template-columns:1fr;border-top-color:#11304133}.software-case .case-detail p{max-width:640px}.software-case .case-detail p>span{display:block;font-size:12px;margin-bottom:16px}
 @media(max-width:1100px){.software-case{padding:30px;gap:30px}}
+.market-case{background:#ddd8ce;color:#292722}.market-case .case-screen>span{background:#292722;color:#f5f1e9}.market-case .case-detail{border-top-color:#29272255}
 @media(max-width:760px){.lead-stage--zwei{grid-template-columns:1fr;aspect-ratio:auto}.lead-stage--zwei img{height:auto;aspect-ratio:auto;width:100%}.software-case{grid-template-columns:1fr;padding:25px 20px;margin-inline:calc(var(--gutter) * -1);gap:28px}}
 
 /* Marke (20.09.2026, Entscheidung des Inhabers): KARRIARO mit rotem Punkt, wie der Namenszug auf muammerkizilaslan.com. Der Punkt ist ein Kreis auf der Grundlinie (0,36 em, Rot #c34632); der Abstand gleicht die negative Laufweite der Wortmarke aus. Die Seite selbst bleibt monochrom, --accent bleibt Tinte. */
