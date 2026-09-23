@@ -1,0 +1,10 @@
+.concept-business-cta{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(230px,.7fr);align-items:end;gap:45px;background:#172a25;color:#f2efe4;padding:clamp(65px,8vw,120px) clamp(24px,7vw,110px);font-family:Inter,Arial,sans-serif}
+.concept-business-cta>div>span{font-family:'Fragment Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#b6cbb8}
+.concept-business-cta h2{font-family:Cormorant,Georgia,serif;font-weight:400;font-size:clamp(58px,7.5vw,115px);line-height:.9;letter-spacing:-.05em;margin:30px 0 20px}
+.concept-business-cta p{font-size:16px;line-height:1.6;max-width:580px;margin:0}
+.concept-business-cta>a{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 22px;min-height:60px;background:#ecebda;color:#1d352b;font-size:14px;text-decoration:none;transition:transform .25s,background .25s}
+.concept-business-cta>a:hover{transform:translateY(-4px);background:#fff}
+.concept-business-cta>a span{font-size:22px}
+.concept-business-cta :focus-visible{outline:2px solid currentColor;outline-offset:4px}
+@media(max-width:700px){.concept-business-cta{grid-template-columns:1fr;gap:30px}.concept-business-cta h2{font-size:clamp(58px,13vw,86px)}.concept-business-cta p{font-size:15px}.concept-business-cta>a{width:100%}}
+@media(prefers-reduced-motion:reduce){.concept-business-cta>a{transition:none}}

@@ -9,3 +9,23 @@
 
 /* Handy (20.09.2026): 'Alle Beispiele' doppelt den Rückweg der Leiste darunter; die Navigation bleibt so einzeilig. */
 @media(max-width:760px){.site-header nav a[href="/arbeiten.html"]{display:none}.site-header{padding-block:14px}.concept-bar{padding-block:6px}}
+/* The movement study is graphical rather than a synthetic human portrait. */
+[data-profile=training] .ns-motion{background:#e9d7c4;background-image:repeating-linear-gradient(90deg,transparent 0,transparent calc(20% - 1px),#ad8d781f calc(20% - 1px),#ad8d781f 20%)}
+[data-profile=training] .ns-motion:before{content:'';position:absolute;inset:8% 5%;border:1px solid #9e786a72;pointer-events:none}
+[data-profile=training] .ns-frame{background:none!important;width:68%;left:16%;aspect-ratio:auto;transition:transform .9s cubic-bezier(.22,.68,.28,1),opacity .8s}
+[data-profile=training] .ns-ghost{left:0;opacity:.16;transform:scale(.78) translateX(-30%)}
+[data-profile=training] .ns-frame:before{content:'';position:absolute;width:clamp(200px,31vw,450px);height:clamp(200px,31vw,450px);left:50%;top:22%;border:clamp(27px,3vw,47px) solid #522a23;border-right-color:transparent;border-bottom-color:transparent;border-radius:50%;transform:translateX(-50%) rotate(-48deg);transition:transform 1s cubic-bezier(.22,.68,.28,1),border-color .8s}
+[data-profile=training] .ns-frame:after{content:'';position:absolute;width:clamp(110px,15vw,220px);height:clamp(110px,15vw,220px);left:51%;top:50%;border-radius:50%;background:#e15436;box-shadow:0 0 0 1px #713f33;transform:translateX(-50%) scale(.8);transition:transform 1s cubic-bezier(.22,.68,.28,1),background .8s}
+[data-profile=training] #movement-stage[data-frame="1"] .ns-active:before{transform:translateX(-45%) rotate(-12deg)}
+[data-profile=training] #movement-stage[data-frame="2"] .ns-active:before{transform:translateX(-38%) rotate(32deg)}
+[data-profile=training] #movement-stage[data-frame="3"] .ns-active:before{transform:translateX(-50%) rotate(82deg)}
+[data-profile=training] #movement-stage[data-frame="4"] .ns-active:before{transform:translateX(-58%) rotate(131deg)}
+[data-profile=training] #movement-stage[data-frame="5"] .ns-active:before{transform:translateX(-50%) rotate(185deg)}
+[data-profile=training] #movement-stage[data-frame="1"] .ns-active:after{transform:translate(-25%,-12%) scale(.88)}
+[data-profile=training] #movement-stage[data-frame="2"] .ns-active:after{transform:translate(12%,-28%) scale(1)}
+[data-profile=training] #movement-stage[data-frame="3"] .ns-active:after{transform:translate(30%,-42%) scale(1.08)}
+[data-profile=training] #movement-stage[data-frame="4"] .ns-active:after{transform:translate(-6%,-24%) scale(.91)}
+[data-profile=training] #movement-stage[data-frame="5"] .ns-active:after{transform:translate(-50%,0) scale(.78)}
+[data-profile=training] .ns-frame-number{color:#c9ac91}
+@media(max-width:700px){[data-profile=training] .ns-frame:before{width:240px;height:240px;top:16%;border-width:29px}[data-profile=training] .ns-frame:after{width:110px;height:110px;top:45%}}
+@media(prefers-reduced-motion:reduce){[data-profile=training] .ns-frame,[data-profile=training] .ns-frame:before,[data-profile=training] .ns-frame:after{transition:none}}

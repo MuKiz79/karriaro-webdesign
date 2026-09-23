@@ -88,3 +88,55 @@
   .gallery-feature-layout,.gallery-feature--waldruehe .gallery-feature-layout{padding-top:18px;gap:24px}
   .gallery-feature-screen{order:-1}
 }
+
+/* Three new concept websites and an always visible index of the remaining work. */
+.gallery-new{background:#f1eee5;padding-block:100px 115px;scroll-margin-top:35px}
+.gallery-new-intro{display:grid;grid-template-columns:1.15fr .65fr;gap:60px;align-items:end;margin-bottom:50px}
+.gallery-new-intro h2{font-size:clamp(55px,6.7vw,105px);font-weight:450;letter-spacing:-.065em;line-height:.94;margin:20px 0 0}
+.gallery-new-intro h2 em{font-family:var(--serif,Georgia,serif);font-weight:400}
+.gallery-new-intro>p{font-size:17px;line-height:1.65;max-width:390px;color:#4f584d}
+.gallery-new-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.gallery-new-card{background:#fff;min-width:0;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
+.gallery-new-card:hover,.gallery-new-card:focus-visible{transform:translateY(-7px);box-shadow:0 25px 55px #22302a26}
+.gallery-new-media{position:relative;aspect-ratio:1.23;display:block;overflow:hidden;background:#d8d7cc}
+.gallery-new-media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gallery-new-card:hover .gallery-new-media img{transform:scale(1.05)}
+.gallery-new-media>span{position:absolute;top:16px;left:16px;background:#fff;padding:7px 9px;font-size:11px;letter-spacing:.07em}
+.gallery-new-body{display:flex;flex-direction:column;align-items:start;flex:1;padding:26px 25px 24px;color:#263122}
+.gallery-new-body small{font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+.gallery-new-body strong{font-size:clamp(34px,3.2vw,52px);font-weight:450;letter-spacing:-.05em;line-height:1.05;margin:25px 0 12px}
+.gallery-new-body>span{font-size:14px;line-height:1.6;max-width:280px}
+.gallery-new-body b{display:flex;align-items:center;justify-content:space-between;width:100%;font-size:13px;font-weight:600;border-top:1px solid #b9c0b5;padding-top:17px;margin-top:auto}
+.gallery-new-body b span{font-size:22px}
+.gallery-archive .gallery-index{border-top:1px solid #aab1a3}
+.gallery-index-row{grid-template-columns:55px minmax(0,1fr) minmax(125px,.3fr) 36px;min-height:115px}
+.gallery-index-text{display:flex;flex-direction:column;gap:6px;min-width:0}
+.gallery-index-text>span{color:#566055;font-size:13px;line-height:1.45;max-width:580px}
+.gallery-index-kind{text-align:right}
+.gallery-archive+.wrap .collection-note{padding-top:25px;border-top:1px solid #aab1a3}
+@media(max-width:900px){.gallery-new-intro{gap:30px}.gallery-new-grid{gap:10px}.gallery-new-body{padding:22px 18px}.gallery-new-body strong{font-size:35px}.gallery-index-row{grid-template-columns:42px minmax(0,1fr) 90px 30px}}
+@media(max-width:700px){.gallery-new{padding-block:65px}.gallery-new-intro{display:block;margin-bottom:32px}.gallery-new-intro h2{font-size:clamp(51px,11vw,72px)}.gallery-new-intro>p{margin-top:25px;font-size:15px}.gallery-new-grid{grid-template-columns:1fr;gap:14px}.gallery-new-card{display:grid;grid-template-columns:42% 58%;min-height:230px}.gallery-new-media{aspect-ratio:auto;height:100%}.gallery-new-body{padding:20px 17px}.gallery-new-body strong{font-size:clamp(29px,7vw,42px);margin:18px 0 10px}.gallery-new-body>span{font-size:12px}.gallery-new-body b{padding-top:10px;margin-top:15px}.gallery-index-row{grid-template-columns:38px minmax(0,1fr) 28px;gap:10px;min-height:110px}.gallery-index-text{grid-column:2;grid-row:1/3}.gallery-index-kind{grid-column:3;grid-row:2;font-size:10px;text-align:right}.gallery-index-action{grid-column:3;grid-row:1}.gallery-index-text>span{font-size:12px}.gallery-index-row strong{font-size:24px}}
+@media(max-width:420px){.gallery-new-card{grid-template-columns:37% 63%}.gallery-new-body strong{font-size:28px}.gallery-new-body>span{font-size:11px}.gallery-new-body small{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.gallery-new-card,.gallery-new-media img{transition:none}}
+
+/* Every remaining concept gets a visible website entry, not a hidden title row. */
+.gallery-archive .gallery-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;border:0}
+.gallery-archive .gallery-index-row{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;border:1px solid #b7bdb3;background:#f4f4ed;min-height:0;transition:transform .25s,box-shadow .25s}
+.gallery-archive .gallery-index-row:hover,.gallery-archive .gallery-index-row:focus-visible{padding:0;transform:translateY(-5px);box-shadow:0 20px 45px #2633221f}
+.gallery-index-media{display:block;position:relative;aspect-ratio:1.75;overflow:hidden;background:#cbd3cb}
+.gallery-index-media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.gallery-index-row:hover img{transform:scale(1.045)}
+.gallery-index-media .gallery-index-number{position:absolute;top:14px;left:14px;background:#f8f8f0;padding:8px 10px;font-size:10px;letter-spacing:.09em;color:#22332b}
+.gallery-index-text{display:flex;align-items:start;flex-direction:column;gap:0;flex:1;padding:22px 26px 24px}
+.gallery-index-text .gallery-index-kind{display:block;grid-column:auto;grid-row:auto;text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 14px}
+.gallery-index-text strong{font-size:clamp(27px,3vw,43px);line-height:1.05;margin-bottom:9px}
+.gallery-index-text>span:not(.gallery-index-kind):not(.gallery-index-action){font-size:13px;line-height:1.55;max-width:490px;min-height:40px}
+.gallery-index-text .gallery-index-action{display:flex;align-items:center;justify-content:space-between;width:100%;font-size:13px;font-weight:600;text-align:left;border-top:1px solid #b7bdb3;padding-top:15px;margin-top:22px}
+.gallery-index-text .gallery-index-action span{font-size:21px}
+.gallery-index-abstract{position:absolute;inset:0;display:block;overflow:hidden}
+.gallery-index-abstract:before,.gallery-index-abstract:after{content:'';position:absolute;display:block}
+.gallery-index-row--software .gallery-index-media{background:#c9d8d0}.gallery-index-row--software .gallery-index-abstract:before{width:50%;height:40%;left:23%;top:28%;border:2px solid #285249;box-shadow:24px 22px 0 -2px #97b8ab,24px 22px 0 0 #285249;transform:rotate(-5deg)}.gallery-index-row--software .gallery-index-abstract:after{width:23%;height:3px;background:#285249;left:36%;top:49%;box-shadow:0 18px #285249,0 -18px #285249}
+.gallery-index-row--training .gallery-index-media{background:#ebd2b7}.gallery-index-row--training .gallery-index-abstract:before{width:55%;aspect-ratio:1;border:2px solid #ab674d;border-radius:50%;left:22%;top:1%;box-shadow:0 0 0 28px #d8a88b,0 0 0 30px #ab674d}.gallery-index-row--training .gallery-index-abstract:after{width:130%;height:1px;left:-15%;top:65%;background:#ab674d;transform:rotate(-17deg)}
+.gallery-index-row--beratung .gallery-index-media{background:#d6d9cb}.gallery-index-row--beratung .gallery-index-abstract:before{width:44%;height:52%;left:17%;top:20%;background:#738b83;transform:rotate(-10deg);box-shadow:100px 25px 0 -10px #324a42}.gallery-index-row--beratung .gallery-index-abstract:after{left:49%;top:15%;height:72%;width:1px;background:#263c35;transform:rotate(28deg)}
+.gallery-index-row--klang .gallery-index-media{background:#202936}.gallery-index-row--klang .gallery-index-abstract:before{inset:12%;border:1px solid #88a4b4;border-radius:50%;box-shadow:0 0 0 25px #202936,0 0 0 26px #88a4b4,0 0 0 57px #202936,0 0 0 58px #88a4b4}.gallery-index-row--klang .gallery-index-abstract:after{left:49%;top:48%;width:9px;height:9px;border-radius:50%;background:#d8cbb2;box-shadow:140px -60px 0 #8aa9b6,-160px 55px 0 #8aa9b6}
+@media(max-width:700px){.gallery-archive .gallery-index{grid-template-columns:1fr;gap:13px}.gallery-index-media{aspect-ratio:1.8}.gallery-index-text{padding:20px}.gallery-index-text strong{font-size:31px}.gallery-index-text>span:not(.gallery-index-kind):not(.gallery-index-action){min-height:0}}

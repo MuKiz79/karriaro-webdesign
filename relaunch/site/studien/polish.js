@@ -1,7 +1,5 @@
 (() => {
  const slug=location.pathname.split('/').pop().replace('.html','');
- const footer=document.querySelector('.site-footer');
- if(footer){const link=document.createElement('a');link.href='/?beispiel='+slug+'#kontakt';link.target='_top';link.dataset.karriaroInquiry='';link.className='demo-forward';link.textContent='Eine Website in dieser Richtung besprechen ↗';footer.append(link);}
  // The prior collection now leads to the same public gallery as every return link.
  if(slug==='index')location.replace('/arbeiten.html');
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
