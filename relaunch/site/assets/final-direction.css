@@ -116,3 +116,32 @@
   .outcome-body strong{font-size:21px}
 }
 @media(prefers-reduced-motion:reduce){.hero-more-world-image img{transition:none}}
+
+/* Function paths are drawn as journeys, not as another gallery of project images. */
+#erweiterungen .outcome-grid{display:block;margin-top:43px;border-top:1px solid #b8baae}
+#erweiterungen .outcome-card{--path-accent:#9a5845;--path-tint:#f0e7e1;position:relative;display:grid;grid-template-columns:76px minmax(210px,.95fr) minmax(330px,1.25fr) 135px;grid-template-rows:1fr;align-items:center;gap:clamp(16px,2vw,32px);min-height:230px;padding:27px 0;border-bottom:1px solid #b8baae;background:transparent;color:#292d27;box-shadow:none;transform:none}
+#erweiterungen .outcome-card--book{--path-accent:#4b7470;--path-tint:#e4eeea}
+#erweiterungen .outcome-card--inquire{--path-accent:#546e80;--path-tint:#e6ebee}
+#erweiterungen .outcome-card::after{content:"";position:absolute;right:0;bottom:-1px;left:0;height:2px;background:var(--path-accent);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+#erweiterungen .outcome-card:hover::after,#erweiterungen .outcome-card:focus-visible::after{transform:scaleX(1)}
+#erweiterungen .outcome-number{align-self:start;display:flex;flex-direction:column;gap:8px;padding:5px 0 0;color:var(--path-accent);letter-spacing:0;text-transform:none}
+#erweiterungen .outcome-number b{font-size:clamp(35px,3.5vw,48px);font-weight:450;line-height:.85;letter-spacing:-.08em}
+#erweiterungen .outcome-number small{color:#55594f;font-size:10px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}
+#erweiterungen .outcome-body{display:block;align-self:center;padding:0}
+#erweiterungen .outcome-body strong{max-width:15ch;font-size:clamp(26px,2.7vw,39px);font-weight:480;line-height:1.06;letter-spacing:-.055em}
+#erweiterungen .outcome-body small{max-width:36ch;margin-top:14px;color:#54584f;font-size:14px;line-height:1.5}
+#erweiterungen .outcome-visual{display:block;min-width:0;padding:17px 18px 18px;border-top:2px solid var(--path-accent);background:var(--path-tint);transition:background .25s ease}
+#erweiterungen .outcome-visual-label{display:block;margin-bottom:17px;color:#55594f;font-size:10px;font-weight:650;letter-spacing:.12em}
+#erweiterungen .outcome-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+#erweiterungen .outcome-steps>span{position:relative;display:flex;flex-direction:column;min-width:0;min-height:79px;padding:3px 9px 0 11px;border-left:1px solid #878e855e}
+#erweiterungen .outcome-steps>span:last-child{border-left-color:var(--path-accent)}
+#erweiterungen .outcome-steps i{color:var(--path-accent);font-size:10px;font-style:normal;font-weight:700}
+#erweiterungen .outcome-steps b{margin-top:12px;font-size:14px;font-weight:650;line-height:1.1;overflow-wrap:anywhere}
+#erweiterungen .outcome-steps em{margin-top:5px;color:#62675e;font-size:11px;font-style:normal;line-height:1.25;overflow-wrap:anywhere}
+#erweiterungen .outcome-open{align-self:center;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;margin:0;padding:9px 0;border-top:1px solid var(--path-accent);font-size:13px;font-weight:650;line-height:1.3}
+#erweiterungen .outcome-open span{flex:none;color:var(--path-accent);font-size:22px;line-height:1}
+#erweiterungen .outcome-card:hover .outcome-open,#erweiterungen .outcome-card:focus-visible .outcome-open{color:var(--path-accent)}
+@media(max-width:1100px){#erweiterungen .outcome-card{grid-template-columns:65px minmax(210px,.9fr) minmax(310px,1.1fr);gap:18px}#erweiterungen .outcome-open{grid-column:3;justify-self:end;width:100%;max-width:190px;padding-top:8px}#erweiterungen .outcome-visual{grid-column:3;grid-row:1}#erweiterungen .outcome-number,#erweiterungen .outcome-body{grid-row:1/3}#erweiterungen .outcome-card{grid-template-rows:auto auto}}
+@media(max-width:760px){#erweiterungen .outcome-grid{margin-top:31px}#erweiterungen .outcome-card{grid-template-columns:48px minmax(0,1fr);grid-template-rows:auto auto auto;gap:16px 10px;min-height:0;padding:25px 0}#erweiterungen .outcome-number{grid-column:1;grid-row:1;padding-top:3px}#erweiterungen .outcome-number b{font-size:35px}#erweiterungen .outcome-number small{writing-mode:vertical-rl;font-size:9px}#erweiterungen .outcome-body{grid-column:2;grid-row:1;padding:0}#erweiterungen .outcome-body strong{max-width:18ch;font-size:clamp(26px,7vw,35px)}#erweiterungen .outcome-body small{margin-top:10px;font-size:14px;line-height:1.45}#erweiterungen .outcome-visual{grid-column:2;grid-row:2;padding:14px 11px 16px}#erweiterungen .outcome-visual-label{margin-bottom:14px;font-size:9px}#erweiterungen .outcome-steps>span{min-height:75px;padding-left:7px;padding-right:3px}#erweiterungen .outcome-steps b{font-size:12px}#erweiterungen .outcome-steps em{font-size:10px}#erweiterungen .outcome-open{grid-column:2;grid-row:3;justify-self:start;width:min(100%,220px);max-width:none;margin:0;padding:10px 0;font-size:14px}}
+@media(max-width:370px){#erweiterungen .outcome-card{grid-template-columns:42px minmax(0,1fr)}#erweiterungen .outcome-body strong{font-size:25px}#erweiterungen .outcome-steps b{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#erweiterungen .outcome-card::after,#erweiterungen .outcome-visual{transition:none}}
