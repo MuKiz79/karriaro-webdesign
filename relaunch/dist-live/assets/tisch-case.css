@@ -1,0 +1,78 @@
+.tisch-case{color:#2e2927}
+.tisch-case .case-hero .eyebrow,.tisch-case .case-number{color:#a14b42}
+.tisch-case .case-hero h1 span{color:#a14b42}
+.tisch-case .case-cover{background:#692f33}
+.tisch-case .case-cover img{object-position:center 53%}
+.tisch-case .case-cover figcaption{background:#562e31ed}
+.tisch-case .case-intent{padding-bottom:clamp(85px,10vw,160px)}
+.tisch-counter{padding-block:clamp(75px,9vw,140px);background:#f0e8d9}
+.tisch-counter-intro{display:grid;grid-template-columns:minmax(0,.35fr) minmax(0,1fr) minmax(250px,.65fr);gap:24px 45px;align-items:start;padding-bottom:clamp(32px,5vw,65px);border-bottom:1px solid #b9ad9a}
+.tisch-counter-intro h2{margin:0;font:480 clamp(48px,5.6vw,84px)/.98 var(--sans);letter-spacing:-.067em}
+.tisch-counter-intro h2 em{font-family:var(--serif);font-weight:400}
+.tisch-counter-intro>p:last-child{max-width:45ch;margin:3px 0 0;color:#625b51;font-size:14px;line-height:1.65}
+.tisch-counter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);padding-top:clamp(32px,5vw,65px)}
+.tisch-counter-card{min-width:0;margin:0}
+.tisch-counter-window{overflow:hidden;min-height:clamp(385px,37vw,540px);border:1px solid #b9ab98;box-shadow:12px 14px 0 #d9cfbe;background:#f9f4e9}
+.tisch-counter-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;height:47px;padding:9px clamp(12px,1.6vw,24px);border-bottom:1px solid #d8cfc0;color:#4a433c;font-size:9px;white-space:nowrap}
+.tisch-counter-nav strong{font-size:17px;letter-spacing:-.05em}
+.tisch-counter-catalog-copy{padding:clamp(25px,3vw,44px) clamp(17px,2.3vw,32px) 21px}
+.tisch-counter-catalog-copy>span{color:#897d6f;font-size:9px;letter-spacing:.1em}
+.tisch-counter-catalog-copy>strong{display:block;margin-top:15px;font-size:clamp(29px,3.2vw,47px);font-weight:480;line-height:1.04;letter-spacing:-.055em}
+.tisch-counter-catalog-copy p{margin-top:8px;color:#645d55;font-size:12px;line-height:1.45}
+.tisch-counter-products{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;padding:0 9px 9px}
+.tisch-counter-products>div{overflow:hidden;background:#e8dfd1}
+.tisch-counter-products img{display:block;width:100%;height:clamp(155px,17vw,240px);object-fit:cover}
+.tisch-counter-products>div:first-child img{object-position:13% center}
+.tisch-counter-products>div:last-child img{object-position:50% center}
+.tisch-counter-products span{display:block;padding:9px 12px;color:#645d55;font-size:11px}
+.tisch-counter-card--experience .tisch-counter-window{background:#6d3036;border-color:#6d3036;box-shadow:12px 14px 0 #cab6a4;color:#fff0d5}
+.tisch-counter-card--experience .tisch-counter-nav{color:#fff0d5;border-color:#f3d5ba55}
+.tisch-counter-card--experience .tisch-counter-nav strong span{color:#f4cb67}
+.tisch-counter-experience-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);height:clamp(338px,33vw,493px)}
+.tisch-counter-experience-grid>div{display:flex;flex-direction:column;align-items:flex-start;padding:clamp(18px,2.4vw,35px)}
+.tisch-counter-experience-grid>div>span{max-width:25ch;font-size:9px;line-height:1.35;letter-spacing:.12em}
+.tisch-counter-experience-grid strong{max-width:11ch;margin-top:clamp(24px,4vw,55px);font-size:clamp(32px,3.6vw,54px);font-weight:500;line-height:.98;letter-spacing:-.065em}
+.tisch-counter-experience-grid strong em{font-family:var(--serif);font-size:1.1em;font-weight:400;color:#f4cb67}
+.tisch-counter-experience-grid p{max-width:22ch;margin:14px 0 0;font-size:11px;line-height:1.42}
+.tisch-counter-experience-grid b{margin-top:auto;padding-top:12px;border-top:1px solid #edb7a4;color:#fff0d5;font-size:10px;font-weight:500}
+.tisch-counter-experience-grid img{display:block;width:100%;height:100%;object-fit:cover;object-position:54% center}
+.tisch-counter-card figcaption{display:grid;grid-template-columns:minmax(130px,.38fr) 1fr;gap:18px 24px;padding-top:28px}
+.tisch-counter-card figcaption span{color:#97483e;font-size:10px;font-weight:650;letter-spacing:.1em;text-transform:uppercase}
+.tisch-counter-card figcaption p{max-width:45ch;margin:0;color:#5e584e;font-size:13px;line-height:1.6}
+.tisch-counter-conclusion{display:grid;grid-template-columns:minmax(130px,.2fr) 1fr;gap:25px;margin:clamp(55px,7vw,105px) 0 0;padding-top:20px;border-top:1px solid #b9ad9a;font-size:clamp(23px,3vw,44px);line-height:1.18;letter-spacing:-.045em}
+.tisch-counter-conclusion span{padding-top:5px;color:#97483e;font-size:10px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}
+.tisch-flow{display:grid;grid-template-columns:minmax(0,.83fr) minmax(0,1.17fr);gap:clamp(35px,8vw,130px);align-items:center;padding-block:clamp(90px,11vw,170px)}
+.tisch-flow-copy h2{margin:22px 0 28px;font-size:clamp(49px,6vw,89px);font-weight:480;line-height:1;letter-spacing:-.065em}
+.tisch-flow-copy h2 em{font-family:var(--serif);font-size:1.1em;font-weight:400}
+.tisch-flow-copy>p:not(.case-number){max-width:43ch;color:#554e46;font-size:16px;line-height:1.7}
+.tisch-flow-copy>a{display:inline-flex;gap:40px;margin-top:27px;padding-bottom:8px;border-bottom:1px solid #2e2927;font-size:13px;font-weight:550}
+.tisch-flow-sheet{position:relative;min-height:510px;padding:clamp(27px,3.5vw,51px);background:#f1cc61;color:#562f31;box-shadow:17px 19px 0 #f3eadc}
+.tisch-flow-sheet-top{display:flex;justify-content:space-between;gap:15px;padding-bottom:18px;border-bottom:1px solid #562f3166;font-size:10px;letter-spacing:.12em}
+.tisch-flow-sheet-kicker{display:block;margin-top:55px;font-size:10px;font-weight:650;letter-spacing:.13em}
+.tisch-flow-sheet>strong{display:block;max-width:14ch;margin-top:15px;font-size:clamp(33px,3.9vw,57px);font-weight:480;line-height:1;letter-spacing:-.06em}
+.tisch-flow-sheet>p{margin-top:15px;font-size:14px;line-height:1.5}
+.tisch-flow-sheet ol{list-style:none;padding:0;margin:38px 0 0}
+.tisch-flow-sheet li,.tisch-flow-sheet-foot{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid #562f3166;font-size:13px}
+.tisch-flow-sheet li b,.tisch-flow-sheet-foot b{font-weight:600}
+.tisch-flow-sheet-foot{padding-top:18px;border-bottom:0;font-size:15px}
+.tisch-case .case-outro{border-top:1px solid #c8b7a7}
+.tisch-case .case-outro h2 em{color:#923f3b}
+@media(max-width:900px){
+  .tisch-counter-intro{grid-template-columns:1fr 1fr}
+  .tisch-counter-intro .case-number{grid-column:1/-1}
+  .tisch-counter-experience-grid strong{font-size:clamp(29px,3.8vw,42px)}
+}
+@media(max-width:680px){
+  .tisch-counter-intro,.tisch-counter-grid,.tisch-counter-card figcaption,.tisch-counter-conclusion,.tisch-flow{grid-template-columns:1fr}
+  .tisch-counter-intro{gap:17px}
+  .tisch-counter-intro h2{font-size:clamp(47px,10vw,66px)}
+  .tisch-counter-grid{gap:53px}
+  .tisch-counter-window,.tisch-counter-card--experience .tisch-counter-window{min-height:0;box-shadow:7px 8px 0 #d2c4b2}
+  .tisch-counter-experience-grid{height:415px}
+  .tisch-counter-experience-grid strong{font-size:clamp(30px,8.8vw,47px)}
+  .tisch-counter-card figcaption{gap:8px;padding-top:20px}
+  .tisch-counter-conclusion{gap:12px;margin-top:70px;font-size:28px}
+  .tisch-flow{gap:42px}
+  .tisch-flow-sheet{min-height:0;padding:27px;box-shadow:8px 10px 0 #f3eadc}
+}
+@media(max-width:390px){.tisch-counter-experience-grid{grid-template-columns:1fr 1fr}.tisch-counter-experience-grid>div{padding:15px}.tisch-counter-experience-grid strong{font-size:30px}.tisch-counter-experience-grid p{font-size:10px}}

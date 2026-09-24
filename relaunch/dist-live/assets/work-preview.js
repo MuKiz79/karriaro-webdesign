@@ -24,6 +24,8 @@
     const inquiry=dialog.querySelector('#preview-inquiry');
     inquiry.dataset.project=names[slug]?slug:'';
     inquiry.href='/?beispiel='+slug+'#kontakt';
+    const save=dialog.querySelector('#preview-save');
+    if(save){save.dataset.trailProject=slug;save.hidden=!['kante','waldruehe','tischundton','raum','halo','vecto'].includes(slug);save.setAttribute('aria-pressed',String(window.KarriaroTrail?.hasProject(slug)||false));}
   };
   const closePreview = () => dialog.close();
   dialog.querySelector('#preview-close').addEventListener('click',closePreview);

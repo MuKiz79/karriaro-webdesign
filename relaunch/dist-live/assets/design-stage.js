@@ -28,6 +28,7 @@
     if (field && deliberate) field.value = labels[value];
     document.querySelector('#direction-note').hidden = !field?.value;
     if (deliberate) document.querySelector('#design-announcement').textContent = labels[value] + '. ' + descriptions[value];
+    if (deliberate) document.dispatchEvent(new Event('karriaro:interest-change'));
   }
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => selectDesign(tab.dataset.designChoice));
@@ -47,6 +48,7 @@
   document.querySelector('#remove-direction').addEventListener('click', () => {
     document.querySelector('#design-direction').value = '';
     document.querySelector('#direction-note').hidden = true;
+    document.dispatchEvent(new Event('karriaro:interest-change'));
   });
   document.querySelector('#contact-form').addEventListener('reset', () => {
     document.querySelector('#direction-note').hidden = true;
