@@ -10,6 +10,34 @@
 @media(max-width:700px){.nc-nav{min-height:68px}.nc-logo{font-size:25px}.nc-logo small{display:none}.nc-nav nav{gap:12px}.nc-nav nav a:not(.nc-nav-cta){display:none}.nc-demo{font-size:9px}.nc-demo span{max-width:170px;text-align:right}.nc-pad{padding-block:70px}.nc-section-head{display:block}.nc-section-head h2{margin-top:25px}.raum-hero{display:flex;flex-direction:column-reverse;min-height:0}.raum-hero-image{width:100%;min-height:300px;background-position:center}.raum-hero-image span{font-size:9px;right:12px;bottom:12px}.nc-hero-copy{padding:50px 25px 30px}.raum-hero h1{font-size:clamp(68px,14vw,105px);margin:25px 0}.raum-hero p{font-size:16px}.nc-hero-index{padding-top:45px}.raum-intro,.raum-path,.ton-mood,.ton-book,.vecto-finder-grid,.vecto-request-bottom{grid-template-columns:1fr;gap:40px}.raum-intro p:last-child{margin-left:0}.raum-service-grid{grid-template-columns:1fr}.raum-service-grid article{min-height:260px}.raum-service-grid h3{margin-top:30px}.choice-time button{font-size:12px;padding:10px 5px;text-align:center}.raum-closing h2{font-size:65px}.ton-hero{min-height:670px;align-items:end}.ton-hero-image{background-position:38% center}.ton-hero:after{background:linear-gradient(0deg,#39181eef 0%,#39181e9c 57%,transparent 100%)}.ton-hero-overlay{padding:85px 25px 45px}.ton-hero h1{font-size:clamp(76px,14vw,115px);margin:25px 0}.ton-hero p{font-size:16px}.ton-vertical{display:none}.ton-statement{display:block;min-height:0}.ton-statement h2{font-size:70px;margin:30px 0}.ton-mood h2,.ton-book h2{font-size:70px}.ton-mood-card{min-height:420px}.ton-service-list a{grid-template-columns:35px 1fr 25px;gap:10px;min-height:95px}.ton-service-list small{grid-column:2;grid-row:2;margin-top:-12px}.ton-service-list b{grid-column:3;grid-row:1/3}.ton-service-list strong{font-size:37px}.vecto-hero{min-height:680px;align-items:end}.vecto-hero-image{background-position:63% center}.vecto-hero-shade{background:linear-gradient(0deg,#07111ff5 0%,#07111fc9 52%,#07111f22 100%)}.vecto-hero-content{padding:75px 25px 50px}.vecto-hero h1{font-size:clamp(72px,13vw,110px)}.vecto-principle{display:block}.vecto-principle h2,.vecto-finder h2,.vecto-request h2{font-size:clamp(58px,11vw,85px);margin-top:25px}.vecto-finder-grid{margin-top:30px}.vecto-spec{min-height:0}.nc-footer{grid-template-columns:1fr;gap:12px}.nc-footer a{grid-column:auto}}
 @media(max-width:400px){.nc-demo{font-size:8px}.nc-nav nav{font-size:12px}.nc-raum .nc-logo{font-size:23px}.ton-mood-controls button{font-size:12px}.vecto-choices button{padding:11px 12px;font-size:12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.nc-button,.ton-mood-card,.vecto-spec-object i,.ton-service-list a{transition:none}}
+
+/* Industry-specific form studies replace the decorative loops and ring. */
+.ton-mood-art{display:grid;place-items:center;min-height:245px;flex:1}
+.ton-mood-art svg{display:block;width:100%;max-width:390px;height:245px;overflow:visible}
+.ton-mood-art g{display:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ton-mood-art .ton-art-guide{fill:none;stroke:currentColor;stroke-width:.65;stroke-dasharray:3 7;opacity:.48}
+.ton-mood-art .ton-art-fine{stroke-width:.85;opacity:.62}
+.ton-mood-art .ton-art-comb{fill:none;stroke:currentColor;stroke-width:1.25;stroke-linejoin:round;opacity:.72}
+.ton-mood-card[data-mood=klar] .ton-art-klar,.ton-mood-card[data-mood=weich] .ton-art-weich,.ton-mood-card[data-mood=mutig] .ton-art-mutig{display:block}
+.ton-mood-art-label{display:block;margin:0 0 15px;padding-top:10px;border-top:1px solid currentColor;font:11px/1.4 var(--mono);letter-spacing:.11em}
+.ton-mood-card>small{font-size:11px;line-height:1.45;padding-top:18px}
+
+.vecto-spec{--vecto-part-fill:#9dabb7}
+.vecto-spec[data-material=Aluminium]{--vecto-part-fill:#c0cbd2}
+.vecto-spec[data-material="Technischer Kunststoff"]{--vecto-part-fill:#859bab}
+.vecto-spec-object{height:225px;margin-top:7px}
+.vecto-spec-object:before{content:none}
+.vecto-spec-object svg{display:block;width:min(100%,360px);height:220px;overflow:visible;color:#344e62}
+.vecto-spec-object svg g{display:none;stroke:currentColor;stroke-width:2.3;stroke-linejoin:round;fill:none}
+.vecto-spec-object .vecto-drawing-housing{display:block}
+.vecto-spec[data-application=Verbindung] .vecto-drawing-housing,.vecto-spec[data-application=Führung] .vecto-drawing-housing{display:none}
+.vecto-spec[data-application=Verbindung] .vecto-drawing-connection,.vecto-spec[data-application=Führung] .vecto-drawing-guideway{display:block}
+.vecto-spec-object .vecto-drawing-fill{fill:var(--vecto-part-fill)}
+.vecto-spec-object .vecto-drawing-cut{fill:#dce5ec}
+.vecto-spec-object .vecto-drawing-guide{fill:none;stroke:#8196a8;stroke-width:.75;stroke-dasharray:3 6}
+.vecto-spec-object .vecto-drawing-fine{stroke:#6f879a;stroke-width:1}
+.vecto-drawing-note{display:block;margin:0 0 15px;color:#42596d;font:11px/1.4 var(--mono);letter-spacing:.08em}
+@media(max-width:700px){.ton-mood-art{min-height:225px}.ton-mood-art svg{height:225px}.vecto-spec-object{height:195px}.vecto-spec-object svg{height:190px}}
 .nc-project-cta{display:grid;grid-template-columns:1fr auto;gap:16px 40px;align-items:end;padding:clamp(70px,8vw,115px) clamp(22px,6vw,100px);background:#ebece5;color:#1e302d;font-family:Inter,Arial,sans-serif}
 .nc-project-cta>span{grid-column:1/-1;font:11px 'Fragment Mono',monospace;letter-spacing:.12em}
 .nc-project-cta h2{font:400 clamp(62px,8vw,120px)/.85 Cormorant,Georgia,serif;letter-spacing:-.05em;margin:16px 0}

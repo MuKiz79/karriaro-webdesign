@@ -22,15 +22,16 @@
   const moodCard = document.querySelector('[data-ton-card]');
   if (moodCard) {
     const moods = {
-      klar: ['Klar in der Form.', 'Eine präzise Linie, die Ruhe ausstrahlt und mit Ihnen mitgeht.'],
-      weich: ['Weich im Ausdruck.', 'Ein fließender Übergang mit Raum für Bewegung und Leichtigkeit.'],
-      mutig: ['Mutig im Detail.', 'Ein selbstbewusster Akzent, der dem Ganzen eine neue Richtung gibt.']
+      klar: ['Klar in der Form.', 'Eine ruhige Kontur und eine klare Schnittkante geben der Form Haltung.', 'SCHNITTLINIE / KONTUR'],
+      weich: ['Weich in Bewegung.', 'Fließende Linien zeigen, wie sich Länge und Bewegung verbinden können.', 'HAARFALL / BEWEGUNG'],
+      mutig: ['Mutig im Akzent.', 'Eine asymmetrische Schnittlinie setzt einen bewussten Kontrast.', 'SCHNITTLINIE / ASYMMETRIE']
     };
     document.querySelectorAll('[data-ton-mood]').forEach(button => button.addEventListener('click', () => {
       press(document.querySelectorAll('[data-ton-mood]'), button);
       moodCard.dataset.mood = button.dataset.tonMood;
       document.querySelector('#ton-mood-title').textContent = moods[button.dataset.tonMood][0];
       document.querySelector('#ton-mood-copy').textContent = moods[button.dataset.tonMood][1];
+      document.querySelector('#ton-mood-art-label').textContent = moods[button.dataset.tonMood][2];
       moodCard.querySelector(':scope > span').textContent = `HALO / STILKARTE 0${[...button.parentNode.children].indexOf(button) + 1}`;
     }));
     const service = document.querySelector('#ton-service');
@@ -56,6 +57,7 @@
       document.querySelector('#vecto-material').textContent = state.material;
       document.querySelector('#vecto-summary').textContent = `${part} · ${state.application} · ${state.material}`;
       document.querySelector('.vecto-spec').dataset.application = state.application;
+      document.querySelector('.vecto-spec').dataset.material = state.material;
     };
     vecto.querySelectorAll('[data-vecto-choice]').forEach(button => button.addEventListener('click', () => {
       const group = button.dataset.vectoChoice;
