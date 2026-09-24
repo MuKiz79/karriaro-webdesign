@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 const { Window } = await import(process.env.HAPPY_DOM_PACKAGE || 'happy-dom');
 const script = await readFile(new URL('../site/assets/persona-signatures.js', import.meta.url), 'utf8');
+const completeScript = await readFile(new URL('../site/assets/persona-complete.js', import.meta.url), 'utf8');
 
 async function page(slug) {
   const window = new Window({
@@ -35,6 +36,33 @@ test('the working planner accepts a step, marks it complete and removes it', asy
   document.querySelector('.ny-task-remove').click();
   assert.equal(document.getElementById('ny-progress').getAttribute('aria-valuenow'), '0');
   await window.happyDOM.close();
+});
+
+test('Noah’s second product demo lets a visitor choose and confirm a slot without booking', async () => {
+  const { window, document } = await page('noah-yilmaz');
+  window.eval(completeScript);
+  assert.equal(document.getElementById('ny-booking-confirm').disabled, true);
+  document.querySelector('[data-slot="Mi, 14:00 Uhr"]').click();
+  assert.equal(document.getElementById('ny-slot-label').textContent, 'Mi, 14:00 Uhr');
+  assert.equal(document.getElementById('ny-booking-confirm').disabled, false);
+  document.getElementById('ny-booking-confirm').click();
+  assert.match(document.getElementById('ny-booking-state').textContent, /nichts gebucht/);
+  await window.happyDOM.close();
+});
+
+test('fictional profile contact closes the journey locally without a network endpoint', async () => {
+  for (const slug of ['aylin-berger', 'noah-yilmaz', 'tarek-demir']) {
+    const { window, document } = await page(slug);
+    window.eval(completeScript);
+    const form = document.querySelector('.pc-demo-form');
+    assert.equal(form.getAttribute('action'), null);
+    form.querySelector('[name="name"]').value = 'Test Person';
+    form.querySelector('[name="email"]').value = 'test@example.org';
+    form.querySelector('[name="message"]').value = 'Hallo';
+    form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+    assert.match(form.querySelector('.pc-demo-status').textContent, /nichts versendet/);
+    await window.happyDOM.close();
+  }
 });
 
 test('the architecture sequence advances and resets to the starting state', async () => {
