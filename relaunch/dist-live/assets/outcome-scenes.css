@@ -1,119 +1,106 @@
-/* Three distinct functional scenes, each with its own material and composition. */
-#erweiterungen .outcome-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:16px;margin-top:42px}
-#erweiterungen .outcome-card{position:relative;display:flex;flex-direction:column;min-width:0;min-height:620px;overflow:hidden;padding:28px;border:0;background:#e9dfd2;color:#2d302a;text-decoration:none;box-shadow:none;transform:none;transition:transform .3s ease,box-shadow .3s ease}
-#erweiterungen .outcome-card:hover,#erweiterungen .outcome-card:focus-visible{transform:translateY(-4px);box-shadow:0 20px 40px #2028201b}
-#erweiterungen .outcome-card--book{background:#dfeae6;color:#253b36}
-#erweiterungen .outcome-card--inquire{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);grid-template-rows:auto 1fr auto;column-gap:clamp(24px,5vw,85px);min-height:430px;background:#253946;color:#f0f2ec}
-#erweiterungen .scene-meta{display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;padding-bottom:14px;border-bottom:1px solid currentColor;font-size:11px;letter-spacing:.11em;text-transform:uppercase}
+/* Functional examples as a small, editorial exhibition rather than feature cards. */
+#erweiterungen .outcome-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin-top:clamp(48px,7vw,98px)}
+#erweiterungen .outcome-card{--scene-ink:#252b27;position:relative;display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);grid-template-rows:auto 1fr auto;column-gap:clamp(30px,5.8vw,96px);min-width:0;min-height:560px;overflow:visible;padding:0;color:var(--scene-ink);background:transparent;border:0;border-top:1px solid #9d9e98;text-decoration:none;box-shadow:none;transform:none;isolation:isolate}
+#erweiterungen .outcome-card:hover,#erweiterungen .outcome-card:focus-visible{box-shadow:none;transform:none}
+#erweiterungen .outcome-card:focus-visible{outline:2px solid #9d513e;outline-offset:6px}
+#erweiterungen .scene-meta,#erweiterungen .scene-copy,#erweiterungen .scene-link{grid-column:1}
+#erweiterungen .scene-meta{grid-row:1;display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding-top:22px;font-size:11px;line-height:1.4;letter-spacing:.1em;text-transform:uppercase}
 #erweiterungen .scene-meta b{font-weight:680}
-#erweiterungen .scene-meta small{font-size:10px;letter-spacing:.06em;text-align:right;opacity:.7}
-#erweiterungen .scene-copy{display:block;position:relative;z-index:1;margin-top:30px}
-#erweiterungen .scene-copy strong{display:block;font-size:clamp(42px,4.35vw,72px);font-weight:480;line-height:.99;letter-spacing:-.067em;text-wrap:balance}
-#erweiterungen .scene-copy em{font-family:Georgia,serif;font-weight:400;letter-spacing:-.07em}
-#erweiterungen .scene-copy small{display:block;max-width:38ch;margin-top:19px;font-size:15px;line-height:1.5;letter-spacing:0;opacity:.82}
-#erweiterungen .scene-art{position:relative;display:block;flex:none;width:calc(100% + 56px);height:280px;overflow:hidden;margin:26px -28px 0}
-#erweiterungen .scene-link{display:flex;align-items:center;justify-content:space-between;gap:20px;width:100%;margin-top:auto;padding-top:18px;border-top:1px solid currentColor;font-size:15px;font-weight:660;line-height:1.3}
-#erweiterungen .scene-link b{font-size:30px;font-weight:350;line-height:1;transition:transform .25s ease}
-#erweiterungen .outcome-card:hover .scene-link b,#erweiterungen .outcome-card:focus-visible .scene-link b{transform:translate(4px,-4px)}
+#erweiterungen .scene-meta small{font-size:10px;letter-spacing:.06em;text-align:right;color:#74766f}
+#erweiterungen .scene-copy{grid-row:2;display:flex;flex-direction:column;justify-content:center;align-self:center;position:relative;z-index:1;margin:0;padding:45px 0}
+#erweiterungen .scene-copy strong{display:block;max-width:12ch;font-size:clamp(48px,5.6vw,86px);font-weight:450;line-height:.99;letter-spacing:-.075em;text-wrap:balance}
+#erweiterungen .scene-copy em{font-family:Georgia,serif;font-weight:400;letter-spacing:-.08em}
+#erweiterungen .scene-copy small{display:block;max-width:34ch;margin-top:27px;color:#595e58;font-size:16px;line-height:1.55;letter-spacing:0}
+#erweiterungen .scene-link{grid-row:3;display:flex;align-items:center;justify-content:space-between;gap:20px;width:max-content;min-width:min(100%,260px);margin-bottom:43px;padding:15px 0 0;border-top:1px solid currentColor;font-size:14px;font-weight:650;line-height:1.35}
+#erweiterungen .scene-link .brand-cue{font-size:24px;font-weight:400;line-height:1;transition:transform .3s ease}
+#erweiterungen .outcome-card:hover .scene-link .brand-cue,#erweiterungen .outcome-card:focus-visible .scene-link .brand-cue{transform:translate(4px,-4px)}
+#erweiterungen .scene-art{grid-column:2;grid-row:1/4;position:relative;display:block;align-self:center;width:100%;height:clamp(400px,42vw,540px);margin:48px 0;overflow:visible}
+#erweiterungen .scene-art>img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.65,.25,1)}
+#erweiterungen .outcome-card:hover .scene-art>img,#erweiterungen .outcome-card:focus-visible .scene-art>img{transform:scale(1.015)}
 
-/* Shop: a tactile still life with a small occasion ticket. */
-#erweiterungen .scene-art--shop{background:radial-gradient(circle at 54% 25%,#e4d6c4 0,#cbb9a5 54%,#a98f79 100%)}
-#erweiterungen .shop-cloth{position:absolute;left:-6%;top:27%;width:76%;height:88%;background:repeating-linear-gradient(90deg,#d8c9b6 0 2px,#d1c2ae 2px 8px);box-shadow:13px 13px 26px #58433238;transform:rotate(-12deg)}
-#erweiterungen .shop-plate{position:absolute;left:32%;top:-24%;width:57%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 30%,#f6eee2,#e4d7c5 61%,#c4ad94 100%);box-shadow:13px 18px 35px #53433266}
-#erweiterungen .shop-plate:before{content:"";position:absolute;inset:12%;border:2px solid #b6a48b;border-radius:50%;box-shadow:inset 0 0 0 10px #f2e8d8a3}
-#erweiterungen .shop-bottle{position:absolute;left:14%;top:6%;width:13%;height:66%;border-radius:13px 13px 8px 8px;background:linear-gradient(90deg,#253528,#5e6b42 39%,#293e2c 80%,#1b2d26);box-shadow:12px 20px 21px #493c3052;transform:rotate(-9deg)}
-#erweiterungen .shop-bottle:before{content:"";position:absolute;left:25%;top:-18%;width:50%;height:23%;border-radius:3px 3px 0 0;background:#273429}
-#erweiterungen .shop-bottle:after{content:"";position:absolute;left:12%;top:42%;width:76%;height:30%;background:#e8e0cd;box-shadow:inset 0 0 0 6px #d7cebc}
-#erweiterungen .shop-ticket{position:absolute;right:6%;bottom:7%;display:flex;flex-direction:column;width:42%;min-height:167px;padding:17px 19px;background:#f6f1e8;color:#292d27;box-shadow:13px 18px 30px #503f3552;transform:rotate(4deg)}
-#erweiterungen .shop-ticket i,#erweiterungen .shop-ticket small,#erweiterungen .shop-ticket>span{font-style:normal;font-size:10px;letter-spacing:.09em;text-transform:uppercase}
-#erweiterungen .shop-ticket b{margin-top:14px;font-family:Georgia,serif;font-size:clamp(23px,2.4vw,37px);font-weight:400;line-height:.98;letter-spacing:-.05em}
-#erweiterungen .shop-ticket small{margin-top:9px;color:#9a5845}
-#erweiterungen .shop-ticket>span{margin-top:auto;padding-top:11px;border-top:1px solid #a7a9a0;color:#555a50;font-size:9px;letter-spacing:.03em;text-transform:none}
-#erweiterungen .shop-basket{position:absolute;left:6%;bottom:9%;padding:10px 12px;border:1px solid #efe8dd;color:#fff7eb;font-size:10px;font-weight:650;letter-spacing:.12em}
-#erweiterungen .shop-basket b{margin-left:13px;font-size:15px;font-weight:500}
+/* The shop is warm and tactile; the receipt explains what the journey does. */
+#erweiterungen .outcome-card--sell .scene-art{background:#4d201f}
+#erweiterungen .outcome-card--sell .scene-art>img{object-position:48% 52%}
+#erweiterungen .shop-ticket{position:absolute;right:-21px;bottom:-25px;display:flex;flex-direction:column;justify-content:space-between;width:clamp(175px,19vw,250px);min-height:clamp(170px,19vw,240px);padding:20px 21px;background:#f6f0e5;color:#2b302a;box-shadow:13px 17px 33px #29191640;transform:rotate(3deg);transition:transform .45s ease}
+#erweiterungen .shop-ticket i,#erweiterungen .shop-ticket small{font-style:normal;font-size:10px;line-height:1.35;letter-spacing:.08em;text-transform:uppercase}
+#erweiterungen .shop-ticket b{font-family:Georgia,serif;font-size:clamp(29px,3vw,42px);font-weight:400;line-height:.96;letter-spacing:-.07em}
+#erweiterungen .shop-ticket small{padding-top:12px;border-top:1px solid #a8a393;color:#855640;font-size:9px}
+#erweiterungen .shop-basket{position:absolute;top:23px;right:-13px;padding:11px 14px;background:#772f2c;color:#fff7ec;font-size:10px;font-weight:650;letter-spacing:.12em;box-shadow:7px 9px 18px #29191630}
+#erweiterungen .shop-basket b{margin-left:16px;font-size:16px;font-weight:450}
+#erweiterungen .outcome-card--sell:hover .shop-ticket,#erweiterungen .outcome-card--sell:focus-visible .shop-ticket{transform:rotate(1deg) translateY(-6px)}
 
-/* Booking: a clock-like date and a quiet appointment slip. */
-#erweiterungen .scene-art--book{background:radial-gradient(circle at 27% 47%,#3d665c,#203b35 68%,#1b312d)}
-#erweiterungen .book-orbit{position:absolute;left:4%;top:9%;display:flex;flex-direction:column;align-items:center;justify-content:center;width:58%;aspect-ratio:1;border:1px solid #bfd6c366;border-radius:50%;color:#e7efe6}
-#erweiterungen .book-orbit:before{content:"";position:absolute;inset:13%;border:1px solid #bfd6c344;border-radius:50%}
-#erweiterungen .book-orbit i{position:absolute;top:3%;left:49%;width:7px;height:7px;border-radius:50%;background:#d2e1ca;box-shadow:0 0 0 6px #d2e1ca22}
-#erweiterungen .book-orbit b{font-family:Georgia,serif;font-size:clamp(73px,9vw,145px);font-weight:400;line-height:.8;letter-spacing:-.1em}
-#erweiterungen .book-orbit small{margin-top:20px;font-size:9px;letter-spacing:.3em}
-#erweiterungen .book-appointment{position:absolute;right:5%;bottom:12%;display:flex;flex-direction:column;width:43%;min-height:185px;padding:17px;background:#f3f3e9;color:#263d36;box-shadow:15px 18px 28px #091b186e;transform:rotate(4deg);transition:transform .4s ease}
-#erweiterungen .book-appointment i{font-size:9px;font-style:normal;font-weight:650;letter-spacing:.09em}
-#erweiterungen .book-appointment b{margin-top:13px;font-family:Georgia,serif;font-size:clamp(43px,5.5vw,80px);font-weight:400;line-height:.9;letter-spacing:-.08em}
-#erweiterungen .book-appointment small{margin-top:13px;font-size:11px;line-height:1.35}
-#erweiterungen .book-appointment>span{display:flex;justify-content:space-between;gap:8px;margin-top:auto;padding-top:9px;border-top:1px solid #aabcb1;font-size:9px;font-weight:680;letter-spacing:.04em}
-#erweiterungen .book-appointment em{font-size:16px;font-style:normal;line-height:.7}
-#erweiterungen .book-caption{position:absolute;top:16px;right:17px;color:#c7d9cd;font-size:9px;letter-spacing:.17em;writing-mode:vertical-rl}
-#erweiterungen .book-caption i{font-style:normal;color:#92b5a6}
+/* RAUM reverses the rhythm and leaves the architecture itself room to breathe. */
+#erweiterungen .outcome-card--book{grid-template-columns:minmax(0,1.11fr) minmax(0,.89fr);column-gap:clamp(34px,6vw,100px)}
+#erweiterungen .outcome-card--book .scene-art{grid-column:1;grid-row:1/4;margin:55px 0 60px;height:clamp(390px,43vw,550px);background:#e9e9e0}
+#erweiterungen .outcome-card--book .scene-art>img{object-position:50% 50%}
+#erweiterungen .outcome-card--book .scene-meta,#erweiterungen .outcome-card--book .scene-copy,#erweiterungen .outcome-card--book .scene-link{grid-column:2}
+#erweiterungen .outcome-card--book .scene-copy strong{font-size:clamp(46px,5vw,76px)}
+#erweiterungen .outcome-card--book .scene-link{margin-bottom:55px}
+#erweiterungen .book-appointment{position:absolute;left:-19px;bottom:-29px;display:flex;flex-direction:column;width:clamp(185px,23vw,285px);min-height:195px;padding:20px 22px;background:#28433b;color:#f3f1e8;box-shadow:13px 17px 30px #152c2840;transform:rotate(-2deg);transition:transform .45s ease}
+#erweiterungen .book-appointment i{font-size:9px;font-style:normal;letter-spacing:.1em}
+#erweiterungen .book-appointment b{margin-top:15px;font-family:Georgia,serif;font-size:clamp(54px,6vw,82px);font-weight:400;line-height:.9;letter-spacing:-.07em}
+#erweiterungen .book-appointment small{margin-top:11px;font-size:11px;line-height:1.4}
+#erweiterungen .book-appointment>span{margin-top:auto;padding-top:11px;border-top:1px solid #b7c9b6;font-size:9px;font-weight:650;letter-spacing:.07em}
+#erweiterungen .outcome-card--book:hover .book-appointment,#erweiterungen .outcome-card--book:focus-visible .book-appointment{transform:rotate(0) translateY(-6px)}
 
-/* Inquiry: a measured drawing, then a concise project note. */
-#erweiterungen .outcome-card--inquire .scene-meta,#erweiterungen .outcome-card--inquire .scene-copy,#erweiterungen .outcome-card--inquire .scene-link{grid-column:1}
-#erweiterungen .outcome-card--inquire .scene-meta{grid-row:1;border-color:#b8ccd287}
-#erweiterungen .outcome-card--inquire .scene-copy{grid-row:2;align-self:center;margin-top:0}
-#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:clamp(43px,4.45vw,74px)}
-#erweiterungen .outcome-card--inquire .scene-link{grid-row:3;border-color:#b8ccd287}
-#erweiterungen .outcome-card--inquire .scene-art{grid-column:2;grid-row:1/4;width:auto;height:calc(100% + 56px);min-height:430px;margin:-28px -28px -28px 0;background:radial-gradient(circle at 45% 45%,#365464,#1a303d 78%)}
-#erweiterungen .inquire-drawing{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
-#erweiterungen .inquire-note{position:absolute;right:5%;top:17%;display:flex;flex-direction:column;width:38%;min-height:245px;padding:20px;background:#e6eced;color:#253b46;box-shadow:16px 21px 38px #07172188;transform:rotate(4deg);transition:transform .4s ease}
-#erweiterungen .inquire-note i{padding-bottom:14px;border-bottom:1px solid #9baab0;font-size:10px;font-style:normal;font-weight:700;letter-spacing:.15em}
-#erweiterungen .inquire-note b{margin:18px 0 19px;font-family:Georgia,serif;font-size:clamp(24px,2.5vw,40px);font-weight:400;line-height:1.01;letter-spacing:-.06em}
-#erweiterungen .inquire-note>span{display:flex;justify-content:space-between;gap:5px;padding:9px 0;border-top:1px solid #a6b5ba;font-size:10px;font-weight:650}
+/* A dark technical plate closes the triptych; its inquiry slip remains legible. */
+#erweiterungen .outcome-card--inquire{--scene-ink:#f0f0e9;grid-template-columns:minmax(0,.79fr) minmax(0,1.21fr);column-gap:0;min-height:510px;margin-top:0;padding:0 0 0 clamp(26px,4vw,58px);border-top:0;background:#1d303c;color:var(--scene-ink)}
+#erweiterungen .outcome-card--inquire .scene-meta{padding-right:clamp(22px,3vw,50px);padding-top:27px}
+#erweiterungen .outcome-card--inquire .scene-meta small{color:#b7c8cd}
+#erweiterungen .outcome-card--inquire .scene-copy{padding-right:clamp(20px,3vw,48px)}
+#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:clamp(45px,4.9vw,77px)}
+#erweiterungen .outcome-card--inquire .scene-copy small{color:#cfdae0}
+#erweiterungen .outcome-card--inquire .scene-link{margin-bottom:34px}
+#erweiterungen .outcome-card--inquire .scene-art{height:100%;min-height:510px;margin:0;overflow:hidden;background:#172b36}
+#erweiterungen .outcome-card--inquire .scene-art>img{object-position:50% 50%}
+#erweiterungen .outcome-card--inquire .scene-art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#1d303c80,transparent 30%);pointer-events:none}
+#erweiterungen .inquire-note{position:absolute;right:clamp(18px,3vw,45px);bottom:clamp(18px,3vw,45px);z-index:1;display:flex;flex-direction:column;width:clamp(190px,20vw,265px);padding:17px 18px;background:#e9ece9;color:#263941;box-shadow:12px 16px 30px #06192199;transform:rotate(2deg);transition:transform .45s ease}
+#erweiterungen .inquire-note i{padding-bottom:11px;border-bottom:1px solid #a8b7bc;font-size:9px;font-style:normal;font-weight:700;letter-spacing:.13em}
+#erweiterungen .inquire-note b{margin:13px 0;font-family:Georgia,serif;font-size:clamp(26px,3vw,39px);font-weight:400;line-height:1;letter-spacing:-.06em}
+#erweiterungen .inquire-note>span{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid #adb9bd;font-size:10px;font-weight:650}
 #erweiterungen .inquire-note em{font-style:normal;font-weight:400;text-align:right}
-#erweiterungen .outcome-card--book:hover .book-appointment,#erweiterungen .outcome-card--book:focus-visible .book-appointment,#erweiterungen .outcome-card--inquire:hover .inquire-note,#erweiterungen .outcome-card--inquire:focus-visible .inquire-note{transform:rotate(1deg) translateY(-5px)}
-#erweiterungen .outcome-card--sell:hover .shop-ticket,#erweiterungen .outcome-card--sell:focus-visible .shop-ticket{transform:rotate(1deg) translateY(-5px)}
+#erweiterungen .outcome-card--inquire:hover .inquire-note,#erweiterungen .outcome-card--inquire:focus-visible .inquire-note{transform:rotate(0) translateY(-5px)}
 
-@media(max-width:1050px){
-  #erweiterungen .outcome-card{min-height:590px}
-  #erweiterungen .scene-copy strong{font-size:clamp(38px,4.6vw,61px)}
-  #erweiterungen .scene-art{height:270px}
-  #erweiterungen .book-orbit{left:-6%;width:72%}
-  #erweiterungen .book-appointment{width:48%;right:4%}
-}
 @media(max-width:900px){
-  #erweiterungen .outcome-grid{grid-template-columns:1fr}
-  #erweiterungen .outcome-card--inquire{grid-column:1}
-  #erweiterungen .book-orbit{left:7%;width:52%}
-  #erweiterungen .book-appointment{right:8%;width:39%}
+  #erweiterungen .outcome-card{grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr);column-gap:28px;min-height:470px}
+  #erweiterungen .outcome-card--book{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)}
+  #erweiterungen .scene-art,#erweiterungen .outcome-card--book .scene-art{height:390px;margin-block:42px}
+  #erweiterungen .scene-copy strong,#erweiterungen .outcome-card--book .scene-copy strong,#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:clamp(40px,5.5vw,58px)}
+  #erweiterungen .scene-copy small{font-size:14px}
+  #erweiterungen .outcome-card--inquire{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);min-height:460px}
+  #erweiterungen .outcome-card--inquire .scene-art{height:100%;min-height:460px;margin:0}
 }
-@media(max-width:760px){
-  #erweiterungen .outcome-grid{grid-template-columns:1fr;gap:10px;margin-top:31px}
-  #erweiterungen .outcome-card{display:flex;min-height:0;padding:20px}
-  #erweiterungen .outcome-card--inquire{grid-column:auto}
-  #erweiterungen .scene-meta{gap:8px;font-size:10px}
-  #erweiterungen .scene-meta small{max-width:15ch;font-size:9px}
-  #erweiterungen .scene-copy{margin-top:26px}
-  #erweiterungen .scene-copy strong,#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:clamp(37px,10vw,56px)}
-  #erweiterungen .scene-copy small{margin-top:13px;font-size:14px}
-  #erweiterungen .scene-art,#erweiterungen .outcome-card--inquire .scene-art{flex:none;width:calc(100% + 40px);height:250px;min-height:0;margin:23px -20px 0}
-  #erweiterungen .scene-link{margin-top:0;padding-top:16px;font-size:14px}
-  #erweiterungen .shop-ticket{min-height:147px;padding:13px 14px}
-  #erweiterungen .shop-ticket b{font-size:clamp(23px,7vw,34px)}
-  #erweiterungen .book-orbit{left:5%;width:61%}
-  #erweiterungen .book-orbit b{font-size:clamp(72px,21vw,110px)}
-  #erweiterungen .book-appointment{right:5%;width:48%;min-height:168px;padding:13px}
-  #erweiterungen .book-appointment b{font-size:clamp(41px,12vw,65px)}
-  #erweiterungen .book-caption{display:none}
-  #erweiterungen .outcome-card--inquire .scene-art{height:305px}
-  #erweiterungen .inquire-note{top:8%;width:46%;min-height:0;padding:12px}
-  #erweiterungen .inquire-note i{padding-bottom:9px;font-size:8px}
-  #erweiterungen .inquire-note b{margin:12px 0;font-size:clamp(20px,6.5vw,28px)}
-  #erweiterungen .inquire-note>span{font-size:8px;padding:7px 0}
+@media(max-width:700px){
+  #erweiterungen .outcome-grid{margin-top:44px}
+  #erweiterungen .outcome-card,#erweiterungen .outcome-card--book,#erweiterungen .outcome-card--inquire{display:flex;flex-direction:column;min-height:0;column-gap:0;padding:0;background:transparent;color:#252b27;border-top:1px solid #a6a8a0}
+  #erweiterungen .outcome-card--inquire{margin-top:0;background:#1d303c;color:#f0f0e9;border:0;padding:0 20px}
+  #erweiterungen .scene-meta,#erweiterungen .outcome-card--inquire .scene-meta{order:1;padding:18px 0 0;font-size:10px}
+  #erweiterungen .scene-meta small{font-size:9px}
+  #erweiterungen .scene-copy,#erweiterungen .outcome-card--inquire .scene-copy{order:2;align-self:stretch;padding:29px 0 0}
+  #erweiterungen .scene-copy strong,#erweiterungen .outcome-card--book .scene-copy strong,#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:clamp(43px,9.5vw,64px)}
+  #erweiterungen .scene-copy small{max-width:40ch;margin-top:15px;font-size:14px}
+  #erweiterungen .outcome-card--inquire .scene-copy small{color:#cfdae0}
+  #erweiterungen .scene-art,#erweiterungen .outcome-card--book .scene-art,#erweiterungen .outcome-card--inquire .scene-art{order:3;align-self:stretch;flex:none;width:100%;height:clamp(275px,66vw,440px);min-height:0;margin:28px 0 0}
+  #erweiterungen .outcome-card--inquire .scene-art{width:calc(100% + 40px);margin-inline:-20px}
+  #erweiterungen .scene-link,#erweiterungen .outcome-card--book .scene-link,#erweiterungen .outcome-card--inquire .scene-link{order:4;align-self:stretch;width:auto;min-width:0;margin:0 0 44px;padding:18px 0;border-top:0;border-bottom:1px solid currentColor}
+  #erweiterungen .outcome-card--inquire .scene-link{margin-bottom:0}
+  #erweiterungen .shop-ticket{right:-7px;bottom:-15px;width:170px;min-height:145px;padding:13px}
+  #erweiterungen .shop-ticket b{font-size:28px}
+  #erweiterungen .shop-ticket i,#erweiterungen .shop-ticket small{font-size:8px}
+  #erweiterungen .shop-basket{right:8px;top:11px;font-size:9px}
+  #erweiterungen .book-appointment{left:-7px;bottom:-15px;width:175px;min-height:155px;padding:14px}
+  #erweiterungen .book-appointment b{font-size:52px}
+  #erweiterungen .book-appointment small{font-size:10px}
+  #erweiterungen .inquire-note{right:18px;bottom:18px;width:180px;padding:12px}
+  #erweiterungen .inquire-note b{font-size:26px}
+  #erweiterungen .inquire-note>span{font-size:8px}
 }
 @media(max-width:390px){
-  #erweiterungen .scene-copy strong,#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:36px}
-  #erweiterungen .scene-art{height:230px}
-  #erweiterungen .outcome-card--inquire .scene-art{height:290px}
-  #erweiterungen .shop-basket{font-size:8px}
-  #erweiterungen .shop-ticket{width:46%}
-  #erweiterungen .book-appointment{width:46%}
-  #erweiterungen .book-appointment>span{font-size:8px}
+  #erweiterungen .scene-copy strong,#erweiterungen .outcome-card--book .scene-copy strong,#erweiterungen .outcome-card--inquire .scene-copy strong{font-size:39px}
+  #erweiterungen .scene-art,#erweiterungen .outcome-card--book .scene-art,#erweiterungen .outcome-card--inquire .scene-art{height:255px}
+  #erweiterungen .shop-ticket{width:150px;min-height:136px}
+  #erweiterungen .shop-ticket b{font-size:25px}
 }
-@media(prefers-reduced-motion:no-preference){
-  #erweiterungen .shop-ticket{animation:shop-ticket-breathe 7s ease-in-out infinite}
-  #erweiterungen .book-orbit i{animation:book-dot-breathe 4s ease-in-out infinite}
-  @keyframes shop-ticket-breathe{0%,100%{transform:rotate(4deg) translateY(0)}50%{transform:rotate(3deg) translateY(-6px)}}
-  @keyframes book-dot-breathe{0%,100%{box-shadow:0 0 0 5px #d2e1ca22}50%{box-shadow:0 0 0 15px #d2e1ca00}}
+@media(prefers-reduced-motion:reduce){
+  #erweiterungen .scene-art>img,#erweiterungen .scene-link .brand-cue,#erweiterungen .shop-ticket,#erweiterungen .book-appointment,#erweiterungen .inquire-note{transition:none}
 }
-@media(prefers-reduced-motion:reduce){#erweiterungen .outcome-card,#erweiterungen .scene-link b,#erweiterungen .book-appointment,#erweiterungen .inquire-note{transition:none}}
