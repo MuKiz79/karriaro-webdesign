@@ -10,13 +10,12 @@ function setup(){
  let requests=0;w.fetch=()=>{requests++;throw new Error('No external demo requests allowed')};
  w.eval(script);return {w,d:w.document,requests:()=>requests};
 }
-test('Demo basket adds, caps and clears items without sending data',async()=>{
- const {w,d,requests}=setup();const add=d.querySelector('#shop-demo-add');
- for(let i=0;i<12;i++)add.click();
- assert.equal(d.querySelector('#shop-demo-count').textContent,'9');assert.equal(add.disabled,true);
- assert.match(d.querySelector('#shop-demo-status').textContent,/kein Kauf möglich/);
- d.querySelector('#shop-demo-clear').click();assert.equal(d.querySelector('#shop-demo-count').textContent,'0');
- assert.equal(add.disabled,false);assert.equal(d.activeElement,add);assert.equal(requests(),0);
+test('Three distinct example routes lead to complete concept websites',async()=>{
+ const {w,d,requests}=setup();
+ const paths=[...d.querySelectorAll('.outcome-card')].map(link=>new URL(link.href).pathname);
+ assert.deepEqual(paths,['/studien/tischundton.html','/studien/raum.html','/studien/vecto.html']);
+ assert.match(d.querySelector('.outcome-disclosure').textContent,/fiktive Betriebe/);
+ assert.equal(requests(),0);
  await w.happyDOM.close();
 });
 test('Feature inquiries preserve existing form input and add only the chosen interest',async()=>{

@@ -108,6 +108,17 @@
 @media(max-width:900px){.gallery-index-row{grid-template-columns:42px minmax(0,1fr) 90px 30px}}
 @media(max-width:700px){.gallery-index-row{grid-template-columns:38px minmax(0,1fr) 28px;gap:10px;min-height:110px}.gallery-index-text{grid-column:2;grid-row:1/3}.gallery-index-kind{grid-column:3;grid-row:2;font-size:10px;text-align:right}.gallery-index-action{grid-column:3;grid-row:1}.gallery-index-text>span{font-size:12px}.gallery-index-row strong{font-size:24px}}
 
+/* The mobile hero already explains the collection; lead with the first website. */
+@media(max-width:760px){
+  .gallery-hero{padding-bottom:23px}
+  .gallery-jump{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:17px}
+  .gallery-jump a:first-child{display:none}
+  .gallery-jump a{justify-content:center;min-height:42px;padding:6px 9px;text-align:center;font-size:11px;line-height:1.2}
+  .gallery-section-intro{display:block;padding-block:21px 15px}
+  .gallery-section-intro>.eyebrow{margin:0}
+  .gallery-section-intro h2,.gallery-section-intro>p:last-child{display:none}
+}
+
 /* Every remaining concept gets a visible website entry, not a hidden title row. */
 .gallery-archive .gallery-index{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;border:0}
 .gallery-archive .gallery-index-row{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;border:1px solid #b7bdb3;background:#f4f4ed;min-height:0;transition:transform .25s,box-shadow .25s}
