@@ -97,3 +97,9 @@
 @media(max-width:900px){.wald-time-interaction{grid-template-columns:1fr}.wald-time-stage{min-height:460px}.wald-time-editor{min-height:430px}.wald-time-story{margin:0 0 35px}}
 @media(max-width:650px){.wald-moments .section-top{margin-bottom:30px}.wald-time-stage{min-height:350px}.wald-time-sun{width:45px}.wald-time-stage strong{font-size:90px}.wald-time-editor{padding:30px 22px}.wald-time-choices button{font-size:15px}}
 @media(prefers-reduced-motion:reduce){.wald-time-stage,.wald-time-sun,.wald-time-choices button{transition:none}}
+
+@media(max-width:650px){
+  .concept-ribbon,.concept-ribbon span::after{font-size:11px;line-height:1.35}
+  .concept-ribbon span::after{content:"Website-Konzept · fiktiv"}
+  .wordmark small{font-size:10px;letter-spacing:.1em}
+}

@@ -18,3 +18,12 @@
 .nc-project-cta a:hover{transform:translateY(-4px)}.nc-project-cta a span{font-size:22px}
 @media(max-width:700px){.nc-project-cta{display:block}.nc-project-cta h2{font-size:70px;margin:25px 0}.nc-project-cta a{margin-top:30px;width:100%}}
 @media(prefers-reduced-motion:reduce){.nc-project-cta a{transition:none}}
+
+/* Keep the sector and the demo status legible when the full navigation collapses. */
+@media(max-width:700px){
+  .nc-demo{font-size:10px;line-height:1.4}
+  .nc-demo span{max-width:190px}
+  .nc-logo{display:grid;grid-template-columns:max-content max-content;align-items:start;gap:4px 0}
+  .nc-logo small{display:block;grid-column:1/-1;margin:0;font-size:10px;line-height:1.2;letter-spacing:.04em}
+}
+@media(max-width:400px){.nc-demo{font-size:10px}}
