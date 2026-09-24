@@ -84,19 +84,25 @@ gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/as
 personal_content = (ROOT / 'personal-landing-content.html').read_text()
 personal_page = page(
     'Persönliche Websites für Karriere und Positionierung',
-    'Individuelle persönliche Websites für Studium, Berufseinstieg, erfahrene Fachkräfte und Selbstständige. Acht bedienbare Beispiele und ein klarer Ablauf vom Fragebogen zur Website.',
+    'Individuell gestaltete persönliche Websites für Bewerbung, Karriere und Selbstständigkeit. Veröffentlichte Arbeit, Leistung und Preis ab 2.990 €, Fragebogen und bedienbare Beispiele.',
     'persoenliche-websites',
     personal_content,
 )
 personal_page = personal_page.replace('</head>', (
     '<meta property="og:type" content="website">'
     '<meta property="og:title" content="Mehr als ein Profil. Persönliche Websites von Karriaro.">'
-    '<meta property="og:description" content="Acht persönliche Website-Beispiele für verschiedene Berufe und Karrierestufen. Vom Fragebogen zum ersten Website-Entwurf.">'
+    '<meta property="og:description" content="Eine persönliche Website, die Ihre Arbeit sichtbar macht. Sehen Sie veröffentlichte Arbeit, Preis und Ablauf vom Fragebogen zum ersten Entwurf.">'
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
     '<link rel="stylesheet" href="/assets/personal-landing.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery.css">'
-    '<script src="/assets/personal-gallery.js" defer></script></head>'
+    '<link rel="stylesheet" href="/assets/personal-conversion.css"></head>'
 ))
+personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
+personal_nav = personal_header
+personal_nav = re.sub(r'<nav class="desktop-nav".*?</nav>', '<nav class="desktop-nav" aria-label="Hauptnavigation"><a href="#arbeiten">Live-Arbeit</a><a href="#angebot">Leistung &amp; Preis</a><a href="#ablauf">Ablauf</a><a href="#beispiele">Beispiele</a></nav>', personal_nav, count=1, flags=re.S)
+personal_nav = re.sub(r'<nav class="mobile-nav".*?</nav>', '<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation" hidden><a href="#arbeiten">Live-Arbeit</a><a href="#angebot">Leistung &amp; Preis</a><a href="#ablauf">Ablauf</a><a href="#beispiele">Beispiele</a><a href="#anfrage">Persönliche Website anfragen</a></nav>', personal_nav, count=1, flags=re.S)
+personal_nav = personal_nav.replace('href="/#kontakt"', 'href="#anfrage"').replace('Projekt besprechen', 'Website anfragen')
+personal_page = personal_page.replace(personal_header, personal_nav, 1)
 (SITE / 'persoenliche-websites.html').write_text(personal_page)
 
 kante_case = (ROOT / 'kante-case-content.html').read_text()
