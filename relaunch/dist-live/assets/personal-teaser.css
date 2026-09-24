@@ -1,0 +1,15 @@
+.personal-teaser{padding-block:clamp(60px,8vw,120px);border-top:1px solid #b8b9b2}
+.personal-teaser-top{display:flex;justify-content:space-between;gap:25px;padding-top:14px;border-top:1px solid #a3a59e;font-size:10px;font-weight:650;letter-spacing:.1em}
+.personal-teaser-top span:last-child{color:#73766d;font-weight:400}
+.personal-teaser-layout{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(35px,6vw,100px);align-items:center;margin-top:36px}
+.personal-teaser h2{margin:0;font-size:clamp(56px,6.2vw,92px);font-weight:500;line-height:.99;letter-spacing:-.07em}
+.personal-teaser h2 em{font-family:Georgia,serif;font-weight:400}
+.personal-teaser-layout>div:first-child>p{max-width:37ch;margin:27px 0 0;font-size:17px;line-height:1.5}
+.personal-teaser-layout>div:first-child>a{display:inline-flex;justify-content:space-between;gap:40px;min-width:275px;margin-top:38px;padding-top:13px;border-top:1px solid currentColor;font-size:14px;font-weight:650}
+.personal-teaser-art{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:360px;padding:26px;overflow:hidden;background:#cbd3c7}
+.personal-teaser-art:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),#2a3b3224 calc(25% - 1px) 25%)}
+.personal-teaser-art>span,.personal-teaser-art>b{position:relative;z-index:1;font-size:10px;letter-spacing:.1em}
+.personal-teaser-art strong{position:relative;z-index:1;font-size:clamp(45px,5vw,75px);font-weight:500;line-height:.96;letter-spacing:-.07em}
+.personal-teaser-art strong em{font-family:Georgia,serif;font-weight:400}
+.personal-teaser-art i{position:absolute;right:-12%;top:7%;width:58%;aspect-ratio:1;border:1px solid #243b30;border-radius:50%;background:#b4c1b0}
+@media(max-width:760px){.personal-teaser-top span:last-child{display:none}.personal-teaser-layout{grid-template-columns:1fr;gap:35px}.personal-teaser h2{font-size:clamp(48px,10vw,68px)}.personal-teaser-layout>div:first-child>p{font-size:15px}.personal-teaser-layout>div:first-child>a{width:100%;margin-top:27px}.personal-teaser-art{min-height:300px}.personal-teaser-art strong{font-size:clamp(43px,10vw,65px)}}

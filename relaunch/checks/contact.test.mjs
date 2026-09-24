@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 const { Window } = await import(process.env.HAPPY_DOM_PACKAGE || 'happy-dom');
 const html = await readFile(new URL('../site/index.html', import.meta.url), 'utf8');
 const script = await readFile(new URL('../site/assets/site.js', import.meta.url), 'utf8');
+const personalHTML = await readFile(new URL('../site/persoenliche-websites.html', import.meta.url), 'utf8');
 
 function setup(fetch) {
   const window = new Window({url: 'http://localhost:4319/', settings: {
@@ -88,4 +89,25 @@ test('Mobile menu closes with Escape and returns keyboard focus', async () => {
   t.doc.dispatchEvent(new t.window.KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
   assert.equal(button.getAttribute('aria-expanded'),'false');assert.equal(t.doc.activeElement,button);
   await t.window.happyDOM.close();
+});
+test('Personal website landing page sends its inquiry with the chosen service and confirms it inline', async () => {
+  const requests = [];
+  const window = new Window({url: 'http://localhost:4319/persoenliche-websites.html', settings: {
+    disableCSSFileLoading: true, disableJavaScriptFileLoading: true,
+    enableJavaScriptEvaluation: true, disableComputedStyleRendering: true
+  }});
+  window.document.write(personalHTML.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''));
+  window.fetch = async (url, options) => { requests.push({url, options}); return {ok: true}; };
+  window.eval(script);
+  const doc = window.document;
+  doc.querySelector('#pl-name').value = 'Lokaler Test';
+  doc.querySelector('#pl-email').value = 'local-test@example.invalid';
+  doc.querySelector('#pl-goal').value = 'Eine persönliche Website für meine Arbeit.';
+  doc.querySelector('#contact-form').dispatchEvent(new window.Event('submit', {bubbles: true, cancelable: true}));
+  await tick();
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].url, 'https://formspree.io/f/mjggbdre');
+  assert.equal(requests[0].options.body.get('vorhaben'), 'Persönliche Website');
+  assert.equal(doc.querySelector('#form-status').dataset.state, 'success');
+  await window.happyDOM.close();
 });

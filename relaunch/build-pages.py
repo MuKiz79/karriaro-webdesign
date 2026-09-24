@@ -81,6 +81,22 @@ gallery_page = page('Webdesign-Beispiele und Website-Konzepte', 'Entdecken Sie K
 gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/assets/gallery.css?v=20260923d"></head>')
 (SITE/'arbeiten.html').write_text(gallery_page)
 
+personal_content = (ROOT / 'personal-landing-content.html').read_text()
+personal_page = page(
+    'Persönliche Websites für Karriere und Positionierung',
+    'Individuelle persönliche Websites für Bewerbung, Karrierewechsel und Positionierung. Echte Arbeiten, drei bedienbare Konzepte und ein klarer Weg zur Anfrage.',
+    'persoenliche-websites',
+    personal_content,
+)
+personal_page = personal_page.replace('</head>', (
+    '<meta property="og:type" content="website">'
+    '<meta property="og:title" content="Mehr als ein Profil. Persönliche Websites von Karriaro.">'
+    '<meta property="og:description" content="Ihre Arbeit, Haltung und Erfahrung in einer eigenen Form. Sehen Sie persönliche Websites und drei bedienbare Konzepte.">'
+    '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
+    '<link rel="stylesheet" href="/assets/personal-landing.css"></head>'
+))
+(SITE / 'persoenliche-websites.html').write_text(personal_page)
+
 kante_case = (ROOT / 'kante-case-content.html').read_text()
 kante_page = page('KANTE – Einblick in die Gestaltung', 'Einblick in die Designentscheidungen hinter KANTE: Gegenprobe, Bildsprache, Raster und interaktive Projektskizze eines Website-Konzepts.', 'einblick-kante', kante_case)
 kante_page = kante_page.replace('</head>', '<link rel="stylesheet" href="/assets/case-counter.css"></head>')

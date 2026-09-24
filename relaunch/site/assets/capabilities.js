@@ -3,6 +3,7 @@
   const field = document.querySelector('#capability-interest');
   const note = document.querySelector('#capability-interest-note');
   const label = document.querySelector('#capability-interest-label');
+  if (!form || !field || !note || !label) return;
   const reset = () => { field.value = ''; note.hidden = true; label.textContent = ''; document.dispatchEvent(new Event('karriaro:interest-change')); };
   document.querySelectorAll('[data-capability]').forEach(link => {
     link.addEventListener('click', () => {
