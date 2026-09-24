@@ -31,3 +31,21 @@
 @media(max-width:700px){.pe-header{min-height:66px;gap:13px}.pe-wordmark{font-size:15px}.pe-header nav{display:none}.pe-header-cta{font-size:10px}.pe-footer{font-size:9px}.pe-contact h2{font-size:clamp(49px,10vw,75px)}.la-hero{grid-template-columns:1fr}.la-hero-copy{padding-block:64px}.la-hero h1{margin-top:29px;font-size:clamp(60px,11vw,82px)}.la-hero-copy>p:not(.pe-kicker){font-size:17px}.la-hero-art{min-height:420px}.la-work-grid,.td-system-grid,.mn-hero-grid,.mn-approach-grid{grid-template-columns:1fr}.la-work-grid{gap:36px}.la-work h2,.td-system h2,.td-principles h2,.mn-approach h2,.mn-notes h2{font-size:clamp(50px,10vw,72px)}.la-case-buttons button{font-size:10px}.la-case-panel{min-height:390px}.la-case-panel h3{margin-top:40px;font-size:clamp(39px,8vw,55px)}.la-principle blockquote{font-size:clamp(38px,8vw,59px)}.la-principle-row{grid-template-columns:1fr;gap:11px;margin-top:45px}.td-hero{min-height:690px;padding-bottom:55px}.td-hero-top span:last-child{display:none}.td-hero h1{margin-top:100px;font-size:clamp(58px,10vw,80px)}.td-hero-bottom{display:block;margin-top:50px}.td-hero-bottom p{font-size:17px}.td-hero-bottom a{max-width:250px;margin-top:36px}.td-hero-grid{top:17%;right:-18%;width:90%;height:67%;opacity:.43}.td-system-grid{gap:25px}.td-node-map{height:255px;margin-top:20px}.td-node-detail{min-height:395px}.td-node-detail h3{margin-top:45px}.td-principle-grid{grid-template-columns:1fr;gap:27px;margin-top:55px}.td-principle-grid h3{margin-top:20px}.mn-hero{min-height:0;padding-bottom:70px}.mn-hero-grid{gap:45px;margin-top:60px}.mn-hero h1{font-size:clamp(58px,10vw,78px)}.mn-hero-grid>div:first-child>p{font-size:17px}.mn-mark{min-height:350px}.mn-approach-grid{gap:30px}.mn-note-grid{grid-template-columns:1fr;gap:12px;margin-top:38px}.mn-note-grid article,.mn-note-grid article:nth-child(2),.mn-note-grid article:nth-child(3){min-height:220px;transform:none}.mn-note-grid p{margin-top:57px}}
 @media(max-width:390px){.la-hero h1,.td-hero h1,.mn-hero h1{font-size:55px}.pe-contact h2{font-size:44px}.la-case-buttons button{font-size:9px}.td-node-map button{min-width:70px}.td-node-map button span{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Complete project stories turn the three original studies into readable portfolios. */
+.pe-evidence{padding-block:clamp(85px,9vw,140px)}
+.pe-evidence h2{margin:45px 0 60px;font-size:clamp(57px,6.5vw,96px);font-weight:500;line-height:.98;letter-spacing:-.075em}
+.pe-evidence h2 em{font-family:Georgia,serif;font-weight:400}
+.pe-evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pe-evidence-grid article{min-width:0;min-height:390px;padding:30px;background:#efe5d9}
+.pe-evidence-grid article>span{font-size:10px;font-weight:700;letter-spacing:.13em}
+.pe-evidence-grid h3{max-width:16ch;margin:65px 0 20px;font-size:clamp(38px,4vw,59px);font-weight:500;line-height:1;letter-spacing:-.06em}
+.pe-evidence-grid p{max-width:51ch;font-size:16px;line-height:1.5}
+.pe-evidence-grid dl{margin-top:32px}
+.pe-evidence-grid dl div{display:grid;grid-template-columns:125px 1fr;gap:15px;padding:13px 0;border-top:1px solid currentColor;font-size:13px;line-height:1.4}
+.pe-evidence-grid dt{font-weight:700}.pe-evidence-grid dd{margin:0}
+.pe-evidence-note{max-width:65ch;margin-top:25px;font-size:12px;line-height:1.5}
+.pe-evidence--lena{background:#f6f0e8}.pe-evidence--lena .pe-evidence-grid article:first-child{background:#dfaa89}.pe-evidence--lena .pe-evidence-grid article:last-child{background:#e3cfb9}
+.pe-evidence--tarek{background:#dfeadb;color:#243228}.pe-evidence--tarek .pe-evidence-grid article:first-child{background:#bcd6ac}.pe-evidence--tarek .pe-evidence-grid article:last-child{background:#c8dac5}
+.pe-evidence--mila{background:#eeeaf0}.pe-evidence--mila .pe-evidence-grid article:first-child{background:#d7c7dc}.pe-evidence--mila .pe-evidence-grid article:last-child{background:#dfd8e3}
+@media(max-width:700px){.pe-evidence{padding-block:75px}.pe-evidence h2{margin:35px 0 35px;font-size:clamp(47px,10vw,72px)}.pe-evidence-grid{grid-template-columns:1fr;gap:12px}.pe-evidence-grid article{min-height:0;padding:23px}.pe-evidence-grid h3{margin:45px 0 15px;font-size:clamp(37px,8vw,53px)}.pe-evidence-grid dl div{grid-template-columns:100px 1fr}}

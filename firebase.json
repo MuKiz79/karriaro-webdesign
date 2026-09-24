@@ -314,6 +314,15 @@
             "value": "noindex, follow"
           }
         ]
+      },
+      {
+        "source": "/personen/**",
+        "headers": [
+          {
+            "key": "X-Robots-Tag",
+            "value": "noindex, follow"
+          }
+        ]
       }
     ],
     "rewrites": [

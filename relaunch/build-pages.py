@@ -84,16 +84,18 @@ gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/as
 personal_content = (ROOT / 'personal-landing-content.html').read_text()
 personal_page = page(
     'Persönliche Websites für Karriere und Positionierung',
-    'Individuelle persönliche Websites für Bewerbung, Karrierewechsel und Positionierung. Echte Arbeiten, drei bedienbare Konzepte und ein klarer Weg zur Anfrage.',
+    'Individuelle persönliche Websites für Studium, Berufseinstieg, erfahrene Fachkräfte und Selbstständige. Acht bedienbare Beispiele und ein klarer Ablauf vom Fragebogen zur Website.',
     'persoenliche-websites',
     personal_content,
 )
 personal_page = personal_page.replace('</head>', (
     '<meta property="og:type" content="website">'
     '<meta property="og:title" content="Mehr als ein Profil. Persönliche Websites von Karriaro.">'
-    '<meta property="og:description" content="Ihre Arbeit, Haltung und Erfahrung in einer eigenen Form. Sehen Sie persönliche Websites und drei bedienbare Konzepte.">'
+    '<meta property="og:description" content="Acht persönliche Website-Beispiele für verschiedene Berufe und Karrierestufen. Vom Fragebogen zum ersten Website-Entwurf.">'
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
-    '<link rel="stylesheet" href="/assets/personal-landing.css"></head>'
+    '<link rel="stylesheet" href="/assets/personal-landing.css">'
+    '<link rel="stylesheet" href="/assets/personal-gallery.css">'
+    '<script src="/assets/personal-gallery.js" defer></script></head>'
 ))
 (SITE / 'persoenliche-websites.html').write_text(personal_page)
 

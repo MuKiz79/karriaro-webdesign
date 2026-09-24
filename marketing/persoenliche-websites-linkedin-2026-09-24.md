@@ -4,7 +4,7 @@
 
 **Kampagnenlink:** https://karriaro-webdesign.de/persoenliche-websites?utm_source=linkedin&utm_medium=paid_social&utm_campaign=persoenliche_websites
 
-Die Seite erklärt den Nutzen einer persönlichen Website, zeigt eine veröffentlichte Arbeit, kennzeichnet den Ilyas-Kablan-Entwurf als private Vorschau, bietet drei bedienbare fiktive Konzepte und führt zum eigenen Anfrageformular. Kein Versprechen auf eine Anstellung oder messbare Karriereerfolge.
+Die Seite erklärt den Nutzen einer persönlichen Website, zeigt eine veröffentlichte Arbeit, kennzeichnet den Ilyas-Kablan-Entwurf als private Vorschau, bietet acht bedienbare fiktive Websites für verschiedene Berufe und Karrierestufen und führt zum eigenen Anfrageformular. Der Ablauf erklärt Fragebogen, ersten bedienbaren Entwurf, Feinschliff und Veröffentlichung. Kein Versprechen auf eine Anstellung oder messbare Karriereerfolge.
 
 ## Anzeigenidee A — Karrierewechsel
 
