@@ -1,0 +1,27 @@
+.pl-hero-art--story{display:flex;flex-direction:column;min-height:690px;padding:23px 25px 0;background:#20372f;color:#f3efe5;box-shadow:none;overflow:hidden;isolation:isolate}
+.pl-hero-art--story::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 100% 100%,#b46d4a44,transparent 44%),repeating-linear-gradient(90deg,transparent 0 92px,#ffffff0b 93px);pointer-events:none;z-index:-1}
+.pl-hero-art--story::after{display:none}
+.pl-story-meta,.pl-story-footer{display:flex;justify-content:space-between;align-items:center;gap:18px;font-size:10px;font-weight:700;letter-spacing:.12em;line-height:1.45}
+.pl-story-meta{padding-bottom:20px}
+.pl-story-stage{position:relative;display:grid;grid-template-columns:35% 65%;flex:1;min-height:445px;overflow:hidden}
+.pl-story-record,.pl-story-perspective{display:flex;flex-direction:column;min-width:0;padding:clamp(23px,2.6vw,38px)}
+.pl-story-record{background:#eeece4;color:#23352d}
+.pl-story-record>span,.pl-story-perspective>span{font-size:10px;font-weight:750;letter-spacing:.115em;line-height:1.4}
+.pl-story-record strong{margin-top:clamp(45px,6vw,88px);font-size:clamp(29px,2.45vw,40px);font-weight:550;letter-spacing:-.075em;line-height:1}
+.pl-story-record ol{list-style:none;margin:auto 0 0;padding:0}
+.pl-story-record li{display:flex;align-items:center;gap:9px;padding:13px 0;border-top:1px solid #aeb5a9;font-size:clamp(14px,1.35vw,18px);font-weight:550;letter-spacing:-.035em}
+.pl-story-record li:last-child{border-bottom:1px solid #aeb5a9}
+.pl-story-record li span{color:#a2533c;font-size:10px;font-weight:750;letter-spacing:.1em}
+.pl-story-perspective{position:relative;background:#a5523d;color:#fff5ec}
+.pl-story-perspective::after{content:"02";position:absolute;right:-.07em;bottom:-.28em;color:#ffffff12;font-size:clamp(190px,23vw,335px);font-weight:700;letter-spacing:-.13em;line-height:1;pointer-events:none}
+.pl-story-perspective strong{position:relative;z-index:1;margin:auto 0;font-size:clamp(42px,4vw,61px);font-weight:520;line-height:.94;letter-spacing:-.072em}
+.pl-story-perspective strong em{display:block;margin-top:.14em;color:#f4d5c0;font-family:"Cormorant Field",Georgia,serif;font-size:1.08em;font-weight:400;letter-spacing:-.067em}
+.pl-story-perspective p{position:relative;z-index:1;max-width:26ch;margin:0;padding-top:18px;border-top:1px solid #f8dbc585;font-size:clamp(13px,1.15vw,16px);line-height:1.4}
+.pl-story-footer{min-height:101px;letter-spacing:.1em}
+.pl-story-footer>span{max-width:20ch;color:#d7e0d4}
+.pl-story-footer a{display:flex;justify-content:space-between;align-items:center;gap:16px;min-width:190px;padding:10px 0;border-bottom:1px solid #c5d1c5;color:inherit;font-size:12px;letter-spacing:0;text-decoration:none}
+.pl-story-footer a span{font-size:20px;font-weight:400;line-height:.8}
+.pl-story-footer a:hover,.pl-story-footer a:focus-visible{color:#f3b9a0}
+@media(max-width:1050px){.pl-hero-art--story{min-height:610px}.pl-story-record,.pl-story-perspective{padding:22px}.pl-story-stage{grid-template-columns:37% 63%}.pl-story-perspective strong{font-size:clamp(39px,4vw,52px)}}
+@media(max-width:700px){.pl-hero-art--story{min-height:0;padding:16px 16px 0}.pl-story-meta{padding-bottom:15px;font-size:9px}.pl-story-stage{grid-template-columns:1fr;min-height:0}.pl-story-record{min-height:184px;padding:20px}.pl-story-record strong{margin-top:18px;font-size:39px}.pl-story-record ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:auto}.pl-story-record li{display:block;padding:8px 0;border-bottom:1px solid #aeb5a9;font-size:12px}.pl-story-record li span{display:block;margin-bottom:6px}.pl-story-perspective{min-height:265px;padding:21px}.pl-story-perspective strong{margin:32px 0 25px;font-size:clamp(45px,11vw,62px)}.pl-story-perspective p{margin-top:auto;font-size:13px}.pl-story-footer{min-height:92px;align-items:flex-start;padding:17px 0;font-size:9px}.pl-story-footer a{min-width:0;max-width:160px;font-size:11px}}
+@media(max-width:390px){.pl-story-perspective strong{font-size:45px}.pl-story-record li{font-size:11px}}

@@ -101,6 +101,7 @@ personal_page = personal_page.replace('</head>', (
     '<link rel="stylesheet" href="/assets/personal-editions.css">'
     '<link rel="stylesheet" href="/assets/personal-signature.css">'
     '<link rel="stylesheet" href="/assets/personal-clarity.css?v=20260925b">'
+    '<link rel="stylesheet" href="/assets/personal-hero-story.css">'
     '<script src="/assets/personal-inquiry.js" defer></script></head>'
 ))
 personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
