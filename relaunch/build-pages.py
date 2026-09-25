@@ -112,7 +112,7 @@ personal_page = personal_page.replace(personal_header, personal_nav, 1)
 
 muammer_case = (ROOT / 'muammer-case-content.html').read_text()
 muammer_page = page('Eine Laufbahn als Themenraum – Einblick in die Gestaltung', 'Wie aus Muammer Kizilaslans beruflichem Weg eine persönliche Website mit begehbaren Themen und überprüfbaren Belegen wurde.', 'einblick-muammer', muammer_case)
-muammer_page = muammer_page.replace('</head>', '<link rel="stylesheet" href="/assets/muammer-case.css"><script src="/assets/muammer-case.js" defer></script></head>')
+muammer_page = muammer_page.replace('</head>', '<meta property="og:title" content="Eine Laufbahn. Kein Zeitstrahl. — Karriaro"><meta property="og:description" content="Wie echte berufliche Stationen zu einer persönlichen Website mit begehbaren Verbindungen wurden."><meta property="og:url" content="https://karriaro-webdesign.de/einblick-muammer"><link rel="stylesheet" href="/assets/muammer-case.css"><script src="/assets/muammer-case.js" defer></script></head>')
 (SITE / 'einblick-muammer.html').write_text(muammer_page)
 
 kante_case = (ROOT / 'kante-case-content.html').read_text()
