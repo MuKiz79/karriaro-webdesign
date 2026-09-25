@@ -50,6 +50,16 @@ test('a chosen example carries into the real inquiry without inventing a custome
   window.eval(script);
   assert.equal(document.getElementById('pl-example-input').value, 'Felix Brandt · Berufswechsel');
   assert.equal(document.getElementById('pl-selected-example').hidden, false);
+  assert.deepEqual(
+    [...document.querySelectorAll('.pl-editions-work .pl-edition:not([hidden])')].map(item => item.dataset.editionPanel),
+    ['aylin']
+  );
+  document.querySelector('[data-edition="mina"]').click();
+  assert.deepEqual(
+    [...document.querySelectorAll('.pl-editions-work .pl-edition:not([hidden])')].map(item => item.dataset.editionPanel),
+    ['mina']
+  );
+  assert.equal(document.querySelector('[data-edition="mina"]').getAttribute('aria-pressed'), 'true');
   document.querySelector('[data-example="mina-aydin"]').click();
   assert.equal(document.getElementById('pl-example-input').value, 'Mina Aydin · Selbstständigkeit');
   assert.equal(document.querySelector('#contact-form').getAttribute('action'), 'https://formspree.io/f/mjggbdre');

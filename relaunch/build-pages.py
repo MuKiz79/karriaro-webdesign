@@ -84,21 +84,22 @@ gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/as
 
 personal_content = (ROOT / 'personal-landing-content.html').read_text()
 personal_page = page(
-    'Persönliche Websites für Karriere und Positionierung',
-    'Individuell gestaltete persönliche Websites für Bewerbung, Karriere und Selbstständigkeit. Zwei ausgearbeitete Arbeiten, vier vollständige Konzeptseiten, Preis ab 2.990 € und Fragebogen.',
+    'Persönliche Websites ohne Vorlage — Karriaro',
+    'Eine eigene Website für Bewerbung, Karriere und Selbstständigkeit: individuell konzipiert, mit vollständigen Arbeiten, Einstieg ab 2.990 € und persönlichem Kontakt.',
     'persoenliche-websites',
     personal_content,
 )
 personal_page = personal_page.replace('</head>', (
     '<meta property="og:type" content="website">'
-    '<meta property="og:title" content="Persönliche Website für Karriere und Positionierung — Karriaro.">'
-    '<meta property="og:description" content="Persönliche Websites als eigene, vollständige Auftritte. Sehen Sie ausgearbeitete Arbeiten, Konzepte, Preis und Ablauf.">'
+    '<meta property="og:title" content="Persönliche Websites ohne Vorlage — Karriaro">'
+    '<meta property="og:description" content="Eine eigene Website für Bewerbung, Karriere und Selbstständigkeit. Entdecken Sie die Arbeiten und den Weg zu Ihrem Auftritt.">'
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
     '<link rel="stylesheet" href="/assets/personal-landing.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery.css">'
     '<link rel="stylesheet" href="/assets/personal-conversion.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery-art.css">'
     '<link rel="stylesheet" href="/assets/personal-editions.css">'
+    '<link rel="stylesheet" href="/assets/personal-signature.css">'
     '<script src="/assets/personal-inquiry.js" defer></script></head>'
 ))
 personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
