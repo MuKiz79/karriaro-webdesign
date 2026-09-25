@@ -53,14 +53,16 @@ test('three full design directions use the same real profile and carry into the 
   assert.equal(directions.length, 3);
   for (const direction of directions) {
     const href = direction.querySelector('.pl-v-open')?.getAttribute('href');
-    assert.equal(href, direction.querySelector('iframe')?.getAttribute('src'));
+    const preview = direction.querySelector('iframe')?.getAttribute('src');
+    assert.equal(href, preview?.split('#')[0]);
     assert.ok(direction.querySelector('[data-example]'));
     const page = await readFile(new URL('../site' + href, import.meta.url), 'utf8');
     assert.match(page, /name="robots" content="noindex,follow"/);
     assert.match(page, /DESIGNSTUDIE/);
     assert.match(page, /muammerkizilaslan.com/);
     assert.ok((page.match(/<section\b/g) || []).length >= 5);
-    assert.match(page, /data-mv-group/);
+    assert.match(page, /BSH[\s\S]*Borusan[\s\S]*Hansgrohe|Hansgrohe[\s\S]*BSH[\s\S]*Borusan/);
+    assert.match(page, /data-mv-group|<details>/);
     assert.doesNotMatch(page, /Ilyas|Kablan|fiktive Kundenergebnisse/i);
   }
   window.eval(await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8'));
@@ -72,7 +74,7 @@ test('three full design directions use the same real profile and carry into the 
 
 test('each profile variant has a working, keyboard-native perspective choice', async () => {
   const interaction = await readFile(new URL('../site/assets/muammer-variants.js', import.meta.url), 'utf8');
-  for (const slug of ['muammer-fuehrung', 'muammer-technologie', 'muammer-gruendung']) {
+  for (const slug of ['muammer-fuehrung', 'muammer-technologie']) {
     const page = await readFile(new URL(`../site/personen/${slug}.html`, import.meta.url), 'utf8');
     const window = new Window({
       url: `http://localhost/personen/${slug}.html`,
@@ -89,6 +91,9 @@ test('each profile variant has a working, keyboard-native perspective choice', a
     assert.equal(panels.find(panel => !panel.hidden)?.dataset.mvPanel, buttons[1].dataset.mvSelect);
     await window.happyDOM.close();
   }
+  const founder = await readFile(new URL('../site/personen/muammer-gruendung.html', import.meta.url), 'utf8');
+  assert.equal((founder.match(/<details>/g) || []).length, 3);
+  assert.match(founder, /mv-braid-professional[\s\S]*mv-braid-own/);
 });
 
 test('the real design case is reachable and each topic reveals its own evidence', async () => {

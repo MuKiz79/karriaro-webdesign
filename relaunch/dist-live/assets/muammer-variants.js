@@ -3,6 +3,7 @@ for (const group of document.querySelectorAll('[data-mv-group]')) {
   const panels = [...group.querySelectorAll('[data-mv-panel]')];
   if (!buttons.length || !panels.length) continue;
   const select = key => {
+    group.dataset.active = key;
     buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.mvSelect === key)));
     panels.forEach(panel => { panel.hidden = panel.dataset.mvPanel !== key; });
   };
