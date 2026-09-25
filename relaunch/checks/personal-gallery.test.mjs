@@ -18,6 +18,8 @@ test('the new showroom presents one published work and retains offer and inquiry
   assert.ok(document.querySelector('#arbeiten a[href="https://muammerkizilaslan.com/"]'));
   assert.equal(document.querySelectorAll('iframe, .pl-edition, a[href^="/personen/"]').length,0);
   assert.equal(document.querySelectorAll('link[rel="stylesheet"]').length,1);
+  assert.equal(document.querySelector('meta[name="robots"]').content,'index,follow');
+  assert.doesNotMatch(document.body.textContent,/Interne Vorschau|Formularversand wird simuliert/);
   assert.ok(document.getElementById('varianten')); assert.ok(document.getElementById('beispiele'));
   assert.match(document.querySelector('h1').textContent,/Ihr Werdegang.*Ihr eigener Auftritt/);
   assert.match(document.querySelector('#angebot').textContent,/Individuell kalkuliert/);

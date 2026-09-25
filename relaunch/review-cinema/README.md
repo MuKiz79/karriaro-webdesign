@@ -39,8 +39,10 @@ Die Angebotsfassung ist ein interner Entwurf. Auch der enthaltene Umfang mit zwe
 - Keine Browser-Konsolenfehler in der geprüften Ansicht.
 - Vorschau-Screenshots: preview-desktop.png und preview-mobile.png.
 
-## Vor einer Veröffentlichung noch erforderlich
+## Freigabe und Veröffentlichung
 
-Gestalterische Abnahme durch Muammer, Entscheidung zur öffentlichen Preisangabe und Freigabe des Leistungsumfangs. Ein echter Formspree-Versand einschließlich Zustellung wurde in dieser Etappe ausdrücklich nicht durchgeführt. Der schnelle Verständnistest mit einer außenstehenden Person steht ebenfalls noch aus; die Seite benennt Angebot, Nutzen und nächsten Schritt bereits im Hero.
+Der Nutzer hat am 25.09.2026 mit „bitte veröffentlichen“ die gezeigte Fassung freigegeben. Öffentliche Preisangabe: „Individuell kalkuliert. Verbindliches Angebot vor Beginn.“ Die Angebotsseite verwendet jetzt index,follow und den echten bestehenden Formspree-Endpunkt. Versionierte Asset-URLs aktualisieren zwischengespeicherte Skripte zuverlässig.
 
-Nicht deployen: Diese Fassung ist als interne Vorschau gekennzeichnet und mit noindex/nofollow versehen. Vor späterem Einsatz müssen Vorschau- und Indexierungsstatus bewusst angepasst werden.
+Der lokale Vorschau-Server bleibt separat: sein Hinweis, noindex-Header und simulierter Versand sind nicht Bestandteil von dist-live. Produktionsbuild und Quellstand werden gemeinsam über den bestehenden GitHub/Firebase-Workflow veröffentlicht.
+
+Ein echter Formularversand einschließlich E-Mail-Zustellung und ein Verständnistest mit Außenstehenden wurden nicht durchgeführt. Die Funktionsprüfung des Formulars ist automatisiert und lokal simuliert erfolgt.
