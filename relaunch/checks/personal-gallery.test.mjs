@@ -165,3 +165,23 @@ test('each demonstrated interaction changes content and the established cases re
     assert.match(page, /versendet keine Nachricht/);
   }
 });
+
+test('the adapted personal forms express different biographies and the field network is usable', async () => {
+  const felix = await readFile(new URL('../site/personen/felix-brandt.html', import.meta.url), 'utf8');
+  assert.equal((felix.match(/data-felix-chapter="[1-4]"/g) || []).length, 4);
+  assert.match(felix, /KONSTRUIEREN[\s\S]*BEOBACHTEN[\s\S]*ÜBERSETZEN[\s\S]*GESTALTEN/);
+  assert.doesNotMatch(felix, /Ilyas|Kablan|ilyaskablan|Fußball/i);
+
+  const window = new Window({ url: 'http://localhost/personen/aylin-berger.html', settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true, enableJavaScriptEvaluation: true, suppressInsecureJavaScriptEnvironmentWarning: true } });
+  const aylin = await readFile(new URL('../site/personen/aylin-berger.html', import.meta.url), 'utf8');
+  window.document.write(aylin.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''));
+  window.eval(await readFile(new URL('../site/assets/personal-form-principles.js', import.meta.url), 'utf8'));
+  const network = window.document.querySelector('[data-aylin-network]');
+  assert.equal(network.querySelectorAll('[data-node]').length, 6);
+  network.querySelector('[data-node="water"]').click();
+  assert.equal(network.dataset.focus, 'water');
+  assert.equal(window.document.querySelector('#ab-network-title').textContent, 'Wenn Regen bleibt.');
+  assert.equal(network.querySelector('[data-node="water"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(network.querySelector('[data-node="heat"]').getAttribute('aria-pressed'), 'false');
+  await window.happyDOM.close();
+});
