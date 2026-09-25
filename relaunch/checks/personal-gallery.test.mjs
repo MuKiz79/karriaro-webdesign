@@ -35,7 +35,7 @@ test('the two finished works lead four curated, complete conceptual websites', a
   assert.match(document.querySelector('#ablauf').textContent, /Fragebogen[\s\S]*bedienbaren Entwurf/i);
   const why = document.querySelector('#warum');
   assert.match(why.textContent, /Warum eine eigene Website\?/i);
-  assert.match(why.textContent, /20 Jahre Erfahrung in Technologie und Führung[\s\S]*KI-Praxis/);
+  assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
   assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
   await window.happyDOM.close();
 });
