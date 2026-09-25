@@ -33,11 +33,14 @@ test('the two finished works lead four curated, complete conceptual websites', a
   }
   assert.match(document.querySelector('#angebot').textContent, /2\.990 €/);
   assert.match(document.querySelector('#ablauf').textContent, /Fragebogen[\s\S]*bedienbaren Entwurf/i);
-  assert.match(document.querySelector('.pl-hero').textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
-  const heroSignature = document.querySelector('.pl-hero-art--signature');
-  assert.match(heroSignature.textContent, /ECHTE ARBEIT[\s\S]*TECHNOLOGIE[\s\S]*FÜHRUNG[\s\S]*GRÜNDUNG[\s\S]*Menschen und[\s\S]*Verantwortung/);
-  assert.ok(heroSignature.querySelector('a[href="https://muammerkizilaslan.com/"]'));
+  const hero = document.querySelector('.pl-hero');
+  assert.match(hero.textContent, /Sie können mehr,[\s\S]*als Ihr Profil zeigt/);
+  assert.match(hero.textContent, /Bewerbung[\s\S]*beruflichen Wechsel[\s\S]*eigene Kunden/);
+  const situations = [...hero.querySelectorAll('.pl-situation')];
+  assert.deepEqual(situations.map(item => item.getAttribute('href')), ['/personen/aylin-berger.html', '/personen/felix-brandt.html', '/personen/mina-aydin.html']);
+  assert.match(hero.textContent, /Personen fiktiv/);
   const why = document.querySelector('#warum');
+  assert.match(why.textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
   assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
   assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
   assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
