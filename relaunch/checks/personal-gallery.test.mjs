@@ -33,8 +33,9 @@ test('the two finished works lead four curated, complete conceptual websites', a
   }
   assert.match(document.querySelector('#angebot').textContent, /2\.990 €/);
   assert.match(document.querySelector('#ablauf').textContent, /Fragebogen[\s\S]*bedienbaren Entwurf/i);
+  assert.match(document.querySelector('.pl-hero').textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
   const why = document.querySelector('#warum');
-  assert.match(why.textContent, /Warum eine eigene Website\?/i);
+  assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
   assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
   assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
   await window.happyDOM.close();
