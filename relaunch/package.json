@@ -6,7 +6,7 @@
   "scripts": {
     "build": "python3 build-pages.py",
     "check": "node checks/site.mjs",
-    "test": "node --test checks/contact.test.mjs checks/design.test.mjs checks/object-motion.test.mjs checks/capabilities.test.mjs checks/complete-journeys.test.mjs checks/market-concepts.test.mjs checks/project-trail.test.mjs checks/personal-gallery.test.mjs checks/persona-signatures.test.mjs",
+    "test": "node --test checks/contact.test.mjs checks/design.test.mjs checks/object-motion.test.mjs checks/capabilities.test.mjs checks/complete-journeys.test.mjs checks/market-concepts.test.mjs checks/project-trail.test.mjs checks/personal-gallery.test.mjs checks/persona-signatures.test.mjs checks/personal-cinema.test.mjs",
     "preview": "python3 -m http.server 4319 --bind 127.0.0.1 --directory site"
   },
   "devDependencies": {

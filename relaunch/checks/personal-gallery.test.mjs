@@ -13,59 +13,27 @@ async function landing(url = 'http://localhost/persoenliche-websites.html') {
   return { window, document: window.document };
 }
 
-test('the two finished works lead four curated, complete conceptual websites', async () => {
-  const { window, document } = await landing();
-  const works = [...document.querySelectorAll('.pl-edition')];
-  assert.equal(works.length, 4);
-  assert.deepEqual(works.map(item => item.querySelector('h3')?.textContent), ['Aylin Berger.', 'Noah Yilmaz.', 'Felix Brandt.', 'Mina Aydin.']);
-  assert.ok(document.querySelector('.pl-real-muammer a[href="https://muammerkizilaslan.com/"]'));
-  assert.ok(document.querySelector('.pl-real-anonymous a[href="/personen/unternehmerprofil.html"]'));
-  assert.ok(document.querySelector('details.pl-editions-archive'));
-  for (const work of works) {
-    const href = work.querySelector('.pl-edition-main-link')?.getAttribute('href');
-    assert.equal(href, work.querySelector('.pl-edition-overlay')?.getAttribute('href'));
-    assert.equal(href, work.querySelector('iframe')?.getAttribute('src'));
-    assert.ok(work.querySelector('[data-example]'));
-    const page = await readFile(new URL('../site' + href, import.meta.url), 'utf8');
-    assert.match(page, /name="robots" content="noindex,follow"/);
-    assert.ok((page.match(/<section\b/g) || []).length >= 5, href + ' needs a full visitor journey');
-    assert.match(page, /FIKTIVES, BEDIENBARES WEBSITE-KONZEPT|FIKTIVES KONZEPT/);
-  }
-  assert.match(document.querySelector('#angebot').textContent, /2\.990 €/);
-  assert.match(document.querySelector('#ablauf').textContent, /Fragebogen[\s\S]*bedienbaren Entwurf/i);
-  const hero = document.querySelector('.pl-hero');
-  assert.match(hero.textContent, /Sie können mehr,[\s\S]*als Ihr Profil zeigt/);
-  assert.match(hero.textContent, /Bewerbung[\s\S]*beruflichen Wechsel[\s\S]*eigene Kunden/);
-  assert.ok(hero.querySelector('.pl-proof-screen[href="https://muammerkizilaslan.com/"]'));
-  assert.ok(hero.querySelector('.pl-proof-foot a[href="/einblick-muammer.html"]'));
-  assert.match(hero.textContent, /11[\s\S]*Stationen[\s\S]*24[\s\S]*Themen/);
-  assert.equal(document.querySelectorAll('.pl-variant, .pl-mh-page').length, 0);
-  const why = document.querySelector('#warum');
-  assert.match(why.textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
-  assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
-  assert.match(why.textContent, /20 Jahren Technologie und Führung[\s\S]*belegbaren Arbeiten[\s\S]*KI hilft/);
-  assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
+test('the new showroom presents one published work and retains offer and inquiry compatibility', async () => {
+  const {window, document}=await landing();
+  assert.ok(document.querySelector('#arbeiten a[href="https://muammerkizilaslan.com/"]'));
+  assert.equal(document.querySelectorAll('iframe, .pl-edition, a[href^="/personen/"]').length,0);
+  assert.equal(document.querySelectorAll('link[rel="stylesheet"]').length,1);
+  assert.ok(document.getElementById('varianten')); assert.ok(document.getElementById('beispiele'));
+  assert.match(document.querySelector('h1').textContent,/Ihr Werdegang.*Ihr eigener Auftritt/);
+  assert.match(document.querySelector('#angebot').textContent,/Individuell kalkuliert/);
+  assert.doesNotMatch(document.body.textContent,/2[.,]990|7[.,]336|Ilyas|Kablan/);
+  assert.match(document.querySelector('#ablauf').textContent,/Fragebogen/);
+  assert.equal(document.querySelector('#contact-form').action,'https://formspree.io/f/mjggbdre');
+  assert.equal(document.querySelectorAll('.pg-evidence article').length,3);
   await window.happyDOM.close();
 });
 
-test('unapproved profile studies are retained for review but not featured as customer examples', async () => {
-  const { window, document } = await landing('http://localhost/persoenliche-websites.html?beispiel=muammer-technologie#anfrage');
-  assert.equal(document.querySelectorAll('a[href^="/personen/muammer-"]').length, 0);
-  assert.ok(document.querySelector('#varianten')); // old deep links arrive at the real work
-  for (const slug of ['muammer-fuehrung', 'muammer-technologie', 'muammer-gruendung']) {
-    const page = await readFile(new URL(`../site/personen/${slug}.html`, import.meta.url), 'utf8');
-    assert.match(page, /name="robots" content="noindex,follow"/);
-    assert.match(page, /DESIGNSTUDIE/);
-    assert.match(page, /muammerkizilaslan.com/);
-    assert.ok((page.match(/<section\b/g) || []).length >= 5);
-    assert.match(page, /BSH[\s\S]*Borusan[\s\S]*Hansgrohe|Hansgrohe[\s\S]*BSH[\s\S]*Borusan/);
-    assert.match(page, /data-mv-group|<details>/);
-    assert.doesNotMatch(page, /Ilyas|Kablan|fiktive Kundenergebnisse/i);
-  }
-  window.eval(await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8'));
-  assert.equal(document.getElementById('pl-example-input').value, 'Designrichtung Technologie');
-  document.querySelector('[data-example="aylin-berger"]').click();
-  assert.equal(document.getElementById('pl-example-input').value, 'Aylin Berger · Studium');
+test('legacy example links remain recognized without featuring their studies',async()=>{
+  const {window,document}=await landing('http://localhost/persoenliche-websites.html?beispiel=muammer-technologie#anfrage');
+  window.eval(await readFile(new URL('../site/assets/personal-inquiry.js',import.meta.url),'utf8'));
+  assert.equal(document.getElementById('pl-example-input').value,'Designrichtung Technologie');
+  assert.equal(document.getElementById('pg-selected-example').hidden,false);
+  for(const slug of ['tarek-demir','aylin-berger','noah-yilmaz','felix-brandt','mina-aydin']) assert.ok(await readFile(new URL('../site/personen/'+slug+'.html',import.meta.url),'utf8'));
   await window.happyDOM.close();
 });
 
@@ -122,25 +90,18 @@ test('the anonymized work contains no personal trace or outbound link to the ori
   assert.ok((page.match(/<section\b/g) || []).length >= 5);
 });
 
-test('a chosen example carries into the real inquiry without inventing a customer outcome', async () => {
-  const { window, document } = await landing('http://localhost/persoenliche-websites.html?beispiel=felix-brandt#anfrage');
-  const script = await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8');
-  window.eval(script);
-  assert.equal(document.getElementById('pl-example-input').value, 'Felix Brandt · Berufswechsel');
-  assert.equal(document.getElementById('pl-selected-example').hidden, false);
-  assert.deepEqual(
-    [...document.querySelectorAll('.pl-editions-work .pl-edition:not([hidden])')].map(item => item.dataset.editionPanel),
-    ['aylin']
-  );
-  document.querySelector('[data-edition="mina"]').click();
-  assert.deepEqual(
-    [...document.querySelectorAll('.pl-editions-work .pl-edition:not([hidden])')].map(item => item.dataset.editionPanel),
-    ['mina']
-  );
-  assert.equal(document.querySelector('[data-edition="mina"]').getAttribute('aria-pressed'), 'true');
-  document.querySelector('[data-example="mina-aydin"]').click();
-  assert.equal(document.getElementById('pl-example-input').value, 'Mina Aydin · Selbstständigkeit');
-  assert.equal(document.querySelector('#contact-form').getAttribute('action'), 'https://formspree.io/f/mjggbdre');
+test('a published work carries into the inquiry, can be removed, and resets after success',async()=>{
+  const {window,document}=await landing('http://localhost/persoenliche-websites.html?beispiel=unknown#anfrage');
+  window.eval(await readFile(new URL('../site/assets/personal-inquiry.js',import.meta.url),'utf8'));
+  const input=document.getElementById('pl-example-input'),box=document.getElementById('pg-selected-example');
+  assert.equal(input.value,'');assert.equal(box.hidden,true);
+  document.getElementById('pl-goal').value='Mein bestehender Entwurf';
+  document.querySelector('[data-example="muammer-original"]').click();
+  assert.match(input.value,/Muammer Kizilaslan/);assert.equal(box.hidden,false);
+  assert.equal(document.getElementById('pl-goal').value,'Mein bestehender Entwurf');
+  document.getElementById('pg-remove-example').click();assert.equal(input.value,'');assert.equal(box.hidden,true);
+  assert.equal(document.activeElement.id,'pl-name');
+  document.querySelector('[data-example="muammer-original"]').click();document.getElementById('contact-form').reset();assert.equal(input.value,'');assert.equal(box.hidden,true);
   await window.happyDOM.close();
 });
 

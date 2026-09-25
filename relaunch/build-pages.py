@@ -83,34 +83,10 @@ gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/as
 (SITE/'arbeiten.html').write_text(gallery_page)
 
 personal_content = (ROOT / 'personal-landing-content.html').read_text()
-personal_page = page(
-    'Persönliche Websites ohne Vorlage',
-    'Überlassen Sie die Deutungshoheit über Ihren Werdegang nicht dem Zufall. Persönliche Websites für Karriere und Selbstständigkeit, individuell gestaltet ab 2.990 €.',
-    'persoenliche-websites',
-    personal_content,
-)
-personal_page = personal_page.replace('</head>', (
-    '<meta property="og:type" content="website">'
-    '<meta property="og:title" content="Persönliche Websites ohne Vorlage — Karriaro">'
-    '<meta property="og:description" content="Ihr Werdegang. Ihr Auftritt. Eine persönliche Website zeigt, wofür Sie stehen und wohin Sie wollen.">'
-    '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
-    '<link rel="stylesheet" href="/assets/personal-landing.css">'
-    '<link rel="stylesheet" href="/assets/personal-gallery.css">'
-    '<link rel="stylesheet" href="/assets/personal-conversion.css">'
-    '<link rel="stylesheet" href="/assets/personal-gallery-art.css">'
-    '<link rel="stylesheet" href="/assets/personal-editions.css">'
-    '<link rel="stylesheet" href="/assets/personal-signature.css">'
-    '<link rel="stylesheet" href="/assets/personal-clarity.css?v=20260925b">'
-    '<link rel="stylesheet" href="/assets/personal-hero-story.css">'
-    '<link rel="stylesheet" href="/assets/personal-proof.css">'
-    '<script src="/assets/personal-inquiry.js" defer></script></head>'
-))
-personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
-personal_nav = personal_header
-personal_nav = re.sub(r'<nav class="desktop-nav".*?</nav>', '<nav class="desktop-nav" aria-label="Hauptnavigation"><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#beispiele">Beispiele</a><a href="#angebot">Preis &amp; Leistung</a></nav>', personal_nav, count=1, flags=re.S)
-personal_nav = re.sub(r'<nav class="mobile-nav".*?</nav>', '<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation" hidden><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#beispiele">Beispiele</a><a href="#angebot">Preis &amp; Leistung</a><a href="#ablauf">Ablauf</a><a href="#anfrage">Persönliche Website anfragen</a></nav>', personal_nav, count=1, flags=re.S)
-personal_nav = personal_nav.replace('href="/#kontakt"', 'href="#anfrage"').replace('Projekt besprechen', 'Website anfragen')
-personal_page = personal_page.replace(personal_header, personal_nav, 1)
+personal_header = """<header class="site-header pg-wrap"><a class="brand" href="/" aria-label="Karriaro – Startseite"><span class="brand-name">KARRIARO<span aria-hidden="true">.</span></span><span class="brand-caption">Website-Designmanufaktur</span></a><nav class="desktop-nav" aria-label="Hauptnavigation"><a href="#arbeiten">Website erleben</a><a href="#warum">Ihr Vorteil</a><a href="#angebot">Leistung &amp; Ablauf</a></nav><a class="header-contact" href="#anfrage">Anfragen</a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menü öffnen"><span></span><span></span></button><nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation" hidden><a href="#arbeiten">Website erleben</a><a href="#warum">Ihr Vorteil</a><a href="#angebot">Leistung &amp; Ablauf</a><a href="#anfrage">Anfragen</a></nav></header>"""
+personal_footer = """<footer class="pg-footer"><div class="pg-wrap"><div class="pg-footer-top"><a href="/" aria-label="Karriaro – Startseite" class="pg-footer-brand">KARRIARO<span>.</span></a><p>Website-Designmanufaktur.<br>Persönlich in Schiltach. Für Projekte überall.</p></div><div class="pg-footer-bottom"><span>© 2026 Karriaro</span><nav aria-label="Rechtliche Informationen"><a href="/impressum.html">Impressum</a><a href="/datenschutz.html">Datenschutz</a><a href="/agb.html">AGB</a></nav><a href="#inhalt">Nach oben</a></div></div></footer>"""
+personal_page = """<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#171819"><meta name="robots" content="noindex,nofollow"><title>Persönliche Websites – Ihr eigener Auftritt | Karriaro</title><meta name="description" content="Individuelle persönliche Websites für Karriere, berufliche Positionierung und Selbstständigkeit. Entdecken Sie eine veröffentlichte Arbeit von Karriaro."><link rel="canonical" href="https://karriaro-webdesign.de/persoenliche-websites"><meta property="og:type" content="website"><meta property="og:title" content="Ihr Werdegang. Ihr eigener Auftritt. — Karriaro"><meta property="og:description" content="Persönliche Websites, die sichtbar machen, was Sie besonders macht. Individuell gestaltet von Karriaro."><meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites"><meta property="og:image" content="https://karriaro-webdesign.de/assets/projects/muammerkizilaslan-desktop-poster.webp"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/personal-cinema.css"><script src="/assets/personal-inquiry.js" defer></script><script src="/assets/site.js" defer></script><noscript><style>.menu-toggle{display:none!important}@media(max-width:760px){.site-header{flex-wrap:wrap}.site-header .desktop-nav{display:flex;order:3;width:100%;gap:18px;flex-wrap:wrap;padding:15px 0}}</style></noscript></head><body class="pg-page"><a class="pg-skip" href="#inhalt">Zum Inhalt springen</a>""" + personal_header + '<main id="inhalt">' + personal_content + '</main>' + personal_footer + '</body></html>\n'
 (SITE / 'persoenliche-websites.html').write_text(personal_page)
 
 muammer_case = (ROOT / 'muammer-case-content.html').read_text()
