@@ -333,3 +333,5 @@
 @media (prefers-reduced-motion: reduce) {
   .pl-cover-preview img, .pl-editions-switch button { transition: none !important; }
 }
+.pl-real-copy .pl-real-case-link{margin-top:12px;border-top:1px solid #f4f2e970;color:#f4d0bc;font-size:12px;font-weight:580}
+.pl-real-copy .pl-real-case-link:hover,.pl-real-copy .pl-real-case-link:focus-visible{color:#fff}

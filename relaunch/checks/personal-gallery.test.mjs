@@ -36,6 +36,27 @@ test('the two finished works lead four curated, complete conceptual websites', a
   await window.happyDOM.close();
 });
 
+test('the real design case is reachable and each topic reveals its own evidence', async () => {
+  const home = await readFile(new URL('../site/index.html', import.meta.url), 'utf8');
+  const offer = await readFile(new URL('../site/persoenliche-websites.html', import.meta.url), 'utf8');
+  assert.match(home, /href="\/einblick-muammer\.html"/);
+  assert.match(offer, /href="\/einblick-muammer\.html"/);
+  const window = new Window({ url: 'http://localhost/einblick-muammer.html', settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true, enableJavaScriptEvaluation: true, suppressInsecureJavaScriptEnvironmentWarning: true } });
+  const html = await readFile(new URL('../site/einblick-muammer.html', import.meta.url), 'utf8');
+  window.document.write(html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''));
+  window.eval(await readFile(new URL('../site/assets/muammer-case.js', import.meta.url), 'utf8'));
+  const buttons = [...window.document.querySelectorAll('[data-mk-topic]')];
+  const panels = [...window.document.querySelectorAll('[data-mk-panel]')];
+  assert.equal(buttons.length, 3);
+  assert.equal(panels.length, 3);
+  assert.equal(panels.filter(panel => !panel.hidden).length, 1);
+  buttons[1].click();
+  assert.equal(buttons[1].getAttribute('aria-pressed'), 'true');
+  assert.equal(panels.filter(panel => !panel.hidden)[0].dataset.mkPanel, 'fuehrung');
+  assert.ok(window.document.querySelector('a[href="https://muammerkizilaslan.com/"]'));
+  await window.happyDOM.close();
+});
+
 test('the anonymized work contains no personal trace or outbound link to the original', async () => {
   const page = await readFile(new URL('../site/personen/unternehmerprofil.html', import.meta.url), 'utf8');
   assert.match(page, /Anonymisierte Projektadaption/);

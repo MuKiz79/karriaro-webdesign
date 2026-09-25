@@ -1,0 +1,9 @@
+.art-hero .hero-proposition h1{max-width:12ch}
+.lead-case-link{display:grid;grid-template-columns:170px minmax(0,1fr) auto;gap:20px;align-items:center;margin-top:29px;padding:19px 0;border-top:1px solid #777e75;border-bottom:1px solid #777e75;color:#26362e;text-decoration:none;transition:color .2s,padding-left .2s}
+.lead-case-link>span:first-child{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
+.lead-case-link strong{font-size:clamp(18px,2.2vw,31px);font-weight:530;line-height:1.1;letter-spacing:-.045em}
+.lead-case-link>span:last-child{font-size:25px;line-height:1}
+.lead-case-link:hover,.lead-case-link:focus-visible{padding-left:12px;color:#a4533b}
+.lead-case-link:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+@media(max-width:760px){.lead-case-link{grid-template-columns:1fr auto;gap:10px 20px;margin-top:24px;padding:17px 0}.lead-case-link>span:first-child{grid-column:1/-1}.lead-case-link strong{font-size:23px}}
+@media(prefers-reduced-motion:reduce){.lead-case-link{transition:none}}
