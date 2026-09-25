@@ -95,7 +95,8 @@ personal_page = personal_page.replace('</head>', (
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
     '<link rel="stylesheet" href="/assets/personal-landing.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery.css">'
-    '<link rel="stylesheet" href="/assets/personal-conversion.css"></head>'
+    '<link rel="stylesheet" href="/assets/personal-conversion.css">'
+    '<link rel="stylesheet" href="/assets/personal-gallery-art.css"></head>'
 ))
 personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
 personal_nav = personal_header

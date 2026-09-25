@@ -1,0 +1,37 @@
+/* The gallery presents working websites as work, not as small decorative cards. */
+@font-face{font-family:"Cormorant Field";src:url("/assets/fonts/cormorant-garamond-latin.woff2") format("woff2");font-display:swap}
+.pl-persona-grid--featured{gap:56px;margin-top:70px}
+.pl-persona-grid--featured .pl-persona{grid-template-columns:minmax(285px,.65fr) minmax(0,1.35fr);min-height:720px;box-shadow:0 18px 50px #13231c1b}
+.pl-persona-grid--featured .pl-persona:nth-child(even) .pl-persona-copy{order:initial}
+.pl-persona-grid--featured .pl-persona:nth-child(even) .pl-persona-screen{order:initial}
+.pl-persona-grid--featured .pl-persona-copy{position:relative;padding:clamp(32px,4vw,65px);isolation:isolate}
+.pl-persona-grid--featured .pl-persona-copy>span{position:relative;z-index:1}
+.pl-persona-grid--featured .pl-persona-copy h3{position:relative;z-index:1;margin-top:clamp(100px,11vw,170px);font-size:clamp(72px,7vw,110px);line-height:.83}
+.pl-persona-grid--featured .pl-persona-copy p{position:relative;z-index:1;max-width:31ch;margin-top:40px;font-size:19px;line-height:1.45}
+.pl-persona-grid--featured .pl-persona-copy>a{position:relative;z-index:1;margin-top:auto;padding-top:20px;border-top-width:2px;font-size:14px}
+.pl-persona-grid--featured .pl-persona-screen{min-height:720px;margin:0;border:0;border-left:1px solid currentColor}
+.pl-persona-grid--featured .pl-persona-screen:before{content:"BEDIENBARE WEBSITE-VORSCHAU  /  HIER SCROLLEN";height:37px;padding:12px 18px;background:#26372e;color:#f3f1e9;font-size:10px;line-height:1}
+.pl-persona-grid--featured .pl-persona-screen iframe{top:37px;left:0;width:100%;height:calc(100% - 37px);pointer-events:auto;transform:none;background:var(--persona-screen)}
+.pl-persona-grid--featured .pl-persona-screen-open{inset:auto 20px 20px auto;display:flex;align-items:center;gap:28px;width:auto;height:auto;padding:13px 16px;background:#f7f3e7;color:#24352a;border:1px solid #24352a;box-shadow:5px 5px 0 #24352a;font-size:13px;font-weight:700;cursor:pointer}
+.pl-persona-grid--featured .pl-persona-screen-open:hover{box-shadow:7px 7px 0 #24352a;transform:translate(-2px,-2px)}
+.pl-persona-grid--featured .pl-persona-screen-open span{font-size:20px;line-height:1}
+.pl-persona--aylin{--persona-bg:#eae2cf;--persona-ink:#294237;--persona-screen:#f1ead8}
+.pl-persona--aylin .pl-persona-copy{border-left:9px solid #ad5e41;background:linear-gradient(90deg,transparent calc(100% - 1px),#94a18e55 100%) center/44px 44px}
+.pl-persona--aylin .pl-persona-copy h3{font-family:"Cormorant Field",Georgia,serif;font-weight:400;letter-spacing:-.07em}
+.pl-persona--aylin .pl-persona-screen:before{background:#29483e}
+.pl-persona--noah{--persona-bg:#1b2b69;--persona-ink:#f7f5ec;--persona-screen:#182354}
+.pl-persona--noah .pl-persona-copy{background:radial-gradient(circle at 96% 10%,#ffbe8e 0 35px,transparent 36px),#1b2b69}
+.pl-persona--noah .pl-persona-copy h3{font-weight:750;letter-spacing:-.1em}
+.pl-persona--noah .pl-persona-copy>span{color:#ffbe8e}
+.pl-persona--noah .pl-persona-screen:before{background:#253980;color:#ffcfaa}
+.pl-persona--noah .pl-persona-screen-open{background:#ffbe8e;color:#182354;border-color:#182354;box-shadow:5px 5px 0 #182354}
+.pl-persona--tarek{--persona-bg:#1d2e24;--persona-ink:#e6eee3;--persona-screen:#1a2620}
+.pl-persona--tarek .pl-persona-copy{background:linear-gradient(#bfe99b14 1px,transparent 1px),linear-gradient(90deg,#bfe99b14 1px,transparent 1px),#1d2e24;background-size:39px 39px}
+.pl-persona--tarek .pl-persona-copy>span{font-family:ui-monospace,monospace;color:#bfe99b}
+.pl-persona--tarek .pl-persona-copy h3{font-weight:450}
+.pl-persona--tarek .pl-persona-screen:before{background:#1a2620;color:#bfe99b}
+.pl-concept-disclosure{max-width:79ch;margin-top:45px!important;padding-top:20px;border-top:1px solid #aaa;font-size:13px!important}
+@media(max-width:900px){.pl-persona-grid--featured .pl-persona{grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);min-height:600px}.pl-persona-grid--featured .pl-persona-screen{min-height:600px}.pl-persona-grid--featured .pl-persona-copy h3{margin-top:100px;font-size:clamp(64px,8vw,85px)}.pl-persona-grid--featured .pl-persona-copy p{font-size:17px}}
+@media(max-width:700px){.pl-persona-grid--featured{gap:38px;margin-top:42px}.pl-persona-grid--featured .pl-persona{display:flex;flex-direction:column;min-height:0}.pl-persona-grid--featured .pl-persona-copy{min-height:325px;padding:29px}.pl-persona-grid--featured .pl-persona-copy h3{margin-top:41px;font-size:clamp(68px,16vw,89px)}.pl-persona-grid--featured .pl-persona-copy p{margin-top:20px;font-size:16px}.pl-persona-grid--featured .pl-persona-copy>a{margin-top:35px}.pl-persona-grid--featured .pl-persona-screen{min-height:530px;border-left:0;border-top:1px solid currentColor}.pl-persona-grid--featured .pl-persona-screen-open{right:10px;bottom:10px;padding:10px 12px;font-size:12px}.pl-persona-grid--featured .pl-persona-screen:before{font-size:8px}}
+@media(max-width:390px){.pl-persona-grid--featured .pl-persona-copy h3{font-size:62px}.pl-persona-grid--featured .pl-persona-screen{min-height:475px}}
+@media(prefers-reduced-motion:reduce){.pl-persona-grid--featured .pl-persona-screen-open{transition:none}}

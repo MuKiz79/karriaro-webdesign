@@ -1,0 +1,67 @@
+/* Three different visual systems, built from the subject of each fictional brief. */
+@font-face{font-family:"Cormorant Field";src:url("/assets/fonts/cormorant-garamond-latin.woff2") format("woff2");font-display:swap}
+@font-face{font-family:"Cormorant Field";src:url("/assets/fonts/cormorant-garamond-latin-italic.woff2") format("woff2");font-style:italic;font-display:swap}
+
+/* AYLIN — a living field atlas: ink, coordinates and the changing city. */
+.px--aylin{background:#f1ead8;color:#253b33}
+.px--aylin .px-header{border-color:#89927c}
+.px--aylin .px-logo{font-size:22px;letter-spacing:-.035em}
+.ab-hero{position:relative;padding-bottom:150px;background:linear-gradient(90deg,transparent calc(50% - .5px),#b7bdab 50%,transparent calc(50% + .5px)) center/48px 48px}
+.ab-hero:before{content:"A / B";position:absolute;right:clamp(18px,3.5vw,64px);bottom:80px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.2em}
+.ab-hero-grid{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:4%;align-items:end;margin-top:42px}
+.ab-hero h1{position:relative;z-index:2;margin:0 0 -8px;font-family:"Cormorant Field",Georgia,serif;font-size:clamp(96px,10vw,162px);font-weight:400;line-height:.76;letter-spacing:-.07em}
+.ab-hero h1 em{color:#a6533d;font-family:inherit;font-weight:400}
+.ab-hero-grid>div:first-child>p{max-width:34ch;margin:60px 0 0;font-size:20px;line-height:1.52}
+.ab-hero-grid .ab-link{font-size:13px;letter-spacing:.04em}
+.ab-map{min-height:700px;border:9px solid #eee6d2;box-shadow:22px 22px 0 #334d40;background:#c4c7a4}
+.ab-map:before,.ab-map-lines,.ab-map-pond{display:none}
+.ab-city-art{position:absolute;inset:0;width:100%;height:100%}
+.ab-city-heat,.ab-city-water,.ab-city-route{transition:opacity .5s,transform .5s;transform-origin:center}
+.ab-city-water,.ab-city-route{opacity:.43}.ab-map[data-view=water] .ab-city-water,.ab-map[data-view=route] .ab-city-route{opacity:1}.ab-map[data-view=water] .ab-city-heat,.ab-map[data-view=route] .ab-city-heat{opacity:.2}
+.ab-city-route{stroke-dasharray:2 12}.ab-map[data-view=route] .ab-city-route{animation:ab-route 8s linear infinite}
+@keyframes ab-route{to{stroke-dashoffset:-140}}
+.ab-map-top{top:19px;left:19px;padding:11px 13px;background:#f1ead8;color:#253b33;font-family:ui-monospace,monospace;font-size:10px}
+.ab-map-readout{right:22px;bottom:22px;left:22px;max-width:none;padding:21px 25px;border-left:4px solid #ad5e41;background:#f1ead8;box-shadow:8px 8px 0 #334d40}
+.ab-map-readout strong{font-family:"Cormorant Field",Georgia,serif;font-size:46px;font-weight:400;letter-spacing:-.04em}
+.ab-map-pin{background:#a6533d;border-color:#f7f0da;box-shadow:0 0 0 5px #a6533d55}
+.ab-map-pin[aria-pressed=true]{background:#274b43;box-shadow:0 0 0 8px #274b4350}
+.ab-map small{right:18px;top:18px;max-width:104px;color:#263a33;font:700 9px/1.4 ui-monospace,monospace}
+.ab-research h2,.ab-field h2,.ab-profile h2,.ab-contact h2{font-family:"Cormorant Field",Georgia,serif;font-weight:400;letter-spacing:-.06em;line-height:.86}
+.ab-research h2{font-size:clamp(84px,10vw,150px)}.ab-research-list h3{font-family:"Cormorant Field",Georgia,serif;font-size:clamp(54px,5vw,82px);font-weight:400;line-height:.89}
+.ab-field{background:#e9e2cf}.ab-field h2{font-size:clamp(82px,9vw,140px)}.ab-field-heading>p{border-left:2px solid #a6533d;padding-left:25px}
+.ab-profile{background:#29483e}.ab-profile h2{font-size:clamp(75px,8vw,120px)}.ab-contact h2{font-size:clamp(85px,10vw,150px)}
+
+/* NOAH — interface culture: strong signal, visible focus and a different rhythm. */
+.px--noah{background:#182354;color:#f7f5ec}
+.px--noah .px-header{border-color:#8192c1}
+.px--noah .px-logo span,.ny-hero h1 em,.ny-contact h2 span{color:#ffbe8e}
+.ny-hero{position:relative;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);min-height:800px}
+.ny-hero:before{content:"01 / WORKING IN THE OPEN";position:absolute;left:clamp(18px,3.5vw,64px);bottom:30px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.16em;color:#ffbe8e}
+.ny-hero h1{font-size:clamp(80px,9.4vw,155px);line-height:.84;letter-spacing:-.085em}
+.ny-hero h1 em{font-family:"Inter Tight",Arial,sans-serif;font-style:normal}
+.ny-visual{min-height:620px;overflow:visible;background:#3046a2;border:0;box-shadow:20px 20px 0 #ffbe8e}
+.ny-visual:before{background:radial-gradient(circle at center,#ffd8bc 1px,transparent 1.5px);background-size:18px 18px;opacity:.18}
+.ny-product-snapshot{inset:11% 9% 15% 5%;transform:rotate(2deg);background:#f7f5ec;box-shadow:12px 14px 0 #ee865f}
+.ny-product-card{background:#ffd4b8}.ny-orbit{right:-16px;bottom:-19px;background:#ffbe8e;color:#182354}
+.ny-focuskeys{position:absolute;z-index:4;left:-27px;bottom:36px;display:flex;align-items:center;gap:6px;transform:rotate(-5deg);font:700 12px/1 ui-monospace,monospace;color:#182354}
+.ny-focuskeys span{padding:13px 17px;border:2px solid #182354;background:#f7f5ec;box-shadow:4px 4px 0 #182354}.ny-focuskeys i{padding:0 5px;color:#fff;font-style:normal;font-size:27px}
+.ny-projects{background:#f8f6ee;color:#182354}.ny-project-grid article{background:#e1e6f6}.ny-project-art--queue{background:#ffbe8e;color:#182354}.ny-project-art--study{background:#aebdf1}
+.ny-booking-section{background:#dfe5fb}.ny-booking-intro h2 em{color:#dd734e}.ny-booking-principle{border-color:#253473}.ny-booking-product{box-shadow:15px 15px 0 #a9b8f0}.ny-booking-slots button:hover,.ny-booking-slots button[aria-pressed=true]{background:#ffbe8e}.ny-booking-summary{background:#23377f}.ny-booking-state{color:#ffbe8e}
+.ny-lab{background:#f6c7a5}.ny-lab h2 em{font-family:"Inter Tight",Arial,sans-serif;font-style:normal;color:#314c9a}.ny-planner{background:#182354;box-shadow:16px 16px 0 #de895f}.ny-planner-progress>div{border-color:#ffbe8e}.ny-planner-progress i{background:#ffbe8e}.ny-planner form>div{border-color:#ffbe8e}.ny-planner form button,.ny-task-toggle,.ny-planner-foot{color:#ffbe8e}
+.ny-path{background:#e1e6f6;color:#182354}.ny-contact{background:#182354}.px--noah .pc-contact-panel{background:#23377f}
+
+/* TAREK — a decision record drawn as an architectural score. */
+.person--tarek{background:#1a2620;color:#e6eee3}.person--tarek .pe-header{border-color:#62786b}.person--tarek .pe-wordmark{font-family:ui-monospace,monospace;font-size:19px;letter-spacing:-.08em}
+.td-hero{min-height:830px}.td-hero h1{max-width:10ch;margin-top:clamp(120px,16vh,190px);font-size:clamp(82px,10vw,158px);line-height:.84}.td-hero h1 em{color:#bfe99b;font-style:normal}
+.td-hero-bottom{max-width:1000px}.td-hero-bottom p{font-size:20px}
+.td-hero-grid{top:7%;right:1%;width:49%;height:87%;background:none;opacity:.92}
+.td-hero-diagram{display:block;width:100%;height:100%}
+.td-hero-flow{stroke-dasharray:16 9;animation:td-flow 11s linear infinite}.td-hero-pulse{animation:td-pulse 3s ease-in-out infinite}
+@keyframes td-flow{to{stroke-dashoffset:-250}}@keyframes td-pulse{50%{opacity:.25;transform:scale(1.4)}}
+.td-system{background:#ecf0e7}.td-case{background:#e6eee3}.td-principles{background:#16291e}.td-career{background:#203528}
+
+@media(max-width:1000px){.ab-hero h1{font-size:clamp(86px,10vw,130px)}.ny-hero h1{font-size:clamp(72px,9vw,112px)}.ny-visual{min-height:540px}.td-hero h1{font-size:clamp(70px,10vw,120px)}}
+@media(max-width:700px){.ab-hero{padding-bottom:85px}.ab-hero:before{bottom:28px}.ab-hero-grid{grid-template-columns:1fr;gap:37px}.ab-hero h1{font-size:clamp(85px,19vw,125px)}.ab-hero-grid>div:first-child>p{margin-top:38px;font-size:17px}.ab-map{min-height:530px;border-width:5px;box-shadow:9px 9px 0 #334d40}.ab-map-readout{right:13px;bottom:13px;left:13px;padding:16px}.ab-map-readout strong{font-size:34px}.ab-research h2,.ab-field h2,.ab-profile h2,.ab-contact h2{font-size:clamp(67px,14vw,91px)}.ab-research-list h3{font-size:59px}.ab-field-heading>p{padding-left:15px}.ny-hero{grid-template-columns:1fr;gap:55px;min-height:0;padding-bottom:95px}.ny-hero:before{left:18px;bottom:22px}.ny-hero h1{font-size:clamp(73px,18vw,110px)}.ny-visual{min-height:425px;box-shadow:9px 9px 0 #ffbe8e}.ny-product-snapshot{inset:8% 8% 12% 5%}.ny-focuskeys{left:-6px;bottom:14px;font-size:9px}.ny-focuskeys span{padding:8px 10px;box-shadow:2px 2px 0 #182354}.ny-focuskeys i{font-size:16px}.ny-orbit{right:-7px;bottom:-7px}.ny-planner{box-shadow:8px 8px 0 #de895f}.td-hero{min-height:690px}.td-hero h1{position:relative;z-index:3;margin-top:96px;font-size:clamp(68px,15vw,100px)}.td-hero-grid{top:18%;right:-23%;width:110%;height:66%;opacity:.32}.td-hero-bottom{margin-top:60px}}
+@media(max-width:390px){.ab-hero h1{font-size:79px}.ny-hero h1{font-size:68px}.td-hero h1{font-size:63px}}
+@media(max-width:700px){.ab-map small{top:66px;right:13px;max-width:115px;padding:4px 5px;background:#f1ead8e8;color:#263a33}}
+@media(prefers-reduced-motion:reduce){.ab-city-route,.td-hero-flow,.td-hero-pulse{animation:none}.ab-city-heat,.ab-city-water,.ab-city-route{transition:none}}
