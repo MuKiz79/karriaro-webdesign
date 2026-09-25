@@ -57,8 +57,8 @@ featured = {
 def project_url(slug):
     return f'/studien/{slug}.html' + ('?v=20260923c' if slug in featured_slugs else '')
 
-intro = '<section class="page-hero gallery-hero wrap"><p class="eyebrow">Karriaro / Werkschau</p><h1>Jede Aufgabe<br><em>eine eigene Welt.</em></h1><p>Sechs bedienbare Konzepte für unterschiedliche Branchen. Öffnen Sie eine Website, testen Sie ihre Funktion und sehen Sie, wie eine Aufgabe zur eigenen Form wird.</p><nav class="gallery-jump" aria-label="Bereiche der Werkschau"><a href="#konzepte">Sechs ausgewählte Websites</a><a href="#veroeffentlicht">Veröffentlichte Website</a><a href="#sammlung">Weitere Entwürfe</a></nav></section>'
-published = '<section class="published-work wrap" id="veroeffentlicht" aria-labelledby="published-title"><a href="https://muammerkizilaslan.com/" aria-label="Veröffentlichte Website von Muammer Kizilaslan öffnen"><img src="/assets/projects/muammerkizilaslan-desktop-poster.webp" width="1920" height="862" alt="Die veröffentlichte persönliche Website von Muammer Kizilaslan mit ihrem Themen-Netz"></a><div><span class="work-type">02 / Eigene Website · veröffentlicht</span><h2 id="published-title">Kein Lebenslauf.<br>Eine Denkweise.</h2><p>Meine persönliche Website verbindet Themen als bewegliches Netz, statt Stationen aufzuzählen. Konzept, Gestaltung und Umsetzung aus einer Hand – live unter muammerkizilaslan.com.</p><a class="text-link" href="https://muammerkizilaslan.com/">Veröffentlichte Website öffnen <span class="brand-cue" aria-hidden="true">↗</span></a></div></section>'
+intro = '<section class="page-hero gallery-hero wrap"><p class="eyebrow">Karriaro / Werkschau</p><h1>Jede Aufgabe<br><em>eine eigene Welt.</em></h1><p>Beginnen Sie mit einer veröffentlichten persönlichen Website und einer anonymisierten Projektadaption. Danach können Sie sechs bedienbare Unternehmenskonzepte erkunden.</p><nav class="gallery-jump" aria-label="Bereiche der Werkschau"><a href="#veroeffentlicht">Ausgearbeitete Arbeit</a><a href="#anonymisiert">Anonymisierte Adaption</a><a href="#konzepte">Unternehmenskonzepte</a><a href="#sammlung">Weitere Entwürfe</a></nav></section>'
+published = '<section class="published-work wrap" id="veroeffentlicht" aria-labelledby="published-title"><a href="https://muammerkizilaslan.com/" aria-label="Veröffentlichte Website von Muammer Kizilaslan öffnen"><img src="/assets/projects/muammerkizilaslan-desktop-poster.webp" width="1920" height="862" alt="Die veröffentlichte persönliche Website von Muammer Kizilaslan mit ihrem Themen-Netz"></a><div><span class="work-type">01 / Eigene Website · veröffentlicht</span><h2 id="published-title">Kein Lebenslauf.<br>Eine Denkweise.</h2><p>Meine persönliche Website verbindet Themen als bewegliches Netz, statt Stationen aufzuzählen. Konzept, Gestaltung und Umsetzung aus einer Hand – live unter muammerkizilaslan.com.</p><a class="text-link" href="https://muammerkizilaslan.com/">Veröffentlichte Website öffnen <span class="brand-cue" aria-hidden="true">↗</span></a></div></section>'
 
 gallery = '<section class="gallery-featured" id="konzepte" aria-labelledby="featured-title"><div class="wrap gallery-section-intro"><p class="eyebrow">01 / Ausgewählte Konzepte</p><h2 id="featured-title">Sechs Aufgaben.<br><em>Sechs Antworten.</em></h2><p>Fiktive Betriebe. Öffnen Sie eine Website, um sie vollständig auszuprobieren. Eine Qualität, die zu Ihrem Projekt passt, können Sie merken.</p></div>'
 for index, slug in enumerate(selected_slugs, start=1):
@@ -69,7 +69,8 @@ for index, slug in enumerate(selected_slugs, start=1):
     case_link = '<a class="gallery-case-link" href="/einblick-kante.html">Gestaltung und Entscheidungen hinter KANTE ansehen</a>' if slug == 'kante' else ('<a class="gallery-case-link" href="/einblick-tischundton.html">Gestaltung und Entscheidungen hinter TISCH &amp; TON ansehen</a>' if slug == 'tischundton' else '')
     gallery += f'<article class="gallery-feature gallery-feature--{slug}"{anchor}><div class="wrap gallery-feature-inner"><div class="gallery-feature-top"><span>{index:02d} / {len(selected_slugs):02d}</span><span>Eigenes Website-Konzept · fiktiver Betrieb</span></div><div class="gallery-feature-layout"><div class="gallery-feature-copy"><p class="eyebrow">{label}</p><h3>{headline}</h3><p class="gallery-feature-name">{name}</p><dl><div><dt>Die Aufgabe</dt><dd>{task}</dd></div><div><dt>Die Idee</dt><dd>{decision}</dd></div></dl><a class="gallery-feature-cta" href="{url}">{action} <span class="brand-cue" aria-hidden="true">↗</span></a><button type="button" class="gallery-trail-save" data-trail-project="{slug}">Qualität für mein Projekt merken <b aria-hidden="true">+</b></button>{case_link}</div><a class="gallery-feature-screen" href="{url}" aria-label="Website-Konzept {name} öffnen"><span class="gallery-screen-bar"><span class="browser-dots" aria-hidden="true">● ● ●</span><span>{kind} / Website-Vorschau</span><span class="brand-cue" aria-hidden="true">↗</span></span><span class="website-live-frame" aria-hidden="true"><iframe src="{url}" title="Vorschau: {name}" tabindex="-1" loading="lazy" sandbox=""></iframe></span><span class="gallery-screen-foot">Website öffnen <span class="brand-cue" aria-hidden="true">↗</span></span></a></div></div></article>'
 gallery += '</section>'
-gallery += published
+anonymous = '<section class="published-work wrap" id="anonymisiert" aria-labelledby="anonymous-title"><a href="/personen/unternehmerprofil.html" aria-label="Anonymisierte, bedienbare Projektadaption öffnen"><span class="gallery-anonymous-art" aria-hidden="true"><b>PERSPEKTIVE.</b><i></i><strong>Erfahrung<br>wird Haltung.</strong></span></a><div><span class="work-type">02 / Anonymisierte Projektadaption · bedienbar</span><h2 id="anonymous-title">Zwei Rollen.<br>Eine Haltung.</h2><p>Eine reale Gestaltungsaufgabe, für diese Präsentation vollständig neu befüllt: Ohne Name, Porträt, Biografie, Kennzahlen oder Kontaktdaten der ursprünglichen Person. Die Website zeigt, wie eine individuelle Geschichte zwei Besucherwege bekommt.</p><a class="text-link" href="/personen/unternehmerprofil.html">Adaption vollständig öffnen <span class="brand-cue" aria-hidden="true">↗</span></a></div></section>'
+gallery = published + anonymous + gallery
 
 archive_projects = [project for project in projects if project[0] not in selected_slugs]
 gallery += f'<section class="gallery-archive wrap" id="sammlung" aria-labelledby="archive-title"><div class="gallery-archive-head"><div><p class="eyebrow">03 / Weitere Websites</p><h2 id="archive-title">Elf weitere<br><em>Perspektiven.</em></h2></div><p>Weitere vollständige, bedienbare Entwürfe. Öffnen Sie die Sammlung, wenn Sie mehr sehen möchten.</p></div><details class="gallery-archive-details"><summary>Weitere Website-Konzepte entdecken <span aria-hidden="true">+</span></summary><div class="gallery-index">'
@@ -77,26 +78,28 @@ for index, (slug, name, kind, image, description) in enumerate(archive_projects,
     artwork = f'<img src="/studien/assets/{image}" width="640" height="430" alt="" loading="lazy" decoding="async">' if slug not in ('software','training','beratung','klang') else '<span class="gallery-index-abstract" aria-hidden="true"></span>'
     gallery += f'<a class="gallery-index-row gallery-index-row--{slug}" href="{project_url(slug)}" aria-label="Website-Konzept {name} öffnen"><span class="gallery-index-media">{artwork}<span class="gallery-index-number">{index:02d} / {len(projects):02d}</span></span><span class="gallery-index-text"><span class="gallery-index-kind">{kind}</span><strong>{name}</strong><span>{description}</span><span class="gallery-index-action">Website öffnen <span class="brand-cue" aria-hidden="true">↗</span></span></span></a>'
 gallery += '</div></details></section><div class="wrap"><p class="collection-note">Die Konzeptwebsites sind eigene Entwürfe mit fiktiven Betrieben, Personen oder Produkten und teils KI-generierten Bildmotiven. Sie zeigen Gestaltung und technische Umsetzung, keine Kundenaufträge oder Geschäftsergebnisse. Kontakt- und Geschäftsvorgänge sind Demos.</p><section class="simple-cta" aria-label="Projektanfrage"><h2>Und Ihr <em>Auftritt?</em></h2><a class="button button-dark" href="/#kontakt">Projekt besprechen <span class="brand-cue" aria-hidden="true">↗</span></a></section></div>'
-gallery_page = page('Webdesign-Beispiele und Website-Konzepte', 'Entdecken Sie Karriaros veröffentlichte Website und bedienbare Webdesign-Konzepte für Handwerk, Unterkunft, Handel und weitere Branchen.', 'arbeiten', intro+gallery)
-gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/assets/gallery.css?v=20260923d"></head>')
+gallery_page = page('Webdesign-Beispiele und Website-Konzepte', 'Entdecken Sie Karriaros veröffentlichte Website, anonymisierte Projektadaption und bedienbare Webdesign-Konzepte.', 'arbeiten', intro+gallery)
+gallery_page = gallery_page.replace('</head>', '<link rel="stylesheet" href="/assets/gallery.css?v=20260923d"><link rel="stylesheet" href="/assets/personal-editions.css"></head>')
 (SITE/'arbeiten.html').write_text(gallery_page)
 
 personal_content = (ROOT / 'personal-landing-content.html').read_text()
 personal_page = page(
     'Persönliche Websites für Karriere und Positionierung',
-    'Individuell gestaltete persönliche Websites für Bewerbung, Karriere und Selbstständigkeit. Veröffentlichte Arbeit, Leistung und Preis ab 2.990 €, Fragebogen und bedienbare Beispiele.',
+    'Individuell gestaltete persönliche Websites für Bewerbung, Karriere und Selbstständigkeit. Zwei ausgearbeitete Arbeiten, vier vollständige Konzeptseiten, Preis ab 2.990 € und Fragebogen.',
     'persoenliche-websites',
     personal_content,
 )
 personal_page = personal_page.replace('</head>', (
     '<meta property="og:type" content="website">'
-    '<meta property="og:title" content="Mehr als ein Profil. Persönliche Websites von Karriaro.">'
-    '<meta property="og:description" content="Eine persönliche Website, die Ihre Arbeit sichtbar macht. Sehen Sie veröffentlichte Arbeit, Preis und Ablauf vom Fragebogen zum ersten Entwurf.">'
+    '<meta property="og:title" content="Ihre eigene Website. Persönlich gestaltet von Karriaro.">'
+    '<meta property="og:description" content="Persönliche Websites als eigene, vollständige Auftritte. Sehen Sie ausgearbeitete Arbeiten, Konzepte, Preis und Ablauf.">'
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
     '<link rel="stylesheet" href="/assets/personal-landing.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery.css">'
     '<link rel="stylesheet" href="/assets/personal-conversion.css">'
-    '<link rel="stylesheet" href="/assets/personal-gallery-art.css"></head>'
+    '<link rel="stylesheet" href="/assets/personal-gallery-art.css">'
+    '<link rel="stylesheet" href="/assets/personal-editions.css">'
+    '<script src="/assets/personal-inquiry.js" defer></script></head>'
 ))
 personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
 personal_nav = personal_header

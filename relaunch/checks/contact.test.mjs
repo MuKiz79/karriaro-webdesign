@@ -111,3 +111,24 @@ test('Personal website landing page sends its inquiry with the chosen service an
   assert.equal(doc.querySelector('#form-status').dataset.state, 'success');
   await window.happyDOM.close();
 });
+
+test('Personal website inquiry sends the selected portfolio example', async () => {
+  const window = new Window({url: 'http://localhost:4319/persoenliche-websites.html?beispiel=felix-brandt#anfrage', settings: {
+    disableCSSFileLoading: true, disableJavaScriptFileLoading: true,
+    enableJavaScriptEvaluation: true, disableComputedStyleRendering: true
+  }});
+  window.document.write(personalHTML.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''));
+  const requests = [];
+  window.fetch = async (_url, options) => { requests.push(options); return {ok: true}; };
+  window.eval(await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8'));
+  window.eval(script);
+  const doc = window.document;
+  doc.querySelector('#pl-name').value = 'Lokaler Test';
+  doc.querySelector('#pl-email').value = 'local-test@example.invalid';
+  doc.querySelector('#pl-goal').value = 'Portfolio anfragen';
+  doc.querySelector('#contact-form').dispatchEvent(new window.Event('submit', {bubbles: true, cancelable: true}));
+  await tick();
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].body.get('beispiel'), 'Felix Brandt · Berufswechsel');
+  await window.happyDOM.close();
+});

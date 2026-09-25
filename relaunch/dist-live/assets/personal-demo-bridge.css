@@ -1,0 +1,6 @@
+.pc-offer-bridge{margin-top:32px;padding:22px 0 0;border-top:1px solid currentColor}
+.pc-offer-bridge small{display:block;margin-bottom:9px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.pc-offer-bridge p{margin:0 0 18px;max-width:37ch;font-size:15px;line-height:1.5}
+.pc-offer-bridge a{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:13px 0;border-top:1px solid currentColor;border-bottom:1px solid currentColor;color:inherit;font-size:15px;font-weight:700;text-decoration:none}
+.pc-offer-bridge a span{font-size:24px;font-weight:400;line-height:1}
+.pc-offer-bridge a:hover,.pc-offer-bridge a:focus-visible{padding-inline:8px}
