@@ -36,27 +36,24 @@ test('the two finished works lead four curated, complete conceptual websites', a
   const hero = document.querySelector('.pl-hero');
   assert.match(hero.textContent, /Sie können mehr,[\s\S]*als Ihr Profil zeigt/);
   assert.match(hero.textContent, /Bewerbung[\s\S]*beruflichen Wechsel[\s\S]*eigene Kunden/);
-  const heroDirections = [...hero.querySelectorAll('.pl-mh-page')];
-  assert.deepEqual(heroDirections.map(item => item.getAttribute('href')), ['/personen/muammer-fuehrung.html', '/personen/muammer-technologie.html', '/personen/muammer-gruendung.html']);
-  assert.match(hero.textContent, /Drei vollständige Designstudien/);
+  assert.ok(hero.querySelector('.pl-proof-screen[href="https://muammerkizilaslan.com/"]'));
+  assert.ok(hero.querySelector('.pl-proof-foot a[href="/einblick-muammer.html"]'));
+  assert.match(hero.textContent, /11[\s\S]*Stationen[\s\S]*24[\s\S]*Themen/);
+  assert.equal(document.querySelectorAll('.pl-variant, .pl-mh-page').length, 0);
   const why = document.querySelector('#warum');
   assert.match(why.textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
   assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
-  assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
+  assert.match(why.textContent, /20 Jahren Technologie und Führung[\s\S]*belegbaren Arbeiten[\s\S]*KI hilft/);
   assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
   await window.happyDOM.close();
 });
 
-test('three full design directions use the same real profile and carry into the inquiry', async () => {
+test('unapproved profile studies are retained for review but not featured as customer examples', async () => {
   const { window, document } = await landing('http://localhost/persoenliche-websites.html?beispiel=muammer-technologie#anfrage');
-  const directions = [...document.querySelectorAll('.pl-variant')];
-  assert.equal(directions.length, 3);
-  for (const direction of directions) {
-    const href = direction.querySelector('.pl-v-open')?.getAttribute('href');
-    const preview = direction.querySelector('iframe')?.getAttribute('src');
-    assert.equal(href, preview?.split('#')[0]);
-    assert.ok(direction.querySelector('[data-example]'));
-    const page = await readFile(new URL('../site' + href, import.meta.url), 'utf8');
+  assert.equal(document.querySelectorAll('a[href^="/personen/muammer-"]').length, 0);
+  assert.ok(document.querySelector('#varianten')); // old deep links arrive at the real work
+  for (const slug of ['muammer-fuehrung', 'muammer-technologie', 'muammer-gruendung']) {
+    const page = await readFile(new URL(`../site/personen/${slug}.html`, import.meta.url), 'utf8');
     assert.match(page, /name="robots" content="noindex,follow"/);
     assert.match(page, /DESIGNSTUDIE/);
     assert.match(page, /muammerkizilaslan.com/);
@@ -67,8 +64,8 @@ test('three full design directions use the same real profile and carry into the 
   }
   window.eval(await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8'));
   assert.equal(document.getElementById('pl-example-input').value, 'Designrichtung Technologie');
-  document.querySelector('[data-example="muammer-gruendung"]').click();
-  assert.equal(document.getElementById('pl-example-input').value, 'Designrichtung Beruf & Gründung');
+  document.querySelector('[data-example="aylin-berger"]').click();
+  assert.equal(document.getElementById('pl-example-input').value, 'Aylin Berger · Studium');
   await window.happyDOM.close();
 });
 

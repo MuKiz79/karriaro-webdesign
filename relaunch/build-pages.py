@@ -102,13 +102,13 @@ personal_page = personal_page.replace('</head>', (
     '<link rel="stylesheet" href="/assets/personal-signature.css">'
     '<link rel="stylesheet" href="/assets/personal-clarity.css?v=20260925b">'
     '<link rel="stylesheet" href="/assets/personal-hero-story.css">'
-    '<link rel="stylesheet" href="/assets/personal-variants.css">'
+    '<link rel="stylesheet" href="/assets/personal-proof.css">'
     '<script src="/assets/personal-inquiry.js" defer></script></head>'
 ))
 personal_header = re.search(r'<header class="site-header">.*?</header>', personal_page, re.S).group()
 personal_nav = personal_header
-personal_nav = re.sub(r'<nav class="desktop-nav".*?</nav>', '<nav class="desktop-nav" aria-label="Hauptnavigation"><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#varianten">Drei Richtungen</a><a href="#angebot">Preis &amp; Leistung</a></nav>', personal_nav, count=1, flags=re.S)
-personal_nav = re.sub(r'<nav class="mobile-nav".*?</nav>', '<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation" hidden><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#varianten">Drei Richtungen</a><a href="#angebot">Preis &amp; Leistung</a><a href="#ablauf">Ablauf</a><a href="#anfrage">Persönliche Website anfragen</a></nav>', personal_nav, count=1, flags=re.S)
+personal_nav = re.sub(r'<nav class="desktop-nav".*?</nav>', '<nav class="desktop-nav" aria-label="Hauptnavigation"><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#beispiele">Beispiele</a><a href="#angebot">Preis &amp; Leistung</a></nav>', personal_nav, count=1, flags=re.S)
+personal_nav = re.sub(r'<nav class="mobile-nav".*?</nav>', '<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile Navigation" hidden><a href="#warum">Warum?</a><a href="#arbeiten">Arbeiten</a><a href="#beispiele">Beispiele</a><a href="#angebot">Preis &amp; Leistung</a><a href="#ablauf">Ablauf</a><a href="#anfrage">Persönliche Website anfragen</a></nav>', personal_nav, count=1, flags=re.S)
 personal_nav = personal_nav.replace('href="/#kontakt"', 'href="#anfrage"').replace('Projekt besprechen', 'Website anfragen')
 personal_page = personal_page.replace(personal_header, personal_nav, 1)
 (SITE / 'persoenliche-websites.html').write_text(personal_page)
