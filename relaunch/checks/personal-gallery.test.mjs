@@ -34,9 +34,9 @@ test('the two finished works lead four curated, complete conceptual websites', a
   assert.match(document.querySelector('#angebot').textContent, /2\.990 €/);
   assert.match(document.querySelector('#ablauf').textContent, /Fragebogen[\s\S]*bedienbaren Entwurf/i);
   assert.match(document.querySelector('.pl-hero').textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
-  const heroStory = document.querySelector('.pl-hero-art--story');
-  assert.match(heroStory.textContent, /LEBENSLAUF[\s\S]*PERSÖNLICHE WEBSITE/);
-  assert.ok(heroStory.querySelector('a[href="https://muammerkizilaslan.com/"]'));
+  const heroSignature = document.querySelector('.pl-hero-art--signature');
+  assert.match(heroSignature.textContent, /ECHTE ARBEIT[\s\S]*TECHNOLOGIE[\s\S]*FÜHRUNG[\s\S]*GRÜNDUNG[\s\S]*Menschen und[\s\S]*Verantwortung/);
+  assert.ok(heroSignature.querySelector('a[href="https://muammerkizilaslan.com/"]'));
   const why = document.querySelector('#warum');
   assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
   assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
