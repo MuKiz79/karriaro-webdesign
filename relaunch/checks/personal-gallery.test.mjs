@@ -37,7 +37,7 @@ test('the two finished works lead four curated, complete conceptual websites', a
   assert.match(hero.textContent, /Sie können mehr,[\s\S]*als Ihr Profil zeigt/);
   assert.match(hero.textContent, /Bewerbung[\s\S]*beruflichen Wechsel[\s\S]*eigene Kunden/);
   const situations = [...hero.querySelectorAll('.pl-situation')];
-  assert.deepEqual(situations.map(item => item.getAttribute('href')), ['/personen/aylin-berger.html', '/personen/felix-brandt.html', '/personen/mina-aydin.html']);
+  assert.deepEqual(situations.map(item => item.getAttribute('href')), ['/personen/felix-brandt.html', '/personen/aylin-berger.html', '/personen/mina-aydin.html']);
   assert.match(hero.textContent, /Personen fiktiv/);
   const why = document.querySelector('#warum');
   assert.match(why.textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
