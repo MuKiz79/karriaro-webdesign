@@ -36,15 +36,59 @@ test('the two finished works lead four curated, complete conceptual websites', a
   const hero = document.querySelector('.pl-hero');
   assert.match(hero.textContent, /Sie können mehr,[\s\S]*als Ihr Profil zeigt/);
   assert.match(hero.textContent, /Bewerbung[\s\S]*beruflichen Wechsel[\s\S]*eigene Kunden/);
-  const situations = [...hero.querySelectorAll('.pl-situation')];
-  assert.deepEqual(situations.map(item => item.getAttribute('href')), ['/personen/felix-brandt.html', '/personen/aylin-berger.html', '/personen/mina-aydin.html']);
-  assert.match(hero.textContent, /Personen fiktiv/);
+  const heroDirections = [...hero.querySelectorAll('.pl-mh-page')];
+  assert.deepEqual(heroDirections.map(item => item.getAttribute('href')), ['/personen/muammer-fuehrung.html', '/personen/muammer-technologie.html', '/personen/muammer-gruendung.html']);
+  assert.match(hero.textContent, /Drei vollständige Designstudien/);
   const why = document.querySelector('#warum');
   assert.match(why.textContent, /Deutungshoheit über Ihren Werdegang nicht dem Zufall/);
   assert.equal(why.querySelectorAll('.pl-clarity-benefits li').length, 3);
   assert.match(why.textContent, /20 Jahren in Technologie und Führung[\s\S]*beruflicher Positionierung[\s\S]*KI-Praxis/);
   assert.ok(why.compareDocumentPosition(document.querySelector('#arbeiten')) & window.Node.DOCUMENT_POSITION_FOLLOWING);
   await window.happyDOM.close();
+});
+
+test('three full design directions use the same real profile and carry into the inquiry', async () => {
+  const { window, document } = await landing('http://localhost/persoenliche-websites.html?beispiel=muammer-technologie#anfrage');
+  const directions = [...document.querySelectorAll('.pl-variant')];
+  assert.equal(directions.length, 3);
+  for (const direction of directions) {
+    const href = direction.querySelector('.pl-v-open')?.getAttribute('href');
+    assert.equal(href, direction.querySelector('iframe')?.getAttribute('src'));
+    assert.ok(direction.querySelector('[data-example]'));
+    const page = await readFile(new URL('../site' + href, import.meta.url), 'utf8');
+    assert.match(page, /name="robots" content="noindex,follow"/);
+    assert.match(page, /DESIGNSTUDIE/);
+    assert.match(page, /muammerkizilaslan.com/);
+    assert.ok((page.match(/<section\b/g) || []).length >= 5);
+    assert.match(page, /data-mv-group/);
+    assert.doesNotMatch(page, /Ilyas|Kablan|fiktive Kundenergebnisse/i);
+  }
+  window.eval(await readFile(new URL('../site/assets/personal-inquiry.js', import.meta.url), 'utf8'));
+  assert.equal(document.getElementById('pl-example-input').value, 'Designrichtung Technologie');
+  document.querySelector('[data-example="muammer-gruendung"]').click();
+  assert.equal(document.getElementById('pl-example-input').value, 'Designrichtung Beruf & Gründung');
+  await window.happyDOM.close();
+});
+
+test('each profile variant has a working, keyboard-native perspective choice', async () => {
+  const interaction = await readFile(new URL('../site/assets/muammer-variants.js', import.meta.url), 'utf8');
+  for (const slug of ['muammer-fuehrung', 'muammer-technologie', 'muammer-gruendung']) {
+    const page = await readFile(new URL(`../site/personen/${slug}.html`, import.meta.url), 'utf8');
+    const window = new Window({
+      url: `http://localhost/personen/${slug}.html`,
+      settings: { disableJavaScriptFileLoading: true, disableCSSFileLoading: true, enableJavaScriptEvaluation: true, suppressInsecureJavaScriptEnvironmentWarning: true }
+    });
+    window.document.write(page.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''));
+    window.eval(interaction);
+    const buttons = [...window.document.querySelectorAll('[data-mv-select]')];
+    const panels = [...window.document.querySelectorAll('[data-mv-panel]')];
+    assert.ok(buttons.length >= 2, slug);
+    assert.equal(panels.filter(panel => !panel.hidden).length, 1);
+    buttons[1].click();
+    assert.equal(buttons[1].getAttribute('aria-pressed'), 'true');
+    assert.equal(panels.find(panel => !panel.hidden)?.dataset.mvPanel, buttons[1].dataset.mvSelect);
+    await window.happyDOM.close();
+  }
 });
 
 test('the real design case is reachable and each topic reveals its own evidence', async () => {

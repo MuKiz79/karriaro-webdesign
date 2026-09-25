@@ -1,5 +1,8 @@
 const examples = {
   'unternehmerprofil': 'Anonymisierte Projektadaption',
+  'muammer-fuehrung': 'Designrichtung Führung',
+  'muammer-technologie': 'Designrichtung Technologie',
+  'muammer-gruendung': 'Designrichtung Beruf & Gründung',
   'aylin-berger': 'Aylin Berger · Studium',
   'noah-yilmaz': 'Noah Yilmaz · Berufseinstieg',
   'felix-brandt': 'Felix Brandt · Berufswechsel',
