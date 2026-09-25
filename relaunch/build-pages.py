@@ -92,7 +92,7 @@ personal_page = page(
 personal_page = personal_page.replace('</head>', (
     '<meta property="og:type" content="website">'
     '<meta property="og:title" content="Persönliche Websites ohne Vorlage — Karriaro">'
-    '<meta property="og:description" content="Ihr Werdegang. Ihre Geschichte. Eine persönliche Website zeigt, wofür Sie stehen und wohin Sie wollen.">'
+    '<meta property="og:description" content="Ihr Werdegang. Ihr Auftritt. Eine persönliche Website zeigt, wofür Sie stehen und wohin Sie wollen.">'
     '<meta property="og:url" content="https://karriaro-webdesign.de/persoenliche-websites">'
     '<link rel="stylesheet" href="/assets/personal-landing.css">'
     '<link rel="stylesheet" href="/assets/personal-gallery.css">'
