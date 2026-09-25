@@ -108,7 +108,7 @@
   .hero-world--kante .hero-world-action{margin-top:0}
   .hero-world--wald .hero-world-preview .website-live-frame,.hero-world--tisch .hero-world-preview .website-live-frame{aspect-ratio:1.62}
   .hero-world--wald .hero-world-title,.hero-world--tisch .hero-world-title{min-height:60px;font-size:clamp(38px,9vw,55px)}
-  .work-proof{grid-template-columns:1fr;gap:18px;padding:26px 22px;margin-top:25px}.work-proof h3{font-size:clamp(41px,9vw,59px);margin-top:14px}.work-proof p{font-size:14px}.worlds-archive{margin-top:34px}
+  .work-proof{grid-template-columns:minmax(0,1fr);gap:18px;padding:26px 22px;margin-top:25px}.work-proof>*{min-width:0}.work-proof h3{font-size:clamp(41px,9vw,59px);margin-top:14px}.work-proof p{font-size:14px}.worlds-archive{margin-top:34px}
   .delivery-proof{grid-template-columns:1fr}.delivery-proof>div,.delivery-proof>div:first-child,.delivery-proof>div:last-child{border-right:0;border-bottom:1px solid #c8cdc1;padding:17px 0}.delivery-proof>div:last-child{border-bottom:0}.delivery-proof span{margin-bottom:7px}.delivery-proof p{margin-top:4px}
   .case-hero-grid,.case-intent,.case-decision-grid,.case-decision--grid,.case-outro,.case-disclosure{grid-template-columns:1fr}
   .case-hero-grid{padding:35px 0}.case-hero h1{font-size:clamp(52px,12vw,112px);overflow-wrap:anywhere}.case-hero-side p{font-size:18px}.case-cover img{height:430px}.case-cover figcaption{font-size:9px}
